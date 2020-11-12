@@ -9,8 +9,7 @@ This method has two parameters:
 
 Input file has `.csv` format. CSV is a simple file format used to store tabular data.
 This type of files is very popular to storing information. So we will start working with it. 
-CSV stands for "comma-separated values". Its data fields are most often separated, or delimited, 
-by a comma. 
+CSV stands for "comma-separated values". Its data fields are most often separated, or delimited by a comma. 
 
 For example, let's say you had a spreadsheet containing the following data:
 
