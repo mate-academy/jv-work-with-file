@@ -1,4 +1,4 @@
-# jv-write-to-file-uppercase
+# jv-work-with-file
 
 Implement method `getStatistic(String fromFileName, String toFileName)` 
 which will return some data from market after working day. 
