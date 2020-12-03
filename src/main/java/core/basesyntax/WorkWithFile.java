@@ -9,43 +9,45 @@ import java.util.List;
 
 public class WorkWithFile {
     private static final String SPLIT_BY = ",";
-    private int supple = 0;
-    private int buy = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
+        int supple = 0;
+        int buy = 0;
         String line;
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));) {
             while ((line = bufferedReader.readLine()) != null) {
                 String[] rowInfo = line.split(SPLIT_BY);
-                readFromRow(rowInfo);
+                if (rowInfo[0].equals("buy")) {
+                    buy += Integer.parseInt(rowInfo[1]);
+                } else {
+                    supple += Integer.parseInt(rowInfo[1]);
+                }
             }
         } catch (IOException e) {
             System.out.println("File was not found");
         }
-        writeFile(toFileName);
+        writeFile(toFileName, createReport(supple,buy));
     }
 
-    private void readFromRow(String[] row) {
-        if (row[0].equals("buy")) {
-            buy += Integer.parseInt(row[1]);
-        } else {
-            supple += Integer.parseInt(row[1]);
-        }
-    }
-
-    private void writeFile(String toFileName) {
+    private String createReport(int supple, int buy) {
         List<List<String>> rows = Arrays.asList(
                 Arrays.asList("supply", "" + supple),
                 Arrays.asList("buy", "" + buy),
                 Arrays.asList("result", "" + (supple - buy))
         );
+        StringBuilder report = new StringBuilder();
+        for (List<String> rowData : rows) {
+            report.append(String.join(",",rowData));
+            report.append(System.lineSeparator());
+        }
+        return report.toString();
+    }
+
+    private void writeFile(String toFileName, String report) {
         try (FileWriter fileWriter = new FileWriter(toFileName)) {
-            for (List<String> rowData : rows) {
-                fileWriter.append(String.join(",", rowData));
-                fileWriter.append(System.lineSeparator());
-            }
+            fileWriter.append(report);
         } catch (IOException e) {
-            System.out.println("File exist");
+            System.out.println("File was not found");
         }
     }
 }
