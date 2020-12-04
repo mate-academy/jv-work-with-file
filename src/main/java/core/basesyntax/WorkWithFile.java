@@ -37,7 +37,7 @@ public class WorkWithFile {
             writer.newLine();
             writer.write("result," + (supplyValue - buyValue));
         } catch (IOException e) {
-            throw new RuntimeException("Can't read this file");
+            throw new RuntimeException("Can't read the file");
         }
     }
 }
