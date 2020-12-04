@@ -10,8 +10,6 @@ import java.io.IOException;
 public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
-        StringBuilder buyStringBuilder = new StringBuilder();
-        StringBuilder supplyStringBuilder = new StringBuilder();
         int buy = 0;
         int supply = 0;
         try {
