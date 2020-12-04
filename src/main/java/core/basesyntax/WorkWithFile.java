@@ -36,7 +36,6 @@ public class WorkWithFile {
             bufferedWriter.write("  supply," + supply + System.lineSeparator()
                     + "buy," + buy + System.lineSeparator()
                     + "result," + (supply - buy));
-            bufferedWriter.flush();
         } catch (IOException e) {
             throw new RuntimeException("Can't correctly read data from file " + toFileName, e);
         }
