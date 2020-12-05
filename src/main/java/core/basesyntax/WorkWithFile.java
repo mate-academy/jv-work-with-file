@@ -2,7 +2,6 @@ package core.basesyntax;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -35,10 +34,8 @@ public class WorkWithFile {
             builder.append("supply,").append(supply).append(System.lineSeparator());
             builder.append("buy,").append(buy).append(System.lineSeparator());
             builder.append("result,").append(supply - buy);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException("File not found!");
         } catch (IOException e) {
-            throw new RuntimeException("Something go wrong!");
+            throw new RuntimeException("File with name: " + fileName + " not found");
         }
         return builder.toString();
     }
@@ -46,10 +43,8 @@ public class WorkWithFile {
     private static void writeToFile(String fileName, String report) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
             bufferedWriter.write(report);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException("File doesn't exist");
         } catch (IOException e) {
-            throw new RuntimeException("Can't write to File");
+            throw new RuntimeException("File with name: " + fileName + " not found");
         }
     }
 }
