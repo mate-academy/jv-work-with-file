@@ -29,7 +29,6 @@ public class WorkWithFile {
             stringBuilder.append("supply,").append(supply)
                 .append("\n" + "buy,").append(buy)
                 .append("\n" + "result,").append(supply - buy);
-
         } catch (IOException e) {
             throw new RuntimeException("Can not read data from file", e);
         }
