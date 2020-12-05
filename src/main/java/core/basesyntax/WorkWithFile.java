@@ -34,7 +34,7 @@ public class WorkWithFile {
         }
 
         File fileTo = new File(toFileName);
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileTo))){
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileTo))) {
             String output = stringBuilder.toString();
             bufferedWriter.write(output);
         } catch (IOException e) {
