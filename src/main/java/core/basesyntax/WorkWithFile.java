@@ -26,19 +26,17 @@ public class WorkWithFile {
                 }
                 line = reader.readLine();
             }
-            stringBuilder.append("supply,").append(supply)
-                .append("\n" + "buy,").append(buy)
-                .append("\n" + "result,").append(supply - buy);
+            stringBuilder.append("supply,").append(supply).append(System.lineSeparator())
+                    .append("buy,").append(buy).append(System.lineSeparator())
+                    .append("result,").append(supply - buy);
         } catch (IOException e) {
             throw new RuntimeException("Can not read data from file", e);
         }
 
         File fileTo = new File(toFileName);
-        try {
-            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileTo));
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileTo))){
             String output = stringBuilder.toString();
             bufferedWriter.write(output);
-            bufferedWriter.close();
         } catch (IOException e) {
             throw new RuntimeException("Can not write data to file", e);
         }
