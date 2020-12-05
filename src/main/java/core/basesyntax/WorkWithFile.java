@@ -11,7 +11,6 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         File fileFrom = new File(fromFileName);
-        StringBuilder stringBuilder = new StringBuilder();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(fileFrom))) {
             String line = reader.readLine();
@@ -21,19 +20,27 @@ public class WorkWithFile {
                 String[] lineData = line.split(",");
                 if (lineData[0].equals("supply")) {
                     supply += Integer.parseInt(lineData[1]);
-                } else if (lineData[0].equals("buy")) {
+                } else {
                     buy += Integer.parseInt(lineData[1]);
                 }
                 line = reader.readLine();
             }
-            stringBuilder.append("supply,").append(supply).append(System.lineSeparator())
-                    .append("buy,").append(buy).append(System.lineSeparator())
-                    .append("result,").append(supply - buy);
+            writeReportToFile(supply,buy,toFileName);
         } catch (IOException e) {
             throw new RuntimeException("Can not read data from file", e);
         }
-
+    }
+    public void writeReportToFile(int supply, int buy, String toFileName) {
+        StringBuilder stringBuilder = new StringBuilder();
         File fileTo = new File(toFileName);
+        stringBuilder.append("supply,")
+                .append(supply)
+                .append(System.lineSeparator())
+                .append("buy,")
+                .append(buy)
+                .append(System.lineSeparator())
+                .append("result,")
+                .append(supply - buy);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileTo))) {
             String output = stringBuilder.toString();
             bufferedWriter.write(output);
