@@ -1,6 +1,11 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -46,7 +51,8 @@ public class WorkWithFile {
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, true));
             for (String information : values) {
-                StringBuffer value = new StringBuffer(information).append(",").append(data.get(information)).append(System.lineSeparator());
+                StringBuffer value = new StringBuffer(information).append(",")
+                        .append(data.get(information)).append(System.lineSeparator());
                 writer.write(value.toString());
                 writer.flush();
             }
@@ -56,13 +62,3 @@ public class WorkWithFile {
 
     }
 }
-
-/*
-
-if (result.containsKey(tempData[0])) {
-                result.put(tempData[0]
-                        , result.get(tempData[0]) + Integer.parseInt(tempData[1]));
-            } else {
-                result.put(tempData[0], Integer.parseInt(tempData[1]));
-            }
- */
