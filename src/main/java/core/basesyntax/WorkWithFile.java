@@ -14,7 +14,6 @@ public class WorkWithFile {
     private static final String FIRST_VALUE = "supply";
     private static final String SECOND_VALUE = "buy";
     private static final String RESULT = "result";
-    private static final int countOfIteration = 3;
     private static final String[] values = {FIRST_VALUE, SECOND_VALUE, RESULT};
 
     public void getStatistic(String fromFileName, String toFileName) {
