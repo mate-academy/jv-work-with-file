@@ -11,14 +11,14 @@ import java.util.HashMap;
 import java.util.List;
 
 public class WorkWithFile {
-    private static final String FIRST_VALUE = "supply";
-    private static final String SECOND_VALUE = "buy";
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
     private static final String RESULT = "result";
-    private static final String[] values = {FIRST_VALUE, SECOND_VALUE, RESULT};
+    private static final String[] values = {SUPPLY, BUY, RESULT};
 
     public void getStatistic(String fromFileName, String toFileName) {
-        List<String> dataForOutput = getLinesFromFile(fromFileName);
-        HashMap<String, Integer> readyData = getFormattedInformation(dataForOutput);
+        List<String> dataFromOutput = getLinesFromFile(fromFileName);
+        HashMap<String, Integer> readyData = getFormattedInformation(dataFromOutput);
         putInformationInNewFile(readyData, toFileName);
     }
 
@@ -42,22 +42,21 @@ public class WorkWithFile {
             String[] tempData = line.split(",");
             result.merge(tempData[0], Integer.parseInt(tempData[1]), Integer::sum);
         }
-        result.put(RESULT, result.get(FIRST_VALUE) - result.get(SECOND_VALUE));
+        result.put(RESULT, result.get(SUPPLY) - result.get(BUY));
         return result;
     }
 
     private void putInformationInNewFile(HashMap<String, Integer> data, String fileName) {
         try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, true));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
             for (String information : values) {
                 StringBuilder dataToFile = new StringBuilder(information).append(",")
                         .append(data.get(information)).append(System.lineSeparator());
                 writer.write(dataToFile.toString());
-                writer.flush();
             }
+            writer.flush();
         } catch (IOException e) {
             throw new RuntimeException("Problem to write new file.", e);
         }
-
     }
 }
