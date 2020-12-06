@@ -50,9 +50,9 @@ public class WorkWithFile {
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, true));
             for (String information : values) {
-                StringBuffer value = new StringBuffer(information).append(",")
+                StringBuilder dataToFile = new StringBuilder(information).append(",")
                         .append(data.get(information)).append(System.lineSeparator());
-                writer.write(value.toString());
+                writer.write(dataToFile.toString());
                 writer.flush();
             }
         } catch (IOException e) {
