@@ -43,7 +43,8 @@ public class WorkWithFile {
     }
 
     private void writeFile(String writeFile) {
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(new File(writeFile)))) {
+        try (BufferedWriter bufferedWriter
+                     = new BufferedWriter(new FileWriter(new File(writeFile)))) {
             for (String information : writeToFile) {
                 bufferedWriter.write(information + System.lineSeparator());
             }
