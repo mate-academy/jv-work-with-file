@@ -16,9 +16,7 @@ public class WorkWithFile {
 
         List<String> readedData = readData(fromFileName);
 
-        int[] data;
-
-        data = sortData(readedData);
+        int[] data = sortData(readedData); //sorts data between supply and buy
 
         writeData(toFileName, data);
     }
