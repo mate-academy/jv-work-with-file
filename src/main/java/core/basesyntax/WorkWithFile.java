@@ -46,9 +46,11 @@ public class WorkWithFile {
                 totalBuyOperations += Integer.parseInt(eachEntry[1]);
             }
         }
-        return "supply," + totalSupplyOperations + System.lineSeparator()
-                + "buy," + totalBuyOperations + System.lineSeparator()
-                + "result," + (totalSupplyOperations - totalBuyOperations);
+        StringBuilder resultStringBuilder = new StringBuilder().append("supply,")
+                .append(totalSupplyOperations).append(System.lineSeparator()).append("buy,")
+                .append(totalBuyOperations).append(System.lineSeparator()).append("result,")
+                .append(totalSupplyOperations - totalBuyOperations);
+        return resultStringBuilder.toString();
     }
 
     protected void writeToFile(String toFileName, String data) {
