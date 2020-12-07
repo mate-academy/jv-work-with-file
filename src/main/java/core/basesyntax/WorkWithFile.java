@@ -19,7 +19,7 @@ public class WorkWithFile {
                 value = reader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file!", e);
+            throw new RuntimeException("Can't read file - " + fromFileName, e);
         }
         String[] valuesReport = report.toString().split(System.lineSeparator());
         writeFile(toFileName, getReport(valuesReport));
