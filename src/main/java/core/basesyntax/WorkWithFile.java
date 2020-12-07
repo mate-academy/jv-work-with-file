@@ -29,7 +29,7 @@ public class WorkWithFile {
             }
             writeReportToFile(supply,buy,toFileName);
         } catch (IOException e) {
-            throw new RuntimeException("Can not read data from file", e);
+            throw new RuntimeException("Can not read data from file: " + fileFrom, e);
         }
     }
 
@@ -48,7 +48,7 @@ public class WorkWithFile {
             String output = stringBuilder.toString();
             bufferedWriter.write(output);
         } catch (IOException e) {
-            throw new RuntimeException("Can not write data to file", e);
+            throw new RuntimeException("Can not write data to file: " + fileTo, e);
         }
     }
 }
