@@ -8,6 +8,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String SUPPLY_STRING = "supply";
+
     private int supply;
     private int buy;
 
@@ -23,7 +25,7 @@ public class WorkWithFile {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
             while ((newLine = bufferedReader.readLine()) != null) {
                 String[] lineWords = newLine.split(",");
-                if (lineWords[0].equals("supply")) {
+                if (lineWords[0].equals(SUPPLY_STRING)) {
                     supply += Integer.parseInt(lineWords[1]);
                 } else {
                     buy += Integer.parseInt(lineWords[1]);
