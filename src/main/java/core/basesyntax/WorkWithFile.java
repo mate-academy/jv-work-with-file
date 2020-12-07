@@ -7,6 +7,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String SUPPLY_FIELD = "supply";
+    private static final String BUY_FIELD = "buy";
     private static final String SPLITTER = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
@@ -19,9 +21,9 @@ public class WorkWithFile {
             int[] data = {0, 0};
             String row = reader.readLine();
             while (row != null) {
-                if (row.split(SPLITTER)[0].equals("supply")) {
+                if (row.split(SPLITTER)[0].equals(SUPPLY_FIELD)) {
                     data[0] += Integer.parseInt(row.split(SPLITTER)[1]);
-                } else if (row.split(SPLITTER)[0].equals("buy")) {
+                } else if (row.split(SPLITTER)[0].equals(BUY_FIELD)) {
                     data[1] += Integer.parseInt(row.split(SPLITTER)[1]);
                 }
                 row = reader.readLine();
