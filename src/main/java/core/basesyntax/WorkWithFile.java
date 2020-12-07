@@ -12,8 +12,8 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         File fromFile = new File(fromFileName);
         File toFile = new File(toFileName);
-        writeReport(sumOfOperation("supply",fromFile),
-                    sumOfOperation("buy",fromFile),
+        writeReport(sumOfOperation("supply", fromFile),
+                    sumOfOperation("buy", fromFile),
                     toFile);
     }
 
