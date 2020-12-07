@@ -9,6 +9,10 @@ import java.io.IOException;
 
 public class WorkWithFile {
 
+    public static final String SUPPLY = "supply";
+    public static final String BUY = "buy";
+    public static final String RESULT = "result";
+
     public void getStatistic(String fromFileName, String toFileName) {
         writeFile(toFileName, readFileAndCalculate(fromFileName));
     }
@@ -19,8 +23,7 @@ public class WorkWithFile {
         int supply = 0;
         int buy = 0;
         File file = new File(fileName);
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
             StringBuilder stringBuilder = new StringBuilder();
             String value = bufferedReader.readLine();
             while (value != null) {
@@ -29,18 +32,18 @@ public class WorkWithFile {
             }
             workList = stringBuilder.toString().split(",");
             for (int i = 0; i < workList.length; i++) {
-                if (workList[i].equals("supply")) {
+                if (workList[i].equals(SUPPLY)) {
                     supply += Integer.parseInt(workList[i + 1]);
-                } else if (workList[i].equals("buy")) {
+                } else if (workList[i].equals(BUY)) {
                     buy += Integer.parseInt(workList[i + 1]);
                 }
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from file.", e);
         }
-        return returnValue.append("supply").append(",").append(supply)
-                .append(System.lineSeparator()).append("buy").append(",").append(buy)
-                .append(System.lineSeparator()).append("result").append(",")
+        return returnValue.append(SUPPLY).append(",").append(supply)
+                .append(System.lineSeparator()).append(BUY).append(",").append(buy)
+                .append(System.lineSeparator()).append(RESULT).append(",")
                 .append(supply - buy).toString();
     }
 
