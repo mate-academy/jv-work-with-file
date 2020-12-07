@@ -12,14 +12,13 @@ public class WorkWithFile {
     private static final String COMA = ",";
     private static final int INDEX_ZERO = 0;
     private static final int INDEX_ONE = 1;
-    private List<String> writeToFile;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        readFile(fromFileName);
-        writeFile(toFileName);
+        List<String> writtenList = readFile(fromFileName);
+        writeFile(toFileName, writtenList);
     }
 
-    public void readFile(String readFile) {
+    private List<String> readFile(String readFile) {
         List<String> list;
         try {
             list = Files.readAllLines(new File(readFile).toPath());
@@ -38,18 +37,19 @@ public class WorkWithFile {
             }
         }
 
-        writeToFile = new ArrayList<>();
+        List<String> writeToFile = new ArrayList<>();
         String buy = "buy";
         String result = "result";
         writeToFile.add(supply + COMA + supplySum);
         writeToFile.add(buy + COMA + buySum);
         writeToFile.add(result + COMA + (supplySum - buySum));
+        return writeToFile;
     }
 
-    public void writeFile(String writeFile) {
+    private void writeFile(String writeFile, List<String> writerList) {
         try (BufferedWriter bufferedWriter
                      = new BufferedWriter(new FileWriter(new File(writeFile)))) {
-            for (String information : writeToFile) {
+            for (Object information : writerList) {
                 bufferedWriter.write(information + System.lineSeparator());
             }
         } catch (IOException e) {
