@@ -25,9 +25,7 @@ public class WorkWithFile {
     }
 
     private String [] readInformation(String fromFileName) {
-        BufferedReader reader = null;
-        try {
-            reader = new BufferedReader(new FileReader(fromFileName));
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             StringBuilder stringBuilder = new StringBuilder();
             String value = reader.readLine();
             while (value != null) {
