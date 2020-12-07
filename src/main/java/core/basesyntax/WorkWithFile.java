@@ -16,7 +16,7 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         String[] informationFromFile = readFromFile(fromFileName).split(System.lineSeparator());
         String informationForWriteToFile =
-                prepareInformationForWriteToFile(informationFromFile, fromFileName);
+                buildFileContent(informationFromFile, fromFileName);
         writeToFile(informationForWriteToFile, toFileName);
     }
 
@@ -36,8 +36,7 @@ public class WorkWithFile {
         return information.toString();
     }
 
-    private String prepareInformationForWriteToFile(String[] informationFromFile,
-                                                    String fromFileName) {
+    private String buildFileContent(String[] informationFromFile, String fromFileName) {
         StringBuilder result = new StringBuilder();
         int sumSupply = 0;
         int sumBuy = 0;
@@ -52,12 +51,12 @@ public class WorkWithFile {
                 sumBuy += Integer.parseInt(values[1]);
             }
         }
-        return String.valueOf(result.append(SUPPLY).append(DELIMITER).append(sumSupply)
+        return result.append(SUPPLY).append(DELIMITER).append(sumSupply)
                 .append(System.lineSeparator())
                 .append(BUY).append(DELIMITER).append(sumBuy)
                 .append(System.lineSeparator())
                 .append(RESULT).append(DELIMITER).append(sumSupply - sumBuy)
-                .append(System.lineSeparator()));
+                .append(System.lineSeparator()).toString();
     }
 
     private void writeToFile(String informationForWriteToFile, String toFileName) {
