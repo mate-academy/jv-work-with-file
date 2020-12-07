@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String SPLITTER = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         int[] data = readDataFromFile(fromFileName);
@@ -14,57 +15,32 @@ public class WorkWithFile {
     }
 
     private int[] readDataFromFile(String file) {
-        try {
-            BufferedReader readSupply = new BufferedReader(new FileReader(file));
-            int[] data = new int[2];
-            data[0] = getSupplyCount(readSupply);
-            BufferedReader readSales = new BufferedReader(new FileReader(file));
-            data[1] = getSellCount(readSales);
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            int[] data = {0, 0};
+            String row = reader.readLine();
+            while (row != null) {
+                if (row.split(SPLITTER)[0].equals("supply")) {
+                    data[0] += Integer.parseInt(row.split(SPLITTER)[1]);
+                } else if (row.split(SPLITTER)[0].equals("buy")) {
+                    data[1] += Integer.parseInt(row.split(SPLITTER)[1]);
+                }
+                row = reader.readLine();
+            }
             return data;
         } catch (IOException e) {
-            throw new RuntimeException("Can't read from file", e);
+            throw new RuntimeException("Can't read from file" + file, e);
         }
     }
 
     private void writeDataToFile(String file, int supply, int sales) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             StringBuilder builder = new StringBuilder();
-            builder.append("supply,").append(supply).append(System.lineSeparator());
-            builder.append("buy,").append(sales).append(System.lineSeparator());
-            builder.append("result,").append(supply - sales);
+            builder.append("supply,").append(supply).append(System.lineSeparator())
+                    .append("buy,").append(sales).append(System.lineSeparator())
+                    .append("result,").append(supply - sales);
             writer.write(builder.toString());
         } catch (IOException e) {
-            throw new RuntimeException("Can't write to file", e);
+            throw new RuntimeException("Can't write to file" + file, e);
         }
-    }
-
-    private int getSupplyCount(BufferedReader reader) throws IOException {
-        int supply = 0;
-        String line = reader.readLine();
-        String[] row;
-        while (line != null) {
-            row = line.split(",");
-            if (row[0].equals("supply")) {
-                supply += Integer.parseInt(row[1]);
-            }
-            line = reader.readLine();
-        }
-        reader.close();
-        return supply;
-    }
-
-    private int getSellCount(BufferedReader reader) throws IOException {
-        int sales = 0;
-        String line = reader.readLine();
-        String[] row;
-        while (line != null) {
-            row = line.split(",");
-            if (row[0].equals("buy")) {
-                sales += Integer.parseInt(row[1]);
-            }
-            line = reader.readLine();
-        }
-        reader.close();
-        return sales;
     }
 }
