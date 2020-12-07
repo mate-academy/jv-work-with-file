@@ -7,13 +7,15 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Locale;
 
 public class WorkWithFile {
+    private static final String BUY = "buy";
+    private static final String SUPPLY = "supply";
+    private static final String RESULT = "result,";
 
     public void getStatistic(String fromFileName, String toFileName) {
         try {
-            writeFile(toFileName,prepareFile(getFile(fromFileName)));
+            writeFile(toFileName, prepareFile(getFile(fromFileName)));
         } catch (IOException e) {
             System.out.println("File was not found");
         }
@@ -25,38 +27,36 @@ public class WorkWithFile {
                     InputStreamReader(new FileInputStream(fromFileName)));
         String newLine = bufferedReader.readLine();
         while (newLine != null) {
-            file.append(newLine.toLowerCase(Locale.ROOT)).append(" ");
+            file.append(newLine.toLowerCase()).append(" ");
             newLine = bufferedReader.readLine();
         }
+        bufferedReader.close();
         return file.toString();
     }
 
     private String prepareFile(String file) {
         int sumOfSupply = 0;
         int sumOfbuy = 0;
-        String[] fileToArr = file.replace(',', ' ').split(" ");
-        for (int i = 0; i < fileToArr.length - 1; i += 2) {
-            if (fileToArr[i].equals("buy")) {
-                sumOfbuy += Integer.parseInt(fileToArr[i + 1]);
-            } else if (fileToArr[i].equals("supply")) {
-                sumOfSupply += Integer.parseInt(fileToArr[i + 1]);
+        String[] fileToArr = file.split(" ");
+        for (String fileInArr: fileToArr) {
+            String[] temp;
+            temp = fileInArr.split(",");
+            if (temp[0].equals(BUY)) {
+                sumOfbuy += Integer.parseInt(temp[1]);
+            } else if (temp[0].equals(SUPPLY)) {
+                sumOfSupply += Integer.parseInt(temp[1]);
             }
         }
-        return "supply," + sumOfSupply + System.lineSeparator()
-                + "buy," + sumOfbuy + System.lineSeparator() + "result,"
-                + (sumOfSupply - sumOfbuy);
+        return new StringBuilder(SUPPLY + "," + sumOfSupply + System.lineSeparator()
+                + BUY + "," + sumOfbuy + System.lineSeparator() + RESULT
+                + (sumOfSupply - sumOfbuy)).toString();
     }
 
-    private boolean writeFile(String fileName, String fileInPut) {
+    private boolean writeFile(String fileName, String fileInPut) throws IOException {
         File file = new File(fileName);
-        try {
-            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));
-            bufferedWriter.write(fileInPut);
-            bufferedWriter.close();
-            return true;
-        } catch (IOException e) {
-            System.out.println("Can't write to this file");
-            return false;
-        }
+        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));
+        bufferedWriter.write(fileInPut);
+        bufferedWriter.close();
+        return true;
     }
 }
