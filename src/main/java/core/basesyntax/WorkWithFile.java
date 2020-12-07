@@ -16,7 +16,7 @@ public class WorkWithFile {
         for (String line : data) {
             if (line.contains(SUPPLY)) {
                 supply += Integer.parseInt(line.split(",")[1]);
-            } else if (line.contains(BUY)) {
+            } else {
                 buy += Integer.parseInt(line.split(",")[1]);
             }
         }
@@ -34,13 +34,12 @@ public class WorkWithFile {
         }
     }
 
-    private boolean writeTo(String toFileName, StringBuilder message) {
+    private void writeTo(String toFileName, StringBuilder message) {
         File file = new File(toFileName);
         try {
             Files.write(file.toPath(), message.toString().getBytes());
         } catch (IOException e) {
             throw new RuntimeException("ERROR: unable to write to: " + toFileName, e);
         }
-        return true;
     }
 }
