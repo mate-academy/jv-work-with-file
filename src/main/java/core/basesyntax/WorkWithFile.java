@@ -12,6 +12,7 @@ public class WorkWithFile {
     private static final String SUPPLY_FIELD = "supply";
     private static final String BUY_FIELD = "buy";
     private static final String RESULT_FIELD = "result";
+    private static final String COMMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         File file = new File(fromFileName);
@@ -26,7 +27,6 @@ public class WorkWithFile {
             }
             String[] arrayOfDataFromFile = dataFromFile.toString().split(System.lineSeparator());
             reportCreation(arrayOfDataFromFile,toFileName);
-            //writeToFile(toFileName);
         } catch (IOException e) {
             throw new RuntimeException("Can't read file " + fromFileName, e);
         }
@@ -37,18 +37,17 @@ public class WorkWithFile {
         int buy = 0;
 
         for (String line : dataFromFile) {
-            if (line.substring(0,line.indexOf(",")).equals(SUPPLY_FIELD)) {
-                supply += Integer.parseInt(line.substring(line.indexOf(",") + 1));
+            if (line.substring(0,line.indexOf(COMMA)).equals(SUPPLY_FIELD)) {
+                supply += Integer.parseInt(line.substring(line.indexOf(COMMA) + 1));
             } else {
-                buy += Integer.parseInt(line.substring(line.indexOf(",") + 1));
+                buy += Integer.parseInt(line.substring(line.indexOf(COMMA) + 1));
             }
         }
 
-        StringBuilder stringBuilder = new StringBuilder();
-        String report = stringBuilder.append(SUPPLY_FIELD).append(",")
+        String report = new StringBuilder().append(SUPPLY_FIELD).append(COMMA)
                 .append(supply).append(System.lineSeparator())
-                .append(BUY_FIELD).append(",").append(buy).append(System.lineSeparator())
-                .append(RESULT_FIELD).append(",").append(supply - buy).toString();
+                .append(BUY_FIELD).append(COMMA).append(buy).append(System.lineSeparator())
+                .append(RESULT_FIELD).append(COMMA).append(supply - buy).toString();
 
         return writeToFile(report, toFileName);
     }
@@ -64,6 +63,6 @@ public class WorkWithFile {
             throw new RuntimeException("Can't write data to file " + toFileName, e);
         }
 
-        return "";
+        return report;
     }
 }
