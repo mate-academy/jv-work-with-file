@@ -9,8 +9,9 @@ import java.util.List;
 
 public class WorkWithFile {
 
-    private static final int SUPPLY = 0;
-    private static final int BUY = 1;
+    private static final int ZERO_INDEX = 0;
+    private static final int FIRST_INDEX = 1;
+    private static final String DELIMITER = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
 
@@ -21,7 +22,7 @@ public class WorkWithFile {
         writeData(toFileName, data);
     }
 
-    public List<String> readData(String fromFileName) {
+    private List<String> readData(String fromFileName) {
         File fromFile = new File(fromFileName);
         try {
             return Files.readAllLines(fromFile.toPath());
@@ -30,28 +31,26 @@ public class WorkWithFile {
         }
     }
 
-    public int[] sortData(List<String> readedData) {
+    private int[] sortData(List<String> readedData) {
         int supply = 0;
         int buy = 0;
         for (int i = 0; i < readedData.size(); i++) {
-            String[] strings = readedData.get(i).split(",");
-            if (strings[0].equals("supply")) {
-                supply += Integer.parseInt(strings[1]);
+            String[] strings = readedData.get(i).split(DELIMITER);
+            if (strings[ZERO_INDEX].equals("supply")) {
+                supply += Integer.parseInt(strings[FIRST_INDEX]);
             } else {
-                buy += Integer.parseInt(strings[1]);
+                buy += Integer.parseInt(strings[FIRST_INDEX]);
             }
         }
         return new int[] {supply, buy};
     }
 
-    public void writeData(String toFileName, int[] data) {
+    private void writeData(String toFileName, int[] data) {
         File toFile = new File(toFileName);
-        try {
-            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFile));
-            bufferedWriter.write("supply," + data[SUPPLY] + System.lineSeparator()
-                    + "buy," + data[BUY] + System.lineSeparator()
-                    + "result," + Integer.sum(data[SUPPLY], -data[BUY]));
-            bufferedWriter.close();
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFile))) {
+            bufferedWriter.write("supply," + data[ZERO_INDEX] + System.lineSeparator()
+                    + "buy," + data[FIRST_INDEX] + System.lineSeparator()
+                    + "result," + (data[ZERO_INDEX] - data[FIRST_INDEX]));
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file" + toFileName, e);
         }
