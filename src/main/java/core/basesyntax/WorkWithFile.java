@@ -15,7 +15,7 @@ public class WorkWithFile {
         int supple = 0;
         int buy = 0;
         String line;
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             while ((line = bufferedReader.readLine()) != null) {
                 String[] rowInfo = line.split(SPLIT_BY);
                 if (rowInfo[0].equals("buy")) {
