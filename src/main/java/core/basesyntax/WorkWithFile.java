@@ -22,29 +22,18 @@ public class WorkWithFile {
     protected StringBuilder readFromFile(String fromFileName) {
         File file = new File(fromFileName);
         StringBuilder stringBuilder = new StringBuilder();
-        BufferedReader bufferedReader = null;
-        try {
-            bufferedReader = new BufferedReader(new FileReader(file));
-            String value = bufferedReader.readLine();
-            while (value != null) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
+            String value;
+            while ((value = bufferedReader.readLine()) != null) {
                 stringBuilder.append(value).append(System.lineSeparator());
-                value = bufferedReader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read from file",e);
-        } finally {
-            if (bufferedReader != null) {
-                try {
-                    bufferedReader.close();
-                } catch (IOException e) {
-                    throw new RuntimeException("Can't close BufferedReader",e);
-                }
-            }
         }
         return stringBuilder;
     }
 
-    protected String [] makeDayBalance(StringBuilder stringBuilder) {
+    protected String makeDayBalance(StringBuilder stringBuilder) {
 
         String [] dataFromFile = stringBuilder.toString().split(System.lineSeparator());
         int totalSupplyOperations = 0;
@@ -57,33 +46,22 @@ public class WorkWithFile {
                 totalBuyOperations += Integer.parseInt(eachEntry[1]);
             }
         }
-        StringBuilder supplyEntry = new StringBuilder("supply,").append(totalSupplyOperations);
-        StringBuilder buyEntry = new StringBuilder("buy,").append(totalBuyOperations);
-        StringBuilder resultEntry = new StringBuilder("result,")
-                .append(totalSupplyOperations - totalBuyOperations);
-        return new String[]{supplyEntry.toString(),buyEntry.toString(),resultEntry.toString()};
+        return "supply," + totalSupplyOperations + System.lineSeparator()
+                + "buy," + totalBuyOperations + System.lineSeparator()
+                + "result," + (totalSupplyOperations - totalBuyOperations);
     }
 
-    protected void writeToFile(String toFileName, String [] data) {
+    protected void writeToFile(String toFileName, String data) {
         File file = new File(toFileName);
-        BufferedWriter bufferedWriter = null;
-        try {
-            bufferedWriter = new BufferedWriter(new FileWriter(file));
-            for (String value:data) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
+            String [] values = data.split(System.lineSeparator());
+            for (String value:values) {
                 bufferedWriter.write(value);
                 bufferedWriter.write(System.lineSeparator());
                 bufferedWriter.flush();
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file",e);
-        } finally {
-            if (bufferedWriter != null) {
-                try {
-                    bufferedWriter.close();
-                } catch (IOException e) {
-                    throw new RuntimeException("Can't close BufferedWriter",e);
-                }
-            }
         }
     }
 }
