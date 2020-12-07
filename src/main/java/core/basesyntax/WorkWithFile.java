@@ -7,37 +7,44 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    int supply = 0;
-    int buy = 0;
+    private static final String OPERATION_TYPE = "supply";
+    private static final String SPLIT_WORDS = ",";
+    private static final int FIRST_CELL = 0;
+    private static final int SECOND_CELL = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        try {
-            writeToFile(toFileName, readFromFile(fromFileName));
+        writeToFile(toFileName, readFromFile(fromFileName));
+    }
+
+    public void writeToFile(String fileName, String data) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
+            bufferedWriter.write(data);
         } catch (IOException e) {
-            throw new RuntimeException("Can't read data from the file " + fromFileName, e);
+            throw new RuntimeException("Can't write data from the file ", e);
         }
     }
 
-    public void writeToFile(String fileName, String data) throws IOException {
-        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName));
-        bufferedWriter.write(data);
-        bufferedWriter.close();
-    }
-
-    public String readFromFile(String fileName) throws IOException {
+    private String readFromFile(String fileName) {
+        int supply = 0;
+        int buy = 0;
         StringBuilder stringBuilder = new StringBuilder();
-        BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName));
-        String value = bufferedReader.readLine();
-        while (value != null) {
-            String[] split = value.split(",");
-            if (split[0].equals("supply")) {
-                supply += Integer.parseInt(split[1]);
-            } else {
-                buy += Integer.parseInt(split[1]);
+
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
+            String value = bufferedReader.readLine();
+            while (value != null) {
+                String[] split = value.split(SPLIT_WORDS);
+                if (split[FIRST_CELL].equals(OPERATION_TYPE)) {
+                    supply += Integer.parseInt(split[SECOND_CELL]);
+                } else {
+                    buy += Integer.parseInt(split[SECOND_CELL]);
+                }
+                value = bufferedReader.readLine();
             }
-            value = bufferedReader.readLine();
+        } catch (IOException e) {
+            throw new RuntimeException("Can't read data from the file ", e);
         }
-        return stringBuilder.append("supply,").append(supply).append("\n").append("buy,")
-                .append(buy).append("\n").append("result,").append(supply - buy).toString();
+        return stringBuilder.append("supply,").append(supply).append(System.lineSeparator())
+                .append("buy,").append(buy).append(System.lineSeparator()).append("result,")
+                .append(supply - buy).toString();
     }
 }
