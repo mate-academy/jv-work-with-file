@@ -14,6 +14,7 @@ public class WorkWithFile {
     private static final int SUPPLY_INDEX = 0;
     private static final int BUY_INDEX = 1;
     private static final int RESULT_INDEX = 2;
+    private static final int PARSE_VALUE_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         List<String> list = readFile(fromFileName);
@@ -49,10 +50,10 @@ public class WorkWithFile {
 
         for (String line : list) {
             if (line.contains(FILE_FIELDS[SUPPLY_INDEX])) {
-                supply += Integer.parseInt(line.split(DELIMITER)[1]);
+                supply += Integer.parseInt(line.split(DELIMITER)[PARSE_VALUE_INDEX]);
             }
             if (line.contains(FILE_FIELDS[BUY_INDEX])) {
-                buy += Integer.parseInt(line.split(DELIMITER)[1]);
+                buy += Integer.parseInt(line.split(DELIMITER)[PARSE_VALUE_INDEX]);
             }
         }
 
