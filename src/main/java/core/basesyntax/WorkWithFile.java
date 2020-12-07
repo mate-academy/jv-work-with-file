@@ -8,8 +8,15 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final char COMMA = ',';
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
+
     public void getStatistic(String fromFileName, String toFileName) {
-        writeFile(toFileName, calculateResult(readFile(fromFileName)));
+        writeFile(toFileName,
+                writeReport(calculateSupply(readFile(fromFileName)),
+                        calculateBuy(readFile(fromFileName))));
     }
 
     private String readFile(String fileName) {
@@ -18,7 +25,7 @@ public class WorkWithFile {
             StringBuilder stringBuilder = new StringBuilder();
             String value = bufferedReader.readLine();
             while (value != null) {
-                stringBuilder.append(value).append(",");
+                stringBuilder.append(value).append(COMMA);
                 value = bufferedReader.readLine();
             }
             return stringBuilder.toString();
@@ -27,21 +34,36 @@ public class WorkWithFile {
         }
     }
 
-    private String calculateResult(String value) {
+    private int calculateSupply(String value) {
         int supply = 0;
+        StringBuilder stringBuilder = new StringBuilder();
+        String[] data = value.split(String.valueOf(COMMA));
+        for (int i = 0; i < data.length; i++) {
+            if (data[i].equals(SUPPLY)) {
+                supply += Integer.parseInt(data[i + 1]);
+            }
+        }
+        return supply;
+    }
+
+    private int calculateBuy(String value) {
         int buy = 0;
         StringBuilder stringBuilder = new StringBuilder();
-        String[] data = value.split(",");
+        String[] data = value.split(String.valueOf(COMMA));
         for (int i = 0; i < data.length; i++) {
-            if (data[i].equals("supply")) {
-                supply += Integer.parseInt(data[i + 1]);
-            } else if (data[i].equals("buy")) {
+            if (data[i].equals(BUY)) {
                 buy += Integer.parseInt(data[i + 1]);
             }
         }
-        return stringBuilder.append("supply").append(",").append(supply)
-                .append(System.lineSeparator()).append("buy").append(",").append(buy)
-                .append(System.lineSeparator()).append("result").append(",")
+        return buy;
+    }
+
+    private String writeReport(int supply, int buy) {
+        StringBuilder stringBuilder = new StringBuilder();
+        return stringBuilder.append(SUPPLY).append(COMMA).append(supply)
+                .append(System.lineSeparator()).append(BUY)
+                .append(COMMA).append(buy).append(System.lineSeparator())
+                .append(RESULT).append(COMMA)
                 .append(supply - buy).toString();
     }
 
