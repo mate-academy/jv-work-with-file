@@ -25,20 +25,19 @@ public class WorkWithFile {
                 }
             }
         } catch (IOException e) {
-            System.out.println("File was not found");
+            throw new RuntimeException("File was not found");
         }
         writeFile(toFileName, createReport(supple,buy));
     }
 
     private String createReport(int supple, int buy) {
-        List<List<String>> rows = Arrays.asList(
-                Arrays.asList("supply", "" + supple),
-                Arrays.asList("buy", "" + buy),
-                Arrays.asList("result", "" + (supple - buy))
-        );
+        List<String> rows = Arrays.asList(
+                "supply," + supple,
+                "buy," + buy,
+                "result," + (supple - buy));
         StringBuilder report = new StringBuilder();
-        for (List<String> rowData : rows) {
-            report.append(String.join(",",rowData));
+        for (String rowData : rows) {
+            report.append(rowData);
             report.append(System.lineSeparator());
         }
         return report.toString();
@@ -48,7 +47,7 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(report);
         } catch (IOException e) {
-            System.out.println("File was not found");
+            throw new RuntimeException("File was not found");
         }
     }
 }
