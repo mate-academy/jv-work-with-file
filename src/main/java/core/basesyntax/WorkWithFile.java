@@ -15,8 +15,7 @@ public class WorkWithFile {
 
     public String readFromFile(String fileName) {
         StringBuilder infoToFile = new StringBuilder();
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName));
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName));) {
             String value = bufferedReader.readLine();
             while (value != null) {
                 String[] info = value.split(",");
@@ -28,7 +27,7 @@ public class WorkWithFile {
                 value = bufferedReader.readLine();
             }
         } catch (Exception e) {
-            throw new RuntimeException("Can't read this file!");
+            throw new RuntimeException("Can't read this file!", e);
         }
         return infoToFile.append("supply,").append(countSupply).append(System.lineSeparator())
                 .append("buy,").append(countBuy).append(System.lineSeparator())
@@ -39,7 +38,7 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName));) {
             bufferedWriter.write(inFile);
         } catch (Exception e) {
-            throw new RuntimeException("Can't write information to this file!");
+            throw new RuntimeException("Can't write information to this file!", e);
         }
     }
 }
