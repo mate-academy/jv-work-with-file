@@ -9,6 +9,8 @@ import java.io.IOException;
 
 public class WorkWithFile {
 
+    private static final String OPERATION_TYPE_BUY = "buy";
+
     public void getStatistic(String fromFileName, String toFileName) {
         StringBuilder counting = new StringBuilder();
         int buy = 0;
@@ -17,7 +19,7 @@ public class WorkWithFile {
             String data = statistic.readLine();
             while (data != null) {
                 String[] check = data.split(",");
-                if (check[0].equals("buy")) {
+                if (check[0].equals(OPERATION_TYPE_BUY)) {
                     buy += Integer.parseInt(check[1]);
                 } else {
                     supply += Integer.parseInt(check[1]);
