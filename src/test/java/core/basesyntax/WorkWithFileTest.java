@@ -10,7 +10,7 @@ public class WorkWithFileTest {
     private WorkWithFile workWithFile = new WorkWithFile();
 
     @Test
-    public void getStatisticAboutApple() throws IOException {
+    public void getStatisticAboutApple() {
         workWithFile.getStatistic("apple.csv", "appleResult.csv");
 
         String actualResult = readFromFile("appleResult.csv").trim();
@@ -21,7 +21,7 @@ public class WorkWithFileTest {
     }
 
     @Test
-    public void getStatisticAboutOrange() throws IOException {
+    public void getStatisticAboutOrange() {
         workWithFile.getStatistic("orange.csv", "orangeResult.csv");
 
         String actualResult = readFromFile("orangeResult.csv").trim();
@@ -32,7 +32,7 @@ public class WorkWithFileTest {
     }
 
     @Test
-    public void getStatisticAboutGrape() throws IOException {
+    public void getStatisticAboutGrape() {
         workWithFile.getStatistic("grape.csv", "grapeResult.csv");
 
         String actualResult = readFromFile("grapeResult.csv").trim();
@@ -43,7 +43,7 @@ public class WorkWithFileTest {
     }
 
     @Test
-    public void getStatisticAboutBanana() throws IOException {
+    public void getStatisticAboutBanana() {
         workWithFile.getStatistic("banana.csv", "bananaResult.csv");
 
         String actualResult = readFromFile("bananaResult.csv").trim();
@@ -53,7 +53,7 @@ public class WorkWithFileTest {
         Assert.assertEquals(expectedResult, actualResult);
     }
 
-    private String readFromFile(String fileName) throws IOException {
+    private String readFromFile(String fileName) {
         try {
             return Files.readString(Path.of(fileName));
         } catch (IOException e) {

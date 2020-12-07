@@ -9,16 +9,16 @@ import java.io.IOException;
 
 public class WorkWithFile {
     private static final String DELIMITER = ",";
-    private static final int NAME_ID = 0;
-    private static final int SALARY_ID = 1;
+    private static final int OPERATION = 0;
+    private static final int AMOUNT = 1;
     private static final String BUY = "buy";
     private static final String SUPPLY = "supply";
 
-    public void getStatistic(String fromFileName, String toFileName) throws IOException {
+    public void getStatistic(String fromFileName, String toFileName) {
         writeToFile(toFileName, calculateReport(fromFileName));
     }
 
-    private String calculateReport(String fileName) throws IOException {
+    private String calculateReport(String fileName) {
         StringBuilder builder = new StringBuilder();
         int buy = 0;
         int supply = 0;
@@ -27,10 +27,10 @@ public class WorkWithFile {
             String line = "";
             while ((line = bufferedReader.readLine()) != null) {
                 String[] token = line.split(DELIMITER);
-                if (BUY.equals(token[NAME_ID])) {
-                    buy += Integer.parseInt(token[SALARY_ID]);
-                } else if (SUPPLY.equals(token[NAME_ID])) {
-                    supply += Integer.parseInt(token[SALARY_ID]);
+                if (BUY.equals(token[OPERATION])) {
+                    buy += Integer.parseInt(token[AMOUNT]);
+                } else if (SUPPLY.equals(token[OPERATION])) {
+                    supply += Integer.parseInt(token[AMOUNT]);
                 }
             }
             builder.append("supply,").append(supply).append(System.lineSeparator());
@@ -39,18 +39,18 @@ public class WorkWithFile {
         } catch (FileNotFoundException e) {
             throw new RuntimeException("File with name: " + fileName + " not found");
         } catch (IOException e) {
-            throw new IOException("Can't read file: " + fileName + ", cause " + e);
+            throw new RuntimeException("Can't read file: " + fileName + ", cause " + e);
         }
         return builder.toString();
     }
 
-    private static void writeToFile(String fileName, String report) throws IOException {
+    private void writeToFile(String fileName, String report) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
             bufferedWriter.write(report);
         } catch (FileNotFoundException e) {
             throw new RuntimeException("File with name: " + fileName + " not found");
         } catch (IOException e) {
-            throw new IOException("Can't write to file: " + fileName + ", cause: " + e);
+            throw new RuntimeException("Can't write to file: " + fileName + ", cause: " + e);
         }
     }
 }
