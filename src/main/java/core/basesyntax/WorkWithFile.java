@@ -7,6 +7,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
 
     public void getStatistic(String fromFileName, String toFileName) {
         StringBuilder builder = new StringBuilder();
@@ -17,7 +19,7 @@ public class WorkWithFile {
                 value = reader.read();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read the file");
+            throw new RuntimeException("Can't read the file", e);
         }
         String[] rows = builder.toString().split(System.lineSeparator());
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName, true))) {
@@ -25,19 +27,19 @@ public class WorkWithFile {
             int buyValue = 0;
             for (String row : rows) {
                 String[] data = row.split(",");
-                if (data[0].equals("supply")) {
+                if (data[0].equals(SUPPLY)) {
                     supplyValue += Integer.parseInt(data[1]);
-                } else {
+                } else if (data[0].equals(BUY)) {
                     buyValue += Integer.parseInt(data[1]);
                 }
             }
-            writer.write("supply," + supplyValue);
+            writer.write(SUPPLY + "," + supplyValue);
             writer.newLine();
-            writer.write("buy," + buyValue);
+            writer.write(BUY + "," + buyValue);
             writer.newLine();
             writer.write("result," + (supplyValue - buyValue));
         } catch (IOException e) {
-            throw new RuntimeException("Can't read the file");
+            throw new RuntimeException("Can't read the file", e);
         }
     }
 }
