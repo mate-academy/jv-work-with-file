@@ -9,9 +9,23 @@ import java.io.IOException;
 
 public class WorkWithFile {
     private static final String SUPPLY = "supply";
-    private static final String BUY = "buy";
 
     public void getStatistic(String fromFileName, String toFileName) {
+        String[] data = readFromFile(fromFileName,toFileName).split(",");
+        File file = new File(toFileName);
+        int supply = 0;
+        int buy = 0;
+        for (int i = 0;i < data.length;i += 2) {
+            if (data[i].equals(SUPPLY)) {
+                supply += Integer.parseInt(data[i + 1]);
+            } else {
+                buy += Integer.parseInt(data[i + 1]);
+            }
+        }
+        writeToFile(supply,buy,toFileName);
+    }
+
+    public String readFromFile(String fromFileName, String toFileName) {
         StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String value = reader.readLine();
@@ -19,38 +33,20 @@ public class WorkWithFile {
                 stringBuilder.append(value).append(",");
                 value = reader.readLine();
             }
+            return stringBuilder.toString();
         } catch (IOException e) {
             throw new RuntimeException("Can't read file " + toFileName, e);
         }
-        String[] data = stringBuilder.toString().split(",");
-        File file = new File(toFileName);
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
-            int result = getSupply(data) - getBuy(data);
-            bufferedWriter.write("  supply," + getSupply(data) + System.lineSeparator()
-                    + "buy," + getBuy(data) + System.lineSeparator()
+    }
+
+    public void writeToFile(int supply,int buy,String toFileName) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
+            int result = supply - buy;
+            bufferedWriter.write("  supply," + supply + System.lineSeparator()
+                    + "buy," + buy + System.lineSeparator()
                     + "result," + result);
         } catch (IOException e) {
             throw new RuntimeException("Can't correctly read data from file " + toFileName, e);
         }
-    }
-
-    public int getSupply(String[] data) {
-        int supply = 0;
-        for (int i = 0;i < data.length;i += 2) {
-            if (data[i].equals(SUPPLY)) {
-                supply += Integer.parseInt(data[i + 1]);
-            }
-        }
-        return supply;
-    }
-
-    public int getBuy(String[] data) {
-        int buy = 0;
-        for (int i = 0;i < data.length;i += 2) {
-            if (data[i].equals(BUY)) {
-                buy += Integer.parseInt(data[i + 1]);
-            }
-        }
-        return buy;
     }
 }
