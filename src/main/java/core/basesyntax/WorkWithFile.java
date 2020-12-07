@@ -7,6 +7,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String SUPPLY = "supply";
+
     public void getStatistic(String fromFileName, String toFileName) {
         writeToFIle(toFileName, readFromFIle(fromFileName));
     }
@@ -17,7 +19,7 @@ public class WorkWithFile {
             String lineText = readFile.readLine();
             while (lineText != null) {
                 String[] line = lineText.split(",");
-                if (line[0].equals("supply")) {
+                if (line[0].equals(SUPPLY)) {
                     sales[0] += Integer.parseInt(line[1]);
                 } else {
                     sales[1] += Integer.parseInt(line[1]);
