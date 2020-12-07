@@ -8,6 +8,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String SUPPLY_KEY_WORD = "supply";
+    private static final String BUY_KEY_WORD = "buy";
 
     public void getStatistic(String fromFileName, String toFileName) {
         File fileFrom = new File(fromFileName);
@@ -18,9 +20,9 @@ public class WorkWithFile {
             int buy = 0;
             while (line != null) {
                 String[] lineData = line.split(",");
-                if (lineData[0].equals("supply")) {
+                if (lineData[0].equals(SUPPLY_KEY_WORD)) {
                     supply += Integer.parseInt(lineData[1]);
-                } else {
+                } else if (lineData[0].equals(BUY_KEY_WORD)) {
                     buy += Integer.parseInt(lineData[1]);
                 }
                 line = reader.readLine();
@@ -30,6 +32,7 @@ public class WorkWithFile {
             throw new RuntimeException("Can not read data from file", e);
         }
     }
+
     public void writeReportToFile(int supply, int buy, String toFileName) {
         StringBuilder stringBuilder = new StringBuilder();
         File fileTo = new File(toFileName);
