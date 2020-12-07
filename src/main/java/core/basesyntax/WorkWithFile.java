@@ -7,6 +7,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
+    private static final String SYMBOL = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         int supply = 0;
@@ -24,7 +28,7 @@ public class WorkWithFile {
 
     }
 
-    private String [] readInformation(String fromFileName) {
+    private String[] readInformation(String fromFileName) {
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             StringBuilder stringBuilder = new StringBuilder();
             String value = reader.readLine();
@@ -32,7 +36,7 @@ public class WorkWithFile {
                 stringBuilder.append(value).append(",");
                 value = reader.readLine();
             }
-            String [] textString = stringBuilder.toString().split(",");
+            String[] textString = stringBuilder.toString().split(",");
             return textString;
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from the file " + fromFileName, e);
@@ -42,20 +46,20 @@ public class WorkWithFile {
     private void writeInformation(int buy, int supply, String toFileName) {
         try (FileWriter writer = new FileWriter(new File(toFileName))) {
             StringBuilder sb = new StringBuilder();
-            sb.append("supply");
-            sb.append(',');
+            sb.append(SUPPLY);
+            sb.append(SYMBOL);
             sb.append(Integer.toString(supply));
             sb.append(System.lineSeparator());
 
-            sb.append("buy");
-            sb.append(',');
+            sb.append(BUY);
+            sb.append(SYMBOL);
             sb.append(Integer.toString(buy));
             sb.append(System.lineSeparator());
 
-            sb.append("result");
-            sb.append(',');
+            sb.append(RESULT);
+            sb.append(SYMBOL);
             sb.append(Integer.toString(supply - buy));
-            sb.append('\n');
+            sb.append(System.lineSeparator());
 
             writer.write(sb.toString());
 
@@ -63,10 +67,4 @@ public class WorkWithFile {
             throw new RuntimeException("Can't write data from the file " + toFileName, e);
         }
     }
-
 }
-
-
-
-
-
