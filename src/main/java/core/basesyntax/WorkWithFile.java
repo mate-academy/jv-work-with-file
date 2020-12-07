@@ -9,7 +9,7 @@ import java.io.IOException;
 
 public class WorkWithFile {
 
-    public String getStatistic(String fromFileName, String toFileName) {
+    public void getStatistic(String fromFileName, String toFileName) {
         int buy = 0;
         int supply = 0;
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
@@ -29,7 +29,6 @@ public class WorkWithFile {
         StringBuilder result = new StringBuilder().append("supply, ").append(supply)
                 .append(System.lineSeparator()).append("buy, ").append(buy)
                 .append(System.lineSeparator()).append("result, ").append(supply - buy);
-        return result.toString();
     }
 
     private void printInFile(String toFileName, String result) {
