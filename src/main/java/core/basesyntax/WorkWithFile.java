@@ -5,59 +5,56 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 
 public class WorkWithFile {
-    private static final String[] setOfNames = new String[]{"supply", "buy"};
-    private StringBuilder dataForStatistics = new StringBuilder();
-    private List<String> fullStrings = new ArrayList<>();
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
+    private static final String COMMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        readFromFile(fromFileName);
-        calculateResult();
-        writeToFile(toFileName);
+        generateReport(fromFileName, toFileName);
     }
 
-    public void readFromFile(String fromFileName) {
+    private void generateReport(String fromFileName, String toFileName) {
+        int supply = 0;
+        int buy = 0;
+
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
-            String nameProduct = bufferedReader.readLine();
-            while (nameProduct != null) {
-                fullStrings.add(nameProduct);
-                nameProduct = bufferedReader.readLine();
+            List<String> allLines = Files.readAllLines(Paths.get(fromFileName));
+            for (int i = 0; i < allLines.size(); i++) {
+                String[] nameProduct = bufferedReader.readLine().split(",");
+                if (nameProduct[0].equals(SUPPLY)) {
+                    supply += Integer.parseInt(nameProduct[1]);
+                } else {
+                    buy += Integer.parseInt(nameProduct[1]);
+                }
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read the file: " + fromFileName, e);
         }
 
-        for (String str : setOfNames) {
-            dataForStatistics.append(str).append(",");
-            int count = 0;
-            for (int i = 0; i < fullStrings.size(); i++) {
-                if (str.equals(fullStrings.get(i).substring(0, fullStrings.get(i).indexOf(",")))) {
-                    count += Integer.parseInt(fullStrings.get(i)
-                            .substring(fullStrings.get(i).indexOf(",") + 1));
-                }
-            }
-            dataForStatistics.append(count).append(System.lineSeparator());
-        }
+        writeToFile(toFileName, supply, buy);
     }
 
-    public void writeToFile(String toFileName) {
+    private void writeToFile(String toFileName, int supply, int buy) {
+        StringBuilder writeString = new StringBuilder();
+
+        writeString.append(SUPPLY).append(COMMA)
+                .append(supply).append(System.lineSeparator());
+        writeString.append(BUY).append(COMMA)
+                .append(buy).append(System.lineSeparator());
+        writeString.append(RESULT).append(COMMA)
+                .append(supply >= buy ? supply - buy : buy - supply);
+
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write(dataForStatistics.toString());
+            bufferedWriter.write(writeString.toString());
             bufferedWriter.flush();
         } catch (IOException e) {
             throw new RuntimeException("Can't write to the file: " + toFileName, e);
         }
-    }
-
-    public void calculateResult() {
-        String[] statistics = dataForStatistics.toString().split(System.lineSeparator());
-        int buy = Integer.parseInt(statistics[0].substring(statistics[0].indexOf(",") + 1));
-        int supply = Integer.parseInt(statistics[1].substring(statistics[1].indexOf(",") + 1));
-        int result = buy >= supply ? buy - supply : supply - buy;
-
-        dataForStatistics.append("result").append(",").append(result);
     }
 }
