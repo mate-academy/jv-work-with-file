@@ -10,6 +10,7 @@ public class WorkWithFile {
     private static final int SUPPLY = 0;
     private static final int BUY = 1;
     private static final int RESULT = 2;
+    private static final String DELIMITER = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         writeFile(toFileName, calculateData(readFile(fromFileName)));
@@ -20,9 +21,9 @@ public class WorkWithFile {
             StringBuilder fromFileNameReader = new StringBuilder();
             String readLine = reader.readLine();
             while (readLine != null) {
-                String[] arrReadLine = readLine.split(",");
-                for (int i = 0; i < arrReadLine.length; i++) {
-                    fromFileNameReader.append(arrReadLine[i]).append(" ");
+                String[] arrReadLine = readLine.split(DELIMITER);
+                for (String wordFromLine : arrReadLine) {
+                    fromFileNameReader.append(wordFromLine).append(" ");
                 }
                 readLine = reader.readLine();
             }
@@ -43,7 +44,7 @@ public class WorkWithFile {
             }
         }
         values[RESULT] = values[SUPPLY] - values[BUY];
-        String[] generalInformation = new String[]{"", "", ""};
+        String[] generalInformation = new String[3];
         String[] titles = new String[]{"supply", "buy", "result"};
         for (int i = 0; i < generalInformation.length; i++) {
             StringBuilder stringBuilder = new StringBuilder();
