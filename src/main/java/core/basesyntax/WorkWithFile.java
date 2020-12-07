@@ -8,7 +8,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-
+private static final String SUPPLY = "supply";
+private static final String BUY = "buy";
     public void getStatistic(String fromFileName, String toFileName) {
         StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
@@ -35,7 +36,7 @@ public class WorkWithFile {
     public int getSupply(String[] data) {
         int supply = 0;
         for (int i = 0;i < data.length;i += 2) {
-            if (data[i].equals("supply")) {
+            if (data[i].equals(SUPPLY)) {
                 supply += Integer.parseInt(data[i + 1]);
             }
         }
@@ -45,7 +46,7 @@ public class WorkWithFile {
     public int getBuy(String[] data) {
         int buy = 0;
         for (int i = 0;i < data.length;i += 2) {
-            if (data[i].equals("buy")) {
+            if (data[i].equals(BUY)) {
                 buy += Integer.parseInt(data[i + 1]);
             }
         }
