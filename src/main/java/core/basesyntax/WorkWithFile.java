@@ -10,6 +10,7 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final String SUPPLY_KEY_WORD = "supply";
     private static final String BUY_KEY_WORD = "buy";
+    private static final String DATA_SEPARATOR = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         File fileFrom = new File(fromFileName);
@@ -19,7 +20,7 @@ public class WorkWithFile {
             int supply = 0;
             int buy = 0;
             while (line != null) {
-                String[] lineData = line.split(",");
+                String[] lineData = line.split(DATA_SEPARATOR);
                 if (lineData[0].equals(SUPPLY_KEY_WORD)) {
                     supply += Integer.parseInt(lineData[1]);
                 } else if (lineData[0].equals(BUY_KEY_WORD)) {
