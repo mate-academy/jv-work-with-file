@@ -11,6 +11,8 @@ public class WorkWithFile {
     private static final String DELIMITER = ",";
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
+    private static final int ZERO = 0;
+    private static final int ONE = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         File read = new File(fromFileName);
@@ -27,10 +29,10 @@ public class WorkWithFile {
             int buy = 0;
             for (String line : lines) {
                 String[] operation = line.split(DELIMITER);
-                if (operation[0].equals(SUPPLY)) {
-                    supply += Integer.parseInt(operation[1]);
+                if (operation[ZERO].equals(SUPPLY)) {
+                    supply += Integer.parseInt(operation[ONE]);
                 } else {
-                    buy += Integer.parseInt(operation[1]);
+                    buy += Integer.parseInt(operation[ONE]);
                 }
             }
             createReport(supply, buy, toFileName);
@@ -42,9 +44,9 @@ public class WorkWithFile {
     private void createReport(int supply, int buy, String toFileName) {
         File report = new File(toFileName);
         StringBuilder results = new StringBuilder();
-        results.append(SUPPLY).append(",").append(supply).append("\n")
-                .append(BUY).append(",").append(buy).append("\n")
-                .append("result,").append(supply - buy);
+        results.append(SUPPLY).append(DELIMITER).append(supply).append(System.lineSeparator())
+                .append(BUY).append(DELIMITER).append(buy).append(System.lineSeparator())
+                .append("result").append(DELIMITER).append(supply - buy);
 
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(report))) {
             bufferedWriter.write(results.toString());
