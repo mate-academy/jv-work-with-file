@@ -28,7 +28,7 @@ public class WorkWithFile {
             }
             return result;
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't read file" + pathToFile, e);
         }
     }
 
@@ -42,14 +42,14 @@ public class WorkWithFile {
             try {
                 file.createNewFile();
             } catch (IOException e) {
-                throw new RuntimeException("Can't create file", e);
+                throw new RuntimeException("Can't create file" + pathToFile, e);
             }
         }
         try {
             Files.write(file.toPath(), stringBuilder.toString().getBytes(),
                     StandardOpenOption.APPEND);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data to file", e);
+            throw new RuntimeException("Can't write data to file" + pathToFile, e);
         }
     }
 }
