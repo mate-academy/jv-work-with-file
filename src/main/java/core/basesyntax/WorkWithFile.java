@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class WorkWithFile {
     private static final String SUPPLY = "supply";
@@ -18,8 +19,8 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         List<String> dataFromOutput = getLinesFromFile(fromFileName);
-        HashMap<String, Integer> readyData = getFormattedInformation(dataFromOutput);
-        putInformationInNewFile(readyData, toFileName);
+        Map<String, Integer> readyData = getFormattedInformation(dataFromOutput);
+        writeToFile(readyData, toFileName);
     }
 
     private List<String> getLinesFromFile(String fileName) {
@@ -29,14 +30,15 @@ public class WorkWithFile {
                 listOfInformation.add(reader.readLine());
             }
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("file not found", e);
+            throw new RuntimeException(String.format("File %s not found.", fileName), e);
         } catch (IOException e) {
-            throw new RuntimeException("problem with read file. Try again", e);
+            throw new RuntimeException(String.format("The problem has been encountered "
+                    + "while reading file %s.)", fileName), e);
         }
         return listOfInformation;
     }
 
-    private HashMap<String, Integer> getFormattedInformation(List<String> data) {
+    private Map<String, Integer> getFormattedInformation(List<String> data) {
         HashMap<String, Integer> result = new HashMap<>();
         for (String line : data) {
             String[] tempData = line.split(",");
@@ -46,9 +48,8 @@ public class WorkWithFile {
         return result;
     }
 
-    private void putInformationInNewFile(HashMap<String, Integer> data, String fileName) {
-        try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
+    private void writeToFile(Map<String, Integer> data, String fileName) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             for (String information : values) {
                 StringBuilder dataToFile = new StringBuilder(information).append(",")
                         .append(data.get(information)).append(System.lineSeparator());
