@@ -42,11 +42,9 @@ public class WorkWithFile {
                 sumOfSupply += Integer.parseInt(fileToArr[i + 1]);
             }
         }
-        return new StringBuilder().append("supply,")
-                .append(sumOfSupply).append(System.lineSeparator())
-                .append("buy,").append(sumOfbuy)
-                .append(System.lineSeparator()).append("result,")
-                .append(sumOfSupply - sumOfbuy).toString();
+        return "supply," + sumOfSupply + System.lineSeparator()
+                + "buy," + sumOfbuy + System.lineSeparator() + "result,"
+                + (sumOfSupply - sumOfbuy);
     }
 
     private boolean writeFile(String fileName, String fileInPut) {
