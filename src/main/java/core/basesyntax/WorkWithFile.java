@@ -7,9 +7,8 @@ import java.nio.file.StandardOpenOption;
 import java.util.List;
 
 public class WorkWithFile {
-
     public void getStatistic(String fromFileName, String toFileName) {
-        writeFile(readFile(fromFileName), toFileName);
+        writeToFile(createResult(readFile(fromFileName)), toFileName);
     }
 
     private int[] readFile(String pathToFile) {
@@ -17,13 +16,13 @@ public class WorkWithFile {
 
         File file = new File(pathToFile);
         try {
-            List<String> stringList = Files.readAllLines(file.toPath());
-            for (String string : stringList) {
-                String[] buffer = string.split(",");
-                if (buffer[0].contains("supply")) {
-                    result[0] += Integer.parseInt(buffer[1]);
+            List<String> dataFromFile = Files.readAllLines(file.toPath());
+            for (String data : dataFromFile) {
+                String[] supplyOrBuyData = data.split(",");
+                if (supplyOrBuyData[0].equals("supply")) {
+                    result[0] += Integer.parseInt(supplyOrBuyData[1]);
                 } else {
-                    result[1] += Integer.parseInt(buffer[1]);
+                    result[1] += Integer.parseInt(supplyOrBuyData[1]);
                 }
             }
             return result;
@@ -32,11 +31,15 @@ public class WorkWithFile {
         }
     }
 
-    private void writeFile(int[] values, String pathToFile) {
+    private String createResult(int[] values) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("supply,").append(values[0]).append(System.lineSeparator())
                 .append("buy,").append(values[1]).append(System.lineSeparator())
                 .append("result,").append(values[0] - values[1]);
+        return stringBuilder.toString();
+    }
+
+    private void writeToFile(String result, String pathToFile) {
         File file = new File(pathToFile);
         if (!file.exists()) {
             try {
@@ -46,7 +49,7 @@ public class WorkWithFile {
             }
         }
         try {
-            Files.write(file.toPath(), stringBuilder.toString().getBytes(),
+            Files.write(file.toPath(), result.getBytes(),
                     StandardOpenOption.APPEND);
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to file" + pathToFile, e);
