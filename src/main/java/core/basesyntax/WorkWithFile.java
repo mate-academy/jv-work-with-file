@@ -13,7 +13,7 @@ public class WorkWithFile {
     private static final String DELIMITER = ",";
     private static final int SUPPLY_INDEX = 0;
     private static final int BUY_INDEX = 1;
-    private static final int RESULT_INDEX = 2; //I know it isn't in use, but it might be needed at some point
+    private static final int RESULT_INDEX = 2;
 
     public void getStatistic(String fromFileName, String toFileName) {
         List<String> list = readFile(fromFileName);
