@@ -1,4 +1,7 @@
 .idea/*
 *.iml
 target/*
-*.csv
+appleResult.csv
+bananaResult.csv
+grapeResult.csv
+orangeResult.csv
