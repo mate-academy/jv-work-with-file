@@ -11,6 +11,11 @@ public class WorkWithFile {
     private static final String[] FILE_FIELDS
             = new String[] {"supply", "buy", "result"};
 
+    public void getStatistic(String fromFileName, String toFileName) {
+        List<String> list = readFile(fromFileName);
+        writeFile(toFileName, reportStatistics(list));
+    }
+
     private static List<String> readFile(String filePath) {
         File fileToRead = new File(filePath);
         List<String> readData = null;
@@ -59,10 +64,5 @@ public class WorkWithFile {
                 .append(FILE_FIELDS[2]).append(",").append(supply - buy)
                 .append(System.lineSeparator());
         return sb.toString();
-    }
-
-    public void getStatistic(String fromFileName, String toFileName) {
-        List<String> list = readFile(fromFileName);
-        writeFile(toFileName, reportStatistics(list));
     }
 }
