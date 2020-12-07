@@ -13,7 +13,6 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         int supply = 0;
         int buy = 0;
-
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String value = bufferedReader.readLine();
 
@@ -30,7 +29,6 @@ public class WorkWithFile {
             throw new RuntimeException("Can't read data from the file " + fromFileName, e);
         }
         writeToFile(toFileName, createReport(supply, buy));
-
     }
 
     private String createReport(int supply, int buy) {
