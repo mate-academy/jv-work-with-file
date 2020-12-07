@@ -8,11 +8,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    int supply = 0;
+    int buy = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
         StringBuilder stringBuilder = new StringBuilder();
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String value = reader.readLine();
             while (value != null) {
                 stringBuilder.append(value).append(",");
@@ -24,20 +25,23 @@ public class WorkWithFile {
         String[] data = stringBuilder.toString().split(",");
         File file = new File(toFileName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
-            int supply = 0;
-            int buy = 0;
-            for (int i = 0;i < data.length;i += 2) {
-                if (data[i].equals("supply")) {
-                    supply += Integer.parseInt(data[i + 1]);
-                } else {
-                    buy += Integer.parseInt(data[i + 1]);
-                }
-            }
+            int result = getTotalSum(data);
             bufferedWriter.write("  supply," + supply + System.lineSeparator()
                     + "buy," + buy + System.lineSeparator()
-                    + "result," + (supply - buy));
+                    + "result," + result);
         } catch (IOException e) {
             throw new RuntimeException("Can't correctly read data from file " + toFileName, e);
         }
+    }
+
+    public int getTotalSum(String[] data) {
+        for (int i = 0;i < data.length;i += 2) {
+            if (data[i].equals("supply")) {
+                supply += Integer.parseInt(data[i + 1]);
+            } else {
+                buy += Integer.parseInt(data[i + 1]);
+            }
+        }
+        return supply - buy;
     }
 }
