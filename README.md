@@ -27,7 +27,7 @@ supply,30
 buy,10
 buy,13
 supply,17
-buy,10**
+buy,10
 ```
 
 __Your task is to read all data from input csv file, 
