@@ -44,7 +44,7 @@ public class WorkWithFile {
     }
 
     public void writeToFile(String toFileName) {
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true))) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(dataForStatistics.toString());
             bufferedWriter.flush();
         } catch (IOException e) {
