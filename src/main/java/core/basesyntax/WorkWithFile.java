@@ -34,7 +34,6 @@ public class WorkWithFile {
     }
 
     protected String makeDayBalance(StringBuilder stringBuilder) {
-
         String [] dataFromFile = stringBuilder.toString().split(System.lineSeparator());
         int totalSupplyOperations = 0;
         int totalBuyOperations = 0;
@@ -57,11 +56,11 @@ public class WorkWithFile {
         File file = new File(toFileName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
             String [] values = data.split(System.lineSeparator());
-            for (String value:values) {
+            for (String value : values) {
                 bufferedWriter.write(value);
                 bufferedWriter.write(System.lineSeparator());
-                bufferedWriter.flush();
             }
+            bufferedWriter.flush();
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file",e);
         }
