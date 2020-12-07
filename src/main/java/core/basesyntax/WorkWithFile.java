@@ -26,7 +26,7 @@ public class WorkWithFile {
                 allText.append(line).append(System.lineSeparator());
             }
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("Can't find file with this name!", e);
+            throw new RuntimeException("Can't find file with name " + fromFile, e);
         } catch (IOException e) {
             throw new RuntimeException("Can't read information!", e);
         }
