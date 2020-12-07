@@ -7,6 +7,10 @@ import java.io.PrintWriter;
 
 public class WorkWithFile {
 
+    private static final int NAME_INDEX = 0;
+    private static final int NUMBER_INDEX = 1;
+    private static final String SEPARATOR = ",";
+
     public void getStatistic(String fromFileName, String toFileName) {
         writeToFile(readFromFile(fromFileName), toFileName);
     }
@@ -15,27 +19,21 @@ public class WorkWithFile {
         Report report = new Report();
         int sumBuy = 0;
         int sumSupply = 0;
-        int result;
-        String line;
-        StringBuilder dataFromFile = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            String line;
             while ((line = reader.readLine()) != null) {
-                dataFromFile.append(line);
-                dataFromFile.append(" ");
-            }
-            String[] readFile = dataFromFile.toString().split(" ");
-            for (int i = 0; i < readFile.length; i++) {
-                String[] dividedInfo = readFile[i].split(",", 2);
-                if (dividedInfo[0].equals("buy")) {
-                    sumBuy += Integer.parseInt(dividedInfo[1]);
-                } else {
-                    sumSupply += Integer.parseInt(dividedInfo[1]);
+                String[] readFile = line.split(" ");
+                for (String s : readFile) {
+                    String[] dividedInfo = s.split(SEPARATOR);
+                    if (dividedInfo[NAME_INDEX].equals("buy")) {
+                        sumBuy += Integer.parseInt(dividedInfo[NUMBER_INDEX]);
+                    } else {
+                        sumSupply += Integer.parseInt(dividedInfo[NUMBER_INDEX]);
+                    }
                 }
             }
             report.setSumBuy(sumBuy);
             report.setSumSupply(sumSupply);
-            result = sumSupply - sumBuy;
-            report.setResult(result);
         } catch (IOException e) {
             throw new RuntimeException("Can't read from file!", e);
         }
@@ -46,17 +44,17 @@ public class WorkWithFile {
         try (PrintWriter writer = new PrintWriter(toFileName)) {
             StringBuilder writeInfo = new StringBuilder();
             writeInfo.append("supply")
-                    .append(',')
+                    .append(SEPARATOR)
                     .append(report.getSumSupply())
                     .append(System.lineSeparator());
 
             writeInfo.append("buy")
-                    .append(',')
+                    .append(SEPARATOR)
                     .append(report.getSumBuy())
                     .append(System.lineSeparator());
 
             writeInfo.append("result")
-                    .append(',')
+                    .append(SEPARATOR)
                     .append(report.getResult())
                     .append(System.lineSeparator());
 
