@@ -12,15 +12,14 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         StringBuilder report = new StringBuilder();
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String value = reader.readLine();
             while (value != null) {
                 report.append(value).append(System.lineSeparator());
                 value = reader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file!");
+            throw new RuntimeException("Can't read file!", e);
         }
         String[] valuesReport = report.toString().split(System.lineSeparator());
         writeFile(toFileName, getReport(valuesReport));
