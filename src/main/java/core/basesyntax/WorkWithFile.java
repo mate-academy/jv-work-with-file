@@ -8,8 +8,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-private static final String SUPPLY = "supply";
-private static final String BUY = "buy";
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+
     public void getStatistic(String fromFileName, String toFileName) {
         StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
