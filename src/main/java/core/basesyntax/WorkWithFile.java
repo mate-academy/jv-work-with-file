@@ -35,7 +35,7 @@ public class WorkWithFile {
             }
             createReport(supply, buy, toFileName);
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file " + fromFileName , e);
+            throw new RuntimeException("Can't read file " + fromFileName, e);
         }
     }
 
