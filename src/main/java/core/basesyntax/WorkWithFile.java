@@ -1,6 +1,7 @@
 package core.basesyntax;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -44,8 +45,8 @@ public class WorkWithFile {
     }
 
     private void writeFile(String toFileName, String report) {
-        try (FileWriter fileWriter = new FileWriter(toFileName)) {
-            fileWriter.append(report);
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
+            bufferedWriter.write(report);
         } catch (IOException e) {
             System.out.println("File was not found");
         }
