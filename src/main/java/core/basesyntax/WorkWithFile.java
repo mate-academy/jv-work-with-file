@@ -10,13 +10,13 @@ public class WorkWithFile {
     private static final String SYMBOL_SPLIT = ",";
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
-    StringBuilder fileRead = new StringBuilder();
 
     public void getStatistic(String fromFileName, String toFileName) {
         writeData(toFileName, readFile(fromFileName));
     }
 
     private String readFile(String fileName) {
+        StringBuilder fileRead = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
             String value = bufferedReader.readLine();
             while (value != null) {
@@ -26,10 +26,10 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read file", e);
         }
-        return countAndCreateReport();
+        return countAndCreateReport(fileRead);
     }
 
-    private String countAndCreateReport() {
+    private String countAndCreateReport(StringBuilder fileRead) {
         String[] readFromFile = fileRead.toString().split(SYMBOL_SPLIT);
         int supply = 0;
         int buy = 0;
