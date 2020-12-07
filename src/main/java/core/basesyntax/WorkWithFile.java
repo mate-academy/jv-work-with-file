@@ -9,6 +9,7 @@ import java.io.IOException;
 public class WorkWithFile {
     public static final String COMA = ",";
     public static final int ZERO = 0;
+    public static final int ONE = 1;
     int supply = 0;
     int buy = 0;
 
@@ -18,10 +19,10 @@ public class WorkWithFile {
             while (value != null) {
                 String[] info = value.split(COMA);
                 if (info[ZERO].equals("supply")) {
-                    supply += Integer.parseInt(info[1]);
+                    supply += Integer.parseInt(info[ONE]);
                 }
                 if (info[ZERO].equals("buy")) {
-                    buy += Integer.parseInt(info[1]);
+                    buy += Integer.parseInt(info[ONE]);
                 }
                 value = reader.readLine();
             }
