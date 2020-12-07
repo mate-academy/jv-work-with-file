@@ -14,9 +14,10 @@ public class WorkWithFile {
     private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
+        String informationFromFile = readFile(fromFileName);
         writeFile(toFileName,
-                writeReport(calculateSupply(readFile(fromFileName)),
-                        calculateBuy(readFile(fromFileName))));
+                writeReport(calculateSupply(informationFromFile),
+                        calculateBuy(informationFromFile)));
     }
 
     private String readFile(String fileName) {
