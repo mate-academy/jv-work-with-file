@@ -9,10 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WorkWithFile {
-    private static final String SUPPLY = "supply";
-    private static final String BUY = "buy";
-    private static final String RESULT = "result";
-    private List<String> writeToFile = new ArrayList<>();
+    private static final String COMA = ",";
+    private static final int INDEX_ZERO = 0;
+    private static final int INDEX_ONE = 1;
+    private List<String> writeToFile;
 
     public void getStatistic(String fromFileName, String toFileName) {
         readFile(fromFileName);
@@ -27,19 +27,23 @@ public class WorkWithFile {
             throw new RuntimeException("File not found!", e);
         }
 
+        String supply = "supply";
         int supplySum = 0;
         int buySum = 0;
         for (String string : list) {
-            if (SUPPLY.equals(string.split(",")[0])) {
-                supplySum += Integer.parseInt(string.split(",")[1]);
+            if (supply.equals(string.split(COMA)[INDEX_ZERO])) {
+                supplySum += Integer.parseInt(string.split(COMA)[INDEX_ONE]);
             } else {
-                buySum += Integer.parseInt(string.split(",")[1]);
+                buySum += Integer.parseInt(string.split(COMA)[INDEX_ONE]);
             }
         }
 
-        writeToFile.add(SUPPLY + "," + supplySum);
-        writeToFile.add(BUY + "," + buySum);
-        writeToFile.add(RESULT + "," + (supplySum - buySum));
+        writeToFile = new ArrayList<>();
+        String buy = "buy";
+        String result = "result";
+        writeToFile.add(supply + COMA + supplySum);
+        writeToFile.add(buy + COMA + buySum);
+        writeToFile.add(result + COMA + (supplySum - buySum));
     }
 
     private void writeFile(String writeFile) {
