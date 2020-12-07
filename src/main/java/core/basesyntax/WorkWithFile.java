@@ -35,7 +35,7 @@ public class WorkWithFile {
             }
             createReport(supply, buy, toFileName);
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't read file " + fromFileName , e);
         }
     }
 
@@ -49,7 +49,7 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(report))) {
             bufferedWriter.write(results.toString());
         } catch (IOException e) {
-            throw new RuntimeException("Can't write to file", e);
+            throw new RuntimeException("Can't write to file " + toFileName, e);
         }
     }
 }
