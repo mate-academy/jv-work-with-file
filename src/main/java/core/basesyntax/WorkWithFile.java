@@ -48,7 +48,7 @@ public class WorkWithFile {
         try (FileWriter fileWriter = new FileWriter(toFileName)) {
             fileWriter.append(finalReport);
         } catch (IOException e) {
-            throw new RuntimeException("File was not found");
+            throw new RuntimeException("File was not found - " + toFileName, e);
         }
     }
 }
