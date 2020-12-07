@@ -8,7 +8,6 @@ import java.nio.file.Files;
 import java.util.List;
 
 public class WorkWithFile {
-
     private static final String[] FILE_FIELDS
             = new String[] {"supply", "buy", "result"};
 
