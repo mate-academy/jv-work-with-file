@@ -19,17 +19,15 @@ public class WorkWithFile {
 
     private void readFromFile(String fileName) {
         File file = new File(fileName);
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
-            String newLine = bufferedReader.readLine();
-            while (newLine != null) {
+        String newLine;
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
+            while ((newLine = bufferedReader.readLine()) != null) {
                 String[] lineWords = newLine.split(",");
                 if (lineWords[0].equals("supply")) {
                     supply += Integer.parseInt(lineWords[1]);
                 } else {
                     buy += Integer.parseInt(lineWords[1]);
                 }
-                newLine = bufferedReader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read from file: " + fileName, e);
