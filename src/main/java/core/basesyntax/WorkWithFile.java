@@ -14,6 +14,8 @@ public class WorkWithFile {
     private static final String BUY = "buy";
     private static final String RESULT = "result";
     private static final String COMMA = ",";
+    private static final int CELL_FIRST = 0;
+    private static final int CELL_SECOND = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         generateReport(fromFileName, toFileName);
@@ -23,14 +25,14 @@ public class WorkWithFile {
         int supply = 0;
         int buy = 0;
 
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
+        try {
             List<String> allLines = Files.readAllLines(Paths.get(fromFileName));
             for (int i = 0; i < allLines.size(); i++) {
-                String[] nameProduct = bufferedReader.readLine().split(",");
-                if (nameProduct[0].equals(SUPPLY)) {
-                    supply += Integer.parseInt(nameProduct[1]);
+                String[] nameProduct = allLines.get(i).split(COMMA);
+                if (nameProduct[CELL_FIRST].equals(SUPPLY)) {
+                    supply += Integer.parseInt(nameProduct[CELL_SECOND]);
                 } else {
-                    buy += Integer.parseInt(nameProduct[1]);
+                    buy += Integer.parseInt(nameProduct[CELL_SECOND]);
                 }
             }
         } catch (IOException e) {
@@ -48,7 +50,7 @@ public class WorkWithFile {
         writeString.append(BUY).append(COMMA)
                 .append(buy).append(System.lineSeparator());
         writeString.append(RESULT).append(COMMA)
-                .append(supply >= buy ? supply - buy : buy - supply);
+                .append(supply - buy);
 
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(writeString.toString());
