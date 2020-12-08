@@ -49,7 +49,7 @@ public class WorkWithFile {
     private void writeFile(String writeFile, List<String> writerList) {
         try (BufferedWriter bufferedWriter
                      = new BufferedWriter(new FileWriter(new File(writeFile)))) {
-            for (Object information : writerList) {
+            for (String information : writerList) {
                 bufferedWriter.write(information + System.lineSeparator());
             }
         } catch (IOException e) {
