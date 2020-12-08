@@ -17,10 +17,10 @@ public class WorkWithFile {
         int buy = 0;
         String[] strings = readInformation(fromFileName);
         for (int i = 0; i < strings.length; i++) {
-            if (strings[i].equals("supply")) {
+            if (strings[i].equals(SUPPLY)) {
                 buy = buy + Integer.parseInt(strings[i + 1]);
             }
-            if (strings[i].equals("buy")) {
+            if (strings[i].equals(BUY)) {
                 supply = supply + Integer.parseInt(strings[i + 1]);
             }
         }
@@ -33,10 +33,10 @@ public class WorkWithFile {
             StringBuilder stringBuilder = new StringBuilder();
             String value = reader.readLine();
             while (value != null) {
-                stringBuilder.append(value).append(",");
+                stringBuilder.append(value).append(SYMBOL);
                 value = reader.readLine();
             }
-            String[] textString = stringBuilder.toString().split(",");
+            String[] textString = stringBuilder.toString().split(SYMBOL);
             return textString;
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from the file " + fromFileName, e);
