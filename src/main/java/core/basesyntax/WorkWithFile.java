@@ -25,9 +25,10 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Cant read file - " + fromFileName, e);
         }
-        StringBuilder result = new StringBuilder().append("supply, ").append(supply)
-                .append(System.lineSeparator()).append("buy, ").append(buy)
-                .append(System.lineSeparator()).append("result, ").append(supply - buy);
+        StringBuilder result = new StringBuilder().append("supply,").append(supply)
+                .append(System.lineSeparator()).append("buy,").append(buy)
+                .append(System.lineSeparator()).append("result,").append(supply - buy);
+        printInFile(toFileName, result.toString());
     }
 
     private void printInFile(String toFileName, String result) {
