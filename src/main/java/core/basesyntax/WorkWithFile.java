@@ -22,8 +22,7 @@ public class WorkWithFile {
         String[] workList;
         int supply = 0;
         int buy = 0;
-        File file = new File(fileName);
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
             StringBuilder stringBuilder = new StringBuilder();
             String value = bufferedReader.readLine();
             while (value != null) {
