@@ -2,7 +2,6 @@ package core.basesyntax;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -32,9 +31,7 @@ public class WorkWithFile {
     }
 
     private void printInFile(String toFileName, String result) {
-        File fileToWrite = new File(toFileName);
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileToWrite))) {
-            fileToWrite.createNewFile();
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(result);
         } catch (IOException e) {
             throw new RuntimeException("Cant write to file - " + toFileName, e);
