@@ -8,10 +8,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private int supply = 0;
+    private int buy = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int supply = 0;
-        int buy = 0;
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
             StringBuilder builder = new StringBuilder();
@@ -20,8 +20,8 @@ public class WorkWithFile {
                 builder.append((char) value);
                 value = bufferedReader.read();
             }
-            String replaceAllEnter = builder.toString().replaceAll("\n", ",");
-            String[] splitArray = replaceAllEnter.split(",");
+            String wordWithoutEnter = builder.toString().replaceAll("\n", ",");
+            String[] splitArray = wordWithoutEnter.split(",");
             for (int i = 0; i < splitArray.length; i++) {
                 if (splitArray[i].equals("supply")) {
                     supply += Integer.parseInt(splitArray[i + 1]);
@@ -32,9 +32,12 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read from file", e);
         }
+    }
+
+    public void createReport(String toFileName) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("supply,").append(supply).append("\n").append("buy,").append(buy)
-                    .append("\n").append("result,").append(supply - buy);
+                .append("\n").append("result,").append(supply - buy);
         File file = new File(toFileName);
         try {
             file.createNewFile();
