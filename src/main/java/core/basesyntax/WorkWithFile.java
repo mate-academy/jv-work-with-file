@@ -35,20 +35,16 @@ public class WorkWithFile {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("supply,").append(supply).append("\n").append("buy,").append(buy)
                     .append("\n").append("result,").append(supply - buy);
-        BufferedWriter bufferedWriter = null;
+        File file = new File(toFileName);
         try {
-            File file = new File(toFileName);
             file.createNewFile();
-            bufferedWriter = new BufferedWriter(new FileWriter(file));
+        } catch (IOException e) {
+            throw new RuntimeException("Can't create file", e);
+        }
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
             bufferedWriter.write(stringBuilder.toString());
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data to new file", e);
-        } finally {
-            try {
-                bufferedWriter.close();
-            } catch (IOException e) {
-                throw new RuntimeException("Can't close file", e);
-            }
+            throw new RuntimeException("Can't write data to file", e);
         }
     }
 }
