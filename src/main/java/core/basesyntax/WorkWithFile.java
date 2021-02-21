@@ -8,10 +8,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private int supply = 0;
-    private int buy = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
+        String[] strings = readFromFile(fromFileName);
+        String report = createReport(strings);
+        writeToFile(report, toFileName);
+    }
+
+    private String[] readFromFile(String fromFileName) {
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
             StringBuilder builder = new StringBuilder();
@@ -22,22 +26,31 @@ public class WorkWithFile {
             }
             String wordWithoutEnter = builder.toString().replaceAll("\n", ",");
             String[] splitArray = wordWithoutEnter.split(",");
-            for (int i = 0; i < splitArray.length; i++) {
-                if (splitArray[i].equals("supply")) {
-                    supply += Integer.parseInt(splitArray[i + 1]);
-                } else if (splitArray[i].equals("buy")) {
-                    buy += Integer.parseInt(splitArray[i + 1]);
-                }
-            }
+            return splitArray;
         } catch (IOException e) {
             throw new RuntimeException("Can't read from file", e);
         }
+
     }
 
-    public void createReport(String toFileName) {
+    private String createReport(String[] splitArray) {
+        int supply = 0;
+        int buy = 0;
+        for (int i = 0; i < splitArray.length; i++) {
+            if (splitArray[i].equals("supply")) {
+                supply += Integer.parseInt(splitArray[i + 1]);
+            } else if (splitArray[i].equals("buy")) {
+                buy += Integer.parseInt(splitArray[i + 1]);
+            }
+        }
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("supply,").append(supply).append("\n").append("buy,").append(buy)
                 .append("\n").append("result,").append(supply - buy);
+        String resultReport = stringBuilder.toString();
+        return resultReport;
+    }
+
+    public void writeToFile(String resultReport, String toFileName) {
         File file = new File(toFileName);
         try {
             file.createNewFile();
@@ -45,7 +58,7 @@ public class WorkWithFile {
             throw new RuntimeException("Can't create file", e);
         }
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
-            bufferedWriter.write(stringBuilder.toString());
+            bufferedWriter.write(resultReport);
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to file", e);
         }
