@@ -6,6 +6,5 @@ public class Main {
         String toFileName = "result";
         WorkWithFile workWithFile = new WorkWithFile();
         workWithFile.getStatistic(fromFileName, toFileName);
-        workWithFile.createReport(toFileName);
     }
 }
