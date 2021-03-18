@@ -11,40 +11,37 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         File newFile = new File(toFileName);
         File initialFile = new File(fromFileName);
-        StringBuilder initialData = new StringBuilder();
+        int supply = 0;
+        int buy = 0;
+        int result;
 
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(initialFile));
             String bufferValue = bufferedReader.readLine();
+            String name = "";
+            String count = "";
 
             while (bufferValue != null) {
-                initialData.append(bufferValue).append("\n");
+                name = bufferValue.split(",")[0];
+                count = bufferValue.split(",")[1];
+
+                if (name.equals("supply")) {
+                    supply += Integer.parseInt(count);
+                } else if (name.equals("buy")) {
+                    buy += Integer.parseInt(count);
+                }
+
                 bufferValue = bufferedReader.readLine();
             }
+
+            result = supply - buy;
         } catch (IOException e) {
             throw new RuntimeException("Can't read a file", e);
         }
 
-        String[] initialDataList = initialData.toString().split("\n");
         StringBuilder writerStringBuilder = new StringBuilder();
-        int supply = 0;
-        int buy = 0;
-        int result = 0;
 
         try (BufferedWriter bufferWriter = new BufferedWriter(new FileWriter(newFile))) {
-            for (String initialDataItem: initialDataList) {
-                String name = initialDataItem.split(",")[0];
-                String count = initialDataItem.split(",")[1];
-
-                if (name.equals("supply")) {
-                    supply += Integer.parseInt(count);
-                } else {
-                    buy += Integer.parseInt(count);
-                }
-            }
-
-            result = supply - buy;
-
             writerStringBuilder
                     .append("supply,")
                     .append(supply)

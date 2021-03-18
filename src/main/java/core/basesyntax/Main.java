@@ -3,6 +3,6 @@ package core.basesyntax;
 public class Main {
     public static void main(String[] args) {
         WorkWithFile workWithFile = new WorkWithFile();
-        workWithFile.getStatistic("apple.csv", "newapple.csv");
+        workWithFile.getStatistic("orange.csv", "newapple.csv");
     }
 }
