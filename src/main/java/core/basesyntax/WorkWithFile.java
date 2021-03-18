@@ -15,9 +15,10 @@ public class WorkWithFile {
         int buy = 0;
         int result;
 
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(initialFile));
+        try (BufferedWriter bufferWriter = new BufferedWriter(new FileWriter(newFile));
+             BufferedReader bufferedReader = new BufferedReader(new FileReader(initialFile))) {
             String bufferValue = bufferedReader.readLine();
+            StringBuilder writerStringBuilder = new StringBuilder();
             String name = "";
             String count = "";
 
@@ -35,26 +36,14 @@ public class WorkWithFile {
             }
 
             result = supply - buy;
-        } catch (IOException e) {
-            throw new RuntimeException("Can't read a file", e);
-        }
 
-        StringBuilder writerStringBuilder = new StringBuilder();
-
-        try (BufferedWriter bufferWriter = new BufferedWriter(new FileWriter(newFile))) {
-            writerStringBuilder
-                    .append("supply,")
-                    .append(supply)
-                    .append("\n")
-                    .append("buy,")
-                    .append(buy)
-                    .append("\n")
-                    .append("result,")
-                    .append(result);
+            writerStringBuilder.append("supply,").append(supply).append("\n")
+                    .append("buy,").append(buy).append("\n")
+                    .append("result,").append(result);
 
             bufferWriter.write(writerStringBuilder.toString());
         } catch (IOException e) {
-            throw new RuntimeException("Can't write to file", e);
+            throw new RuntimeException("Something wrong with file", e);
         }
     }
 }
