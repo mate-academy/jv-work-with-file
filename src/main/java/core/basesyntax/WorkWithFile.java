@@ -11,36 +11,48 @@ import java.util.List;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
-        File fileTo = new File(fromFileName.substring(0,
-                fromFileName.indexOf(".")) + "Result.csv");
+        createFile(toFileName);
+        int supply = readFile(fromFileName, "supply");
+        int buy = readFile(fromFileName, "buy");
+        writeInFile(toFileName, supply, buy);
+    }
+
+    private void createFile(String fileName) {
+        File fileTo = new File(fileName);
         try {
             fileTo.createNewFile();
         } catch (IOException e) {
-            throw new RuntimeException("can't create new file.");
+            throw new RuntimeException("Cannot create a new file.");
         }
-        Path go = Paths.get(fromFileName);
+    }
+
+    private int readFile(String fileName, String target) {
+        Path go = Paths.get(fileName);
         File to = go.toFile();
-        int supply = 0;
-        int buy = 0;
+        int result = 0;
         try {
             List<String> list = Files.readAllLines(to.toPath());
             for (String str : list) {
                 String[] args = str.split(",");
-                if (args[0].equals("supply")) {
-                    supply += Integer.parseInt(args[1]);
-                } else {
-                    buy += Integer.parseInt(args[1]);
+                if (args[0].equals(target)) {
+                    result += Integer.parseInt(args[1]);
                 }
             }
+            return result;
         } catch (IOException e) {
             throw new RuntimeException("file not found.", e);
         }
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileTo, true))) {
+    }
+
+    private void writeInFile(String fileName, int supply, int buy) {
+        Path path = Paths.get(fileName);
+        File file = path.toFile();
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
             writer.write("supply" + "," + supply + System.lineSeparator());
             writer.write("buy" + "," + buy + System.lineSeparator());
             writer.write("result" + "," + (supply - buy) + System.lineSeparator());
         } catch (IOException e) {
-            throw new RuntimeException("file not found.", e);
+            throw new RuntimeException("File not found.", e);
         }
     }
 }
