@@ -45,7 +45,7 @@ public class WorkWithFile {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileTo, true))) {
             writer.write("supply" + "," + supply + System.lineSeparator());
             writer.write("buy" + "," + buy + System.lineSeparator());
-            writer.write("result" + "," + result);
+            writer.write("result" + "," + result + System.lineSeparator());
         } catch (IOException e) {
             throw new RuntimeException("file not found.", e);
         }
