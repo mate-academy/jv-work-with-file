@@ -1,63 +1,64 @@
 package core.basesyntax;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
 
 public class WorkWithFile {
+    public static final String SUPPLY = "supply";
+    public static final String RESULT = "result";
+    public static final String BUY = "buy";
+    public static final String COMMA = ",";
+
     public void getStatistic(String fromFileName, String toFileName) {
         createFile(toFileName);
-        int supply = readFile(fromFileName, "supply");
-        int buy = readFile(fromFileName, "buy");
-        int result = supply - buy;
-        writeInFile(toFileName, supply, buy, result);
+        String report = readFromFile(fromFileName);
+        createReport(toFileName, report);
     }
 
     private void createFile(String fileName) {
-        File fileTo = new File(fileName);
+        File file = new File(fileName);
         try {
-            fileTo.createNewFile();
+            file.createNewFile();
         } catch (IOException e) {
-            throw new RuntimeException("Cannot create a new file.");
+            throw new RuntimeException("Cannot create a file.");
         }
     }
 
-    private int readFile(String fileName, String target) {
-        Path go = Paths.get(fileName);
-        File to = go.toFile();
-        int result = 0;
-        try {
-            List<String> list = Files.readAllLines(to.toPath());
-            for (String str : list) {
-                String[] args = str.split(",");
-                if (args[0].equals(target)) {
-                    try {
-                        result += Integer.parseInt(args[1]);
-                    } catch (NumberFormatException e) {
-                        throw new RuntimeException("Value is not a number exception");
-                    }
+    private String readFromFile(String fileName) {
+        int supply = 0;
+        int buy = 0;
+        StringBuilder builder = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            String line = reader.readLine();
+            while (line != null) {
+                if (line.split(COMMA)[0].equals(SUPPLY)) {
+                    supply += Integer.parseInt(line.split(COMMA)[1]);
+                } else {
+                    buy += Integer.parseInt(line.split(COMMA)[1]);
                 }
+                line = reader.readLine();
             }
-            return result;
+            builder.append(SUPPLY).append(COMMA).append(supply)
+                    .append(System.lineSeparator())
+                    .append(BUY).append(COMMA).append(buy)
+                    .append(System.lineSeparator())
+                    .append(RESULT).append(COMMA).append(supply - buy)
+                    .append(System.lineSeparator());
+            return builder.toString();
         } catch (IOException e) {
-            throw new RuntimeException("file not found.", e);
+            throw new RuntimeException("File not found", e);
         }
     }
 
-    private void writeInFile(String fileName, int supply, int buy, int result) {
-        Path path = Paths.get(fileName);
-        File file = path.toFile();
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
-            writer.write("supply" + "," + supply + System.lineSeparator());
-            writer.write("buy" + "," + buy + System.lineSeparator());
-            writer.write("result" + "," + result + System.lineSeparator());
+    private void createReport(String fileName, String text) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+            writer.write(text);
         } catch (IOException e) {
-            throw new RuntimeException("File not found.", e);
+            throw new RuntimeException("Can't write to file", e);
         }
     }
 }
