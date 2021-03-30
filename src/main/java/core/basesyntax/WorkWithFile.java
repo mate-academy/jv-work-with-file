@@ -35,7 +35,11 @@ public class WorkWithFile {
             for (String str : list) {
                 String[] args = str.split(",");
                 if (args[0].equals(target)) {
-                    result += Integer.parseInt(args[1]);
+                    try {
+                        result += Integer.parseInt(args[1]);
+                    } catch (NumberFormatException e) {
+                        throw new RuntimeException("Value is not a number exception");
+                    }
                 }
             }
             return result;
