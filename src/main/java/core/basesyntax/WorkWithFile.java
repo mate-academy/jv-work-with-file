@@ -14,7 +14,8 @@ public class WorkWithFile {
         createFile(toFileName);
         int supply = readFile(fromFileName, "supply");
         int buy = readFile(fromFileName, "buy");
-        writeInFile(toFileName, supply, buy);
+        int result = supply - buy;
+        writeInFile(toFileName, supply, buy, result);
     }
 
     private void createFile(String fileName) {
@@ -48,13 +49,13 @@ public class WorkWithFile {
         }
     }
 
-    private void writeInFile(String fileName, int supply, int buy) {
+    private void writeInFile(String fileName, int supply, int buy, int result) {
         Path path = Paths.get(fileName);
         File file = path.toFile();
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
             writer.write("supply" + "," + supply + System.lineSeparator());
             writer.write("buy" + "," + buy + System.lineSeparator());
-            writer.write("result" + "," + (supply - buy) + System.lineSeparator());
+            writer.write("result" + "," + result + System.lineSeparator());
         } catch (IOException e) {
             throw new RuntimeException("File not found.", e);
         }
