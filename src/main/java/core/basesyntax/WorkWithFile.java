@@ -8,6 +8,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String SPLITTER = ",";
+    private static final int OPERATION_TYPE = 0;
+    private static final int AMMOUNT = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String report = createReport(fromFileName);
@@ -27,15 +32,14 @@ public class WorkWithFile {
         File file = new File(fromFileName);
         int supply = 0;
         int buy = 0;
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(file));
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String value = reader.readLine();
             while (value != null) {
-                String[] valueContent = value.split(",");
-                if (valueContent[0].equals("supply")) {
-                    supply += Integer.parseInt(valueContent[1]);
-                } else if (valueContent[0].equals("buy")) {
-                    buy += Integer.parseInt(valueContent[1]);
+                String[] valueContent = value.split(SPLITTER);
+                if (valueContent[OPERATION_TYPE].equals(SUPPLY)) {
+                    supply += Integer.parseInt(valueContent[AMMOUNT]);
+                } else if (valueContent[OPERATION_TYPE].equals(BUY)) {
+                    buy += Integer.parseInt(valueContent[AMMOUNT]);
                 }
                 value = reader.readLine();
             }
