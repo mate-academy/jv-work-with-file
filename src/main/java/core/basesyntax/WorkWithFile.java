@@ -69,7 +69,7 @@ public class WorkWithFile {
     }
 
     private void writeResult(String[] report, String fileName) {
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName, true))) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName, false))) {
             for (String string : report) {
                 bufferedWriter.write(string);
                 bufferedWriter.append(System.lineSeparator());
