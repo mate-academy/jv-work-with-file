@@ -13,60 +13,51 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
+    private static final char COMMA = ',';
 
     public void getStatistic(String fromFileName, String toFileName) {
         File fileToRead = new File(fromFileName);
-        File fileToWrite = new File(toFileName);
-        writeToFile(fileToWrite, fileToRead);
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true))) {
+            StringBuilder builder = new StringBuilder();
+            builder.append(SUPPLY)
+                    .append(COMMA)
+                    .append(amountOfOneType(fileToRead, SUPPLY))
+                    .append(System.lineSeparator())
+                    .append(BUY)
+                    .append(COMMA)
+                    .append(amountOfOneType(fileToRead, BUY))
+                    .append(System.lineSeparator())
+                    .append(RESULT)
+                    .append(COMMA)
+                    .append((amountOfOneType(fileToRead, SUPPLY)
+                            - amountOfOneType(fileToRead, BUY)));
+            bufferedWriter.write(builder.toString());
+        } catch (IOException e) {
+            throw new RuntimeException("can't write to file");
+        }
     }
 
-    public String getName(String lineFromFile) {
+    private String getName(String lineFromFile) {
         return lineFromFile.split(",")[NAME_INDEX];
     }
 
-    public int getAmount(String lineFromFile) {
+    private int getAmount(String lineFromFile) {
         return Integer.parseInt(lineFromFile.split(",")[VALUE_INDEX]);
     }
 
-    public int amountOfOneType(File file, String name) {
+    private int amountOfOneType(File file, String name) {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String value = reader.readLine();
             int totalAmount = 0;
             while (value != null) {
                 if (getName(value).equals(name)) {
                     totalAmount += getAmount(value);
-                    value = reader.readLine();
-                } else {
-                    value = reader.readLine();
                 }
+                value = reader.readLine();
             }
             return totalAmount;
         } catch (IOException e) {
             throw new RuntimeException("can't read from file", e);
-        }
-    }
-
-    public StringBuilder buildInputToFile(File fileReader) {
-        StringBuilder builder = new StringBuilder();
-        builder.append(SUPPLY)
-                .append(',')
-                .append(amountOfOneType(fileReader, SUPPLY))
-                .append(System.lineSeparator())
-                .append(BUY)
-                .append(',')
-                .append(amountOfOneType(fileReader, BUY))
-                .append(System.lineSeparator())
-                .append(RESULT)
-                .append(',')
-                .append((amountOfOneType(fileReader, SUPPLY) - amountOfOneType(fileReader, BUY)));
-        return builder;
-    }
-
-    public void writeToFile(File fileWriter, File fileReader) {
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileWriter, true))) {
-            bufferedWriter.write(buildInputToFile(fileReader).toString());
-        } catch (IOException e) {
-            throw new RuntimeException("can't write to file");
         }
     }
 }
