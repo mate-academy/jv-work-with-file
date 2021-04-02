@@ -10,14 +10,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class WorkWithFile {
-    public static final String SUPPLY = "supply,";
-    public static final String BUY = "buy,";
-    public static final String RESULT = "result,";
+    public static final String SUPPLY = "supply";
+    public static final String BUY = "buy";
+    public static final String RESULT = "result";
+    public static final String COMMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] data = readData(fromFileName);
         int[] profit = amountOfProfit(data);
-        String[] report = report(profit);
+        String report = getReport(profit);
         writeResult(report, toFileName);
     }
 
@@ -43,10 +44,12 @@ public class WorkWithFile {
         int[] countProfit = new int[3];
 
         for (String stringData : data) {
-            if (stringData.split(",")[0].equals("supply")) {
+            String supplyOrBuy = stringData.split(COMMA)[0];
+
+            if (supplyOrBuy.equals(SUPPLY)) {
                 countProfit[0] += Integer.parseInt(stringData.split(",")[1]);
             }
-            if (stringData.split(",")[0].equals("buy")) {
+            if (supplyOrBuy.equals(BUY)) {
                 countProfit[1] += Integer.parseInt(stringData.split(",")[1]);
             }
         }
@@ -54,26 +57,26 @@ public class WorkWithFile {
         return countProfit;
     }
 
-    private String[] report(int[] profit) {
+    private String getReport(int[] profit) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(SUPPLY)
+                .append(COMMA)
                 .append(profit[0])
-                .append("\n")
+                .append(System.lineSeparator())
                 .append(BUY)
+                .append(COMMA)
                 .append(profit[1])
-                .append("\n")
+                .append(System.lineSeparator())
                 .append(RESULT)
+                .append(COMMA)
                 .append(profit[2]);
 
-        return stringBuilder.toString().split("\n");
+        return stringBuilder.toString();
     }
 
-    private void writeResult(String[] report, String fileName) {
+    private void writeResult(String report, String fileName) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName, false))) {
-            for (String string : report) {
-                bufferedWriter.write(string);
-                bufferedWriter.append(System.lineSeparator());
-            }
+            bufferedWriter.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Cant write data.");
         }
