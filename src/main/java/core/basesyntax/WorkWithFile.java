@@ -10,6 +10,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class WorkWithFile {
+    public static final String SUPPLY = "supply,";
+    public static final String BUY = "buy,";
+    public static final String RESULT = "result,";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] data = readData(fromFileName);
@@ -29,9 +32,9 @@ public class WorkWithFile {
                 sentence = bufferedReader.readLine();
             }
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("File not found");
+            throw new RuntimeException("File not found.");
         } catch (IOException e) {
-            throw new RuntimeException("Cant read data with file");
+            throw new RuntimeException("Cant read data from the file.");
         }
         return data.toArray(new String[data.size()]);
     }
@@ -53,13 +56,13 @@ public class WorkWithFile {
 
     private String[] report(int[] profit) {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("supply,")
+        stringBuilder.append(SUPPLY)
                 .append(profit[0])
                 .append("\n")
-                .append("buy,")
+                .append(BUY)
                 .append(profit[1])
                 .append("\n")
-                .append("result,")
+                .append(RESULT)
                 .append(profit[2]);
 
         return stringBuilder.toString().split("\n");
