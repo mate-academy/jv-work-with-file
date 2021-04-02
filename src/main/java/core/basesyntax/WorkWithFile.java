@@ -10,7 +10,7 @@ import java.io.IOException;
 public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true))) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(readFromFile(fromFileName).toString());
         } catch (IOException e) {
             throw new RuntimeException("Can`t write to file" + toFileName, e);
@@ -22,7 +22,6 @@ public class WorkWithFile {
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
             String line = bufferedReader.readLine();
-            StringBuilder result = new StringBuilder();
             int supplyCounter = 0;
             int buyCounter = 0;
             while (line != null) {
@@ -34,12 +33,17 @@ public class WorkWithFile {
                 }
                 line = bufferedReader.readLine();
             }
-            result.append("supply,").append(supplyCounter).append(System.lineSeparator());
-            result.append("buy,").append(buyCounter).append(System.lineSeparator());
-            result.append("result,").append(supplyCounter - buyCounter);
-            return result;
+            return crateTabular(supplyCounter, buyCounter);
         } catch (IOException e) {
             throw new RuntimeException("Can`t find or read file" + fromFileName, e);
         }
+    }
+
+    public StringBuilder crateTabular(int supplyCounter, int buyCounter) {
+        StringBuilder result = new StringBuilder();
+        result.append("supply,").append(supplyCounter).append(System.lineSeparator());
+        result.append("buy,").append(buyCounter).append(System.lineSeparator());
+        result.append("result,").append(supplyCounter - buyCounter);
+        return result;
     }
 }
