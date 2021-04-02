@@ -11,6 +11,7 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String SPLITTER = ",";
+    private static final String WORD_FOR_OUTPUT = "result,";
     private static final int OPERATION_TYPE = 0;
     private static final int AMMOUNT = 1;
 
@@ -38,7 +39,7 @@ public class WorkWithFile {
                 String[] valueContent = value.split(SPLITTER);
                 if (valueContent[OPERATION_TYPE].equals(SUPPLY)) {
                     supply += Integer.parseInt(valueContent[AMMOUNT]);
-                } else if (valueContent[OPERATION_TYPE].equals(BUY)) {
+                } else {
                     buy += Integer.parseInt(valueContent[AMMOUNT]);
                 }
                 value = reader.readLine();
@@ -46,8 +47,8 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read file", e);
         }
-        return "supply," + supply + System.lineSeparator()
-                + "buy," + buy + System.lineSeparator()
-                + "result," + (supply - buy);
+        return SUPPLY + SPLITTER + supply + System.lineSeparator()
+                + BUY + SPLITTER + buy + System.lineSeparator()
+                + WORD_FOR_OUTPUT + (supply - buy);
     }
 }
