@@ -1,6 +1,11 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class WorkWithFile {
     private static final String BUY_WORD = "buy";
@@ -13,9 +18,10 @@ public class WorkWithFile {
         int totalSupply = 0;
 
         try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(new File(fromFileName)));
+            BufferedReader bufferedReader = new BufferedReader(
+                    new FileReader(new File(fromFileName)));
             String value = bufferedReader.readLine();
-            while (value != null){
+            while (value != null) {
                 String[] temp = value.split(CSV_DELIMITER);
                 if (temp[0].equals(SUPPLY_WORD)) {
                     totalSupply += Integer.parseInt(temp[1]);
@@ -42,11 +48,15 @@ public class WorkWithFile {
                      .append(System.lineSeparator());
 
         try {
-            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(new File(toFileName)));
-            String[] outputStrings = stringBuilder.toString().split(System.lineSeparator());
+            BufferedWriter bufferedWriter = new BufferedWriter(
+                    new FileWriter(new File(toFileName), true));
+            String[] outputStrings = stringBuilder.toString()
+                                                  .split(System.lineSeparator());
             for (String outputString : outputStrings) {
                 bufferedWriter.write(outputString);
+                bufferedWriter.newLine();
             }
+            bufferedWriter.flush();
         } catch (IOException e) {
             throw new RuntimeException("Can`t write in file", e);
         }
