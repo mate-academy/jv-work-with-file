@@ -8,6 +8,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final int INDEX_OF_VALUE = 1;
+    private static final int INDEX_OF_WORD = 0;
     private static final String BUY_WORD = "buy";
     private static final String CSV_DELIMITER = ",";
     private static final String RESULT_WORD = "result";
@@ -17,17 +19,16 @@ public class WorkWithFile {
         int totalBuy = 0;
         int totalSupply = 0;
 
-        try {
-            BufferedReader bufferedReader = new BufferedReader(
-                    new FileReader(new File(fromFileName)));
+        try (BufferedReader bufferedReader = new BufferedReader(
+                new FileReader(new File(fromFileName)))) {
             String value = bufferedReader.readLine();
             while (value != null) {
                 String[] temp = value.split(CSV_DELIMITER);
-                if (temp[0].equals(SUPPLY_WORD)) {
-                    totalSupply += Integer.parseInt(temp[1]);
+                if (temp[INDEX_OF_WORD].equals(SUPPLY_WORD)) {
+                    totalSupply += Integer.parseInt(temp[INDEX_OF_VALUE]);
                 }
-                if (temp[0].equals(BUY_WORD)) {
-                    totalBuy += Integer.parseInt(temp[1]);
+                if (temp[INDEX_OF_WORD].equals(BUY_WORD)) {
+                    totalBuy += Integer.parseInt(temp[INDEX_OF_VALUE]);
                 }
                 value = bufferedReader.readLine();
             }
@@ -47,9 +48,8 @@ public class WorkWithFile {
                      .append(totalSupply - totalBuy)
                      .append(System.lineSeparator());
 
-        try {
-            BufferedWriter bufferedWriter = new BufferedWriter(
-                    new FileWriter(new File(toFileName), true));
+        try (BufferedWriter bufferedWriter = new BufferedWriter(
+                new FileWriter(new File(toFileName)))) {
             String[] outputStrings = stringBuilder.toString()
                                                   .split(System.lineSeparator());
             for (String outputString : outputStrings) {
