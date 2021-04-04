@@ -10,13 +10,27 @@ public class WorkWithFile {
     private static final String COMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
+        writeToFile(createReport(readFromFile(fromFileName)), toFileName);
+
+    }
+
+    private String[] readFromFile(String fromFileName) {
+        String[] dataFromFile;
+        try {
+            dataFromFile = Files.readString(Path.of(fromFileName))
+                    .split(System.lineSeparator());
+        } catch (IOException e) {
+            throw new RuntimeException("Can't read file", e);
+        }
+        return dataFromFile;
+    }
+
+    private String createReport(String[] data) {
         int supplyResult = 0;
         int buyResult = 0;
         StringBuilder stringBuilder = new StringBuilder();
         try {
-            String[] dataFromFile = Files.readString(Path.of(fromFileName))
-                    .split(System.lineSeparator());
-            for (String dataInfo : dataFromFile) {
+            for (String dataInfo : data) {
                 if (dataInfo.contains(SUPPLY)) {
                     supplyResult += Integer.parseInt(dataInfo.split(COMA)[1]);
                 } else {
@@ -27,11 +41,15 @@ public class WorkWithFile {
                     .append(System.lineSeparator()).append(BUY).append(COMA)
                     .append(buyResult).append(System.lineSeparator())
                     .append("result").append(COMA).append(supplyResult - buyResult);
-            try {
-                Files.write(Path.of(toFileName), stringBuilder.toString().getBytes());
-            } catch (IOException e) {
-                throw new RuntimeException("Can't read file", e);
-            }
+        } catch (Exception e) {
+            throw new RuntimeException("Can't read file", e);
+        }
+        return stringBuilder.toString();
+    }
+
+    private void writeToFile(String report, String toFileName) {
+        try {
+            Files.write(Path.of(toFileName), report.getBytes());
         } catch (IOException e) {
             throw new RuntimeException("Can't read file", e);
         }
