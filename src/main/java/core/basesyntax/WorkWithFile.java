@@ -1,11 +1,11 @@
 package core.basesyntax;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 
 public class WorkWithFile {
     private static final int INDEX_OF_VALUE = 1;
@@ -48,15 +48,10 @@ public class WorkWithFile {
                      .append(totalSupply - totalBuy)
                      .append(System.lineSeparator());
 
-        try (BufferedWriter bufferedWriter = new BufferedWriter(
-                new FileWriter(new File(toFileName)))) {
-            String[] outputStrings = stringBuilder.toString()
-                                                  .split(System.lineSeparator());
-            for (String outputString : outputStrings) {
-                bufferedWriter.write(outputString);
-                bufferedWriter.newLine();
-            }
-            bufferedWriter.flush();
+        File outputFile = new File(toFileName);
+        try {
+            Files.write(outputFile.toPath(), stringBuilder.toString().getBytes(),
+                    StandardOpenOption.TRUNCATE_EXISTING);
         } catch (IOException e) {
             throw new RuntimeException("Can`t write in file", e);
         }
