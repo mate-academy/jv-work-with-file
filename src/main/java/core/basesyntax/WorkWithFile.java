@@ -33,11 +33,11 @@ public class WorkWithFile {
         for (String someDatum : someData) {
             if (someDatum.contains("supply")) {
                 supplyPrice += Integer.parseInt(someDatum.substring(someDatum
-                        .indexOf(",") + 1, someDatum.length()));
+                        .indexOf(",") + 1));
 
             } else {
                 buyPrice += Integer.parseInt(someDatum.substring(someDatum
-                        .indexOf(",") + 1, someDatum.length()));
+                        .indexOf(",") + 1));
             }
 
             report[0] = "supply" + "," + supplyPrice;
