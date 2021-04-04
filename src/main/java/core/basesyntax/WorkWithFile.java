@@ -11,7 +11,6 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         writeToFile(createReport(readFromFile(fromFileName)), toFileName);
-
     }
 
     private String[] readFromFile(String fromFileName) {
