@@ -51,7 +51,7 @@ public class WorkWithFile {
         File outputFile = new File(toFileName);
         try {
             Files.write(outputFile.toPath(), stringBuilder.toString().getBytes(),
-                    StandardOpenOption.TRUNCATE_EXISTING);
+                    StandardOpenOption.CREATE);
         } catch (IOException e) {
             throw new RuntimeException("Can`t write in file", e);
         }
