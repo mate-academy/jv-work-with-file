@@ -11,7 +11,9 @@ import java.util.Map;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
-        write(createReport(read(fromFileName)), toFileName);
+        List<String> stringsFromFile = read(fromFileName);
+        String report = createReport(stringsFromFile);
+        write(report, toFileName);
     }
 
     private List<String> read(String fileName) {
@@ -20,7 +22,7 @@ public class WorkWithFile {
         try {
             stringsFromSourceFile = Files.readAllLines(sourceFile.toPath());
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't read file: " + sourceFile);
         }
         return stringsFromSourceFile;
     }
