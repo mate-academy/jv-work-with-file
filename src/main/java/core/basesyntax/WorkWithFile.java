@@ -7,9 +7,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-
-    private final static String SUPPLY = "supply";
-    private final static String BUY = "buy";
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
     private final String[] operationTypeArray = new String[] {SUPPLY, BUY};
 
     public void getStatistic(String fromFileName, String toFileName) {
