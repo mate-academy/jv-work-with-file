@@ -20,17 +20,17 @@ public class WorkWithFile {
     }
 
     private String getDataFromFile(String fromFileName) {
-        int countOfSupply = 0;
-        int countOfBuy = 0;
+        int supplyAmount = 0;
+        int buyAmount = 0;
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String line = bufferedReader.readLine();
             while (line != null) {
-                String[] lines = line.split(COMA);
-                if (lines[INDEX_OF_OPERATION].equals(BUY)) {
-                    countOfBuy += Integer.parseInt(lines[INDEX_OF_AMOUNT]);
+                String[] data = line.split(COMA);
+                if (data[INDEX_OF_OPERATION].equals(BUY)) {
+                    buyAmount += Integer.parseInt(data[INDEX_OF_AMOUNT]);
                 }
-                if (lines[INDEX_OF_OPERATION].equals(SUPPLY)) {
-                    countOfSupply += Integer.parseInt(lines[INDEX_OF_AMOUNT]);
+                if (data[INDEX_OF_OPERATION].equals(SUPPLY)) {
+                    supplyAmount += Integer.parseInt(data[INDEX_OF_AMOUNT]);
                 }
                 line = bufferedReader.readLine();
             }
@@ -38,13 +38,13 @@ public class WorkWithFile {
             throw new RuntimeException("Can not read a file" + fromFileName, e);
         }
         StringBuilder builder = new StringBuilder();
-        builder.append(SUPPLY).append(COMA).append(countOfSupply)
+        builder.append(SUPPLY).append(COMA).append(supplyAmount)
                 .append(System.lineSeparator())
                 .append(BUY).append(COMA)
-                .append(countOfBuy)
+                .append(buyAmount)
                 .append(System.lineSeparator())
                 .append(RESULT).append(COMA)
-                .append(countOfSupply - countOfBuy);
+                .append(supplyAmount - buyAmount);
         return builder.toString();
     }
 
