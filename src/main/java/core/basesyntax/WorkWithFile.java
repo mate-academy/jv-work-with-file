@@ -6,10 +6,12 @@ import java.nio.file.Path;
 import java.util.List;
 
 public class WorkWithFile {
-    private static final String FIRST_OPERATION_TYPE_STRING = "supply";
-    private static final String SECOND_OPERATION_TYPE_STRING = "buy";
+    private static final String SUPPLY_OPERATION = "supply";
+    private static final String BUY_OPERATION = "buy";
     private static final String RESULT_STRING = "result";
     private static final String SEPARATOR = ",";
+    private static final int TYPE_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         int[] data = parseData(getData(fromFileName));
@@ -37,8 +39,8 @@ public class WorkWithFile {
 
     private String createReport(int[] data) {
         int result = data[0] - data[1];
-        return FIRST_OPERATION_TYPE_STRING + SEPARATOR + data[0] + System.lineSeparator()
-                + SECOND_OPERATION_TYPE_STRING + SEPARATOR + data[1] + System.lineSeparator()
+        return SUPPLY_OPERATION + SEPARATOR + data[0] + System.lineSeparator()
+                + BUY_OPERATION + SEPARATOR + data[1] + System.lineSeparator()
                 + RESULT_STRING + SEPARATOR + result;
     }
 
@@ -47,10 +49,10 @@ public class WorkWithFile {
         int buyAmount = 0;
         for (String line : data) {
             String[] typeAndAmount = line.split(SEPARATOR);
-            if (typeAndAmount[0].equals(FIRST_OPERATION_TYPE_STRING)) {
-                supplyAmount += Integer.parseInt(typeAndAmount[1]);
-            } else {
-                buyAmount += Integer.parseInt(typeAndAmount[1]);
+            if (typeAndAmount[TYPE_INDEX].equals(SUPPLY_OPERATION)) {
+                supplyAmount += Integer.parseInt(typeAndAmount[AMOUNT_INDEX]);
+            } else if (typeAndAmount[TYPE_INDEX].equals(BUY_OPERATION)) {
+                buyAmount += Integer.parseInt(typeAndAmount[AMOUNT_INDEX]);
             }
         }
         return new int[]{supplyAmount, buyAmount};
