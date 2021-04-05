@@ -16,10 +16,10 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         String dataFromFile = analyseDataFromFile(fromFileName);
-        writeDataFromFile(dataFromFile, toFileName);
+        writeDataToFile(dataFromFile, toFileName);
     }
 
-    private void writeDataFromFile(String dataToFile, String fileName) {
+    private void writeDataToFile(String dataToFile, String fileName) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
             bufferedWriter.write(dataToFile);
         } catch (IOException e) {
@@ -44,7 +44,6 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read file" + fileName, e);
         }
-
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(SUPPLY).append(COMMA).append(supply)
                 .append(System.lineSeparator())
