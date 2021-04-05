@@ -17,31 +17,44 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         File fileRead = new File(fromFileName);
         File fileWrite = new File(toFileName);
-        StringBuilder data = new StringBuilder();
-        StringBuilder reportData = new StringBuilder();
-        fileWrite.getAbsoluteFile().delete();
-        writeToStringBuilder(fileRead, data);
-        String[] dataArray = data.toString().split(System.lineSeparator());
-        reportData.append(SUPPLY)
-                .append(COMMA)
-                .append(getTotalAmount(dataArray, SUPPLY))
-                .append(System.lineSeparator())
-                .append(BUY)
-                .append(COMMA)
-                .append(getTotalAmount(dataArray, BUY))
-                .append(System.lineSeparator())
-                .append(RESULT)
-                .append(COMMA)
-                .append(getTotalAmount(dataArray, SUPPLY) - getTotalAmount(dataArray, BUY));
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileWrite, true))) {
-            bufferedWriter.write(reportData.toString());
+        String[] dataArray = writeToStringBuilder(fileRead)
+                .toString().split(System.lineSeparator());
+        int supplyTotal = 0;
+        int buyTotal = 0;
+        for (int i = 0; i < dataArray.length; i++) {
+            if (getOperationType(dataArray[i]).equals(SUPPLY)) {
+                supplyTotal += getAmount(dataArray[i]);
+            } else {
+                buyTotal += getAmount(dataArray[i]);
+            }
+        }
+        String reportData = generateReportData(supplyTotal, buyTotal);
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileWrite))) {
+            bufferedWriter.write(reportData);
         } catch (IOException exception) {
-            throw new RuntimeException("Can't write to file");
+            throw new RuntimeException("Can't write to file", exception);
         }
 
     }
 
-    private void writeToStringBuilder(File fileRead, StringBuilder data) {
+    private String generateReportData(int supplyTotal, int buyTotal) {
+        StringBuilder reportData = new StringBuilder();
+        reportData.append(SUPPLY)
+                .append(COMMA)
+                .append(supplyTotal)
+                .append(System.lineSeparator())
+                .append(BUY)
+                .append(COMMA)
+                .append(buyTotal)
+                .append(System.lineSeparator())
+                .append(RESULT)
+                .append(COMMA)
+                .append(supplyTotal - buyTotal);
+        return reportData.toString();
+    }
+
+    private StringBuilder writeToStringBuilder(File fileRead) {
+        StringBuilder data = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(fileRead))) {
             String value = reader.readLine();
             while (value != null) {
@@ -49,18 +62,9 @@ public class WorkWithFile {
                 value = reader.readLine();
             }
         } catch (IOException exception) {
-            throw new RuntimeException("Can't read from file");
+            throw new RuntimeException("Can't read from file", exception);
         }
-    }
-
-    private int getTotalAmount(String[] data, String operationType) {
-        int amount = 0;
-        for (int i = 0; i < data.length; i++) {
-            if (getOperationType(data[i]).equals(operationType)) {
-                amount += getAmount(data[i]);
-            }
-        }
-        return amount;
+        return data;
     }
 
     private String getOperationType(String oneRecord) {
