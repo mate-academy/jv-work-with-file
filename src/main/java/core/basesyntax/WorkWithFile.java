@@ -14,20 +14,18 @@ public class WorkWithFile {
     private static final String STRING_SPLIT = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        readFile(fromFileName);
-        writeFile(toFileName);
+        writeFile(toFileName, readFile(fromFileName));
     }
 
-    private void writeFile(String toFileName) {
-        StringBuilder builder = new StringBuilder();
+    private void writeFile(String toFileName, String data) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write(String.valueOf(builder));
+            bufferedWriter.write(data);
         } catch (IOException e) {
             throw new RuntimeException("Can't write file", e);
         }
     }
 
-    private void readFile(String fromFileName) {
+    private String readFile(String fromFileName) {
         StringBuilder builder = new StringBuilder();
         int supply = 0;
         int buy = 0;
@@ -52,5 +50,6 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read file", e);
         }
+        return String.valueOf(builder);
     }
 }
