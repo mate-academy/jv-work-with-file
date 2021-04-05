@@ -7,9 +7,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 public class WorkWithFile {
-    private String PURPOSE_AND_VALUE_SEPARATOR = ",";
-    private String DATA_SEPARATOR = "\n";
-    private String CHARACTERS_AND_SIGNS_FILTER = "^a-z ^,";
+    private static final String PURPOSE_AND_VALUE_SEPARATOR = ",";
+    private static final String DATA_SEPARATOR = "\n";
+    private static final String CHARACTERS_AND_SIGNS_FILTER = "^a-z ^,";
     private String fromFileName;
     private String toFileName;
 
@@ -50,13 +50,13 @@ public class WorkWithFile {
         int supplyNumber = 0;
         int buyNumber = 0;
         for (String data : readFileAndCreateDataArray()) {
-            if (data.substring(0, data.indexOf(PURPOSE_AND_VALUE_SEPARATOR)).equals("supply")) {
-                supplyNumber += Integer.parseInt(data.substring(data
-                        .indexOf(PURPOSE_AND_VALUE_SEPARATOR) + 1).trim());
-            } else if (data.substring(0, data.indexOf(PURPOSE_AND_VALUE_SEPARATOR))
-                    .equals("buy")) {
-                buyNumber += Integer.parseInt(data.substring(data
-                        .indexOf(PURPOSE_AND_VALUE_SEPARATOR) + 1).trim());
+            String dataSubstring = data.substring(0, data.indexOf(PURPOSE_AND_VALUE_SEPARATOR));
+            int valueOfData = Integer.parseInt(data.substring(data
+                    .indexOf(PURPOSE_AND_VALUE_SEPARATOR) + 1).trim());
+            if (dataSubstring.equals("supply")) {
+                supplyNumber += valueOfData;
+            } else if (dataSubstring.equals("buy")) {
+                buyNumber += valueOfData;
             }
         }
         int result = supplyNumber - buyNumber;
@@ -65,9 +65,9 @@ public class WorkWithFile {
 
     private String[] createReport() {
         int[] buyAndSupplyArray = sumOfSupplyAndBuyInFile();
-        String reportBuilder = "supply," + buyAndSupplyArray[0] +
-                " " + "buy," + buyAndSupplyArray[1] +
-                " " + "result," + buyAndSupplyArray[2];
+        String reportBuilder = "supply," + buyAndSupplyArray[0]
+                + " " + "buy," + buyAndSupplyArray[1]
+                + " " + "result," + buyAndSupplyArray[2];
         return reportBuilder.split(" ");
     }
 
