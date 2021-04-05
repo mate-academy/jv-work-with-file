@@ -5,9 +5,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class WorkWithFile {
-    private static final String SUPPLY = "supply";
-    private static final String BUY = "buy";
-    private static final String COMA = ",";
+    private static final String SUPPLY_OPERATION = "supply";
+    private static final String BUY_OPERATION = "buy";
+    private static final String CSV_SEPARATOR = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         writeToFile(createReport(readFromFile(fromFileName)), toFileName);
@@ -30,18 +30,19 @@ public class WorkWithFile {
         StringBuilder stringBuilder = new StringBuilder();
         try {
             for (String dataInfo : data) {
-                if (dataInfo.contains(SUPPLY)) {
-                    supplyResult += Integer.parseInt(dataInfo.split(COMA)[1]);
+                String[] values = dataInfo.split(CSV_SEPARATOR);
+                if (values[0].contains(SUPPLY_OPERATION)) {
+                    supplyResult += Integer.parseInt(values[1]);
                 } else {
-                    buyResult += Integer.parseInt(dataInfo.split(COMA)[1]);
+                    buyResult += Integer.parseInt(values[1]);
                 }
             }
-            stringBuilder.append(SUPPLY).append(COMA).append(supplyResult)
-                    .append(System.lineSeparator()).append(BUY).append(COMA)
+            stringBuilder.append(SUPPLY_OPERATION).append(CSV_SEPARATOR).append(supplyResult)
+                    .append(System.lineSeparator()).append(BUY_OPERATION).append(CSV_SEPARATOR)
                     .append(buyResult).append(System.lineSeparator())
-                    .append("result").append(COMA).append(supplyResult - buyResult);
+                    .append("result").append(CSV_SEPARATOR).append(supplyResult - buyResult);
         } catch (Exception e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't create report", e);
         }
         return stringBuilder.toString();
     }
@@ -50,7 +51,7 @@ public class WorkWithFile {
         try {
             Files.write(Path.of(toFileName), report.getBytes());
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't write file", e);
         }
     }
 }
