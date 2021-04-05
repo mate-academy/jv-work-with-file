@@ -1,88 +1,54 @@
 package core.basesyntax;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
 
 public class WorkWithFile {
     private static final String PURPOSE_AND_VALUE_SEPARATOR = ",";
-    private static final String DATA_SEPARATOR = "\n";
-    private static final String CHARACTERS_AND_SIGNS_FILTER = "^a-z ^,";
-    private String fromFileName;
-    private String toFileName;
-
-    public String getFromFileName() {
-        return fromFileName;
-    }
-
-    public void setFromFileName(String fromFileName) {
-        this.fromFileName = fromFileName;
-    }
-
-    public String getToFileName() {
-        return toFileName;
-    }
-
-    public void setToFileName(String toFileName) {
-        this.toFileName = toFileName;
-    }
-
-    private String[] readFileAndCreateDataArray() {
-        File file = new File(getFromFileName());
-        if (file.length() > 0) {
-            String[] fileDataArray;
-            String buffer;
-            try {
-                buffer = Files.readString(file.toPath())
-                        .replaceAll(CHARACTERS_AND_SIGNS_FILTER, "");
-                fileDataArray = buffer.split(DATA_SEPARATOR);
-                return fileDataArray;
-            } catch (IOException e) {
-                throw new RuntimeException("Can`t read file and list data." + fromFileName, e);
-            }
-        }
-        return new String[]{};
-    }
-
-    private int[] sumOfSupplyAndBuyInFile() {
-        int supplyNumber = 0;
-        int buyNumber = 0;
-        for (String data : readFileAndCreateDataArray()) {
-            String dataSubstring = data.substring(0, data.indexOf(PURPOSE_AND_VALUE_SEPARATOR));
-            int valueOfData = Integer.parseInt(data.substring(data
-                    .indexOf(PURPOSE_AND_VALUE_SEPARATOR) + 1).trim());
-            if (dataSubstring.equals("supply")) {
-                supplyNumber += valueOfData;
-            } else if (dataSubstring.equals("buy")) {
-                buyNumber += valueOfData;
-            }
-        }
-        int result = supplyNumber - buyNumber;
-        return new int[]{supplyNumber, buyNumber, result};
-    }
-
-    private String[] createReport() {
-        int[] buyAndSupplyArray = sumOfSupplyAndBuyInFile();
-        String reportBuilder = "supply," + buyAndSupplyArray[0]
-                + " " + "buy," + buyAndSupplyArray[1]
-                + " " + "result," + buyAndSupplyArray[2];
-        return reportBuilder.split(" ");
-    }
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        setFromFileName(fromFileName);
-        setToFileName(toFileName);
-        StringBuilder report = new StringBuilder();
-        report.append(createReport()[0]).append(System.lineSeparator())
-                .append(createReport()[1]).append(System.lineSeparator())
-                .append(createReport()[2]).append(System.lineSeparator());
+        int supplyAmount = 0;
+        int buyAmount = 0;
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
+            String data = bufferedReader.readLine();
+            while (data != null) {
+                int valueOfData = Integer.parseInt(data.split(PURPOSE_AND_VALUE_SEPARATOR)[1]);
+                if (data.trim().split(PURPOSE_AND_VALUE_SEPARATOR)[0].equals(SUPPLY)) {
+                    supplyAmount += valueOfData;
+                } else if (data.trim().split(PURPOSE_AND_VALUE_SEPARATOR)[0].equals(BUY)) {
+                    buyAmount += valueOfData;
+                }
+                data = bufferedReader.readLine();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Can`t read file" + fromFileName, e);
+        }
+        writeToFile(toFileName, createReport(supplyAmount, buyAmount));
+    }
+
+    private void writeToFile(String toFileName, String report) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(String.format("%10s", report));
         } catch (IOException e) {
             throw new RuntimeException("Can`t write data to" + toFileName, e);
         }
+    }
+
+    private String createReport(int supply, int buy) {
+        int result = supply - buy;
+        StringBuilder reportBuilder = new StringBuilder();
+        reportBuilder.append("supply,").append(supply)
+                .append(System.lineSeparator()).append("buy,")
+                .append(buy).append(System.lineSeparator())
+                .append("result,").append(result)
+                .append(System.lineSeparator());
+        return reportBuilder.toString();
     }
 }
 
