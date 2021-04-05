@@ -17,7 +17,6 @@ public class WorkWithFile {
         String dataFromFile = readFromFile(fromFileName);
         String report = createReport(dataFromFile);
         writeToFile(report, toFileName);
-
     }
 
     private void writeToFile(String report, String toFileName) {
