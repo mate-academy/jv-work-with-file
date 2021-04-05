@@ -8,14 +8,14 @@ import java.nio.file.Files;
 import java.util.List;
 
 public class WorkWithFile {
-    private static final int RESULT_ARRAY_LENGTH = 3;
-    private static final String[] CSV_CATEGORIES = new String[]{"buy", "supply"};
+    private static final String[] CSV_CATEGORIES = new String[]{"buy"};
+    private static final String DELIMITER = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         writeToCsvFile(toFileName, readFromCsvFile(fromFileName));
     }
 
-    private String[] readFromCsvFile(String fromFileName) {
+    private String readFromCsvFile(String fromFileName) {
         File fileFrom = new File(fromFileName);
         List<String> csvValues;
         int buyTotal = 0;
@@ -24,29 +24,27 @@ public class WorkWithFile {
             csvValues = Files.readAllLines(fileFrom.toPath());
             for (String currentLine : csvValues) {
                 if (currentLine.contains(CSV_CATEGORIES[0])) {
-                    buyTotal += Integer.parseInt(currentLine.split(",")[1]);
+                    buyTotal += Integer.parseInt(currentLine
+                            .split(DELIMITER)[CSV_CATEGORIES.length]);
                     continue;
                 }
-                supplyTotal += Integer.parseInt(currentLine.split(",")[1]);
+                supplyTotal += Integer.parseInt(currentLine
+                        .split(DELIMITER)[CSV_CATEGORIES.length]);
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read file", e);
         }
-        String[] calculatedTotal = new String[RESULT_ARRAY_LENGTH];
-        calculatedTotal[0] = "supply," + supplyTotal + System.lineSeparator();
-        calculatedTotal[1] = "buy," + buyTotal + System.lineSeparator();
-        calculatedTotal[2] = "result," + (supplyTotal - buyTotal) + System.lineSeparator();
-        return calculatedTotal;
+        return "supply," + supplyTotal + System.lineSeparator()
+                + "buy," + buyTotal + System.lineSeparator() + "result,"
+                + (supplyTotal - buyTotal) + System.lineSeparator();
     }
 
-    private void writeToCsvFile(String toFileName, String[] csvData) {
+    private void writeToCsvFile(String toFileName, String csvData) {
         File fileTo = new File(toFileName);
-        for (String csvDatum : csvData) {
-            try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileTo, true))) {
-                bufferedWriter.write(csvDatum);
-            } catch (IOException e) {
-                throw new RuntimeException("Can't write data to file", e);
-            }
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileTo, true))) {
+            bufferedWriter.write(csvData);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write data to file", e);
         }
     }
 }
