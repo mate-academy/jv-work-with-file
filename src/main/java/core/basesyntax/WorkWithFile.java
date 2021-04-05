@@ -2,7 +2,6 @@ package core.basesyntax;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -20,16 +19,15 @@ public class WorkWithFile {
     }
 
     private String readFromFile(String fromFileName) {
-        File file = new File(fromFileName);
         StringBuilder builder = new StringBuilder();
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String readerValue = bufferedReader.readLine();
             while (readerValue != null) {
                 builder.append(readerValue).append(System.lineSeparator());
                 readerValue = bufferedReader.readLine();
             }
         } catch (IOException exception) {
-            throw new RuntimeException("File Name is Empty!" + fromFileName + " " + exception);
+            throw new RuntimeException("Cant read from file!" + fromFileName, exception);
         }
         return builder.toString();
     }
@@ -37,7 +35,7 @@ public class WorkWithFile {
     private String getDailyReport(String[] fileContent) {
         int supply = 0;
         int buy = 0;
-        for (int i = 0; i < fileContent.length - 1; i++) {
+        for (int i = 0; i < fileContent.length; i++) {
             if (fileContent[i].equals(SUPPLY)) {
                 supply += Integer.parseInt(fileContent[i + 1]);
             } else if (fileContent[i].equals(BUY)) {
@@ -52,16 +50,10 @@ public class WorkWithFile {
     }
 
     private void writeToFile(String toFileName, String dailyReport) {
-        File file = new File(toFileName);
-        try {
-            file.createNewFile();
-        } catch (IOException exception) {
-            throw new RuntimeException("Cant create file" + toFileName);
-        }
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(dailyReport);
         } catch (IOException exception) {
-            throw new RuntimeException("Cant write Report to File" + exception);
+            throw new RuntimeException("Cant write Report to File", exception);
         }
     }
 }
