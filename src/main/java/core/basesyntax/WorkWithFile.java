@@ -28,38 +28,37 @@ public class WorkWithFile {
     }
 
     private static String[] readFromFile(String fromFileName) {
-        StringBuilder stringBuilder = new StringBuilder();
+        StringBuilder wordsInLowerCase = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
-            String value = bufferedReader.readLine();
-            while (value != null) {
-                stringBuilder.append(value.toLowerCase()).append(System.lineSeparator());
-                value = bufferedReader.readLine();
+            String line = bufferedReader.readLine();
+            while (line != null) {
+                wordsInLowerCase.append(line.toLowerCase()).append(System.lineSeparator());
+                line = bufferedReader.readLine();
             }
         } catch (FileNotFoundException e) {
             throw new RuntimeException("File not found", e);
         } catch (IOException e) {
             throw new RuntimeException("Can't read from file", e);
         }
-        return stringBuilder.toString().split(SPECIAL_CHARACTERS);
+        return wordsInLowerCase.toString().split(SPECIAL_CHARACTERS);
     }
 
     private static String getResult(String fromFileName) {
-        String[] allWOrds = readFromFile(fromFileName);
-        StringBuilder stringBuilder = new StringBuilder();
+        String[] allWords = readFromFile(fromFileName);
+        StringBuilder statisticReport = new StringBuilder();
         int supplySum = 0;
         int buySum = 0;
 
-        for (int i = 0; i < allWOrds.length; i++) {
-            String wordToCompare = allWOrds[i];
+        for (int i = 0; i < allWords.length; i++) {
+            String wordToCompare = allWords[i];
             if (wordToCompare.equals(SUPPLY)) {
-                supplySum += Integer.parseInt(allWOrds[i + 1]);
+                supplySum += Integer.parseInt(allWords[i + 1]);
             } else if (wordToCompare.equals(BUY)) {
-                buySum += Integer.parseInt(allWOrds[i + 1]);
+                buySum += Integer.parseInt(allWords[i + 1]);
             }
         }
-        stringBuilder.append(SUPPLY).append(COMA).append(supplySum).append("\n");
-        stringBuilder.append(BUY).append(COMA).append(buySum).append("\n");
-        stringBuilder.append("result").append(COMA).append(supplySum - buySum);
-        return stringBuilder.toString();
+        statisticReport.append(SUPPLY).append(COMA).append(supplySum).append("\n");
+        statisticReport.append(BUY).append(COMA).append(buySum).append("\n");
+        return statisticReport.append("result").append(COMA).append(supplySum - buySum).toString();
     }
 }
