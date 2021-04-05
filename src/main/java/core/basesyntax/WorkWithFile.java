@@ -38,11 +38,12 @@ public class WorkWithFile {
     private void writeToFile(File file, int supply, int buy) {
         int result = supply - buy;
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
-            String report = ("supply," + supply + System.lineSeparator()
-                    + "buy," + buy + System.lineSeparator()
-                    + "result," + result);
-            String newStr = String.format("%10s", report);
-            bufferedWriter.write(newStr);
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append("supply,").append(supply).append(System.lineSeparator())
+                    .append("buy,").append(buy).append(System.lineSeparator())
+                    .append("result,").append(result);
+            String finalReport = String.format("%10s", stringBuilder);
+            bufferedWriter.write(finalReport);
         } catch (IOException e) {
             throw new RuntimeException("File does not exist", e);
         }
