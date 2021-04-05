@@ -8,18 +8,37 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
+    private static final String STRING_SPLIT = ",";
+
     public void getStatistic(String fromFileName, String toFileName) {
         int supply = 0;
         int buy = 0;
-        int result;
-        String[] operatingTypeSystem;
+        int result = 0;
         StringBuilder builder = new StringBuilder();
+        readFile(fromFileName, supply, result, buy, builder);
+        writeFile(toFileName, builder);
+    }
+
+    public void writeFile(String toFileName, StringBuilder builder) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true))) {
+            bufferedWriter.write(String.valueOf(builder));
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write file" + e);
+        }
+    }
+
+    public void readFile(String fromFileName, int supply, int result,
+             int buy, StringBuilder builder) {
         File myFile = new File(fromFileName);
+        String[] operatingTypeSystem;
         try (BufferedReader reader = new BufferedReader(new FileReader(myFile))) {
             String value = reader.readLine();
             while (value != null) {
-                operatingTypeSystem = value.split(",");
-                if (operatingTypeSystem[0].equals("supply")) {
+                operatingTypeSystem = value.split(STRING_SPLIT);
+                if (operatingTypeSystem[0].equals(SUPPLY)) {
                     supply += Integer.parseInt(operatingTypeSystem[1]);
                 } else {
                     buy += (Integer.parseInt(operatingTypeSystem[1]));
@@ -27,16 +46,11 @@ public class WorkWithFile {
                 value = reader.readLine();
             }
             result = supply - buy;
-            builder.append("supply,").append(supply).append(System.lineSeparator())
-                    .append("buy,").append(buy).append(System.lineSeparator())
-                    .append("result,").append(result);
+            builder.append(SUPPLY).append(",").append(supply).append(System.lineSeparator())
+                    .append(BUY).append(",").append(buy).append(System.lineSeparator())
+                    .append(RESULT).append(",").append(result);
         } catch (IOException e) {
             throw new RuntimeException("Can't read file" + e);
-        }
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true))) {
-            bufferedWriter.write(String.valueOf(builder));
-        } catch (IOException e) {
-            throw new RuntimeException("Can't write file" + e);
         }
     }
 }
