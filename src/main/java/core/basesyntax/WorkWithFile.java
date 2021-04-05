@@ -19,11 +19,11 @@ public class WorkWithFile {
 
     private StringBuilder readFromFile(String fromFileName) {
         File file = new File(fromFileName);
+        int supplyCounter = 0;
+        int buyCounter = 0;
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
             String line = bufferedReader.readLine();
-            int supplyCounter = 0;
-            int buyCounter = 0;
             while (line != null) {
                 String[] information = line.split(",");
                 if ("supply".equals(information[0])) {
@@ -33,10 +33,10 @@ public class WorkWithFile {
                 }
                 line = bufferedReader.readLine();
             }
-            return crateTabular(supplyCounter, buyCounter);
         } catch (IOException e) {
             throw new RuntimeException("Can`t find or read file" + fromFileName, e);
         }
+        return crateTabular(supplyCounter, buyCounter);
     }
 
     public StringBuilder crateTabular(int supplyCounter, int buyCounter) {
