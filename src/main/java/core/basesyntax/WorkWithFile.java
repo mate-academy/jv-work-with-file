@@ -10,6 +10,8 @@ public class WorkWithFile {
     private static final String FIRST_OPERATION_NAME = "supply";
     private static final String SECOND_OPERATION_NAME = "buy";
     private static final String DELIMITER = ",";
+    private static final int OPERATION_POSITION = 0;
+    private static final int AMOUNT_POSITION = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] textLines = getInputText(fromFileName).split(System.lineSeparator());
@@ -17,10 +19,10 @@ public class WorkWithFile {
         int buyAmount = 0;
         for (String line : textLines) {
             String[] lineInfo = line.split(DELIMITER);
-            if (lineInfo[0].equals(FIRST_OPERATION_NAME)) {
-                supplyAmount += Integer.parseInt(lineInfo[1]);
+            if (lineInfo[OPERATION_POSITION].equals(FIRST_OPERATION_NAME)) {
+                supplyAmount += Integer.parseInt(lineInfo[AMOUNT_POSITION]);
             } else {
-                buyAmount += Integer.parseInt(lineInfo[1]);
+                buyAmount += Integer.parseInt(lineInfo[AMOUNT_POSITION]);
             }
         }
         String inputText = getReportText(supplyAmount, buyAmount);
@@ -32,12 +34,12 @@ public class WorkWithFile {
         try {
             file.createNewFile();
         } catch (IOException e) {
-            throw new RuntimeException("Can't create a file", e);
+            throw new RuntimeException("Can't create the file " + fileName, e);
         }
         try {
             Files.write(file.toPath(), inputText.getBytes());
         } catch (IOException e) {
-            throw new RuntimeException("Can't write a file", e);
+            throw new RuntimeException("Can't write to the file" + fileName, e);
         }
     }
 
@@ -65,7 +67,7 @@ public class WorkWithFile {
             }
             return sourceTextBuilder.toString().trim();
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("Can't read a file", e);
+            throw new RuntimeException("Can't read the file " + fileName, e);
         }
     }
 }
