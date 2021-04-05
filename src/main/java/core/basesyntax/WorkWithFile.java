@@ -8,9 +8,17 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String WORDS_DIVIDER = ",";
+    private static final String SUPPLY_OPERATION = "supply";
+    private static final String BUY_OPERATION = "buy";
+    private static final String RESULT_OPERATION = "result";
+    private static final int FIRST_ELEMENT_INDEX = 0;
+    private static final int SECOND_ELEMENT_INDEX = 1;
+    private static final String EMPTY_STRING = "";
+
     public void getStatistic(String fromFileName, String toFileName) {
         String data = readInputFile(fromFileName);
-        String report = "";
+        String report = EMPTY_STRING;
         if (!data.isEmpty()) {
             report += calculateStatistic(data);
         }
@@ -25,7 +33,7 @@ public class WorkWithFile {
             StringBuilder stringBuilder = new StringBuilder();
             String line = bufferedReader.readLine();
             if (line == null) {
-                return "";
+                return EMPTY_STRING;
             }
             while (line != null) {
                 stringBuilder.append(line).append(System.lineSeparator());
@@ -42,16 +50,16 @@ public class WorkWithFile {
         int suppliesCount = 0;
         int buyCount = 0;
         for (String simpleLine : arrayData) {
-            String[] lineToArray = simpleLine.split(",");
-            if (lineToArray[0].equals("supply")) {
-                suppliesCount += Integer.parseInt(lineToArray[1]);
+            String[] lineToArray = simpleLine.split(WORDS_DIVIDER);
+            if (lineToArray[FIRST_ELEMENT_INDEX].equals(SUPPLY_OPERATION)) {
+                suppliesCount += Integer.parseInt(lineToArray[SECOND_ELEMENT_INDEX]);
             } else {
-                buyCount += Integer.parseInt(lineToArray[1]);
+                buyCount += Integer.parseInt(lineToArray[SECOND_ELEMENT_INDEX]);
             }
         }
-        return "supply," + suppliesCount + System.lineSeparator()
-                + "buy," + buyCount + System.lineSeparator()
-                + "result," + (suppliesCount - buyCount);
+        return SUPPLY_OPERATION + WORDS_DIVIDER + suppliesCount + System.lineSeparator()
+                + BUY_OPERATION + WORDS_DIVIDER + buyCount + System.lineSeparator()
+                + RESULT_OPERATION + WORDS_DIVIDER + (suppliesCount - buyCount);
     }
 
     private void writeReportToFile(String reportToWrite, String pathToFile) {
