@@ -16,29 +16,23 @@ public class WorkWithFile {
         writeToFile(toFileName, report);
     }
 
-    public static String[] readFromFle(String fromFileName) {
-        if (fromFileName == null) {
-            return new String[0];
-        }
+    private String[] readFromFle(String fromFileName) {
         File file = new File(fromFileName);
-        if (file.length() == 0) {
-            return new String[0];
-        }
         StringBuilder allLines = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            int character = reader.read();
-            while (character != -1) {
-                allLines.append((char)character);
-                character = reader.read();
+            String line = reader.readLine();
+            while (line != null) {
+                allLines.append(line).append(" ");
+                line = reader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("File not found", e);
         }
 
-        return allLines.toString().split("\\s+");
+        return allLines.toString().split(" ");
     }
 
-    public static String createReport(String[] data) {
+    private String createReport(String[] data) {
         int supplySum = 0;
         int buySum = 0;
         for (int i = 0; i < data.length; i++) {
@@ -56,7 +50,7 @@ public class WorkWithFile {
         return report.toString();
     }
 
-    public static void writeToFile(String toFileName, String report) {
+    private void writeToFile(String toFileName, String report) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write(report);
         } catch (IOException e) {
