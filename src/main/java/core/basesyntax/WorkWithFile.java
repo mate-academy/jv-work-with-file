@@ -12,6 +12,8 @@ public class WorkWithFile {
     private static final String RESULT = "result";
     private static final String SPLITTER = ",";
     private static final String WHITE_SPACE_REGEX = " ";
+    private static final int SUBSTRING_SUPPLY = 7;
+    private static final int SUBSTRING_BUY = 4;
 
     public void getStatistic(String fromFileName, String toFileName) {
         StringBuilder stringBuilder = readFile(new File(fromFileName));
@@ -40,9 +42,9 @@ public class WorkWithFile {
 
         for (String string : strings) {
             if (string.contains(SUPPLY)) {
-                supply += Integer.parseInt(string.substring(7));
+                supply += Integer.parseInt(string.substring(SUBSTRING_SUPPLY));
             } else {
-                buy += Integer.parseInt(string.substring(4));
+                buy += Integer.parseInt(string.substring(SUBSTRING_BUY));
             }
         }
         return new int[] {supply, buy};
@@ -50,11 +52,12 @@ public class WorkWithFile {
 
     public void writeToFile(String nameFile, int[] date) {
         File file = new File(nameFile);
-        String report = SUPPLY + SPLITTER + date[0] + System.lineSeparator()
-                + BUY + SPLITTER + date[1] + System.lineSeparator()
-                + RESULT + SPLITTER + (date[0] - date[1]);
+        StringBuilder report = new StringBuilder();
+        report.append(SUPPLY).append(SPLITTER).append(date[0]).append(System.lineSeparator())
+                .append(BUY).append(SPLITTER).append(date[1]).append(System.lineSeparator())
+                .append(RESULT).append(SPLITTER).append(date[0] - date[1]);
         try {
-            Files.write(file.toPath(), report.getBytes());
+            Files.write(file.toPath(), report.toString().getBytes());
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file", e);
         }
