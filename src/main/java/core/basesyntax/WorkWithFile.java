@@ -12,38 +12,38 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String RESULT = "result";
     private static final String COMMA = ",";
+    private static final int INDEX_OF_OPERATION_TYPE = 0;
+    private static final int INDEX_OF_AMOUNT = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         File fileFrom = new File(fromFileName);
         File fileTo = new File(toFileName);
-        String fileInfo = getFileInfo(fileFrom);
+        String fileInfo = getDataFromFile(fileFrom);
         writeToNewFile(fileTo,fileInfo);
     }
 
-    private String getFileInfo(File fileFrom) {
+    private String getDataFromFile(File fileFrom) {
         int buy = 0;
         int supply = 0;
         try (BufferedReader reader = new BufferedReader(new FileReader(fileFrom))) {
-            String value = reader.readLine();
-            while (value != null) {
-                int indexOfComma = value.indexOf(COMMA);
-                String operationType = value.substring(0,indexOfComma);
-                int amount = Integer.parseInt(value.substring(indexOfComma + 1, value.length()));
-                if (operationType.equals(BUY)) {
-                    buy += amount;
+            String line = reader.readLine();
+            while (line != null) {
+                String[] data = line.split(COMMA);
+                if (data[INDEX_OF_OPERATION_TYPE].equals(BUY)) {
+                    buy += Integer.parseInt(data[INDEX_OF_AMOUNT]);
                 }
-                if (operationType.equals(SUPPLY)) {
-                    supply += amount;
+                if (data[INDEX_OF_OPERATION_TYPE].equals(SUPPLY)) {
+                    supply += Integer.parseInt(data[INDEX_OF_AMOUNT]);
                 }
-                value = reader.readLine();
+                line = reader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read " + fileFrom, e);
         }
-        return getCvsFormat(buy,supply);
+        return createReport(buy,supply);
     }
 
-    private String getCvsFormat(int buy, int supply) {
+    private String createReport(int buy, int supply) {
         StringBuilder builder = new StringBuilder();
         int result = supply - buy;
         builder.append(SUPPLY).append(COMMA).append(supply).append(System.lineSeparator())
@@ -52,7 +52,7 @@ public class WorkWithFile {
         return builder.toString();
     }
 
-    private void writeToNewFile(File fileTo,String fileInfo) {
+    private void writeToNewFile(File fileTo, String fileInfo) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileTo))) {
             writer.write(fileInfo);
         } catch (IOException e) {
