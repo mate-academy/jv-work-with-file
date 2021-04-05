@@ -8,12 +8,18 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    public static final String SENTENCE_SPLITTER = "next sentence";
+    private static final String SENTENCE_SPLITTER = "next sentence";
+    private static final String SUBSTRING_REGEX = ",";
+
+    public void getStatistic(String fromFileName, String toFileName) {
+        String[] information = getDataFromFile(fromFileName);
+        String[] reportAboutInformation = createReport(information);
+        writeToFile(reportAboutInformation, toFileName);
+    }
 
     private String[] getDataFromFile(String fromFileName) {
-        File file = new File(fromFileName);
         StringBuilder stringBuilder = new StringBuilder();
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String line = bufferedReader.readLine();
             while (line != null) {
                 stringBuilder.append(line).append(SENTENCE_SPLITTER);
@@ -25,19 +31,19 @@ public class WorkWithFile {
         return stringBuilder.toString().split(SENTENCE_SPLITTER);
     }
 
-    private String[] createReport(String[] someData) {
+    private String[] createReport(String[] records) {
         int supplyPrice = 0;
         int buyPrice = 0;
         String[] report = new String[3];
 
-        for (String someDatum : someData) {
+        for (String someDatum : records) {
             if (someDatum.contains("supply")) {
                 supplyPrice += Integer.parseInt(someDatum.substring(someDatum
-                        .indexOf(",") + 1));
+                        .indexOf(SUBSTRING_REGEX) + 1));
 
             } else {
                 buyPrice += Integer.parseInt(someDatum.substring(someDatum
-                        .indexOf(",") + 1));
+                        .indexOf(SUBSTRING_REGEX) + 1));
             }
 
             report[0] = "supply" + "," + supplyPrice;
@@ -47,20 +53,14 @@ public class WorkWithFile {
         return report;
     }
 
-    private void writeToFile(String[] someReport, String toFileName) {
+    private void writeToFile(String[] reports, String toFileName) {
         File file = new File(toFileName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, true))) {
-            for (String s : someReport) {
+            for (String s : reports) {
                 bufferedWriter.write(s + System.lineSeparator());
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't create file", e);
         }
-    }
-
-    public void getStatistic(String fromFileName, String toFileName) {
-        String[] information = getDataFromFile(fromFileName);
-        String[] reportAboutInformation = createReport(information);
-        writeToFile(reportAboutInformation, toFileName);
     }
 }
