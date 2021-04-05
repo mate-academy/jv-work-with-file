@@ -28,7 +28,7 @@ public class WorkWithFile {
                 line = bufferedReader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't find the file", e);
+            throw new RuntimeException("Can't find the file " + fromFileName, e);
         }
         String[] datesFromFile = stringBuilder.toString().split(",");
         for (int i = 0; i < datesFromFile.length; i++) {
@@ -50,7 +50,7 @@ public class WorkWithFile {
             bufferedWriter.flush();
             bufferedWriter.close();
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data to file", e);
+            throw new RuntimeException("Can't write data to file" + toFileName, e);
         }
     }
 }
