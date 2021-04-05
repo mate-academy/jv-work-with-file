@@ -29,7 +29,6 @@ public class WorkWithFile {
 
     private void writeReport(String fileName, String report) {
         try {
-            Files.createFile(Path.of(fileName));
             Files.write(Path.of(fileName), report.getBytes());
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file " + fileName, e);
