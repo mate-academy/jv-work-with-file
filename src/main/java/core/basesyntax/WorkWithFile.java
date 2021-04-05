@@ -8,8 +8,8 @@ import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 
 public class WorkWithFile {
-    private static final int INDEX_OF_VALUE = 1;
-    private static final int INDEX_OF_WORD = 0;
+    private static final int VALUE_POSITION = 1;
+    private static final int OPERATION_TYPE_POSITION = 0;
     private static final String BUY_WORD = "buy";
     private static final String CSV_DELIMITER = ",";
     private static final String RESULT_WORD = "result";
@@ -18,42 +18,40 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         int totalBuy = 0;
         int totalSupply = 0;
-
         try (BufferedReader bufferedReader = new BufferedReader(
                 new FileReader(new File(fromFileName)))) {
-            String value = bufferedReader.readLine();
-            while (value != null) {
-                String[] temp = value.split(CSV_DELIMITER);
-                if (temp[INDEX_OF_WORD].equals(SUPPLY_WORD)) {
-                    totalSupply += Integer.parseInt(temp[INDEX_OF_VALUE]);
+            String line = bufferedReader.readLine();
+            while (line != null) {
+                String[] data = line.split(CSV_DELIMITER);
+                if (data[OPERATION_TYPE_POSITION].equals(SUPPLY_WORD)) {
+                    totalSupply += Integer.parseInt(data[VALUE_POSITION]);
+                    line = bufferedReader.readLine();
                 }
-                if (temp[INDEX_OF_WORD].equals(BUY_WORD)) {
-                    totalBuy += Integer.parseInt(temp[INDEX_OF_VALUE]);
+                if (data[OPERATION_TYPE_POSITION].equals(BUY_WORD)) {
+                    totalBuy += Integer.parseInt(data[VALUE_POSITION]);
+                    line = bufferedReader.readLine();
                 }
-                value = bufferedReader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("Can`t read file", e);
         }
-
-        StringBuilder stringBuilder = new StringBuilder();
-
-        stringBuilder.append(SUPPLY_WORD + CSV_DELIMITER)
-                     .append(totalSupply)
-                     .append(System.lineSeparator());
-        stringBuilder.append(BUY_WORD + CSV_DELIMITER)
-                     .append(totalBuy)
-                     .append(System.lineSeparator());
-        stringBuilder.append(RESULT_WORD + CSV_DELIMITER)
-                     .append(totalSupply - totalBuy)
-                     .append(System.lineSeparator());
-
         File outputFile = new File(toFileName);
         try {
-            Files.write(outputFile.toPath(), stringBuilder.toString().getBytes(),
+            Files.write(outputFile.toPath(), makeReport(totalSupply, totalBuy).getBytes(),
                     StandardOpenOption.CREATE);
         } catch (IOException e) {
             throw new RuntimeException("Can`t write in file", e);
         }
+    }
+
+    private String makeReport(int totalSupply, int totalBuy) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(SUPPLY_WORD + CSV_DELIMITER).append(totalSupply)
+                     .append(System.lineSeparator());
+        stringBuilder.append(BUY_WORD + CSV_DELIMITER).append(totalBuy)
+                     .append(System.lineSeparator());
+        stringBuilder.append(RESULT_WORD + CSV_DELIMITER).append(totalSupply - totalBuy)
+                     .append(System.lineSeparator());
+        return stringBuilder.toString();
     }
 }
