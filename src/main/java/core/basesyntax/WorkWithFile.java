@@ -31,7 +31,7 @@ public class WorkWithFile {
             }
             writeToFile(toFileName, supply, buy);
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't write write data to file" + fromFileName, e);
         }
     }
 
@@ -43,7 +43,7 @@ public class WorkWithFile {
                     .append(RESULT).append(COMMA).append(supply - buy);
             writer.write(stringBuilder.toString());
         } catch (IOException e) {
-            throw new RuntimeException("Can't write write data to file", e);
+            throw new RuntimeException("Can't write write data to file" + toFileName, e);
         }
     }
 }
