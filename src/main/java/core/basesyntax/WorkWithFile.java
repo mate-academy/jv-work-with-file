@@ -18,21 +18,24 @@ public class WorkWithFile {
         File fileRead = new File(fromFileName);
         File fileWrite = new File(toFileName);
         StringBuilder data = new StringBuilder();
-        StringBuilder dataToWrite = new StringBuilder();
-        fileWrite.getAbsoluteFile().delete();
+        StringBuilder reportData = new StringBuilder();
+        fileWrite.getAbsoluteFile().delete(); // deleting old files, need to test without deleting files myself.
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(fileRead))) {
-            String value = reader.readLine();
-            while (value != null) {
-                data.append(value).append(System.lineSeparator());
-                value = reader.readLine();
-            }
+        writeToStringBuilder(fileRead, data); // as the name says, writes data from file do stringBuilder
+
+        String[] dataArray = data.toString().split(System.lineSeparator()); //creates array with data for easy access
+
+        createReport(reportData, dataArray);
+
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileWrite, true))) {
+            bufferedWriter.write(reportData.toString());
         } catch (IOException exception) {
-            throw new RuntimeException("Can't read from file");
+            throw new RuntimeException("Can't write to file");
         }
 
-        String[] dataArray = data.toString().split(System.lineSeparator());
+    }
 
+    private void createReport(StringBuilder dataToWrite, String[] dataArray) {
         dataToWrite.append(SUPPLY)
                 .append(COMMA)
                 .append(getTotalAmount(dataArray, SUPPLY))
@@ -44,13 +47,18 @@ public class WorkWithFile {
                 .append(RESULT)
                 .append(COMMA)
                 .append(getTotalAmount(dataArray, SUPPLY) - getTotalAmount(dataArray, BUY));
+    }
 
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileWrite, true))) {
-            bufferedWriter.write(dataToWrite.toString());
+    private void writeToStringBuilder(File fileRead, StringBuilder data) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileRead))) {
+            String value = reader.readLine();
+            while (value != null) {
+                data.append(value).append(System.lineSeparator());
+                value = reader.readLine();
+            }
         } catch (IOException exception) {
-            throw new RuntimeException("Can't write to file");
+            throw new RuntimeException("Can't read from file");
         }
-
     }
 
     private int getTotalAmount(String[] data, String operationType) {
