@@ -25,8 +25,8 @@ public class WorkWithFile {
                 buyAmount += Integer.parseInt(lineInfo[AMOUNT_POSITION]);
             }
         }
-        String inputText = getReportText(supplyAmount, buyAmount);
-        writeToFile(toFileName, inputText);
+        String outputText = getReportText(supplyAmount, buyAmount);
+        writeToFile(toFileName, outputText);
     }
 
     private void writeToFile(String fileName, String inputText) {

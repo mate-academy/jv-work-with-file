@@ -45,6 +45,4 @@ Explanation:
 - `buy = 10 + 13 + 10 = 33`
 - `result = supply - buy = 47 - 33 = 14`
 
-#### [Try to avoid these common mistakes, while solving task][]
-
-[]: https://mate-sademy.github.io/jv-program-common-mistakes/java-core/builder-file/work-with-file
+#### [Try to avoid these common mistakes, while solving task](https://mate-sademy.github.io/jv-program-common-mistakes/java-core/builder-file/work-with-file)
