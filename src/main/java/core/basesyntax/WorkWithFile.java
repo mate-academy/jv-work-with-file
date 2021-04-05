@@ -9,8 +9,8 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final String SUPPLY_OPERATION = "supply";
     private static final String BUY_OPEATION = "buy";
-    private final String[] operationTypeArray = new String[] {SUPPLY_OPERATION, BUY_OPEATION};
     private static final String CSV_SEPARATOR = ",";
+    private final String[] operationTypeArray = new String[] {SUPPLY_OPERATION, BUY_OPEATION};
 
     public void getStatistic(String fromFileName, String toFileName) {
         int[] amountArray = new int[2];
