@@ -1,49 +1,53 @@
 package core.basesyntax;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.util.List;
 
 public class WorkWithFile {
-    protected static String[] readFromFile(String fromFileName) {
+    private static final String BUY = "b";
+    private static final String SUPPLY = "s";
+    private static final String WHITE_SPACE = " ";
+
+    protected static int[] readFromFile(String fromFileName) {
         File file = new File(fromFileName);
-        List<String> statistic = null;
+        int countBuy = 0;
+        int countSupply = 0;
+        String line = null;
         try {
-            statistic = Files.readAllLines(file.toPath());
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+            while ((line = bufferedReader.readLine()) != null) {
+                String[] words = line.split(WHITE_SPACE);
+                for (String word : words) {
+                    if (word.startsWith(BUY)) {
+                        countBuy += Integer.parseInt(word.substring(4));
+                    } else if (word.startsWith(SUPPLY)) {
+                        countSupply += Integer.parseInt(word.substring(7));
+                    }
+                }
+            }
         } catch (IOException e) {
             throw new RuntimeException("Cannot read file " + fromFileName, e);
         }
-        String[] array = new String[statistic.size()];
-        array = statistic.toArray(array);
-        return array;
+        return new int[]{countBuy, countSupply};
     }
 
     protected static String createReport(String fromFileName) {
-        String[] statistic = readFromFile(fromFileName);
-        int countBuy = 0;
-        int countSupply = 0;
-
-        for (String word : statistic) {
-            if (word.startsWith("b")) {
-                countBuy += Integer.parseInt(word.substring(4));
-            } else if (word.startsWith("s")) {
-                countSupply += Integer.parseInt(word.substring(7));
-            }
-        }
-        countBuy /= 2;
-        countSupply /= 2;
-        int result = countSupply - countBuy;
+        int[] valueBuySupply = readFromFile(fromFileName);
+        valueBuySupply[0] /= 2;
+        valueBuySupply[1] /= 2;
+        int result = valueBuySupply[1] - valueBuySupply[0];
         StringBuilder reportBuilder = new StringBuilder();
-        reportBuilder.append("supply,").append(countSupply).append(System.lineSeparator())
-                     .append("buy,").append(countBuy).append(System.lineSeparator())
+        reportBuilder.append("supply,").append(valueBuySupply[1]).append(System.lineSeparator())
+                     .append("buy,").append(valueBuySupply[0]).append(System.lineSeparator())
                      .append("result,").append(result);
         return reportBuilder.toString();
     }
 
-    public static void getStatistic(String fromFileName, String toFileName) {
+    protected static void getStatistic(String fromFileName, String toFileName) {
         File file = new File(toFileName);
         try {
             file.createNewFile();
