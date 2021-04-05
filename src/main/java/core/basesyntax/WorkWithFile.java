@@ -41,7 +41,7 @@ public class WorkWithFile {
                 .append(System.lineSeparator())
                 .append(BUY).append(",").append(buy)
                 .append(System.lineSeparator())
-                .append(RESULT).append(",").append(supply-buy);
+                .append(RESULT).append(",").append(supply - buy);
         return stringBuilder.toString();
     }
 
