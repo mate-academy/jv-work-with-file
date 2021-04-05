@@ -8,21 +8,25 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    public static final String STRING_DIVIDER = " ";
+    public static final String WORDS_DIVIDER = ",";
+    public static final int AMOUNT_POSITION_INDEX = 1;
+    public static final String SUPPLY = "supply,";
+    public static final String BUY = "buy,";
+    public static final String RESULT = "result,";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        WorkWithFile workWithFile = new WorkWithFile();
-        workWithFile.writeToFile(createReport(readFromFile(fromFileName)), toFileName);
+        writeToFile(createReport(readFromFile(fromFileName)), toFileName);
     }
 
     private String readFromFile(String fromFileName) {
         File file = new File(fromFileName);
         String result = "";
-        StringBuilder stringBuilder = new StringBuilder("");
+        StringBuilder stringBuilder = new StringBuilder(result);
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            String value = reader.readLine();
-            while (value != null) {
-                stringBuilder.append(value).append(" ");
-                value = reader.readLine();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                stringBuilder.append(line).append(STRING_DIVIDER);
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from file" + fromFileName, e);
@@ -32,22 +36,22 @@ public class WorkWithFile {
     }
 
     private String createReport(String inputData) {
-        String[] records = inputData.split(" ");
+        String[] records = inputData.split(STRING_DIVIDER);
         StringBuilder builder = new StringBuilder();
         int countBuy = 0;
         int countSupply = 0;
         for (String record : records) {
-            String[] array = record.split(",");
+            String[] array = record.split(WORDS_DIVIDER);
             if (record.contains("buy")) {
-                countBuy += Integer.parseInt(array[1]);
+                countBuy += Integer.parseInt(array[AMOUNT_POSITION_INDEX]);
             } else {
-                countSupply += Integer.parseInt(array[1]);
+                countSupply += Integer.parseInt(array[AMOUNT_POSITION_INDEX]);
             }
         }
         int result = countSupply - countBuy;
-        builder.append("supply,").append(countSupply).append(System.lineSeparator())
-                .append("buy,").append(countBuy).append(System.lineSeparator())
-                .append("result,").append(result).append(System.lineSeparator());
+        builder.append(SUPPLY).append(countSupply).append(System.lineSeparator())
+                .append(BUY).append(countBuy).append(System.lineSeparator())
+                .append(RESULT).append(result).append(System.lineSeparator());
         return builder.toString();
     }
 
