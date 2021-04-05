@@ -13,12 +13,11 @@ import java.util.Map;
 public class WorkWithFile {
     private static final int OPERATION_NAME = 0;
     private static final int OPERATION_AMOUNT = 1;
-    private static final String REGEX = "[\\W]";
+    private static final String CSV_SEPARATOR = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] result = readFromFile(fromFileName);
         writeToFile(toFileName, dataProcessing(result));
-
     }
 
     private String[] readFromFile(String fromFileName) {
@@ -34,19 +33,11 @@ public class WorkWithFile {
             throw new RuntimeException("Can't open file! " + fromFileName, e);
         }
 
-        for (String line : strings.toString()
-                .substring(1, strings.toString().length() - 1)
-                .split("\n")) {
-            stringBuilder.append(line)
-                    .append(" ");
-
-        }
-        return stringBuilder.toString().split(" ");
+        return strings.toArray(new String[0]);
     }
 
     private void writeToFile(String toFile, String dataToWriting) {
         File file = new File(toFile);
-        StringBuilder stringBuilder = new StringBuilder();
 
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, false))) {
             bufferedWriter.write(dataToWriting);
@@ -60,7 +51,7 @@ public class WorkWithFile {
         StringBuilder stringBuilder = new StringBuilder();
 
         for (String line : data) {
-            String[] buffer = line.split(",");
+            String[] buffer = line.split(CSV_SEPARATOR);
             if (result.containsKey(buffer[OPERATION_NAME])) {
                 result.put(buffer[OPERATION_NAME], result.get(buffer[OPERATION_NAME])
                         + Integer.parseInt(buffer[OPERATION_AMOUNT]));
@@ -81,5 +72,4 @@ public class WorkWithFile {
 
         return stringBuilder.toString();
     }
-
 }
