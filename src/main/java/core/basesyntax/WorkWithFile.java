@@ -12,7 +12,7 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String COMMA = ",";
 
-    public static int[] readFromFile(String fromFileName) {
+    private int[] readFromFile(String fromFileName) {
         File file = new File(fromFileName);
         int countBuy = 0;
         int countSupply = 0;
@@ -33,10 +33,8 @@ public class WorkWithFile {
         return new int[]{countBuy, countSupply};
     }
 
-    public static String createReport(String fromFileName) {
+    private String createReport(String fromFileName) {
         int[] valueBuySupply = readFromFile(fromFileName);
-        valueBuySupply[0] /= 2;
-        valueBuySupply[1] /= 2;
         int result = valueBuySupply[1] - valueBuySupply[0];
         StringBuilder reportBuilder = new StringBuilder();
         reportBuilder.append("supply,").append(valueBuySupply[1]).append(System.lineSeparator())
@@ -45,7 +43,7 @@ public class WorkWithFile {
         return reportBuilder.toString();
     }
 
-    public static void getStatistic(String fromFileName, String toFileName) {
+    public void getStatistic(String fromFileName, String toFileName) {
         File file = new File(toFileName);
         try {
             file.createNewFile();
