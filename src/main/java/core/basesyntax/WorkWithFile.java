@@ -14,24 +14,24 @@ public class WorkWithFile {
     private static final String STRING_SPLIT = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int supply = 0;
-        int buy = 0;
-        int result = 0;
-        StringBuilder builder = new StringBuilder();
-        readFile(fromFileName, supply, result, buy, builder);
-        writeFile(toFileName, builder);
+        readFile(fromFileName);
+        writeFile(toFileName);
     }
 
-    public void writeFile(String toFileName, StringBuilder builder) {
+    private void writeFile(String toFileName) {
+        StringBuilder builder = new StringBuilder();
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true))) {
             bufferedWriter.write(String.valueOf(builder));
         } catch (IOException e) {
-            throw new RuntimeException("Can't write file" + e);
+            throw new RuntimeException("Can't write file", e);
         }
     }
 
-    public void readFile(String fromFileName, int supply, int result,
-             int buy, StringBuilder builder) {
+    private void readFile(String fromFileName) {
+        StringBuilder builder = new StringBuilder();
+        int supply = 0;
+        int buy = 0;
+        int result = 0;
         File myFile = new File(fromFileName);
         String[] operatingTypeSystem;
         try (BufferedReader reader = new BufferedReader(new FileReader(myFile))) {
@@ -50,7 +50,7 @@ public class WorkWithFile {
                     .append(BUY).append(",").append(buy).append(System.lineSeparator())
                     .append(RESULT).append(",").append(result);
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file" + e);
+            throw new RuntimeException("Can't read file", e);
         }
     }
 }
