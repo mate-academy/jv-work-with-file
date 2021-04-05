@@ -8,11 +8,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final String BUY = "b";
-    private static final String SUPPLY = "s";
-    private static final String WHITE_SPACE = " ";
+    private static final String BUY = "buy";
+    private static final String SUPPLY = "supply";
+    private static final String COMMA = ",";
 
-    protected static int[] readFromFile(String fromFileName) {
+    public static int[] readFromFile(String fromFileName) {
         File file = new File(fromFileName);
         int countBuy = 0;
         int countSupply = 0;
@@ -20,13 +20,11 @@ public class WorkWithFile {
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
             while ((line = bufferedReader.readLine()) != null) {
-                String[] words = line.split(WHITE_SPACE);
-                for (String word : words) {
-                    if (word.startsWith(BUY)) {
-                        countBuy += Integer.parseInt(word.substring(4));
-                    } else if (word.startsWith(SUPPLY)) {
-                        countSupply += Integer.parseInt(word.substring(7));
-                    }
+                String[] wordNumber = line.split(COMMA);
+                if (wordNumber[0].equals(BUY)) {
+                    countBuy += Integer.parseInt(wordNumber[1]);
+                } else if (wordNumber[0].equals(SUPPLY)) {
+                    countSupply += Integer.parseInt(wordNumber[1]);
                 }
             }
         } catch (IOException e) {
@@ -35,7 +33,7 @@ public class WorkWithFile {
         return new int[]{countBuy, countSupply};
     }
 
-    protected static String createReport(String fromFileName) {
+    public static String createReport(String fromFileName) {
         int[] valueBuySupply = readFromFile(fromFileName);
         valueBuySupply[0] /= 2;
         valueBuySupply[1] /= 2;
@@ -47,7 +45,7 @@ public class WorkWithFile {
         return reportBuilder.toString();
     }
 
-    protected static void getStatistic(String fromFileName, String toFileName) {
+    public static void getStatistic(String fromFileName, String toFileName) {
         File file = new File(toFileName);
         try {
             file.createNewFile();
