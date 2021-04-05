@@ -9,16 +9,12 @@ import java.io.IOException;
 
 public class WorkWithFile {
     private static final String SPECIAL_CHARACTERS = "[,\\s\\-:?]";
-    private static final String COMA = ",";
-    private static final String SUPPLY = "supply";
-    private static final String BUY = "buy";
+    private static final String CSV_SEPARATOR = ",";
+    private static final String SUPPLY_OPERATION = "supply";
+    private static final String BUY_OPERATION = "buy";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        writeToFile(fromFileName, toFileName);
-    }
-
-    private static void writeToFile(String fromFileName, String toFileName) {
-        String result = getResult(fromFileName);
+        String result = readFromFile(fromFileName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true));
         ) {
             bufferedWriter.write(result);
@@ -27,12 +23,23 @@ public class WorkWithFile {
         }
     }
 
-    private static String[] readFromFile(String fromFileName) {
-        StringBuilder wordsInLowerCase = new StringBuilder();
+    private static String readFromFile(String fromFileName) {
+        StringBuilder statisticReport = new StringBuilder();
+        int supplySum = 0;
+        int buySum = 0;
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String line = bufferedReader.readLine();
             while (line != null) {
-                wordsInLowerCase.append(line.toLowerCase()).append(System.lineSeparator());
+                String[] arrayWithLowerCase = (line.toLowerCase()
+                        + System.lineSeparator()).split(SPECIAL_CHARACTERS);
+                for (int i = 0; i < arrayWithLowerCase.length; i++) {
+                    String wordToCompare = arrayWithLowerCase[i];
+                    if (wordToCompare.equals(SUPPLY_OPERATION)) {
+                        supplySum += Integer.parseInt(arrayWithLowerCase[i + 1]);
+                    } else if (wordToCompare.equals(BUY_OPERATION)) {
+                        buySum += Integer.parseInt(arrayWithLowerCase[i + 1]);
+                    }
+                }
                 line = bufferedReader.readLine();
             }
         } catch (FileNotFoundException e) {
@@ -40,25 +47,12 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read from file", e);
         }
-        return wordsInLowerCase.toString().split(SPECIAL_CHARACTERS);
-    }
 
-    private static String getResult(String fromFileName) {
-        String[] allWords = readFromFile(fromFileName);
-        StringBuilder statisticReport = new StringBuilder();
-        int supplySum = 0;
-        int buySum = 0;
-
-        for (int i = 0; i < allWords.length; i++) {
-            String wordToCompare = allWords[i];
-            if (wordToCompare.equals(SUPPLY)) {
-                supplySum += Integer.parseInt(allWords[i + 1]);
-            } else if (wordToCompare.equals(BUY)) {
-                buySum += Integer.parseInt(allWords[i + 1]);
-            }
-        }
-        statisticReport.append(SUPPLY).append(COMA).append(supplySum).append("\n");
-        statisticReport.append(BUY).append(COMA).append(buySum).append("\n");
-        return statisticReport.append("result").append(COMA).append(supplySum - buySum).toString();
+        statisticReport.append(SUPPLY_OPERATION).append(CSV_SEPARATOR)
+                .append(supplySum).append("\n");
+        statisticReport.append(BUY_OPERATION).append(CSV_SEPARATOR)
+                .append(buySum).append("\n");
+        return statisticReport.append("result").append(CSV_SEPARATOR)
+                .append(supplySum - buySum).toString();
     }
 }
