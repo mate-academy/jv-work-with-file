@@ -12,24 +12,23 @@ public class WorkWithFile {
     public static final String SUPPLY = "supply";
     public static final String BUY = "buy";
     public static final String RESULT = "result";
-    public static final int ZERO = 0;
-    public static final int ONE = 1;
+    public static final int OPERATION_TYPE_POSITION = 0;
+    public static final int AMOUNT_POSITION = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         File readFromFile = new File(fromFileName);
         int supply = 0;
         int buy = 0;
-
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(readFromFile))) {
-            String value = bufferedReader.readLine();
-            while (value != null) {
-                if (value.split(COMMA)[ZERO].equals("supply")) {
-                    supply += Integer.parseInt(value.split(",")[ONE]);
+            String line = bufferedReader.readLine();
+            while (line != null) {
+                if (line.split(COMMA)[OPERATION_TYPE_POSITION].equals("supply")) {
+                    supply += Integer.parseInt(line.split(",")[AMOUNT_POSITION]);
                 }
-                if (value.split(COMMA)[ZERO].equals("buy")) {
-                    buy += Integer.parseInt(value.split(",")[ONE]);
+                if (line.split(COMMA)[OPERATION_TYPE_POSITION].equals("buy")) {
+                    buy += Integer.parseInt(line.split(COMMA)[AMOUNT_POSITION]);
                 }
-                value = bufferedReader.readLine();
+                line = bufferedReader.readLine();
             }
             writeToFile(toFileName, supply, buy);
         } catch (IOException e) {
@@ -39,10 +38,11 @@ public class WorkWithFile {
 
     private void writeToFile(String toFileName, int supply, int buy) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            String result = SUPPLY + COMMA + supply + System.lineSeparator()
-                    + BUY + COMMA + buy + System.lineSeparator()
-                    + RESULT + COMMA + (supply - buy);
-            writer.write(result);
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append(SUPPLY).append(COMMA).append(supply).append(System.lineSeparator())
+                    .append(BUY).append(COMMA).append(buy).append(System.lineSeparator())
+                    .append(RESULT).append(COMMA).append(supply - buy);
+            writer.write(stringBuilder.toString());
         } catch (IOException e) {
             throw new RuntimeException("Can't write write data to file", e);
         }
