@@ -20,7 +20,7 @@ public class WorkWithFile {
 
     private void writeFile(String toFileName) {
         StringBuilder builder = new StringBuilder();
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true))) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(String.valueOf(builder));
         } catch (IOException e) {
             throw new RuntimeException("Can't write file", e);
