@@ -7,22 +7,25 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private final int[] amountArray = new int[2];
-    private final String[] operationTypeArray = new String[] {"supply", "buy"};
+
+    private final static String SUPPLY = "supply";
+    private final static String BUY = "buy";
+    private final String[] operationTypeArray = new String[] {SUPPLY, BUY};
 
     public void getStatistic(String fromFileName, String toFileName) {
-        try (BufferedWriter writter = new BufferedWriter(new FileWriter(toFileName))) {
-            fillamountArray(fromFileName);
-            writter.write(operationTypeArray[0] + ',' + amountArray[0] + System.lineSeparator());
-            writter.write(operationTypeArray[1] + ',' + amountArray[1] + System.lineSeparator());
-            writter.write("result," + Math.abs(amountArray[0] - amountArray[1]));
+        int[] amountArray = new int[2];
+        fillAmountArray(fromFileName, amountArray);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
+            writer.write(operationTypeArray[0] + ',' + amountArray[0] + System.lineSeparator());
+            writer.write(operationTypeArray[1] + ',' + amountArray[1] + System.lineSeparator());
+            writer.write("result," + Math.abs(amountArray[0] - amountArray[1]));
         } catch (IOException error) {
             throw new RuntimeException("Can't write data to file "
                     + fromFileName, error);
         }
     }
 
-    private void fillamountArray(String fromFileName) {
+    private void fillAmountArray(String fromFileName, int[] amountArray) {
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -31,7 +34,7 @@ public class WorkWithFile {
                 int amount = Integer.parseInt(content[1]);
                 if (operation.equals(operationTypeArray[0])) {
                     amountArray[0] += amount;
-                } else if (operation.equals(operationTypeArray[1])) {
+                } else {
                     amountArray[1] += amount;
                 }
             }
