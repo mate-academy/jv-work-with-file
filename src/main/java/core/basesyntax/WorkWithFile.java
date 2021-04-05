@@ -20,23 +20,9 @@ public class WorkWithFile {
         StringBuilder data = new StringBuilder();
         StringBuilder reportData = new StringBuilder();
         fileWrite.getAbsoluteFile().delete();
-
         writeToStringBuilder(fileRead, data);
-
         String[] dataArray = data.toString().split(System.lineSeparator());
-
-        createReport(reportData, dataArray);
-
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileWrite, true))) {
-            bufferedWriter.write(reportData.toString());
-        } catch (IOException exception) {
-            throw new RuntimeException("Can't write to file");
-        }
-
-    }
-
-    private void createReport(StringBuilder dataToWrite, String[] dataArray) {
-        dataToWrite.append(SUPPLY)
+        reportData.append(SUPPLY)
                 .append(COMMA)
                 .append(getTotalAmount(dataArray, SUPPLY))
                 .append(System.lineSeparator())
@@ -47,6 +33,12 @@ public class WorkWithFile {
                 .append(RESULT)
                 .append(COMMA)
                 .append(getTotalAmount(dataArray, SUPPLY) - getTotalAmount(dataArray, BUY));
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileWrite, true))) {
+            bufferedWriter.write(reportData.toString());
+        } catch (IOException exception) {
+            throw new RuntimeException("Can't write to file");
+        }
+
     }
 
     private void writeToStringBuilder(File fileRead, StringBuilder data) {
