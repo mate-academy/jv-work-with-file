@@ -40,7 +40,7 @@ public class WorkWithFile {
                 fileDataArray = buffer.split(DATA_SEPARATOR);
                 return fileDataArray;
             } catch (IOException e) {
-                throw new RuntimeException("Can`t read file and list data.", e);
+                throw new RuntimeException("Can`t read file and list data." + fromFileName, e);
             }
         }
         return new String[]{};
@@ -74,12 +74,12 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         setFromFileName(fromFileName);
         setToFileName(toFileName);
-        StringBuilder b = new StringBuilder();
-        b.append(createReport()[0]).append(System.lineSeparator())
+        StringBuilder report = new StringBuilder();
+        report.append(createReport()[0]).append(System.lineSeparator())
                 .append(createReport()[1]).append(System.lineSeparator())
                 .append(createReport()[2]).append(System.lineSeparator());
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write(String.format("%10s", b));
+            bufferedWriter.write(String.format("%10s", report));
         } catch (IOException e) {
             throw new RuntimeException("Can`t write data to" + toFileName, e);
         }
