@@ -19,11 +19,11 @@ public class WorkWithFile {
         File fileWrite = new File(toFileName);
         StringBuilder data = new StringBuilder();
         StringBuilder reportData = new StringBuilder();
-        fileWrite.getAbsoluteFile().delete(); // deleting old files, need to test without deleting files myself.
+        fileWrite.getAbsoluteFile().delete();
 
-        writeToStringBuilder(fileRead, data); // as the name says, writes data from file do stringBuilder
+        writeToStringBuilder(fileRead, data);
 
-        String[] dataArray = data.toString().split(System.lineSeparator()); //creates array with data for easy access
+        String[] dataArray = data.toString().split(System.lineSeparator());
 
         createReport(reportData, dataArray);
 
