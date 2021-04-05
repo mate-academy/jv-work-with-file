@@ -12,8 +12,12 @@ public class WorkWithFile {
     private static final int INDEX_OF_VALUE = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
+        writeToFile(readFromFile(fromFileName).toString(), toFileName);
+    }
+
+    private void writeToFile(String dataToWrite, String toFileName) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write(readFromFile(fromFileName).toString());
+            bufferedWriter.write(dataToWrite);
         } catch (IOException e) {
             throw new RuntimeException("Can`t write to file" + toFileName, e);
         }
