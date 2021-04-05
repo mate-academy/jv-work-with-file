@@ -20,15 +20,14 @@ public class WorkWithFile {
         int supply = 0;
         int buy = 0;
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(readFromFile))) {
-            String line = bufferedReader.readLine();
-            while (line != null) {
+            for (String line = bufferedReader.readLine(); line != null;
+                    line = bufferedReader.readLine()) {
                 if (line.split(COMMA)[OPERATION_TYPE_POSITION].equals(SUPPLY)) {
                     supply += Integer.parseInt(line.split(COMMA)[AMOUNT_POSITION]);
                 }
                 if (line.split(COMMA)[OPERATION_TYPE_POSITION].equals(BUY)) {
                     buy += Integer.parseInt(line.split(COMMA)[AMOUNT_POSITION]);
                 }
-                line = bufferedReader.readLine();
             }
             writeToFile(toFileName, supply, buy);
         } catch (IOException e) {
