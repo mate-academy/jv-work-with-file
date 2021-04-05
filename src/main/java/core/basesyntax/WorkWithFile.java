@@ -7,30 +7,33 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    public static final String COMMA = ",";
-    public static final String SUPPLY = "supply";
-    public static final String BUY = "buy";
-    public static final String RESULT = "result";
+    private static final String CSV_SEPARATOR = ",";
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
+    private static final int AMOUNT_INDEX = 1;
+    private static final int OPERATION_INDEX = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
         int supply = 0;
         int buy = 0;
+        StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             for (String value = bufferedReader.readLine();
                     value != null; value = bufferedReader.readLine()) {
-                String[] array = value.split(COMMA);
-                if (value.contains(SUPPLY)) {
-                    supply += Integer.parseInt(array[1]);
+                String[] array = value.split(CSV_SEPARATOR);
+                if (array[OPERATION_INDEX].equals(SUPPLY)) {
+                    supply += Integer.parseInt(array[AMOUNT_INDEX]);
                 } else {
-                    buy += Integer.parseInt(array[1]);
+                    buy += Integer.parseInt(array[AMOUNT_INDEX]);
                 }
             }
-            StringBuilder stringBuilder = new StringBuilder()
-                    .append(SUPPLY).append(COMMA).append(supply)
+            stringBuilder = stringBuilder.append(SUPPLY)
+                    .append(CSV_SEPARATOR).append(supply)
                     .append(System.lineSeparator())
-                    .append(BUY).append(COMMA).append(buy)
+                    .append(BUY).append(CSV_SEPARATOR).append(buy)
                     .append(System.lineSeparator())
-                    .append(RESULT).append(COMMA).append(supply - buy)
+                    .append(RESULT).append(CSV_SEPARATOR).append(supply - buy)
                     .append(System.lineSeparator());
             writeToFile(toFileName, stringBuilder.toString());
         } catch (IOException e) {
@@ -38,7 +41,7 @@ public class WorkWithFile {
         }
     }
 
-    public void writeToFile(String toFileName, String report) {
+    private void writeToFile(String toFileName, String report) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(report);
         } catch (IOException e) {
