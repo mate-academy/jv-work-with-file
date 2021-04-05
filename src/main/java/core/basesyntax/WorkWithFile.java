@@ -20,27 +20,25 @@ public class WorkWithFile {
         int totalSupply = 0;
         try (BufferedReader bufferedReader = new BufferedReader(
                 new FileReader(new File(fromFileName)))) {
-            String line = bufferedReader.readLine();
-            while (line != null) {
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
                 String[] data = line.split(CSV_DELIMITER);
                 if (data[OPERATION_TYPE_POSITION].equals(SUPPLY_WORD)) {
                     totalSupply += Integer.parseInt(data[VALUE_POSITION]);
-                    line = bufferedReader.readLine();
                 }
                 if (data[OPERATION_TYPE_POSITION].equals(BUY_WORD)) {
                     totalBuy += Integer.parseInt(data[VALUE_POSITION]);
-                    line = bufferedReader.readLine();
                 }
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can`t read file", e);
+            throw new RuntimeException("Can`t read file " + fromFileName, e);
         }
         File outputFile = new File(toFileName);
         try {
             Files.write(outputFile.toPath(), makeReport(totalSupply, totalBuy).getBytes(),
                     StandardOpenOption.CREATE);
         } catch (IOException e) {
-            throw new RuntimeException("Can`t write in file", e);
+            throw new RuntimeException("Can`t write in file " + toFileName, e);
         }
     }
 
