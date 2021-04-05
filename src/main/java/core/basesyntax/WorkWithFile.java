@@ -14,15 +14,14 @@ public class WorkWithFile {
     public static final String SEPARATOR = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        readDataFromFile(fromFileName);
-        createReport(toFileName, readDataFromFile(fromFileName));
+        createNewFile(toFileName);
+        writeReport(toFileName, readDataFromFile(fromFileName));
     }
 
-    public String readDataFromFile(String fileName) {
+    private String readDataFromFile(String fileName) {
         int supply = 0;
         int buy = 0;
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName));
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
             StringBuilder stringBuilder = new StringBuilder();
             String stringLine = bufferedReader.readLine();
             while (stringLine != null) {
@@ -33,7 +32,6 @@ public class WorkWithFile {
                 }
                 stringLine = bufferedReader.readLine();
             }
-            bufferedReader.close();
             return stringBuilder.append(SUPPLY).append(SEPARATOR).append(supply)
                     .append(System.lineSeparator())
                     .append(BUY).append(SEPARATOR).append(buy)
@@ -45,20 +43,20 @@ public class WorkWithFile {
         }
     }
 
-    private void createReport(String fileName, String report) {
+    private void writeReport(String fileName, String report) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
+            bufferedWriter.write(report);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write to file" + fileName, e);
+        }
+    }
+
+    private void createNewFile(String fileName) {
         try {
             File fileReport = new File(fileName);
             fileReport.createNewFile();
-            try {
-                BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName));
-                bufferedWriter.write(report);
-                bufferedWriter.close();
-            } catch (IOException e) {
-                throw new RuntimeException("Can't write to file" + fileName, e);
-            }
         } catch (IOException e) {
             throw new RuntimeException("Can't create the file: " + fileName, e);
         }
-
     }
 }
