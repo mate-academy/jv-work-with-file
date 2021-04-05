@@ -8,7 +8,8 @@ import java.io.IOException;
 
 public class WorkWithFile {
     public static final int WORD_PART = 0;
-    public static final int NUMBER_PART  = 1;
+    public static final int NUMBER_PART = 1;
+
     public void getStatistic(String fromFileName, String toFileName) {
         int totalSupplies = 0;
         int totalBuys = 0;
