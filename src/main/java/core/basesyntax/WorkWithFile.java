@@ -36,7 +36,7 @@ public class WorkWithFile {
         int supply = 0;
         int buy = 0;
         try {
-            List fileToRead = Files.readAllLines(Paths.get(fromFileName));
+            List<String> fileToRead = Files.readAllLines(Paths.get(fromFileName));
             for (int i = 0; i < fileToRead.size(); i++) {
                 read += fileToRead.get(i) + EMPTY_CHARACTER;
             }
