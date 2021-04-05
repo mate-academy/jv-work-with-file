@@ -7,9 +7,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final String SUPPLY = "supply";
-    private static final String BUY = "buy";
-    private final String[] operationTypeArray = new String[] {SUPPLY, BUY};
+    private static final String SUPPLY_OPERATION = "supply";
+    private static final String BUY_OPEATION = "buy";
+    private final String[] operationTypeArray = new String[] {SUPPLY_OPERATION, BUY_OPEATION};
+    private static final String CSV_SEPARATOR = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         int[] amountArray = new int[2];
@@ -28,7 +29,7 @@ public class WorkWithFile {
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                String[] content = line.split(",");
+                String[] content = line.split(CSV_SEPARATOR);
                 String operation = content[0];
                 int amount = Integer.parseInt(content[1]);
                 if (operation.equals(operationTypeArray[0])) {
