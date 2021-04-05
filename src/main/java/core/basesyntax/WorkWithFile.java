@@ -11,7 +11,7 @@ public class WorkWithFile {
     private static final String BUY = "buy";
     private static final String RESULT = "result";
     private static final String SPLITTER = ",";
-    private static final String REGEX = " ";
+    private static final String WHITE_SPACE_REGEX = " ";
 
     public void getStatistic(String fromFileName, String toFileName) {
         StringBuilder stringBuilder = readFile(new File(fromFileName));
@@ -24,7 +24,7 @@ public class WorkWithFile {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
             String value = bufferedReader.readLine();
             while (value != null) {
-                allInfoFromFile.append(value).append(REGEX);
+                allInfoFromFile.append(value).append(WHITE_SPACE_REGEX);
                 value = bufferedReader.readLine();
             }
         } catch (IOException e) {
@@ -34,7 +34,7 @@ public class WorkWithFile {
     }
 
     public int[] getReport(StringBuilder allInfoFromFile) {
-        String[] strings = allInfoFromFile.toString().split(REGEX);
+        String[] strings = allInfoFromFile.toString().split(WHITE_SPACE_REGEX);
         int supply = 0;
         int buy = 0;
 
