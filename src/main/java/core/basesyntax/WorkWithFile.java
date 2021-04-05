@@ -15,36 +15,39 @@ public class WorkWithFile {
     private static final int INDEX_OF_OPERATION = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String data = getDataFromFile(fromFileName);
+        String data = makeReport(getDataFromFile(fromFileName));
         writeToFile(toFileName, data);
     }
 
-    private String getDataFromFile(String fromFileName) {
-        int supplyAmount = 0;
-        int buyAmount = 0;
+    private int[] getDataFromFile(String fromFileName) {
+        int[] supplyAndBuy = new int[2];
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String line = bufferedReader.readLine();
             while (line != null) {
                 String[] data = line.split(COMA);
                 if (data[INDEX_OF_OPERATION].equals(BUY)) {
-                    buyAmount += Integer.parseInt(data[INDEX_OF_AMOUNT]);
+                    supplyAndBuy[1] += Integer.parseInt(data[INDEX_OF_AMOUNT]);
                 }
                 if (data[INDEX_OF_OPERATION].equals(SUPPLY)) {
-                    supplyAmount += Integer.parseInt(data[INDEX_OF_AMOUNT]);
+                    supplyAndBuy[0] += Integer.parseInt(data[INDEX_OF_AMOUNT]);
                 }
                 line = bufferedReader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("Can not read a file" + fromFileName, e);
         }
+        return supplyAndBuy;
+    }
+
+    private String makeReport(int[] supplyAndBuy) {
         StringBuilder builder = new StringBuilder();
-        builder.append(SUPPLY).append(COMA).append(supplyAmount)
+        builder.append(SUPPLY).append(COMA).append(supplyAndBuy[0])
                 .append(System.lineSeparator())
                 .append(BUY).append(COMA)
-                .append(buyAmount)
+                .append(supplyAndBuy[1])
                 .append(System.lineSeparator())
                 .append(RESULT).append(COMA)
-                .append(supplyAmount - buyAmount);
+                .append(supplyAndBuy[0] - supplyAndBuy[1]);
         return builder.toString();
     }
 
