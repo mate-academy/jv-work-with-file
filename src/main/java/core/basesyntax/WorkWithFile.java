@@ -9,11 +9,11 @@ import java.nio.file.Paths;
 import java.util.List;
 
 public class WorkWithFile {
-    public static final String EMPTY_CHARACTER = " ";
-    public static final String COMMA = ",";
-    public static final String SUPPLY = "supply";
-    public static final String BUY = "buy";
-    public static final String RESULT = "result";
+    private static final String EMPTY_CHARACTER = " ";
+    private static final String COMMA = ",";
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
         createFile(toFileName);
