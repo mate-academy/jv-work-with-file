@@ -9,6 +9,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String LINE_DIVIDER = ",";
+    private static final String COMPARISON_WORD = "buy";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] resultOfReadFile = readFile(new File(fromFileName));
@@ -18,10 +20,8 @@ public class WorkWithFile {
     private String[] readFile(File oldFile) {
         StringBuilder builder = new StringBuilder();
 
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(oldFile));
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(oldFile))) {
             String line = bufferedReader.readLine();
-
             while (line != null) {
                 builder.append(line).append(" ");
                 line = bufferedReader.readLine();
@@ -40,8 +40,8 @@ public class WorkWithFile {
         int buy = 0;
 
         for (String arrayOfDatum : arrayOfData) {
-            String[] data = arrayOfDatum.split(",");
-            if (data[0].equals("buy")) {
+            String[] data = arrayOfDatum.split(LINE_DIVIDER);
+            if (data[0].equals(COMPARISON_WORD)) {
                 buy += Integer.parseInt(data[1]);
             } else {
                 supply += Integer.parseInt(data[1]);
@@ -56,7 +56,8 @@ public class WorkWithFile {
 
     private void writeFile(String newData, String nameFile) {
         File newFile = new File(nameFile);
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(newFile, true))) {
+        try (BufferedWriter bufferedWriter =
+                     new BufferedWriter(new FileWriter(newFile, true))) {
             bufferedWriter.write(newData);
         } catch (IOException e) {
             throw new RuntimeException("Can't found the file", e);
