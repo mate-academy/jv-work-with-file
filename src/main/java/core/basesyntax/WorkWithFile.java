@@ -13,7 +13,9 @@ public class WorkWithFile {
     public static final String VALUE_SEPARATOR = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        writeToFile(createReport(readFile(fromFileName)), toFileName);
+        String dataFromFile = readFile(fromFileName);
+        String report = createReport(dataFromFile);
+        writeToFile(report, toFileName);
     }
 
     public String readFile(String fileName) {
@@ -27,8 +29,7 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read the file", e);
         }
-        String dataFromFile = stringBuilder.toString();
-        return dataFromFile;
+        return stringBuilder.toString();
     }
 
     public String createReport(String dataFromFile) {
@@ -42,19 +43,17 @@ public class WorkWithFile {
                 totalBuy += Integer.parseInt(dataLine.substring(dataLine.indexOf(",") + 1));
             }
         }
-        String data;
-        data = new StringBuilder().append(SUPPLY).append(VALUE_SEPARATOR).append(totalSupply)
+        return new StringBuilder().append(SUPPLY).append(VALUE_SEPARATOR).append(totalSupply)
                 .append(System.lineSeparator())
                 .append(BUY).append(VALUE_SEPARATOR).append(totalBuy)
                 .append(System.lineSeparator())
                 .append("result").append(VALUE_SEPARATOR).append(totalSupply - totalBuy)
                 .toString();
-        return data;
     }
 
-    public void writeToFile(String data, String toFileName) {
+    public void writeToFile(String report, String toFileName) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write(data);
+            bufferedWriter.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Can't write information", e);
         }
