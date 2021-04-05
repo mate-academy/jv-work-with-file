@@ -39,7 +39,7 @@ public class WorkWithFile {
         return crateTabular(supplyCounter, buyCounter);
     }
 
-    public StringBuilder crateTabular(int supplyCounter, int buyCounter) {
+    private StringBuilder crateTabular(int supplyCounter, int buyCounter) {
         StringBuilder result = new StringBuilder();
         result.append("supply,").append(supplyCounter).append(System.lineSeparator());
         result.append("buy,").append(buyCounter).append(System.lineSeparator());
