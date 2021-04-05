@@ -22,8 +22,7 @@ public class WorkWithFile {
     private StringBuilder readFromFile(String fromFileName) {
         int supplySum = 0;
         int buySum = 0;
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String line = bufferedReader.readLine();
             while (line != null) {
                 String[] information = line.split(SPLIT_SYMBOL);
