@@ -11,14 +11,19 @@ import java.util.Map;
 
 public class WorkWithFile {
     private static final String ADDED = "buy";
-    private static final String LOSE = "supply";
+    private static final String DECREASED = "supply";
+    private static final String CSV_SEPARATOR = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
+
+    }
+
+    public void readingFromFile(String fromFileName) {
         HashMap<String, Integer> sellAndBuy = new HashMap<>();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String lineWords = bufferedReader.readLine();
             while (lineWords != null) {
-                String[] line = lineWords.split(",");
+                String[] line = lineWords.split(CSV_SEPARATOR);
                 String key = line[0];
                 Integer value = Integer.parseInt(line[1]);
                 if (sellAndBuy.containsKey(key)) {
@@ -29,35 +34,39 @@ public class WorkWithFile {
                 lineWords = bufferedReader.readLine();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Can't read file", e);
         }
-        String key = "result";
-        int value = Math.abs(sellAndBuy.get(ADDED) - sellAndBuy.get(LOSE));
-        File file = new File(toFileName);
+    }
 
+    public void formingResult(HashMap<String, Integer> sellAndBuy) {
+        StringBuilder builder = new StringBuilder();
+        for (Map.Entry<String, Integer> kvp : sellAndBuy.entrySet()) {
+            if (!kvp.getKey().equals(ADDED)) {
+                builder.append(kvp.getKey());
+                builder.append(CSV_SEPARATOR);
+                builder.append(kvp.getValue());
+                builder.append(System.lineSeparator());
+            }
+        }
+        for (Map.Entry<String, Integer> kvp : sellAndBuy.entrySet()) {
+            if (!kvp.getKey().equals(DECREASED)) {
+                builder.append(kvp.getKey());
+                builder.append(CSV_SEPARATOR);
+                builder.append(kvp.getValue());
+                builder.append(System.lineSeparator());
+            }
+        }
+        int value = Math.abs(sellAndBuy.get(ADDED) - sellAndBuy.get(DECREASED));
+        builder.append("result");
+        builder.append(CSV_SEPARATOR);
+        builder.append(value);
+        builder.append(System.lineSeparator());
+        String content = builder.toString().trim();
+    }
+
+    public void writingFromFile(String toFileName, String content) {
+        File file = new File(toFileName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
-            StringBuilder builder = new StringBuilder();
-            for (Map.Entry<String, Integer> kvp : sellAndBuy.entrySet()) {
-                if (!kvp.getKey().equals(ADDED)) {
-                    builder.append(kvp.getKey());
-                    builder.append(",");
-                    builder.append(kvp.getValue());
-                    builder.append("\r\n");
-                }
-            }
-            for (Map.Entry<String, Integer> kvp : sellAndBuy.entrySet()) {
-                if (!kvp.getKey().equals(LOSE)) {
-                    builder.append(kvp.getKey());
-                    builder.append(",");
-                    builder.append(kvp.getValue());
-                    builder.append("\r\n");
-                }
-            }
-            builder.append("result");
-            builder.append(",");
-            builder.append(value);
-            builder.append("\r\n");
-            String content = builder.toString().trim();
             bufferedWriter.write(content);
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to file", e);
