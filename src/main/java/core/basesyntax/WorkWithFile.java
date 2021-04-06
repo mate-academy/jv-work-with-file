@@ -12,19 +12,16 @@ public class WorkWithFile {
     private static final String SUPPLY_OPERATION = "supply";
     private static final String BUY_OPERATION = "buy";
     private static final String RESULT_OPERATION = "result";
-    private static final int FIRST_ELEMENT_INDEX = 0;
-    private static final int SECOND_ELEMENT_INDEX = 1;
+    private static final int OPERATION_TYPE_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
+    private static final int AMOUNT_SUPPLY_OPERATION_INDEX = 0;
+    private static final int AMOUNT_BUY_OPERATION_INDEX = 1;
     private static final String EMPTY_STRING = "";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String data = readInputFile(fromFileName);
-        String report = EMPTY_STRING;
-        if (!data.isEmpty()) {
-            report += calculateStatistic(data);
-        }
-        if (!report.isEmpty()) {
-            writeReportToFile(report, toFileName);
-        }
+        String report = calculateStatistic(data);
+        writeReportToFile(report, toFileName);
     }
 
     private String readInputFile(String pathToFile) {
@@ -32,9 +29,6 @@ public class WorkWithFile {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
             StringBuilder stringBuilder = new StringBuilder();
             String line = bufferedReader.readLine();
-            if (line == null) {
-                return EMPTY_STRING;
-            }
             while (line != null) {
                 stringBuilder.append(line).append(System.lineSeparator());
                 line = bufferedReader.readLine();
@@ -46,20 +40,31 @@ public class WorkWithFile {
     }
 
     private String calculateStatistic(String inputString) {
-        String[] arrayData = inputString.split(System.lineSeparator());
+        String[] statistic = inputString.split(System.lineSeparator());
         int suppliesCount = 0;
         int buyCount = 0;
-        for (String simpleLine : arrayData) {
+        for (String simpleLine : statistic) {
             String[] lineToArray = simpleLine.split(WORDS_DIVIDER);
-            if (lineToArray[FIRST_ELEMENT_INDEX].equals(SUPPLY_OPERATION)) {
-                suppliesCount += Integer.parseInt(lineToArray[SECOND_ELEMENT_INDEX]);
+            if (lineToArray[OPERATION_TYPE_INDEX].equals(SUPPLY_OPERATION)) {
+                suppliesCount += Integer.parseInt(lineToArray[AMOUNT_INDEX]);
             } else {
-                buyCount += Integer.parseInt(lineToArray[SECOND_ELEMENT_INDEX]);
+                buyCount += Integer.parseInt(lineToArray[AMOUNT_INDEX]);
             }
         }
         return SUPPLY_OPERATION + WORDS_DIVIDER + suppliesCount + System.lineSeparator()
                 + BUY_OPERATION + WORDS_DIVIDER + buyCount + System.lineSeparator()
                 + RESULT_OPERATION + WORDS_DIVIDER + (suppliesCount - buyCount);
+    }
+
+    private String createReport(String statisticResult) {
+        String[] statisticArray = statisticResult.split(EMPTY_STRING);
+        return SUPPLY_OPERATION + WORDS_DIVIDER + statisticArray[AMOUNT_SUPPLY_OPERATION_INDEX]
+                + System.lineSeparator()
+                + BUY_OPERATION + WORDS_DIVIDER + statisticArray[AMOUNT_BUY_OPERATION_INDEX]
+                + System.lineSeparator()
+                + RESULT_OPERATION + WORDS_DIVIDER
+                + (Integer.parseInt(statisticArray[AMOUNT_SUPPLY_OPERATION_INDEX])
+                - Integer.parseInt(statisticArray[AMOUNT_BUY_OPERATION_INDEX]));
     }
 
     private void writeReportToFile(String reportToWrite, String pathToFile) {
