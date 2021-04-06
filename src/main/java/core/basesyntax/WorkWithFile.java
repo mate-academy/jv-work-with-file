@@ -40,15 +40,15 @@ public class WorkWithFile {
         }
         builder.append(SUPPLY_WORD).append(",").append(SUPPLY_WORD).append(System.lineSeparator())
                 .append(BUY_WORD).append(",").append(BUY_WORD).append(System.lineSeparator())
-                .append("result").append(",").append(supply - buy);
+                .append("result").append(",").append(supply - buy).toString();
     }
 
-    private void setStatistic(String fromFileName, String toFileName) {
+    private void setStatistic(String report, String toFileName) {
         File file = new File(toFileName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write(builder.toString());
+            bufferedWriter.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("File not found " + fromFileName, e);
+            throw new RuntimeException("File not found " + toFileName, e);
         }
     }
 }
