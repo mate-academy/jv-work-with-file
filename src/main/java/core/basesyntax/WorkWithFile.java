@@ -36,9 +36,9 @@ public class WorkWithFile {
     }
 
     private String getReport(int supply, int buy) {
-        return (SUPPLY) + (COMMA) + supply + System.lineSeparator()
-                + (BUY) + (COMMA) + buy + System.lineSeparator()
-                + (RESULT) + (COMMA) + (supply - buy);
+        return SUPPLY + COMMA + supply + System.lineSeparator()
+                + BUY + COMMA + buy + System.lineSeparator()
+                + RESULT + COMMA + (supply - buy);
     }
 
     private void writeToFile(String toFileName, String data) {
