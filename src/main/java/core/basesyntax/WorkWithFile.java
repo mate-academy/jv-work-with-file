@@ -28,23 +28,24 @@ public class WorkWithFile {
                 }
                 line = bufferedReader.readLine();
             }
-            writeToFile(toFileName, suply, buy);
+            writeToFile(toFileName, createReport(suply, buy));
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from the file " + fromFileName,e);
         }
     }
 
-    private void writeToFile(String toFileName, int supply, int buy) {
-        report(toFileName, supply, buy);
-    }
-
-    private void report(String toFileName, int supply, int buy) {
+    private void writeToFile(String toFileName, String report) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write(SUPPLY + "," + supply + System.lineSeparator()
-                    + BUY + "," + buy + System.lineSeparator()
-                    + "result" + "," + (supply - buy));
+            bufferedWriter.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from the file " + toFileName, e);
         }
+    }
+
+    private String createReport(int supply, int buy) {
+        String report = SUPPLY + "," + supply + System.lineSeparator()
+                + BUY + "," + buy + System.lineSeparator()
+                + "result" + "," + (supply - buy);
+        return report;
     }
 }
