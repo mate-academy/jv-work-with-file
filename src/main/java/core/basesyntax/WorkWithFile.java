@@ -8,12 +8,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    public static final String SUPPLY = "supply";
-    public static final String BUY = "buy";
-    public static final String RESULT = "result";
-    public static final String COMMA = ",";
-    public static final int OPERATION_INDEX = 0;
-    public static final int AMOUNT_INDEX = 1;
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
+    private static final String COMMA = ",";
+    private static final int OPERATION_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         File readFromFile = new File(fromFileName);
@@ -30,14 +30,15 @@ public class WorkWithFile {
                     buy += Integer.parseInt(line.split(COMMA)[AMOUNT_INDEX]);
                 }
             }
-            writeToFile(toFileName, supply, buy);
 
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to file", e);
         }
+        writeToFile(toFileName, supply, buy);
     }
 
     private void writeToFile(String toFileName, int supply, int buy) {
+
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder
