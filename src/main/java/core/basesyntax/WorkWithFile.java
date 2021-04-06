@@ -27,7 +27,6 @@ public class WorkWithFile {
                     buy += Integer.parseInt(array[AMOUNT_INDEX]);
                 }
             }
-
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from the file " + fromFileName, e);
         }
