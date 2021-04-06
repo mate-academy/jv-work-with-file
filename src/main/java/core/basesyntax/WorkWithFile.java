@@ -12,8 +12,8 @@ public class WorkWithFile {
     public static final String BUY = "buy";
     public static final String RESULT = "result";
     public static final String COMMA = ",";
-    public static final int ZERO_POSITION = 0;
-    public static final int FIRST_POSITION = 1;
+    public static final int OPERATION_INDEX = 0;
+    public static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         File readFromFile = new File(fromFileName);
@@ -23,17 +23,17 @@ public class WorkWithFile {
             for (String line = bufferedReader.readLine();
                     line != null;
                     line = bufferedReader.readLine()) {
-                if (line.split(COMMA)[ZERO_POSITION].equals(SUPPLY)) {
-                    supply += Integer.parseInt(line.split(COMMA)[FIRST_POSITION]);
+                if (line.split(COMMA)[OPERATION_INDEX].equals(SUPPLY)) {
+                    supply += Integer.parseInt(line.split(COMMA)[AMOUNT_INDEX]);
                 }
-                if (line.split(COMMA)[ZERO_POSITION].equals(BUY)) {
-                    buy += Integer.parseInt(line.split(COMMA)[FIRST_POSITION]);
+                if (line.split(COMMA)[OPERATION_INDEX].equals(BUY)) {
+                    buy += Integer.parseInt(line.split(COMMA)[AMOUNT_INDEX]);
                 }
             }
             writeToFile(toFileName, supply, buy);
 
-        } catch (IOException e1) {
-            throw new RuntimeException("Can't write data to file", e1);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write data to file", e);
         }
     }
 
