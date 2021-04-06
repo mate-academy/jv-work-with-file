@@ -17,7 +17,6 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         int supply = 0;
         int buy = 0;
-        StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             for (String value = bufferedReader.readLine();
                     value != null; value = bufferedReader.readLine()) {
@@ -28,17 +27,18 @@ public class WorkWithFile {
                     buy += Integer.parseInt(array[AMOUNT_INDEX]);
                 }
             }
-            stringBuilder = stringBuilder.append(SUPPLY)
-                    .append(CSV_SEPARATOR).append(supply)
-                    .append(System.lineSeparator())
-                    .append(BUY).append(CSV_SEPARATOR).append(buy)
-                    .append(System.lineSeparator())
-                    .append(RESULT).append(CSV_SEPARATOR).append(supply - buy)
-                    .append(System.lineSeparator());
-            writeToFile(toFileName, stringBuilder.toString());
+
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from the file " + fromFileName, e);
         }
+        StringBuilder stringBuilder = new StringBuilder().append(SUPPLY)
+                .append(CSV_SEPARATOR).append(supply)
+                .append(System.lineSeparator())
+                .append(BUY).append(CSV_SEPARATOR).append(buy)
+                .append(System.lineSeparator())
+                .append(RESULT).append(CSV_SEPARATOR).append(supply - buy)
+                .append(System.lineSeparator());
+        writeToFile(toFileName, stringBuilder.toString());
     }
 
     private void writeToFile(String toFileName, String report) {
