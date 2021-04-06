@@ -9,6 +9,8 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final String SEPARATOR = ",";
     private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
     private static final int KIND_OF_ACTION = 0;
     private static final int ACTION_VALUE = 1;
 
@@ -36,9 +38,12 @@ public class WorkWithFile {
 
     private String getReport(int[] data) {
         StringBuilder result = new StringBuilder()
-                .append("supply,").append(data[0]).append(System.lineSeparator())
-                .append("buy,").append(data[1]).append(System.lineSeparator())
-                .append("result,").append(data[0] - data[1]);
+                .append(SUPPLY).append(SEPARATOR).append(data[KIND_OF_ACTION])
+                .append(System.lineSeparator())
+                .append(BUY).append(SEPARATOR).append(data[ACTION_VALUE])
+                .append(System.lineSeparator())
+                .append(RESULT).append(SEPARATOR)
+                .append(data[KIND_OF_ACTION] - data[ACTION_VALUE]);
         return result.toString();
     }
 
