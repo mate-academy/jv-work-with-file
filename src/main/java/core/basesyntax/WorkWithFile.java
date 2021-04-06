@@ -17,7 +17,7 @@ public class WorkWithFile {
         writeReportToFile(createReport(getDataFromFile(fromFileName)), toFileName);
     }
 
-    public String getDataFromFile(String file) {
+    private String getDataFromFile(String file) {
         StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
             String line = bufferedReader.readLine();
@@ -31,7 +31,7 @@ public class WorkWithFile {
         return stringBuilder.toString();
     }
 
-    public String createReport(String dataFromFile) {
+    private String createReport(String dataFromFile) {
         int supplySum = 0;
         int buySum = 0;
         String[] dataFromFileArray = dataFromFile.split(DATA_SEPARATOR);
@@ -51,7 +51,7 @@ public class WorkWithFile {
                     .toString();
     }
 
-    public void writeReportToFile(String data, String toFileName) {
+    private void writeReportToFile(String data, String toFileName) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(data);
         } catch (IOException e) {
