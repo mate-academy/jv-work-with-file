@@ -36,7 +36,7 @@ public class WorkWithFile {
     }
 
     private void writeToWile(String output, String toFileName) {
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName));){
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(output);
         } catch (IOException e) {
             throw new RuntimeException("File can`t write");
