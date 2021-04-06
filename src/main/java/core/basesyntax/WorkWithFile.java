@@ -15,10 +15,12 @@ public class WorkWithFile {
     private static final String CSV_SEPARATOR = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-
+        HashMap<String, Integer> map = readingFromFile(fromFileName);
+        String result = formingResult(map);
+        String resultFromFile = writingFromFile(toFileName, result);
     }
 
-    public void readingFromFile(String fromFileName) {
+    public HashMap<String, Integer> readingFromFile(String fromFileName) {
         HashMap<String, Integer> sellAndBuy = new HashMap<>();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String lineWords = bufferedReader.readLine();
@@ -36,9 +38,10 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read file", e);
         }
+        return sellAndBuy;
     }
 
-    public void formingResult(HashMap<String, Integer> sellAndBuy) {
+    public String formingResult(HashMap<String, Integer> sellAndBuy) {
         StringBuilder builder = new StringBuilder();
         for (Map.Entry<String, Integer> kvp : sellAndBuy.entrySet()) {
             if (!kvp.getKey().equals(ADDED)) {
@@ -62,14 +65,16 @@ public class WorkWithFile {
         builder.append(value);
         builder.append(System.lineSeparator());
         String content = builder.toString().trim();
+        return content;
     }
 
-    public void writingFromFile(String toFileName, String content) {
+    public String writingFromFile(String toFileName, String content) {
         File file = new File(toFileName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
             bufferedWriter.write(content);
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to file", e);
         }
+        return toFileName;
     }
 }
