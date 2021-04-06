@@ -21,14 +21,10 @@ public class WorkWithFile {
     }
 
     private String[] readFromFile(String fromFileName) {
-        StringBuilder stringBuilder = new StringBuilder();
         List<String> strings;
 
         try {
             strings = Files.readAllLines(Path.of(fromFileName));
-            if (strings.toString().equals("[]")) {
-                return new String[0];
-            }
         } catch (IOException e) {
             throw new RuntimeException("Can't open file! " + fromFileName, e);
         }
@@ -39,7 +35,7 @@ public class WorkWithFile {
     private void writeToFile(String toFile, String dataToWriting) {
         File file = new File(toFile);
 
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, false))) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
             bufferedWriter.write(dataToWriting);
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file" + toFile, e);
