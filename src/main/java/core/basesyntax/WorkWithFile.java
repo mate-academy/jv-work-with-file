@@ -33,9 +33,10 @@ public class WorkWithFile {
         }
         String output = SUPPLY + "," + supplyNumber + System.lineSeparator() + BUY + ","
                 + buyNumber + System.lineSeparator() + RESULT + "," + (supplyNumber - buyNumber);
+        writeToFile(output, toFileName);
     }
 
-    private void writeToWile(String output, String toFileName) {
+    private void writeToFile(String output, String toFileName) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(output);
         } catch (IOException e) {
