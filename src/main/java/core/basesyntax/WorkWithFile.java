@@ -37,13 +37,13 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         File toFileObject = new File(toFileName);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileObject))) {
-            writer.write(toString(setStatistic(fromFileName)));
+            writer.write(getResult(setStatistic(fromFileName)));
         } catch (IOException e) {
             throw new RuntimeException("Can't write data, ", e);
         }
     }
 
-    private String toString(int[] cases) {
+    private String getResult(int[] cases) {
         return "supply" + CSV_SEPARATOR + cases[0] + System.lineSeparator()
                 + "buy" + CSV_SEPARATOR + cases[1] + System.lineSeparator()
                 + "result" + CSV_SEPARATOR + (cases[0] - cases[1]);
