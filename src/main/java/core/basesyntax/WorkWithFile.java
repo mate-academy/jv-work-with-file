@@ -2,7 +2,6 @@ package core.basesyntax;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -14,7 +13,6 @@ public class WorkWithFile {
     public static final String SEPARATOR = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        createNewFile(toFileName);
         writeReport(toFileName, readDataFromFile(fromFileName));
     }
 
@@ -48,15 +46,6 @@ public class WorkWithFile {
             bufferedWriter.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file" + fileName, e);
-        }
-    }
-
-    private void createNewFile(String fileName) {
-        try {
-            File fileReport = new File(fileName);
-            fileReport.createNewFile();
-        } catch (IOException e) {
-            throw new RuntimeException("Can't create the file: " + fileName, e);
         }
     }
 }
