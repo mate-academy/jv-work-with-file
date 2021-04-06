@@ -7,7 +7,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-
     public static final String SPLITTER = ",";
     public static final String SUPPLY = "supply";
     public static final String BUY = "buy";
@@ -36,6 +35,10 @@ public class WorkWithFile {
     }
 
     private void writeToFile(String toFileName, int supply, int buy) {
+        report(toFileName, supply, buy);
+    }
+
+    private void report(String toFileName, int supply, int buy) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(SUPPLY + "," + supply + System.lineSeparator()
                     + BUY + "," + buy + System.lineSeparator()
