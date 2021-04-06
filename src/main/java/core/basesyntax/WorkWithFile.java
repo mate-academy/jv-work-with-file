@@ -9,21 +9,25 @@ import java.io.IOException;
 
 public class WorkWithFile {
     public static final String SUPPLY = "supply";
+    public static final String BUY = "buy";
+    public static final String RESULT = "result";
+    public static final String COMMA = ",";
+    public static final int INDEX_FOR_OPERATION_TYPE = 0;
+    public static final int INDEX_FOR_AMMOUNT = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         int supplyAmount = 0;
         int buyAmount = 0;
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
-            String textLines = bufferedReader.readLine();
-
-            while (textLines != null) {
-                String[] lineInfo = textLines.split(",");
-                if (lineInfo[0].equals(SUPPLY)) {
-                    supplyAmount += Integer.parseInt(lineInfo[1]);
-                } else {
-                    buyAmount += Integer.parseInt(lineInfo[1]);
+            String textLine = bufferedReader.readLine();
+            while (textLine != null) {
+                String[] lineInfo = textLine.split(COMMA);
+                if (lineInfo[INDEX_FOR_OPERATION_TYPE].equals(SUPPLY)) {
+                    supplyAmount += Integer.parseInt(lineInfo[INDEX_FOR_AMMOUNT]);
+                } else if (lineInfo[INDEX_FOR_OPERATION_TYPE].equals(BUY)) {
+                    buyAmount += Integer.parseInt(lineInfo[INDEX_FOR_AMMOUNT]);
                 }
-                textLines = bufferedReader.readLine();
+                textLine = bufferedReader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from the file " + fromFileName, e);
@@ -32,9 +36,9 @@ public class WorkWithFile {
     }
 
     private String getReport(int supply, int buy) {
-        return "supply," + supply + System.lineSeparator()
-                + "buy," + buy + System.lineSeparator()
-                + "result," + (supply - buy);
+        return (SUPPLY) + (COMMA) + supply + System.lineSeparator()
+                + (BUY) + (COMMA) + buy + System.lineSeparator()
+                + (RESULT) + (COMMA) + (supply - buy);
     }
 
     private void writeToFile(String toFileName, String data) {
