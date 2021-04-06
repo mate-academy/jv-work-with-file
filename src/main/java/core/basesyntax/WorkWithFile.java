@@ -47,7 +47,8 @@ public class WorkWithFile {
             String[] lineToArray = simpleLine.split(WORDS_DIVIDER);
             if (lineToArray[OPERATION_TYPE_INDEX].equals(SUPPLY_OPERATION)) {
                 suppliesCount += Integer.parseInt(lineToArray[AMOUNT_INDEX]);
-            } else {
+            }
+            if (lineToArray[OPERATION_TYPE_INDEX].equals(BUY_OPERATION)) {
                 buyCount += Integer.parseInt(lineToArray[AMOUNT_INDEX]);
             }
         }
