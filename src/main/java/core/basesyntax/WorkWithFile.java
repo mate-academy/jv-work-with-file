@@ -15,12 +15,12 @@ public class WorkWithFile {
     private static final String CSV_SEPARATOR = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        HashMap<String, Integer> map = readingFromFile(fromFileName);
-        String result = formingResult(map);
-        String resultFromFile = writingFromFile(toFileName, result);
+        Map<String, Integer> map = readingFromFile(fromFileName);
+        String result = formResult(map);
+        String resultFromFile = writeFromFile(toFileName, result);
     }
 
-    public HashMap<String, Integer> readingFromFile(String fromFileName) {
+    public Map<String, Integer> readingFromFile(String fromFileName) {
         HashMap<String, Integer> sellAndBuy = new HashMap<>();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String lineWords = bufferedReader.readLine();
@@ -41,25 +41,17 @@ public class WorkWithFile {
         return sellAndBuy;
     }
 
-    public String formingResult(HashMap<String, Integer> sellAndBuy) {
+    public String formResult(Map<String, Integer> sellAndBuy) {
         StringBuilder builder = new StringBuilder();
-        for (Map.Entry<String, Integer> kvp : sellAndBuy.entrySet()) {
-            if (!kvp.getKey().equals(ADDED)) {
-                builder.append(kvp.getKey());
-                builder.append(CSV_SEPARATOR);
-                builder.append(kvp.getValue());
-                builder.append(System.lineSeparator());
-            }
-        }
-        for (Map.Entry<String, Integer> kvp : sellAndBuy.entrySet()) {
-            if (!kvp.getKey().equals(DECREASED)) {
-                builder.append(kvp.getKey());
-                builder.append(CSV_SEPARATOR);
-                builder.append(kvp.getValue());
-                builder.append(System.lineSeparator());
-            }
-        }
         int value = Math.abs(sellAndBuy.get(ADDED) - sellAndBuy.get(DECREASED));
+        builder.append("supply");
+        builder.append(CSV_SEPARATOR);
+        builder.append(sellAndBuy.get(DECREASED));
+        builder.append(System.lineSeparator());
+        builder.append("buy");
+        builder.append(CSV_SEPARATOR);
+        builder.append(sellAndBuy.get(ADDED));
+        builder.append(System.lineSeparator());
         builder.append("result");
         builder.append(CSV_SEPARATOR);
         builder.append(value);
@@ -68,7 +60,7 @@ public class WorkWithFile {
         return content;
     }
 
-    public String writingFromFile(String toFileName, String content) {
+    public String writeFromFile(String toFileName, String content) {
         File file = new File(toFileName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
             bufferedWriter.write(content);
