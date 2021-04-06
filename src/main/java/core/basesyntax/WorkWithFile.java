@@ -10,17 +10,11 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final String CSV_SEPARATOR = ",";
 
-    private String getResult(int[] cases) {
-        return "supply" + CSV_SEPARATOR + cases[0] + System.lineSeparator()
-                + "buy" + CSV_SEPARATOR + cases[1] + System.lineSeparator()
-                + "result" + CSV_SEPARATOR + (cases[0] - cases[1]);
-    }
-
     public int[] setStatistic(String fromFileName) {
         int buy = 0;
         int supply = 0;
-        try (BufferedReader fromFile = new BufferedReader(new FileReader(fromFileName))) {
-            String data = fromFile.readLine();
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
+            String data = reader.readLine();
             while (data != null) {
                 String[] info = data.split(CSV_SEPARATOR);
                 switch (info[0]) {
@@ -31,7 +25,7 @@ public class WorkWithFile {
                     default:
                         break;
                 }
-                data = fromFile.readLine();
+                data = reader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read file, ", e);
@@ -42,10 +36,16 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         File toFileObject = new File(toFileName);
-        try (BufferedWriter toFile = new BufferedWriter(new FileWriter(toFileObject))) {
-            toFile.write(getResult(setStatistic(fromFileName)));
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileObject))) {
+            writer.write(toString(setStatistic(fromFileName)));
         } catch (IOException e) {
             throw new RuntimeException("Can't write data, ", e);
         }
+    }
+
+    private String toString(int[] cases) {
+        return "supply" + CSV_SEPARATOR + cases[0] + System.lineSeparator()
+                + "buy" + CSV_SEPARATOR + cases[1] + System.lineSeparator()
+                + "result" + CSV_SEPARATOR + (cases[0] - cases[1]);
     }
 }
