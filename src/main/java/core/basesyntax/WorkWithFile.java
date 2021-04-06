@@ -8,8 +8,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final int OPERATOR = 0;
-    private static final int AMOUNT = 1;
+    private static final int OPERATOR_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String report = createReport(readFromFle(fromFileName));
@@ -37,10 +37,10 @@ public class WorkWithFile {
         int buySum = 0;
         for (int i = 0; i < data.length; i++) {
             String[] operatorAndAmount = data[i].split(",");
-            if (operatorAndAmount[OPERATOR].equals("supply")) {
-                supplySum += Integer.parseInt(operatorAndAmount[AMOUNT]);
+            if (operatorAndAmount[OPERATOR_INDEX].equals("supply")) {
+                supplySum += Integer.parseInt(operatorAndAmount[AMOUNT_INDEX]);
             } else {
-                buySum += Integer.parseInt(operatorAndAmount[AMOUNT]);
+                buySum += Integer.parseInt(operatorAndAmount[AMOUNT_INDEX]);
             }
         }
         StringBuilder report = new StringBuilder();
