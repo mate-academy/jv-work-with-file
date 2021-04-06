@@ -24,7 +24,7 @@ public class WorkWithFile {
                 String[] statistic = line.split(REGEX);
                 if (statistic[OPERATION_TYPE_INDEX].equals(KEYWORD_SUPPLY)) {
                     sumOfSupply += Integer.parseInt(statistic[AMOUNT_INDEX]);
-                } else {
+                } else if (statistic[OPERATION_TYPE_INDEX].equals(KEYWORD_BUY)) {
                     sumOfBuy += Integer.parseInt(statistic[AMOUNT_INDEX]);
                 }
                 line = bufferedReader.readLine();
