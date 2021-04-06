@@ -19,21 +19,20 @@ public class WorkWithFile {
         int sumOfSupply = 0;
         int sumOfBuy = 0;
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
-            String value = bufferedReader.readLine();
-            while (value != null) {
-                String[] arrayOfValues = value.split(REGEX);
-                if (arrayOfValues[OPERATION_TYPE_INDEX].equals(KEYWORD_SUPPLY)) {
-                    sumOfSupply += Integer.parseInt(arrayOfValues[AMOUNT_INDEX]);
+            String line = bufferedReader.readLine();
+            while (line != null) {
+                String[] statistic = line.split(REGEX);
+                if (statistic[OPERATION_TYPE_INDEX].equals(KEYWORD_SUPPLY)) {
+                    sumOfSupply += Integer.parseInt(statistic[AMOUNT_INDEX]);
                 } else {
-                    sumOfBuy += Integer.parseInt(arrayOfValues[AMOUNT_INDEX]);
+                    sumOfBuy += Integer.parseInt(statistic[AMOUNT_INDEX]);
                 }
-                value = bufferedReader.readLine();
+                line = bufferedReader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read from file!", e);
+            throw new RuntimeException("Can't read from file!" + fromFileName, e);
         }
-        String output = getReport(sumOfSupply, sumOfBuy);
-        writeToFile(toFileName, output);
+        writeToFile(toFileName, getReport(sumOfSupply, sumOfBuy));
     }
 
     private String getReport(int sumOfSupply, int sumOfBuy) {
