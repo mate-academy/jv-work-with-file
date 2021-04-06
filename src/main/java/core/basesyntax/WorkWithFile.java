@@ -10,7 +10,16 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final String CSV_SEPARATOR = ",";
 
-    public int[] setStatistic(String fromFileName) {
+    public void getStatistic(String fromFileName, String toFileName) {
+        File toFileObject = new File(toFileName);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileObject))) {
+            writer.write(getResult(setStatistic(fromFileName)));
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write data, ", e);
+        }
+    }
+
+    private int[] setStatistic(String fromFileName) {
         int buy = 0;
         int supply = 0;
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
@@ -32,15 +41,6 @@ public class WorkWithFile {
         }
 
         return new int[]{supply, buy};
-    }
-
-    public void getStatistic(String fromFileName, String toFileName) {
-        File toFileObject = new File(toFileName);
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileObject))) {
-            writer.write(getResult(setStatistic(fromFileName)));
-        } catch (IOException e) {
-            throw new RuntimeException("Can't write data, ", e);
-        }
     }
 
     private String getResult(int[] cases) {
