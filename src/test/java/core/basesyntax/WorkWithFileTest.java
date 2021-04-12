@@ -17,10 +17,10 @@ public class WorkWithFileTest {
     @After
     public void clearResults() {
         try {
-        Files.deleteIfExists(Path.of(APPLE_RESULT_FILE));
-        Files.deleteIfExists(Path.of(GRAPE_RESULT_FILE));
-        Files.deleteIfExists(Path.of(ORANGE_RESULT_FILE));
-        Files.deleteIfExists(Path.of(BANANA_RESULT_FILE));
+            Files.deleteIfExists(Path.of(APPLE_RESULT_FILE));
+            Files.deleteIfExists(Path.of(GRAPE_RESULT_FILE));
+            Files.deleteIfExists(Path.of(ORANGE_RESULT_FILE));
+            Files.deleteIfExists(Path.of(BANANA_RESULT_FILE));
         } catch (IOException e) {
             throw new RuntimeException("Can't correctly clear result files after test ", e);
         }
