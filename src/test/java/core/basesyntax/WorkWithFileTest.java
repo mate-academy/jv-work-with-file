@@ -15,7 +15,7 @@ public class WorkWithFileTest {
     private static final String BANANA_RESULT_FILE = "bananaResult.csv";
 
     @After
-    public void cleanResults() {
+    public void clearResults() {
         try {
         Files.deleteIfExists(Path.of(APPLE_RESULT_FILE));
         Files.deleteIfExists(Path.of(GRAPE_RESULT_FILE));
