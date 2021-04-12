@@ -1,5 +1,6 @@
 package core.basesyntax;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 import java.io.IOException;
@@ -8,12 +9,28 @@ import java.nio.file.Path;
 
 public class WorkWithFileTest {
     private WorkWithFile workWithFile = new WorkWithFile();
+    private static final String APPLE_RESULT_FILE = "appleResult.csv";
+    private static final String GRAPE_RESULT_FILE = "grapeResult.csv";
+    private static final String ORANGE_RESULT_FILE = "orangeResult.csv";
+    private static final String BANANA_RESULT_FILE = "bananaResult.csv";
+
+    @After
+    public void clearResults() {
+        try {
+            Files.deleteIfExists(Path.of(APPLE_RESULT_FILE));
+            Files.deleteIfExists(Path.of(GRAPE_RESULT_FILE));
+            Files.deleteIfExists(Path.of(ORANGE_RESULT_FILE));
+            Files.deleteIfExists(Path.of(BANANA_RESULT_FILE));
+        } catch (IOException e) {
+            throw new RuntimeException("Can't correctly clear result files after test ", e);
+        }
+    }
 
     @Test
     public void getStatisticAboutApple() {
-        workWithFile.getStatistic("apple.csv", "appleResult.csv");
+        workWithFile.getStatistic("apple.csv", APPLE_RESULT_FILE);
 
-        String actualResult = readFromFile("appleResult.csv").trim();
+        String actualResult = readFromFile(APPLE_RESULT_FILE).trim();
         String expectedResult = "supply,188" + System.lineSeparator()
                 + "buy,115" + System.lineSeparator()
                 + "result,73";
@@ -22,9 +39,9 @@ public class WorkWithFileTest {
 
     @Test
     public void getStatisticAboutOrange() {
-        workWithFile.getStatistic("orange.csv", "orangeResult.csv");
+        workWithFile.getStatistic("orange.csv", ORANGE_RESULT_FILE);
 
-        String actualResult = readFromFile("orangeResult.csv").trim();
+        String actualResult = readFromFile(ORANGE_RESULT_FILE).trim();
         String expectedResult = "supply,295" + System.lineSeparator()
                 + "buy,154" + System.lineSeparator()
                 + "result,141";
@@ -33,9 +50,9 @@ public class WorkWithFileTest {
 
     @Test
     public void getStatisticAboutGrape() {
-        workWithFile.getStatistic("grape.csv", "grapeResult.csv");
+        workWithFile.getStatistic("grape.csv", GRAPE_RESULT_FILE);
 
-        String actualResult = readFromFile("grapeResult.csv").trim();
+        String actualResult = readFromFile(GRAPE_RESULT_FILE).trim();
         String expectedResult = "supply,352" + System.lineSeparator()
                 + "buy,352" + System.lineSeparator()
                 + "result,0";
@@ -44,9 +61,9 @@ public class WorkWithFileTest {
 
     @Test
     public void getStatisticAboutBanana() {
-        workWithFile.getStatistic("banana.csv", "bananaResult.csv");
+        workWithFile.getStatistic("banana.csv", BANANA_RESULT_FILE);
 
-        String actualResult = readFromFile("bananaResult.csv").trim();
+        String actualResult = readFromFile(BANANA_RESULT_FILE).trim();
         String expectedResult = "supply,491" + System.lineSeparator()
                 + "buy,293" + System.lineSeparator()
                 + "result,198";
