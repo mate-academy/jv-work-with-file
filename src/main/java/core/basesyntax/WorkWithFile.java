@@ -9,17 +9,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class WorkWithFile {
-    private final String supply = "supply";
-    private final String buy = "buy";
-    private final char csvSeparator = ',';
-    private final int startIndex = 0;
-    private final int stepIndex = 1;
-    private final int startValue = 0;
+    private static final String SUPPLY_OPERATION = "supply";
+    private static final String BUY_OPERATION = "buy";
+    private static final char CSV_SEPARATOR = ',';
+    private static final int START_INDEX = 0;
+    private static final int STEP_INDEX = 1;
+    private static final int START_VALUE = 0;
     private Map<String, Integer> resultMap = new HashMap<>();
 
     public void getStatistic(String fromFileName, String toFileName) {
-        resultMap.put(supply, startValue);
-        resultMap.put(buy, startValue);
+        resultMap.put(SUPPLY_OPERATION, START_VALUE);
+        resultMap.put(BUY_OPERATION, START_VALUE);
         readFile(fromFileName);
         writeFile(toFileName);
     }
@@ -29,9 +29,9 @@ public class WorkWithFile {
             while (reader.ready()) {
                 String lineInFile = reader.readLine();
                 String operation = lineInFile
-                        .substring(startIndex, lineInFile.indexOf(csvSeparator));
+                        .substring(START_INDEX, lineInFile.indexOf(CSV_SEPARATOR));
                 String textValue = lineInFile
-                        .substring(lineInFile.indexOf(csvSeparator) + stepIndex);
+                        .substring(lineInFile.indexOf(CSV_SEPARATOR) + STEP_INDEX);
                 Integer valueOperation = Integer.parseInt(textValue);
                 resultMap.put(operation, (resultMap.get(operation) + valueOperation));
             }
@@ -41,12 +41,11 @@ public class WorkWithFile {
     }
 
     private void writeFile(String toFileName) {
-        try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName));
-            writer.write("supply," + resultMap.get(supply) + System.lineSeparator()
-                    + "buy," + resultMap.get(buy) + System.lineSeparator()
-                    + "result," + (resultMap.get(supply) - resultMap.get(buy)));
-            writer.close();
+        String result = "supply," + resultMap.get(SUPPLY_OPERATION) + System.lineSeparator()
+                + "buy," + resultMap.get(BUY_OPERATION) + System.lineSeparator()
+                + "result," + (resultMap.get(SUPPLY_OPERATION) - resultMap.get(BUY_OPERATION));
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
+            writer.write(result);
         } catch (IOException e) {
             throw new RuntimeException("Error!!! Can not write file.", e);
         }
