@@ -18,7 +18,8 @@ public class WorkWithFile {
         int supply = 0;
         int buy = 0;
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
-            for (String line = bufferedReader.readLine(); line != null; line = bufferedReader.readLine()) {
+            for (String line = bufferedReader.readLine();
+                    line != null; line = bufferedReader.readLine()) {
                 String[] lineValues = line.split(CSV_SEPARATOR);
                 if (lineValues[VALUE_NAME_INDEX].equals(SUPPLY)) {
                     supply += Integer.parseInt(lineValues[AMOUNT_INDEX]);
