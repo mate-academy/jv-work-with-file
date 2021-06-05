@@ -10,7 +10,7 @@ public class WorkWithFile {
     private static final int INDEX_OF_VALUE = 1;
     private static final String CVS_SEPARATOR = ",";
 
-public void getStatistic(String fromFileName, String toFileName) {
+    public void getStatistic(String fromFileName, String toFileName) {
         writeReport(toFileName, createAndGetReportFromFile(fromFileName));
     }
 
