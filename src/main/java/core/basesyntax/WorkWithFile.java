@@ -31,10 +31,10 @@ public class WorkWithFile {
                 buySum += value;
             }
         }
-        return new String[]{" " + FIRST_REPORT_WORD_VALUE + "," + suppliesSum
-                + System.lineSeparator(),
-                SECOND_REPORT_WORD_VALUE + "," + buySum + System.lineSeparator(),
-                THIRD_REPORT_WORD_VALUE + "," + (suppliesSum - buySum)};
+        return new String[]{String.format(" %s,%s%s", FIRST_REPORT_WORD_VALUE, suppliesSum,
+                System.lineSeparator()),
+                String.format("%s,%s%s", SECOND_REPORT_WORD_VALUE, buySum, System.lineSeparator()),
+                String.format("%s,%s", THIRD_REPORT_WORD_VALUE, suppliesSum - buySum)};
 
     }
 
