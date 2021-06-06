@@ -32,4 +32,19 @@ public class WorkWithFile {
             throw new RuntimeException("Can't read from file " + fromFileName + e);
         }
     }
+
+    private String makeReport() {
+        return "supply" + "," + supplySum + System.lineSeparator() + "n" +
+                "buy" + "," + buySum + System.lineSeparator() + "n" +
+                "result" + "," + result + System.lineSeparator() + "n";
+    }
+
+    private void writeToFile (String toFileName) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
+            Files.createFile(Path.of(toFileName));
+            bufferedWriter.write(makeReport());
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write to file " + toFileName + e);
+        }
+    }
 }
