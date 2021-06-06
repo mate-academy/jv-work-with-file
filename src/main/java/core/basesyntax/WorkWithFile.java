@@ -47,7 +47,9 @@ public class WorkWithFile {
             int indexOfComma = info.indexOf(COMMA);
             if (info.substring(0, indexOfComma).contains("buy")) {
                 totalBuy += Integer.parseInt(info.substring(indexOfComma + 1));
-            } else totalSupply += Integer.parseInt(info.substring(indexOfComma + 1));
+            } else {
+                totalSupply += Integer.parseInt(info.substring(indexOfComma + 1));
+            }
         }
 
         report.add("supply" + COMMA + totalSupply + System.lineSeparator());
