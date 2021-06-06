@@ -15,7 +15,8 @@ public class WorkWithFile {
     int result = buySum - supplySum;
 
     public void getStatistic(String fromFileName, String toFileName) {
-
+        readFromFile(fromFileName);
+        writeToFile(toFileName);
     }
 
     private void readFromFile(String fromFileName) {
