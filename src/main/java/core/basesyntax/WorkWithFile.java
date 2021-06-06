@@ -9,6 +9,10 @@ import java.util.List;
 
 public class WorkWithFile {
     private static final String COMMA = ",";
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
+    private static final int INDEX_OF_OPERATION = 0;
     private int totalSupply = 0;
     private int totalBuy = 0;
 
@@ -45,16 +49,16 @@ public class WorkWithFile {
 
         for (String info : list) {
             int indexOfComma = info.indexOf(COMMA);
-            if (info.substring(0, indexOfComma).contains("buy")) {
+            if (info.substring(INDEX_OF_OPERATION, indexOfComma).equals(BUY)) {
                 totalBuy += Integer.parseInt(info.substring(indexOfComma + 1));
             } else {
                 totalSupply += Integer.parseInt(info.substring(indexOfComma + 1));
             }
         }
 
-        report.add("supply" + COMMA + totalSupply + System.lineSeparator());
-        report.add("buy" + COMMA + totalBuy + System.lineSeparator());
-        report.add("result" + COMMA + (totalSupply - totalBuy));
+        report.add(SUPPLY + COMMA + totalSupply + System.lineSeparator());
+        report.add(BUY + COMMA + totalBuy + System.lineSeparator());
+        report.add(RESULT + COMMA + (totalSupply - totalBuy));
         return report;
     }
 }
