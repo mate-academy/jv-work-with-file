@@ -58,9 +58,4 @@ public class WorkWithFile {
             System.out.println(e.getMessage());
         }
     }
-
-    public static void main(String[] args) {
-        WorkWithFile workWithFile = new WorkWithFile();
-        workWithFile.getStatistic("banana.csv", null);
-    }
 }
