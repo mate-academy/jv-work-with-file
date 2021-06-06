@@ -33,7 +33,7 @@ public class WorkWithFile {
         createReport(sumSupply, sumBuy, toFileName);
     }
 
-    public void createReport(int supply, int buy, String toFileName) {
+    private void createReport(int supply, int buy, String toFileName) {
         StringBuilder stringBuilder =
                 new StringBuilder("supply,").append(supply).append(System.lineSeparator())
                 .append("buy,").append(buy).append(System.lineSeparator())
