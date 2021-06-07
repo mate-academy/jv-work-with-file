@@ -20,10 +20,11 @@ public class WorkWithFile {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
+                int value = Integer.parseInt(line.split(SEPARATOR)[INDEX_OF_VALUE]);
                 if (line.contains(SUPPLY)) {
-                    supply += Integer.parseInt(line.split(SEPARATOR)[INDEX_OF_VALUE]);
+                    supply += value;
                 } else {
-                    buy += Integer.parseInt(line.split(SEPARATOR)[INDEX_OF_VALUE]);
+                    buy += value;
                 }
             }
         } catch (IOException e) {
