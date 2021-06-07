@@ -19,13 +19,13 @@ public class WorkWithFile {
         int buy = 0;
 
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
-            String readable;
-            while ((readable = bufferedReader.readLine()) != null) {
-                if (readable.contains("supply")) {
-                    supply += Integer.parseInt(readable.split(CVS_SEPARATOR)[INDEX_OF_VALUE]);
-                }
-                if (readable.contains("buy")) {
-                    buy += Integer.parseInt(readable.split(CVS_SEPARATOR)[INDEX_OF_VALUE]);
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                int value = Integer.parseInt(line.split(CVS_SEPARATOR)[INDEX_OF_VALUE]);
+                if (line.contains("supply")) {
+                    supply += value;
+                } else if (line.contains("buy")) {
+                    buy += value;
                 }
             }
         } catch (IOException e) {
