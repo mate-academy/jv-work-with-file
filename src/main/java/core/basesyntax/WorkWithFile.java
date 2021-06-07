@@ -14,14 +14,28 @@ public class WorkWithFile {
     private static final int POSITION_ALL_SUPPLY_OPERATION = 0;
     private static final int POSITION_All_BUY_OPERATION = 1;
 
-    private void getWriteToFile(String lineOperation, String toFileName, int resultSum) {
+    public void getStatistic(String fromFileName, String toFileName) {
+        int[] resultOperation = new int[TYPE_OPERATION.length];
+        int count = 0;
+
+        for (String lineOperation : TYPE_OPERATION) {
+            resultOperation[count] = getReadAndSumOperation(fromFileName, lineOperation);
+            writeToFile(lineOperation, toFileName, resultOperation[count]);
+            count++;
+        }
+
+        writeToFile("result", toFileName, resultOperation[POSITION_ALL_SUPPLY_OPERATION]
+                    - resultOperation[POSITION_All_BUY_OPERATION]);
+    }
+
+    private void writeToFile(String lineOperation, String toFileName, int resultSum) {
         try (BufferedWriter bufferedWriter =
                      new BufferedWriter(new FileWriter(toFileName, true))) {
             StringBuilder dataLineToFile = new StringBuilder();
             bufferedWriter.write(dataLineToFile.append(lineOperation)
                     .append(",")
                     .append(resultSum)
-                    .append("\r\n")
+                    .append(System.lineSeparator())
                     .toString());
         } catch (IOException e) {
             throw new RuntimeException("Can't write data file " + toFileName, e);
@@ -29,21 +43,14 @@ public class WorkWithFile {
     }
 
     private int getReadAndSumOperation(String fromFileName, String lineOperation) {
-        String line;
-        int sumOperation;
-        String dataLineFromFile;
-        String[] dataLineSplit;
-        File fileReader = new File(fromFileName);
+        int sumOperation = 0;
 
-        try {
-            sumOperation = 0;
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(fileReader));
-            line = bufferedReader.readLine();
+        try (BufferedReader bufferedReader =
+                     new BufferedReader(new FileReader(new File(fromFileName)))) {
+            String line = bufferedReader.readLine();
 
             while (line != null) {
-                StringBuilder stringBuilder = new StringBuilder();
-                dataLineFromFile = stringBuilder.append(line).toString();
-                dataLineSplit = dataLineFromFile.split(",");
+                String[] dataLineSplit = line.split(",");
 
                 if ((dataLineSplit[POSITION_OPERATION_IN_LINE]).equals(lineOperation)) {
                     sumOperation += Integer.parseInt(dataLineSplit[POSITION_COST_IN_LINE]);
@@ -54,20 +61,5 @@ public class WorkWithFile {
             throw new RuntimeException("Can't read data file " + fromFileName, e);
         }
         return sumOperation;
-    }
-
-    public void getStatistic(String fromFileName, String toFileName) {
-        int[] resultOperation = new int[TYPE_OPERATION.length];
-        int count = 0;
-
-        for (String lineOperation : TYPE_OPERATION) {
-            resultOperation[count] = getReadAndSumOperation(fromFileName, lineOperation);
-            getWriteToFile(lineOperation, toFileName,
-                    getReadAndSumOperation(fromFileName, lineOperation));
-            count++;
-        }
-
-        getWriteToFile("result", toFileName, resultOperation[POSITION_ALL_SUPPLY_OPERATION]
-                    - resultOperation[POSITION_All_BUY_OPERATION]);
     }
 }
