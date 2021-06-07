@@ -11,26 +11,27 @@ public class WorkWithFile {
     private static final String SEPARATOR = System.lineSeparator();
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String toFile = "";
-        StringBuilder builder = new StringBuilder();
+        int supply = 0;
+        int buy = 0;
+        int index;
         try (BufferedReader buffered = new BufferedReader(new FileReader(fromFileName))) {
-            int supply = 0;
-            int buy = 0;
             for (String line = buffered.readLine(); line != null; line = buffered.readLine()) {
-                if (line.substring(0, line.indexOf(DELIMITER)).equals("supply")) {
-                    supply += Integer.parseInt(line.substring(line.indexOf(DELIMITER) + 1));
-                } else if (line.substring(0, line.indexOf(DELIMITER)).equals("buy")) {
-                    buy += Integer.parseInt(line.substring((line.indexOf(DELIMITER) + 1)));
+                index = line.indexOf(DELIMITER);
+                if (line.substring(0, index).equals("supply")) {
+                    supply += Integer.parseInt(line.substring(index + 1));
+                } else if (line.substring(0, index).equals("buy")) {
+                    buy += Integer.parseInt(line.substring((index + 1)));
                 }
             }
-            builder.append("supply").append(DELIMITER).append(supply).append(SEPARATOR)
-                    .append("buy").append(DELIMITER).append(buy).append(SEPARATOR)
-                    .append("result" + DELIMITER + (supply - buy));
-            toFile = builder.toString();
-            writeToFile(toFile, toFileName);
+
         } catch (IOException ioe) {
             throw new RuntimeException("The file cannot be read", ioe);
         }
+        StringBuilder builder = new StringBuilder("supply").append(DELIMITER)
+                .append(supply).append(SEPARATOR)
+                .append("buy").append(DELIMITER).append(buy).append(SEPARATOR)
+                .append("result").append(DELIMITER).append(supply - buy);
+        writeToFile(builder.toString(), toFileName);
     }
 
     private void writeToFile(String writeThis, String toFileName) {
