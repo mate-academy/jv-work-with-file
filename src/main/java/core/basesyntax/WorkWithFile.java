@@ -7,7 +7,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final int INDEX_NUMERIC = 1;
+    private static final int INDEX_OF_OPERATION = 0;
+    private static final int INDEX_OF_PRODUCT_COUNT = 1;
+    private static final String WORD_SEPARATOR = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
@@ -22,15 +24,13 @@ public class WorkWithFile {
         int buy = 0;
 
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
-            String reader;
-            while ((reader = bufferedReader.readLine()) != null) {
-                if (reader.contains("supply")) {
-                    String [] inheritArray = reader.split(",");
-                    supply += Integer.parseInt(inheritArray[INDEX_NUMERIC]);
-                }
-                if (reader.contains("buy")) {
-                    String [] inheritArray = reader.split(",");
-                    buy += Integer.parseInt(inheritArray[INDEX_NUMERIC]);
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                String [] splitArray = line.split(WORD_SEPARATOR);
+                if (splitArray[INDEX_OF_OPERATION].equals("supply")) {
+                    supply += Integer.parseInt(splitArray[INDEX_OF_PRODUCT_COUNT]);
+                } else {
+                    buy += Integer.parseInt(splitArray[INDEX_OF_PRODUCT_COUNT]);
                 }
             }
         } catch (IOException e) {
