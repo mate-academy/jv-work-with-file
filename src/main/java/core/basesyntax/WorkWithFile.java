@@ -3,33 +3,23 @@ package core.basesyntax;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
 import java.util.List;
 
 public class WorkWithFile {
-    private static final String COMMA = ",";
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
+    private static final String COMMA = ",";
     private static final int INDEX_OF_OPERATION = 0;
-    private int totalSupply = 0;
-    private int totalBuy = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
+        writeToFile(toFileName, createReport(readFromFile(fromFileName)));
+    }
+
+    private void writeToFile(String toFileName, String report) {
         File file = new File(toFileName);
-        List<String> list = createReport(readFromFile(fromFileName));
-
         try {
-            file.createNewFile();
-        } catch (IOException e) {
-            throw new RuntimeException("Can't create new file", e);
-        }
-
-        try {
-            for (String row : list) {
-                Files.write(file.toPath(), row.getBytes(), StandardOpenOption.APPEND);
-            }
+            Files.write(file.toPath(), report.getBytes());
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file " + toFileName, e);
         }
@@ -44,8 +34,10 @@ public class WorkWithFile {
         }
     }
 
-    private List<String> createReport(List<String> list) {
-        List<String> report = new ArrayList<>();
+    private String createReport(List<String> list) {
+        StringBuilder builder = new StringBuilder();
+        int totalSupply = 0;
+        int totalBuy = 0;
 
         for (String info : list) {
             int indexOfComma = info.indexOf(COMMA);
@@ -55,10 +47,10 @@ public class WorkWithFile {
                 totalSupply += Integer.parseInt(info.substring(indexOfComma + 1));
             }
         }
-
-        report.add(SUPPLY + COMMA + totalSupply + System.lineSeparator());
-        report.add(BUY + COMMA + totalBuy + System.lineSeparator());
-        report.add(RESULT + COMMA + (totalSupply - totalBuy));
-        return report;
+        return builder.append(SUPPLY).append(COMMA).append(totalSupply)
+                .append(System.lineSeparator())
+                .append(BUY).append(COMMA).append(totalBuy)
+                .append(System.lineSeparator())
+                .append(RESULT).append(COMMA).append(totalSupply - totalBuy).toString();
     }
 }
