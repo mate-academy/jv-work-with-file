@@ -7,7 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final int INDEX_OF_NUMERIC = 1;
+    private static final int INDEX_NUMERIC = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
@@ -26,11 +26,11 @@ public class WorkWithFile {
             while ((reader = bufferedReader.readLine()) != null) {
                 if (reader.contains("supply")) {
                     String [] inheritArray = reader.split(",");
-                    supply += Integer.parseInt(inheritArray[INDEX_OF_NUMERIC]);
+                    supply += Integer.parseInt(inheritArray[INDEX_NUMERIC]);
                 }
                 if (reader.contains("buy")) {
                     String [] inheritArray = reader.split(",");
-                    buy += Integer.parseInt(inheritArray[INDEX_OF_NUMERIC]);
+                    buy += Integer.parseInt(inheritArray[INDEX_NUMERIC]);
                 }
             }
         } catch (IOException e) {
