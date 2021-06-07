@@ -31,11 +31,11 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Reading file was failed ", e);
         }
-        String resultBuilder = SUPPLY_OPERATION + SEPARATOR_DATA + supplyAmount +
-                System.lineSeparator() +
-                BUY_OPERATION + SEPARATOR_DATA + buyAmount +
-                System.lineSeparator() +
-                RESULT + SEPARATOR_DATA + (supplyAmount - buyAmount);
+        String resultBuilder = SUPPLY_OPERATION + SEPARATOR_DATA + supplyAmount
+                + System.lineSeparator()
+                + BUY_OPERATION + SEPARATOR_DATA + buyAmount
+                + System.lineSeparator()
+                + RESULT + SEPARATOR_DATA + (supplyAmount - buyAmount);
         writeToFile(toFileName, resultBuilder);
     }
 
