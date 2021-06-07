@@ -17,7 +17,7 @@ public class WorkWithFile {
         File statistic = new File(fromFileName);
         int supply = 0;
         int buy = 0;
-        int value;
+        int value = 0;
 
         try (BufferedReader reader = new BufferedReader(new FileReader(statistic))) {
             String record = reader.readLine();
@@ -34,22 +34,25 @@ public class WorkWithFile {
             throw new RuntimeException("Could not read file " + fromFileName, e);
         }
 
-        String[] report = {SUPPLY + CSV_SEPARATOR + supply,
-                BUY + CSV_SEPARATOR + buy,
-                RESULT + CSV_SEPARATOR + (supply - buy)};
-
-        writeToFile(toFileName, report);
+        writeToFile(toFileName, createReport(supply, buy, value));
     }
 
-    private void writeToFile(String toFileName, String[] report) {
+    private String createReport(int supply, int buy, int value) {
+        StringBuilder report = new StringBuilder();
+        String nextLine = System.lineSeparator();
+
+        return report.append(SUPPLY).append(CSV_SEPARATOR).append(supply).append(nextLine)
+                .append(BUY).append(CSV_SEPARATOR).append(buy).append(nextLine)
+                .append(RESULT).append(CSV_SEPARATOR).append(supply - buy).toString();
+    }
+
+    private void writeToFile(String toFileName, String report) {
         File resultFile = new File(toFileName);
-        for (String line : report) {
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(resultFile, true))) {
-                writer.write(line);
-                writer.newLine();
-            } catch (IOException e) {
-                throw new RuntimeException("Could not write in file " + toFileName, e);
-            }
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(resultFile))) {
+            writer.write(report);
+        } catch (IOException e) {
+            throw new RuntimeException("Could not write in file " + toFileName, e);
         }
     }
 }
