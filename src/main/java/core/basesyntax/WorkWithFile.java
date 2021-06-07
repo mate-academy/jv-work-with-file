@@ -17,12 +17,12 @@ public class WorkWithFile {
         File statistic = new File(fromFileName);
         int supply = 0;
         int buy = 0;
-        int value = 0;
 
         try (BufferedReader reader = new BufferedReader(new FileReader(statistic))) {
             String record = reader.readLine();
+
             while (record != null) {
-                value = Integer.parseInt(record.substring(record.indexOf(CSV_SEPARATOR) + 1));
+                int value = Integer.parseInt(record.substring(record.indexOf(CSV_SEPARATOR) + 1));
                 if (record.contains(SUPPLY)) {
                     supply += value;
                 } else {
@@ -34,10 +34,10 @@ public class WorkWithFile {
             throw new RuntimeException("Could not read file " + fromFileName, e);
         }
 
-        writeToFile(toFileName, createReport(supply, buy, value));
+        writeToFile(toFileName, createReport(supply, buy));
     }
 
-    private String createReport(int supply, int buy, int value) {
+    private String createReport(int supply, int buy) {
         StringBuilder report = new StringBuilder();
         String nextLine = System.lineSeparator();
 
