@@ -8,68 +8,52 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private int[] supply = new int[10];
-    private int sumSupply = 0;
-    private int counterSupply = 0;
-    private int[] buy = new int[10];
-    private int sumBuy = 0;
-    private int counterBuy = 0;
-    private StringBuilder stringBuilder = new StringBuilder();
+    private static final char DELIMETER = ',';
 
     public void getStatistic(String fromFileName, String toFileName) {
-        readFromFile(fromFileName);
-        for (int i = 0; i < supply.length; i++) {
-            sumSupply += supply[i];
-            sumBuy += buy[i];
-        }
-        writeToFile(toFileName);
+        writeToFile(toFileName, readFromFile(fromFileName));
     }
 
-    public void writeToFile(String toFileName) {
+    private void writeToFile(String toFileName, String report) {
+        int sumBuy = Integer.parseInt(report.substring(0, report.indexOf(',')));
+        int sumSupply = Integer.parseInt(report.substring(report.indexOf(',') + 1));
+        StringBuilder stringBuilder = new StringBuilder();
         File file = new File(toFileName);
-        try {
-            file.createNewFile();
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
+            bufferedWriter.write(stringBuilder.append(("supply,")).append(sumSupply)
+                    .append(System.lineSeparator())
+                    .append("buy,").append(sumBuy).append(System.lineSeparator())
+                    .append("result,").append(sumSupply - sumBuy).toString());
         } catch (IOException e) {
-            throw new RuntimeException("Can`t create new file", e);
-        }
-        try {
-            stringBuilder.delete(0, stringBuilder.length());
-            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName));
-            bufferedWriter.write(String.valueOf(stringBuilder
-                    .append("supply,").append(sumSupply)));
-            stringBuilder.delete(0, stringBuilder.length());
-            bufferedWriter.write(String.valueOf(stringBuilder
-                    .append("\r\nbuy,").append(sumBuy)));
-            stringBuilder.delete(0, stringBuilder.length());
-            bufferedWriter.write(String.valueOf(stringBuilder
-                    .append("\r\nresult,").append(sumSupply - sumBuy)));
-            stringBuilder.delete(0, stringBuilder.length());
-            bufferedWriter.close();
-        } catch (RuntimeException | IOException e) {
-            throw new RuntimeException("Can`t write to file, e");
+            throw new RuntimeException("Can`t write to file", e);
         }
     }
 
-    public void readFromFile(String fromFileName) {
+    private String readFromFile(String fromFileName) {
+
+        int sumBuy = 0;
+        int sumSupply = 0;
+        StringBuilder stringBuilder = new StringBuilder();
         try {
             File file = new File(fromFileName);
             BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
             String workingString = bufferedReader.readLine();
             while (workingString != null) {
-                if (workingString.substring(0, workingString.indexOf(',')).equals("supply")) {
-                    supply[counterSupply] = Integer.parseInt(
-                            workingString.substring(workingString.indexOf(',') + 1));
-                    counterSupply++;
+                if (workingString.substring(0, workingString.indexOf(DELIMETER))
+                        .equals("supply")) {
+                    sumSupply += Integer.parseInt(
+                            workingString.substring(workingString.indexOf(DELIMETER) + 1));
                 } else {
-                    buy[counterBuy] = Integer.parseInt(
-                            workingString.substring(workingString.indexOf(',') + 1));
-                    counterBuy++;
+                    sumBuy += Integer.parseInt(
+                            workingString.substring(workingString.indexOf(DELIMETER) + 1));
                 }
                 workingString = bufferedReader.readLine();
             }
             bufferedReader.close();
-        } catch (RuntimeException | IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException("Can`t read from file", e);
         }
+        stringBuilder.append(sumBuy).append(",").append(sumSupply);
+        return stringBuilder.toString();
     }
 }
