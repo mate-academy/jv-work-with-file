@@ -36,7 +36,7 @@ public class WorkWithFile {
                     .append("buy,").append(buying).append(System.lineSeparator())
                     .append("result,").append(supplying - buying).toString();
         } catch (IOException e) {
-            throw new RuntimeException("Wow, pleas check your file one more time" + e);
+            throw new RuntimeException("Can't read from file", e);
         }
     }
 
@@ -45,7 +45,7 @@ public class WorkWithFile {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             writer.write(fileReport);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can't write to file", e);
         }
     }
 }
