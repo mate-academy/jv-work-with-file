@@ -23,12 +23,12 @@ public class WorkWithFile {
                 String[] lineValues = line.split(CSV_SEPARATOR);
                 if (lineValues[VALUE_NAME_INDEX].equals(SUPPLY)) {
                     supply += Integer.parseInt(lineValues[AMOUNT_INDEX]);
-                } else if (lineValues[VALUE_NAME_INDEX].equals(BUY)) {
+                } else {
                     buy += Integer.parseInt(lineValues[AMOUNT_INDEX]);
                 }
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read from file");
+            throw new RuntimeException("Can't read from file", e);
         }
         StringBuilder builder = new StringBuilder()
                 .append(SUPPLY).append(CSV_SEPARATOR).append(supply)
@@ -39,11 +39,11 @@ public class WorkWithFile {
         writeToFile(toFileName, builder.toString());
     }
 
-    public void writeToFile(String toFileName, String report) {
+    private void writeToFile(String toFileName, String report) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write to file");
+            throw new RuntimeException("Can't write to file", e);
         }
     }
 }
