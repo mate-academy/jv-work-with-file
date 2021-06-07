@@ -21,7 +21,7 @@ public class WorkWithFile {
     }
 
     private void writeToFile(String report, String toFileName) {
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true))) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Can't write file", e);
@@ -37,7 +37,7 @@ public class WorkWithFile {
             int increaseAmount = Integer.parseInt(words.split(COMMA_SEPARATOR)[WORD_INDEX]);
             if (words.contains(WORD_SUPPLY)) {
                 supply += increaseAmount;
-            } else if (words.contains(WORD_BUY)) {
+            } else {
                 buy += increaseAmount;
             }
         }
