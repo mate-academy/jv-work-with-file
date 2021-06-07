@@ -20,7 +20,6 @@ public class WorkWithFile {
         HashMap<String, Integer> map = new HashMap<>();
         String[] element;
 
-
         for (String rowCsv : getStringList(fromFileName)) {
             element = rowCsv.split(COMMA);
             if (map.get(element[INDEX_OF_OPERATION]) == null) {
