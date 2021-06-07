@@ -14,14 +14,6 @@ public class WorkWithFile {
     private static final int OPERATION_INDEX = 0;
     private static final int AMOUNT_INDEX = 1;
 
-    public void writeToFile(String toFileName, String report) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            writer.write(report);
-        } catch (IOException e) {
-            throw new RuntimeException("Write to file was canceled " + e);
-        }
-    }
-
     public void getStatistic(String fromFileName, String toFileName) {
         int supplyAmount = 0;
         int buyAmount = 0;
@@ -45,5 +37,13 @@ public class WorkWithFile {
                 System.lineSeparator() +
                 RESULT + SEPARATOR_DATA + (supplyAmount - buyAmount);
         writeToFile(toFileName, resultBuilder);
+    }
+
+    private void writeToFile(String toFileName, String report) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
+            writer.write(report);
+        } catch (IOException e) {
+            throw new RuntimeException("Write to file was canceled " + e);
+        }
     }
 }
