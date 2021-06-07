@@ -20,6 +20,7 @@ public class WorkWithFile {
         HashMap<String, Integer> map = new HashMap<>();
         String[] element;
 
+
         for (String rowCsv : getStringList(fromFileName)) {
             element = rowCsv.split(COMMA);
             if (map.get(element[INDEX_OF_OPERATION]) == null) {
@@ -46,7 +47,7 @@ public class WorkWithFile {
         try {
             list = Files.readAllLines(Path.of(fromFileName));
         } catch (IOException e) {
-            throw new RuntimeException("IO exception : ",e);
+            throw new RuntimeException("IO exception when reading the file " + fromFileName, e);
         }
         return list;
     }
@@ -55,7 +56,7 @@ public class WorkWithFile {
         try {
             Files.write(Path.of(toFileName), report);
         } catch (IOException e) {
-            throw new RuntimeException("IO exception : ",e);
+            throw new RuntimeException("IO exception when writing in the file " + toFileName, e);
         }
     }
 }
