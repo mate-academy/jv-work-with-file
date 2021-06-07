@@ -2,7 +2,6 @@ package core.basesyntax;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -15,28 +14,18 @@ public class WorkWithFile {
     }
 
     private void writeToFile(String toFileName, String report) {
-        int sumBuy = Integer.parseInt(report.substring(0, report.indexOf(',')));
-        int sumSupply = Integer.parseInt(report.substring(report.indexOf(',') + 1));
-        StringBuilder stringBuilder = new StringBuilder();
-        File file = new File(toFileName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write(stringBuilder.append(("supply,")).append(sumSupply)
-                    .append(System.lineSeparator())
-                    .append("buy,").append(sumBuy).append(System.lineSeparator())
-                    .append("result,").append(sumSupply - sumBuy).toString());
+            bufferedWriter.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Can`t write to file", e);
         }
     }
 
     private String readFromFile(String fromFileName) {
-
         int sumBuy = 0;
         int sumSupply = 0;
         StringBuilder stringBuilder = new StringBuilder();
-        try {
-            File file = new File(fromFileName);
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String workingString = bufferedReader.readLine();
             while (workingString != null) {
                 if (workingString.substring(0, workingString.indexOf(DELIMETER))
@@ -49,11 +38,13 @@ public class WorkWithFile {
                 }
                 workingString = bufferedReader.readLine();
             }
-            bufferedReader.close();
         } catch (IOException e) {
             throw new RuntimeException("Can`t read from file", e);
         }
-        stringBuilder.append(sumBuy).append(",").append(sumSupply);
+        stringBuilder.append(("supply,")).append(sumSupply)
+                .append(System.lineSeparator())
+                .append("buy,").append(sumBuy).append(System.lineSeparator())
+                .append("result,").append(sumSupply - sumBuy);
         return stringBuilder.toString();
     }
 }
