@@ -15,7 +15,6 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         writeReport(createReport(readData(fromFileName)), toFileName);
-
     }
 
     private String[] createReport(ArrayList<String> inputData) {
@@ -26,16 +25,14 @@ public class WorkWithFile {
             int value = Integer.parseInt(element.substring(element.indexOf(",") + 1));
             if (element.contains(FIRST_REPORT_WORD_VALUE)) {
                 suppliesSum += value;
-            }
-            if (element.contains(SECOND_REPORT_WORD_VALUE)) {
+            } else {
                 buySum += value;
             }
         }
-        return new String[]{String.format(" %s,%s%s", FIRST_REPORT_WORD_VALUE, suppliesSum,
+        return new String[]{String.format("%s,%s%s", FIRST_REPORT_WORD_VALUE, suppliesSum,
                 System.lineSeparator()),
                 String.format("%s,%s%s", SECOND_REPORT_WORD_VALUE, buySum, System.lineSeparator()),
                 String.format("%s,%s", THIRD_REPORT_WORD_VALUE, suppliesSum - buySum)};
-
     }
 
     private ArrayList<String> readData(String fromFileName) {
@@ -48,13 +45,13 @@ public class WorkWithFile {
         } catch (FileNotFoundException e) {
             throw new RuntimeException("Can't find the file.", e);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write in file.", e);
+            throw new RuntimeException("Can't read the file.", e);
         }
         return inputData;
     }
 
     private void writeReport(String[] data, String toFileName) {
-        try (BufferedWriter fileWriter = new BufferedWriter(new FileWriter(toFileName, true))) {
+        try (BufferedWriter fileWriter = new BufferedWriter(new FileWriter(toFileName))) {
             for (String element : data) {
                 fileWriter.write(element);
             }
