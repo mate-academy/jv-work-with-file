@@ -39,12 +39,11 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Reading file was failed ", e);
         }
-        StringBuilder resultBuilder = new StringBuilder()
-                .append(SUPPLY_OPERATION).append(SEPARATOR_DATA).append(supplyAmount)
-                .append(System.lineSeparator())
-                .append(BUY_OPERATION).append(SEPARATOR_DATA).append(buyAmount)
-                .append(System.lineSeparator())
-                .append(RESULT).append(SEPARATOR_DATA).append(supplyAmount - buyAmount);
-        writeToFile(toFileName, resultBuilder.toString());
+        String resultBuilder = SUPPLY_OPERATION + SEPARATOR_DATA + supplyAmount +
+                System.lineSeparator() +
+                BUY_OPERATION + SEPARATOR_DATA + buyAmount +
+                System.lineSeparator() +
+                RESULT + SEPARATOR_DATA + (supplyAmount - buyAmount);
+        writeToFile(toFileName, resultBuilder);
     }
 }
