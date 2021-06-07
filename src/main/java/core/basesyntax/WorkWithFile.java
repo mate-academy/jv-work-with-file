@@ -20,7 +20,6 @@ public class WorkWithFile {
     }
 
     private String readFromFile(String fromFileName) {
-        StringBuilder stringBuilder = new StringBuilder();
         File fileToRead = new File(fromFileName);
         int buySum = 0;
         int supplySum = 0;
