@@ -7,49 +7,49 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String CSV_SEPARATOR = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String dataFromFile = readFromFile(fromFileName);
-        String report = reporting(dataFromFile);
+        String report = buildReport(dataFromFile);
         writeToFile(report, toFileName);
 
     }
 
     private String readFromFile(String fromFileName) {
-        StringBuilder stringBuilder = new StringBuilder();
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
-            int value = reader.read();
-            while (value != -1) {
-                stringBuilder.append((char) value);
-                value = reader.read();
+        StringBuilder fileContent = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
+            String value = reader.readLine();
+            while (value != null) {
+                fileContent.append(value).append(System.lineSeparator());
+                value = reader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("Cant read file", e);
         }
-        return stringBuilder.toString();
+        return fileContent.toString();
 
     }
 
-    private String reporting(String dataFromFile) {
-        int sumsupply = 0;
-        int sumbuy = 0;
+    private String buildReport(String dataFromFile) {
+        int sumSupply = 0;
+        int sumBuy = 0;
         String data = dataFromFile.replaceAll("\n|\r\n"," ");
-        String[]datainfo = data.split(" ");
-        for (int i = 0; i < datainfo.length; i++) {
-            String[] reportinfo = datainfo[i].split(",");
-            if (reportinfo[0].equals("supply")) {
-                sumsupply += Integer.parseInt(reportinfo[1]);
+        String[]dataInfo = data.split(" ");
+        for (int i = 0; i < dataInfo.length; i++) {
+            String[] reportInfo = dataInfo[i].split(CSV_SEPARATOR);
+            if (reportInfo[0].equals("supply")) {
+                sumSupply += Integer.parseInt(reportInfo[1]);
             } else {
-                sumbuy += Integer.parseInt(reportinfo[1]);
+                sumBuy += Integer.parseInt(reportInfo[1]);
             }
         }
-        int result = sumsupply - sumbuy;
+        int result = sumSupply - sumBuy;
 
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("supply,").append(sumsupply)
+        stringBuilder.append("supply,").append(sumSupply)
                 .append(System.lineSeparator()).append("buy,")
-                .append(sumbuy).append(System.lineSeparator())
+                .append(sumBuy).append(System.lineSeparator())
                 .append("result,").append(result);
         return stringBuilder.toString();
     }
