@@ -1,8 +1,10 @@
 package core.basesyntax;
 
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class WorkWithFile {
     private static final int AMOUNT_INDEX = 1;
@@ -17,8 +19,8 @@ public class WorkWithFile {
         int buySum = 0;
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String line = null;
-            String[] splittedLine = line.split(COMMA);
             while ((line = bufferedReader.readLine()) != null) {
+                String[] splittedLine = line.split(COMMA);
                 if (line.contains("supply")) {
                     supplySum += Integer.parseInt(splittedLine[AMOUNT_INDEX]);
                 } else {
@@ -31,7 +33,7 @@ public class WorkWithFile {
         return makeReport(buySum, supplySum);
     }
 
-    private String makeReport(int buySum, int supplySum ) {
+    private String makeReport(int buySum, int supplySum) {
         return "supply" + "," + supplySum + System.lineSeparator()
                 + "buy" + "," + buySum + System.lineSeparator()
                 + "result" + "," + (supplySum - buySum) + System.lineSeparator();
