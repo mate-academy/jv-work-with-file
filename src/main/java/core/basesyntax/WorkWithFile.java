@@ -14,7 +14,11 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
-
+    
+    public void getStatistic(String fromFileName, String toFileName) {
+        writeToFile(toFileName, readFromFile(fromFileName));
+    }
+    
     private String readFromFile(String fromFileName) {
         int supplyValue = 0;
         int buyValue = 0;
@@ -44,16 +48,9 @@ public class WorkWithFile {
     private void writeToFile(String toFileName, String report) {
         File toFile = new File(toFileName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFile))) {
-            if (!toFile.exists()) {
-                toFile.createNewFile();
-            }
             bufferedWriter.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Can't write output file", e);
         }
-    }
-
-    public void getStatistic(String fromFileName, String toFileName) {
-        writeToFile(toFileName, readFromFile(fromFileName));
     }
 }
