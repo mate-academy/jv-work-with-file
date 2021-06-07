@@ -16,7 +16,7 @@ public class WorkWithFile {
         putReport(getReport(fromFileName), toFileName);
     }
 
-    public String getReport(String fromFileName) {
+    private String getReport(String fromFileName) {
         int supplying = 0;
         int buying = 0;
         File file = new File(fromFileName);
@@ -31,16 +31,16 @@ public class WorkWithFile {
                 }
                 oneLine = reader.readLine();
             }
-            return new StringBuilder()
-                    .append("supply,").append(supplying).append(System.lineSeparator())
-                    .append("buy,").append(buying).append(System.lineSeparator())
-                    .append("result,").append(supplying - buying).toString();
         } catch (IOException e) {
             throw new RuntimeException("Can't read from file", e);
         }
+        return new StringBuilder()
+                .append("supply,").append(supplying).append(System.lineSeparator())
+                .append("buy,").append(buying).append(System.lineSeparator())
+                .append("result,").append(supplying - buying).toString();
     }
 
-    public void putReport(String fileReport, String fileName) {
+    private void putReport(String fileReport, String fileName) {
         File file = new File(fileName);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             writer.write(fileReport);
