@@ -17,34 +17,33 @@ public class WorkWithFile {
             int buy = 0;
             int supply = 0;
 
-            while (true) {
+            while (true) { // loop for reading data from file while end
                 line = br.readLine();
-                if (line == null) {
+                if (line == null) { // check null
                     break;
-                } else {
-                    if (line.contains("buy")) {
-                        String[] arraybuy = line.split(",");
-                        buy = buy + Integer.parseInt(arraybuy[SUM_OPERATION]);
-                    }
-                    if (line.contains("supply")) {
-                        String[] arraysupply = line.split(",");
-                        supply = supply + Integer.parseInt(arraysupply[SUM_OPERATION]);
-                    }
+                }
+                if (line.contains("buy")) { // calculating total "buy"
+                    String[] arrayBuy = line.split(",");
+                    buy = buy + Integer.parseInt(arrayBuy[SUM_OPERATION]);
+                }
+                if (line.contains("supply")) { // calculating total "buy"
+                    String[] arraySupply = line.split(",");
+                    supply += Integer.parseInt(arraySupply[SUM_OPERATION]);
                 }
             }
 
-            StringBuilder result = new StringBuilder();
+            StringBuilder result = new StringBuilder(); // info for file
             result
                     .append("supply,").append(supply).append(System.lineSeparator())
                     .append("buy,").append(buy).append(System.lineSeparator())
                     .append("result,").append(supply - buy);
 
             BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName));
-            bufferedWriter.write(result.toString());
+            bufferedWriter.write(result.toString()); // write info to file
             bufferedWriter.close();
 
         } catch (Exception e) {
-            throw new RuntimeException("Can't correctly read data from file ", e);
+            throw new RuntimeException("Can't correctly read data from file " + fromFileName, e);
         }
     }
 }
