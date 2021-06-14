@@ -10,12 +10,12 @@ public class WorkWithFile {
     private static final int SUM_OPERATION = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        try {
-            File file = new File(fromFileName);
-            BufferedReader br = new BufferedReader(new FileReader(file));
+        File file = new File(fromFileName);
+        int supply = 0;
+        int buy = 0;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
-            int buy = 0;
-            int supply = 0;
 
             while (true) { // loop for reading data from file while end
                 line = br.readLine();
@@ -26,25 +26,23 @@ public class WorkWithFile {
                     String[] arrayBuy = line.split(",");
                     buy = buy + Integer.parseInt(arrayBuy[SUM_OPERATION]);
                 }
-                if (line.contains("supply")) { // calculating total "buy"
+                if (line.contains("supply")) { // calculating total "supply"
                     String[] arraySupply = line.split(",");
                     supply += Integer.parseInt(arraySupply[SUM_OPERATION]);
                 }
             }
-
-            StringBuilder result = new StringBuilder(); // info for file
-            result
-                    .append("supply,").append(supply).append(System.lineSeparator())
-                    .append("buy,").append(buy).append(System.lineSeparator())
-                    .append("result,").append(supply - buy);
-
-            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName));
-            bufferedWriter.write(result.toString()); // write info to file
-            bufferedWriter.close();
-
         } catch (Exception e) {
             throw new RuntimeException("Can't correctly read data from file " + fromFileName, e);
         }
+
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
+            String result = "supply," + supply + System.lineSeparator()
+                    + "buy," + buy + System.lineSeparator()
+                    + "result," + (supply - buy);// info for file
+            bufferedWriter.write(result); // write info to file
+
+        } catch (Exception e) {
+            throw new RuntimeException("Can't correctly write to the file " + fromFileName, e);
+        }
     }
 }
-
