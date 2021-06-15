@@ -15,13 +15,11 @@ public class WorkWithFile {
         int buy = 0;
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+
             String line;
 
-            while (true) { // loop for reading data from file while end
-                line = br.readLine();
-                if (line == null) { // check null
-                    break;
-                }
+            while ((line = br.readLine()) != null) { // loop for reading data from file while end
+
                 if (line.contains("buy")) { // calculating total "buy"
                     String[] arrayBuy = line.split(",");
                     buy = buy + Integer.parseInt(arrayBuy[SUM_OPERATION]);
