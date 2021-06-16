@@ -55,7 +55,7 @@ public class WorkWithFile {
         StringBuilder report = new StringBuilder();
 
         for (String s : arrayReport) {
-            report.append(s).append("\r\n");
+            report.append(s).append(System.lineSeparator());
         }
         return report.toString();
     }
