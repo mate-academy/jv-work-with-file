@@ -8,7 +8,7 @@ import java.nio.file.Paths;
 
 public class WorkWithFile {
 
-    private int sapply = 0;
+    private int saply = 0;
     private int buy = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
@@ -24,7 +24,7 @@ public class WorkWithFile {
 
                 for (String word : words) {
                     if (word.startsWith("s")) {
-                        sapply += Integer.parseInt((word.replaceAll("\\D", "")));
+                        saply += Integer.parseInt((word.replaceAll("\\D", "")));
                     }
                     if (word.startsWith("b")) {
                         buy += Integer.parseInt((word.replaceAll("\\D", "")));
@@ -47,9 +47,9 @@ public class WorkWithFile {
 
     public String getReport() {
 
-        int result = (Math.abs(sapply - buy));
+        int result = (Math.abs(saply - buy));
         String[] arrayReport = new String[3];
-        arrayReport[0] = "supply," + sapply;
+        arrayReport[0] = "supply," + saply;
         arrayReport[1] = "buy," + buy;
         arrayReport[2] = "result," + result;
         StringBuilder report = new StringBuilder();
