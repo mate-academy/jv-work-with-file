@@ -2,71 +2,61 @@ package core.basesyntax;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class WorkWithFile {
 
-    public void getStatistic(String fromFileName, String toFileName) {
-        File fileRead = new File(fromFileName);
+    private int sapply = 0;
+    private int buy = 0;
 
-        try {
+    public void getStatistic(String fromFileName, String toFileName) {
+        getRead(fromFileName);
+        getWrite(toFileName);
+    }
+
+    public void getRead(String fromFileName) {
+        try (BufferedReader bufferedReader = Files.newBufferedReader(Paths.get(fromFileName))) {
             String line;
-            StringBuilder suply = new StringBuilder();
-            StringBuilder buy = new StringBuilder();
-            String[] numberSuply = new String[0];
-            String[] numberBuy = new String[0];
-            int valueSuply = 0;
-            int valueBuy = 0;
-            final int result;
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(fileRead));
             while ((line = bufferedReader.readLine()) != null) {
                 String[] words = line.split(" ");
 
                 for (String word : words) {
                     if (word.startsWith("s")) {
-                        suply.append(word);
+                        sapply += Integer.parseInt((word.replaceAll("\\D", "")));
                     }
                     if (word.startsWith("b")) {
-                        buy.append(word);
+                        buy += Integer.parseInt((word.replaceAll("\\D", "")));
                     }
                 }
-                String supplyString = suply.toString();
-                String buyString = buy.toString();
-                numberSuply = supplyString.split("supply,");
-                numberBuy = buyString.split("buy,");
             }
-            for (int i = 1; i < numberSuply.length; i++) {
-                valueSuply += Integer.parseInt(numberSuply[i]);
-            }
-            String s = "supply," + valueSuply;
-            for (int i = 1; i < numberBuy.length; i++) {
-                valueBuy += Integer.parseInt(numberBuy[i]);
-            }
-            String s1 = "buy," + valueBuy;
-            result = (Math.abs(valueSuply - valueBuy));
-            String res = "result," + result;
 
-            String[] report = new String[3];
-            report[0] = s;
-            report[1] = s1;
-            report[2] = res;
-            File fileWrite = new File(toFileName);
-            String rep = new String();
-            for (int i = 0; i < report.length; i++) {
-                rep += report[i] + "\r\n";
-            }
-            try {
-                BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileWrite));
-                bufferedWriter.write(rep);
-                bufferedWriter.close();
-            } catch (IOException e) {
-                throw new RuntimeException("Can't write data to file");
-            }
         } catch (IOException e) {
             throw new RuntimeException("Can't read file");
         }
+    }
+
+    public void getWrite(String toFileName) {
+        try (BufferedWriter bufferedWriter = Files.newBufferedWriter(Paths.get(toFileName))) {
+            bufferedWriter.write(getReport());
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write data to file");
+        }
+    }
+
+    public String getReport() {
+
+        int result = (Math.abs(sapply - buy));
+        String[] arrayReport = new String[3];
+        arrayReport[0] = "supply," + sapply;
+        arrayReport[1] = "buy," + buy;
+        arrayReport[2] = "result," + result;
+        StringBuilder report = new StringBuilder();
+
+        for (String s : arrayReport) {
+            report.append(s).append("\r\n");
+        }
+        return report.toString();
     }
 }
