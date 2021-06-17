@@ -8,48 +8,51 @@ import java.nio.file.Paths;
 
 public class WorkWithFile {
 
-    private int saply = 0;
+    private int supply = 0;
     private int buy = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        getRead(fromFileName);
-        getWrite(toFileName);
+        String rawData = readFromFile(fromFileName);
+        String report = buildReport(rawData);
+        writeToFile(toFileName, report);
     }
 
-    public void getRead(String fromFileName) {
+    public String readFromFile(String fromFileName) {
         try (BufferedReader bufferedReader = Files.newBufferedReader(Paths.get(fromFileName))) {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
-                String[] words = line.split(" ");
+                String[] words = line.split(",");
 
                 for (String word : words) {
                     if (word.startsWith("s")) {
-                        saply += Integer.parseInt((word.replaceAll("\\D", "")));
+                        supply += Integer.parseInt(words[1]);
                     }
                     if (word.startsWith("b")) {
-                        buy += Integer.parseInt((word.replaceAll("\\D", "")));
+                        buy += Integer.parseInt(words[1]);
                     }
                 }
             }
 
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file");
+            throw new RuntimeException("Can't read file", e);
         }
+        return fromFileName;
     }
 
-    public void getWrite(String toFileName) {
+    public void writeToFile(String toFileName, String report) {
         try (BufferedWriter bufferedWriter = Files.newBufferedWriter(Paths.get(toFileName))) {
-            bufferedWriter.write(getReport());
+            String rawData = new String();
+            bufferedWriter.write(buildReport(rawData));
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data to file");
+            throw new RuntimeException("Can't write data to file", e);
         }
     }
 
-    public String getReport() {
+    public String buildReport(String rawData) {
 
-        int result = (Math.abs(saply - buy));
+        int result = (Math.abs(supply - buy));
         String[] arrayReport = new String[3];
-        arrayReport[0] = "supply," + saply;
+        arrayReport[0] = "supply," + supply;
         arrayReport[1] = "buy," + buy;
         arrayReport[2] = "result," + result;
         StringBuilder report = new StringBuilder();
