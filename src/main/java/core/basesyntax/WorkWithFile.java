@@ -11,6 +11,10 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
 
+        String fullReport = "supply," + getSupply(fromFileName) + System.lineSeparator()
+                + "buy," + getBuy(fromFileName) + System.lineSeparator()
+                + "result," + (getSupply(fromFileName) - getBuy(fromFileName));
+
         File writeResult = new File(toFileName);
 
         try {
@@ -19,10 +23,8 @@ public class WorkWithFile {
             throw new RuntimeException("Can't create new file", e);
         }
 
-        try (BufferedWriter writeToFile = new BufferedWriter(new FileWriter(writeResult, true))) {
-            writeToFile.write("supply," + getSupply(fromFileName) + System.lineSeparator()
-                    + "buy," + getBuy(fromFileName) + System.lineSeparator()
-                    + "result," + (getSupply(fromFileName) - getBuy(fromFileName)));
+        try (BufferedWriter writeToFile = new BufferedWriter(new FileWriter(writeResult))) {
+            writeToFile.write(fullReport);
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to file", e);
         }
@@ -30,13 +32,13 @@ public class WorkWithFile {
 
     private int getSupply(String fromFile) {
         File inputFrom = new File(fromFile);
-        final String Supply_Line = "supply";
+        final String supplyLine = "supply";
         int supply = 0;
 
         try (BufferedReader reader = new BufferedReader(new FileReader(inputFrom))) {
             String lineFromFile = reader.readLine();
             while (lineFromFile != null) {
-                if (lineFromFile.startsWith(Supply_Line)) {
+                if (lineFromFile.startsWith(supplyLine)) {
                     supply += Integer.parseInt(
                             lineFromFile.substring(lineFromFile.indexOf(',') + 1));
                 }
@@ -50,13 +52,13 @@ public class WorkWithFile {
 
     private int getBuy(String fromFile) {
         File inputFrom = new File(fromFile);
-        final String Buy_Line = "buy";
+        final String buyLine = "buy";
         int buy = 0;
 
         try (BufferedReader reader = new BufferedReader(new FileReader(inputFrom))) {
             String lineFromFile = reader.readLine();
             while (lineFromFile != null) {
-                if (lineFromFile.startsWith(Buy_Line)) {
+                if (lineFromFile.startsWith(buyLine)) {
                     buy += Integer.parseInt(lineFromFile.substring(lineFromFile.indexOf(',') + 1));
                 }
                 lineFromFile = reader.readLine();
