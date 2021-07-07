@@ -57,9 +57,7 @@ public class WorkWithFile {
 
     private void writeToFile(String toFileName, String resultText) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true))) {
-            for (int i = 0; i < resultText.length(); i++) {
-                bufferedWriter.append(resultText.charAt(i));
-            }
+            bufferedWriter.write(resultText);
         } catch (FileNotFoundException e) {
             throw new RuntimeException("Can't find file ", e);
         } catch (IOException e) {
