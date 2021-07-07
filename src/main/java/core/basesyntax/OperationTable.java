@@ -4,7 +4,6 @@ public class OperationTable {
     private static final String OPERATION_BUY = "buy";
     private static final String OPERATION_SUPPLY = "supply";
     private static final String OPERATION_RESULT = "result";
-    private static final String OPERATION_SEPARATOR = ",";
 
     private String[] operationTypes;
     private int[] amounts;
@@ -63,12 +62,12 @@ public class OperationTable {
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < actualLength; i++) {
             stringBuilder.append(operationTypes[i])
-                    .append(OPERATION_SEPARATOR)
+                    .append(WorkWithFile.OPERATION_SEPARATOR)
                     .append(amounts[i])
                     .append(System.lineSeparator());
         }
         stringBuilder.append(OPERATION_RESULT)
-                .append(OPERATION_SEPARATOR)
+                .append(WorkWithFile.OPERATION_SEPARATOR)
                 .append(supplyAmount - buyAmount);
         return stringBuilder.toString().trim();
     }

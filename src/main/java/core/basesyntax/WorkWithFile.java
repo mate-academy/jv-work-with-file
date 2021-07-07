@@ -8,7 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final String OPERATION_SEPARATOR = ",";
+    public static final String OPERATION_SEPARATOR = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String fileData = readFromFile(fromFileName);
