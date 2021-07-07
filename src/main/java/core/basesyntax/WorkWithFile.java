@@ -9,11 +9,10 @@ import java.io.IOException;
 
 public class WorkWithFile {
     private static final String OPERATION_SEPARATOR = ",";
-    private static final String LINE_SEPARATOR = System.lineSeparator();
 
     public void getStatistic(String fromFileName, String toFileName) {
         String fileData = readFromFile(fromFileName);
-        String[] basicOperationArray = fileData.split(LINE_SEPARATOR);
+        String[] basicOperationArray = fileData.split(System.lineSeparator());
         OperationTable operationTable = convertOperationArrayToOperationTable(basicOperationArray);
         operationTable.sumUpTable();
         String resultText = operationTable.toString();
@@ -25,7 +24,7 @@ public class WorkWithFile {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
             String value = bufferedReader.readLine();
             while (value != null) {
-                stringBuilder.append(value).append(LINE_SEPARATOR);
+                stringBuilder.append(value).append(System.lineSeparator());
                 value = bufferedReader.readLine();
             }
         } catch (FileNotFoundException e) {
