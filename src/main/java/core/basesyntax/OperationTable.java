@@ -38,9 +38,11 @@ public class OperationTable {
         OperationTable resultOperationTable = new OperationTable(operationNamesArray.length);
         resultOperationTable.operationTypes = operationNamesArray;
         resultOperationTable.actualLength = operationNamesArray.length;
-        for (int resultTableIndex = 0; resultTableIndex < resultOperationTable.actualLength; resultTableIndex++) {
+        for (int resultTableIndex = 0;
+             resultTableIndex < resultOperationTable.actualLength; resultTableIndex++) {
             for (int baseTableIndex = 0; baseTableIndex < operationTypes.length; baseTableIndex++) {
-                if (operationTypes[baseTableIndex].equals(resultOperationTable.operationTypes[resultTableIndex])) {
+                if (operationTypes[baseTableIndex]
+                        .equals(resultOperationTable.operationTypes[resultTableIndex])) {
                     resultOperationTable.amounts[resultTableIndex] += amounts[baseTableIndex];
                 }
             }
@@ -62,9 +64,14 @@ public class OperationTable {
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < actualLength; i++) {
-            stringBuilder.append(operationTypes[i]).append(OPERATION_SEPARATOR).append(amounts[i]).append(LINE_SEPARATOR);
+            stringBuilder.append(operationTypes[i])
+                    .append(OPERATION_SEPARATOR)
+                    .append(amounts[i])
+                    .append(LINE_SEPARATOR);
         }
-        stringBuilder.append(OPERATION_RESULT).append(OPERATION_SEPARATOR).append(supplyAmount - buyAmount);
+        stringBuilder.append(OPERATION_RESULT)
+                .append(OPERATION_SEPARATOR)
+                .append(supplyAmount - buyAmount);
         return stringBuilder.toString().trim();
     }
 }
