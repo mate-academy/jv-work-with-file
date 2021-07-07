@@ -38,12 +38,11 @@ public class OperationTable {
         OperationTable resultOperationTable = new OperationTable(operationNamesArray.length);
         resultOperationTable.operationTypes = operationNamesArray;
         resultOperationTable.actualLength = operationNamesArray.length;
-        for (int resultTableIndex = 0;
-             resultTableIndex < resultOperationTable.actualLength; resultTableIndex++) {
+        for (int resTabIndex = 0; resTabIndex < resultOperationTable.actualLength; resTabIndex++) {
             for (int baseTableIndex = 0; baseTableIndex < operationTypes.length; baseTableIndex++) {
                 if (operationTypes[baseTableIndex]
-                        .equals(resultOperationTable.operationTypes[resultTableIndex])) {
-                    resultOperationTable.amounts[resultTableIndex] += amounts[baseTableIndex];
+                        .equals(resultOperationTable.operationTypes[resTabIndex])) {
+                    resultOperationTable.amounts[resTabIndex] += amounts[baseTableIndex];
                 }
             }
         }
