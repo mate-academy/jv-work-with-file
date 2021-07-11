@@ -3,15 +3,15 @@ package core.basesyntax;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.IOException;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
-          try {
+        try {
             BufferedReader readFile = Files.newBufferedReader(Paths.get(fromFileName));
             int[] resultingArray = new int[3];
             String line;
@@ -36,8 +36,8 @@ public class WorkWithFile {
             } catch (IOException e) {
                 throw new RuntimeException("Unable to write to file", e);
             }
-          } catch (IOException e) {
-              throw new RuntimeException("Can't read file", e);
-          }
+        } catch (IOException e) {
+            throw new RuntimeException("Can't read file", e);
+        }
     }
 }
