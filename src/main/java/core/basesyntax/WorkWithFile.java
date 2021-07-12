@@ -11,9 +11,8 @@ import java.nio.file.Paths;
 public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
-        try {
-            BufferedReader readFile = Files.newBufferedReader(Paths.get(fromFileName));
-            int[] resultingArray = new int[3];
+        int[] resultingArray = new int[3];
+        try (BufferedReader readFile = Files.newBufferedReader(Paths.get(fromFileName))) {
             String line;
 
             while ((line = readFile.readLine()) != null) {
@@ -24,20 +23,20 @@ public class WorkWithFile {
                     resultingArray[1] += Integer.parseInt(tokens[1]);
                 }
             }
-            resultingArray[2] = resultingArray[0] - resultingArray[1];
-
-            File file = new File(toFileName);
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
-                writer.write("supply," + resultingArray[0]);
-                writer.newLine();
-                writer.write("buy," + resultingArray[1]);
-                writer.newLine();
-                writer.write("result," + resultingArray[2]);
-            } catch (IOException e) {
-                throw new RuntimeException("Unable to write to file", e);
-            }
         } catch (IOException e) {
             throw new RuntimeException("Can't read file", e);
+        }
+        resultingArray[2] = resultingArray[0] - resultingArray[1];
+
+        File file = new File(toFileName);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
+            writer.write("supply," + resultingArray[0]);
+            writer.newLine();
+            writer.write("buy," + resultingArray[1]);
+            writer.newLine();
+            writer.write("result," + resultingArray[2]);
+        } catch (IOException e) {
+            throw new RuntimeException("Unable to write to file", e);
         }
     }
 }
