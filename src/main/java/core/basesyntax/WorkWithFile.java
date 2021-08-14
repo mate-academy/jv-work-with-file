@@ -13,7 +13,6 @@ public class WorkWithFile {
         File from = new File(fromFileName);
         File to = new File(toFileName);
         String fileData = fileReader(from);
-
         String[] rows = fileData.split(System.lineSeparator());
         int supplyValue = 0;
         int buyValue = 0;
