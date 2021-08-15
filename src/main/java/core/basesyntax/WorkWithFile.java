@@ -10,6 +10,30 @@ public class WorkWithFile {
     private static final String REG_EX = "\\s";
 
     public void getStatistic(String fromFileName, String toFileName) {
+        String[] lines = readFile(fromFileName);
+        int totalSupply = 0;
+        int totalBuy = 0;
+        String[] lineSplit;
+
+        for (String line : lines) {
+            lineSplit = line.split(",");
+
+            if (lineSplit.length == 2) {
+
+                switch (lineSplit[0]) {
+                    case "buy":
+                        totalBuy += Integer.parseInt(lineSplit[1]);
+                        break;
+                    case "supply":
+                        totalSupply += Integer.parseInt(lineSplit[1]);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        createReport(totalBuy, totalSupply, toFileName);
 
     }
 
@@ -31,7 +55,7 @@ public class WorkWithFile {
         return result.toString().split(REG_EX);
     }
 
-    private void createReport(int[] buyArray, int[] supplyArray, String filename) {
+    private void createReport(int buy, int supply, String filename) {
         File file = new File(filename);
         if (!file.exists()) {
             try {
@@ -41,20 +65,9 @@ public class WorkWithFile {
             }
         }
 
-        int totalBuy = 0;
-        int totalSupply = 0;
-
-        for (int buy : buyArray) {
-            totalBuy += buy;
-        }
-
-        for (int supply : supplyArray) {
-            totalSupply += supply;
-        }
-
-        int result = totalSupply - totalBuy;
-        String report = "supply," + totalSupply + System.lineSeparator()
-                + "buy," + totalBuy + System.lineSeparator()
+        int result = supply - buy;
+        String report = "supply," + supply + System.lineSeparator()
+                + "buy," + buy + System.lineSeparator()
                 + "result," + result;
 
         try {
