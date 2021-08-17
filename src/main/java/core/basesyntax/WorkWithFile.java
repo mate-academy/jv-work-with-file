@@ -1,16 +1,17 @@
 package core.basesyntax;
 
-import javax.naming.NamingEnumeration;
-import java.io.*;
-import java.util.regex.Pattern;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 
 public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         String inputFile = fileReader(fromFileName);
-        String resultString = productCount(inputFile);
-
-
+        int[] resultString = productCount(inputFile);
+        fileWriter(toFileName, resultString);
     }
 
     private String fileReader(String fromFileName) {
@@ -28,35 +29,28 @@ public class WorkWithFile {
         }
     }
 
-    private String productCount(String file) {
-        StringBuilder result = new StringBuilder();
-        while (!file.equals("")) {
-            String[] fileArray = file.split(" ");
-            String name = fileArray[0].replaceAll(",\\d+", "");
-            int amount = 0;
-            for (String fileString: fileArray) {
-                String[]fileStringArray = fileString.split(",");
-                if (name.equals(fileStringArray[0])) {
-                    amount += Integer.parseInt(fileStringArray[1]);
-                }
+    private int[] productCount(String file) {
+        int supply = 0;
+        int buy = 0;
+        for (String item : file.split(" ")) {
+            String[] itemArray = item.split(",");
+            if (itemArray[0].equals("supply")) {
+                supply += Integer.parseInt(itemArray[1]);
+            } else {
+                buy += Integer.parseInt(itemArray[1]);
             }
-            result.append(name).append(",").append(amount).append(System.lineSeparator());
-            file = file.replaceAll(Pattern.quote(name) + ",\\d+[ ]?", "");
         }
-        return result.toString();
+        return new int[] {supply, buy};
     }
 
-    private void fileWriter(String fileName, String resultString) {
+    private void fileWriter(String fileName, int[] resultString) {
         File outputFile = new File(fileName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(outputFile))) {
-
-            for (String string: resultString.split(" ") ) {
-                bufferedWriter.write(string);
-                bufferedWriter.write(System.lineSeparator());
-            }
-
-
-
+            bufferedWriter.write("supply," + resultString[0]);
+            bufferedWriter.write(System.lineSeparator());
+            bufferedWriter.write("buy," + resultString[1]);
+            bufferedWriter.write(System.lineSeparator());
+            bufferedWriter.write("result," + (resultString[0] - resultString[1]));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
