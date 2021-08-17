@@ -8,13 +8,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private final String supplyId = "supply";
+    private final String buyId = "buy";
+    private final String resultId = "result";
+    private final int idPosition = 0;
+    private final int valuePosition = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        final String supplyId = "supply";
-        final String buyId = "buy";
-        final String resultId = "result";
-        final int idPosition = 0;
-        final int valuePosition = 1;
         File file = new File(fromFileName);
         int supplyAmount = 0;
         int buyAmount = 0;
