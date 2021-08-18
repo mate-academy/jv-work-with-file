@@ -11,7 +11,7 @@ public class WorkWithFile {
     private static final String OPERATION_BUY = "buy";
     private static final String OPERATION_SUPPLY = "supply";
 
-    private static String createReport(String[] dataArray) {
+    private static int[] calculation(String[] dataArray) {
         int amountBuy = 0;
         int amountSupply = 0;
         for (int i = 0; i <= dataArray.length - 2; i += 2) {
@@ -21,10 +21,15 @@ public class WorkWithFile {
                 amountSupply += Integer.parseInt(dataArray[i + 1]);
             }
         }
-        return OPERATION_SUPPLY + "," + amountSupply
+        return new int[]{amountBuy, amountSupply};
+    }
+
+    private static String createReport(int[] calculation) {
+
+        return OPERATION_SUPPLY + "," + calculation[1]
                 + System.lineSeparator() + OPERATION_BUY + ","
-                + amountBuy + System.lineSeparator()
-                + "result" + "," + (amountSupply - amountBuy);
+                + calculation[0] + System.lineSeparator()
+                + "result" + "," + (calculation[1] - calculation[0]);
     }
 
     private void writeToFile(String toFileName, String report) {
@@ -40,18 +45,16 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         File file = new File(fromFileName);
         String inputData;
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(file));
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             StringBuilder builder = new StringBuilder();
-            String value = reader.readLine();
-            while (value != null) {
+            String value;
+            while ((value = reader.readLine()) != null) {
                 builder.append(value).append(",");
-                value = reader.readLine();
             }
             inputData = builder.toString();
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from the file " + fromFileName, e);
         }
-        writeToFile(toFileName, createReport(inputData.split(",")));
+        writeToFile(toFileName, createReport(calculation(inputData.split(","))));
     }
 }
