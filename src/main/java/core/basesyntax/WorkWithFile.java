@@ -1,8 +1,11 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
-import java.util.Arrays;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class WorkWithFile {
     private static final int ACTION = 0;
@@ -16,7 +19,6 @@ public class WorkWithFile {
     private static final String RESULT_STR = "result";
     private static final String COMA = ",";
 
-
     public void getStatistic(String fromFileName, String toFileName) {
         readFile(fromFileName);
         writeInFile(resultTextMaker(statisticCalculator(readFile(fromFileName))), toFileName);
@@ -25,7 +27,7 @@ public class WorkWithFile {
     private String readFile(String fromFileName) {
         StringBuilder result = new StringBuilder();
         try {
-            BufferedReader bufferedReader = new BufferedReader( new FileReader(fromFileName));
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
             String value = bufferedReader.readLine();
             while (value != null) {
                 result.append(value).append(System.lineSeparator());
