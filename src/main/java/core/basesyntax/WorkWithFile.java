@@ -10,7 +10,6 @@ import java.io.IOException;
 public class WorkWithFile {
     private final String supplyName = "supply";
     private final String buyName = "buy";
-    private final String resultName = "result";
     private int supplySum = 0;
     private int baySum = 0;
     private int result = 0;
@@ -42,7 +41,7 @@ public class WorkWithFile {
             stringBuilder.append(supplyName).append(",").append(supplySum)
                     .append(System.lineSeparator())
                     .append(buyName).append(",").append(baySum).append(System.lineSeparator())
-                    .append(resultName).append(",").append(result);
+                    .append("result").append(",").append(result);
             bufferedWriter.write(stringBuilder.toString());
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to file" + toFileName, e);
