@@ -32,20 +32,16 @@ public class WorkWithFile {
     private String createReport(String readString) {
         int supply = 0;
         int buy = 0;
-        int result = 0;
         String[] stringsForReport = readString.split(ForConstants.LINE_SEPARATOR);
-        for (int i = 0; i < stringsForReport.length; i++) {
+        for (int i = ForConstants.ZERO; i < stringsForReport.length; i++) {
             String[] oneStingFroReport = stringsForReport[i].split(ForConstants.CSV_FILE_SEPARATOR);
-            if (oneStingFroReport[0].equals(ForConstants.SUPPLY)) {
-                supply += Integer.parseInt(oneStingFroReport[1]);
-            } else if (oneStingFroReport[0].equals(ForConstants.BUY)) {
-                buy += Integer.parseInt(oneStingFroReport[1]);
+            if (oneStingFroReport[ForConstants.ZERO].equals(ForConstants.SUPPLY)) {
+                supply += Integer.parseInt(oneStingFroReport[ForConstants.ONE]);
+            } else if (oneStingFroReport[ForConstants.ZERO].equals(ForConstants.BUY)) {
+                buy += Integer.parseInt(oneStingFroReport[ForConstants.ONE]);
             }
         }
-        result = supply - buy;
-        return ForConstants.SUPPLY + "," + supply + System.lineSeparator()
-                + ForConstants.BUY + "," + buy + System.lineSeparator()
-                + "result," + result;
+        return drawReport(supply, buy);
     }
 
     private void writeFile(String toFileName, String report) {
@@ -56,5 +52,11 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("File wasn't write!", e);
         }
+    }
+
+    private String drawReport(int supply, int buy) {
+        return ForConstants.SUPPLY + "," + supply + System.lineSeparator()
+                + ForConstants.BUY + "," + buy + System.lineSeparator()
+                + "result," + (supply - buy);
     }
 }
