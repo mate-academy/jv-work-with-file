@@ -1,16 +1,18 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class WorkWithFile {
-    public static void main(String[] args) {// for TEST and Debug
-        WorkWithFile workWithFile = new WorkWithFile();
-        workWithFile.getStatistic("apple.csv", "text.txt");
-    }
+    private final String sup = "supply";
+    private final String buy = "buy";
+    private final String res = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        final String SUPPLY = "supply";
-        final String BUY = "buy";
         int addSupply = 0;
         int addBay = 0;
         int result = 0;
@@ -22,9 +24,9 @@ public class WorkWithFile {
             String value = bufferedReader.readLine();
             while (value != null) {
                 String[] split = value.split(",");
-                if (split[0].equals(SUPPLY)) {
+                if (split[0].equals(sup)) {
                     addSupply += Integer.parseInt(split[1]);
-                } else if (split[0].equals(BUY)) {
+                } else if (split[0].equals(buy)) {
                     addBay += Integer.parseInt(split[1]);
                 }
                 value = bufferedReader.readLine();
@@ -34,14 +36,14 @@ public class WorkWithFile {
             throw new RuntimeException("Can't read file" + fromFileName, e);
         }
 
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileOut, true))){
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileOut, true))) {
             StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append(SUPPLY).append(",").append(addSupply).append(System.lineSeparator())
-                            .append(BUY).append(",").append(addBay).append(System.lineSeparator())
-                            .append("result").append(",").append(result);
+            stringBuilder.append(sup).append(",").append(addSupply).append(System.lineSeparator())
+                            .append(buy).append(",").append(addBay).append(System.lineSeparator())
+                            .append(res).append(",").append(result);
             bufferedWriter.write(stringBuilder.toString());
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data to file" + fromFileName, e);
+            throw new RuntimeException("Can't write data to file" + toFileName, e);
         }
     }
 }
