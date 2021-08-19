@@ -8,39 +8,41 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private final String sup = "supply";
-    private final String buy = "buy";
-    private final String res = "result";
+    private final String supplyName = "supply";
+    private final String buyName = "buy";
+    private final String resultName = "result";
+    private int supplySum = 0;
+    private int baySum = 0;
+    private int result = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int addSupply = 0;
-        int addBay = 0;
-        int result = 0;
-
         File fileIn = new File(fromFileName);
-        File fileOut = new File(toFileName);
-
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileIn))) {
             String value = bufferedReader.readLine();
             while (value != null) {
                 String[] split = value.split(",");
-                if (split[0].equals(sup)) {
-                    addSupply += Integer.parseInt(split[1]);
-                } else if (split[0].equals(buy)) {
-                    addBay += Integer.parseInt(split[1]);
+                if (split[0].equals(supplyName)) {
+                    supplySum += Integer.parseInt(split[1]);
+                } else if (split[0].equals(buyName)) {
+                    baySum += Integer.parseInt(split[1]);
                 }
                 value = bufferedReader.readLine();
             }
-            result = addSupply - addBay;
+            result = supplySum - baySum;
         } catch (IOException e) {
             throw new RuntimeException("Can't read file" + fromFileName, e);
         }
+        writeToFile(toFileName);
+    }
 
+    private void writeToFile(String toFileName) {
+        File fileOut = new File(toFileName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileOut, true))) {
             StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append(sup).append(",").append(addSupply).append(System.lineSeparator())
-                            .append(buy).append(",").append(addBay).append(System.lineSeparator())
-                            .append(res).append(",").append(result);
+            stringBuilder.append(supplyName).append(",").append(supplySum)
+                    .append(System.lineSeparator())
+                    .append(buyName).append(",").append(baySum).append(System.lineSeparator())
+                    .append(resultName).append(",").append(result);
             bufferedWriter.write(stringBuilder.toString());
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to file" + toFileName, e);
