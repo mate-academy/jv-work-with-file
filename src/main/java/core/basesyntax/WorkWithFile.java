@@ -10,6 +10,9 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final String OPERATION_BUY = "buy";
     private static final String OPERATION_SUPPLY = "supply";
+    private static final int SUPPLY_INDEX = 1;
+    private static final int BUY_INDEX = 0;
+    private static final int RESULT_INDEX = 2;
 
     public void getStatistic(String fromFileName, String toFileName) {
         File file = new File(fromFileName);
@@ -42,10 +45,10 @@ public class WorkWithFile {
     }
 
     private static String createReport(int[] calculation) {
-        return OPERATION_SUPPLY + "," + calculation[1]
+        return OPERATION_SUPPLY + "," + calculation[SUPPLY_INDEX]
                 + System.lineSeparator() + OPERATION_BUY + ","
-                + calculation[0] + System.lineSeparator()
-                + "result" + "," + (calculation[2]);
+                + calculation[BUY_INDEX] + System.lineSeparator()
+                + "result" + "," + (calculation[RESULT_INDEX]);
     }
 
     private void writeToFile(String toFileName, String report) {
