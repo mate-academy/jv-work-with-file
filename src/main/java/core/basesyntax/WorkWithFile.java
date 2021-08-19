@@ -11,37 +11,6 @@ public class WorkWithFile {
     private static final String OPERATION_BUY = "buy";
     private static final String OPERATION_SUPPLY = "supply";
 
-    private static int[] calculation(String[] dataArray) {
-        int amountBuy = 0;
-        int amountSupply = 0;
-        for (int i = 0; i <= dataArray.length - 2; i += 2) {
-            if (OPERATION_BUY.equals(dataArray[i])) {
-                amountBuy += Integer.parseInt(dataArray[i + 1]);
-            } else {
-                amountSupply += Integer.parseInt(dataArray[i + 1]);
-            }
-        }
-        return new int[]{amountBuy, amountSupply};
-    }
-
-    private static String createReport(int[] calculation) {
-
-        return OPERATION_SUPPLY + "," + calculation[1]
-                + System.lineSeparator() + OPERATION_BUY + ","
-                + calculation[0] + System.lineSeparator()
-                + "result" + "," + (calculation[1] - calculation[0]);
-    }
-
-    private void writeToFile(String toFileName, String report) {
-        try {
-            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName));
-            bufferedWriter.write(report);
-            bufferedWriter.close();
-        } catch (IOException e) {
-            throw new RuntimeException("Can't write data to the file " + toFileName, e);
-        }
-    }
-
     public void getStatistic(String fromFileName, String toFileName) {
         File file = new File(fromFileName);
         String inputData;
@@ -56,5 +25,36 @@ public class WorkWithFile {
             throw new RuntimeException("Can't read data from the file " + fromFileName, e);
         }
         writeToFile(toFileName, createReport(calculation(inputData.split(","))));
+    }
+
+    private static int[] calculation(String[] dataArray) {
+        int amountBuy = 0;
+        int amountSupply = 0;
+        for (int i = 0; i <= dataArray.length - 2; i += 2) {
+            if (OPERATION_BUY.equals(dataArray[i])) {
+                amountBuy += Integer.parseInt(dataArray[i + 1]);
+            } else {
+                amountSupply += Integer.parseInt(dataArray[i + 1]);
+            }
+        }
+        int amountResult = amountSupply - amountBuy;
+        return new int[]{amountBuy, amountSupply, amountResult};
+    }
+
+    private static String createReport(int[] calculation) {
+        return OPERATION_SUPPLY + "," + calculation[1]
+                + System.lineSeparator() + OPERATION_BUY + ","
+                + calculation[0] + System.lineSeparator()
+                + "result" + "," + (calculation[2]);
+    }
+
+    private void writeToFile(String toFileName, String report) {
+        try {
+            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName));
+            bufferedWriter.write(report);
+            bufferedWriter.close();
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write data to the file " + toFileName, e);
+        }
     }
 }
