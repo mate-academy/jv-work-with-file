@@ -18,10 +18,9 @@ public class WorkWithFile {
         StringBuilder stringBuilder = new StringBuilder();
         File readFile = new File(fromFileName);
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(readFile))) {
-            String localString = bufferedReader.readLine();
-            while (!(localString == null)) {
+            String localString;
+            while ((localString = bufferedReader.readLine()) != null) {
                 stringBuilder.append(localString).append(ForConstants.LINE_SEPARATOR);
-                localString = bufferedReader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("File wasn't read!", e);
@@ -33,12 +32,12 @@ public class WorkWithFile {
         int supply = 0;
         int buy = 0;
         String[] stringsForReport = readString.split(ForConstants.LINE_SEPARATOR);
-        for (int i = ForConstants.ZERO; i < stringsForReport.length; i++) {
-            String[] oneStingFroReport = stringsForReport[i].split(ForConstants.CSV_FILE_SEPARATOR);
-            if (oneStingFroReport[ForConstants.ZERO].equals(ForConstants.SUPPLY)) {
-                supply += Integer.parseInt(oneStingFroReport[ForConstants.ONE]);
-            } else if (oneStingFroReport[ForConstants.ZERO].equals(ForConstants.BUY)) {
-                buy += Integer.parseInt(oneStingFroReport[ForConstants.ONE]);
+        for (int i = ForConstants.VALUE_ZERO; i < stringsForReport.length; i++) {
+            String[] data = stringsForReport[i].split(ForConstants.CSV_FILE_SEPARATOR);
+            if (data[ForConstants.VALUE_ZERO].equals(ForConstants.SUPPLY)) {
+                supply += Integer.parseInt(data[ForConstants.VALUE_ONE]);
+            } else if (data[ForConstants.VALUE_ZERO].equals(ForConstants.BUY)) {
+                buy += Integer.parseInt(data[ForConstants.VALUE_ONE]);
             }
         }
         return drawReport(supply, buy);
@@ -48,7 +47,6 @@ public class WorkWithFile {
         File writeFile = new File(toFileName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(writeFile))) {
             bufferedWriter. write(report);
-            bufferedWriter.flush();
         } catch (IOException e) {
             throw new RuntimeException("File wasn't write!", e);
         }
