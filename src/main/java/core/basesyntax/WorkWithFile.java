@@ -1,6 +1,11 @@
 package core.basesyntax;
 
 import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 
 public class WorkWithFile {
     public static final String KEY_WORD_FOR_SUPPLY = "supply";
@@ -22,7 +27,8 @@ public class WorkWithFile {
         toFileStringBuilder.append(KEY_WORD_FOR_SUPPLY).append(CSV_SEPARATOR)
                 .append(supplySum).append(System.lineSeparator())
                 .append(KEY_WORD_FOR_BUY).append(CSV_SEPARATOR).append(buySum)
-                .append(System.lineSeparator()).append("result").append(CSV_SEPARATOR).append(result);
+                .append(System.lineSeparator()).append("result")
+                .append(CSV_SEPARATOR).append(result);
         writeToFile(toFileName, toFileStringBuilder.toString());
     }
 
