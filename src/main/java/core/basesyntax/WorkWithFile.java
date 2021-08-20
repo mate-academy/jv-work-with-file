@@ -24,7 +24,6 @@ public class WorkWithFile {
             String row = reader.readLine();
             String[] rowData;
             StringBuilder resultBuilder = new StringBuilder();
-
             while (row != null) {
                 rowData = row.split(",");
                 if (rowData[OPERATION_TYPE_INDEX].equals(SUPPLY)) {
@@ -35,7 +34,6 @@ public class WorkWithFile {
                 }
                 row = reader.readLine();
             }
-
             resultBuilder.append(SUPPLY + ",").append(supplyAmount)
                     .append(System.lineSeparator())
                     .append(BUY + ",").append(buyAmount)
