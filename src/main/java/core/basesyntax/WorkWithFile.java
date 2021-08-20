@@ -7,11 +7,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    static final int REQUIRED_POSITION = 1;
-    static final int OPERATION_TYPE_POSITION = 0;
-    static final String SUPPLY = "supply";
-    static final String BUY = "buy";
-    static final String COMMA = ",";
+    private static final int REQUIRED_POSITION = 1;
+    private static final int OPERATION_TYPE_POSITION = 0;
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String COMMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String finalData = getDataFromFile(fromFileName);
