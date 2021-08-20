@@ -7,44 +7,50 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final String SPECIFIED_CHARACTER = "\\W+";
-    private static final String Supply = "supply";
-    private static final String Buy = "buy";
+    private static final String SPLIT_REGEX = "\\W+";
+    private static final String NAME_SUPPLY = "supply";
+    private static final String NAME_BUY = "buy";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String[] dataFromFile = new String[0];
-        int supplyValue = 0;
-        int buyValue = 0;
-        StringBuilder reportBuilder = new StringBuilder();
+        setDataToFile(toFileName, createStatisticFromData(getDataFromFile(fromFileName)));
+    }
 
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
-            StringBuilder builder = new StringBuilder();
+    private String[] getDataFromFile(String fromFileName) {
+        StringBuilder builder = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String value = reader.readLine();
             while (value != null) {
                 builder.append(value).append(" ");
                 value = reader.readLine();
             }
-            dataFromFile = builder.toString().split(SPECIFIED_CHARACTER);
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from file " + fromFileName, e);
         }
+        return builder.toString().split(SPLIT_REGEX);
+    }
+
+    private String createStatisticFromData(String[] dataFromFile) {
+        StringBuilder reportBuilder = new StringBuilder();
+        int supplyValue = 0;
+        int buyValue = 0;
 
         for (int j = 0; j < dataFromFile.length; j++) {
-            if (dataFromFile[j].equals(Supply)) {
+            if (dataFromFile[j].equals(NAME_SUPPLY)) {
                 supplyValue += Integer.parseInt(dataFromFile[j + 1]);
             }
-            if (dataFromFile[j].equals(Buy)) {
+            if (dataFromFile[j].equals(NAME_BUY)) {
                 buyValue += Integer.parseInt(dataFromFile[j + 1]);
             }
         }
-
-        reportBuilder.append("supply,").append(supplyValue).append(System.lineSeparator())
+        return reportBuilder.append("supply,").append(supplyValue).append(System.lineSeparator())
                 .append("buy,").append(buyValue).append(System.lineSeparator())
-                .append("result,").append(supplyValue - buyValue);
+                .append("result,").append(supplyValue - buyValue).toString();
+    }
+
+    private void setDataToFile(String toFileName, String data) {
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName, true))) {
-            writer.write(reportBuilder.toString());
+            writer.write(data);
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to file " + toFileName, e);
         }
