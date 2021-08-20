@@ -69,7 +69,7 @@ public class WorkWithFile {
             bufferedWriter.newLine();
             bufferedWriter.write(content[RESULT]);
         } catch (IOException e) {
-            throw new RuntimeException("Can't access file!" + toFile, e);
+            throw new RuntimeException("Can't write data to file" + toFile, e);
         }
     }
 
