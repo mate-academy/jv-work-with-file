@@ -44,14 +44,12 @@ public class WorkWithFile {
     }
 
     private void writeData(String data, String fileName) {
-        for (String dataRow : data.split(System.lineSeparator())) {
-            try (BufferedWriter bufferedWriter =
-                         new BufferedWriter(new FileWriter(fileName, true))) {
-                bufferedWriter.write(dataRow);
-                bufferedWriter.write(System.lineSeparator());
-            } catch (IOException e) {
-                throw new RuntimeException("Couldn't write data to the file " + fileName, e);
-            }
+        try (BufferedWriter bufferedWriter =
+                     new BufferedWriter(new FileWriter(fileName, true))) {
+            bufferedWriter.write(data);
+            bufferedWriter.write(System.lineSeparator());
+        } catch (IOException e) {
+            throw new RuntimeException("Couldn't write data to the file " + fileName, e);
         }
     }
 }
