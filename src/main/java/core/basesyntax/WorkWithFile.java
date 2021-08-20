@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.io.*;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
