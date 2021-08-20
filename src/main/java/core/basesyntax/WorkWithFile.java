@@ -6,6 +6,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final int WORD_INDEX = 0;
+    private static final int VALUE_INDEX = 1;
+    private static final String COMMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String statisticsResult = getStatisticsFromFile(fromFileName);
@@ -17,29 +20,29 @@ public class WorkWithFile {
         int supply = 0;
         try (BufferedReader br = new BufferedReader(new FileReader(fromFileName))) {
             for (String line; (line = br.readLine()) != null; ) {
-                String[] parts = line.split(",");
-                if (parts[0].equals("buy")) {
-                    buy += Integer.parseInt(parts[1]);
+                String[] data = line.split(COMMA);
+                if (data[WORD_INDEX].equals("buy")) {
+                    buy += Integer.parseInt(data[VALUE_INDEX]);
                 } else {
-                    supply += Integer.parseInt(parts[1]);
+                    supply += Integer.parseInt(data[VALUE_INDEX]);
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Can't read from file.");
         }
-        return getResult(buy, supply);
+        return getReport(buy, supply);
     }
 
     private void writeTextToFile(String toFileName, String text) {
         try (FileWriter writer = new FileWriter(toFileName, false)) {
             writer.write(text);
             writer.flush();
-        } catch (IOException ex) {
-            System.out.println(ex.getMessage());
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write text to file.");
         }
     }
 
-    private String getResult(int buy, int supply) {
+    private String getReport(int buy, int supply) {
         return "supply," + supply + System.lineSeparator()
                 + "buy," + buy + System.lineSeparator()
                 + "result," + (supply - buy);
