@@ -17,24 +17,23 @@ public class WorkWithFile {
         writeResultToFile(resultString, toFileName);
     }
 
-    public String readSourceFile(String fromFileName) {
-        try {
+    private String readSourceFile(String fromFileName) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             int supplyAmount = 0;
             int buyAmount = 0;
-            BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
-            String line = reader.readLine();
-            String[] tempArray;
+            String row = reader.readLine();
+            String[] rowData;
             StringBuilder resultBuilder = new StringBuilder();
 
-            while (line != null) {
-                tempArray = line.split(",");
-                if (tempArray[OPERATION_TYPE_INDEX].equals(SUPPLY)) {
-                    supplyAmount += Integer.parseInt(tempArray[AMOUNT_INDEX]);
+            while (row != null) {
+                rowData = row.split(",");
+                if (rowData[OPERATION_TYPE_INDEX].equals(SUPPLY)) {
+                    supplyAmount += Integer.parseInt(rowData[AMOUNT_INDEX]);
                 }
-                if (tempArray[OPERATION_TYPE_INDEX].equals(BUY)) {
-                    buyAmount += Integer.parseInt(tempArray[AMOUNT_INDEX]);
+                if (rowData[OPERATION_TYPE_INDEX].equals(BUY)) {
+                    buyAmount += Integer.parseInt(rowData[AMOUNT_INDEX]);
                 }
-                line = reader.readLine();
+                row = reader.readLine();
             }
 
             resultBuilder.append(SUPPLY + ",").append(supplyAmount)
@@ -45,15 +44,15 @@ public class WorkWithFile {
                     .append(System.lineSeparator());
             return resultBuilder.toString();
         } catch (Exception e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't read file " + fromFileName, e);
         }
     }
 
-    public void writeResultToFile(String lineToWrite, String toFileName) {
+    private void writeResultToFile(String lineToWrite, String toFileName) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true))) {
             bufferedWriter.write(lineToWrite);
         } catch (Exception e) {
-            throw new RuntimeException("Can't write to file", e);
+            throw new RuntimeException("Can't write to file " + toFileName, e);
         }
     }
 }
