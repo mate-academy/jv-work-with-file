@@ -7,6 +7,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    static final int REQUIRED_POSITION = 1;
+    static final int OPERATION_TYPE_POSITION = 0;
+    static final String SUPPLY = "supply";
+    static final String BUY = "buy";
+    static final String COMMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String finalData = getDataFromFile(fromFileName);
@@ -16,19 +21,13 @@ public class WorkWithFile {
     private String getDataFromFile(String fileName) {
         int suppliedNumber = 0;
         int boughtNumber = 0;
-        final String supply = "supply";
-        final String buy = "buy";
-        final String comma = ",";
-
         try (BufferedReader bufferedReaderreader = new BufferedReader(new FileReader(fileName))) {
             String line = bufferedReaderreader.readLine();
-            final int requiredPosition = 1;
-            final int operationTypePosition = 0;
             while (line != null) {
-                if (line.split(comma)[operationTypePosition].equals(supply)) {
-                    suppliedNumber += Integer.parseInt(line.split(comma)[requiredPosition]);
-                } else if (line.split(comma)[operationTypePosition].equals(buy)) {
-                    boughtNumber += Integer.parseInt(line.split(comma)[requiredPosition]);
+                if (line.split(COMMA)[OPERATION_TYPE_POSITION].equals(SUPPLY)) {
+                    suppliedNumber += Integer.parseInt(line.split(COMMA)[REQUIRED_POSITION]);
+                } else if (line.split(COMMA)[OPERATION_TYPE_POSITION].equals(BUY)) {
+                    boughtNumber += Integer.parseInt(line.split(COMMA)[REQUIRED_POSITION]);
                 }
                 line = bufferedReaderreader.readLine();
             }
@@ -36,11 +35,11 @@ public class WorkWithFile {
             throw new RuntimeException("Couldn't read data from the file " + fileName, e);
         }
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(supply).append(comma).append(suppliedNumber)
+        stringBuilder.append(SUPPLY).append(COMMA).append(suppliedNumber)
                 .append(System.lineSeparator())
-                .append(buy).append(comma).append(boughtNumber)
+                .append(BUY).append(COMMA).append(boughtNumber)
                 .append(System.lineSeparator())
-                .append("result").append(comma).append(suppliedNumber - boughtNumber);
+                .append("result").append(COMMA).append(suppliedNumber - boughtNumber);
         return stringBuilder.toString();
     }
 
@@ -52,7 +51,6 @@ public class WorkWithFile {
                 bufferedWriter.write(System.lineSeparator());
             } catch (IOException e) {
                 throw new RuntimeException("Couldn't write data to the file " + fileName, e);
-
             }
         }
     }
