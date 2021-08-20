@@ -72,5 +72,4 @@ public class WorkWithFile {
             throw new RuntimeException("Can't write data to file" + toFile, e);
         }
     }
-
 }
