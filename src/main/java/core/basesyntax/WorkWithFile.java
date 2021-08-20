@@ -20,45 +20,43 @@ public class WorkWithFile {
     private static final String COMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        readFile(fromFileName);
-        writeInFile(resultTextMaker(statisticCalculator(readFile(fromFileName))), toFileName);
+        writeInFile(reportMaker(statisticCalculator(readFile(fromFileName))), toFileName);
     }
 
     private String readFile(String fromFileName) {
         StringBuilder result = new StringBuilder();
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String value = bufferedReader.readLine();
             while (value != null) {
                 result.append(value).append(System.lineSeparator());
                 value = bufferedReader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file!", e);
+            throw new RuntimeException("Can't read file!" + fromFileName, e);
         }
         return result.toString();
     }
 
     private int[] statisticCalculator(String textFromFile) {
-        String[] separatedText = textFromFile.split("\\R");
-        int[] numbers = new int[NUMBER_OF_ROWS];
-        for (String documentation: separatedText) {
-            String[] separatedString = documentation.split(COMA);
-            if (separatedString[ACTION].equals(SUPPLY)) {
-                numbers[SUPPLIED] += Integer.parseInt(separatedString[NUMBER]);
-            } else if (separatedString[ACTION].equals(BUY)) {
-                numbers[BOUGHT] += Integer.parseInt(separatedString[NUMBER]);
+        String[] rows = textFromFile.split("\\R");
+        int[] reportData = new int[NUMBER_OF_ROWS];
+        for (String row: rows) {
+            String[] rowData = row.split(COMA);
+            if (rowData[ACTION].equals(SUPPLY)) {
+                reportData[SUPPLIED] += Integer.parseInt(rowData[NUMBER]);
+            } else if (rowData[ACTION].equals(BUY)) {
+                reportData[BOUGHT] += Integer.parseInt(rowData[NUMBER]);
             }
-            numbers[RESULT] = numbers[SUPPLIED] - numbers[BOUGHT];
+            reportData[RESULT] = reportData[SUPPLIED] - reportData[BOUGHT];
         }
-        return numbers;
+        return reportData;
     }
 
-    private String[] resultTextMaker(int[] numbers) {
+    private String[] reportMaker(int[] reportData) {
         String[] output = new String[NUMBER_OF_ROWS];
-        output[SUPPLIED] = SUPPLY + COMA + numbers[SUPPLIED];
-        output[BOUGHT] = BUY + COMA + numbers[BOUGHT];
-        output[RESULT] = RESULT_STR + COMA + numbers[RESULT];
+        output[SUPPLIED] = SUPPLY + COMA + reportData[SUPPLIED];
+        output[BOUGHT] = BUY + COMA + reportData[BOUGHT];
+        output[RESULT] = RESULT_STR + COMA + reportData[RESULT];
         return output;
     }
 
@@ -71,7 +69,7 @@ public class WorkWithFile {
             bufferedWriter.newLine();
             bufferedWriter.write(content[RESULT]);
         } catch (IOException e) {
-            throw new RuntimeException("Can't access file!", e);
+            throw new RuntimeException("Can't access file!" + toFile, e);
         }
     }
 
