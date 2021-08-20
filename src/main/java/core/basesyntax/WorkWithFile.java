@@ -19,13 +19,14 @@ public class WorkWithFile {
         }
         int result = supplySum - buySum;
         StringBuilder toFileStringBuilder = new StringBuilder();
-        toFileStringBuilder.append(KEY_WORD_FOR_SUPPLY).append(CSV_SEPARATOR).append(supplySum)
-                .append(System.lineSeparator()).append(KEY_WORD_FOR_BUY).append(CSV_SEPARATOR).append(buySum)
+        toFileStringBuilder.append(KEY_WORD_FOR_SUPPLY).append(CSV_SEPARATOR)
+                .append(supplySum).append(System.lineSeparator())
+                .append(KEY_WORD_FOR_BUY).append(CSV_SEPARATOR).append(buySum)
                 .append(System.lineSeparator()).append("result").append(CSV_SEPARATOR).append(result);
         writeToFile(toFileName, toFileStringBuilder.toString());
     }
 
-    public StringBuilder readFromFile(String fromFileName) {
+    private StringBuilder readFromFile(String fromFileName) {
         File fromFile = new File(fromFileName);
         StringBuilder stringBuilderFrom = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFile))) {
@@ -40,7 +41,7 @@ public class WorkWithFile {
         return stringBuilderFrom;
     }
 
-    public void writeToFile(String toFileName, String dataToWrite) {
+    private void writeToFile(String toFileName, String dataToWrite) {
         File toFile = new File(toFileName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFile))) {
             toFile.createNewFile();
