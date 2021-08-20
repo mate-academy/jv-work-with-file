@@ -2,10 +2,10 @@ package core.basesyntax;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.IOException;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 
 public class WorkWithFile {
     public static final String KEY_WORD_FOR_SUPPLY = "supply";
