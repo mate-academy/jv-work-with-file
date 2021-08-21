@@ -9,8 +9,9 @@ public class WorkWithFile {
     private static final String BUY = "buy";
     private static final String COMA = ",";
     private static final String SUPPLY = "supply";
-    private static final int NAME = 1;
-    private static final int VALUE = 0;
+    private static final int NAME_COUNT = 0;
+    private static final int VALUE_COUNT = 1;
+
 
     public void getStatistic(String fromFileName, String toFileName) {
         String data = readFile(fromFileName);
@@ -24,10 +25,10 @@ public class WorkWithFile {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
             String line = bufferedReader.readLine();
             while (line != null) {
-                if (line.split(COMA)[VALUE].equals(BUY)) {
-                    buyCount += Integer.parseInt(line.split(COMA)[NAME]);
-                } else if (line.split(COMA)[VALUE].equals(SUPPLY)) {
-                    supplyCount += Integer.parseInt(line.split(COMA)[NAME]);
+                if (line.split(COMA)[NAME_COUNT].equals(BUY)) {
+                    buyCount += Integer.parseInt(line.split(COMA)[VALUE_COUNT]);
+                } else if (line.split(COMA)[NAME_COUNT].equals(SUPPLY)) {
+                    supplyCount += Integer.parseInt(line.split(COMA)[VALUE_COUNT]);
                 }
                 line = bufferedReader.readLine();
             }
