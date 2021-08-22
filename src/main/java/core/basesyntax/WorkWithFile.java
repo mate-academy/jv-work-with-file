@@ -10,6 +10,7 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final String BUY = "buy";
     private static final String SUPPLY = "supply";
+    private static final String CSV_SEPARATOR = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         File file = new File(fromFileName);
@@ -21,7 +22,7 @@ public class WorkWithFile {
             int buyInt = 0;
             int result = 0;
             while ((value = bufferedReader.readLine()) != null) {
-                String[] splittedArr = value.split(",");
+                String[] splittedArr = value.split(CSV_SEPARATOR);
                 if (splittedArr[0].equals(SUPPLY)) {
                     supplyInt += Integer.parseInt(splittedArr[1]);
                 } else if (splittedArr[0].equals(BUY)) {
