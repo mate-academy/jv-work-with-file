@@ -8,34 +8,31 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String BUY = "buy";
+    private static final String SUPPLY = "supply";
+
     public void getStatistic(String fromFileName, String toFileName) {
         File file = new File(fromFileName);
         StringBuilder builder = new StringBuilder();
-        final String buy = "buy";
-        final String supply = "supply";
         String[] lineSplitted;
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
-            String value = bufferedReader.readLine();
+            String value;
             int supplyInt = 0;
             int buyInt = 0;
             int result = 0;
-            while (value != null) {
+            while ((value = bufferedReader.readLine()) != null) {
                 String[] splittedArr = value.split(",");
-                if (splittedArr[0].equals(supply)) {
+                if (splittedArr[0].equals(SUPPLY)) {
                     supplyInt += Integer.parseInt(splittedArr[1]);
-                } else if (splittedArr[0].equals(buy)) {
+                } else if (splittedArr[0].equals(BUY)) {
                     buyInt += Integer.parseInt(splittedArr[1]);
-                }
-                value = bufferedReader.readLine();
-                if (value == null) {
-                    break;
                 }
             }
             result = supplyInt - buyInt;
-            builder.append(supply + ",")
+            builder.append(SUPPLY + ",")
                     .append(supplyInt)
                     .append(System.lineSeparator())
-                    .append(buy + ",")
+                    .append(BUY + ",")
                     .append(buyInt)
                     .append(System.lineSeparator())
                     .append("result,")
