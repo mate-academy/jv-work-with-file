@@ -14,8 +14,7 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         File file = new File(fromFileName);
-        StringBuilder builder = new StringBuilder();
-        String[] lineSplitted;
+        StringBuilder reportBuilder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
             String value;
             int supplyInt = 0;
@@ -30,7 +29,7 @@ public class WorkWithFile {
                 }
             }
             result = supplyInt - buyInt;
-            builder.append(SUPPLY + ",")
+            reportBuilder.append(SUPPLY + ",")
                     .append(supplyInt)
                     .append(System.lineSeparator())
                     .append(BUY + ",")
@@ -41,7 +40,7 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("file not found", e);
         }
-        lineSplitted = builder.toString().split(System.lineSeparator());
+        String[] lineSplitted = reportBuilder.toString().split(System.lineSeparator());
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true))) {
             for (String s : lineSplitted) {
                 bufferedWriter.write(s);
