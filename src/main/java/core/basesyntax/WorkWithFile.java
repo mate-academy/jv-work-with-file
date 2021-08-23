@@ -33,7 +33,7 @@ public class WorkWithFile {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, true))) {
             writer.write(data);
         } catch (IOException e) {
-            throw new RuntimeException("Can`t write into file");
+            throw new RuntimeException("Can`t write into file", e);
         }
     }
 
