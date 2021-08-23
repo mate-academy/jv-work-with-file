@@ -57,7 +57,7 @@ public class WorkWithFile {
         int remain = supply - buy;
         String result = "supply," + supply + System.lineSeparator()
                 + "buy," + buy + System.lineSeparator()
-                + "result," + remain ;
+                + "result," + remain;
         return result;
     }
 }
