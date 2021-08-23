@@ -29,8 +29,7 @@ public class WorkWithFile {
 
     private String getDataFromFile(String fileName) {
         StringBuilder fileContant = new StringBuilder();
-        try {
-            BufferedReader fromFile = new BufferedReader(new FileReader(fileName));
+        try (BufferedReader fromFile = new BufferedReader(new FileReader(fileName))) {
             String line = fromFile.readLine();
             while (line != null) {
                 fileContant.append(line).append(System.lineSeparator());
@@ -55,10 +54,8 @@ public class WorkWithFile {
     }
 
     private void writeToFile(String fileName, String data) {
-        try {
-            BufferedWriter toFile = new BufferedWriter(new FileWriter(fileName));
+        try (BufferedWriter toFile = new BufferedWriter(new FileWriter(fileName))) {
             toFile.write(data);
-            toFile.close();
         } catch (IOException e) {
             throw new RuntimeException("Cannot write data to " + fileName, e);
         }
