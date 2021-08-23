@@ -42,17 +42,6 @@ public class WorkWithFile {
         return fileContant.toString();
     }
 
-    private void writeToFile(String fileNmae, String data) {
-        BufferedWriter toFile;
-        try {
-            toFile = new BufferedWriter(new FileWriter(fileNmae));
-            toFile.write(data);
-            toFile.close();
-        } catch (IOException e) {
-            throw new RuntimeException("Cannot write data to file", e);
-        }
-    }
-
     private String buildReport(int supplyAmount, int buyAmount) {
         StringBuilder report = new StringBuilder();
         return String.valueOf(report.append("supply,")
@@ -63,6 +52,16 @@ public class WorkWithFile {
                 .append(System.lineSeparator())
                 .append("result")
                 .append(",").append(supplyAmount - buyAmount));
+    }
 
+    private void writeToFile(String fileNmae, String data) {
+        BufferedWriter toFile;
+        try {
+            toFile = new BufferedWriter(new FileWriter(fileNmae));
+            toFile.write(data);
+            toFile.close();
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot write data to file", e);
+        }
     }
 }
