@@ -54,10 +54,9 @@ public class WorkWithFile {
                 .append(",").append(supplyAmount - buyAmount));
     }
 
-    private void writeToFile(String fileNmae, String data) {
-        BufferedWriter toFile;
+    private void writeToFile(String fileName, String data) {
         try {
-            toFile = new BufferedWriter(new FileWriter(fileNmae));
+            BufferedWriter toFile = new BufferedWriter(new FileWriter(fileName));
             toFile.write(data);
             toFile.close();
         } catch (IOException e) {
