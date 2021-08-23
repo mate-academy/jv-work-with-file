@@ -9,10 +9,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final int SUPPLY = 0;
+    private static final int BUY = 1;
+    private static final int VALUE = 1;
+    private static final int FIELDS = 2;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int supply = 0;
-        int buy = 0;
+        int[] data = new int[FIELDS];
         File inputData = new File(fromFileName);
         FileReader fileReader;
         try {
@@ -20,7 +23,7 @@ public class WorkWithFile {
         } catch (FileNotFoundException e) {
             throw new RuntimeException("Problem", e);
         }
-        int[] out = createReport(fileReader, supply, buy);
+        createReport(fileReader, data);
         File outputData = new File(toFileName);
         FileWriter fileWriter;
         try {
@@ -28,39 +31,38 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Problem", e);
         }
-        writeToFile(fileWriter, out[0], out[1]);
+        writeToFile(fileWriter, data);
     }
 
-    private int[] createReport(FileReader fileReader, int supply, int buy) {
+    private void createReport(FileReader fileReader, int[] data) {
         String[] record;
         String recordString = "";
         try (BufferedReader bufferedReader = new BufferedReader(fileReader)) {
             recordString = bufferedReader.readLine();
             while (recordString != null) {
                 record = recordString.split(",");
-                if (record[0].equals("supply")) {
-                    supply += Integer.parseInt(record[1]);
+                if (record[SUPPLY].equals("supply")) {
+                    data[SUPPLY] += Integer.parseInt(record[VALUE]);
                 } else {
-                    buy += Integer.parseInt(record[1]);
+                    data[BUY] += Integer.parseInt(record[VALUE]);
                 }
                 recordString = bufferedReader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("Problem", e);
         }
-        return new int[] {supply, buy};
     }
 
-    private void writeToFile(FileWriter fileWriter, int supply, int buy) {
+    private void writeToFile(FileWriter fileWriter, int[] data) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
             bufferedWriter.write(new StringBuilder("supply,")
-                    .append(String.valueOf(supply))
+                    .append(String.valueOf(data[SUPPLY]))
                     .append(System.lineSeparator())
                     .append("buy,")
-                    .append(String.valueOf(buy))
+                    .append(String.valueOf(data[BUY]))
                     .append(System.lineSeparator())
                     .append("result,")
-                    .append(String.valueOf(supply - buy))
+                    .append(String.valueOf(data[SUPPLY] - data[BUY]))
                     .toString());
         } catch (IOException e) {
             throw new RuntimeException("Problem", e);
