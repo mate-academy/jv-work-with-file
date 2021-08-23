@@ -29,17 +29,25 @@ public class WorkWithFile {
                 }
             }
             result = supplyInt - buyInt;
-            reportBuilder.append(SUPPLY + ",")
-                    .append(supplyInt)
-                    .append(System.lineSeparator())
-                    .append(BUY + ",")
-                    .append(buyInt)
-                    .append(System.lineSeparator())
-                    .append("result,")
-                    .append(result);
+            extracted(reportBuilder, supplyInt, buyInt, result);
         } catch (IOException e) {
             throw new RuntimeException("file not found", e);
         }
+        extracted(toFileName, reportBuilder);
+    }
+
+    private void extracted(StringBuilder reportBuilder, int supplyInt, int buyInt, int result) {
+        reportBuilder.append(SUPPLY + ",")
+                .append(supplyInt)
+                .append(System.lineSeparator())
+                .append(BUY + ",")
+                .append(buyInt)
+                .append(System.lineSeparator())
+                .append("result,")
+                .append(result);
+    }
+
+    private void extracted(String toFileName, StringBuilder reportBuilder) {
         String[] lineSplitted = reportBuilder.toString().split(System.lineSeparator());
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true))) {
             for (String s : lineSplitted) {
