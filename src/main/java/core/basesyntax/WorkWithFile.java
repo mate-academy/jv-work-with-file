@@ -48,12 +48,8 @@ public class WorkWithFile {
     }
 
     private void extracted(String toFileName, StringBuilder reportBuilder) {
-        String[] lineSplitted = reportBuilder.toString().split(System.lineSeparator());
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true))) {
-            for (String s : lineSplitted) {
-                bufferedWriter.write(s);
-                bufferedWriter.newLine();
-            }
+            bufferedWriter.write(reportBuilder.toString());
         } catch (IOException e) {
             throw new RuntimeException("cant write to file", e);
         }
