@@ -8,6 +8,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    public static final int OPERATION_TYPE = 0;
+    public static final int AMOUNT = 1;
+    public static final int SUPPLY_AMOUNT = 0;
+    public static final int BUY_AMOUNT = 1;
+    public static final String BUY = "buy";
+    public static final String SUPPLY = "supply";
+    public static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] dataFromFile = readFromFile(fromFileName);
@@ -35,10 +42,10 @@ public class WorkWithFile {
         int supplyNumber = 0;
         for (int i = 0; i < arr.length; i++) {
             String[] data = arr[i].split(",");
-            if (data[0].equals("buy")) {
-                buyNumber += Integer.parseInt(data[1]);
+            if (data[OPERATION_TYPE].equals("buy")) {
+                buyNumber += Integer.parseInt(data[AMOUNT]);
             } else {
-                supplyNumber += Integer.parseInt(data[1]);
+                supplyNumber += Integer.parseInt(data[AMOUNT]);
             }
         }
         return new int[] {supplyNumber,buyNumber};
@@ -46,14 +53,14 @@ public class WorkWithFile {
 
     private String createReport(int[] arr) {
         StringBuilder report = new StringBuilder();
-        report.append("supply,")
-                .append(arr[0])
+        report.append(SUPPLY + ",")
+                .append(arr[SUPPLY_AMOUNT])
                 .append(System.lineSeparator())
-                .append("buy,")
-                .append(arr[1])
+                .append(BUY + ",")
+                .append(arr[BUY_AMOUNT])
                 .append(System.lineSeparator())
-                .append("result,")
-                .append(arr[0] - arr[1]);
+                .append(RESULT + ",")
+                .append(arr[SUPPLY_AMOUNT] - arr[BUY_AMOUNT]);
         return report.toString();
     }
 
