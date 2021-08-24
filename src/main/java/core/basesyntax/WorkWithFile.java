@@ -12,7 +12,7 @@ public class WorkWithFile {
     private static final int AMOUNT = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        write(toFileName, report(buyAndSupply(read(fromFileName))).toString());
+        write(toFileName, report(buyAndSupply(read(fromFileName))));
     }
 
     private String[] read(String fileName) {
@@ -22,7 +22,7 @@ public class WorkWithFile {
             BufferedReader reader = new BufferedReader(new FileReader(file));
             String value = reader.readLine();
             while (value != null) {
-                stringBuilder.append(value);
+                stringBuilder.append(value).append(" ");
                 value = reader.readLine();
             }
         } catch (IOException e) {
@@ -54,10 +54,12 @@ public class WorkWithFile {
 
     }
 
-    private void write(String fileName, String report) {
+    private void write(String fileName, String[] report) {
         File file = new File(fileName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, true))) {
-            bufferedWriter.write(report);
+            for (String reports : report) {
+                bufferedWriter.write(reports);
+            }
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to file ", e);
         }
