@@ -13,8 +13,10 @@ public class WorkWithFile {
     private static final String CSV_SEPARATOR = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        File file = new File(fromFileName);
-        StringBuilder reportBuilder = new StringBuilder();
+        writeToFile(toFileName, readFromFile(new File(fromFileName)));
+    }
+
+    private StringBuilder readFromFile(File file) {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
             String value;
             int supplyInt = 0;
@@ -29,15 +31,14 @@ public class WorkWithFile {
                 }
             }
             result = supplyInt - buyInt;
-            extracted(reportBuilder, supplyInt, buyInt, result);
+            return createReportBuilder(supplyInt, buyInt, result);
         } catch (IOException e) {
             throw new RuntimeException("file not found", e);
         }
-        extracted(toFileName, reportBuilder);
     }
 
-    private void extracted(StringBuilder reportBuilder, int supplyInt, int buyInt, int result) {
-        reportBuilder.append(SUPPLY + ",")
+    private StringBuilder createReportBuilder(int supplyInt, int buyInt, int result) {
+        return new StringBuilder().append(SUPPLY + ",")
                 .append(supplyInt)
                 .append(System.lineSeparator())
                 .append(BUY + ",")
@@ -47,11 +48,15 @@ public class WorkWithFile {
                 .append(result);
     }
 
-    private void extracted(String toFileName, StringBuilder reportBuilder) {
+    private boolean writeToFile(String toFileName, StringBuilder reportBuilder) {
+        if (reportBuilder == null) {
+            return false;
+        }
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true))) {
             bufferedWriter.write(reportBuilder.toString());
         } catch (IOException e) {
             throw new RuntimeException("cant write to file", e);
         }
+        return true;
     }
 }
