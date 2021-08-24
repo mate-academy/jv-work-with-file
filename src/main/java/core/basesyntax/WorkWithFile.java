@@ -45,7 +45,7 @@ public class WorkWithFile {
                     .append(suppliedAmount - boughtAmount).append(System.lineSeparator());
             return statistics.toString();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can't read data from the file " + fileName, e);
         }
     }
 
@@ -53,7 +53,7 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
             bufferedWriter.write(information);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can't write data to the file " + fileName, e);
         }
     }
 }
