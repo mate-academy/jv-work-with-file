@@ -13,7 +13,7 @@ public class WorkWithFile {
     private static final String NEWLINE = System.lineSeparator();
     private static final String SEPARATOR = ",";
 
-    public String getDataFromFile(String filePath) {
+    private String getDataFromFile(String filePath) {
         File myFile = new File(filePath);
         StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(myFile))) {
@@ -29,27 +29,18 @@ public class WorkWithFile {
 
     }
 
-    public String getFieldName(String record) {
+    private String getFieldName(String record) {
         return record.substring(0, record.indexOf(","));
     }
 
-    public void writeReportToFile(String filePath, String report) {
-        File myFile = new File(filePath);
-        try (FileWriter writer = new FileWriter(myFile)) {
-            writer.write(report);
-        } catch (IOException e) {
-            throw new RuntimeException("Cant`t write data to file", e);
-        }
-    }
-
-    public int getIntValueFromRecord(String record) {
+    private int getIntValueFromRecord(String record) {
         String trimmedRecord = record.trim();
         String value = trimmedRecord
                 .substring(trimmedRecord.indexOf(",") + 1);
         return Integer.parseInt(value);
     }
 
-    public int[] countItems(String[] data) {
+    private int[] countItems(String[] data) {
         int supplyCounter = 0;
         int buyCounter = 0;
         for (String record : data) {
@@ -63,7 +54,7 @@ public class WorkWithFile {
         return new int[] {supplyCounter, buyCounter};
     }
 
-    public String generateReport(String[] data) {
+    private String generateReport(String[] data) {
         int[] countedItems = countItems(data);
         StringBuilder stringBuilder = new StringBuilder();
         int supply = countedItems[0];
@@ -80,6 +71,15 @@ public class WorkWithFile {
                 .append(SEPARATOR)
                 .append(supply - buy);
         return stringBuilder.toString();
+    }
+
+    private void writeReportToFile(String filePath, String report) {
+        File myFile = new File(filePath);
+        try (FileWriter writer = new FileWriter(myFile)) {
+            writer.write(report);
+        } catch (IOException e) {
+            throw new RuntimeException("Cant`t write data to file", e);
+        }
     }
 
     public void getStatistic(String fromFileName, String toFileName) {
