@@ -7,6 +7,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
+    private static final String NEWLINE = System.lineSeparator();
+    private static final String SEPARATOR = ",";
 
     public String getDataFromFile(String filePath) {
         File myFile = new File(filePath);
@@ -25,6 +30,10 @@ public class WorkWithFile {
 
     }
 
+    public String getFieldName(String record) {
+        return record.substring(0, record.indexOf(","));
+    }
+
     public void writeReportToFile(String filePath, String report) {
         File myFile = new File(filePath);
         try (FileWriter writer = new FileWriter(myFile)) {
@@ -34,10 +43,6 @@ public class WorkWithFile {
         }
     }
 
-    public String getFieldName(String record) {
-        return record.substring(0, record.indexOf(","));
-    }
-
     public int getIntValueFromRecord(String record) {
         String trimmedRecord = record.trim();
         String value = trimmedRecord
@@ -45,54 +50,43 @@ public class WorkWithFile {
         return Integer.parseInt(value);
     }
 
-    public String getUniqueFieldsString(String[] data) {
-        StringBuilder uniqueFields = new StringBuilder();
+    public int[] countItems(String[] data) {
+        int supplyCounter = 0;
+        int buyCounter = 0;
         for (String record : data) {
-            if (!(uniqueFields.toString().contains(getFieldName(record)))) {
-                uniqueFields.append(getFieldName(record)).append(" ");
+            if (getFieldName(record).equals(SUPPLY)) {
+                supplyCounter += getIntValueFromRecord(record);
+            }
+            if (getFieldName(record).equals(BUY)) {
+                buyCounter += getIntValueFromRecord(record);
             }
         }
-        return uniqueFields.toString().trim();
+        return new int[] {supplyCounter, buyCounter};
     }
 
-    public String[] getUniqueFieldsArray(String uniqueFields) {
-        return uniqueFields.split(" ");
-    }
-
-    public int[] getContainerArray(String[] unuiqueFieldsArray) {
-        return new int[unuiqueFieldsArray.length];
-    }
-
-    public int[] countItems(String[] uniqueFieldsArray, String[] data) {
-        int[] countedItems = getContainerArray(uniqueFieldsArray);
-        for (int i = 0; i < uniqueFieldsArray.length; i++) {
-            for (String record : data) {
-                if (uniqueFieldsArray[i].equals(getFieldName(record))) {
-                    countedItems[i] += getIntValueFromRecord(record);
-                }
-            }
-        }
-        return countedItems;
-    }
-
-    public String generateReport(String[] uniqueFieldsArray, int[] valuesArray) {
+    public String generateReport(String[] data) {
+        int[] countedItems = countItems(data);
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("supply,")
-                .append(valuesArray[1])
-                .append("buy,")
-                .append(valuesArray[0]);
-        int result = valuesArray[1] - valuesArray[0];
-        result = Math.abs(result);
-        stringBuilder.append("result,").append(result);
-        return stringBuilder.toString().trim();
+        int supply = countedItems[0];
+        int buy = countedItems[1];
+        stringBuilder.append(SUPPLY)
+                .append(SEPARATOR)
+                .append(supply)
+                .append(NEWLINE)
+                .append(BUY)
+                .append(SEPARATOR)
+                .append(buy)
+                .append(NEWLINE)
+                .append(RESULT)
+                .append(SEPARATOR)
+                .append(supply - buy);
+        return stringBuilder.toString();
     }
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] data = getDataFromFile(fromFileName).split("\n");
-        String uniqueFieldsString = getUniqueFieldsString(data);
-        String[] uniqueFieldsArray = getUniqueFieldsArray(uniqueFieldsString);
-        int[] countedItems = countItems(uniqueFieldsArray, data);
-        String report = generateReport(uniqueFieldsArray, countedItems);
+        String report = generateReport(data);
         writeReportToFile(toFileName,report);
     }
+
 }
