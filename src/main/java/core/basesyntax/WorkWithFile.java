@@ -10,9 +10,10 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final int OPERATION_TYPE = 0;
     private static final int AMOUNT = 1;
+    private static final String COMMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        write(toFileName, report(buyAndSupply(read(fromFileName))));
+        write(toFileName, CreateReport(generateReport(read(fromFileName))));
     }
 
     private String[] read(String fileName) {
@@ -22,7 +23,9 @@ public class WorkWithFile {
             BufferedReader reader = new BufferedReader(new FileReader(file));
             String value = reader.readLine();
             while (value != null) {
-                stringBuilder.append(value).append(" ");
+                if (value.startsWith("buy") || value.startsWith("supply")) {
+                    stringBuilder.append(value).append(" ");
+                }
                 value = reader.readLine();
             }
         } catch (IOException e) {
@@ -31,25 +34,25 @@ public class WorkWithFile {
         return stringBuilder.toString().split(" ");
     }
 
-    private int[] buyAndSupply(String[] data) {
+    private String[] generateReport(String[] operations) {
         int buy = 0;
         int supply = 0;
-        for (String array : data) {
-            String[] arrayData = array.split(",");
-            if (arrayData[OPERATION_TYPE].equals("buy")) {
-                buy += Integer.parseInt(arrayData[AMOUNT]);
-            } else {
-                supply += Integer.parseInt(arrayData[AMOUNT]);
+        for (String array : operations) {
+            String[] arrayOperations = array.split(COMMA);
+            if (arrayOperations[OPERATION_TYPE].equals("buy")) {
+                buy += Integer.parseInt(arrayOperations[AMOUNT]);
+            } else if (arrayOperations[OPERATION_TYPE].equals("supply")) {
+                supply += Integer.parseInt(arrayOperations[AMOUNT]);
             }
         }
-        return new int[] {buy, supply};
+        return new String[] {String.valueOf(buy), String.valueOf(supply)};
     }
 
-    private String[] report(int[] data) {
+    private String[] CreateReport(String[] data) {
         String[] report = new String[3];
         report[0] = "supply," + data[1] + System.lineSeparator();
         report[1] = "buy," + data[0] + System.lineSeparator();
-        report[2] = "result," + (data[1] - data[0]);
+        report[2] = "result," + (Integer.parseInt(data[1]) - Integer.parseInt(data[0]));
         return report;
 
     }
