@@ -12,7 +12,6 @@ public class WorkWithFile {
     private static final int NAME_COUNT = 0;
     private static final int VALUE_COUNT = 1;
 
-
     public void getStatistic(String fromFileName, String toFileName) {
         String data = readFile(fromFileName);
         writeFile(data, toFileName);
@@ -35,10 +34,7 @@ public class WorkWithFile {
         } catch (Exception e) {
             throw new RuntimeException("Can't read data from the file " + fileName, e);
         }
-        stringBuilder.append(SUPPLY).append(COMA).append(supplyCount).append(System.lineSeparator())
-                .append(BUY).append(COMA).append(buyCount).append(System.lineSeparator())
-                .append("result").append(COMA).append(supplyCount - buyCount);
-        return stringBuilder.toString();
+        return messageConstructor(stringBuilder.toString(), buyCount, supplyCount);
     }
 
     private void writeFile(String data, String fileName) {
@@ -48,5 +44,13 @@ public class WorkWithFile {
         } catch (Exception e) {
             throw new RuntimeException("Can't write data to the file " + fileName, e);
         }
+    }
+
+    private String messageConstructor(String fileData,int buyCount, int supplyCount) {
+        StringBuilder stringBuilder = new StringBuilder(fileData);
+        stringBuilder.append(SUPPLY).append(COMA).append(supplyCount).append(System.lineSeparator())
+                .append(BUY).append(COMA).append(buyCount).append(System.lineSeparator())
+                .append("result").append(COMA).append(supplyCount - buyCount);
+        return stringBuilder.toString();
     }
 }
