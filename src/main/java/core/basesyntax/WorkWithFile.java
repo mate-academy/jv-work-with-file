@@ -8,7 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final String SUPPLY_AS_STRING = "suppl";
+    private static final String SUPPLY_AS_STRING = "supply";
     private static final String BUY_AS_STRING = "buy";
     private static final String RESULT_AS_STRING = "result";
     private static final String CVS_LINE_SEPARATOR = "\r\n";
