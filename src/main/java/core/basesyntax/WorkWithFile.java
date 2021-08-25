@@ -20,7 +20,7 @@ public class WorkWithFile {
     }
 
     public int[] countResults(StringBuilder stringBuilder) {
-        String[] records = stringBuilder.toString().split("\r\n");
+        String[] records = stringBuilder.toString().split(System.lineSeparator());
         int amountSupply = 0;
         int amountBuy = 0;
         for (String record : records) {
