@@ -11,19 +11,21 @@ public class WorkWithFile {
     private static final String SUPPLY_DATA = "supply";
     private static final String BUY_DATA = "buy";
     private static final String RESULT_DATA = "result";
+    private static final int COMPARISON_INDEX = 0;
+    private static final int TAKING_DATA_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         StringBuilder stringBuilder = null;
-        String[] splitWords = this.readFile(fromFileName).toString().split(" ");
+        String[] splitWords = readFile(fromFileName).toString().split(System.lineSeparator());
         int supply = 0;
         int buy = 0;
         int result = 0;
         for (String temp : splitWords) {
             String[] splitValues = temp.split(VALUE_DELIMITER);
-            if (splitValues[0].equals(SUPPLY_DATA)) {
-                supply += Integer.parseInt(splitValues[1]);
-            } else if (splitValues[0].equals(BUY_DATA)) {
-                buy += Integer.parseInt(splitValues[1]);
+            if (splitValues[COMPARISON_INDEX].equals(SUPPLY_DATA)) {
+                supply += Integer.parseInt(splitValues[TAKING_DATA_INDEX]);
+            } else if (splitValues[COMPARISON_INDEX].equals(BUY_DATA)) {
+                buy += Integer.parseInt(splitValues[TAKING_DATA_INDEX]);
             }
         }
         result = supply - buy;
@@ -39,7 +41,7 @@ public class WorkWithFile {
                 System.out.println("File is empty");
             }
             while (readLine != null) {
-                stringBuilder.append(readLine).append(" ");
+                stringBuilder.append(readLine).append(System.lineSeparator());
                 readLine = bufferedReader.readLine();
             }
         } catch (IOException e) {
@@ -50,11 +52,25 @@ public class WorkWithFile {
 
     private void writeFile(int result, int supply, int buy, String toFileName) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write(SUPPLY_DATA + VALUE_DELIMITER + supply + System.lineSeparator()
-                    + BUY_DATA + VALUE_DELIMITER + buy + System.lineSeparator()
-                    + RESULT_DATA + VALUE_DELIMITER + result);
+            bufferedWriter.write(getStringStatistic(result,supply,buy));
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private String getStringStatistic(int result, int supply, int buy) {
+        StringBuilder stringBuilder = new StringBuilder()
+                .append(SUPPLY_DATA)
+                .append(VALUE_DELIMITER)
+                .append(supply)
+                .append(System.lineSeparator())
+                .append(BUY_DATA)
+                .append(VALUE_DELIMITER)
+                .append(buy)
+                .append(System.lineSeparator())
+                .append(RESULT_DATA)
+                .append(VALUE_DELIMITER)
+                .append(result);
+        return new String(stringBuilder);
     }
 }
