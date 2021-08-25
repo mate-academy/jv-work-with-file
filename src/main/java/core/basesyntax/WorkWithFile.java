@@ -9,14 +9,16 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
+    private static final int NAME = 0;
+    private static final int VALUE = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String[] dataSplit = getDataFromFile(fromFileName).split(System.lineSeparator());
+        String[] lines = getDataFromFile(fromFileName).split(System.lineSeparator());
         int supplyAmount = 0;
         int buyAmount = 0;
-        for (String line : dataSplit) {
-            String name = line.substring(0, line.indexOf(','));
-            int value = Integer.parseInt(line.substring(line.indexOf(',') + 1));
+        for (String line : lines) {
+            String name = line.split(",")[NAME];
+            int value = Integer.parseInt(line.split(",")[VALUE]);
             if (SUPPLY.equals(name)) {
                 supplyAmount += value;
             }
@@ -54,8 +56,8 @@ public class WorkWithFile {
     }
 
     private void writeToFile(String fileName, String data) {
-        try (BufferedWriter toFile = new BufferedWriter(new FileWriter(fileName))) {
-            toFile.write(data);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+            writer.write(data);
         } catch (IOException e) {
             throw new RuntimeException("Cannot write data to " + fileName, e);
         }
