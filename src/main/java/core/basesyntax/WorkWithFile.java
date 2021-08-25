@@ -8,23 +8,22 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final int ZERO = 0;
+    private static final int TYPE = 0;
     private static final int VALUE = 1;
-    private static final int DATA = 100;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String[] data = new String[DATA];
         File inputFile = new File(fromFileName);
+        StringBuilder dataString = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(inputFile))) {
-            data[ZERO] = bufferedReader.readLine();
-            int index = ZERO;
-            while (data[index] != null) {
-                index++;
-                data[index] = bufferedReader.readLine();
+            String record = bufferedReader.readLine();
+            while (record != null) {
+                dataString.append(record).append(System.lineSeparator());
+                record = bufferedReader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't find a file!", e);
         }
+        String[] data = dataString.toString().split(System.lineSeparator());
         String report = createReport(data);
         File outputFile = new File(toFileName);
         writeToFile(outputFile, report);
@@ -32,14 +31,11 @@ public class WorkWithFile {
 
     private String createReport(String[] data) {
         String[] record;
-        int supply = ZERO;
-        int buy = ZERO;
+        int supply = 0;
+        int buy = 0;
         for (String datum : data) {
-            if (datum == null) {
-                break;
-            }
             record = datum.split(",");
-            if (record[ZERO].equals("supply")) {
+            if (record[TYPE].equals("supply")) {
                 supply += Integer.parseInt(record[VALUE]);
             } else {
                 buy += Integer.parseInt(record[VALUE]);
