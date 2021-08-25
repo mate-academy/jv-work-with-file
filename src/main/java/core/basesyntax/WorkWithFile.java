@@ -8,11 +8,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final String STRING_TO_COMPARE = "supply";
-    private static final int WORD_INDEX = 0;
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
+    private static final int OPERATION_TYPE = 0;
     private static final int AMOUNT_INDEX = 1;
-    private static final int INDEX_OF_SUPPLY_AMOUNT = 0;
-    private static final int INDEX_OF_BUY_AMOUNT = 1;
+    private static final int SUPPLY_AMOUNT = 0;
+    private static final int BUY_AMOUNT = 1;
+    private static final String CSV_SEPARATOR = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] readFile = readToFile(fromFileName);
@@ -25,24 +28,24 @@ public class WorkWithFile {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String value = bufferedReader.readLine();
             while (value != null) {
-                builder.append(value).append(" ");
+                builder.append(value).append(System.lineSeparator());
                 value = bufferedReader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't rear file " + fromFileName, e);
         }
-        return builder.toString().split(" ");
+        return builder.toString().split(System.lineSeparator());
     }
 
     private int[] calculateForReport(String[] data) {
         int supply = 0;
         int buy = 0;
         for (String datum : data) {
-            String[] dataArr = datum.split(",");
+            String[] dataArr = datum.split(CSV_SEPARATOR);
             int amount = Integer.parseInt(dataArr[AMOUNT_INDEX]);
-            if (dataArr[WORD_INDEX].equals(STRING_TO_COMPARE)) {
+            if (dataArr[OPERATION_TYPE].equals(SUPPLY)) {
                 supply += amount;
-            } else {
+            } else if (dataArr[OPERATION_TYPE].equals(BUY)) {
                 buy += amount;
             }
         }
@@ -51,14 +54,14 @@ public class WorkWithFile {
 
     private String createReport(String[] data) {
         int[] amounts = calculateForReport(data);
-        int supplyAmount = amounts[INDEX_OF_SUPPLY_AMOUNT];
-        int buyAmount = amounts[INDEX_OF_BUY_AMOUNT];
+        int supplyAmount = amounts[SUPPLY_AMOUNT];
+        int buyAmount = amounts[BUY_AMOUNT];
         return new StringBuilder()
-                .append("supply,").append(supplyAmount)
+                .append(SUPPLY).append(CSV_SEPARATOR).append(supplyAmount)
                 .append(System.lineSeparator())
-                .append("buy,").append(buyAmount)
+                .append(BUY).append(CSV_SEPARATOR).append(buyAmount)
                 .append(System.lineSeparator())
-                .append("result,").append(supplyAmount - buyAmount)
+                .append(RESULT).append(CSV_SEPARATOR).append(supplyAmount - buyAmount)
                 .toString();
     }
 
