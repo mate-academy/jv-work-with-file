@@ -14,8 +14,6 @@ public class WorkWithFile {
     private static final String BUY = "buy";
     private static final String CSV_SEPARATOR = ",";
 
-
-
     public void getStatistic(String fromFileName, String toFileName) {
 
         String[] arrayOfCategories = new String[] {SUPPLY, BUY};
