@@ -13,7 +13,7 @@ public class WorkWithFile {
     private static final String COMMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        write(toFileName, CreateReport(generateReport(read(fromFileName))));
+        write(toFileName, createReport(generateReport(read(fromFileName))));
     }
 
     private String[] read(String fileName) {
@@ -48,13 +48,12 @@ public class WorkWithFile {
         return new String[] {String.valueOf(buy), String.valueOf(supply)};
     }
 
-    private String[] CreateReport(String[] data) {
+    private String[] createReport(String[] data) {
         String[] report = new String[3];
         report[0] = "supply," + data[1] + System.lineSeparator();
         report[1] = "buy," + data[0] + System.lineSeparator();
         report[2] = "result," + (Integer.parseInt(data[1]) - Integer.parseInt(data[0]));
         return report;
-
     }
 
     private void write(String fileName, String[] report) {
