@@ -13,9 +13,8 @@ public class WorkWithFile {
     private static final String RESULT = "result";
     private static final String WHITE_SPACE_REGEX = " ";
     private static final String CSV_SEPARATOR = ",";
-    private static final int INDEX_ZERO = 0;
-    private static final int INDEX_ONE = 1;
-    private static final int INDEX_TWO = 2;
+    private static final int OPERATION_TYPE = 0;
+    private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         createFileWithGroupedData(toFileName, createReport(extractDataFromFile(fromFileName)));
@@ -41,18 +40,19 @@ public class WorkWithFile {
         int sumOfBuy = 0;
         for (String value : values) {
             String[] splitValue = value.split(CSV_SEPARATOR);
-            if (splitValue[INDEX_ZERO].equals(SUPPLY)) {
-                sumOfSupply += Integer.parseInt(splitValue[1]);
+            if (splitValue[OPERATION_TYPE].equals(SUPPLY)) {
+                sumOfSupply += Integer.parseInt(splitValue[AMOUNT_INDEX]);
             }
-            if (splitValue[INDEX_ZERO].equals(BUY)) {
-                sumOfBuy += Integer.parseInt(splitValue[1]);
+            if (splitValue[OPERATION_TYPE].equals(BUY)) {
+                sumOfBuy += Integer.parseInt(splitValue[AMOUNT_INDEX]);
             }
         }
-        String[] groupedData = new String[3];
-        groupedData[INDEX_ZERO] = SUPPLY + CSV_SEPARATOR + sumOfSupply;
-        groupedData[INDEX_ONE] = BUY + CSV_SEPARATOR + sumOfBuy;
-        groupedData[INDEX_TWO] = RESULT + CSV_SEPARATOR + (sumOfSupply - sumOfBuy);
-        return groupedData;
+        StringBuilder builder = new StringBuilder();
+        builder.append(SUPPLY).append(CSV_SEPARATOR).append(sumOfSupply)
+                .append(WHITE_SPACE_REGEX).append(BUY).append(CSV_SEPARATOR).append(sumOfBuy)
+                .append(WHITE_SPACE_REGEX).append(RESULT).append(CSV_SEPARATOR)
+                .append(sumOfSupply - sumOfBuy);
+        return builder.toString().split(WHITE_SPACE_REGEX);
     }
 
     private void createFileWithGroupedData(String nameOfReportFile, String[] data) {
