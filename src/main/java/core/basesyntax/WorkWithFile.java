@@ -8,7 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final int ACTION_INDEX = 0;
+    private static final int OPERATION_INDEX = 0;
     private static final int AMOUNT_INDEX = 1;
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
@@ -41,12 +41,11 @@ public class WorkWithFile {
         int buy = 0;
 
         for (int i = 0; i < informationFileRead.length; i++) {
-            if (informationFileRead[i].split(CSV_SEPARATOR)[ACTION_INDEX].equals(SUPPLY)) {
-                supply += Integer.parseInt(informationFileRead[i]
-                        .split(CSV_SEPARATOR)[AMOUNT_INDEX]);
-            } else if (informationFileRead[i].split(CSV_SEPARATOR)[ACTION_INDEX].equals(BUY)) {
-                buy += Integer.parseInt(informationFileRead[i]
-                        .split(CSV_SEPARATOR)[AMOUNT_INDEX]);
+            String[] splitWords = informationFileRead[i].split(CSV_SEPARATOR);
+            if (splitWords[OPERATION_INDEX].equals(SUPPLY)) {
+                supply += Integer.parseInt(splitWords[AMOUNT_INDEX]);
+            } else if (splitWords[OPERATION_INDEX].equals(BUY)) {
+                buy += Integer.parseInt(splitWords[AMOUNT_INDEX]);
             }
         }
 
