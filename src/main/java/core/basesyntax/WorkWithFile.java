@@ -16,8 +16,7 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] sourceStrings;
-        File fileFrom = new File(fromFileName);
-        sourceStrings = readFile(fileFrom).split(" ");
+        sourceStrings = readFile(fromFileName).split(" ");
         int[] results = new int[sourceStrings[0].split(",").length];
         for (String currentString : sourceStrings) {
             String[] splitString = currentString.split(",");
@@ -34,10 +33,11 @@ public class WorkWithFile {
         writeFile(toFileName, resultString.toString());
     }
 
-    private String readFile(File fileName) {
+    private String readFile(String fileName) {
+        File file = new File(fileName);
         StringBuilder resultString = new StringBuilder();
         String currentString;
-        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             currentString = reader.readLine();
             while (currentString != null) {
                 resultString.append(currentString).append(" ");
@@ -52,8 +52,8 @@ public class WorkWithFile {
     }
 
     private void writeFile(String fileName, String data) {
-        File fileTo = new File(fileName);
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileTo))) {
+        File file = new File(fileName);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             writer.write(data);
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file...", e);
