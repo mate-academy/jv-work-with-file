@@ -6,7 +6,7 @@ import java.nio.file.Paths;
 import java.util.stream.Collectors;
 
 public class WorkWithFile {
-    private static final char SEPARATOR = ',';
+    private static final String SEPARATOR = ",";
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
@@ -25,12 +25,12 @@ public class WorkWithFile {
                         .collect(Collectors.joining(" "))
                         .split(" ");
             for (String s : fromFile) {
-                columns = s.split(",");
-                if (columns[FIRST_COLUMN].equals("supply")) {
+                columns = s.split(SEPARATOR);
+                if (columns[FIRST_COLUMN].equals(SUPPLY)) {
                     supply += Integer.parseInt(columns[SECOND_COLUMN]);
                     result += Integer.parseInt(columns[SECOND_COLUMN]);
                 }
-                if (columns[FIRST_COLUMN].equals("buy")) {
+                if (columns[FIRST_COLUMN].equals(BUY)) {
                     buy += Integer.parseInt(columns[SECOND_COLUMN]);
                     result -= Integer.parseInt(columns[SECOND_COLUMN]);
                 }
