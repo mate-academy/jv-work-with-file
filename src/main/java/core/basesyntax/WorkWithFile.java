@@ -16,7 +16,7 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         StringBuilder stringBuilder = null;
-        String[] splitWords = readFile(fromFileName).toString().split(System.lineSeparator());
+        String[] splitWords = readFile(fromFileName).split(System.lineSeparator());
         int supply = 0;
         int buy = 0;
         int result = 0;
@@ -32,7 +32,7 @@ public class WorkWithFile {
         this.writeFile(result, supply, buy, toFileName);
     }
 
-    private StringBuilder readFile(String fromFileName) {
+    private String readFile(String fromFileName) {
         StringBuilder stringBuilder = new StringBuilder();
         String readLine = null;
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
@@ -47,7 +47,7 @@ public class WorkWithFile {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return stringBuilder;
+        return new String(stringBuilder);
     }
 
     private void writeFile(int result, int supply, int buy, String toFileName) {
