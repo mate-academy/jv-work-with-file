@@ -25,7 +25,7 @@ public class WorkWithFile {
             int boughtAmount = 0;
             String line = bufferedReader.readLine();
             while (line != null) {
-            String [] lineData = line.split(REGEX);
+                String [] lineData = line.split(REGEX);
                 if (lineData[OPERATION_TYPE_INDEX].equals(SUPPLY)) {
                     suppliedAmount += Integer.parseInt(lineData[PRODUCT_AMOUNT_INDEX]);
                 }
