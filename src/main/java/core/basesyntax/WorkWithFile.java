@@ -6,42 +6,45 @@ import java.nio.file.Paths;
 import java.util.stream.Collectors;
 
 public class WorkWithFile {
+    private static final char SEPARATOR = ',';
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
+    private static final int FIRST_COLUMN = 0;
+    private static final int SECOND_COLUMN = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         StringBuilder stringBuilder = new StringBuilder();
-        char separator = ',';
         String[] columns;
-        int firstColumn = 0;
-        int secondColumn = 1;
         int supply = 0;
         int buy = 0;
         int result = 0;
         try {
-            String[] in = Files.newBufferedReader(Paths.get(fromFileName))
+            String[] fromFile = Files.newBufferedReader(Paths.get(fromFileName))
                         .lines()
                         .collect(Collectors.joining(" "))
                         .split(" ");
-            for (String s : in) {
+            for (String s : fromFile) {
                 columns = s.split(",");
-                if (columns[firstColumn].equals("supply")) {
-                    supply += Integer.parseInt(columns[secondColumn]);
-                    result += Integer.parseInt(columns[secondColumn]);
+                if (columns[FIRST_COLUMN].equals("supply")) {
+                    supply += Integer.parseInt(columns[SECOND_COLUMN]);
+                    result += Integer.parseInt(columns[SECOND_COLUMN]);
                 }
-                if (columns[firstColumn].equals("buy")) {
-                    buy += Integer.parseInt(columns[secondColumn]);
-                    result -= Integer.parseInt(columns[secondColumn]);
+                if (columns[FIRST_COLUMN].equals("buy")) {
+                    buy += Integer.parseInt(columns[SECOND_COLUMN]);
+                    result -= Integer.parseInt(columns[SECOND_COLUMN]);
                 }
             }
-            stringBuilder.append("supply")
-                        .append(separator)
+            stringBuilder.append(SUPPLY)
+                        .append(SEPARATOR)
                         .append(supply)
                         .append(System.lineSeparator())
-                        .append("buy")
-                        .append(separator)
+                        .append(BUY)
+                        .append(SEPARATOR)
                         .append(buy)
                         .append(System.lineSeparator())
-                        .append("result")
-                        .append(separator)
+                        .append(RESULT)
+                        .append(SEPARATOR)
                         .append(result);
             Files.write(Paths.get(toFileName), stringBuilder.toString().getBytes());
 
