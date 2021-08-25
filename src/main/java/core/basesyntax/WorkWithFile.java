@@ -11,11 +11,11 @@ public class WorkWithFile {
     private static final String COMMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String statisticsResult = getStatisticsFromFile(fromFileName);
-        writeTextToFile(toFileName, statisticsResult);
+        String statisticsResult = generateStatisticsFromFile(fromFileName);
+        writeToFile(toFileName, statisticsResult);
     }
 
-    private String getStatisticsFromFile(String fromFileName) {
+    private String generateStatisticsFromFile(String fromFileName) {
         int buy = 0;
         int supply = 0;
         try (BufferedReader br = new BufferedReader(new FileReader(fromFileName))) {
@@ -30,11 +30,11 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read from file.");
         }
-        return getReport(buy, supply);
+        return generateReport(buy, supply);
     }
 
-    private void writeTextToFile(String toFileName, String text) {
-        try (FileWriter writer = new FileWriter(toFileName, false)) {
+    private void writeToFile(String toFileName, String text) {
+        try (FileWriter writer = new FileWriter(toFileName)) {
             writer.write(text);
             writer.flush();
         } catch (IOException e) {
@@ -42,7 +42,7 @@ public class WorkWithFile {
         }
     }
 
-    private String getReport(int buy, int supply) {
+    private String generateReport(int buy, int supply) {
         return "supply," + supply + System.lineSeparator()
                 + "buy," + buy + System.lineSeparator()
                 + "result," + (supply - buy);
