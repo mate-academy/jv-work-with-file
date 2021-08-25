@@ -21,20 +21,20 @@ public class WorkWithFile {
     public String readFile(String fromFileName) {
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String line = reader.readLine();
-            String[] lineData;
+            String[] lines;
             StringBuilder builder = new StringBuilder();
             int buy = 0;
             int supply = 0;
-            while (line != null) {
-                lineData = line.split(COMMA);
-                if (lineData[OPERATION_TYPE].equals(SUPPLY)) {
-                    supply += Integer.parseInt(lineData[AMOUNT]);
-                }
-                if (lineData[OPERATION_TYPE].equals(BUY)) {
-                    buy += Integer.parseInt(lineData[AMOUNT]);
-                }
+            do {
+                lines = line.split(COMMA);
                 line = reader.readLine();
-            }
+                if (lines[OPERATION_TYPE].equals(SUPPLY)) {
+                    supply += Integer.parseInt(lines[AMOUNT]);
+                }
+                if (lines[OPERATION_TYPE].equals(BUY)) {
+                    buy += Integer.parseInt(lines[AMOUNT]);
+                }
+            } while (line != null);
             builder.append(SUPPLY).append(COMMA).append(supply).append(System.lineSeparator())
                     .append(BUY).append(COMMA).append(buy).append(System.lineSeparator())
                     .append("result").append(COMMA).append(supply - buy);
@@ -51,4 +51,6 @@ public class WorkWithFile {
             throw new RuntimeException("Can't write to file", e);
         }
     }
+
 }
+
