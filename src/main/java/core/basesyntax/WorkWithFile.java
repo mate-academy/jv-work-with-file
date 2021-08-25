@@ -8,16 +8,22 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private String dataFromFile;
-    private String dataToFile;
+    private static final String SUPPLY_AS_STRING = "supply";
+    private static final String BUY_AS_STRING = "buy";
+    private static final String RESULT_AS_STRING = "result";
+    private static final String CVS_LINE_SEPARATOR = "\r\n";
+    private static final String IDENTIFIER_REGEX = "(\\w+)";
+    private static final String EMPTY_STRING = "";
+    private static final int IDENTIFIER_START_INDEX = 0;
+    private static final char IDENTIFIER_SEPARATOR = ',';
 
     public void getStatistic(String fromFileName, String toFileName) {
-        getDataFromFile(fromFileName);
-        convertInputDataInOutputData();
-        setDataToFile(toFileName);
+        String dataFromFileName = getDataFromFile(fromFileName);
+        String dataToFile = convertInputDataInOutputData(dataFromFileName);
+        setDataToFile(toFileName, dataToFile);
     }
 
-    private void getDataFromFile(String fromFileName) {
+    private String getDataFromFile(String fromFileName) {
         StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             int value = reader.read();
@@ -30,44 +36,45 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Error in file reading" + e);
         }
-        dataFromFile = stringBuilder.toString();
+        return stringBuilder.toString();
     }
 
-    private void convertInputDataInOutputData() {
+    private String convertInputDataInOutputData(String dataFromFile) {
         int supply = 0;
         int buy = 0;
-        String[] dataFromFileInArr = dataFromFile.split("\r\n");
+        String[] dataFromFileInArr = dataFromFile.split(CVS_LINE_SEPARATOR);
         String switchCase;
         for (String s : dataFromFileInArr) {
-            switchCase = s.substring(0, s.indexOf(','));
-            int extractedAmount = Integer.parseInt(s.replaceFirst("(\\w+),", ""));
+            switchCase = s.substring(IDENTIFIER_START_INDEX, s.indexOf(IDENTIFIER_SEPARATOR));
+            int extractedAmount = Integer.parseInt(s.replaceFirst(IDENTIFIER_REGEX
+                    + IDENTIFIER_SEPARATOR, EMPTY_STRING));
             switch (switchCase) {
-                case "supply":
+                case SUPPLY_AS_STRING:
                     supply += extractedAmount;
                     break;
-                case "buy":
+                case BUY_AS_STRING:
                     buy += extractedAmount;
                     break;
                 default:
                     throw new RuntimeException("Invalid data in .csv file");
             }
         }
-        parseOutputData(supply, buy);
+        return parseOutputData(supply, buy);
     }
 
-    private void parseOutputData(int supply, int buy) {
+    private String parseOutputData(int supply, int buy) {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("supply,");
-        stringBuilder.append(supply);
-        stringBuilder.append("\r\nbuy,");
-        stringBuilder.append(buy);
-        stringBuilder.append("\r\nresult,");
-        stringBuilder.append(supply - buy);
-        stringBuilder.append("\r\n");
-        dataToFile = stringBuilder.toString();
+        stringBuilder.append(SUPPLY_AS_STRING + IDENTIFIER_SEPARATOR)
+                .append(supply)
+                .append(CVS_LINE_SEPARATOR + BUY_AS_STRING + IDENTIFIER_SEPARATOR)
+                .append(buy)
+                .append(CVS_LINE_SEPARATOR + RESULT_AS_STRING + IDENTIFIER_SEPARATOR)
+                .append(supply - buy)
+                .append(CVS_LINE_SEPARATOR);
+        return stringBuilder.toString();
     }
 
-    private void setDataToFile(String toFileName) {
+    private void setDataToFile(String toFileName, String dataToFile) {
         try (BufferedWriter writer =
                      new BufferedWriter(new FileWriter(toFileName, true))) {
             writer.write(dataToFile);
