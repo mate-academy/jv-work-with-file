@@ -21,7 +21,7 @@ public class WorkWithFile {
         try {
             fileReader = new FileReader(inputData);
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("Problem", e);
+            throw new RuntimeException("Can't read file!", e);
         }
         createReport(fileReader, data);
         File outputData = new File(toFileName);
@@ -29,7 +29,7 @@ public class WorkWithFile {
         try {
             fileWriter = new FileWriter(outputData);
         } catch (IOException e) {
-            throw new RuntimeException("Problem", e);
+            throw new RuntimeException("Can't write to file!", e);
         }
         writeToFile(fileWriter, data);
     }
@@ -49,7 +49,7 @@ public class WorkWithFile {
                 recordString = bufferedReader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Problem", e);
+            throw new RuntimeException("Can't read file!", e);
         }
     }
 
@@ -65,7 +65,7 @@ public class WorkWithFile {
                     .append(String.valueOf(data[SUPPLY] - data[BUY]))
                     .toString());
         } catch (IOException e) {
-            throw new RuntimeException("Problem", e);
+            throw new RuntimeException("Can't write to file!", e);
         }
     }
 }
