@@ -56,7 +56,6 @@ public class WorkWithFile {
     public void writeInFile(String toFileName, String statistic) {
         File writeFile = new File(toFileName);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(writeFile))) {
-            writeFile.createNewFile();
             writer.write(statistic);
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file");
