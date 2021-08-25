@@ -13,32 +13,30 @@ public class WorkWithFile {
     private static final String COMMA = ",";
     private static final String BUY = "buy";
 
-
     public void getStatistic(String fromFileName, String toFileName) {
         String result = readFile(fromFileName);
         writeFile(result, toFileName);
     }
 
     public String readFile(String fileName) {
-        StringBuilder builder = new StringBuilder();
+        StringBuilder report = new StringBuilder();
         int buy = 0;
         int supply = 0;
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             String line = reader.readLine();
-             do  {
+            do {
                 if (line.split(COMMA)[OPERATION_TYPE].equals(SUPPLY)) {
                     supply += Integer.parseInt(line.split(COMMA)[AMOUNT]);
                 } else if (line.split(COMMA)[OPERATION_TYPE].equals(BUY)) {
-                        buy += Integer.parseInt(line.split(COMMA)[AMOUNT]);
-                    }
+                    buy += Integer.parseInt(line.split(COMMA)[AMOUNT]);
+                }
                 line = reader.readLine();
-                } while (line != null);
+            } while (line != null);
         } catch (IOException e) {
             throw new RuntimeException("Can't read file", e);
         }
-        return buildReport(builder.toString(), buy, supply);;
+        return buildReport(report.toString(), buy, supply);
     }
-
 
     private void writeFile(String toWrite, String toFileName) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName, true))) {
@@ -48,7 +46,7 @@ public class WorkWithFile {
         }
     }
 
-    private String buildReport(int buy, int supply, String fileData) {
+    private String buildReport(String fileData, int buy, int supply) {
         StringBuilder report = new StringBuilder(fileData);
         return report.append(SUPPLY)
                 .append(COMMA)
@@ -58,7 +56,7 @@ public class WorkWithFile {
                 .append(COMMA)
                 .append(buy)
                 .append(System.lineSeparator())
-                .append("result,")
+                .append("result")
                 .append(COMMA)
                 .append(supply - buy).toString();
     }
