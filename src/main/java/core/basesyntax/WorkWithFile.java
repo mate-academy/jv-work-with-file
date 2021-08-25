@@ -49,7 +49,7 @@ public class WorkWithFile {
                 calculateSupply += amount;
             }
         }
-        return new int[] { calculateBuy, calculateSupply };
+        return new int[] {calculateBuy, calculateSupply};
     }
 
     private String createReport(String extractedData) {
