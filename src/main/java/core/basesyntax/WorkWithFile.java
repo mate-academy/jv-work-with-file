@@ -8,16 +8,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private int buyResult = 0;
-    private int supplyResult = 0;
-    private int resultValue = 0;
-
     public void getStatistic(String fromFileName, String toFileName) {
         createReportFile(toFileName);
         String readerResult = readFile(fromFileName);
-        supplyResult = calculateSupplyResult(readerResult);
-        buyResult = calculateBuyResult(readerResult);
-        resultValue = calculateResultValue(supplyResult, buyResult);
+        int supplyResult = calculateSupplyResult(readerResult);
+        int buyResult = calculateBuyResult(readerResult);
+        int resultValue = calculateResultValue(supplyResult, buyResult);
         String report = buildReport(supplyResult, buyResult, resultValue);
         writeReportToFile(report, toFileName);
     }
@@ -42,6 +38,7 @@ public class WorkWithFile {
     }
 
     private int calculateSupplyResult(String readerResult) {
+        int supplyResult = 0;
         for (String line : readerResult.split(System.lineSeparator())) {
             String[] lineData = line.split(",");
             int lineIntegerValue = Integer.parseInt(lineData[1]);
@@ -53,6 +50,7 @@ public class WorkWithFile {
     }
 
     private int calculateBuyResult(String readerResult) {
+        int buyResult = 0;
         for (String line : readerResult.split(System.lineSeparator())) {
             String[] lineData = line.split(",");
             int lineIntegerValue = Integer.parseInt(lineData[1]);
@@ -64,7 +62,8 @@ public class WorkWithFile {
     }
 
     private int calculateResultValue(int supplyResult, int buyResult) {
-        return resultValue = supplyResult - buyResult;
+        int resultValue = supplyResult - buyResult;
+        return resultValue;
     }
 
     private String buildReport(int supplyResult, int buyResult, int resultValue) {
