@@ -25,8 +25,7 @@ public class WorkWithFile {
         int supply = 0;
         int buy = 0;
         StringBuilder finalData = new StringBuilder();
-        StringBuilder stringBuilder = readFile(fromFileName);
-        String[] strings = stringBuilder.toString().split(System.lineSeparator());
+        String[] strings = readFile(fromFileName).split(System.lineSeparator());
         for (String string : strings) {
             if (string.split(SEPARATOR)[BEFORE].equals(SUPPLY)) {
                 supply += Integer.parseInt(string.split(SEPARATOR)[AFTER]);
@@ -35,13 +34,14 @@ public class WorkWithFile {
                 buy += Integer.parseInt(string.split(SEPARATOR)[AFTER]);
             }
         }
-        finalData.append(SUPPLY + SEPARATOR + String.valueOf(supply) + System.lineSeparator()
-                + BUY + SEPARATOR + String.valueOf(buy) + System.lineSeparator()
-                + RESULT + SEPARATOR + String.valueOf(supply - buy));
-        createReport(toFileName, finalData);
+        finalData.append(SUPPLY).append(SEPARATOR).append(String.valueOf(supply))
+                .append(System.lineSeparator()).append(BUY).append(SEPARATOR)
+                .append(String.valueOf(buy)).append(System.lineSeparator()).append(RESULT)
+                .append(SEPARATOR).append(String.valueOf(supply - buy));
+        createReport(toFileName, finalData.toString());
     }
 
-    private StringBuilder readFile(String fromFileName) {
+    private String readFile(String fromFileName) {
         StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader reader = Files.newBufferedReader(Paths.get(fromFileName))) {
             String value = reader.readLine();
@@ -52,19 +52,13 @@ public class WorkWithFile {
         } catch (IOException e) {
             System.out.println("Can't read the file with the name: " + fromFileName);
         }
-        return stringBuilder;
+        return stringBuilder.toString();
     }
 
-    private void createReport(String toFileName, StringBuilder stringBuilder) {
+    private void createReport(String toFileName, String string) {
         File file = new File(toFileName);
-        try {
-            file.createNewFile();
-        } catch (IOException e) {
-            System.out.println("Can't create " + toFileName + " file.");
-        }
-
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true))) {
-            bufferedWriter.write(stringBuilder.toString());
+            bufferedWriter.write(string);
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to file", e);
         }
