@@ -12,8 +12,8 @@ public class WorkWithFile {
     private static final String CSV_FILE_SEPARATOR = ",";
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
-    private static final int FIRST_VALUE = 0;
-    private static final int SECOND_VALUE = 1;
+    private static final int OPERATION_VALUE = 0;
+    private static final int AMOUNT_VALUE = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String dataFromFile = readFile(fromFileName);
@@ -39,12 +39,12 @@ public class WorkWithFile {
         int supply = 0;
         int buy = 0;
         String[] stringsForReport = readString.split(LINE_SEPARATOR);
-        for (int i = FIRST_VALUE; i < stringsForReport.length; i++) {
+        for (int i = 0; i < stringsForReport.length; i++) {
             String[] data = stringsForReport[i].split(CSV_FILE_SEPARATOR);
-            if (data[FIRST_VALUE].equals(SUPPLY)) {
-                supply += Integer.parseInt(data[SECOND_VALUE]);
-            } else if (data[FIRST_VALUE].equals(BUY)) {
-                buy += Integer.parseInt(data[SECOND_VALUE]);
+            if (data[OPERATION_VALUE].equals(SUPPLY)) {
+                supply += Integer.parseInt(data[AMOUNT_VALUE]);
+            } else if (data[OPERATION_VALUE].equals(BUY)) {
+                buy += Integer.parseInt(data[AMOUNT_VALUE]);
             }
         }
         return generateReport(supply, buy);
