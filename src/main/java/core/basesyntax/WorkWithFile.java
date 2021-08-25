@@ -16,18 +16,18 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         int[] data = new int[FIELDS];
-        File inputData = new File(fromFileName);
+        File inputFile = new File(fromFileName);
         FileReader fileReader;
         try {
-            fileReader = new FileReader(inputData);
+            fileReader = new FileReader(inputFile);
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("Can't read file!", e);
+            throw new RuntimeException("Can't find a file!", e);
         }
         createReport(fileReader, data);
-        File outputData = new File(toFileName);
+        File outputFile = new File(toFileName);
         FileWriter fileWriter;
         try {
-            fileWriter = new FileWriter(outputData);
+            fileWriter = new FileWriter(outputFile);
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file!", e);
         }
@@ -49,7 +49,7 @@ public class WorkWithFile {
                 recordString = bufferedReader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file!", e);
+            throw new RuntimeException("Can't find a file!", e);
         }
     }
 
