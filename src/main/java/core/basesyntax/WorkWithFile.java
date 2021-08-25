@@ -57,7 +57,7 @@ public class WorkWithFile {
 
     private void parseOutputData(int supply, int buy) {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("supply,");
+        stringBuilder.append(SUPPLY).append(COMMA_SEPARATOR);
         stringBuilder.append(supply);
         stringBuilder.append("\r\nbuy,");
         stringBuilder.append(buy);
