@@ -17,10 +17,7 @@ public class WorkWithFile {
         writeReport(toFileName);
     }
 
-    public void generateReport(String fromFileName) {
-        int supply = 0;
-        int buy = 0;
-        int result = 0;
+    public List<String> readInfo(String fromFileName) {
         File fromFile = new File(fromFileName);
         List<String> fromFileInfo;
         try {
@@ -28,12 +25,20 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("can`t read file", e);
         }
-        for (int i = 0; i < fromFileInfo.size(); i++) {
-            if (fromFileInfo.get(i).split(",")[OPERATION_NAME_INDEX].contains("supply")) {
-                supply = supply + Integer.parseInt(fromFileInfo.get(i).split(",")
+        return fromFileInfo;
+    }
+
+    public void generateReport(String fromFileName) {
+        int supply = 0;
+        int buy = 0;
+        int result = 0;
+        for (int i = 0; i < readInfo(fromFileName).size(); i++) {
+            if (readInfo(fromFileName).get(i).split(",")[OPERATION_NAME_INDEX].contains("supply")) {
+                supply = supply + Integer.parseInt(readInfo(fromFileName).get(i).split(",")
                         [OPERATION_AMOUNT_INDEX]);
-            } else if (fromFileInfo.get(i).split(",")[OPERATION_NAME_INDEX].contains("buy")) {
-                buy = buy + Integer.parseInt(fromFileInfo.get(i).split(",")
+            } else if (readInfo(fromFileName).get(i).split(",")
+                    [OPERATION_NAME_INDEX].contains("buy")) {
+                buy = buy + Integer.parseInt(readInfo(fromFileName).get(i).split(",")
                         [OPERATION_AMOUNT_INDEX]);
             }
         }
