@@ -15,12 +15,12 @@ public class WorkWithFile {
     private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String string = readFile(fromFileName);
-        writeResultToFile(string, toFileName);
+        String readDataFromFile = readFileAndCalculationData(fromFileName);
+        writeResultToFile(readDataFromFile, toFileName);
     }
 
-    private String readFile(String fromFileName) {
-        StringBuilder stringBuilder = new StringBuilder();
+    private String readFileAndCalculationData(String fromFileName) {
+        StringBuilder resultOfReadingAndCalculation = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String value = bufferedReader.readLine();
             String[] result;
@@ -36,7 +36,7 @@ public class WorkWithFile {
                 }
                 value = bufferedReader.readLine();
             }
-            stringBuilder.append(SUPPLY + COMMA)
+            resultOfReadingAndCalculation.append(SUPPLY + COMMA)
                     .append(totalSypply)
                     .append(System.lineSeparator())
                     .append(BUY + COMMA)
@@ -46,7 +46,7 @@ public class WorkWithFile {
                     .append(totalSypply - totalBuy)
                     .append(System.lineSeparator());
 
-            return stringBuilder.toString();
+            return resultOfReadingAndCalculation.toString();
         } catch (IOException e) {
             throw new RuntimeException("Can`t read from file" + fromFileName, e);
         }
