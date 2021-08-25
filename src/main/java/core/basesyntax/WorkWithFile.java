@@ -11,17 +11,22 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
+    private static final String WHITE_SPACE_REGEX = " ";
+    private static final String CSV_SEPARATOR = ",";
+    private static final int INDEX_ZERO = 0;
+    private static final int INDEX_ONE = 1;
+    private static final int INDEX_TWO = 2;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        createFileWithGroupedData(toFileName, createGroupedData(extractDataFromFile(fromFileName)));
+        createFileWithGroupedData(toFileName, createReport(extractDataFromFile(fromFileName)));
     }
 
-    private static String extractDataFromFile(String fileName) {
+    private String extractDataFromFile(String fileName) {
         StringBuilder builder = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             String dataFromFile = reader.readLine();
             while (dataFromFile != null) {
-                builder.append(dataFromFile).append(" ");
+                builder.append(dataFromFile).append(WHITE_SPACE_REGEX);
                 dataFromFile = reader.readLine();
             }
         } catch (IOException e) {
@@ -30,27 +35,27 @@ public class WorkWithFile {
         return builder.toString();
     }
 
-    private static String[] createGroupedData(String dataInLine) {
-        String[] values = dataInLine.split(" ");
+    private String[] createReport(String info) {
+        String[] values = info.split(WHITE_SPACE_REGEX);
         int sumOfSupply = 0;
         int sumOfBuy = 0;
         for (String value : values) {
-            String[] splitValue = value.split(",");
-            if (splitValue[0].equals(SUPPLY)) {
+            String[] splitValue = value.split(CSV_SEPARATOR);
+            if (splitValue[INDEX_ZERO].equals(SUPPLY)) {
                 sumOfSupply += Integer.parseInt(splitValue[1]);
             }
-            if (splitValue[0].equals(BUY)) {
+            if (splitValue[INDEX_ZERO].equals(BUY)) {
                 sumOfBuy += Integer.parseInt(splitValue[1]);
             }
         }
         String[] groupedData = new String[3];
-        groupedData[0] = SUPPLY + "," + sumOfSupply;
-        groupedData[1] = BUY + "," + sumOfBuy;
-        groupedData[2] = RESULT + "," + (sumOfSupply - sumOfBuy);
+        groupedData[INDEX_ZERO] = SUPPLY + CSV_SEPARATOR + sumOfSupply;
+        groupedData[INDEX_ONE] = BUY + CSV_SEPARATOR + sumOfBuy;
+        groupedData[INDEX_TWO] = RESULT + CSV_SEPARATOR + (sumOfSupply - sumOfBuy);
         return groupedData;
     }
 
-    private static void createFileWithGroupedData(String nameOfReportFile, String[] data) {
+    private void createFileWithGroupedData(String nameOfReportFile, String[] data) {
         File file = new File(nameOfReportFile);
         for (String value : data) {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
