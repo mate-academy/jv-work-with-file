@@ -8,32 +8,75 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final int BUY_RESULT_INDEX = 1;
-    private static final int SUPPLY_RESULT_INDEX = 0;
-    private final int[] supplyAndBuyResults = new int[2];
+    private int buyResult = 0;
+    private int supplyResult = 0;
+    private int resultValue = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        readSourceFile(fromFileName);
         createReportFile(toFileName);
-        String report = buildReport(supplyAndBuyResults);
+        String readerResult = readFile(fromFileName);
+        supplyResult = calculateSupplyResult(readerResult);
+        buyResult = calculateBuyResult(readerResult);
+        resultValue = calculateResultValue(supplyResult, buyResult);
+        String report = buildReport(supplyResult, buyResult, resultValue);
         writeReportToFile(report, toFileName);
     }
 
-    private void readSourceFile(String fromFileName) {
-        try (BufferedReader readerOfSourceFile = new BufferedReader(new FileReader(fromFileName))) {
+    private void createReportFile(String toFileName) {
+        new File(toFileName);
+    }
+
+    private String readFile(String fileName) {
+        StringBuilder readerResultBuilder = new StringBuilder();
+        try (BufferedReader readerOfSourceFile = new BufferedReader(new FileReader(fileName))) {
             String line = readerOfSourceFile.readLine();
             while (line != null) {
-                calculateSupplyAndBuyResults(line);
+                readerResultBuilder.append(line).append(System.lineSeparator());
                 line = readerOfSourceFile.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("FileNotFoundException: Be sure your source file is exist",
                     e);
         }
+        return readerResultBuilder.toString().trim();
     }
 
-    private void createReportFile(String toFileName) {
-        new File(toFileName);
+    private int calculateSupplyResult(String readerResult) {
+        for (String line : readerResult.split(System.lineSeparator())) {
+            String[] lineData = line.split(",");
+            int lineIntegerValue = Integer.parseInt(lineData[1]);
+            if (lineData[0].equals("supply")) {
+                supplyResult += lineIntegerValue;
+            }
+        }
+        return supplyResult;
+    }
+
+    private int calculateBuyResult(String readerResult) {
+        for (String line : readerResult.split(System.lineSeparator())) {
+            String[] lineData = line.split(",");
+            int lineIntegerValue = Integer.parseInt(lineData[1]);
+            if (lineData[0].equals("buy")) {
+                buyResult += lineIntegerValue;
+            }
+        }
+        return buyResult;
+    }
+
+    private int calculateResultValue(int supplyResult, int buyResult) {
+        return resultValue = supplyResult - buyResult;
+    }
+
+    private String buildReport(int supplyResult, int buyResult, int resultValue) {
+        StringBuilder reportBuilder = new StringBuilder();
+        return reportBuilder.append("supply,")
+                .append(supplyResult)
+                .append(System.lineSeparator())
+                .append("buy,")
+                .append(buyResult)
+                .append(System.lineSeparator())
+                .append("result,")
+                .append(resultValue).toString();
     }
 
     private void writeReportToFile(String report, String toFileName) {
@@ -45,27 +88,4 @@ public class WorkWithFile {
         }
     }
 
-    private String buildReport(int[] supplyAndBuyResults) {
-        StringBuilder reportBuilder = new StringBuilder();
-        int reportResultValue = supplyAndBuyResults[SUPPLY_RESULT_INDEX]
-                - supplyAndBuyResults[BUY_RESULT_INDEX];
-        return reportBuilder.append("supply,")
-                .append(supplyAndBuyResults[SUPPLY_RESULT_INDEX])
-                .append(System.lineSeparator())
-                .append("buy,")
-                .append(supplyAndBuyResults[BUY_RESULT_INDEX])
-                .append(System.lineSeparator())
-                .append("result,")
-                .append(reportResultValue).toString();
-    }
-
-    private void calculateSupplyAndBuyResults(String line) {
-        String[] lineData = line.split(",");
-        int lineIntegerValue = Integer.parseInt(lineData[1]);
-        if (lineData[0].equals("supply")) {
-            supplyAndBuyResults[SUPPLY_RESULT_INDEX] += lineIntegerValue;
-        } else {
-            supplyAndBuyResults[BUY_RESULT_INDEX] += lineIntegerValue;
-        }
-    }
 }
