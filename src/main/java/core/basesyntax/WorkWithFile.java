@@ -16,8 +16,7 @@ public class WorkWithFile {
     public String getDataFromFile(String filePath) {
         File myFile = new File(filePath);
         StringBuilder stringBuilder = new StringBuilder();
-        try (FileReader fileReader = new FileReader(myFile)) {
-            BufferedReader reader = new BufferedReader(fileReader);
+        try (BufferedReader reader = new BufferedReader(new FileReader(myFile))) {
             int value = reader.read();
             while (value != -1) {
                 stringBuilder.append((char) value);
