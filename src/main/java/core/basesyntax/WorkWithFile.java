@@ -13,12 +13,11 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String RESULT = "result";
     private static final String SEPARATOR = ",";
-    private static final int BEFORE = 0;
-    private static final int AFTER = 1;
+    private static final int OPERATION_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
 
     public static void main(String[] args) {
         WorkWithFile workWithFile = new WorkWithFile();
-        workWithFile.getStatistic("apple.csv", "testReport");
     }
 
     public void getStatistic(String fromFileName, String toFileName) {
@@ -27,11 +26,11 @@ public class WorkWithFile {
         StringBuilder finalData = new StringBuilder();
         String[] strings = readFile(fromFileName).split(System.lineSeparator());
         for (String string : strings) {
-            if (string.split(SEPARATOR)[BEFORE].equals(SUPPLY)) {
-                supply += Integer.parseInt(string.split(SEPARATOR)[AFTER]);
+            if (string.split(SEPARATOR)[OPERATION_INDEX].equals(SUPPLY)) {
+                supply += Integer.parseInt(string.split(SEPARATOR)[AMOUNT_INDEX]);
             }
-            if (string.split(SEPARATOR)[BEFORE].equals(BUY)) {
-                buy += Integer.parseInt(string.split(SEPARATOR)[AFTER]);
+            if (string.split(SEPARATOR)[OPERATION_INDEX].equals(BUY)) {
+                buy += Integer.parseInt(string.split(SEPARATOR)[AMOUNT_INDEX]);
             }
         }
         finalData.append(SUPPLY).append(SEPARATOR).append(String.valueOf(supply))
