@@ -31,8 +31,7 @@ public class WorkWithFile {
         resultString.append("supply,").append(results[SUPPLY_INDEX]).append(System.lineSeparator())
                 .append("buy,").append(results[BUY_INDEX]).append(System.lineSeparator())
                 .append("result,").append(results[SUPPLY_INDEX] - results[BUY_INDEX]);
-        File fileTo = new File(toFileName);
-        writeFile(fileTo, resultString.toString());
+        writeFile(toFileName, resultString.toString());
     }
 
     private String readFile(File fileName) {
@@ -52,9 +51,10 @@ public class WorkWithFile {
         return resultString.toString().strip();
     }
 
-    private void writeFile(File fileTo, String string) {
+    private void writeFile(String fileName, String data) {
+        File fileTo = new File(fileName);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileTo))) {
-            writer.write(string);
+            writer.write(data);
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file...", e);
         }
