@@ -11,7 +11,6 @@ public class WorkWithFile {
     private static final String SUPPLY_AS_STRING = "supply";
     private static final String BUY_AS_STRING = "buy";
     private static final String RESULT_AS_STRING = "result";
-    private static final String CVS_LINE_SEPARATOR = "\r\n";
     private static final String IDENTIFIER_REGEX = "(\\w+)";
     private static final String EMPTY_STRING = "";
     private static final int IDENTIFIER_START_INDEX = 0;
@@ -42,7 +41,7 @@ public class WorkWithFile {
     private String convertInputDataInOutputData(String dataFromFile) {
         int supply = 0;
         int buy = 0;
-        String[] dataFromFileInArr = dataFromFile.split(CVS_LINE_SEPARATOR);
+        String[] dataFromFileInArr = dataFromFile.split(System.lineSeparator());
         String switchCase;
         for (String s : dataFromFileInArr) {
             switchCase = s.substring(IDENTIFIER_START_INDEX, s.indexOf(IDENTIFIER_SEPARATOR));
@@ -64,13 +63,18 @@ public class WorkWithFile {
 
     private String parseOutputData(int supply, int buy) {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(SUPPLY_AS_STRING + IDENTIFIER_SEPARATOR)
+        stringBuilder.append(SUPPLY_AS_STRING)
+                .append(IDENTIFIER_SEPARATOR)
                 .append(supply)
-                .append(CVS_LINE_SEPARATOR + BUY_AS_STRING + IDENTIFIER_SEPARATOR)
+                .append(System.lineSeparator())
+                .append(BUY_AS_STRING)
+                .append(IDENTIFIER_SEPARATOR)
                 .append(buy)
-                .append(CVS_LINE_SEPARATOR + RESULT_AS_STRING + IDENTIFIER_SEPARATOR)
+                .append(System.lineSeparator())
+                .append(RESULT_AS_STRING)
+                .append(IDENTIFIER_SEPARATOR)
                 .append(supply - buy)
-                .append(CVS_LINE_SEPARATOR);
+                .append(System.lineSeparator());
         return stringBuilder.toString();
     }
 
