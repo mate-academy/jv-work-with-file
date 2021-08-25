@@ -26,11 +26,7 @@ public class WorkWithFile {
                 results[BUY_INDEX] += Integer.parseInt(splitString[QUANTITY_INDEX]);
             }
         }
-        StringBuilder resultString = new StringBuilder();
-        resultString.append("supply,").append(results[SUPPLY_INDEX]).append(System.lineSeparator())
-                .append("buy,").append(results[BUY_INDEX]).append(System.lineSeparator())
-                .append("result,").append(results[SUPPLY_INDEX] - results[BUY_INDEX]);
-        writeFile(toFileName, resultString.toString());
+        writeFile(toFileName, report(results));
     }
 
     private String readFile(String fileName) {
@@ -58,5 +54,13 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file", e);
         }
+    }
+
+    private String report(int[] results) {
+        StringBuilder resultString = new StringBuilder();
+        resultString.append("supply,").append(results[SUPPLY_INDEX]).append(System.lineSeparator())
+                .append("buy,").append(results[BUY_INDEX]).append(System.lineSeparator())
+                .append("result,").append(results[SUPPLY_INDEX] - results[BUY_INDEX]);
+        return resultString.toString();
     }
 }
