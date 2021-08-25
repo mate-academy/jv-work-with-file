@@ -42,9 +42,11 @@ public class WorkWithFile {
 
         for (int i = 0; i < informationFileRead.length; i++) {
             if (informationFileRead[i].split(CSV_SEPARATOR)[ACTION_INDEX].equals(SUPPLY)) {
-                supply += Integer.parseInt(informationFileRead[i].split(CSV_SEPARATOR)[AMOUNT_INDEX]);
+                supply += Integer.parseInt(informationFileRead[i]
+                        .split(CSV_SEPARATOR)[AMOUNT_INDEX]);
             } else if (informationFileRead[i].split(CSV_SEPARATOR)[ACTION_INDEX].equals(BUY)) {
-                buy += Integer.parseInt(informationFileRead[i].split(CSV_SEPARATOR)[AMOUNT_INDEX]);
+                buy += Integer.parseInt(informationFileRead[i]
+                        .split(CSV_SEPARATOR)[AMOUNT_INDEX]);
             }
         }
 
