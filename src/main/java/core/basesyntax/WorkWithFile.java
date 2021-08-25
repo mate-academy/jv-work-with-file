@@ -16,9 +16,9 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] sourceStrings;
-        int[] results = new int[2];
         File fileFrom = new File(fromFileName);
         sourceStrings = readFile(fileFrom).split(" ");
+        int[] results = new int[sourceStrings[0].split(",").length];
         for (String currentString : sourceStrings) {
             String[] splitString = currentString.split(",");
             if (splitString[ACTION_INDEX].equals("supply")) {
