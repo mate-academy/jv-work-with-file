@@ -3,67 +3,56 @@ package core.basesyntax;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final int SUPPLY = 0;
-    private static final int BUY = 1;
+    private static final int ZERO = 0;
     private static final int VALUE = 1;
-    private static final int FIELDS = 2;
+    private static final int DATA = 100;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int[] data = new int[FIELDS];
+        String[] data = new String[DATA];
         File inputFile = new File(fromFileName);
-        FileReader fileReader;
-        try {
-            fileReader = new FileReader(inputFile);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException("Can't find a file!", e);
-        }
-        createReport(fileReader, data);
-        File outputFile = new File(toFileName);
-        FileWriter fileWriter;
-        try {
-            fileWriter = new FileWriter(outputFile);
-        } catch (IOException e) {
-            throw new RuntimeException("Can't write to file!", e);
-        }
-        writeToFile(fileWriter, data);
-    }
-
-    private void createReport(FileReader fileReader, int[] data) {
-        String[] record;
-        String recordString = "";
-        try (BufferedReader bufferedReader = new BufferedReader(fileReader)) {
-            recordString = bufferedReader.readLine();
-            while (recordString != null) {
-                record = recordString.split(",");
-                if (record[SUPPLY].equals("supply")) {
-                    data[SUPPLY] += Integer.parseInt(record[VALUE]);
-                } else {
-                    data[BUY] += Integer.parseInt(record[VALUE]);
-                }
-                recordString = bufferedReader.readLine();
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(inputFile))) {
+            data[ZERO] = bufferedReader.readLine();
+            int index = ZERO;
+            while (data[index] != null) {
+                index++;
+                data[index] = bufferedReader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't find a file!", e);
         }
+        String report = createReport(data);
+        File outputFile = new File(toFileName);
+        writeToFile(outputFile, report);
     }
 
-    private void writeToFile(FileWriter fileWriter, int[] data) {
-        try (BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
-            bufferedWriter.write(new StringBuilder("supply,")
-                    .append(String.valueOf(data[SUPPLY]))
-                    .append(System.lineSeparator())
-                    .append("buy,")
-                    .append(String.valueOf(data[BUY]))
-                    .append(System.lineSeparator())
-                    .append("result,")
-                    .append(String.valueOf(data[SUPPLY] - data[BUY]))
-                    .toString());
+    private String createReport(String[] data) {
+        String[] record;
+        int supply = ZERO;
+        int buy = ZERO;
+        for (String datum : data) {
+            if (datum == null) {
+                break;
+            }
+            record = datum.split(",");
+            if (record[ZERO].equals("supply")) {
+                supply += Integer.parseInt(record[VALUE]);
+            } else {
+                buy += Integer.parseInt(record[VALUE]);
+            }
+        }
+        return new StringBuilder("supply,").append(supply).append(System.lineSeparator())
+                .append("buy,").append(buy).append(System.lineSeparator())
+                .append("result,").append(supply - buy).toString();
+    }
+
+    private void writeToFile(File file, String report) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
+            bufferedWriter.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file!", e);
         }
