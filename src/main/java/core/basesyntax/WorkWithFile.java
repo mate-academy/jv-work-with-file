@@ -9,23 +9,11 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final int COMPARED_INDEX = 1;
     private static final int OPERATION_INDEX = 0;
-    private static final String COMPARED_SUPPLY = "supply";
-    private static final String COMPARED_BUY = "buy";
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        StringBuilder stringBuilder = new StringBuilder();
-        String[] data = getDataFromFile(fromFileName).split(System.lineSeparator());
-        int result = Integer.valueOf(data[OPERATION_INDEX])
-                - Integer.valueOf(data[COMPARED_INDEX]);
-        stringBuilder.append("supply,")
-                .append(Integer.valueOf(data[OPERATION_INDEX]))
-                .append(System.lineSeparator())
-                .append("buy,")
-                .append(Integer.valueOf(data[COMPARED_INDEX]))
-                .append(System.lineSeparator())
-                .append("result,")
-                .append(result);
-        String dataFromFile = stringBuilder.toString();
+        String dataFromFile = countResult(fromFileName);
         writeDataToFile(dataFromFile, toFileName);
     }
 
@@ -38,9 +26,9 @@ public class WorkWithFile {
             String value = bufferedReader.readLine();
             while (value != null) {
                 temp = value.split(",");
-                if (temp[OPERATION_INDEX].equals(COMPARED_SUPPLY)) {
+                if (temp[OPERATION_INDEX].equals(SUPPLY)) {
                     totalSupply += Integer.valueOf(temp[COMPARED_INDEX]);
-                } else if (temp[OPERATION_INDEX].equals(COMPARED_BUY)) {
+                } else if (temp[OPERATION_INDEX].equals(BUY)) {
                     totalBuy += Integer.valueOf(temp[COMPARED_INDEX]);
                 }
                 value = bufferedReader.readLine();
@@ -53,6 +41,22 @@ public class WorkWithFile {
                 .append(System.lineSeparator())
                 .append(totalBuy).toString();
         return readFile;
+    }
+
+    public String countResult(String fromFileName) {
+        StringBuilder stringBuilder = new StringBuilder();
+        String[] data = getDataFromFile(fromFileName).split(System.lineSeparator());
+        int result = Integer.valueOf(data[OPERATION_INDEX])
+                - Integer.valueOf(data[COMPARED_INDEX]);
+        stringBuilder.append("supply,")
+                .append(Integer.valueOf(data[OPERATION_INDEX]))
+                .append(System.lineSeparator())
+                .append("buy,")
+                .append(Integer.valueOf(data[COMPARED_INDEX]))
+                .append(System.lineSeparator())
+                .append("result,")
+                .append(result);
+        return stringBuilder.toString();
     }
 
     private void writeDataToFile(String data, String fileName) {
