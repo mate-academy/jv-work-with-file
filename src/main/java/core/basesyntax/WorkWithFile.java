@@ -15,6 +15,7 @@ public class WorkWithFile {
     public static final String SUPPLY = "supply";
     public static final String RESULT = "result";
     public static final String COMMA_SEPARATOR = ",";
+    public static final String LINE_SEPARATOR = "\\R";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] dataFromFile = readFromFile(fromFileName);
@@ -34,7 +35,7 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read from file");
         }
-        return someData.toString().split("\\R");
+        return someData.toString().split(LINE_SEPARATOR);
     }
 
     private int[] calculateValue(String[] arr) {
