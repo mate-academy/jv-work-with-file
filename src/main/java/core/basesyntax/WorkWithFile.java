@@ -12,10 +12,10 @@ public class WorkWithFile {
     private static final String CSV_SEPARATOR = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        writeToFile(toFileName, readFromFile(fromFileName));
+        writeToFile(toFileName, generateReport(fromFileName));
     }
 
-    private String readFromFile(String fromFileName) {
+    private String generateReport(String fromFileName) {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String readLine;
             int supplySum = 0;
