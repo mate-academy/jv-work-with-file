@@ -13,6 +13,9 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
+    private static final String REGEX_RETREAT = "\r";
+    private static final String REGEX_NEW_LINE = "\n";
+    private static final String CSV_SEPARATOR = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String result = readFromFile(fromFileName);
@@ -23,7 +26,7 @@ public class WorkWithFile {
         File fileFromRead = new File(fromFileName);
         StringBuilder sb = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileFromRead))) {
-            for (int i = 1; i < fileFromRead.length(); i++) {
+            for (int i = 0; i < fileFromRead.length(); i++) {
                 sb.append((char) bufferedReader.read());
             }
         } catch (IOException e) {
@@ -31,24 +34,26 @@ public class WorkWithFile {
         }
 
         String informationFileReadCheck = sb.toString();
-        String[] informationFileRead = informationFileReadCheck.replace("\r", "").split("\n");
+        String[] informationFileRead = informationFileReadCheck.replace(REGEX_RETREAT, "")
+                .split(REGEX_NEW_LINE);
+
         int supply = 0;
         int buy = 0;
 
         for (int i = 0; i < informationFileRead.length; i++) {
-            if (informationFileRead[i].split(",")[ACTION_INDEX].equals(SUPPLY)) {
-                supply += Integer.parseInt(informationFileRead[i].split(",")[AMOUNT_INDEX]);
-            } else if (informationFileRead[i].split(",")[ACTION_INDEX].equals(BUY)) {
-                buy += Integer.parseInt(informationFileRead[i].split(",")[AMOUNT_INDEX]);
+            if (informationFileRead[i].split(CSV_SEPARATOR)[ACTION_INDEX].equals(SUPPLY)) {
+                supply += Integer.parseInt(informationFileRead[i].split(CSV_SEPARATOR)[AMOUNT_INDEX]);
+            } else if (informationFileRead[i].split(CSV_SEPARATOR)[ACTION_INDEX].equals(BUY)) {
+                buy += Integer.parseInt(informationFileRead[i].split(CSV_SEPARATOR)[AMOUNT_INDEX]);
             }
         }
 
         StringBuilder sbResult = new StringBuilder();
-        sbResult.append(SUPPLY).append(",").append(supply)
+        sbResult.append(SUPPLY).append(CSV_SEPARATOR).append(supply)
                 .append(System.lineSeparator())
-                .append(BUY).append(",").append(buy)
+                .append(BUY).append(CSV_SEPARATOR).append(buy)
                 .append(System.lineSeparator())
-                .append(RESULT).append(",").append(supply - buy);
+                .append(RESULT).append(CSV_SEPARATOR).append(supply - buy);
 
         return sbResult.toString();
     }
