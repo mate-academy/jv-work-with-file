@@ -5,12 +5,14 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.StandardOpenOption;
 
 public class WorkWithFile {
     public static final String SUPPLY = "supply";
     public static final String BUY = "buy";
     public static final String RESULT = "result";
+    public static final String CSV_SEPARATOR = ",";
+    public static final int OPERATION_INDEX = 0;
+    public static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         writeStatisticToTheFile(readFile(fromFileName), toFileName);
@@ -30,11 +32,11 @@ public class WorkWithFile {
             }
             String[] split = builder.toString().split(" ");
             for (String string : split) {
-                String[] splitString = string.split(",");
-                if (splitString[0].equals(SUPPLY)) {
-                    supply += Integer.parseInt(splitString[1]);
+                String[] splitString = string.split(CSV_SEPARATOR);
+                if (splitString[OPERATION_INDEX].equals(SUPPLY)) {
+                    supply += Integer.parseInt(splitString[AMOUNT_INDEX]);
                 } else {
-                    buy += Integer.parseInt(splitString[1]);
+                    buy += Integer.parseInt(splitString[AMOUNT_INDEX]);
                 }
             }
         } catch (IOException e) {
@@ -48,12 +50,9 @@ public class WorkWithFile {
     private void writeStatisticToTheFile(String statistic, String fileName) {
         try {
             File file = new File(fileName);
-            file.createNewFile();
-            Files.write(file.toPath(), statistic.getBytes(), StandardOpenOption.APPEND);
+            Files.write(file.toPath(), statistic.getBytes());
         } catch (IOException e) {
             throw new RuntimeException("Can't create or write file ", e);
         }
     }
 }
-
-
