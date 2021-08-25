@@ -8,13 +8,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    public static final int OPERATION_TYPE = 0;
     public static final int AMOUNT = 1;
-    public static final int SUPPLY_AMOUNT = 0;
-    public static final int BUY_AMOUNT = 1;
+    public static final int OPERATION_TYPE_SUPPLY = 0;
+    public static final int OPERATION_TYPE_BUY = 1;
     public static final String BUY = "buy";
     public static final String SUPPLY = "supply";
     public static final String RESULT = "result";
+    public static final String COMMA_SEPARATOR = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] dataFromFile = readFromFile(fromFileName);
@@ -42,10 +42,10 @@ public class WorkWithFile {
         int supplyNumber = 0;
         for (int i = 0; i < arr.length; i++) {
             String[] data = arr[i].split(",");
-            if (data[OPERATION_TYPE].equals("buy")) {
-                buyNumber += Integer.parseInt(data[AMOUNT]);
-            } else {
+            if (data[OPERATION_TYPE_SUPPLY].equals(SUPPLY)) {
                 supplyNumber += Integer.parseInt(data[AMOUNT]);
+            } else {
+                buyNumber += Integer.parseInt(data[AMOUNT]);
             }
         }
         return new int[] {supplyNumber,buyNumber};
@@ -53,14 +53,14 @@ public class WorkWithFile {
 
     private String createReport(int[] arr) {
         StringBuilder report = new StringBuilder();
-        report.append(SUPPLY + ",")
-                .append(arr[SUPPLY_AMOUNT])
+        report.append(SUPPLY).append(COMMA_SEPARATOR)
+                .append(arr[OPERATION_TYPE_SUPPLY])
                 .append(System.lineSeparator())
-                .append(BUY + ",")
-                .append(arr[BUY_AMOUNT])
+                .append(BUY).append(COMMA_SEPARATOR)
+                .append(arr[OPERATION_TYPE_BUY])
                 .append(System.lineSeparator())
-                .append(RESULT + ",")
-                .append(arr[SUPPLY_AMOUNT] - arr[BUY_AMOUNT]);
+                .append(RESULT).append(COMMA_SEPARATOR)
+                .append(arr[OPERATION_TYPE_SUPPLY] - arr[OPERATION_TYPE_BUY]);
         return report.toString();
     }
 
