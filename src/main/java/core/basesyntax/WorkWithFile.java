@@ -41,10 +41,10 @@ public class WorkWithFile {
     private String convertInputDataInOutputData(String dataFromFile) {
         int supply = 0;
         int buy = 0;
-        String[] splitWords = dataFromFile.split(IDENTIFIER_SEPARATOR);
+        String[] splitWords = dataFromFile.split(System.lineSeparator());
         String operation;
         for (String s : splitWords) {
-            operation  = s.substring(IDENTIFIER_START_INDEX, s.indexOf(IDENTIFIER_SEPARATOR));
+            operation = s.substring(IDENTIFIER_START_INDEX, s.indexOf(IDENTIFIER_SEPARATOR));
             int extractedAmount = Integer.parseInt(s.replaceFirst(IDENTIFIER_REGEX
                     + IDENTIFIER_SEPARATOR, EMPTY_STRING));
             switch (operation) {
