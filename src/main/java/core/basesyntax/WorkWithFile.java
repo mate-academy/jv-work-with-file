@@ -13,8 +13,8 @@ public class WorkWithFile {
     private static final String RESULT_AS_STRING = "result";
     private static final String IDENTIFIER_REGEX = "(\\w+)";
     private static final String EMPTY_STRING = "";
+    private static final String IDENTIFIER_SEPARATOR = ",";
     private static final int IDENTIFIER_START_INDEX = 0;
-    private static final char IDENTIFIER_SEPARATOR = ',';
 
     public void getStatistic(String fromFileName, String toFileName) {
         String dataFromFileName = getDataFromFile(fromFileName);
@@ -41,13 +41,13 @@ public class WorkWithFile {
     private String convertInputDataInOutputData(String dataFromFile) {
         int supply = 0;
         int buy = 0;
-        String[] dataFromFileInArr = dataFromFile.split(System.lineSeparator());
-        String switchCase;
-        for (String s : dataFromFileInArr) {
-            switchCase = s.substring(IDENTIFIER_START_INDEX, s.indexOf(IDENTIFIER_SEPARATOR));
+        String[] splitWords = dataFromFile.split(IDENTIFIER_SEPARATOR);
+        String operation;
+        for (String s : splitWords) {
+            operation  = s.substring(IDENTIFIER_START_INDEX, s.indexOf(IDENTIFIER_SEPARATOR));
             int extractedAmount = Integer.parseInt(s.replaceFirst(IDENTIFIER_REGEX
                     + IDENTIFIER_SEPARATOR, EMPTY_STRING));
-            switch (switchCase) {
+            switch (operation) {
                 case SUPPLY_AS_STRING:
                     supply += extractedAmount;
                     break;
