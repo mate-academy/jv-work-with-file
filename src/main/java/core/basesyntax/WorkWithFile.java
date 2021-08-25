@@ -10,15 +10,14 @@ import java.io.IOException;
 public class WorkWithFile {
     public static final int INDEX_OF_AMOUNT = 1;
     public static final int INDEX_OF_OPERATION_TYPE = 0;
-    public static final String ELEMENT_TO_SEPARATE = " ";
     public static final String SYMBOL_COMA = ",";
     public static final String OPERATOR_TYPE_SUPPLY = "supply";
     public static final String OPERATOR_TYPE_BUY = "buy";
     public static final String OPERATOR_TYPE_RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String [] dataArray = readFromFile(fromFileName);
-        String report = createReport(dataArray);
+        String[] data = readFromFile(fromFileName);
+        String report = createReport(data);
         writeToFile(toFileName, report);
     }
 
@@ -29,16 +28,16 @@ public class WorkWithFile {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
             String value = bufferedReader.readLine();
             while (value != null) {
-                stringBuilder.append(value).append(ELEMENT_TO_SEPARATE);
+                stringBuilder.append(value).append(System.lineSeparator());
                 value = bufferedReader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from file", e);
         }
-        return stringBuilder.toString().split(ELEMENT_TO_SEPARATE);
+        return stringBuilder.toString().split(System.lineSeparator());
     }
 
-    public String createReport(String [] dataArray) {
+    public String createReport(String[] dataArray) {
         int sumOfSupply = 0;
         int sumOfBuy = 0;
         for (String data : dataArray) {
