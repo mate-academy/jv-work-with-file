@@ -25,9 +25,9 @@ public class WorkWithFile {
         StringBuilder fileContent = new StringBuilder();
         File file = new File(fromFileName);
         try (BufferedReader myReader = new BufferedReader(new FileReader(file))) {
-            String localString;
-            while ((localString = myReader.readLine()) != null) {
-                fileContent.append(localString).append(LINE_SEPARATOR);
+            String oneLine;
+            while ((oneLine = myReader.readLine()) != null) {
+                fileContent.append(oneLine).append(LINE_SEPARATOR);
             }
         } catch (IOException e) {
             throw new RuntimeException("File wasn't read!", e);
