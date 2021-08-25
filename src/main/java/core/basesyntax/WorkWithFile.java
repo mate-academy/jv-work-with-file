@@ -7,25 +7,31 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
+    private static final String CSV_SEPARATOR = ",";
+
     public void getStatistic(String fromFileName, String toFileName) {
-        String[] dataFromFirstFile = reader(fromFileName).split(" ");
+        String[] dataFromFirstFile = reader(fromFileName).split(System.lineSeparator());
         int supply = 0;
         int buy = 0;
-        for (String s : dataFromFirstFile) {
-            String[] lineInfo = s.split(",");
+        for (String line: dataFromFirstFile) {
+            String[] lineInfo = line.split(CSV_SEPARATOR);
             for (int i = 0; i < lineInfo.length - 1; i++) {
-                if (lineInfo[i].equals("supply")) {
+                if (lineInfo[i].equals(SUPPLY)) {
                     supply += Integer.parseInt(lineInfo[i + 1]);
-                } else {
+                }
+                if (lineInfo[i].equals(BUY)) {
                     buy += Integer.parseInt((lineInfo[i + 1]));
                 }
             }
         }
-        String dataToWrite = new StringBuilder("supply,")
+        String dataToWrite = new StringBuilder(SUPPLY).append(CSV_SEPARATOR)
                 .append(supply).append(System.lineSeparator())
-                .append("buy,").append(buy)
-                .append(System.lineSeparator()).append("result,")
-                .append(supply - buy).toString();
+                .append(BUY).append(CSV_SEPARATOR).append(buy)
+                .append(System.lineSeparator()).append(RESULT)
+                .append(CSV_SEPARATOR).append(supply - buy).toString();
         writer(toFileName,dataToWrite);
     }
 
@@ -43,7 +49,7 @@ public class WorkWithFile {
             StringBuilder stringBuilder = new StringBuilder();
             String value = reader.readLine();
             while (value != null) {
-                stringBuilder.append(value).append(" ");
+                stringBuilder.append(value).append(System.lineSeparator());
                 value = reader.readLine();
             }
             return stringBuilder.toString();
