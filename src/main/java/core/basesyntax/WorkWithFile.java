@@ -8,14 +8,26 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final int FIRST_WORD_OF_LINE = 0;
-    private static final int SECOND_WORD_OF_LINE = 1;
-    private static final String FIRST_UNIQUE_CATEGORY = "supply";
-    private static final String SECOND_UNIQUE_CATEGORY = "buy";
+    private static final int OPERATION_TYPE = 0;
+    private static final int AMOUNT = 1;
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+
+    private void writeToFile(String toWriteFile, String toWriteData) {
+
+        File fileToWrite = new File(toWriteFile);
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(fileToWrite, true));
+            writer.write(toWriteData);
+            writer.close();
+        } catch (IOException exc) {
+            throw new RuntimeException("Can't write to file:" + fileToWrite, exc);
+        }
+    }
 
     public void getStatistic(String fromFileName, String toFileName) {
 
-        String[] arrayOfCategories = new String[] {FIRST_UNIQUE_CATEGORY, SECOND_UNIQUE_CATEGORY};
+        String[] arrayOfCategories = new String[] {SUPPLY, BUY};
         int[] arrayOfSumsOfCategories = new int[arrayOfCategories.length];
         File fileToRead = new File(fromFileName);
         try (BufferedReader reader = new BufferedReader(new FileReader(fileToRead))) {
@@ -24,9 +36,9 @@ public class WorkWithFile {
             while (readLineOfFile != null) {
                 readLineSplitTwoParts = readLineOfFile.split(",");
                 for (int i = 0; i < arrayOfCategories.length; i++) {
-                    if (arrayOfCategories[i].equals(readLineSplitTwoParts[FIRST_WORD_OF_LINE])) {
+                    if (arrayOfCategories[i].equals(readLineSplitTwoParts[OPERATION_TYPE])) {
                         arrayOfSumsOfCategories[i]
-                                += Integer.parseInt(readLineSplitTwoParts[SECOND_WORD_OF_LINE]);
+                                += Integer.parseInt(readLineSplitTwoParts[AMOUNT]);
                     }
                 }
                 readLineOfFile = reader.readLine();
@@ -34,20 +46,15 @@ public class WorkWithFile {
         } catch (IOException exc) {
             throw new RuntimeException("Problems with file reading" + fileToRead, exc);
         }
-        String toWriteString = new String(arrayOfCategories[FIRST_WORD_OF_LINE] + ","
-                + arrayOfSumsOfCategories[FIRST_WORD_OF_LINE] + System.lineSeparator()
-                + arrayOfCategories[SECOND_WORD_OF_LINE] + ","
-                + arrayOfSumsOfCategories[SECOND_WORD_OF_LINE] + System.lineSeparator()
-                + "result," + (arrayOfSumsOfCategories[FIRST_WORD_OF_LINE]
-                - arrayOfSumsOfCategories[SECOND_WORD_OF_LINE]));
-
-        File fileToWrite = new File(toFileName);
-        try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(fileToWrite, true));
-            writer.write(toWriteString);
-            writer.close();
-        } catch (IOException exc) {
-            throw new RuntimeException("Can't write to file" + fileToWrite, exc);
-        }
+        StringBuilder buildString = new StringBuilder();
+        String toWriteString = buildString.append(arrayOfCategories[OPERATION_TYPE])
+                .append(",").append(arrayOfSumsOfCategories[OPERATION_TYPE])
+                .append(System.lineSeparator())
+                .append(arrayOfCategories[AMOUNT]).append(",")
+                .append(arrayOfSumsOfCategories[AMOUNT]).append(System.lineSeparator())
+                .append("result,")
+                .append((arrayOfSumsOfCategories[OPERATION_TYPE] - arrayOfSumsOfCategories[AMOUNT]))
+                .toString();
+        writeToFile(toFileName, toWriteString);
     }
 }
