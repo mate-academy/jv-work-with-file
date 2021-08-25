@@ -10,6 +10,7 @@ public class WorkWithFile {
     private static String BUY = "buy";
     private static int OPERATION_INDEX = 0;
     private static int AMOUNT_INDEX = 1;
+    private static String CSV_SEPARATOR = ",";
     private static String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
@@ -24,19 +25,19 @@ public class WorkWithFile {
             int totalSupply = 0;
             int buyTotal = 0;
             while (value != null) {
-                String[] temporary = value.split(",");
+                String[] temporary = value.split(CSV_SEPARATOR);
                 if (temporary[OPERATION_INDEX].equals(SUPPLY)) {
                     totalSupply += Integer.parseInt(temporary[AMOUNT_INDEX]);
-                } else {
+                } else if (temporary[OPERATION_INDEX].equals(BUY)) {
                     buyTotal += Integer.parseInt(temporary[AMOUNT_INDEX]);
                 }
                 value = bufferedReader.readLine();
             }
-            stringBuilder.append(SUPPLY).append(",").append(totalSupply)
+            stringBuilder.append(SUPPLY).append(CSV_SEPARATOR).append(totalSupply)
                     .append(System.lineSeparator())
-                    .append(BUY).append(",").append(buyTotal)
+                    .append(BUY).append(CSV_SEPARATOR).append(buyTotal)
                     .append(System.lineSeparator())
-                    .append(RESULT).append(",").append(totalSupply - buyTotal);
+                    .append(RESULT).append(CSV_SEPARATOR).append(totalSupply - buyTotal);
             return stringBuilder.toString();
         } catch (Exception e) {
             throw new RuntimeException("Can't read data from the file ", e);
@@ -44,10 +45,8 @@ public class WorkWithFile {
     }
 
     public void recordDateInFile(String toFileName, String data) {
-        try {
-            FileWriter fileWriter = new FileWriter(toFileName);
+        try (FileWriter fileWriter = new FileWriter(toFileName)) {
             fileWriter.write(data);
-            fileWriter.close();
         } catch (IOException e) {
             System.out.println("Can`t record data in file ");
         }
