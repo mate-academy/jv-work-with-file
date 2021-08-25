@@ -13,36 +13,32 @@ public class WorkWithFile {
     private static final String COMMA = ",";
     private static final String BUY = "buy";
 
+
     public void getStatistic(String fromFileName, String toFileName) {
         String result = readFile(fromFileName);
         writeFile(result, toFileName);
     }
 
-    public String readFile(String fromFileName) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
+    public String readFile(String fileName) {
+        StringBuilder builder = new StringBuilder();
+        int buy = 0;
+        int supply = 0;
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             String line = reader.readLine();
-            String[] lines;
-            StringBuilder builder = new StringBuilder();
-            int buy = 0;
-            int supply = 0;
-            do {
-                lines = line.split(COMMA);
+             do  {
+                if (line.split(COMMA)[OPERATION_TYPE].equals(SUPPLY)) {
+                    supply += Integer.parseInt(line.split(COMMA)[AMOUNT]);
+                } else if (line.split(COMMA)[OPERATION_TYPE].equals(BUY)) {
+                        buy += Integer.parseInt(line.split(COMMA)[AMOUNT]);
+                    }
                 line = reader.readLine();
-                if (lines[OPERATION_TYPE].equals(SUPPLY)) {
-                    supply += Integer.parseInt(lines[AMOUNT]);
-                }
-                if (lines[OPERATION_TYPE].equals(BUY)) {
-                    buy += Integer.parseInt(lines[AMOUNT]);
-                }
-            } while (line != null);
-            builder.append(SUPPLY).append(COMMA).append(supply).append(System.lineSeparator())
-                    .append(BUY).append(COMMA).append(buy).append(System.lineSeparator())
-                    .append("result").append(COMMA).append(supply - buy);
-            return builder.toString();
+                } while (line != null);
         } catch (IOException e) {
             throw new RuntimeException("Can't read file", e);
         }
+        return buildReport(builder.toString(), buy, supply);;
     }
+
 
     private void writeFile(String toWrite, String toFileName) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName, true))) {
@@ -52,5 +48,20 @@ public class WorkWithFile {
         }
     }
 
+    private String buildReport(int buy, int supply, String fileData) {
+        StringBuilder report = new StringBuilder(fileData);
+        return report.append(SUPPLY)
+                .append(COMMA)
+                .append(supply)
+                .append(System.lineSeparator())
+                .append(BUY)
+                .append(COMMA)
+                .append(buy)
+                .append(System.lineSeparator())
+                .append("result,")
+                .append(COMMA)
+                .append(supply - buy).toString();
+    }
 }
+
 
