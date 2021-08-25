@@ -8,18 +8,13 @@ import java.io.IOException;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
-        StringBuilder stringFromFile = new StringBuilder();
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
-            String value = bufferedReader.readLine();
-            while (value != null) {
-                stringFromFile.append(value).append(",");
-                value = bufferedReader.readLine();
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("Can't read data from the file " + fromFileName, e);
-        }
-        String[] information = stringFromFile.toString().split(",");
+        String stringFromFile = readFromFile(fromFileName);
+        String result = createReport(stringFromFile);
+        writeToFile(toFileName, result);
+    }
+
+    private String createReport(String infoFromFile) {
+        String[] information = infoFromFile.split(",");
         StringBuilder result = new StringBuilder();
         int sumOfBuy = 0;
         int sumOfSupply = 0;
@@ -37,10 +32,30 @@ public class WorkWithFile {
                 .append(System.lineSeparator())
                 .append("result,")
                 .append(sumOfSupply - sumOfBuy);
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write(result.toString());
+        return result.toString();
+    }
+
+    private String readFromFile(String fileName) {
+        StringBuilder stringFromFile = new StringBuilder();
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName));
+            String value = bufferedReader.readLine();
+            while (value != null) {
+                stringFromFile.append(value).append(",");
+                value = bufferedReader.readLine();
+            }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read data from the file " + toFileName, e);
+            throw new RuntimeException("Can't read data from the file " + fileName, e);
+        }
+        return stringFromFile.toString();
+    }
+
+    private void writeToFile(String fileName, String content) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
+            bufferedWriter.write(content);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't read data from the file " + fileName, e);
         }
     }
+
 }
