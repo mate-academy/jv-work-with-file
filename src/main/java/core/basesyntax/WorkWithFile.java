@@ -9,10 +9,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final int SUPPLY = 0;
-    private static final int BUY = 1;
-    private static final int ACTION = 0;
-    private static final int QUANTITY = 1;
+    private static final int SUPPLY_INDEX = 0;
+    private static final int BUY_INDEX = 1;
+    private static final int ACTION_INDEX = 0;
+    private static final int QUANTITY_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] sourceStrings;
@@ -21,16 +21,16 @@ public class WorkWithFile {
         sourceStrings = readFile(fileFrom).split(" ");
         for (String currentString : sourceStrings) {
             String[] splitString = currentString.split(",");
-            if (splitString[ACTION].equals("supply")) {
-                results[SUPPLY] += Integer.parseInt(splitString[QUANTITY]);
+            if (splitString[ACTION_INDEX].equals("supply")) {
+                results[SUPPLY_INDEX] += Integer.parseInt(splitString[QUANTITY_INDEX]);
             } else {
-                results[BUY] += Integer.parseInt(splitString[QUANTITY]);
+                results[BUY_INDEX] += Integer.parseInt(splitString[QUANTITY_INDEX]);
             }
         }
         StringBuilder resultString = new StringBuilder();
-        resultString.append("supply,").append(results[SUPPLY]).append(System.lineSeparator())
-                .append("buy,").append(results[BUY]).append(System.lineSeparator())
-                .append("result,").append(results[SUPPLY] - results[BUY]);
+        resultString.append("supply,").append(results[SUPPLY_INDEX]).append(System.lineSeparator())
+                .append("buy,").append(results[BUY_INDEX]).append(System.lineSeparator())
+                .append("result,").append(results[SUPPLY_INDEX] - results[BUY_INDEX]);
         File fileTo = new File(toFileName);
         writeFile(fileTo, resultString.toString());
     }
