@@ -8,39 +8,46 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String LINE_SEPARATOR = "~!";
+    private static final String CSV_FILE_SEPARATOR = ",";
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final int FIRST_VALUE = 0;
+    private static final int SECOND_VALUE = 1;
+
     public void getStatistic(String fromFileName, String toFileName) {
-        String readString = readFile(fromFileName);
-        String report = createReport(readString);
+        String dataFromFile = readFile(fromFileName);
+        String report = createReport(dataFromFile);
         writeFile(toFileName, report);
     }
 
     private String readFile(String fromFileName) {
-        StringBuilder stringBuilder = new StringBuilder();
-        File readFile = new File(fromFileName);
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(readFile))) {
+        StringBuilder fileContent = new StringBuilder();
+        File file = new File(fromFileName);
+        try (BufferedReader myReader = new BufferedReader(new FileReader(file))) {
             String localString;
-            while ((localString = bufferedReader.readLine()) != null) {
-                stringBuilder.append(localString).append(ForConstants.LINE_SEPARATOR);
+            while ((localString = myReader.readLine()) != null) {
+                fileContent.append(localString).append(LINE_SEPARATOR);
             }
         } catch (IOException e) {
             throw new RuntimeException("File wasn't read!", e);
         }
-        return stringBuilder.toString();
+        return fileContent.toString();
     }
 
     private String createReport(String readString) {
         int supply = 0;
         int buy = 0;
-        String[] stringsForReport = readString.split(ForConstants.LINE_SEPARATOR);
-        for (int i = ForConstants.VALUE_ZERO; i < stringsForReport.length; i++) {
-            String[] data = stringsForReport[i].split(ForConstants.CSV_FILE_SEPARATOR);
-            if (data[ForConstants.VALUE_ZERO].equals(ForConstants.SUPPLY)) {
-                supply += Integer.parseInt(data[ForConstants.VALUE_ONE]);
-            } else if (data[ForConstants.VALUE_ZERO].equals(ForConstants.BUY)) {
-                buy += Integer.parseInt(data[ForConstants.VALUE_ONE]);
+        String[] stringsForReport = readString.split(LINE_SEPARATOR);
+        for (int i = FIRST_VALUE; i < stringsForReport.length; i++) {
+            String[] data = stringsForReport[i].split(CSV_FILE_SEPARATOR);
+            if (data[FIRST_VALUE].equals(SUPPLY)) {
+                supply += Integer.parseInt(data[SECOND_VALUE]);
+            } else if (data[FIRST_VALUE].equals(BUY)) {
+                buy += Integer.parseInt(data[SECOND_VALUE]);
             }
         }
-        return drawReport(supply, buy);
+        return generateReport(supply, buy);
     }
 
     private void writeFile(String toFileName, String report) {
@@ -52,9 +59,9 @@ public class WorkWithFile {
         }
     }
 
-    private String drawReport(int supply, int buy) {
-        return ForConstants.SUPPLY + "," + supply + System.lineSeparator()
-                + ForConstants.BUY + "," + buy + System.lineSeparator()
+    private String generateReport(int supply, int buy) {
+        return SUPPLY + "," + supply + System.lineSeparator()
+                + BUY + "," + buy + System.lineSeparator()
                 + "result," + (supply - buy);
     }
 }
