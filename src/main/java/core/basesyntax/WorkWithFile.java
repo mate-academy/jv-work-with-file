@@ -8,15 +8,16 @@ import java.nio.file.Files;
 import java.util.List;
 
 public class WorkWithFile {
-    private static final int NUMBERS_PART_OF_SPLITED_INFOLINE = 1;
+    private static final int OPERATION_AMOUNT_INDEX = 1;
+    private static final int OPERATION_NAME_INDEX = 0;
     private StringBuilder shopReport = new StringBuilder("supply,");
 
     public void getStatistic(String fromFileName, String toFileName) {
-        formReport(fromFileName);
-        sendReport(toFileName);
+        generateReport(fromFileName);
+        writeReport(toFileName);
     }
 
-    public void formReport(String fromFileName) {
+    public void generateReport(String fromFileName) {
         int supply = 0;
         int buy = 0;
         int result = 0;
@@ -28,12 +29,12 @@ public class WorkWithFile {
             throw new RuntimeException("can`t read file", e);
         }
         for (int i = 0; i < fromFileInfo.size(); i++) {
-            if (fromFileInfo.get(i).split(",")[0].contains("supply")) {
+            if (fromFileInfo.get(i).split(",")[OPERATION_NAME_INDEX].contains("supply")) {
                 supply = supply + Integer.parseInt(fromFileInfo.get(i).split(",")
-                        [NUMBERS_PART_OF_SPLITED_INFOLINE]);
-            } else if (fromFileInfo.get(i).split(",")[0].contains("buy")) {
+                        [OPERATION_AMOUNT_INDEX]);
+            } else if (fromFileInfo.get(i).split(",")[OPERATION_NAME_INDEX].contains("buy")) {
                 buy = buy + Integer.parseInt(fromFileInfo.get(i).split(",")
-                        [NUMBERS_PART_OF_SPLITED_INFOLINE]);
+                        [OPERATION_AMOUNT_INDEX]);
             }
         }
         result = supply - buy;
@@ -47,12 +48,12 @@ public class WorkWithFile {
                 .append(System.lineSeparator());
     }
 
-    public void sendReport(String toFileName) {
+    public void writeReport(String toFileName) {
         File toFile = new File(toFileName);
         try {
             toFile.createNewFile();
         } catch (IOException e) {
-            throw new RuntimeException("Io have been thrown", e);
+            throw new RuntimeException("Can't create new file", e);
         }
         try (BufferedWriter repotrWriter = new BufferedWriter(new FileWriter(toFile))) {
             repotrWriter.write(shopReport.toString());
