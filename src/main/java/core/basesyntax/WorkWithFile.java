@@ -12,7 +12,6 @@ public class WorkWithFile {
     private static final int NAME_COUNT = 0;
     private static final int VALUE_COUNT = 1;
 
-
     public void getStatistic(String fromFileName, String toFileName) {
         String data = readFile(fromFileName);
         writeFile(data, toFileName);
