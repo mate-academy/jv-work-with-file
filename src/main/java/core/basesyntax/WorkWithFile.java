@@ -8,9 +8,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final int SUPPLY_OR_BUY = 0;
+    private static final int OPERATION_INDEX = 0;
     private static final int SUPPLY_OR_BUY_VALUE = 1;
     private static final String CSV_SEPARATOR = ",";
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] infoFromFile = readFile(fromFileName);
@@ -19,16 +21,18 @@ public class WorkWithFile {
         int buyAmount = 0;
         for (String splitTextToLine : infoFromFile) {
             splitedLine = splitTextToLine.split(CSV_SEPARATOR);
-            if ("supply".equals(splitedLine[SUPPLY_OR_BUY])) {
+            if (SUPPLY.equals(splitedLine[OPERATION_INDEX ])) {
                 supply += Integer.parseInt(splitedLine[SUPPLY_OR_BUY_VALUE]);
-            } else {
+            }
+            if (BUY.equals(splitedLine[OPERATION_INDEX ])) {
                 buyAmount += Integer.parseInt(splitedLine[SUPPLY_OR_BUY_VALUE]);
             }
         }
         int remain = supply - buyAmount;
         StringBuilder result = new StringBuilder();
-        String statistic = result.append("supply,").append(supply).append(System.lineSeparator())
-                .append("buy,").append(buyAmount).append(System.lineSeparator())
+        String statistic = result.append(SUPPLY).append(CSV_SEPARATOR)
+                .append(supply).append(System.lineSeparator())
+                .append(BUY).append(CSV_SEPARATOR).append(buyAmount).append(System.lineSeparator())
                 .append("result,").append(remain).append(System.lineSeparator()).toString();
         writeInFile(toFileName, statistic);
     }
