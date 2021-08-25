@@ -13,8 +13,8 @@ public class WorkWithFile {
     public static final char CSV_SEPARATOR = ',';
 
     public void getStatistic(String fromFileName, String toFileName) {
-        StringBuilder fromFileStringBuilder = readFromFile(fromFileName);
-        String[] fromFileStrings = fromFileStringBuilder.toString().split(System.lineSeparator());
+        String fromFileString = readFromFile(fromFileName);
+        String[] fromFileStrings = fromFileString.split(System.lineSeparator());
         int supplySum = 0;
         int buySum = 0;
         for (String string : fromFileStrings) {
@@ -22,17 +22,11 @@ public class WorkWithFile {
             supplySum += string.startsWith(KEY_WORD_FOR_SUPPLY) ? amount : 0;
             buySum += string.startsWith(KEY_WORD_FOR_BUY) ? amount : 0;
         }
-        int result = supplySum - buySum;
-        StringBuilder toFileStringBuilder = new StringBuilder();
-        toFileStringBuilder.append(KEY_WORD_FOR_SUPPLY).append(CSV_SEPARATOR)
-                .append(supplySum).append(System.lineSeparator())
-                .append(KEY_WORD_FOR_BUY).append(CSV_SEPARATOR).append(buySum)
-                .append(System.lineSeparator()).append("result")
-                .append(CSV_SEPARATOR).append(result);
-        writeToFile(toFileName, toFileStringBuilder.toString());
+        String toFileString = createReport(supplySum, buySum);
+        writeToFile(toFileName, toFileString);
     }
 
-    private StringBuilder readFromFile(String fromFileName) {
+    private String readFromFile(String fromFileName) {
         File fromFile = new File(fromFileName);
         StringBuilder stringBuilderFrom = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFile))) {
@@ -44,7 +38,18 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read from file " + fromFileName, e);
         }
-        return stringBuilderFrom;
+        return stringBuilderFrom.toString();
+    }
+
+    private String createReport(int supplySum, int buySum) {
+        int result = supplySum - buySum;
+        StringBuilder toFileStringBuilder = new StringBuilder();
+        toFileStringBuilder.append(KEY_WORD_FOR_SUPPLY).append(CSV_SEPARATOR)
+                .append(supplySum).append(System.lineSeparator())
+                .append(KEY_WORD_FOR_BUY).append(CSV_SEPARATOR).append(buySum)
+                .append(System.lineSeparator()).append("result")
+                .append(CSV_SEPARATOR).append(result);
+        return toFileStringBuilder.toString();
     }
 
     private void writeToFile(String toFileName, String dataToWrite) {
@@ -52,7 +57,6 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFile))) {
             toFile.createNewFile();
             bufferedWriter.write(dataToWrite);
-            System.out.println(dataToWrite);
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file" + toFileName, e);
         }
