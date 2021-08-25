@@ -2,7 +2,6 @@ package core.basesyntax;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -15,10 +14,11 @@ public class WorkWithFile {
     private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        writeToFile(fromFileName, toFileName);
+        String infoFromFile = readFromFile(fromFileName);
+        writeToFile(infoFromFile, toFileName);
     }
 
-    private String readFromFile(String fromFileName) throws FileNotFoundException {
+    private String readFromFile(String fromFileName) {
         int supplyAmount = 0;
         int buyAmount = 0;
         StringBuilder stringBuilder = new StringBuilder();
@@ -53,9 +53,9 @@ public class WorkWithFile {
         return stringBuilder.toString();
     }
 
-    private void writeToFile(String fromFileName, String toFileName) {
+    private void writeToFile(String readData, String toFileName) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write(readFromFile(fromFileName));
+            bufferedWriter.write(readData);
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file", e);
         }
