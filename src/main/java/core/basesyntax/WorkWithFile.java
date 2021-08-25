@@ -53,16 +53,16 @@ public class WorkWithFile {
         return new int[]{supply, buy, result};
     }
 
-    private String getResult(String[] fromFileName) {
+    private String getResult(String[] data) {
         StringBuilder stringBuilder = new StringBuilder();
-        int[] a = calculateAll(fromFileName);
+        int[] calculatedData = calculateAll(data);
         return stringBuilder.append("supply,")
-                .append(a[SUPPLY_INDEX])
+                .append(calculatedData[SUPPLY_INDEX])
                 .append(System.lineSeparator())
                 .append("buy,")
-                .append(a[BUY_INDEX])
+                .append(calculatedData[BUY_INDEX])
                 .append(System.lineSeparator())
                 .append("result,")
-                .append(a[RESULT_INDEX]).toString();
+                .append(calculatedData[RESULT_INDEX]).toString();
     }
 }
