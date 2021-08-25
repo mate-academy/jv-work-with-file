@@ -11,35 +11,42 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
-    private static final int PRICE = 1;
+    private static final int AMOUNT = 1;
     private static final int OPERATION = 0;
+    private static final int SUPPLY_AMOUNT = 0;
+    private static final int BUY_AMOUNT = 1;
+    private static final int AMOUNT_ARRAYS_LENGTH = 2;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        writeToFile(getFileReport(fromFileName), toFileName);
+        writeToFile(getFileReport(readFromFile(fromFileName)), toFileName);
     }
 
-    private String getFileReport(String fromFileName) {
-        int supplyCount = 0;
-        int buyCount = 0;
-        StringBuilder report = new StringBuilder();
+    private int[] readFromFile(String fromFileName) {
+        int[] amount = new int[AMOUNT_ARRAYS_LENGTH];
         File fromFile = new File(fromFileName);
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFile))) {
-            String value = bufferedReader.readLine();
-            while (value != null) {
-                String[] readedFromLine = value.split(",");
-                if (readedFromLine[OPERATION].equals(SUPPLY)) {
-                    supplyCount += Integer.parseInt(readedFromLine[PRICE]);
+            String line = bufferedReader.readLine();
+            while (line != null) {
+                String[] records = line.split(",");
+                if (records[OPERATION].equals(SUPPLY)) {
+                    amount[SUPPLY_AMOUNT] += Integer.parseInt(records[AMOUNT]);
                 } else {
-                    buyCount += Integer.parseInt(readedFromLine[PRICE]);
+                    amount[BUY_AMOUNT] += Integer.parseInt(records[AMOUNT]);
                 }
-                value = bufferedReader.readLine();
+                line = bufferedReader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read file" + e);
         }
-        report.append(SUPPLY).append(",").append(supplyCount).append(System.lineSeparator())
-                .append(BUY).append(",").append(buyCount).append(System.lineSeparator())
-                .append(RESULT).append(",").append(supplyCount - buyCount);
+        return amount;
+    }
+
+    private String getFileReport(int[] amount) {
+        StringBuilder report = new StringBuilder();
+        report.append(SUPPLY).append(",").append(amount[SUPPLY_AMOUNT])
+                .append(System.lineSeparator())
+                .append(BUY).append(",").append(amount[BUY_AMOUNT]).append(System.lineSeparator())
+                .append(RESULT).append(",").append(amount[SUPPLY_AMOUNT] - amount[BUY_AMOUNT]);
         return report.toString();
     }
 
