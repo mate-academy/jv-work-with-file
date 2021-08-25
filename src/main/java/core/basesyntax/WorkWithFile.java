@@ -17,6 +17,7 @@ public class WorkWithFile {
     private static final String RESULT = "result";
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
+    private static final String[] OUTPUT_ORDER = {"supply", "buy", "result"};
 
     public void getStatistic(String fromFileName, String toFileName) {
         List<String> readData = readFromFile(fromFileName);
@@ -51,21 +52,18 @@ public class WorkWithFile {
                         Integer.parseInt(splitLineData[1]));
             }
         }
+        sortedData.put(RESULT, sortedData.get(SUPPLY) - sortedData.get(BUY));
         return sortedData;
     }
 
     private void writeToFile(String toFileName, Map<String, Integer> sortedData) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true))) {
-            for (int i = sortedData.keySet().size() - 1; i >= 0; i--) {
-                bufferedWriter.write(sortedData.keySet().toArray()[i].toString());
-                bufferedWriter.write(COMMA);
-                bufferedWriter.write(sortedData.get(sortedData.keySet()
-                                .toArray()[i].toString()).toString());
-                bufferedWriter.write(System.lineSeparator());
+            StringBuilder statistic = new StringBuilder();
+            for (String operationType : OUTPUT_ORDER) {
+                statistic.append(operationType).append(COMMA).append(sortedData
+                        .get(operationType)).append(System.lineSeparator());
             }
-            bufferedWriter.write(RESULT);
-            bufferedWriter.write(COMMA);
-            bufferedWriter.write("" + (sortedData.get(SUPPLY) - sortedData.get(BUY)));
+            bufferedWriter.write(statistic.toString().trim());
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file " + toFileName, e);
         }
