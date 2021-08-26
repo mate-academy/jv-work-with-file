@@ -6,12 +6,13 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.System;
 
 public class WorkWithFile {
-    private static final int INDEX_OF_TYPE = 0;
-    private static final int INDEX_OF_AMOUNT = 1;
-    private static final int INDEX_OF_SUPPLY_AMOUNT = 0;
-    private static final int INDEX_OF_BUY_AMOUNT = 1;
+    private static final int OPERATION_TYPE = 0;
+    private static final int AMOUNT = 1;
+    private static final int SUPPLY_AMOUNT = 0;
+    private static final int BUY_AMOUNT = 1;
     private static final String SYMBOL_TO_SPLIT_DATA = ",";
     private static final String STRING_TO_COMPARE = "supply";
 
@@ -26,13 +27,13 @@ public class WorkWithFile {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
             String value = bufferedReader.readLine();
             while (value != null) {
-                stringBuilder.append(value).append(" ");
+                stringBuilder.append(value).append(System.lineSeparator());
                 value = bufferedReader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("can't read file " + fileName, e);
         }
-        return stringBuilder.toString().split(" ");
+        return stringBuilder.toString().split(System.lineSeparator());
     }
 
     private int[] calculateForReport(String[] data) {
@@ -40,20 +41,20 @@ public class WorkWithFile {
         int buyAmount = 0;
         for (String datum : data) {
             String[] datumArr = datum.split(SYMBOL_TO_SPLIT_DATA);
-            int amount = Integer.parseInt(datumArr[INDEX_OF_AMOUNT]);
-            if (datumArr[INDEX_OF_TYPE].equals(STRING_TO_COMPARE)) {
+            int amount = Integer.parseInt(datumArr[AMOUNT]);
+            if (datumArr[OPERATION_TYPE].equals(STRING_TO_COMPARE)) {
                 supplyAmount += amount;
-            } else {
-                buyAmount += amount;
             }
         }
+
         return new int[] {supplyAmount, buyAmount};
+
     }
 
     private String createReport(String[] data) {
         int[] amounts = calculateForReport(data);
-        int supplyAmount = amounts[INDEX_OF_SUPPLY_AMOUNT];
-        int buyAmount = amounts[INDEX_OF_BUY_AMOUNT];
+        int supplyAmount = amounts[SUPPLY_AMOUNT];
+        int buyAmount = amounts[BUY_AMOUNT];
         return new StringBuilder().append("supply,").append(supplyAmount)
                 .append(System.lineSeparator())
                 .append("buy,").append(buyAmount).append(System.lineSeparator())
