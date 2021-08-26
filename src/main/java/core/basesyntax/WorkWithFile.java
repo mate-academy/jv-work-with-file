@@ -56,7 +56,7 @@ public class WorkWithFile {
         int buyAmount = amounts[BUY_AMOUNT];
         return new StringBuilder().append("supply,").append(supplyAmount)
                 .append(System.lineSeparator())
-                .append("buy,").append(buyAmount).append(System.lineSeparator())
+                .append(BUY).append(COMMA).append(buyAmount).append(System.lineSeparator())
                 .append("result,").append(supplyAmount - buyAmount).toString();
     }
 
