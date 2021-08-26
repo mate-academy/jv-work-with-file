@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.System;
 
 public class WorkWithFile {
     private static final int OPERATION_TYPE = 0;
