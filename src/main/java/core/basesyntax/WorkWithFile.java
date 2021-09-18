@@ -39,7 +39,7 @@ public class WorkWithFile {
                     .append(result);
             writeToFile(toFileName, stringBuilder.toString());
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Can't read from the file", e);
         }
     }
 
