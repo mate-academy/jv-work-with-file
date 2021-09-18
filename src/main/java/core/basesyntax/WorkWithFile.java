@@ -15,11 +15,11 @@ public class WorkWithFile {
             int result = 0;
             for (String readAllLine : Files.readAllLines(new File(fromFileName).toPath())) {
                 String[] split = readAllLine.split(",");
-                int i = Integer.parseInt(split[1]);
+                int parseInt = Integer.parseInt(split[1]);
                 if (readAllLine.contains("supply")) {
-                    supply += i;
+                    supply += parseInt;
                 } else {
-                    buy += i;
+                    buy += parseInt;
                 }
                 result = supply - buy;
             }
