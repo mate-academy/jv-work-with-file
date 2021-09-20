@@ -6,13 +6,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 
-public class WorkWithFile {
+public class WorkWithStatistic {
     public void getStatistic(String fromFileName, String toFileName) {
+        StringBuilder stringBuilder = new StringBuilder();
+        int supply = 0;
+        int buy = 0;
+        int result = 0;
         try {
-            StringBuilder stringBuilder = new StringBuilder();
-            int supply = 0;
-            int buy = 0;
-            int result = 0;
             for (String readAllLine : Files.readAllLines(new File(fromFileName).toPath())) {
                 String[] split = readAllLine.split(",");
                 int parseInt = Integer.parseInt(split[1]);
@@ -23,24 +23,21 @@ public class WorkWithFile {
                 }
                 result = supply - buy;
             }
-            String s = String.valueOf(supply);
-            String b = String.valueOf(buy);
-            String.valueOf(result);
-            stringBuilder.append("supply")
-                    .append(",")
-                    .append(s)
-                    .append(System.lineSeparator())
-                    .append("buy")
-                    .append(",")
-                    .append(b)
-                    .append(System.lineSeparator())
-                    .append("result")
-                    .append(",")
-                    .append(result);
-            writeToFile(toFileName, stringBuilder.toString());
         } catch (IOException e) {
             throw new RuntimeException("Can't read from the file", e);
         }
+        stringBuilder.append("supply")
+                .append(",")
+                .append(supply)
+                .append(System.lineSeparator())
+                .append("buy")
+                .append(",")
+                .append(buy)
+                .append(System.lineSeparator())
+                .append("result")
+                .append(",")
+                .append(result);
+        writeToFile(toFileName, stringBuilder.toString());
     }
 
     private void writeToFile(String toFileName, String data) {

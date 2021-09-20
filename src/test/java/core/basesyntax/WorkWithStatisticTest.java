@@ -8,7 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class WorkWithStatisticTest {
-    private WorkWithFile workWithFile = new WorkWithFile();
+    private WorkWithStatistic workWithFile = new WorkWithStatistic();
     private static final String APPLE_RESULT_FILE = "appleResult.csv";
     private static final String GRAPE_RESULT_FILE = "grapeResult.csv";
     private static final String ORANGE_RESULT_FILE = "orangeResult.csv";
