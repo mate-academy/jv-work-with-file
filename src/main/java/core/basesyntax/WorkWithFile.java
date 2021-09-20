@@ -10,6 +10,10 @@ import java.io.IOException;
 public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
+        writeData(getData(fromFileName),toFileName);
+    }
+
+    private String getData(String fromFileName) {
         File file = new File(fromFileName);
         StringBuilder report = new StringBuilder();
         int fullBuyValue = 0;
@@ -22,7 +26,7 @@ public class WorkWithFile {
                 value = bufferedReader.read();
             }
         } catch (Exception e) {
-            throw new RuntimeException("Something wen wrong", e);
+            throw new RuntimeException("Error while reading from file", e);
         }
         String[] array = dataFromFile.toString().split("\\W+");
         int supValue;
@@ -44,6 +48,10 @@ public class WorkWithFile {
                 .append(System.lineSeparator())
                 .append("result,")
                 .append(fullSupValue - fullBuyValue);
+        return report.toString();
+    }
+
+    private void writeData(String data, String toFileName) {
         File toFile = new File(toFileName);
         try {
             toFile.createNewFile();
@@ -51,7 +59,7 @@ public class WorkWithFile {
             throw new RuntimeException("can't create file");
         }
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFile))) {
-            bufferedWriter.write(report.toString());
+            bufferedWriter.write(data);
         } catch (IOException e) {
             throw new RuntimeException("can't write data");
         }
