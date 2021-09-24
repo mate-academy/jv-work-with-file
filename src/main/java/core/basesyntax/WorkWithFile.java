@@ -21,7 +21,7 @@ public class WorkWithFile {
         final String buy = "buy";
         int supplySum = 0;
         int buySum = 0;
-
+        int result = 0;
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileNameData));
             String value = bufferedReader.readLine();
@@ -37,7 +37,7 @@ public class WorkWithFile {
                 }
                 value = bufferedReader.readLine();
             }
-            int result = supplySum - buySum;
+            result = supplySum - buySum;
 
         } catch (FileNotFoundException e) {
             throw new RuntimeException("Can't read data from file: " + fromFileNameData, e);
