@@ -9,30 +9,28 @@ import java.io.IOException;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
-        writeFile(toFileName, readFile(fromFileName));
-        System.out.println(readFile(fromFileName));
+        String report = readFile(fromFileName);
+        writeFile(toFileName, report);
     }
 
     private String readFile(String fromFileNameData) {
-        StringBuilder stringBuilder;
-        String[] oneLine;
         final String supply = "supply";
         final String buy = "buy";
         int supplySum = 0;
         int buySum = 0;
         int result = 0;
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileNameData));
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileNameData))) {
             String value = bufferedReader.readLine();
 
             while (value != null) {
+                String[] oneLine;
                 oneLine = value.split(",");
                 if (oneLine[0].equals(supply)) {
                     supplySum += Integer.parseInt(oneLine[1]);
                 } else if (oneLine[0].equals(buy)) {
                     buySum += Integer.parseInt(oneLine[1]);
                 } else {
-                    throw new RuntimeException("There is nothing in file");
+                    throw new RuntimeException("Unknown operation");
                 }
                 value = bufferedReader.readLine();
             }
@@ -43,10 +41,10 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read line", e);
         }
-        stringBuilder = new StringBuilder(supply + "," + supplySum + System.lineSeparator() + buy
-        + "," + buySum + System.lineSeparator() + "result" + "," + result);
+        String stringFinal = supply + "," + supplySum + System.lineSeparator() + buy
+                + "," + buySum + System.lineSeparator() + "result" + "," + result;
 
-        return stringBuilder.toString();
+        return stringFinal;
     }
 
     private void writeFile(String filePath, String fileContent) {
