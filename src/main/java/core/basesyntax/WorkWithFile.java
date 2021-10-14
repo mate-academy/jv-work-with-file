@@ -8,31 +8,35 @@ import java.nio.file.StandardOpenOption;
 public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String SUPPLY_OPERATION_TYPE = "supply";
-        String BUY_OPERATION_TYPE = "buy";
-        String RESULT = "result";
-        String COMMA = ",";
+        String supplyOperationType = "supply";
+        String buyOperationType = "buy";
+        String result = "result";
+        String comma = ",";
         int supplySum = 0;
         int buySum = 0;
         try {
-            String[] stringsFromFile = Files.readString(Path.of(fromFileName)).split(System.lineSeparator());
+            String[] stringsFromFile = Files.readString(Path.of(fromFileName))
+                    .split(System.lineSeparator());
             for (String line : stringsFromFile) {
-                String operationType = line.split(COMMA)[0];
-                int operationSumma = Integer.parseInt(line.split(COMMA)[1]);
-                if (SUPPLY_OPERATION_TYPE.equals(operationType)) {
+                String operationType = line.split(comma)[0];
+                int operationSumma = Integer.parseInt(line.split(comma)[1]);
+                if (supplyOperationType.equals(operationType)) {
                     supplySum += operationSumma;
                 }
-                if (BUY_OPERATION_TYPE.equals(operationType)) {
+                if (buyOperationType.equals(operationType)) {
                     buySum += operationSumma;
                 }
             }
-            String resultToWrite = SUPPLY_OPERATION_TYPE + COMMA + supplySum + System.lineSeparator()
-                    + BUY_OPERATION_TYPE + COMMA + buySum + System.lineSeparator()
-                    + RESULT + COMMA + (supplySum - buySum);
-            Files.deleteIfExists(Path.of(toFileName));
-            Files.write(Path.of(toFileName), resultToWrite.getBytes(), StandardOpenOption.CREATE_NEW);
         } catch (IOException e) {
             throw new RuntimeException("Cannot read from file: " + fromFileName, e);
+        }
+        String resultToWrite = supplyOperationType + comma + supplySum + System.lineSeparator()
+                + buyOperationType + comma + buySum + System.lineSeparator()
+                + result + comma + (supplySum - buySum);
+        try {
+            Files.write(Path.of(toFileName), resultToWrite.getBytes(), StandardOpenOption.CREATE_NEW);
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot write to file: " + toFileName, e);
         }
 
     }
