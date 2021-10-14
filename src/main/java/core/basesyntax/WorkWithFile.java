@@ -34,7 +34,8 @@ public class WorkWithFile {
                 + buyOperationType + comma + buySum + System.lineSeparator()
                 + result + comma + (supplySum - buySum);
         try {
-            Files.write(Path.of(toFileName), resultToWrite.getBytes(), StandardOpenOption.CREATE_NEW);
+            Files.write(Path.of(toFileName), resultToWrite.getBytes()
+                    , StandardOpenOption.CREATE_NEW);
         } catch (IOException e) {
             throw new RuntimeException("Cannot write to file: " + toFileName, e);
         }
