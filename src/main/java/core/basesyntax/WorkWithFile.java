@@ -15,8 +15,8 @@ public class WorkWithFile {
         int supplySum = 0;
         int buySum = 0;
         try {
-            String[] stringsFromFile = Files.readString(Path.of(fromFileName))
-                    .split(System.lineSeparator());
+            String[] stringsFromFile = Files.readString(
+                    Path.of(fromFileName)).split(System.lineSeparator());
             for (String line : stringsFromFile) {
                 String operationType = line.split(comma)[0];
                 int operationSumma = Integer.parseInt(line.split(comma)[1]);
@@ -34,8 +34,8 @@ public class WorkWithFile {
                 + buyOperationType + comma + buySum + System.lineSeparator()
                 + result + comma + (supplySum - buySum);
         try {
-            Files.write(Path.of(toFileName), resultToWrite.getBytes()
-                    , StandardOpenOption.CREATE_NEW);
+            Files.write(
+                    Path.of(toFileName), resultToWrite.getBytes(), StandardOpenOption.CREATE_NEW);
         } catch (IOException e) {
             throw new RuntimeException("Cannot write to file: " + toFileName, e);
         }
