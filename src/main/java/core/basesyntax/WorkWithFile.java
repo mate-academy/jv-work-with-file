@@ -8,7 +8,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-
     public void getStatistic(String fromFileName, String toFileName) {
         File file = new File(fromFileName);
         String valueBaySupply = new String();
