@@ -41,9 +41,6 @@ public class WorkWithFile {
             throw new RuntimeException("Can't read file", e);
         }
         result = valueDaySupply - valueDayBay;
-        System.out.println("supply," + valueDaySupply);
-        System.out.println("bay," + valueDayBay);
-        System.out.println("result," + result);
         File file1 = new File(toFileName);
 
         try {
@@ -55,8 +52,8 @@ public class WorkWithFile {
         }
         try (BufferedWriter bufferedWriter = new BufferedWriter(
                 new FileWriter(file1, true))) {
-            bufferedWriter.write("supply," + valueDaySupply + "\n");
-            bufferedWriter.write("bay," + valueDayBay + "\n");
+            bufferedWriter.write("supply," + valueDaySupply + System.lineSeparator());
+            bufferedWriter.write("buy," + valueDayBay + System.lineSeparator());
             bufferedWriter.write("result," + result);
         } catch (IOException e) {
             throw new RuntimeException("Can't create file", e);
