@@ -3,46 +3,47 @@ package core.basesyntax;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class WorkWithFile {
-    public void getStatistic(String fromFileName, String toFileName) {
-        File file = new File(fromFileName);
-        String valueBaySupply = new String();
-        int valueBay;
-        int valueSupply;
-        int valueDayBay = 0;
-        int valueDaySupply = 0;
-        int result = 0;
+    private int valueBuy = 0;
+    private int valueSupply = 0;
+    private int result = 0;
 
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(file));
+    public void getStatistic(String fromFileName, String toFileName) {
+        String fromFile = fromFileName;
+        String toFile = toFileName;
+
+        readingData(fromFile);
+        printToFile(valueSupply, valueBuy, result, toFile);
+    }
+
+    public void readingData(String fromFileName) {
+        File file = new File(fromFileName);
+
+        try (BufferedReader reader = Files.newBufferedReader(Paths.get(fromFileName))) {
             String value = reader.readLine();
             while (value != null) {
-                int indexComa = value.indexOf(',');
-                valueBaySupply = value.substring(indexComa + 1, value.length());
-
-                switch (indexComa) {
-                    case 3:
-                        valueBay = Integer.parseInt(valueBaySupply);
-                        valueDayBay += valueBay;
-                        break;
-                    case 6:
-                        valueSupply = Integer.parseInt(valueBaySupply);
-                        valueDaySupply += valueSupply;
-                        break;
-                    default: break;
+                String[] values = value.split(",");
+                if (values[0].equals("buy")) {
+                    valueBuy += Integer.parseInt(values[1]);
+                }
+                if (values[0].equals("supply")) {
+                    valueSupply += Integer.parseInt(values[1]);
                 }
                 value = reader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            System.out.println("Can't read file");
         }
-        result = valueDaySupply - valueDayBay;
-        File file1 = new File(toFileName);
+        result = valueSupply - valueBuy;
+    }
 
+    public void printToFile(int valueDaySupply, int valueDayBay, int result, String toFileName) {
+        File file1 = new File(toFileName);
         try {
             if (file1.delete()) {
                 file1.createNewFile();
