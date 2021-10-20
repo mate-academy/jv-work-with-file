@@ -9,43 +9,44 @@ import java.io.IOException;
 public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int supplyCount = 0;
-        int buyCount = 0;
+        String data = readeFile(fromFileName);
+        String reportSend = report(data);
+        writeToFile(toFileName, reportSend);
+    }
 
-        //String report = reportPrint(supplyCount, buyCount);
-        // writeToFile(toFileName, report);
-
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
+    private String readeFile(String fromFileName) {
+        StringBuilder builder = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String row = reader.readLine();
             while (row != null) {
-                String name = row.substring(0, row.indexOf(","));
-                String number = row.substring(row.indexOf(",") + 1);
-                if (name.equals("supply")) {
-                    supplyCount += Integer.valueOf(number);
-                }
-                if (name.equals("buy")) {
-                    buyCount += Integer.valueOf(number);
-                }
+                builder.append(row).append(",");
                 row = reader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read file" + fromFileName, e);
         }
-
-        String report = reportPrint(supplyCount, buyCount);
-        writeToFile(toFileName, report);
+        return builder.toString();
     }
 
-    public String reportPrint(int supply, int buy) {
-        StringBuilder report = new StringBuilder();
-        return (report.append("supply,").append(supply).append(System.lineSeparator())
-                .append("buy,").append(buy).append(System.lineSeparator())
-                .append("result,").append(supply - buy)).toString();
+    private String report(String textReaded) {
+        int supplyCount = 0;
+        int buyCount = 0;
+        StringBuilder concate = new StringBuilder();
+        String[] array = textReaded.split(",");
+        for (int i = 0; i < array.length; i++) {
+            if (array[i].equals("supply")) {
+                supplyCount += Integer.parseInt(array[i + 1]);
+            }
+            if (array[i].equals("buy")) {
+                buyCount += Integer.parseInt(array[i + 1]);
+            }
+        }
+        return (concate.append("supply,").append(supplyCount).append(System.lineSeparator())
+                .append("buy,").append(buyCount).append(System.lineSeparator())
+                .append("result,").append(supplyCount - buyCount)).toString();
     }
 
-    public void writeToFile(String toFileName, String reportPrint) {
-
+    private void writeToFile(String toFileName, String reportPrint) {
         try (BufferedWriter write = new BufferedWriter(new FileWriter(toFileName, true))) {
             write.write(reportPrint);
         } catch (IOException e) {
