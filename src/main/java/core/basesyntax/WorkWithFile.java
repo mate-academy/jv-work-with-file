@@ -14,14 +14,13 @@ public class WorkWithFile {
     private int result = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String fromFile = fromFileName;
-        String toFile = toFileName;
 
-        readingData(fromFile);
-        printToFile(valueSupply, valueBuy, result, toFile);
+        int[] checkedData = readDataFromFile(fromFileName);
+        String report = formingReport(checkedData);
+        printToFile(report, toFileName);
     }
 
-    public void readingData(String fromFileName) {
+    public int[] readDataFromFile(String fromFileName) {
         File file = new File(fromFileName);
 
         try (BufferedReader reader = Files.newBufferedReader(Paths.get(fromFileName))) {
@@ -40,9 +39,19 @@ public class WorkWithFile {
             System.out.println("Can't read file");
         }
         result = valueSupply - valueBuy;
+        return new int[] {valueSupply, valueBuy, result};
     }
 
-    public void printToFile(int valueDaySupply, int valueDayBay, int result, String toFileName) {
+    public String formingReport(int[] results) {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        stringBuilder.append("supply,").append(results[0]).append(System.lineSeparator())
+                .append("buy,").append(results[1]).append(System.lineSeparator())
+                .append("result,").append(results[2]);
+        return stringBuilder.toString();
+    }
+
+    public void printToFile(String content, String toFileName) {
         File file1 = new File(toFileName);
         try {
             if (file1.delete()) {
@@ -53,11 +62,10 @@ public class WorkWithFile {
         }
         try (BufferedWriter bufferedWriter = new BufferedWriter(
                 new FileWriter(file1, true))) {
-            bufferedWriter.write("supply," + valueDaySupply + System.lineSeparator());
-            bufferedWriter.write("buy," + valueDayBay + System.lineSeparator());
-            bufferedWriter.write("result," + result);
+            bufferedWriter.write(content);
         } catch (IOException e) {
             throw new RuntimeException("Can't create file", e);
+
         }
     }
 }
