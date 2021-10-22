@@ -15,22 +15,11 @@ public class WorkWithFile {
     private static final int BUY_INDEX = 1;
     private static final String COMMA = ",";
     private static final String RESULT = "result";
+    private StringBuilder savedInfo = new StringBuilder();
+    private StringBuilder reportResult = new StringBuilder();
 
     public void getStatistic(String fromFileName, String toFileName) {
-        File file = new File(toFileName);
-        StringBuilder savedInfo = new StringBuilder();
-        StringBuilder reportResult = new StringBuilder();
-        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
-            String value = reader.readLine();
-            while (value != null) {
-                savedInfo.append(value).append(System.lineSeparator());
-                value = reader.readLine();
-            }
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException("File not found!", e);
-        } catch (IOException e) {
-            throw new RuntimeException("Cant read file!", e);
-        }
+        readReport(fromFileName);
         int buyMoney = 0;
         int supplyMoney = 0;
         String[] saved = savedInfo.toString().split(System.lineSeparator());
@@ -48,8 +37,28 @@ public class WorkWithFile {
                 .append(buyMoney).append(System.lineSeparator())
                 .append(RESULT).append(COMMA)
                 .append(supplyMoney - buyMoney).append(System.lineSeparator());
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-            writer.write(reportResult.toString());
+        writeReport(toFileName, reportResult);
+    }
+
+    public StringBuilder readReport(String fileName) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            String value = reader.readLine();
+            while (value != null) {
+                savedInfo.append(value).append(System.lineSeparator());
+                value = reader.readLine();
+            }
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException("File not found!", e);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't read data from the file " + fileName, e);
+        }
+        return savedInfo;
+    }
+
+    public void writeReport(String path, StringBuilder report) {
+        File file = new File(path);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(path))) {
+            writer.write(report.toString());
         } catch (IOException e) {
             throw new RuntimeException("Can't create file!", e);
         }
