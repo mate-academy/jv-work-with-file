@@ -59,7 +59,6 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't create file!", e);
         }
-        System.out.printf("Repor has been written sucsessfully in file: %s%n", file);
+        System.out.printf("Report has been written successfully in file: %s %n", file);
     }
 }
-
