@@ -2,7 +2,6 @@ package core.basesyntax;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -54,14 +53,13 @@ public class WorkWithFile {
         return savedInfo.toString();
     }
 
-    public void writeReport(String path, StringBuilder report) {
-        File file = new File(path);
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(path))) {
+    public void writeReport(String file, StringBuilder report) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             writer.write(report.toString());
         } catch (IOException e) {
             throw new RuntimeException("Can't create file!", e);
         }
-        System.out.println(String.format("Repor has been written sucsessfully in file: %s", path));
+        System.out.printf("Repor has been written sucsessfully in file: %s%n", file);
     }
 }
 
