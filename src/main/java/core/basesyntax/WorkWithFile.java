@@ -15,14 +15,12 @@ public class WorkWithFile {
     private static final int BUY_INDEX = 1;
     private static final String COMMA = ",";
     private static final String RESULT = "result";
-    private StringBuilder savedInfo = new StringBuilder();
-    private StringBuilder reportResult = new StringBuilder();
 
     public void getStatistic(String fromFileName, String toFileName) {
-        readReport(fromFileName);
         int buyMoney = 0;
         int supplyMoney = 0;
-        String[] saved = savedInfo.toString().split(System.lineSeparator());
+        StringBuilder reportResult = new StringBuilder();
+        String[] saved = readReport(fromFileName).split(System.lineSeparator());
         for (String save : saved) {
             String[] splitedReport = save.split(COMMA);
             if (splitedReport[SUPPLY_INDEX].equals(SUPPLY)) {
@@ -40,7 +38,8 @@ public class WorkWithFile {
         writeReport(toFileName, reportResult);
     }
 
-    public StringBuilder readReport(String fileName) {
+    public String readReport(String fileName) {
+        StringBuilder savedInfo = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             String value = reader.readLine();
             while (value != null) {
@@ -52,7 +51,7 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from the file " + fileName, e);
         }
-        return savedInfo;
+        return savedInfo.toString();
     }
 
     public void writeReport(String path, StringBuilder report) {
@@ -62,6 +61,7 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't create file!", e);
         }
+        System.out.println(String.format("Repor has been written sucsessfully in file: %s", path));
     }
 }
 
