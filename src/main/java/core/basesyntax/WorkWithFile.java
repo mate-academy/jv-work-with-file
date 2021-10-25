@@ -31,7 +31,7 @@ public class WorkWithFile {
                     sumBuy += countGoods;
                     break;
                 default:
-                    break;
+                    throw new IllegalActEcxeption("Action case not found");
             }
         }
         int result = sumSupply - sumBuy;
