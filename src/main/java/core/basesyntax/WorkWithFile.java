@@ -7,10 +7,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private int totalSupply = 0;
+    private int totalBuy = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int totalSupply = calculateTotalSupply(readFromFile(fromFileName));
-        int totalBuy = calculateTotalBuy(readFromFile(fromFileName));
+        calculateSupplyAndBuy(readFromFile(fromFileName));
         String report = createReport(totalSupply, totalBuy);
         writeToFile(toFileName, report);
     }
@@ -29,31 +30,17 @@ public class WorkWithFile {
         return stringBuilder.toString();
     }
 
-    private int calculateTotalSupply(String data) {
+    private void calculateSupplyAndBuy(String data) {
         String[] rowList = data.split(" ");
-        int supply = 0;
         for (String row : rowList) {
             String operationType = row.substring(0, row.indexOf(","));
             String amount = row.substring(row.indexOf(",") + 1);
             if (operationType.equals("supply")) {
-                supply += Integer.parseInt(amount);
+                totalSupply += Integer.parseInt(amount);
+            } else if (operationType.equals("buy")) {
+                totalBuy += Integer.parseInt(amount);
             }
         }
-
-        return supply;
-    }
-
-    private int calculateTotalBuy(String data) {
-        String[] rowList = data.split(" ");
-        int buy = 0;
-        for (String row : rowList) {
-            String operationType = row.substring(0, row.indexOf(","));
-            String amount = row.substring(row.indexOf(",") + 1);
-            if (operationType.equals("buy")) {
-                buy += Integer.parseInt(amount);
-            }
-        }
-        return buy;
     }
 
     private String createReport(int supply, int buy) {
