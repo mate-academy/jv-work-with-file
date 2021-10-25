@@ -13,42 +13,52 @@ public class WorkWithFile {
     private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String result = readFile(fromFileName);
-        writeFile(result, toFileName);
+        String result = getReport(readFile(fromFileName));
+        writeFile(toFileName, result);
     }
 
     private String readFile(String fromFileName) {
-        StringBuilder report = new StringBuilder();
-        int supply = 0;
-        int buy = 0;
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
+            StringBuilder report = new StringBuilder();
             String value = reader.readLine();
             while (value != null) {
-                if (value.split(COMMA)[0].equals(SUPPLY)) {
-                    supply += Integer.parseInt(value.split(COMMA)[1]);
-                } else if (value.split(COMMA)[0].equals(BUY)) {
-                    buy += Integer.parseInt(value.split(COMMA)[1]);
+                String[] arr = value.split(COMMA);
+                for (int i = 0; i < arr.length; i++) {
+                    report.append(arr[i]).append(" ");
                 }
                 value = reader.readLine();
             }
+            return report.toString();
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from file");
         }
-        return getReport(report.toString(), supply, buy);
     }
 
-    private String getReport(String dataFromFile, int supply, int buy) {
-        StringBuilder result = new StringBuilder(dataFromFile);
+    private String getReport(String data) {
+        String[] splitData = data.split(" ");
+        StringBuilder result = new StringBuilder();
+        int supply = 0;
+        int buy = 0;
+        for (int i = 0; i < splitData.length; i++) {
+            if (splitData[i].equals(SUPPLY)) {
+                supply += Integer.parseInt(splitData[i + 1]);
+            } else if (splitData[i].equals(BUY)) {
+                buy += Integer.parseInt(splitData[i + 1]);
+            }""
+        }
         return result.append(SUPPLY).append(COMMA).append(supply).append(System.lineSeparator())
                 .append(BUY).append(COMMA).append(buy).append(System.lineSeparator())
                 .append(RESULT).append(COMMA).append(supply - buy).toString();
     }
 
-    private void writeFile(String writeText, String toFileName) {
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true))) {
-            bufferedWriter.write(writeText);
+    private void writeFile(String toFileName, String formattedResult) {
+        String[] writeToFile = formattedResult.split(System.lineSeparator());
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
+            for (String result : writeToFile) {
+                bufferedWriter.write(result + System.lineSeparator());
+            }
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data to file", e);
+            throw new RuntimeException("Can't write file", e);
         }
     }
 }
