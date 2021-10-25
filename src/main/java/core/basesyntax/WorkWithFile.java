@@ -36,19 +36,17 @@ public class WorkWithFile {
 
     private String getDataFromFile(String fileName) {
         File file = new File(fileName);
-        String informationFromFile = null;
+        StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            StringBuilder stringBuilder = new StringBuilder();
             String value = reader.readLine();
             while (value != null) {
                 stringBuilder.append(value).append(System.lineSeparator());
                 value = reader.readLine();
             }
-            informationFromFile = stringBuilder.toString();
         } catch (IOException e) {
             throw new RuntimeException("Can't read file " + fileName, e);
         }
-        return informationFromFile;
+        return stringBuilder.toString();
     }
 
     private void writeFile(String toFileName, String data) {
