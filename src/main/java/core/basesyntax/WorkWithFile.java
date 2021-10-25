@@ -14,65 +14,50 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         String res = readFile(fromFileName);
-        write(res, toFileName);
+        String[] values = res.split(" ");
+        write(values, toFileName);
     }
 
-    private void write(String str, String toFileName) {
+    private void write(String[] values, String toFileName) {
         File file = new File(toFileName);
         try {
             file.createNewFile();
         } catch (IOException e) {
             throw new RuntimeException("Can't create a file", e);
         }
-        String[] datas = str.split(" ");
-        for (String data : datas) {
+        for (String value : values) {
             try {
-                Files.write(file.toPath(), (data + System.lineSeparator()).getBytes(),
+                Files.write(file.toPath(), (value + System.lineSeparator()).getBytes(),
                         StandardOpenOption.APPEND);
             } catch (IOException e) {
-                throw new RuntimeException("Can't write data to file");
+                throw new RuntimeException("Can't write data to file", e);
             }
         }
     }
 
     private String readFile(String fromFileName) {
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             StringBuilder stringBuilder = new StringBuilder();
             String value = reader.readLine();
             while (value != null) {
                 stringBuilder.append(value).append(" ");
                 value = reader.readLine();
             }
-            String str = stringBuilder.toString();
-            return sortInfo(str);
+            String values = stringBuilder.toString();
+            return getDividedInfo(values, NAMES);
         } catch (IOException e) {
-            throw new RuntimeException("Can't read a file");
+            throw new RuntimeException("Can't read a file", e);
         }
     }
 
-    private String sortInfo(String str) {
-        String[] split = str.split("\\W+");
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < split.length; i++) {
-            stringBuilder.append(split[i]).append(" ");
-            if (i % 2 != 0) {
-                stringBuilder.append("_");
-            }
-        }
-        String result = stringBuilder.toString();
-        getDividedInfo(str, NAMES);
-        return getDividedInfo(str, NAMES);
-    }
-
-    private String getDividedInfo(String str, String[] names) {
+    private String getDividedInfo(String values, String[] names) {
         int price = 0;
         int supply = 0;
         int buy = 0;
-        int resultPrice = 0;
+        int resultPrice;
 
         StringBuilder stringBuilder = new StringBuilder();
-        String[] data = str.split(" ");
+        String[] data = values.split(" ");
 
         for (int i = 0; i < names.length; i++) {
             for (int j = 0; j < data.length; j++) {
@@ -90,9 +75,9 @@ public class WorkWithFile {
         for (int i = 0; i < data2.length; i++) {
             String[] splitedData = data2[i].split(",");
             if (splitedData[INDEX_NAME].equals("supply")) {
-                supply = Integer.valueOf(splitedData[INDEX_PRICE]);
+                supply = Integer.parseInt(splitedData[INDEX_PRICE]);
             } else {
-                buy = Integer.valueOf(splitedData[INDEX_PRICE]);
+                buy = Integer.parseInt(splitedData[INDEX_PRICE]);
             }
         }
         resultPrice = supply - buy;
