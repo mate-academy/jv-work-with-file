@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.util.List;
 
 public class WorkWithFile {
+    private static final String SUPPLY_FIELD = "supply";
+    private static final String BUY_FIELD = "buy";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[][] data = readFile(fromFileName);
@@ -29,12 +31,14 @@ public class WorkWithFile {
         int allBuy = 0;
         for (int i = 0; i < arr.length; i++) {
             switch (arr[i][0]) {
-                case "supply":
+                case SUPPLY_FIELD:
                     allSupply += Integer.valueOf(arr[i][1]);
                     break;
-                case "buy":
-                default:
+                case BUY_FIELD:
                     allBuy += Integer.valueOf(arr[i][1]);
+                    break;
+                default:
+                    throw new FieldNotFoundException("Some field in file is incorrect");
             }
         }
         StringBuilder stringBuilder = new StringBuilder();
