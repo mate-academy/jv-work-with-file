@@ -19,7 +19,7 @@ public class WorkWithFile {
                     totalBuy += parseInt(lineData[1]);
                     break;
                 default:
-                    System.out.println("Can't recognize operation type");
+                    throw new RuntimeException("Can't recognize operation type " + lineData[0]);
             }
         }
         int result = totalSupply - totalBuy;
