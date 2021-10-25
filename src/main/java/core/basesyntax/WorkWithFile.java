@@ -6,7 +6,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collections;
 
 public class WorkWithFile {
     private static final int COLUMN_AMOUNT = 2;
@@ -15,11 +14,11 @@ public class WorkWithFile {
     private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String stringData = stringData(fromFileName);
-        String[] devidedData = stringData.split("[^A-Za-z0-9,]+");
+        String data = getDataFromFile(fromFileName);
+        String[] devidedData = data.split(System.lineSeparator());
         int[] supplyBuyData = new int[COLUMN_AMOUNT];
         for (int i = 0; i < devidedData.length; i++) {
-            if (devidedData[i].matches("(s)[A-Za-z0-9,]+")) {
+            if (devidedData[i].contains("supply")) {
                 supplyBuyData[SUPPLY_INDEX] += Integer.parseInt(devidedData[i]
                         .split(",")[AMOUNT_INDEX]);
             } else {
@@ -35,27 +34,26 @@ public class WorkWithFile {
         writeFile(toFileName, report.toString());
     }
 
-    private String stringData(String fromFileName) {
-        File file = new File(fromFileName);
-        String informationFromFileName = null;
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(file));
+    private String getDataFromFile(String fileName) {
+        File file = new File(fileName);
+        String informationFromFile = null;
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             StringBuilder stringBuilder = new StringBuilder();
             String value = reader.readLine();
             while (value != null) {
                 stringBuilder.append(value).append(System.lineSeparator());
                 value = reader.readLine();
             }
-            informationFromFileName = stringBuilder.toString();
+            informationFromFile = stringBuilder.toString();
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't read file " + fileName, e);
         }
-        return informationFromFileName;
+        return informationFromFile;
     }
 
     private void writeFile(String toFileName, String data) {
         try {
-            Files.write(Path.of(toFileName), Collections.singleton(data));
+            Files.write(Path.of(toFileName), data.getBytes());
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to file", e);
         }
