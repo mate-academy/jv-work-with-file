@@ -17,13 +17,13 @@ public class WorkWithFile {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
             String line = bufferedReader.readLine();
             while (line != null) {
-                stringBuilder.append(line).append(" ");
+                stringBuilder.append(line).append(System.lineSeparator());
                 line = bufferedReader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("Cannot read file " + fileName, e);
         }
-        return stringBuilder.toString().trim().split(" ");
+        return stringBuilder.toString().trim().split(System.lineSeparator());
     }
 
     private String createReport(String[] info) {
@@ -31,8 +31,8 @@ public class WorkWithFile {
         int sumSupply = 0;
         int sumBuy = 0;
 
-        for (String str : info) {
-            String[] line = str.split(",");
+        for (String informationLine : info) {
+            String[] line = informationLine.split(",");
             if (line[INDEX_OF_ACTION].equals(ACTION_SUPPLY)) {
                 sumSupply += Integer.valueOf(line[INDEX_OF_NUMBERS]);
             } else if (line[INDEX_OF_ACTION].equals(ACTION_BUY)) {
@@ -46,12 +46,15 @@ public class WorkWithFile {
                 .append("result,").append(sumSupply - sumBuy).toString();
     }
 
-    public void getStatistic(String fromFileName, String toFileName) {
-        String report = createReport(readFile(fromFileName));
+    private void writeFile(String data, String toFileName) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true))) {
-            bufferedWriter.write(report);
+            bufferedWriter.write(data);
         } catch (IOException e) {
             throw new RuntimeException("Cannot write data to file" + toFileName, e);
         }
+    }
+
+    public void getStatistic(String fromFileName, String toFileName) {
+        writeFile(createReport(readFile(fromFileName)), toFileName);
     }
 }
