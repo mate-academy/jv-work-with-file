@@ -2,11 +2,9 @@ package core.basesyntax;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 
 public class FileWriterService {
-
     public static void writeDataToFile(String[] data, String fileName) {
         File file = new File(fileName);
         BufferedWriter bufferedWriter = null;
@@ -28,5 +26,4 @@ public class FileWriterService {
             }
         }
     }
-
 }

@@ -3,14 +3,12 @@ package core.basesyntax;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class FileReaderService {
-    //reads lines from specified file and returning array of String
     public static String[] readLines(String fileName) {
-        ArrayList<String> lines = new ArrayList<>(); // Create an ArrayList object
+        ArrayList<String> lines = new ArrayList<>();
         File file = new File(fileName);
         try {
             BufferedReader reader = new BufferedReader(new java.io.FileReader(file));
@@ -26,5 +24,4 @@ public class FileReaderService {
         }
         return lines.toArray(new String[0]);
     }
-
 }
