@@ -15,8 +15,8 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         List<String> infoFromFile = getInfoFromFile(fromFileName);
-        String resultLine = getResultLine(infoFromFile);
-        writeDataToFile(toFileName, resultLine);
+        String report = getReport(infoFromFile);
+        writeDataToFile(toFileName, report);
     }
 
     private List<String> getInfoFromFile(String fromFileName) {
@@ -25,17 +25,17 @@ public class WorkWithFile {
         try {
             strings = Files.readAllLines(fileToRead.toPath());
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't read file " + fromFileName, e);
         }
         return strings;
     }
 
-    private String getResultLine(List<String> data) {
+    private String getReport(List<String> data) {
         StringBuilder stringBuilder = new StringBuilder();
         int totalSupply = 0;
         int totalBuy = 0;
         for (String line : data) {
-            int value = getValueFromLine(line);
+            int value = Integer.parseInt(line.substring(line.indexOf(SEPARATOR) + 1));
             if (line.contains(SUPPLY)) {
                 totalSupply += value;
             } else {
@@ -46,10 +46,6 @@ public class WorkWithFile {
                 .append(System.lineSeparator()).append(BUY).append(SEPARATOR).append(totalBuy)
                 .append(System.lineSeparator()).append(RESULT).append(SEPARATOR)
                 .append(totalSupply - totalBuy).toString();
-    }
-
-    private int getValueFromLine(String line) {
-        return Integer.parseInt(line.substring(line.indexOf(SEPARATOR) + 1));
     }
 
     private void writeDataToFile(String toFileName, String resultLine) {
