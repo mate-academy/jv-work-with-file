@@ -19,9 +19,9 @@ public class WorkWithFile {
         int buyMoney = 0;
         int supplyMoney = 0;
         StringBuilder reportResult = new StringBuilder();
-        String[] saved = readReport(fromFileName).split(System.lineSeparator());
-        for (String save : saved) {
-            String[] splitedReport = save.split(COMMA);
+        String[] data = readReport(fromFileName);
+        for (String line : data) {
+            String[] splitedReport = line.split(COMMA);
             if (splitedReport[SUPPLY_INDEX].equals(SUPPLY)) {
                 supplyMoney += Integer.parseInt(splitedReport[BUY_INDEX]);
             } else {
@@ -37,7 +37,7 @@ public class WorkWithFile {
         writeReport(toFileName, reportResult);
     }
 
-    public String readReport(String fileName) {
+    private String[] readReport(String fileName) {
         StringBuilder savedInfo = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             String value = reader.readLine();
@@ -50,15 +50,14 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from the file " + fileName, e);
         }
-        return savedInfo.toString();
+        return savedInfo.toString().split(System.lineSeparator());
     }
 
-    public void writeReport(String file, StringBuilder report) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+    private void writeReport(String fileName, StringBuilder report) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             writer.write(report.toString());
         } catch (IOException e) {
             throw new RuntimeException("Can't create file!", e);
         }
-        System.out.printf("Report has been written successfully in file: %s %n", file);
     }
 }
