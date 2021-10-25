@@ -5,39 +5,41 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.List;
 
 public class WorkWithFile {
-    private static final int NUMBERLINE = 3;
+    private static final int NUMBER_OF_LINE = 3;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String fileString = readData(fromFileName);
-        String data = createReport(fileString);
-        writeData(toFileName, data);
-
+        if (fileString.length() > 0) {
+            String data = createReport(fileString);
+            writeData(toFileName, data);
+        }
     }
 
     private String readData(String fromFileName) {
         File file = new File(fromFileName);
         try {
             String result = Files.readAllLines(file.toPath()).toString();
-            return result.substring(1, result.length() - 1);
+            return result.substring(1, result.length() - 1).trim();
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file!", e);
+            throw new RuntimeException("Can't read file! " + fromFileName, e);
         }
     }
 
-    private String createReport(String fileString) {
+    private String createReport(String data) {
         StringBuilder stringBuilder = new StringBuilder();
-        String[] arrayString = fileString.split(" ");
-        int[] arrayNumber = calculateDate(arrayString);
+        String[] arrayString = data.split(" ");
+        int[] arrayNumber = calculateData(arrayString);
         stringBuilder.append("supply,").append(arrayNumber[0]).append(System.lineSeparator())
                         .append("buy,").append(arrayNumber[1]).append(System.lineSeparator())
                         .append("result,").append(arrayNumber[2]);
         return stringBuilder.toString();
     }
 
-    private int[] calculateDate(String[] arrayString) {
-        int[] arrayResult = new int[NUMBERLINE];
+    private int[] calculateData(String[] arrayString) {
+        int[] arrayResult = new int[NUMBER_OF_LINE];
         int sumSupply = 0;
         int sumBuy = 0;
         int result = 0;
@@ -62,6 +64,7 @@ public class WorkWithFile {
             bufferedWriter.write(data);
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to file!", e);
+
         }
     }
 }
