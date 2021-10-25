@@ -1,6 +1,7 @@
 package core.basesyntax;
 
 import au.com.bytecode.opencsv.CSVReader;
+import core.exception.FieldNotFoundException;
 import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -29,13 +30,13 @@ public class WorkWithFile {
     public String createReport(String[][] arr) {
         int allSupply = 0;
         int allBuy = 0;
-        for (int i = 0; i < arr.length; i++) {
-            switch (arr[i][0]) {
+        for (String[] strings : arr) {
+            switch (strings[0]) {
                 case SUPPLY_FIELD:
-                    allSupply += Integer.valueOf(arr[i][1]);
+                    allSupply += Integer.valueOf(strings[1]);
                     break;
                 case BUY_FIELD:
-                    allBuy += Integer.valueOf(arr[i][1]);
+                    allBuy += Integer.valueOf(strings[1]);
                     break;
                 default:
                     throw new FieldNotFoundException("Some field in file is incorrect");
@@ -56,7 +57,6 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Cannot read file " + fileName, e);
         }
-        String[][] result = allLines.toArray(new String[0][0]);
-        return result;
+        return allLines.toArray(new String[0][0]);
     }
 }
