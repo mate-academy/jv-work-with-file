@@ -18,18 +18,18 @@ public class WorkWithFile {
     }
 
     private String readFromFile(String fileName) {
-        StringBuilder builder = new StringBuilder();
+        StringBuilder textFromFileBuilder = new StringBuilder();
         String value;
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
             value = bufferedReader.readLine();
             while (value != null) {
-                builder.append(value).append(System.lineSeparator());
+                textFromFileBuilder.append(value).append(System.lineSeparator());
                 value = bufferedReader.readLine();
             }
         } catch (Exception e) {
-            throw new RuntimeException("Can't read file" + e);
+            throw new RuntimeException("Can't read file", e);
         }
-        return builder.toString();
+        return textFromFileBuilder.toString();
     }
 
     private String makingReport(String data) {
@@ -57,7 +57,7 @@ public class WorkWithFile {
         try (FileWriter fileWriter = new FileWriter(fileName)) {
             fileWriter.write(data);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data to file " + e);
+            throw new RuntimeException("Can't write data to file ", e);
         }
     }
 }
