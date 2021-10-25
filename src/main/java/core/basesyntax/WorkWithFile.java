@@ -20,41 +20,40 @@ public class WorkWithFile {
     public String[] readFromFile(String fromFileName) {
         File file = new File(fromFileName);
         StringBuilder stringBuilder = new StringBuilder();
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(file));
-            String readedLine = reader.readLine();
+        try (BufferedReader readerFromFile = new BufferedReader(new FileReader(file))) {
+            String readedLine = readerFromFile.readLine();
             if (readedLine == null) {
                 return new String[0];
             }
             while (readedLine != null) {
                 stringBuilder.append(readedLine).append((System.lineSeparator()));
-                readedLine = reader.readLine();
+                readedLine = readerFromFile.readLine();
             }
 
         } catch (IOException e) {
             throw new RuntimeException("Can't read file", e);
         }
-        String str = stringBuilder.toString();
-        return str.split(System.lineSeparator());
+        String stringReadFromFile = stringBuilder.toString();
+        return stringReadFromFile.split(System.lineSeparator());
     }
 
     public String createReport(String[] data) {
-        StringBuilder stringBuilder = new StringBuilder();
-        int sumOfBuys = 0;
-        int sumOfSupplies = 0;
+        StringBuilder stringBuilderWithReport = new StringBuilder();
+        int sumOfBuysToReport = 0;
+        int sumOfSuppliesToReport = 0;
         for (String string : data) {
             String[] splittedString = string.split(",");
             if (splittedString[0].equals(BUY)) {
-                sumOfBuys += Integer.parseInt(splittedString[1]);
+                sumOfBuysToReport += Integer.parseInt(splittedString[1]);
             }
             if (splittedString[0].equals(SUPPLY)) {
-                sumOfSupplies += Integer.parseInt(splittedString[1]);
+                sumOfSuppliesToReport += Integer.parseInt(splittedString[1]);
             }
         }
-        return stringBuilder.append(SUPPLY).append(",").append(sumOfSupplies)
-                .append(System.lineSeparator()).append(BUY).append(",").append(sumOfBuys)
+        return stringBuilderWithReport.append(SUPPLY).append(",").append(sumOfSuppliesToReport)
+                .append(System.lineSeparator()).append(BUY).append(",").append(sumOfBuysToReport)
                 .append(System.lineSeparator()).append(RESULT).append(",")
-                .append(sumOfSupplies - sumOfBuys).toString();
+                .append(sumOfSuppliesToReport - sumOfBuysToReport).toString();
     }
 
     public void writeToFile(String fileName, String report) {
