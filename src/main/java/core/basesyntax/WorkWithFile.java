@@ -43,9 +43,12 @@ public class WorkWithFile {
 
     private String createReport() {
         StringBuilder stringBuilder = new StringBuilder();
-        return stringBuilder.append("supply,").append(supplyOperation).append(System.lineSeparator())
-                .append("buy,").append(buyOperation).append(System.lineSeparator())
-                .append("result,").append(supplyOperation - buyOperation).append(System.lineSeparator())
+        return stringBuilder.append("supply,").append(supplyOperation)
+                .append(System.lineSeparator())
+                .append("buy,").append(buyOperation)
+                .append(System.lineSeparator())
+                .append("result,").append(supplyOperation - buyOperation)
+                .append(System.lineSeparator())
                 .toString();
     }
 }
