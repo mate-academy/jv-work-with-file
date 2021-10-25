@@ -13,7 +13,7 @@ public class FileWriterService {
                 bufferedWriter.flush();
             }
         } catch (IOException e) {
-            throw new RuntimeException("IOException during writing to file", e);
+            throw new RuntimeException("IOException during writing to file " + fileName, e);
         }
     }
 }
