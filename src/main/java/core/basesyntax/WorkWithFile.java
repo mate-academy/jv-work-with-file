@@ -30,7 +30,7 @@ public class WorkWithFile {
             }
             return report.toString();
         } catch (IOException e) {
-            throw new RuntimeException("Can't read data from file");
+            throw new RuntimeException("Can't read data from file" + fromFileName, e);
         }
     }
 
@@ -44,7 +44,7 @@ public class WorkWithFile {
                 supply += Integer.parseInt(splitData[i + 1]);
             } else if (splitData[i].equals(BUY)) {
                 buy += Integer.parseInt(splitData[i + 1]);
-            }""
+            }
         }
         return result.append(SUPPLY).append(COMMA).append(supply).append(System.lineSeparator())
                 .append(BUY).append(COMMA).append(buy).append(System.lineSeparator())
@@ -58,7 +58,7 @@ public class WorkWithFile {
                 bufferedWriter.write(result + System.lineSeparator());
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't write file", e);
+            throw new RuntimeException("Can't write file" + toFileName, e);
         }
     }
 }
