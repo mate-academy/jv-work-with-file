@@ -1,6 +1,6 @@
 package core.basesyntax;
 
-public class MyArrayWorker {
+public class ArrayService {
 
     public static String[][] splitStringLinesInOneDimensionalOnTwoSrtings(
                 String[] oneDimArr, String symbol) {

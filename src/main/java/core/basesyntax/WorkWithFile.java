@@ -6,7 +6,7 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] linesArray = MyFileReader.readLines(fromFileName);
-        String[][] data = MyArrayWorker.splitStringLinesInOneDimensionalOnTwoSrtings(
+        String[][] data = ArrayService.splitStringLinesInOneDimensionalOnTwoSrtings(
                 linesArray, ",");
         int totalSupply = 0;
         int totalBuy = 0;
