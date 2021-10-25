@@ -9,7 +9,8 @@ import java.io.IOException;
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            String finalData = createReport(readDataFromFile(fromFileName));
+            StringBuilder textFromFileBuilder = readDataFromFile(fromFileName);
+            String finalData = createReport(textFromFileBuilder);
             writer.write(finalData);
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to file.", e);
