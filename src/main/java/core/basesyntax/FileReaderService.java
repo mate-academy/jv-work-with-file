@@ -1,17 +1,13 @@
 package core.basesyntax;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 
 public class FileReaderService {
     public static String[] readLines(String fileName) {
         ArrayList<String> lines = new ArrayList<>();
         File file = new File(fileName);
-        try {
-            BufferedReader reader = new BufferedReader(new java.io.FileReader(file));
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line = reader.readLine();
             while (line != null) {
                 lines.add(line);
