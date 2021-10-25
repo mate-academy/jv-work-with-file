@@ -17,7 +17,7 @@ public class WorkWithFile {
         writeFile(toFileName, createReport(readFile(fromFileName)));
     }
 
-    private StringBuilder readFile(String fileName) {
+    private String readFile(String fileName) {
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             StringBuilder dataBuilder = new StringBuilder();
             String readLine = reader.readLine();
@@ -29,14 +29,14 @@ public class WorkWithFile {
                 }
                 readLine = reader.readLine();
             }
-            return dataBuilder;
+            return dataBuilder.toString();
         } catch (IOException e) {
-            throw new RuntimeException("Can't reach file", e);
+            throw new RuntimeException("Can't reach file " + fileName, e);
         }
     }
 
-    private String[] createReport(StringBuilder dataValuesBuilder) {
-        String[] splitData = dataValuesBuilder.toString()
+    private String createReport(String dataValues) {
+        String[] splitData = dataValues
                 .split(System.lineSeparator());
         int[] values = new int[NUMBER_OF_VALUES];
         for (int i = 0; i < splitData.length; i++) {
@@ -47,19 +47,19 @@ public class WorkWithFile {
             }
         }
         values[RESULT] = values[SUPPLY] - values[BUY];
-        String[] formattedResult = new String[NUMBER_OF_VALUES];
         String[] titles = new String[]{"supply", "buy", "result"};
-        for (int i = 0; i < formattedResult.length; i++) {
-            StringBuilder builder = new StringBuilder();
-            builder.append(titles[i]).append(SEPARATOR).append(values[i]);
-            formattedResult[i] = builder.toString();
+        StringBuilder formattedResult = new StringBuilder();
+        for (int i = 0; i < titles.length; i++) {
+            formattedResult.append(titles[i]).append(SEPARATOR)
+                    .append(values[i]).append(System.lineSeparator());
         }
-        return formattedResult;
+        return formattedResult.toString();
     }
 
-    private void writeFile(String toFileName, String[] formattedResult) {
+    private void writeFile(String toFileName, String formattedResult) {
+        String[] writeToFile = formattedResult.split(System.lineSeparator());
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            for (String result : formattedResult) {
+            for (String result : writeToFile) {
                 bufferedWriter.write(result + System.lineSeparator());
             }
         } catch (IOException e) {
