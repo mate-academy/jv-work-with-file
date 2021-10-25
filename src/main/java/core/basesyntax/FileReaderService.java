@@ -7,13 +7,13 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class MyFileReader {
+public class FileReaderService {
     //reads lines from specified file and returning array of String
     public static String[] readLines(String fileName) {
         ArrayList<String> lines = new ArrayList<>(); // Create an ArrayList object
         File file = new File(fileName);
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(file));
+            BufferedReader reader = new BufferedReader(new java.io.FileReader(file));
             String line = reader.readLine();
             while (line != null) {
                 lines.add(line);

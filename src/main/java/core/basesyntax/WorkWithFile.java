@@ -5,7 +5,7 @@ import static java.lang.Integer.parseInt;
 public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String[] linesArray = MyFileReader.readLines(fromFileName);
+        String[] linesArray = FileReaderService.readLines(fromFileName);
         String[][] data = ArrayService.splitStringLinesInOneDimensionalOnTwoSrtings(
                 linesArray, ",");
         int totalSupply = 0;
@@ -27,6 +27,6 @@ public class WorkWithFile {
         report[0] = "supply," + totalSupply;
         report[1] = "buy," + totalBuy;
         report[2] = "result," + result;
-        MyFileWriter.writeDataToFile(report, toFileName);
+        FileWriterService.writeDataToFile(report, toFileName);
     }
 }
