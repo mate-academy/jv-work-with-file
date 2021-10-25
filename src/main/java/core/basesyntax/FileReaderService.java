@@ -18,9 +18,9 @@ public class FileReaderService {
                 line = reader.readLine();
             }
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("FileNotFoundException: ", e);
+            throw new RuntimeException("Can't find file with name " + fileName, e);
         } catch (IOException e) {
-            throw new RuntimeException("IOException: ", e);
+            throw new RuntimeException("Can't read file " + fileName, e);
         }
         return lines.toArray(new String[0]);
     }
