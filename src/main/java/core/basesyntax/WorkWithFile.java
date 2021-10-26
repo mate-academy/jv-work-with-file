@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
-        StringBuilder textFromFileBuilder = readDataFromFile(fromFileName);
+        String textFromFileBuilder = readDataFromFile(fromFileName);
         String finalData = createReport(textFromFileBuilder);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write(finalData);
@@ -17,7 +17,7 @@ public class WorkWithFile {
         }
     }
 
-    private StringBuilder readDataFromFile(String fromFileName) {
+    private String readDataFromFile(String fromFileName) {
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             StringBuilder fileStrings = new StringBuilder();
             String fromFile = reader.readLine();
@@ -26,15 +26,15 @@ public class WorkWithFile {
                         .append(System.lineSeparator());
                 fromFile = reader.readLine();
             }
-            return fileStrings;
+            return fileStrings.toString();
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from file.", e);
         }
     }
 
-    private String createReport(StringBuilder fileStrings) {
+    private String createReport(String fileStrings) {
         StringBuilder report = new StringBuilder();
-        String[] splittedLines = fileStrings.toString().split(System.lineSeparator());
+        String[] splittedLines = fileStrings.split(System.lineSeparator());
         int supply = 0;
         int buy = 0;
         for (String currentLine : splittedLines) {
