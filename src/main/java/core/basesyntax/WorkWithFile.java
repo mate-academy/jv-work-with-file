@@ -11,6 +11,15 @@ public class WorkWithFile {
     private static final int INDEX_FOR_AMOUNT = 1;
     private static final String ACTION_NAME = "supply";
 
+    public void getStatistic(String fromFileName, String toFileName) {
+        byte[] textOfReportInBytes = createReport(readFile(fromFileName)).getBytes();
+        try {
+            Files.write(Path.of(toFileName), textOfReportInBytes);
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot write data to file" + toFileName, e);
+        }
+    }
+
     private String[] readFile(String fileName) {
         StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
@@ -41,14 +50,5 @@ public class WorkWithFile {
                 .append(System.lineSeparator())
                 .append("buy,").append(purchases).append(System.lineSeparator())
                 .append("result,").append(supply - purchases).toString();
-    }
-
-    public void getStatistic(String fromFileName, String toFileName) {
-        byte[] textOfReportInBytes = createReport(readFile(fromFileName)).getBytes();
-        try {
-            Files.write(Path.of(toFileName), textOfReportInBytes);
-        } catch (IOException e) {
-            throw new RuntimeException("Cannot write data to file" + toFileName, e);
-        }
     }
 }
