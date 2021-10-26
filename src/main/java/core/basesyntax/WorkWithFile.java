@@ -55,7 +55,6 @@ public class WorkWithFile {
         }
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(report);
-            bufferedWriter.flush();
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file", e);
         }
