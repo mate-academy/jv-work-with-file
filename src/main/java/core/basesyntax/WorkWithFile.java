@@ -30,7 +30,7 @@ public class WorkWithFile {
         return amountsSupplyAndBuy;
     }
 
-    private void getAmount(String operationLine,int[] currentAmountsSupplyAndBuy) {
+    private void getAmount(String operationLine, int[] currentAmountsSupplyAndBuy) {
         int amountOnOperationLine = Integer.parseInt(operationLine
                 .substring(operationLine.indexOf(",") + 1));
         switch (operationLine.substring(0, operationLine.indexOf(","))) {
@@ -43,6 +43,7 @@ public class WorkWithFile {
                 break;
             }
             default: {
+                throw new RuntimeException("Bad line in data");
             }
         }
     }
