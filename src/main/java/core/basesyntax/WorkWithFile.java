@@ -7,7 +7,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-
     private String[] readFile(String fromFileName) {
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             StringBuilder builder = new StringBuilder();
