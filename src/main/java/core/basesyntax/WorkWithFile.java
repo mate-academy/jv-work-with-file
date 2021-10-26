@@ -19,10 +19,10 @@ public class WorkWithFile {
         String[] data = readFromFile(fromFileName).split(System.lineSeparator());
         StringBuilder calculateResult = new StringBuilder();
         for (String unit : data) {
-            if (unit.substring(0, unit.indexOf(COMMA)).equals(SUPPLY)) {
+            if (unit.contains(SUPPLY)) {
                 supplySum += Integer.parseInt(unit.substring(unit.indexOf(COMMA) + 1));
             }
-            if (unit.substring(0, unit.indexOf(COMMA)).equals(BUY)) {
+            if (unit.contains(BUY)) {
                 buySum += Integer.parseInt(unit.substring(unit.indexOf(COMMA) + 1));
             }
         }
