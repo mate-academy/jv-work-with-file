@@ -6,9 +6,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile implements Reportable {
-    public static final String SPLIT_BY = ",";
-    public static final int FIRST_INDEX = 0;
-    public static final int SECOND_INDEX = 1;
+    private static final String SPLIT_BY = ",";
+    private static final int FIRST_INDEX = 0;
+    private static final int SECOND_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String report = getReport(fromFileName);
