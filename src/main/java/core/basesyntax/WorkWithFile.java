@@ -25,7 +25,6 @@ public class WorkWithFile {
         }
         result = supply - buy;
         writerFile(toFileName, buy, supply, result);
-        listDataFile.clear();
     }
 
     public List<String> readerFile(String fromFileName) {
