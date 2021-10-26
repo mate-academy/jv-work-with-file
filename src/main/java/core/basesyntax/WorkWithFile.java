@@ -9,6 +9,8 @@ import java.nio.file.Files;
 public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
+    private static final String RESULT = "result";
+    private static final String COMMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         File fromFile = new File(fromFileName);
@@ -27,9 +29,9 @@ public class WorkWithFile {
                     buy += Integer.parseInt(readedLines[i]);
                 }
             }
-            dataToWrite[0] = "supply," + supply;
-            dataToWrite[1] = "buy," + buy;
-            dataToWrite[2] = "result," + (supply - buy);
+            dataToWrite[0] = SUPPLY + COMMA + supply;
+            dataToWrite[1] = BUY + COMMA + buy;
+            dataToWrite[2] = RESULT + COMMA + (supply - buy);
             writeToFile(toFileName, dataToWrite);
         } catch (IOException e) {
             throw new RuntimeException("Error while reading file ", e);
