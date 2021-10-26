@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class WorkWithFile {
     private static final String SUPPLY = "supply,";
@@ -14,7 +15,7 @@ public class WorkWithFile {
     private static final String RESULT = "result,";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        ArrayList<String> spreadSheet = new ArrayList<>();
+        List<String> spreadSheet = new ArrayList<>();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String line = "";
             while (line != null) {
@@ -29,7 +30,7 @@ public class WorkWithFile {
         writeStatistic(toFileName, createReport(spreadSheet));
     }
 
-    private String createReport(ArrayList<String> spreadSheet) {
+    private String createReport(List<String> spreadSheet) {
         int buy = 0;
         int supply = 0;
         for (String target : spreadSheet) {
