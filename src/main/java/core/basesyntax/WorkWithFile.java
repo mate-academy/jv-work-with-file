@@ -18,8 +18,7 @@ public class WorkWithFile {
     private String[] readFromFile(String fileName) {
         File fromFile = new File(fileName);
         StringBuilder data = new StringBuilder();
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFile));
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFile))) {
             String reader = bufferedReader.readLine();
             while (reader != null) {
                 data.append(reader).append(" ");
