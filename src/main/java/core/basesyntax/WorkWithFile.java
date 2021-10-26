@@ -1,6 +1,10 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class WorkWithFile {
 
@@ -41,8 +45,10 @@ public class WorkWithFile {
         }
         result = supply - buy;
         StringBuilder resultBuilder = new StringBuilder();
-        resultBuilder.append("supply,").append(supply).append("\n").append("buy,").append(buy)
-                .append("\n").append("result,").append(result);
+        resultBuilder.append("supply,").append(supply).append(System
+                        .lineSeparator()).append("buy,").append(buy)
+                        .append(System.lineSeparator()).append("result,")
+                        .append(result);
         return resultBuilder.toString();
     }
 
