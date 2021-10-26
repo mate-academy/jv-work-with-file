@@ -67,9 +67,7 @@ public class WorkWithFile {
     private void writeData(String toFileName, String data) {
         File file = new File(toFileName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, true))) {
-            if (data != "") {
-                bufferedWriter.write(data);
-            }
+            bufferedWriter.write(data);
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to file!", e);
         }
