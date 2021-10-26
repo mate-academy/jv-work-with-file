@@ -13,25 +13,21 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         String readData = readFile(fromFileName);
-        write(readData, toFileName);
+        String report = getDividedInfo(readData);
+        write(report, toFileName);
     }
 
     private void write(String readData, String toFileName) {
-        String[] values = readData.split(" ");
-
         File file = new File(toFileName);
         try {
             file.createNewFile();
         } catch (IOException e) {
             throw new RuntimeException("Can't create a file", e);
         }
-        for (String value : values) {
-            try {
-                Files.write(file.toPath(), (value + System.lineSeparator()).getBytes(),
-                        StandardOpenOption.APPEND);
-            } catch (IOException e) {
-                throw new RuntimeException("Can't write data to file", e);
-            }
+        try {
+            Files.write(file.toPath(), readData.getBytes(), StandardOpenOption.APPEND);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write data to file", e);
         }
     }
 
@@ -43,8 +39,7 @@ public class WorkWithFile {
                 stringBuilder.append(value).append(" ");
                 value = reader.readLine();
             }
-            String values = stringBuilder.toString();
-            return getDividedInfo(values);
+            return stringBuilder.toString();
         } catch (IOException e) {
             throw new RuntimeException("Can't read a file", e);
         }
