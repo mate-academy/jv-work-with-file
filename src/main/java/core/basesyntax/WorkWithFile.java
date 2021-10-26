@@ -1,6 +1,11 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class WorkWithFile {
     private static final String SUPPLY = "supply";
@@ -31,18 +36,15 @@ public class WorkWithFile {
         int buy = 0;
         for (String value : split) {
             if (value.contains(SUPPLY)) {
-                int index = value.indexOf(',') + 1;
-                int length = value.length();
                 supply += Integer.parseInt(value.substring(value.indexOf(',') + 1, value.length()));
             } else if (value.contains(BUY)) {
-                int index = value.indexOf(',') + 1;
-                int length = value.length();
                 buy += Integer.parseInt(value.substring(value.indexOf(',') + 1, value.length()));
             }
         }
         StringBuilder resultLetter = new StringBuilder();
-        resultLetter.append(SUPPLY).append(",").append(supply).append(System.lineSeparator()).append(BUY).append(",")
-                .append(buy).append(System.lineSeparator()).append(RESULT).append(",").append(supply - buy);
+        resultLetter.append(SUPPLY).append(",").append(supply).append(System.lineSeparator())
+                .append(BUY).append(",").append(buy).append(System.lineSeparator())
+                .append(RESULT).append(",").append(supply - buy);
         return resultLetter.toString();
     }
 
