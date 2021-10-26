@@ -10,15 +10,15 @@ import java.nio.file.StandardOpenOption;
 public class WorkWithFile {
     private static final int INDEX_NAME = 0;
     private static final int INDEX_PRICE = 1;
-    private static final String[] NAMES = new String[]{"supply", "buy"};
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String res = readFile(fromFileName);
-        String[] values = res.split(" ");
-        write(values, toFileName);
+        String readData = readFile(fromFileName);
+        write(readData, toFileName);
     }
 
-    private void write(String[] values, String toFileName) {
+    private void write(String readData, String toFileName) {
+        String[] values = readData.split(" ");
+
         File file = new File(toFileName);
         try {
             file.createNewFile();
@@ -44,48 +44,36 @@ public class WorkWithFile {
                 value = reader.readLine();
             }
             String values = stringBuilder.toString();
-            return getDividedInfo(values, NAMES);
+            return getDividedInfo(values);
         } catch (IOException e) {
             throw new RuntimeException("Can't read a file", e);
         }
     }
 
-    private String getDividedInfo(String values, String[] names) {
-        int price = 0;
+    private String getDividedInfo(String values) {
         int supply = 0;
         int buy = 0;
-        int resultPrice;
 
         StringBuilder stringBuilder = new StringBuilder();
         String[] data = values.split(" ");
 
-        for (int i = 0; i < names.length; i++) {
-            for (int j = 0; j < data.length; j++) {
-                String[] splitedData = data[j].split(",");
-                if (names[i].equals(splitedData[INDEX_NAME])) {
-                    price += Integer.parseInt(splitedData[INDEX_PRICE]);
-                }
-            }
-            stringBuilder.append(names[i]).append(",")
-                    .append(price).append(" ");
-            price = 0;
-        }
-        String builderToStr = stringBuilder.toString();
-        String[] data2 = builderToStr.split(" ");
-        for (int i = 0; i < data2.length; i++) {
-            String[] splitedData = data2[i].split(",");
-            if (splitedData[INDEX_NAME].equals("supply")) {
-                supply = Integer.parseInt(splitedData[INDEX_PRICE]);
+        for (int j = 0; j < data.length; j++) {
+            String[] splitedData = data[j].split(",");
+            if ("supply".equals(splitedData[INDEX_NAME])) {
+                supply += Integer.parseInt(splitedData[INDEX_PRICE]);
             } else {
-                buy = Integer.parseInt(splitedData[INDEX_PRICE]);
+                buy += Integer.parseInt(splitedData[INDEX_PRICE]);;
             }
         }
-        resultPrice = supply - buy;
-        StringBuilder stringBuilder1 = new StringBuilder();
-        stringBuilder1.append(builderToStr)
-                .append("result")
-                .append(",")
-                .append(resultPrice);
-        return stringBuilder1.toString();
+
+        stringBuilder.append("supply,")
+                .append(supply)
+                .append(System.lineSeparator())
+                .append("buy,")
+                .append(buy).append(System.lineSeparator())
+                .append("result,")
+                .append(supply - buy);
+
+        return stringBuilder.toString();
     }
 }
