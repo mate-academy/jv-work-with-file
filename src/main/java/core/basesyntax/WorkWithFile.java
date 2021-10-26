@@ -7,13 +7,16 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final int DEFAULT_ZERO = 0;
+    private static final int DEFAULT_ONE = 1;
+
     public void getStatistic(String fromFileName, String toFileName) {
         String[] fileData = readFileData(fromFileName);
         String report = createReport(fileData);
         writeToFile(report, toFileName);
     }
 
-    private String [] readFileData(String fromFileName) {
+    private String[] readFileData(String fromFileName) {
         StringBuilder fileLines = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String fromFile = reader.readLine();
@@ -35,16 +38,16 @@ public class WorkWithFile {
         }
     }
 
-    private String createReport(String[] profitCounter) {
+    private String createReport(String[] data) {
         int supplied = 0;
         int bought = 0;
         String[] stringArray;
-        for (String arrayStrings : profitCounter) {
+        for (String arrayStrings : data) {
             stringArray = arrayStrings.split(",");
-            if (stringArray[0].equals("supply")) {
-                supplied += Integer.parseInt(stringArray[1]);
-            } else if (stringArray[0].equals("buy")) {
-                bought += Integer.parseInt(stringArray[1]);
+            if (stringArray[DEFAULT_ZERO].equals("supply")) {
+                supplied += Integer.parseInt(stringArray[DEFAULT_ONE]);
+            } else if (stringArray[DEFAULT_ZERO].equals("buy")) {
+                bought += Integer.parseInt(stringArray[DEFAULT_ONE]);
             }
         }
         int finalStatistics = supplied - bought;
