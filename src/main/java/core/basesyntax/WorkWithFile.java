@@ -36,10 +36,11 @@ public class WorkWithFile {
         for (String value : textSplit) {
             int index = value.indexOf(',') + 1;
             int length = value.length();
+            String numbers = value.substring(index, length);
             if (value.contains(SUPPLY)) {
-                supply += Integer.parseInt(value.substring(index, length));
+                supply += Integer.parseInt(numbers);
             } else {
-                buy += Integer.parseInt(value.substring(index, length));
+                buy += Integer.parseInt(numbers);
             }
         }
         return SUPPLY + "," + supply + System.lineSeparator()
