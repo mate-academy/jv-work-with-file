@@ -14,23 +14,23 @@ public class WorkWithFile {
     private static final char COMA = ',';
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String[] s = readFromFile(fromFileName).split(" ");
-        statistic(s);
-        String stat = statistic(s);
+        String[] data = readFromFile(fromFileName).split(" ");
+        calculateStatistic(data);
+        String stat = calculateStatistic(data);
         writeToFile(fromFileName, toFileName, stat);
     }
 
-    private String statistic(String[] s) {
+    private String calculateStatistic(String[] s) {
         int supply = 0;
         int buy = 0;
         int result = 0;
         for (int i = 0; i < s.length; i++) {
-            int j = s[i].indexOf(COMA);
-            if (s[i].substring(0, j).equals(SUPPLY)) {
-                supply += Integer.valueOf(s[i].substring(j + 1));
+            int comaindex = s[i].indexOf(COMA);
+            if (s[i].substring(0, comaindex).equals(SUPPLY)) {
+                supply += Integer.valueOf(s[i].substring(comaindex + 1));
             }
-            if (s[i].substring(0, j).equals(BUY)) {
-                buy += Integer.valueOf(s[i].substring(j + 1));
+            if (s[i].substring(0, comaindex).equals(BUY)) {
+                buy += Integer.valueOf(s[i].substring(comaindex + 1));
             }
         }
         result = supply - buy;
