@@ -17,16 +17,14 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         List<String> spreadSheet = new ArrayList<>();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
-            String line = "";
+            String line = bufferedReader.readLine();
             while (line != null) {
-                line = bufferedReader.readLine();
                 spreadSheet.add(line);
+                line = bufferedReader.readLine();
             }
-            bufferedReader.close();
         } catch (IOException e) {
             throw new RuntimeException("Can't read from file", e);
         }
-        spreadSheet.remove(null);
         writeStatistic(toFileName, createReport(spreadSheet));
     }
 
