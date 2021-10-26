@@ -7,8 +7,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 
 public class WorkWithFile {
-    private final int dataIndex = 0;
-    private final int countIndex = 1;
+    private static final int DATAINDEX = 0;
+    private static final int COUNTINDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] data = readFromFile(fromFileName);
@@ -51,11 +51,11 @@ public class WorkWithFile {
         StringBuilder newFileWrite = new StringBuilder();
         for (String filedata : data) {
             String[] sortingData = filedata.split(",");
-            if (sortingData[dataIndex].equals("supply")) {
-                supply += Integer.valueOf(sortingData[countIndex]);
+            if (sortingData[DATAINDEX].equals("supply")) {
+                supply += Integer.valueOf(sortingData[COUNTINDEX]);
             }
-            if (sortingData[dataIndex].equals("buy")) {
-                buy += Integer.valueOf(sortingData[countIndex]);
+            if (sortingData[DATAINDEX].equals("buy")) {
+                buy += Integer.valueOf(sortingData[COUNTINDEX]);
             }
         }
         result = supply - buy;
