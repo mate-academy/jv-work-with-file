@@ -16,12 +16,11 @@ public class WorkWithFile {
     private int[] readAndCalculateData(String fromFileName) {
         int supply = 0;
         int buy = 0;
-        String str;
-        int index;
         int[] result;
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
+            String str;
             while ((str = reader.readLine()) != null) {
-                index = str.indexOf(",");
+                int index = str.indexOf(",");
                 String name = str.substring(0, index);
                 int number = Integer.parseInt(str.substring(index + 1));
                 if (name.equals("supply")) {
