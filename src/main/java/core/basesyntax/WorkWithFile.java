@@ -15,15 +15,14 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] readenData = readFile(new File(fromFileName));
-        int[] report = calculateResult(readenData);
-
+        int[] calculatedData = calculateResult(readenData);
+        String report = formResult(calculatedData);
         writeToFile(new File(toFileName), report);
     }
 
-    private void writeToFile(File file, int[] report) {
+    private void writeToFile(File file, String report) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
-            String result = new WorkWithFile().formResult(report);
-            bufferedWriter.write(result);
+            bufferedWriter.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to the file " + file, e);
         }
