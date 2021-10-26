@@ -7,15 +7,14 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
+
 public class WorkWithFile {
     private static final int NUMBER_OF_LINE = 3;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String fileString = readData(fromFileName);
-        if (fileString.length() > 0) {
-            String data = createReport(fileString);
-            writeData(toFileName, data);
-        }
+        String data = createReport(fileString);
+        writeData(toFileName, data);
     }
 
     private String readData(String fromFileName) {
@@ -68,10 +67,11 @@ public class WorkWithFile {
     private void writeData(String toFileName, String data) {
         File file = new File(toFileName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, true))) {
-            bufferedWriter.write(data);
+            if (data != "") {
+                bufferedWriter.write(data);
+            }
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to file!", e);
-
         }
     }
 }
