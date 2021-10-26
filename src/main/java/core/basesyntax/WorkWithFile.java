@@ -29,22 +29,23 @@ public class WorkWithFile {
                     buy += Integer.parseInt(readedLines[i]);
                 }
             }
-            dataToWrite[0] = SUPPLY + COMMA + supply;
-            dataToWrite[1] = BUY + COMMA + buy;
-            dataToWrite[2] = RESULT + COMMA + (supply - buy);
-            writeToFile(toFileName, dataToWrite);
+            writeToFile(toFileName, getResult(supply, buy));
         } catch (IOException e) {
             throw new RuntimeException("Error while reading file ", e);
         }
     }
 
-    private void writeToFile(String fileName, String[] dataToSave) {
+    private String getResult(int supply, int buy) {
+        StringBuilder builder = new StringBuilder();
+        builder.append(SUPPLY).append(COMMA).append(supply).append(System.lineSeparator())
+                .append(BUY).append(COMMA).append(buy).append(System.lineSeparator())
+                .append(RESULT).append(COMMA).append(supply - buy);
+        return builder.toString();
+    }
+
+    private void writeToFile(String fileName, String dataToSave) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, true))) {
-            for (String data: dataToSave) {
-                writer.write(data);
-                writer.newLine();
-                writer.flush();
-            }
+                writer.write(dataToSave);
         } catch (IOException e) {
             throw new RuntimeException("Error while writing data ", e);
         }
