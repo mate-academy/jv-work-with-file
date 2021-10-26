@@ -10,7 +10,8 @@ import java.io.IOException;
 public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
-        writeToFile(createReport(fromFileName), toFileName);
+        String report = createReport(fromFileName);
+        writeToFile(report, toFileName);
     }
     
     private String createReport(String fromFileName) {
