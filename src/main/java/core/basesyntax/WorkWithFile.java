@@ -15,7 +15,7 @@ public class WorkWithFile {
     private static final int VALUE_COLUMN = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String stringToWrite = readValuesFromFile(fromFileName);
+        String stringToWrite = getDataToWriteFromFile(fromFileName);
         writeValuesToFile(toFileName, stringToWrite);
     }
 
@@ -29,7 +29,7 @@ public class WorkWithFile {
         return stringToWrite.toString();
     }
 
-    private String readValuesFromFile(String fromFileName) {
+    private String getDataToWriteFromFile(String fromFileName) {
         int supplyValue = 0;
         int buyValue = 0;
         File fileFrom = new File(fromFileName);
