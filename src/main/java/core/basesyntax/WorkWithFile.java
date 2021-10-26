@@ -33,11 +33,11 @@ public class WorkWithFile {
             throw new RuntimeException("Can't read file", e);
         }
         int difference = totalSupply - totalBuy;
-        StringBuilder sb = new StringBuilder();
-        sb.append("supply,").append(totalSupply).append(System.lineSeparator())
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("supply,").append(totalSupply).append(System.lineSeparator())
                 .append("buy,").append(totalBuy).append(System.lineSeparator())
                 .append("result,").append(difference);
-        return new String(sb);
+        return new String(stringBuilder);
     }
     
     private void writeToFile(String report, String toFileName) {
@@ -46,7 +46,7 @@ public class WorkWithFile {
             file.createNewFile();
             writer.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data to file");
+            throw new RuntimeException("Can't write data to file", e);
         }
     }
 }
