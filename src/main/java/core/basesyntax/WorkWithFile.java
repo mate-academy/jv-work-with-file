@@ -7,7 +7,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
-
 public class WorkWithFile {
     private static final int NUMBER_OF_LINE = 3;
 
