@@ -11,16 +11,17 @@ public class WorkWithFile implements Reportable {
     public static final int SECOND_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
+        String report = getReport(fromFileName);
         try (FileWriter writer = new FileWriter(toFileName)) {
-            writer.append(getReport(fromFileName));
+            writer.append(report);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException("This file can't be write", e);
         }
     }
 
     @Override
     public String getReport(String fromFileName) {
-        String line = "";
+        String line;
         int supply = 0;
         int buy = 0;
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
@@ -33,7 +34,7 @@ public class WorkWithFile implements Reportable {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException("This file can't be read", e);
         }
         return new StringBuilder().append("supply,").append(supply)
                 .append(System.lineSeparator()).append("buy,")
