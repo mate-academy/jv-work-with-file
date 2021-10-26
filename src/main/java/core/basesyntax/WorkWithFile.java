@@ -1,8 +1,11 @@
 package core.basesyntax;
 
-import java.io.*;
-import java.nio.file.Files;
-
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class WorkWithFile {
     private static final int NUMBER_OF_LINE = 3;
@@ -17,13 +20,14 @@ public class WorkWithFile {
 
     private String readData(String fromFileName) {
         File file = new File(fromFileName);
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(file.getName()));
+        if (!file.exists()) {
+            throw new RuntimeException("File doesn't exist");
+        }
+        try (BufferedReader reader = new BufferedReader(new FileReader(file.getName()))) {
             StringBuilder stringBuilder = new StringBuilder();
-            int value = reader.read();
-            while (value != -1) {
-                stringBuilder.append((char) value);
-                value = reader.read();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                stringBuilder.append(line).append(System.lineSeparator());
             }
             return stringBuilder.toString().trim();
         } catch (IOException e) {
