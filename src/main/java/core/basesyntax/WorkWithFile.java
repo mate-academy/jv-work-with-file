@@ -1,18 +1,19 @@
 package core.basesyntax;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.List;
 
 public class WorkWithFile {
     private static final String COLUMN_SEPARATOR = ",";
     private static final String[] OPERATION_TYPES = {"supply", "buy"};
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String data = getDataFromFile(fromFileName);
+        List<String> data = getDataFromFile(fromFileName);
         HashMap<String, Integer> statistic = parseDataTpHashMap(data);
         StringBuilder resultData = new StringBuilder();
         for (String operationType : OPERATION_TYPES) {
@@ -24,40 +25,32 @@ public class WorkWithFile {
         putDataToFile(toFileName, resultData.toString());
     }
 
-    private String getDataFromFile(String fileName) {
-        StringBuilder data = new StringBuilder();
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
-            String nextLine = bufferedReader.readLine();
-            while (nextLine != null) {
-                data.append(nextLine).append(System.lineSeparator());
-                nextLine = bufferedReader.readLine();
-            }
+    private List<String> getDataFromFile(String fileName) {
+        File file = new File(fileName);
+        List<String> data;
+        try {
+            data = Files.readAllLines(file.toPath());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return data.toString();
+        return data;
     }
 
     private void putDataToFile(String fileName, String data) {
-        File file = new File(fileName);
-        try (FileWriter fileWriter = new FileWriter(file)) {
-            if (!file.exists()) {
-                file.createNewFile();
-            }
-            fileWriter.write(data);
+        try {
+            Files.write(Path.of(fileName), data.getBytes(StandardCharsets.UTF_8));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private HashMap<String, Integer> parseDataTpHashMap(String data) {
+    private HashMap<String, Integer> parseDataTpHashMap(List<String> data) {
         HashMap<String, Integer> statistic = new HashMap<>();
         statistic.put("supply", 0);
         statistic.put("buy", 0);
-        String[] rows = data.split(System.lineSeparator());
         String[] column;
         int value;
-        for (String row : rows) {
+        for (String row : data) {
             column = row.split(COLUMN_SEPARATOR);
             value = Integer.parseInt(column[1]);
             if (column[0].equals(OPERATION_TYPES[0])) {
