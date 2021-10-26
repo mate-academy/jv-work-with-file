@@ -18,37 +18,39 @@ public class WorkWithFile {
     private static final int RESULT_INDEX = 2;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        writeDataToFile(toFileName, processData(readDataFromFile(fromFileName)));
+        writeDataToFile(toFileName, formReport(processData(readDataFromFile(fromFileName))));
     }
 
     private String[] readDataFromFile(String fileName) {
-        File file = new File(fileName);
         StringBuilder stringBuilder = new StringBuilder();
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+        try (BufferedReader bufferedReader =
+                     new BufferedReader(new FileReader(new File(fileName)))) {
             String dataString = bufferedReader.readLine();
             while (dataString != null) {
                 stringBuilder.append(dataString).append(System.lineSeparator());
                 dataString = bufferedReader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can not read from file");
+            throw new RuntimeException("Can not read from file" + fileName, e);
         }
         return stringBuilder.toString().split(System.lineSeparator());
     }
 
-    private void writeDataToFile(String fileName, int[] data) {
+    private String formReport(int[] data) {
+        return OPERATION_SUPPLY + SEPARATOR + data[SUPPLY_INDEX] + System.lineSeparator()
+                + OPERATION_BUY + SEPARATOR + data[BUY_INDEX] + System.lineSeparator()
+                + RESULT + SEPARATOR + data[RESULT_INDEX] + System.lineSeparator();
+    }
+
+    private void writeDataToFile(String fileName, String report) {
         try {
             File file = new File(fileName);
             file.createNewFile();
             BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, false));
-            bufferedWriter.write(
-                    OPERATION_SUPPLY + SEPARATOR + data[SUPPLY_INDEX] + System.lineSeparator()
-                     + OPERATION_BUY + SEPARATOR + data[BUY_INDEX] + System.lineSeparator()
-                     + RESULT + SEPARATOR + data[RESULT_INDEX] + System.lineSeparator());
+            bufferedWriter.write(report);
             bufferedWriter.close();
         } catch (IOException e) {
-            throw new RuntimeException("Can't write into file " + fileName);
+            throw new RuntimeException("Can't write into file " + fileName, e);
         }
     }
 
@@ -60,14 +62,12 @@ public class WorkWithFile {
             separatorIndex = dataString.indexOf(SEPARATOR);
             if (dataString.contains(OPERATION_SUPPLY)) {
                 supplyTotal += Integer.parseInt(dataString.substring(separatorIndex + 1));
+            } else if (dataString.contains(OPERATION_BUY)) {
+                buyTotal += Integer.parseInt(dataString.substring(separatorIndex + 1));
             } else {
-                if (dataString.contains(OPERATION_BUY)) {
-                    buyTotal += Integer.parseInt(dataString.substring(separatorIndex + 1));
-                } else {
-                    throw new RuntimeException("Invalid data format");
-                }
+                throw new RuntimeException("Invalid data format");
             }
         }
-        return new int[]{supplyTotal,buyTotal, supplyTotal - buyTotal};
+        return new int[]{supplyTotal, buyTotal, supplyTotal - buyTotal};
     }
 }
