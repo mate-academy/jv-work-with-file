@@ -30,7 +30,7 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read file " + fromFileName, e);
         }
-        String[] textSplit = textFromFile.toString().split("\r");
+        String[] textSplit = textFromFile.toString().split("\r\n");
         int supply = 0;
         int buy = 0;
         for (String value : textSplit) {
@@ -38,15 +38,13 @@ public class WorkWithFile {
             int length = value.length();
             if (value.contains(SUPPLY)) {
                 supply += Integer.parseInt(value.substring(index, length));
-            } else if (value.contains(BUY)) {
+            } else {
                 buy += Integer.parseInt(value.substring(index, length));
             }
         }
-        StringBuilder resultText = new StringBuilder();
-        resultText.append(SUPPLY).append(",").append(supply).append(System.lineSeparator())
-                .append(BUY).append(",").append(buy).append(System.lineSeparator())
-                .append(RESULT).append(",").append(supply - buy);
-        return resultText.toString();
+        return SUPPLY + "," + supply + System.lineSeparator()
+                + BUY + "," + buy + System.lineSeparator()
+                + RESULT + "," + (supply - buy);
     }
 
     private void writeStatistic(String toFileName, String message) {
