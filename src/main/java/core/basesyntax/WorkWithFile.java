@@ -14,7 +14,6 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         File fromFile = new File(fromFileName);
-        String[] dataToWrite = new String[3];
         StringBuilder stringBuilder = new StringBuilder();
         int supply = 0;
         int buy = 0;
