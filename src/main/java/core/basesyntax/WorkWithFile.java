@@ -8,24 +8,22 @@ import java.io.IOException;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
-        int[] array = calculateData(fromFileName);
+        int[] array = readAndCalculateData(fromFileName);
         String report = createReport(array);
         writeDataToNewFile(report, toFileName);
     }
 
-    private int[] calculateData(String fromFileName) {
+    private int[] readAndCalculateData(String fromFileName) {
         int supply = 0;
         int buy = 0;
         String str;
-        String name;
-        int number;
         int index;
         int[] result;
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             while ((str = reader.readLine()) != null) {
                 index = str.indexOf(",");
-                name = str.substring(0, index);
-                number = Integer.parseInt(str.substring(index + 1));
+                String name = str.substring(0, index);
+                int number = Integer.parseInt(str.substring(index + 1));
                 if (name.equals("supply")) {
                     supply += number;
                 } else if (name.equals("buy")) {
