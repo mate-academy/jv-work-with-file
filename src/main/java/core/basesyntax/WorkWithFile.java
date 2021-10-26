@@ -1,11 +1,8 @@
 package core.basesyntax;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
-import java.util.List;
+
 
 public class WorkWithFile {
     private static final int NUMBER_OF_LINE = 3;
@@ -21,8 +18,14 @@ public class WorkWithFile {
     private String readData(String fromFileName) {
         File file = new File(fromFileName);
         try {
-            String result = Files.readAllLines(file.toPath()).toString();
-            return result.substring(1, result.length() - 1).trim();
+            BufferedReader reader = new BufferedReader(new FileReader(file.getName()));
+            StringBuilder stringBuilder = new StringBuilder();
+            int value = reader.read();
+            while (value != -1) {
+                stringBuilder.append((char) value);
+                value = reader.read();
+            }
+            return stringBuilder.toString().trim();
         } catch (IOException e) {
             throw new RuntimeException("Can't read file! " + fromFileName, e);
         }
@@ -30,7 +33,7 @@ public class WorkWithFile {
 
     private String createReport(String data) {
         StringBuilder stringBuilder = new StringBuilder();
-        String[] arrayString = data.split(" ");
+        String[] arrayString = data.split(System.lineSeparator());
         int[] arrayNumber = calculateData(arrayString);
         stringBuilder.append("supply,").append(arrayNumber[0]).append(System.lineSeparator())
                         .append("buy,").append(arrayNumber[1]).append(System.lineSeparator())
