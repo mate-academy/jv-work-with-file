@@ -7,30 +7,32 @@ import java.io.FileReader;
 import java.io.FileWriter;
 
 public class WorkWithFile {
+    private final int dataIndex = 0;
+    private final int countIndex = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        File fromFile = new File(fromFileName);
-        File toFile = new File(toFileName);
-        String[] data = fileReader(fromFile);
-        createNewFile(toFile,writeData(data));
+        String[] data = readFromFile(fromFileName);
+        writeToFile(toFileName,createReport(data));
     }
 
-    private String[] fileReader(File fromFile) {
-        String readFromFile = "";
+    private String[] readFromFile(String fileName) {
+        File fromFile = new File(fileName);
+        StringBuilder data = new StringBuilder();
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFile));
             String reader = bufferedReader.readLine();
             while (reader != null) {
-                readFromFile = readFromFile + reader + " ";
+                data.append(reader).append(" ");
                 reader = bufferedReader.readLine();
             }
-            return readFromFile.split(" ");
+            return data.toString().split(" ");
         } catch (Exception e) {
             throw new RuntimeException("File read failed " + fromFile, e);
         }
     }
 
-    private void createNewFile(File toFile, String data) {
+    private void writeToFile(String fileName, String data) {
+        File toFile = new File(fileName);
         try {
             toFile.createNewFile();
         } catch (Exception e) {
@@ -43,18 +45,18 @@ public class WorkWithFile {
         }
     }
 
-    private String writeData(String[] fileData) {
+    private String createReport(String[] data) {
         int supply = 0;
         int buy = 0;
         int result = 0;
         StringBuilder newFileWrite = new StringBuilder();
-        for (String data : fileData) {
-            String[] sortingData = data.split(",");
-            if (sortingData[0].equals("supply")) {
-                supply += Integer.valueOf(sortingData[1]);
+        for (String filedata : data) {
+            String[] sortingData = filedata.split(",");
+            if (sortingData[dataIndex].equals("supply")) {
+                supply += Integer.valueOf(sortingData[countIndex]);
             }
-            if (sortingData[0].equals("buy")) {
-                buy += Integer.valueOf(sortingData[1]);
+            if (sortingData[dataIndex].equals("buy")) {
+                buy += Integer.valueOf(sortingData[countIndex]);
             }
         }
         result = supply - buy;
