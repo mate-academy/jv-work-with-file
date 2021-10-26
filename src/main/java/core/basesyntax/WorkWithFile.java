@@ -36,15 +36,14 @@ public class WorkWithFile {
 
     private String getResult(int supply, int buy) {
         StringBuilder builder = new StringBuilder();
-        builder.append(SUPPLY).append(COMMA).append(supply).append(System.lineSeparator())
+        return builder.append(SUPPLY).append(COMMA).append(supply).append(System.lineSeparator())
                 .append(BUY).append(COMMA).append(buy).append(System.lineSeparator())
-                .append(RESULT).append(COMMA).append(supply - buy);
-        return builder.toString();
+                .append(RESULT).append(COMMA).append(supply - buy).toString();
     }
 
     private void writeToFile(String fileName, String dataToSave) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, true))) {
-                writer.write(dataToSave);
+            writer.write(dataToSave);
         } catch (IOException e) {
             throw new RuntimeException("Error while writing data ", e);
         }
