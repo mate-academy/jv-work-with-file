@@ -8,19 +8,25 @@ import java.nio.file.Files;
 
 public class WorkWithFile {
     private static final String SUPPLY = "supply";
+    private static final int SUPPLY_INDEX = 0;
     private static final String BUY = "buy";
+    private static final int BUY_INDEX = 1;
     private static final String RESULT = "result";
     private static final String COMMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        File fromFile = new File(fromFileName);
+        int[] statistic = readLines(fromFileName);
+        writeToFile(toFileName, getResult(statistic[SUPPLY_INDEX], statistic[BUY_INDEX]));
+    }
+
+    private int[] readLines(String fileName) {
+        File fromFile = new File(fileName);
         StringBuilder stringBuilder = new StringBuilder();
         int supply = 0;
         int buy = 0;
         try {
             stringBuilder.append(Files.readAllLines(fromFile.toPath()));
             String[] readedLines = stringBuilder.toString().split("\\W++");
-
             for (int i = 0; i < readedLines.length; i++) {
                 if (i >= 1 && readedLines[i - 1].contains(SUPPLY)) {
                     supply += Integer.parseInt(readedLines[i]);
@@ -28,10 +34,10 @@ public class WorkWithFile {
                     buy += Integer.parseInt(readedLines[i]);
                 }
             }
-            writeToFile(toFileName, getResult(supply, buy));
         } catch (IOException e) {
             throw new RuntimeException("Error while reading file ", e);
         }
+        return new int[]{supply, buy};
     }
 
     private String getResult(int supply, int buy) {
