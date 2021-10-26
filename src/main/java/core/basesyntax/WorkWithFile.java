@@ -35,14 +35,14 @@ public class WorkWithFile {
     private String makeReport(String data) {
         int totalSupply = 0;
         int totalBuy = 0;
-        String[] strings = data.split("\\r?\\n");
+        String[] rows = data.split("\\r?\\n");
         StringBuilder report = new StringBuilder();
-        for (String string: strings) {
-            String[] splitedString = string.split(",");
-            if (SUPPLY.equals(splitedString[0])) {
-                totalSupply += Integer.parseInt(splitedString[1]);
-            } else if (BUY.equals(splitedString[0])) {
-                totalBuy += Integer.parseInt(splitedString[1]);
+        for (String string: rows) {
+            String[] splitedRows = string.split(",");
+            if (SUPPLY.equals(splitedRows[0])) {
+                totalSupply += Integer.parseInt(splitedRows[1]);
+            } else if (BUY.equals(splitedRows[0])) {
+                totalBuy += Integer.parseInt(splitedRows[1]);
             }
         }
         return report.append(SUPPLY).append(COMMA).append(totalSupply)
