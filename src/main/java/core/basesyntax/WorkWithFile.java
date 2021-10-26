@@ -10,9 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WorkWithFile {
-    private static final String SUPPLY = "supply,";
-    private static final String BUY = "buy,";
-    private static final String RESULT = "result,";
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
         List<String> spreadSheet = new ArrayList<>();
@@ -32,17 +32,17 @@ public class WorkWithFile {
         int buy = 0;
         int supply = 0;
         for (String target : spreadSheet) {
-            if (target.contains("buy")) {
+            if (target.contains(BUY)) {
                 buy += Integer.valueOf(target.replaceAll("[^0-9]", ""));
-            } else if (target.contains("supply")) {
+            } else if (target.contains(SUPPLY)) {
                 supply += Integer.valueOf(target.replaceAll("[^0-9]", ""));
             }
         }
-        StringBuilder sb = new StringBuilder();
-        sb.append(SUPPLY).append(supply).append(System.lineSeparator())
-                .append(BUY).append(buy).append(System.lineSeparator())
-                .append(RESULT).append(supply - buy);
-        return sb.toString();
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(SUPPLY).append(",").append(supply).append(System.lineSeparator())
+                .append(BUY).append(",").append(buy).append(System.lineSeparator())
+                .append(RESULT).append(",").append(supply - buy);
+        return stringBuilder.toString();
     }
 
     private void writeStatistic(String toFileName, String report) {
