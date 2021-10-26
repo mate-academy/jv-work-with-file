@@ -44,8 +44,8 @@ public class WorkWithFile {
         int totalBuy = 0;
         int result;
         String[] tempStringArray;
-        for (String s : incomeArray) {
-            tempStringArray = s.split(VALUES_SEPARATOR);
+        for (String stringInArray : incomeArray) {
+            tempStringArray = stringInArray.split(VALUES_SEPARATOR);
             if (tempStringArray[0].equals(SUPPLY)) {
                 totalSupply += Integer.parseInt(tempStringArray[1]);
             } else if (tempStringArray[0].equals(BUY)) {
