@@ -9,29 +9,29 @@ import java.nio.file.Paths;
 public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String[] dataFile = getDataFromFile(fromFileName);
+        String[] dataFile = getRawDataFromFile(fromFileName);
         String report = createReport(dataFile);
         writeReportToFile(report, toFileName);
     }
 
-    private String[] getDataFromFile(String fromFileName) {
+    private String[] getRawDataFromFile(String fromFileName) {
         Path pathFrom = Paths.get(fromFileName).toAbsolutePath();
-        File fileFrom = new File(pathFrom.toString());
         StringBuilder textBuilder = new StringBuilder();
         try {
-            textBuilder.append(Files.readAllLines(fileFrom.toPath()));
+            Files.lines(pathFrom).forEach(data -> textBuilder.append(data).append(System.lineSeparator()));
         } catch (IOException e) {
             throw new RuntimeException("Can't read file", e);
         }
-        return textBuilder.toString().replaceAll("\\[|\\]|\\s", "").split(",");
+        return textBuilder.toString().split(System.lineSeparator());
     }
 
     private String createReport(String[] data) {
         int sumSupply = 0;
         int sumBuy = 0;
-        for (int i = 0; i + 2 < data.length + 2; i += 2) {
-            String act = data[i];
-            int countGoods = Integer.valueOf(data[i + 1]);
+        for (int i = 0; i < data.length; i++) {
+            String[] splitData = data[i].split(",");
+            String act = splitData[0];
+            int countGoods = Integer.valueOf(splitData[1]);
             switch (act) {
                 case "supply":
                     sumSupply += countGoods;
