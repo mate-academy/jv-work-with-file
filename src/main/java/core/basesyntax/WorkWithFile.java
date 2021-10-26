@@ -14,7 +14,7 @@ public class WorkWithFile {
         int buy = 0;
         int supply = 0;
         int result;
-        listDataFile = readerFile(fromFileName);
+        listDataFile = readFile(fromFileName);
         for (String step : listDataFile) {
             String[] splitData = step.split(",");
             if (splitData[0].equals("buy")) {
@@ -24,10 +24,10 @@ public class WorkWithFile {
             }
         }
         result = supply - buy;
-        writerFile(toFileName, buy, supply, result);
+        writeFile(toFileName, buy, supply, result);
     }
 
-    public List<String> readerFile(String fromFileName) {
+    public List<String> readFile(String fromFileName) {
         List<String> listDataFile = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String read;
@@ -40,7 +40,7 @@ public class WorkWithFile {
         return listDataFile;
     }
 
-    public void writerFile(String toFileName, int buy, int supply, int result) {
+    public void writeFile(String toFileName, int buy, int supply, int result) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write("supply," + supply + System.lineSeparator());
             writer.write("buy," + buy + System.lineSeparator());
