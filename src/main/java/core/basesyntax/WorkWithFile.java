@@ -26,8 +26,7 @@ public class WorkWithFile {
         int buy = 0;
         int supply = 0;
         StringBuilder builder = new StringBuilder();
-        for (String oneData:
-                inputReadFile) {
+        for (String oneData : inputReadFile) {
             if (oneData.contains("buy")) {
                 buy += Integer.parseInt(oneData.substring(oneData.indexOf(",") + 1));
             } else {
