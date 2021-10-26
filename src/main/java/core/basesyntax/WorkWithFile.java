@@ -10,7 +10,7 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         String readedFile = readFromFile(fromFileName);
-        String statistic = statistic(readedFile);
+        String statistic = calculateStatistic(readedFile);
         writeToFile(statistic, toFileName);
     }
 
@@ -25,22 +25,21 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read from file " + fromFileName, e);
         }
-
         return builder.toString();
     }
 
-    private String statistic(String someStatistic) {
-        String[] splitArray = someStatistic.split(" ");
+    private String calculateStatistic(String data) {
+        String[] splittedData = data.split(" ");
         int supply = 0;
         int buy = 0;
         int result = 0;
-        for (int i = 0; i < splitArray.length; i++) {
-            int j = splitArray[i].indexOf(',');
-            if (splitArray[i].substring(0, j).equals("supply")) {
-                supply += Integer.valueOf(splitArray[i].substring(j + 1));
+        for (int i = 0; i < splittedData.length; i++) {
+            int index = splittedData[i].indexOf(',');
+            if (splittedData[i].contains("supply")) {
+                supply += Integer.valueOf(splittedData[i].substring(index + 1));
             }
-            if (splitArray[i].substring(0, j).equals("buy")) {
-                buy += Integer.valueOf(splitArray[i].substring(j + 1));
+            if (splittedData[i].contains("buy")) {
+                buy += Integer.valueOf(splittedData[i].substring(index + 1));
             }
         }
         result = supply - buy;
@@ -59,5 +58,4 @@ public class WorkWithFile {
             throw new RuntimeException("Cant't write to file", e);
         }
     }
-
 }
