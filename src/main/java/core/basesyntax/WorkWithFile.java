@@ -14,61 +14,58 @@ public class WorkWithFile {
     private static final int OPERATION_COLUMN = 0;
     private static final int VALUE_COLUMN = 1;
 
-    private int supplyValue = 0;
-    private int buyValue = 0;
-
-    public WorkWithFile() {
+    public void getStatistic(String fromFileName, String toFileName) {
+        String stringToWrite = readValuesFromFile(fromFileName);
+        writeValuesToFile(toFileName, stringToWrite);
     }
 
-    private void countValuesFromString(String[] valueToArray) {
-        switch (valueToArray[OPERATION_COLUMN]) {
-            case BUY: {
-                this.buyValue += Integer.valueOf(valueToArray[VALUE_COLUMN]);
-                break;
-            }
-            case SUPPLY: {
-                this.supplyValue += Integer.valueOf(valueToArray[VALUE_COLUMN]);
-                break;
-            } default : break;
-        }
+    private String getDataToWrite(int supplyValue, int buyValue) {
+        StringBuilder stringToWrite = new StringBuilder();
+        stringToWrite.append(SUPPLY).append(",").append(supplyValue)
+                .append(System.lineSeparator())
+                .append(BUY).append(",").append(buyValue)
+                .append(System.lineSeparator())
+                .append(RESULT).append(",").append(supplyValue - buyValue);
+        return stringToWrite.toString();
     }
 
-    private void readValuesFromFile(String fromFileName) {
+    private String readValuesFromFile(String fromFileName) {
+        int supplyValue = 0;
+        int buyValue = 0;
         File fileFrom = new File(fromFileName);
         try (BufferedReader reader = new BufferedReader(new FileReader(fileFrom))) {
             String value = reader.readLine();
             while (value != null) {
-                countValuesFromString(value.split("\\,"));
+                String[] valueToArray = value.split(",");
+                switch (valueToArray[OPERATION_COLUMN]) {
+                    case BUY: {
+                        buyValue += Integer.valueOf(valueToArray[VALUE_COLUMN]);
+                        break;
+                    }
+                    case SUPPLY: {
+                        supplyValue += Integer.valueOf(valueToArray[VALUE_COLUMN]);
+                        break;
+                    } default : break;
+                }
                 value = reader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't read file " + fromFileName, e);
         }
+        return getDataToWrite(supplyValue, buyValue);
     }
 
-    private void writeValuesToFile(String toFileName) {
+    private void writeValuesToFile(String toFileName, String stringToWrite) {
         File fileTo = new File(toFileName);
-
         try {
             fileTo.createNewFile();
         } catch (IOException e) {
             throw new RuntimeException("Can't create file", e);
         }
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileTo))) {
-            StringBuilder stringToWrite = new StringBuilder();
-            stringToWrite.append(SUPPLY).append(",").append(this.supplyValue)
-                    .append(System.lineSeparator())
-                    .append(BUY).append(",").append(this.buyValue)
-                    .append(System.lineSeparator())
-                    .append(RESULT).append(",").append(this.supplyValue - this.buyValue);
-            writer.write(stringToWrite.toString());
+            writer.write(stringToWrite);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write to file", e);
+            throw new RuntimeException("Can't write to file " + toFileName, e);
         }
-    }
-
-    public void getStatistic(String fromFileName, String toFileName) {
-        readValuesFromFile(fromFileName);
-        writeValuesToFile(toFileName);
     }
 }
