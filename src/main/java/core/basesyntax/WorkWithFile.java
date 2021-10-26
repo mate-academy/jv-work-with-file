@@ -9,13 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WorkWithFile {
-    private static final List<String> listDataFile = new ArrayList<>();
-
     public void getStatistic(String fromFileName, String toFileName) {
+        List<String> listDataFile;
         int buy = 0;
         int supply = 0;
         int result;
-        readerFile(fromFileName);
+        listDataFile = readerFile(fromFileName);
         for (String step : listDataFile) {
             String[] splitData = step.split(",");
             if (splitData[0].equals("buy")) {
@@ -29,7 +28,8 @@ public class WorkWithFile {
         listDataFile.clear();
     }
 
-    public void readerFile(String fromFileName) {
+    public List<String> readerFile(String fromFileName) {
+        List<String> listDataFile = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String read;
             while ((read = reader.readLine()) != null) {
@@ -38,6 +38,7 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Cannot read file" + fromFileName, e);
         }
+        return listDataFile;
     }
 
     public void writerFile(String toFileName, int buy, int supply, int result) {
