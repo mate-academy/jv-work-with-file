@@ -18,7 +18,9 @@ public class WorkWithFile {
         Path pathFrom = Paths.get(fromFileName).toAbsolutePath();
         StringBuilder textBuilder = new StringBuilder();
         try {
-            Files.lines(pathFrom).forEach(data -> textBuilder.append(data).append(System.lineSeparator()));
+            Files.lines(pathFrom).forEach(data -> textBuilder
+                    .append(data)
+                    .append(System.lineSeparator()));
         } catch (IOException e) {
             throw new RuntimeException("Can't read file", e);
         }
