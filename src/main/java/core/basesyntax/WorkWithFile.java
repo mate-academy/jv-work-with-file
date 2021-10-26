@@ -15,7 +15,8 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         File file = new File(fromFileName);
-        int[] supplyAndBuyArray = readFile(file);
+        String[] readenData = readFile(file);
+        int[] supplyAndBuyArray = calculateResult(readenData);
         int supply = supplyAndBuyArray[0];
         int buy = supplyAndBuyArray[1];
 
@@ -23,50 +24,60 @@ public class WorkWithFile {
         writeToFile(file, supply, buy);
     }
 
-    public void writeToFile(File file, int supply, int buy) {
+    private void writeToFile(File file, int supply, int buy) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
-            StringBuilder stringBuilder = new StringBuilder();
-
-            stringBuilder.append(SUPPLY_NAME)
-                    .append(SEPARATOR)
-                    .append(supply)
-                    .append(System.lineSeparator());
-
-            stringBuilder.append(BUY_NAME)
-                    .append(SEPARATOR)
-                    .append(buy)
-                    .append(System.lineSeparator());
-
-            stringBuilder.append(RESULT_NAME)
-                    .append(SEPARATOR)
-                    .append(supply - buy);
-
-            bufferedWriter.write(stringBuilder.toString());
+            String result = new WorkWithFile().formResult(supply, buy);
+            bufferedWriter.write(result);
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to the file " + file, e);
         }
     }
 
-    public int[] readFile(File file) {
-        int supply = 0;
-        int buy = 0;
+    private String formResult(int supply, int buy) {
+        StringBuilder stringBuilder = new StringBuilder();
 
+        stringBuilder.append(SUPPLY_NAME)
+                .append(SEPARATOR)
+                .append(supply)
+                .append(System.lineSeparator());
+
+        stringBuilder.append(BUY_NAME)
+                .append(SEPARATOR)
+                .append(buy)
+                .append(System.lineSeparator());
+
+        stringBuilder.append(RESULT_NAME)
+                .append(SEPARATOR)
+                .append(supply - buy);
+        return stringBuilder.toString();
+    }
+
+    private String[] readFile(File file) {
+        StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
             String currentLine = bufferedReader.readLine();
             while (currentLine != null) {
-                if (currentLine.contains(SUPPLY_NAME)) {
-                    currentLine = currentLine.replaceAll("[^\\d-]", "");
-                    supply += Integer.parseInt(currentLine);
-                }
-
-                if (currentLine.contains(BUY_NAME)) {
-                    currentLine = currentLine.replaceAll("[^\\d-]", "");
-                    buy += Integer.parseInt(currentLine);
-                }
+                stringBuilder.append(currentLine).append(System.lineSeparator());
                 currentLine = bufferedReader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from the file " + file, e);
+        }
+        return stringBuilder.toString().split(System.lineSeparator());
+    }
+
+    private int[] calculateResult(String[] arrOfData) {
+        int supply = 0;
+        int buy = 0;
+
+        for (int i = 0; i < arrOfData.length; i++) {
+            String[] splittedData = arrOfData[i].split(",");
+            if (splittedData[0].equals(SUPPLY_NAME)) {
+                supply += Integer.parseInt(splittedData[1]);
+            }
+            if (splittedData[0].equals(BUY_NAME)) {
+                buy += Integer.parseInt(splittedData[1]);
+            }
         }
         return new int[]{supply, buy};
     }
