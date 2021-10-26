@@ -44,8 +44,9 @@ public class WorkWithFile {
     }
 
     public void getStatistic(String fromFileName, String toFileName) {
+        byte[] textOfReportInBytes = createReport(readFile(fromFileName)).getBytes();
         try {
-            Files.write(Path.of(toFileName), createReport(readFile(fromFileName)).getBytes());
+            Files.write(Path.of(toFileName), textOfReportInBytes);
         } catch (IOException e) {
             throw new RuntimeException("Cannot write data to file" + toFileName, e);
         }
