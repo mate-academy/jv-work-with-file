@@ -18,13 +18,13 @@ public class WorkWithFile {
         int buy = 0;
         try {
             stringBuilder.append(Files.readAllLines(fromFile.toPath()));
-            String[] string = stringBuilder.toString().split("\\W++");
+            String[] readedLines = stringBuilder.toString().split("\\W++");
 
-            for (int i = 0; i < string.length; i++) {
-                if (i >= 1 && string[i - 1].contains(SUPPLY)) {
-                    supply += Integer.parseInt(string[i]);
-                } else if (i >= 1 && string[i - 1].contains(BUY)) {
-                    buy += Integer.parseInt(string[i]);
+            for (int i = 0; i < readedLines.length; i++) {
+                if (i >= 1 && readedLines[i - 1].contains(SUPPLY)) {
+                    supply += Integer.parseInt(readedLines[i]);
+                } else if (i >= 1 && readedLines[i - 1].contains(BUY)) {
+                    buy += Integer.parseInt(readedLines[i]);
                 }
             }
             dataToWrite[0] = "supply," + supply;
