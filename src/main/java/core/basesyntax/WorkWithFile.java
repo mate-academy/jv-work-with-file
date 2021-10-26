@@ -14,41 +14,37 @@ public class WorkWithFile {
     private static final String RESULT_NAME = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        File file = new File(fromFileName);
-        String[] readenData = readFile(file);
-        int[] supplyAndBuyArray = calculateResult(readenData);
-        int supply = supplyAndBuyArray[0];
-        int buy = supplyAndBuyArray[1];
+        String[] readenData = readFile(new File(fromFileName));
+        int[] report = calculateResult(readenData);
 
-        file = new File(toFileName);
-        writeToFile(file, supply, buy);
+        writeToFile(new File(toFileName), report);
     }
 
-    private void writeToFile(File file, int supply, int buy) {
+    private void writeToFile(File file, int[] report) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
-            String result = new WorkWithFile().formResult(supply, buy);
+            String result = new WorkWithFile().formResult(report);
             bufferedWriter.write(result);
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to the file " + file, e);
         }
     }
 
-    private String formResult(int supply, int buy) {
+    private String formResult(int[] report) {
         StringBuilder stringBuilder = new StringBuilder();
 
         stringBuilder.append(SUPPLY_NAME)
                 .append(SEPARATOR)
-                .append(supply)
+                .append(report[0])
                 .append(System.lineSeparator());
 
         stringBuilder.append(BUY_NAME)
                 .append(SEPARATOR)
-                .append(buy)
+                .append(report[1])
                 .append(System.lineSeparator());
 
         stringBuilder.append(RESULT_NAME)
                 .append(SEPARATOR)
-                .append(supply - buy);
+                .append(report[0] - report[1]);
         return stringBuilder.toString();
     }
 
