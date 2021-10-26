@@ -10,25 +10,10 @@ import java.io.IOException;
 public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
-        File file1 = new File(fromFileName);
-        File file2 = new File(toFileName);
-        StringBuilder builder = new StringBuilder();
         int totalSupply = 0;
         int totalBuy = 0;
 
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(file1));
-            String value = reader.readLine();
-            while (value != null) {
-                builder.append(value).append(System.lineSeparator());
-                value = reader.readLine();
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
-        }
-
-        String[] records = builder.toString().split(System.lineSeparator());
-        StringBuilder builderResult = new StringBuilder();
+        String[] records = readFromFile(fromFileName).split(System.lineSeparator());
 
         for (String record : records) {
             if (record.contains("supply")) {
@@ -38,16 +23,37 @@ public class WorkWithFile {
                 totalBuy += Integer.parseInt(record.substring(record.indexOf(",") + 1));
             }
         }
+        StringBuilder builderReport = createReport(totalSupply, totalBuy);
+        writeToFile(toFileName, builderReport);
+    }
 
-        builderResult.append("supply,").append(totalSupply)
-                .append(System.lineSeparator()).append("buy,")
-                .append(totalBuy).append(System.lineSeparator()).append("result,")
-                .append(totalSupply - totalBuy).append(System.lineSeparator());
-
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file2))) {
-            bufferedWriter.write(builderResult.toString());
+    private void writeToFile(String fileName, StringBuilder stringBuilder) {
+        try (BufferedWriter bufferedWriter =
+                     new BufferedWriter(new FileWriter(new File(fileName)))) {
+            bufferedWriter.write(stringBuilder.toString());
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file", e);
         }
+    }
+
+    private String readFromFile(String fileName) {
+        StringBuilder builder = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new FileReader(new File(fileName)))) {
+            String value = reader.readLine();
+            while (value != null) {
+                builder.append(value).append(System.lineSeparator());
+                value = reader.readLine();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Can't read file", e);
+        }
+        return builder.toString();
+    }
+
+    private StringBuilder createReport(int totalSupply, int totalBuy) {
+        return new StringBuilder().append("supply,").append(totalSupply)
+                .append(System.lineSeparator()).append("buy,")
+                .append(totalBuy).append(System.lineSeparator()).append("result,")
+                .append(totalSupply - totalBuy).append(System.lineSeparator());
     }
 }
