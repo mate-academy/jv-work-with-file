@@ -9,31 +9,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WorkWithFile {
-    private static final List<String> list = new ArrayList<>();
+    private static final List<String> listDataFile = new ArrayList<>();
 
     public void getStatistic(String fromFileName, String toFileName) {
         int buy = 0;
         int supply = 0;
         int result;
         readerFile(fromFileName);
-        for (String step : list) {
-            String[] arr = step.split(",");
-            if (arr[0].equals("buy")) {
-                buy += Integer.parseInt(arr[1]);
+        for (String step : listDataFile) {
+            String[] splitData = step.split(",");
+            if (splitData[0].equals("buy")) {
+                buy += Integer.parseInt(splitData[1]);
             } else {
-                supply += Integer.parseInt(arr[1]);
+                supply += Integer.parseInt(splitData[1]);
             }
         }
         result = supply - buy;
         writerFile(toFileName, buy, supply, result);
-        list.clear();
+        listDataFile.clear();
     }
 
     public void readerFile(String fromFileName) {
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String read;
             while ((read = reader.readLine()) != null) {
-                list.add(read);
+                listDataFile.add(read);
             }
         } catch (IOException e) {
             throw new RuntimeException("Cannot read file" + fromFileName, e);
