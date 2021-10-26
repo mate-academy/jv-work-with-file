@@ -8,9 +8,9 @@ import java.io.IOException;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
+        StringBuilder textFromFileBuilder = readDataFromFile(fromFileName);
+        String finalData = createReport(textFromFileBuilder);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            StringBuilder textFromFileBuilder = readDataFromFile(fromFileName);
-            String finalData = createReport(textFromFileBuilder);
             writer.write(finalData);
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to file.", e);
@@ -44,8 +44,10 @@ public class WorkWithFile {
                     buy += Integer.parseInt(splittedCurrentLine[1]);
                     break;
                 case "supply":
-                default:
                     supply += Integer.parseInt(splittedCurrentLine[1]);
+                    break;
+                default:
+                    throw new RuntimeException("Unexpected word in file.");
             }
         }
         report.append("supply,")
