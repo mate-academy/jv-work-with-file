@@ -34,7 +34,7 @@ public class WorkWithFile {
         writeToFile(toFileName, calculateResult);
     }
 
-    public String readFromFile(String fromFileName) {
+    private String readFromFile(String fromFileName) {
         StringBuilder textFromFileBuilder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String value = bufferedReader.readLine();
