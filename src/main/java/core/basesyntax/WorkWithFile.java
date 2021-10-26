@@ -8,16 +8,15 @@ import java.io.IOException;
 
 public class WorkWithFile {
 
-    private int supplyOperation = 0;
-    private int buyOperation = 0;
-
     public void getStatistic(String fromFileName, String toFileName) {
-        readingFile(fromFileName);
-        String report = createReport();
+        int[] countOptions = readingFile(fromFileName);
+        String report = createReport(countOptions);
         writingFile(toFileName, report);
     }
 
-    private void readingFile(String fromFileName) {
+    private int[] readingFile(String fromFileName) {
+        int supplyOperation = 0;
+        int buyOperation = 0;
         String line;
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             while ((line = bufferedReader.readLine()) != null) {
@@ -31,6 +30,7 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("can`t open file for reading", e);
         }
+        return new int[]{supplyOperation, buyOperation};
     }
 
     private void writingFile(String toFileName, String report) {
@@ -41,13 +41,13 @@ public class WorkWithFile {
         }
     }
 
-    private String createReport() {
+    private String createReport(int[] countOptions) {
         StringBuilder stringBuilder = new StringBuilder();
-        return stringBuilder.append("supply,").append(supplyOperation)
+        return stringBuilder.append("supply,").append(countOptions[0])
                 .append(System.lineSeparator())
-                .append("buy,").append(buyOperation)
+                .append("buy,").append(countOptions[1])
                 .append(System.lineSeparator())
-                .append("result,").append(supplyOperation - buyOperation)
+                .append("result,").append(countOptions[0] - countOptions[1])
                 .append(System.lineSeparator())
                 .toString();
     }
