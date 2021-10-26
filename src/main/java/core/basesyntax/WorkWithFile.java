@@ -15,14 +15,19 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         List<String> data = getDataFromFile(fromFileName);
         HashMap<String, Integer> statistic = parseDataTpHashMap(data);
+        String resultData = collectResultDataToString(statistic);
+        putDataToFile(toFileName, resultData);
+    }
+
+    private String collectResultDataToString(HashMap<String, Integer> statistic) {
         StringBuilder resultData = new StringBuilder();
         for (String operationType : OPERATION_TYPES) {
             resultData.append(operationType).append(COLUMN_SEPARATOR)
                     .append(statistic.get(operationType)).append(System.lineSeparator());
         }
-        int result = statistic.get(OPERATION_TYPES[0]) - statistic.get(OPERATION_TYPES[1]);
-        resultData.append("result").append(COLUMN_SEPARATOR).append(result);
-        putDataToFile(toFileName, resultData.toString());
+        int residual = statistic.get(OPERATION_TYPES[0]) - statistic.get(OPERATION_TYPES[1]);
+        resultData.append("result").append(COLUMN_SEPARATOR).append(residual);
+        return resultData.toString();
     }
 
     private List<String> getDataFromFile(String fileName) {
@@ -31,7 +36,7 @@ public class WorkWithFile {
         try {
             data = Files.readAllLines(file.toPath());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Unable to open file", e);
         }
         return data;
     }
@@ -40,7 +45,7 @@ public class WorkWithFile {
         try {
             Files.write(Path.of(fileName), data.getBytes(StandardCharsets.UTF_8));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Unable to write to file", e);
         }
     }
 
