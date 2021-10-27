@@ -8,7 +8,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
