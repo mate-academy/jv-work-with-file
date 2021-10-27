@@ -20,8 +20,7 @@ public class WorkWithFile {
     private String readStatistic(String fromFileName) {
         File file = new File(fromFileName);
         StringBuilder textFromFile = new StringBuilder();
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(file));
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             int value = reader.read();
             while (value != -1) {
                 textFromFile.append((char) value);
@@ -30,22 +29,23 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read file " + fromFileName, e);
         }
-        String[] textSplit = textFromFile.toString().split("\r\n");
+        String[] textSplit = textFromFile.toString().split(System.lineSeparator());
         int supply = 0;
         int buy = 0;
         for (String value : textSplit) {
             int index = value.indexOf(',') + 1;
-            int length = value.length();
-            String numbers = value.substring(index, length);
+            String number = value.substring(index);
             if (value.contains(SUPPLY)) {
-                supply += Integer.parseInt(numbers);
+                supply += Integer.parseInt(number);
             } else {
-                buy += Integer.parseInt(numbers);
+                buy += Integer.parseInt(number);
             }
         }
-        return SUPPLY + "," + supply + System.lineSeparator()
-                + BUY + "," + buy + System.lineSeparator()
-                + RESULT + "," + (supply - buy);
+        StringBuilder report = new StringBuilder();
+        report.append(SUPPLY).append(",").append(supply).append(System.lineSeparator())
+                .append(BUY).append(",").append(buy).append(System.lineSeparator())
+                .append(RESULT).append(",").append(supply - buy);
+        return report.toString();
     }
 
     private void writeStatistic(String toFileName, String message) {
