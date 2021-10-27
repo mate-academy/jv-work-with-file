@@ -8,6 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
@@ -18,17 +19,17 @@ public class WorkWithFile {
                 calculateStatistic(readFromFile(fromFileName).split(" ")));
     }
 
-    private String calculateStatistic(String[] s) {
-        int supply = 0;
+    private String calculateStatistic(String[] splitReadFile) {
         int buy = 0;
+        int supply = 0;
         int result = 0;
-        for (int i = 0; i < s.length; i++) {
-            int comaIndex = s[i].indexOf(COMA);
-            if (s[i].substring(0, comaIndex).equals(SUPPLY)) {
-                supply += Integer.valueOf(s[i].substring(comaIndex + 1));
+        for (String stringValue : splitReadFile) {
+            int comaIndex = stringValue.indexOf(COMA);
+            if (stringValue.substring(0, comaIndex).equals(SUPPLY)) {
+                supply += Integer.valueOf(stringValue.substring(comaIndex + 1));
             }
-            if (s[i].substring(0, comaIndex).equals(BUY)) {
-                buy += Integer.valueOf(s[i].substring(comaIndex + 1));
+            if (stringValue.substring(0, comaIndex).equals(BUY)) {
+                buy += Integer.valueOf(stringValue.substring(comaIndex + 1));
             }
         }
         result = supply - buy;
@@ -53,11 +54,11 @@ public class WorkWithFile {
         return builder.toString();
     }
 
-    private void writeToFile(String fromFileName, String toFileName, String stat) {
+    private void writeToFile(String fromFileName, String toFileName, String content) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             File file = new File(toFileName);
             file.createNewFile();
-            bufferedWriter.write(stat);
+            bufferedWriter.write(content);
         } catch (IOException e) {
             throw new RuntimeException("Can't write to File", e);
         }
