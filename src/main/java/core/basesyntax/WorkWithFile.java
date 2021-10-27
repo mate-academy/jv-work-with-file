@@ -8,6 +8,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String RESULT = "result";
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String COMMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         int totalSupply = 0;
@@ -16,11 +20,11 @@ public class WorkWithFile {
         String[] records = readFromFile(fromFileName).split(System.lineSeparator());
 
         for (String record : records) {
-            if (record.contains("supply")) {
-                totalSupply += Integer.parseInt(record.substring(record.indexOf(",") + 1));
+            if (record.contains(SUPPLY)) {
+                totalSupply += Integer.parseInt(record.substring(record.indexOf(COMMA) + 1));
             }
-            if (record.contains("buy")) {
-                totalBuy += Integer.parseInt(record.substring(record.indexOf(",") + 1));
+            if (record.contains(BUY)) {
+                totalBuy += Integer.parseInt(record.substring(record.indexOf(COMMA) + 1));
             }
         }
         StringBuilder builderReport = createReport(totalSupply, totalBuy);
@@ -51,9 +55,9 @@ public class WorkWithFile {
     }
 
     private StringBuilder createReport(int totalSupply, int totalBuy) {
-        return new StringBuilder().append("supply,").append(totalSupply)
-                .append(System.lineSeparator()).append("buy,")
-                .append(totalBuy).append(System.lineSeparator()).append("result,")
+        return new StringBuilder().append(SUPPLY).append(COMMA).append(totalSupply)
+                .append(System.lineSeparator()).append(BUY).append(COMMA)
+                .append(totalBuy).append(System.lineSeparator()).append(RESULT).append(COMMA)
                 .append(totalSupply - totalBuy).append(System.lineSeparator());
     }
 }
