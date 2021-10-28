@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Arrays;
 
 public class WorkWithFile {
     private static final String SUPPLY = "supply";
@@ -28,10 +29,10 @@ public class WorkWithFile {
             stringBuilder.append(Files.readAllLines(fromFile.toPath()));
             String[] readedLines = stringBuilder.toString().split("\\W++");
             for (int i = 0; i < readedLines.length; i++) {
-                if (i >= 1 && readedLines[i - 1].contains(SUPPLY)) {
-                    supply += Integer.parseInt(readedLines[i]);
-                } else if (i >= 1 && readedLines[i - 1].contains(BUY)) {
-                    buy += Integer.parseInt(readedLines[i]);
+                if (readedLines[i].equals(SUPPLY)) {
+                    supply += Integer.parseInt(readedLines[i + 1]);
+                } else if (readedLines[i].equals(BUY)) {
+                    buy += Integer.parseInt(readedLines[i + 1]);
                 }
             }
         } catch (IOException e) {
