@@ -5,9 +5,11 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.List;
 
 public class WorkWithFile {
     private static final String SUPPLY = "supply";
+    private static final int INDEX = 0;
     private static final int SUPPLY_INDEX = 0;
     private static final String BUY = "buy";
     private static final int BUY_INDEX = 1;
@@ -21,17 +23,16 @@ public class WorkWithFile {
 
     private int[] readLines(String fileName) {
         File fromFile = new File(fileName);
-        StringBuilder stringBuilder = new StringBuilder();
         int supply = 0;
         int buy = 0;
         try {
-            stringBuilder.append(Files.readAllLines(fromFile.toPath()));
-            String[] readedLines = stringBuilder.toString().split("\\W++");
-            for (int i = 0; i < readedLines.length; i++) {
-                if (readedLines[i].equals(SUPPLY)) {
-                    supply += Integer.parseInt(readedLines[i + 1]);
-                } else if (readedLines[i].equals(BUY)) {
-                    buy += Integer.parseInt(readedLines[i + 1]);
+            List<String> read = Files.readAllLines(fromFile.toPath());
+            for (String readedLines : read) {
+                String[] splitter = readedLines.split(",");
+                if (splitter[INDEX].equals(SUPPLY)) {
+                    supply += Integer.parseInt(splitter[1]);
+                } else if (splitter[INDEX].equals(BUY)) {
+                    buy += Integer.parseInt(splitter[1]);
                 }
             }
         } catch (IOException e) {
