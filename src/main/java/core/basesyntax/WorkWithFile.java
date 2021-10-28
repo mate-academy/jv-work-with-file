@@ -9,7 +9,8 @@ import java.util.List;
 
 public class WorkWithFile {
     private static final String SUPPLY = "supply";
-    private static final int INDEX = 0;
+    private static final int OPERATION_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
     private static final int SUPPLY_INDEX = 0;
     private static final String BUY = "buy";
     private static final int BUY_INDEX = 1;
@@ -26,13 +27,13 @@ public class WorkWithFile {
         int supply = 0;
         int buy = 0;
         try {
-            List<String> read = Files.readAllLines(fromFile.toPath());
-            for (String readedLines : read) {
-                String[] splitter = readedLines.split(",");
-                if (splitter[INDEX].equals(SUPPLY)) {
-                    supply += Integer.parseInt(splitter[1]);
-                } else if (splitter[INDEX].equals(BUY)) {
-                    buy += Integer.parseInt(splitter[1]);
+            List<String> readLines = Files.readAllLines(fromFile.toPath());
+            for (String lines : readLines) {
+                String[] splitter = lines.split(COMMA);
+                if (splitter[OPERATION_INDEX].equals(SUPPLY)) {
+                    supply += Integer.parseInt(splitter[AMOUNT_INDEX]);
+                } else if (splitter[OPERATION_INDEX].equals(BUY)) {
+                    buy += Integer.parseInt(splitter[AMOUNT_INDEX]);
                 }
             }
         } catch (IOException e) {
