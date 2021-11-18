@@ -1,18 +1,17 @@
 package core.basesyntax;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
+import java.util.List;
 
 public class WorkWithFile {
     private static final String SPLIT_CHARACTER = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        ArrayList<String> dataFromFile = readCsvFile(fromFileName);
+        List<String> dataFromFile = readCsvFile(fromFileName);
 
         int operationSupply = 0;
         int operationBuy = 0;
@@ -40,19 +39,13 @@ public class WorkWithFile {
         return stringBuilder.toString();
     }
 
-    private ArrayList readCsvFile(String pathToFile) {
-        ArrayList<String> lines = new ArrayList<String>();
+    private List readCsvFile(String pathToFile) {
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(pathToFile));
-            String value = reader.readLine();
-            while (value != null) {
-                lines.add(value);
-                value = reader.readLine();
-            }
+            List<String> data = Files.readAllLines(Paths.get(pathToFile));
+            return data;
         } catch (IOException e) {
             throw new RuntimeException("Can't read file", e);
         }
-        return lines;
     }
 
     private void writeToFile(String toFileName, String data) {
