@@ -28,8 +28,8 @@ public class WorkWithFile {
         }
         int result = operationSupply - operationBuy;
 
-        String newString = createString(operationSupply, operationBuy, result);
-        writeToFile(toFileName, newString);
+        String writingData = createString(operationSupply, operationBuy, result);
+        writeToFile(toFileName, writingData);
     }
 
     private String createString(int operationSupply, int operationBuy, int result) {
