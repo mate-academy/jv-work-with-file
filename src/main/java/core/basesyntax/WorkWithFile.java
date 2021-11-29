@@ -46,8 +46,6 @@ public class WorkWithFile {
             bufferedWriter.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Can't read file ", e);
-        } catch (NumberFormatException e) {
-            throw new RuntimeException("wrong number", e);
         }
     }
 }
