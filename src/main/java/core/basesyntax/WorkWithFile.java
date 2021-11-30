@@ -1,10 +1,10 @@
 package core.basesyntax;
 
-import java.io.File;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.BufferedWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
@@ -26,23 +26,23 @@ public class WorkWithFile {
         StringBuilder stringBuilder = new StringBuilder();
         int supplyInt = 0;
         int buyInt = 0;
-        String BUY_CONSTANT = "buy";
-        String SUPPLY_CONSTANT = "supply";
-        String RESULT_TOTAL = "result";
+        String buyConstant = "buy";
+        String supplyConstant = "supply";
         for (String strings: split) {
             int index = strings.indexOf(',');
             int length = strings.length();
-            String COUNT = strings.substring(index+1, length);
-            if (strings.substring(0,index).equals(SUPPLY_CONSTANT)) {
-                supplyInt += Integer.parseInt(COUNT);
+            String count = strings.substring(index + 1, length);
+            if (strings.substring(0,index).equals(supplyConstant)) {
+                supplyInt += Integer.parseInt(count);
             }
-            if (strings.substring(0,index).equals(BUY_CONSTANT)) {
-                buyInt += Integer.parseInt(COUNT);
+            if (strings.substring(0,index).equals(buyConstant)) {
+                buyInt += Integer.parseInt(count);
             }
         }
-        stringBuilder.append(SUPPLY_CONSTANT).append(",").append(supplyInt).append("\n");
-        stringBuilder.append(BUY_CONSTANT).append(",").append(buyInt).append("\n");
-        stringBuilder.append(RESULT_TOTAL).append(",").append((supplyInt - buyInt)).append("\n");
+        String resultTotal = "result";
+        stringBuilder.append(supplyConstant).append(",").append(supplyInt).append("\n");
+        stringBuilder.append(buyConstant).append(",").append(buyInt).append("\n");
+        stringBuilder.append(resultTotal).append(",").append((supplyInt - buyInt)).append("\n");
         File fileTo = new File(toFileName);
         for (char chars: stringBuilder.toString().toCharArray()) {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileTo, true))) {
