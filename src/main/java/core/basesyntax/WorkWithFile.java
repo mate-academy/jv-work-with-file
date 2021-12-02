@@ -9,20 +9,24 @@ import java.io.IOException;
 
 public class WorkWithFile {
 
-    public void getStatistic(String fromFileName, String toFileName) {
+    private String readFromFile(String fromFileName) {
+        //fromFileName = "orange.csv";
         File file = new File(fromFileName);
         StringBuilder builder = new StringBuilder();
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
             int value = bufferedReader.read();
             while (value != -1) {
                 builder.append((char) value);
                 value = bufferedReader.read();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't read file" + file, e);
         }
-        String[] split = builder.toString().replaceAll("(\r\n|\n)", " ").split(" ");
+        return builder.toString();
+    }
+
+    private String createReport(String fromFile) {
+        String[] split = readFromFile(fromFile).replaceAll("(\r\n|\n)", " ").split(" ");
         StringBuilder stringBuilder = new StringBuilder();
         int supplyInt = 0;
         int buyInt = 0;
@@ -43,13 +47,23 @@ public class WorkWithFile {
         stringBuilder.append(supplyConstant).append(",").append(supplyInt).append("\n");
         stringBuilder.append(buyConstant).append(",").append(buyInt).append("\n");
         stringBuilder.append(resultTotal).append(",").append((supplyInt - buyInt)).append("\n");
+        return stringBuilder.toString();
+    }
+
+    private void writeReportToFile(String report, String toFileName) {
         File fileTo = new File(toFileName);
-        for (char chars: stringBuilder.toString().toCharArray()) {
+        for (char chars: report.toCharArray()) {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileTo, true))) {
                 writer.write(chars);
             } catch (IOException e) {
                 throw new RuntimeException("Can't write file " + toFileName, e);
             }
         }
+    }
+
+    public void getStatistic(String fromFileName, String toFileName) {
+        String rows = readFromFile(fromFileName);
+        String report = createReport(rows);
+        writeReportToFile(report, toFileName);
     }
 }
