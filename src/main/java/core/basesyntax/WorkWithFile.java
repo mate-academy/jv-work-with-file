@@ -10,12 +10,12 @@ import java.io.IOException;
 public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String[] allInputDataOnArray;
-        StringBuilder stringBuilder = new StringBuilder();
-        String resultInfo;
-        int supply = 0;
-        int buy = 0;
+        writeInfoToFile(createReport(readFromFile(fromFileName)), toFileName);
+    }
 
+    private String[] readFromFile(String fromFileName) {
+        StringBuilder stringBuilder = new StringBuilder();
+        String[] allInputDataOnArray;
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String value = bufferedReader.readLine();
             while (value != null) {
@@ -28,21 +28,29 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read file", e);
         }
+        return allInputDataOnArray;
+    }
 
-        for (String i: allInputDataOnArray) {
+    private String createReport(String[] allInputDataOnArray) {
+        int supply = 0;
+        int buy = 0;
+
+        for (String i : allInputDataOnArray) {
             if (i.startsWith("supply")) {
-                supply += Integer.parseInt(i.replace("supply,",""));
+                supply += Integer.parseInt(i.replace("supply,", ""));
             } else {
-                buy += Integer.parseInt(i.replace("buy,",""));
+                buy += Integer.parseInt(i.replace("buy,", ""));
             }
         }
 
-        resultInfo = "supply," + supply + System.lineSeparator()
+        return "supply," + supply + System.lineSeparator()
                 + "buy," + buy + System.lineSeparator()
                 + "result," + (supply - buy);
+    }
 
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName,true))) {
-            bufferedWriter.write(resultInfo);
+    private void writeInfoToFile(String report, String toFileName) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true))) {
+            bufferedWriter.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file" + toFileName, e);
         }
