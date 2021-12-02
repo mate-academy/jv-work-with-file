@@ -10,7 +10,7 @@ import java.io.IOException;
 public class WorkWithFile {
 
     private String readFromFile(String fromFileName) {
-        //fromFileName = "orange.csv";
+        fromFileName = "orange.csv";
         File file = new File(fromFileName);
         StringBuilder builder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
@@ -52,12 +52,10 @@ public class WorkWithFile {
 
     private void writeReportToFile(String report, String toFileName) {
         File fileTo = new File(toFileName);
-        for (char chars: report.toCharArray()) {
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileTo, true))) {
-                writer.write(chars);
-            } catch (IOException e) {
-                throw new RuntimeException("Can't write file " + toFileName, e);
-            }
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileTo, true))) {
+            writer.write(report);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write file " + toFileName, e);
         }
     }
 
