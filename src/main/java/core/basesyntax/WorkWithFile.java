@@ -9,8 +9,13 @@ import java.io.IOException;
 
 public class WorkWithFile {
 
+    public void getStatistic(String fromFileName, String toFileName) {
+        String rows = readFromFile(fromFileName);
+        String report = createReport(rows);
+        writeReportToFile(report, toFileName);
+    }
+
     private String readFromFile(String fromFileName) {
-        fromFileName = "orange.csv";
         File file = new File(fromFileName);
         StringBuilder builder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
@@ -25,21 +30,20 @@ public class WorkWithFile {
         return builder.toString();
     }
 
-    private String createReport(String fromFile) {
-        String[] split = readFromFile(fromFile).replaceAll("(\r\n|\n)", " ").split(" ");
+    private String createReport(String rows) {
+        String[] split = rows.split("\\s+");
         StringBuilder stringBuilder = new StringBuilder();
         int supplyInt = 0;
         int buyInt = 0;
         String buyConstant = "buy";
         String supplyConstant = "supply";
         for (String strings: split) {
-            int index = strings.indexOf(',');
-            int length = strings.length();
-            String count = strings.substring(index + 1, length);
-            if (strings.substring(0,index).equals(supplyConstant)) {
+            String[]record = strings.split(",");
+            String count = record[1];
+            if (record[0].equals(supplyConstant)) {
                 supplyInt += Integer.parseInt(count);
             }
-            if (strings.substring(0,index).equals(buyConstant)) {
+            if (record[0].equals(buyConstant)) {
                 buyInt += Integer.parseInt(count);
             }
         }
@@ -57,11 +61,5 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't write file " + toFileName, e);
         }
-    }
-
-    public void getStatistic(String fromFileName, String toFileName) {
-        String rows = readFromFile(fromFileName);
-        String report = createReport(rows);
-        writeReportToFile(report, toFileName);
     }
 }
