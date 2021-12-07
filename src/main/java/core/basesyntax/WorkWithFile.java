@@ -9,17 +9,19 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private int supply = 0;
+    private int buy = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        StringBuilder outStringBuilder = new StringBuilder();
+        readFile(fromFileName);
+        saveDataToFile(toFileName);
+    }
+
+    private void readFile(String fileInput) {
         String sourseLine;
         String[] sourseLineArr;
-        int supply = 0;
-        int buy = 0;
-        File inputFile = new File(fromFileName);
-        File outFile = new File(toFileName);
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+        File inputFile = new File(fileInput);
+        try (BufferedReader reader = new BufferedReader(new FileReader(inputFile))) {
             sourseLine = reader.readLine();
             while (sourseLine != null) {
                 sourseLineArr = sourseLine.split(",");
@@ -31,14 +33,18 @@ public class WorkWithFile {
                 }
                 sourseLine = reader.readLine();
             }
-            reader.close();
         } catch (FileNotFoundException e) {
-            System.out.println(" Can`t open file");
-            return;
+            throw new RuntimeException(" Can`t open file " + fileInput, e);
         } catch (IOException e) {
-            System.out.println(" Can`t read file");
-            return;
+            throw new RuntimeException(" Can`t read file" + fileInput, e);
         }
+
+    }
+
+    private void saveDataToFile(String outputFile) {
+        File outFile = new File(outputFile);
+        StringBuilder outStringBuilder = new StringBuilder();
+
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(outFile))) {
             writer.write(outStringBuilder.append("supply,")
                     .append(supply).append(System.lineSeparator())
@@ -47,7 +53,8 @@ public class WorkWithFile {
                     .append("result,").append(supply - buy)
                     .append(System.lineSeparator()).toString());
         } catch (IOException e) {
-            System.out.println(" Can`t create file");
+            throw new RuntimeException(" Can`t create file" + outputFile, e);
         }
+
     }
 }
