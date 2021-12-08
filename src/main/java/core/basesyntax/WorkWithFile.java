@@ -9,15 +9,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private int supply = 0;
-    private int buy = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        readFile(fromFileName);
-        saveDataToFile(toFileName);
+        saveDataToFile(toFileName, readFile(fromFileName));
     }
 
-    private void readFile(String fileInput) {
+    private int[] readFile(String fileInput) {
+        int[] result = new int[2];
         String sourseLine;
         String[] sourseLineArr;
         File inputFile = new File(fileInput);
@@ -26,10 +24,10 @@ public class WorkWithFile {
             while (sourseLine != null) {
                 sourseLineArr = sourseLine.split(",");
                 if (sourseLineArr[0].equals("supply")) {
-                    supply += Integer.parseInt(sourseLineArr[1]);
+                    result[0] += Integer.parseInt(sourseLineArr[1]);
                 } else if (sourseLineArr[0].equals("buy")) {
 
-                    buy += Integer.parseInt(sourseLineArr[1]);
+                    result[1] += Integer.parseInt(sourseLineArr[1]);
                 }
                 sourseLine = reader.readLine();
             }
@@ -38,19 +36,19 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException(" Can`t read file" + fileInput, e);
         }
-
+        return result;
     }
 
-    private void saveDataToFile(String outputFile) {
+    private void saveDataToFile(String outputFile, int[] data) {
         File outFile = new File(outputFile);
         StringBuilder outStringBuilder = new StringBuilder();
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(outFile))) {
             writer.write(outStringBuilder.append("supply,")
-                    .append(supply).append(System.lineSeparator())
-                    .append("buy,").append(buy)
+                    .append(data[0]).append(System.lineSeparator())
+                    .append("buy,").append(data[1])
                     .append(System.lineSeparator())
-                    .append("result,").append(supply - buy)
+                    .append("result,").append(data[0] - data[1])
                     .append(System.lineSeparator()).toString());
         } catch (IOException e) {
             throw new RuntimeException(" Can`t create file" + outputFile, e);
