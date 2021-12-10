@@ -1,6 +1,10 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class WorkWithFile {
     private int supplyResult;
@@ -28,7 +32,7 @@ public class WorkWithFile {
         return result;
     }
 
-    public StringBuilder readFile(String fromFileName) {
+    public String[] readFile(String fromFileName) {
         StringBuilder builder = new StringBuilder();
         try {
             BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
@@ -40,11 +44,11 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("can't read file", e);
         }
-        return builder;
+        return builder.toString().split("\\W+");
     }
 
-    public WorkWithFile getResult(String fromFileName) {
-        String[] resultArray = readFile(fromFileName).toString().split("\\W+");
+    public WorkWithFile calculateResult(String fromFileName) {
+        String[] resultArray = readFile(fromFileName);
         int supply = 0;
         int buy = 0;
         for (int i = 0; i < resultArray.length; i++) {
@@ -59,15 +63,15 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName, true))) {
-            writer.write("supply," +
-                    String.valueOf(getResult(fromFileName).getSupplyResult()) +
-                    System.lineSeparator());
-            writer.write("buy," +
-                    String.valueOf(getResult(fromFileName).getBuyResult()) +
-                    System.lineSeparator());
-            writer.write("result," +
-                    String.valueOf(getResult(fromFileName).getResult()) +
-                    System.lineSeparator() + System.lineSeparator());
+            writer.write("supply,"
+                    + String.valueOf(calculateResult(fromFileName).getSupplyResult())
+                    + System.lineSeparator());
+            writer.write("buy,"
+                    + String.valueOf(calculateResult(fromFileName).getBuyResult())
+                    + System.lineSeparator());
+            writer.write("result,"
+                    + String.valueOf(calculateResult(fromFileName).getResult())
+                    + System.lineSeparator() + System.lineSeparator());
         } catch (IOException e) {
             throw new RuntimeException("can't write file", e);
         }
