@@ -6,14 +6,14 @@ import java.io.FileReader;
 import java.io.FileWriter;
 
 public class WorkWithFile {
-
     public void getStatistic(String fromFileName, String toFileName) {
         File file = new File(toFileName);
         String toArray = readFile(fromFileName);
         int[] result = getFiltering(toArray);
         StringBuilder toFile = new StringBuilder();
-        toFile.append("supply,").append(result[1] + "\\n").append("buy,")
-                .append(result[0] + "\\n").append("result,").append((result[1] - result[0]));
+        toFile.append("supply,").append(result[1] + System.lineSeparator())
+                .append("buy,").append(result[0] + System.lineSeparator())
+                .append("result,").append((result[1] - result[0]));
         writeFile(toFile, file);
     }
 
@@ -27,18 +27,19 @@ public class WorkWithFile {
     }
 
     private int[] getFiltering(String toArray) {
-        String[] buyArray = toArray.split("supply,|[Bb][A-z]+,\\d+");
-        String[] supplyArray = toArray.split("buy,|[Ss][A-z]+,\\d+");
+        String[] dataArray = toArray.split(" ");
         int[] result = new int[2];
         int numBuy = 0;
         int numSupply = 0;
-        int maxLength;
-        maxLength = Math.max(buyArray.length, supplyArray.length);
-        for (int i = 0; maxLength > i; i++) {
-            if (buyArray.length != i + 1) {
-                numBuy += Integer.parseInt(buyArray[i]);
-            } else if (supplyArray.length != i + 1) {
-                numSupply += Integer.parseInt(supplyArray[i]);
+        for (int i = 0; dataArray.length > i; i++) {
+            if (dataArray[i].contains("buy,")) {
+                dataArray[i] = dataArray[i].replaceAll("\\D", "");
+                numBuy += Integer.parseInt(dataArray[i]);
+
+            } else if (dataArray[i].contains("supply,")) {
+                dataArray[i] = dataArray[i].replaceAll("\\D", "");
+                numSupply += Integer.parseInt(dataArray[i]);
+
             }
         }
         result[0] = numBuy;
@@ -50,11 +51,12 @@ public class WorkWithFile {
         String strToNull = "";
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             StringBuilder builder = new StringBuilder();
-            int value = bufferedReader.read();
-            while (value != -1) {
-                builder.append((char) value);
-                value = bufferedReader.read();
+            String value = bufferedReader.readLine();
+            while (value != null) {
+                builder.append(value.replaceAll("\\s+", "")).append(" ");
+                value = bufferedReader.readLine();
             }
+            System.out.println(builder.toString());
             String toArray = new String(builder);
             strToNull = toArray;
             return toArray;
