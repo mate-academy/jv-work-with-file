@@ -48,7 +48,6 @@ public class WorkWithFile {
     }
 
     private String readFile(String fromFileName) {
-        String strToNull = "";
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             StringBuilder builder = new StringBuilder();
             String value = bufferedReader.readLine();
@@ -56,13 +55,9 @@ public class WorkWithFile {
                 builder.append(value.replaceAll("\\s+", "")).append(" ");
                 value = bufferedReader.readLine();
             }
-            System.out.println(builder.toString());
-            String toArray = new String(builder);
-            strToNull = toArray;
-            return toArray;
+            return builder.toString();
         } catch (Exception e) {
-            System.out.println("not found File");
+            throw new RuntimeException("not found File");
         }
-        return strToNull;
     }
 }
