@@ -29,7 +29,7 @@ public class WorkWithFile {
         return stringBuilder.toString();
     }
 
-    private ArrayList<String > generateReport(String rawContent) {
+    private ArrayList<String> generateReport(String rawContent) {
         String[] receivedData = rawContent.split(System.lineSeparator());
         ArrayList<String> report = new ArrayList<>();
         int supplySum = 0;
