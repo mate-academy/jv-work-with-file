@@ -9,8 +9,14 @@ import java.io.IOException;
 public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
+        String content = getStringFromFile(fromFileName);
+        String report = takeDataForReport(content);
+        writeToFile(report, toFileName);
+    }
+
+    private void writeToFile(String report, String toFileName) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true))) {
-            bufferedWriter.write(takeDataForReport(getStringFromFile(fromFileName)));
+            bufferedWriter.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Wrong write file!");
         }
@@ -34,8 +40,7 @@ public class WorkWithFile {
         int counter = 0;
         int supplyInt = 0;
         int buyInt = 0;
-        String[] array;
-        array = data.split("\\W+");
+        String[] array = data.split("\\W+");
         for (String tempString : array) {
             if (tempString.equals("supply")) {
                 supplyInt += Integer.parseInt(array[counter + 1]);
