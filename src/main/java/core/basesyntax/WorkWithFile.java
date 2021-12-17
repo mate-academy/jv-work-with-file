@@ -34,7 +34,8 @@ public class WorkWithFile {
         Path reportFile = Paths.get(toFileName);
         try {
             Files.writeString(reportFile, "supply," + supply + System.lineSeparator());
-            Files.writeString(reportFile,"buy," + buy + System.lineSeparator(), StandardOpenOption.APPEND);
+            Files.writeString(reportFile,"buy," + buy + System.lineSeparator(),
+                    StandardOpenOption.APPEND);
             Files.writeString(reportFile, "result," + (supply - buy), StandardOpenOption.APPEND);
         } catch (IOException e) {
             throw new RuntimeException("Can`t write to the file", e);
