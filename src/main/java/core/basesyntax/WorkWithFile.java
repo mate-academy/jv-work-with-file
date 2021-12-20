@@ -9,23 +9,26 @@ import java.io.IOException;
 public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
-        StringBuilder stringBuilder = new StringBuilder();
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
+        String content = readFromFile(fromFileName);
+        String resultReport = createReport(content);
+        writeToFile(resultReport, toFileName);
+    }
+
+    private String readFromFile(String fromFileName) {
+        StringBuilder stringBuilderReader = new StringBuilder();
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String value = bufferedReader.readLine();
             while (value != null) {
-                stringBuilder.append(System.lineSeparator()).append(value).append(" ");
+                stringBuilderReader.append(System.lineSeparator()).append(value).append(" ");
                 value = bufferedReader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file, e");
+            System.out.println("Can't read file with name" + fromFileName);
         }
-        String content = stringBuilder.toString();
-        String resultReport = createReport(content);
-        writeToFIle(resultReport, toFileName);
+        return stringBuilderReader.toString();
     }
 
-    public String createReport(String input) {
+    private String createReport(String input) {
         String[] splitInput = input.split("\\W+");
         int ammountSupply = 0;
         int ammountBuy = 0;
@@ -43,14 +46,13 @@ public class WorkWithFile {
                 + "buy," + ammountBuy + System.lineSeparator() + "result," + result;
     }
 
-    public void writeToFIle(String report, String file) {
-        try {
-            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));
+    private void writeToFile(String report, String file) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
             bufferedWriter.write(report);
-            bufferedWriter.close();
         } catch (IOException e) {
             throw new RuntimeException("Can't write file, e");
         }
     }
 }
+
 
