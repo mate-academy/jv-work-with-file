@@ -8,10 +8,10 @@ import java.nio.file.Files;
 import java.util.List;
 
 public class WorkWithFile {
-    private static final String SUPPLY = "supply";
-    private static final String BUY = "buy";
-    private static final String RESULT = "result";
-    private static final String COMMA = ",";
+    private static String supplyStr = "supply";
+    private static String buyStr = "buy";
+    private static String result = "result";
+    private static String comma = ",";
     private static final int ABSTRACT_INDEX = 0;
     private static final int AMOUNT_INDEX = 1;
     private static final int SUPPLY_INDEX = 0;
@@ -19,7 +19,7 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         int[] statistic = readLines(fromFileName);
-        writeToFile(toFileName, getResult(statistic[SUPPLY_INDEX], statistic[BUY_INDEX]));
+        writeToFile(toFileName, buildReport(statistic[SUPPLY_INDEX], statistic[BUY_INDEX]));
     }
 
     private int[] readLines(String fileName) {
@@ -29,10 +29,10 @@ public class WorkWithFile {
         try {
             List<String> readLines = Files.readAllLines(fromFile.toPath());
             for (String lines : readLines) {
-                String[] split = lines.split(COMMA);
-                if (split[ABSTRACT_INDEX].equals(SUPPLY)) {
+                String[] split = lines.split(comma);
+                if (split[ABSTRACT_INDEX].equals(supplyStr)) {
                     supply += Integer.parseInt(split[AMOUNT_INDEX]);
-                } else if (split[ABSTRACT_INDEX].equals(BUY)) {
+                } else if (split[ABSTRACT_INDEX].equals(buyStr)) {
                     buy += Integer.parseInt(split[AMOUNT_INDEX]);
                 }
             }
@@ -42,19 +42,19 @@ public class WorkWithFile {
         return new int[]{supply, buy};
     }
 
-    private String getResult(int supply, int buy) {
+    private String buildReport(int supply, int buy) {
         StringBuilder builder = new StringBuilder();
         return builder
-                .append(SUPPLY)
-                .append(COMMA)
+                .append(supplyStr)
+                .append(comma)
                 .append(supply)
                 .append(System.lineSeparator())
-                .append(BUY)
-                .append(COMMA)
+                .append(buyStr)
+                .append(comma)
                 .append(buy)
                 .append(System.lineSeparator())
-                .append(RESULT)
-                .append(COMMA)
+                .append(result)
+                .append(comma)
                 .append(supply - buy).toString();
     }
 
@@ -62,7 +62,7 @@ public class WorkWithFile {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, true))) {
             writer.write(dataToSave);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write to file ", e);
+            throw new RuntimeException("Can't write to file " + fileName, e);
         }
     }
 }
