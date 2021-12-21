@@ -8,10 +8,6 @@ import java.nio.file.Files;
 import java.util.List;
 
 public class WorkWithFile {
-    private static String supplyStr = "supply";
-    private static String buyStr = "buy";
-    private static String result = "result";
-    private static String comma = ",";
     private static final int ABSTRACT_INDEX = 0;
     private static final int AMOUNT_INDEX = 1;
     private static final int SUPPLY_INDEX = 0;
@@ -23,6 +19,9 @@ public class WorkWithFile {
     }
 
     private int[] readLines(String fileName) {
+        String supplyStr = "supply";
+        String buyStr = "buy";
+        String comma = ",";
         File fromFile = new File(fileName);
         int supply = 0;
         int buy = 0;
@@ -43,6 +42,10 @@ public class WorkWithFile {
     }
 
     private String buildReport(int supply, int buy) {
+        String supplyStr = "supply";
+        String buyStr = "buy";
+        String result = "result";
+        String comma = ",";
         StringBuilder builder = new StringBuilder();
         return builder
                 .append(supplyStr)
