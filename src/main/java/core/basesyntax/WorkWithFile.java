@@ -7,15 +7,15 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private StringBuilder stringBuilder = new StringBuilder();
 
     public void getStatistic(String fromFileName, String toFileName) {
-        rearFromFile(fromFileName);
-        String result = createResult(stringBuilder.toString());
+        String input = rearFromFile(fromFileName);
+        String result = createResult(input);
         writeToFIle(result, toFileName);
     }
 
-    private void rearFromFile(String fromFileName) {
+    private String rearFromFile(String fromFileName) {
+        StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String line = bufferedReader.readLine();
             while (line != null) {
@@ -25,6 +25,7 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from the file " + fromFileName, e);
         }
+        return stringBuilder.toString();
     }
 
     private String createResult(String input) {
@@ -33,11 +34,11 @@ public class WorkWithFile {
         int buyAmount = 0;
         int allAmount = 0;
         for (String i : array) {
-            String[] a = i.split(",");
-            if (a[0].equals("supply")) {
-                supplyAmount += Integer.parseInt(a[1]);
+            String[] lineAmount = i.split(",");
+            if (lineAmount[0].equals("supply")) {
+                supplyAmount += Integer.parseInt(lineAmount[1]);
             } else {
-                buyAmount += Integer.parseInt(a[1]);
+                buyAmount += Integer.parseInt(lineAmount[1]);
             }
             allAmount = supplyAmount - buyAmount;
         }
