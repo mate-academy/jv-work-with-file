@@ -8,27 +8,26 @@ import java.io.IOException;
 
 public class WorkWithFile {
 
-    private int supply = 0;
-    private int buy = 0;
-    private int result = 0;
+    public void getStatistic(String fromFileName, String toFileName) {
 
-    private void readStatics(String fromFileName) {
+        this.writeStatics(toFileName,this.readStatics(fromFileName));
+    }
+
+    private int[] readStatics(String fromFileName) {
 
         StringBuilder stringBuilder = new StringBuilder();
-
-        this.supply = 0;
-        this.buy = 0;
-
+        int buy = 0;
+        int supply = 0;
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             int value = reader.read();
             while (value != -1) {
                 if ((char)value == (char)'\n') {
                     String[] record = stringBuilder.toString().split(",");
                     if (record[0].equals("buy")) {
-                        this.buy += Integer.parseInt(record[1]);
+                        buy += Integer.parseInt(record[1]);
                     }
                     if (record[0].equals("supply")) {
-                        this.supply += Integer.parseInt(record[1]);
+                        supply += Integer.parseInt(record[1]);
                     }
                     stringBuilder.setLength(0);
                 } else {
@@ -39,27 +38,19 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't open file",e);
         }
+        int[] resultarr = {buy,supply};
+        return resultarr;
     }
 
-    private void writeStatics(String toFileName) {
+    private void writeStatics(String toFileName, int[] reads) {
 
-        this.result = this.supply - this.buy;
-
+        int result = reads[1] - reads[0];
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-
-            writer.write("supply," + this.supply + System.lineSeparator());
-            writer.write("buy," + this.buy + System.lineSeparator());
-            writer.write("result," + this.result + System.lineSeparator());
-
+            writer.write("supply," + reads[1] + System.lineSeparator());
+            writer.write("buy," + reads[0] + System.lineSeparator());
+            writer.write("result," + result + System.lineSeparator());
         } catch (IOException e) {
             throw new RuntimeException("Can't open file",e);
         }
-    }
-
-    public void getStatistic(String fromFileName, String toFileName) {
-
-        this.readStatics(fromFileName);
-        this.writeStatics(toFileName);
-
     }
 }
