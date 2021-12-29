@@ -14,51 +14,34 @@ public class WorkWithFile {
     private int countBuy = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
+        readerFile(fromFileName);
+        String[] resultOperation = {operationSupply + "," + Integer.toString(countSupply),
+                                    operationBuy + "," + Integer.toString(countBuy),
+                                    resultOperation(countSupply, countBuy)};
+        writeFile(resultOperation, toFileName);
+    }
+
+    private void readerFile(String fromFileName) {
         File fromFile = new File(fromFileName);
-        String sumSupply = null;
-        String sumBuy = null;
 
         try (BufferedReader csvReader =
                      new BufferedReader(new FileReader(String.valueOf(fromFile.toPath())))) {
             String value = csvReader.readLine();
             while (value != null) {
-                sumSupply = calculateSupply(value);
-                sumBuy = calculateBuy(value);
-                System.out.println(value);
+                calculateOperation(value);
                 value = csvReader.readLine();
             }
-            createFile(toFileName);
-            String[] resultOperation = {sumSupply, sumBuy, resultOperation(countSupply, countBuy)};
-            writeFile(resultOperation, toFileName);
-            System.out.println(sumBuy);
-            System.out.println(sumSupply);
         } catch (IOException e) {
             throw new RuntimeException("Can't read the file", e);
         }
     }
 
-    private String calculateSupply(String line) {
-        String [] splitSupply = line.split(",");
-        if (splitSupply[0].equals(operationSupply)) {
-            countSupply += Integer.parseInt(splitSupply[1]);
-        }
-        return operationSupply + "," + Integer.toString(countSupply);
-    }
-
-    private String calculateBuy(String line) {
-        String [] splitBuy = line.split(",");
-        if (splitBuy[0].equals(operationBuy)) {
-            countBuy += Integer.parseInt(splitBuy[1]);
-        }
-        return operationBuy + "," + Integer.toString(countBuy);
-    }
-
-    private void createFile(String name) {
-        File toFile = new File(name);
-        try {
-            toFile.createNewFile();
-        } catch (IOException e) {
-            throw new RuntimeException("Can't create the file", e);
+    private void calculateOperation(String line) {
+        String [] splitLine = line.split(",");
+        if (splitLine[0].equals(operationSupply)) {
+            countSupply += Integer.parseInt(splitLine[1]);
+        } else {
+            countBuy += Integer.parseInt(splitLine[1]);
         }
     }
 
@@ -67,6 +50,12 @@ public class WorkWithFile {
     }
 
     private void writeFile(String[] data, String toFile) {
+        File file = new File(toFile);
+        try {
+            file.createNewFile();
+        } catch (IOException e) {
+            throw new RuntimeException("Can't create the file", e);
+        }
         for (String line : data) {
             try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFile, true))) {
                 bufferedWriter.write(line + System.lineSeparator());
