@@ -1,6 +1,10 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class WorkWithFile {
     private static final String CSV_DELIMITER = ",";
@@ -9,19 +13,24 @@ public class WorkWithFile {
     private static final String RESULT_TITLE = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        File srcFile = new File(fromFileName);
         int supplyAmount = 0;
         int buyAmount = 0;
-        try (BufferedReader reader = new BufferedReader(new FileReader(srcFile))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String line;
-            while((line = reader.readLine()) != null) {
+            while ((line = reader.readLine()) != null) {
                 String[] column = line.split(CSV_DELIMITER);
                 if (column.length != 2) {
                     throw new RuntimeException("Incorrect column count in '" + line + "'");
                 }
                 switch (column[0]) {
-                    case SUPPLY_TITLE: { supplyAmount += Integer.parseInt(column[1]); break; }
-                    case BUY_TITLE: { buyAmount += Integer.parseInt(column[1]); break; }
+                    case SUPPLY_TITLE: {
+                        supplyAmount += Integer.parseInt(column[1]);
+                        break;
+                    }
+                    case BUY_TITLE: {
+                        buyAmount += Integer.parseInt(column[1]);
+                        break;
+                    }
                     default: throw new RuntimeException("Incorrect title '"
                             + column[0] + "' in '" + line + "'");
                 }
