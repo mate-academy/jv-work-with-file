@@ -2,34 +2,48 @@ package core.basesyntax;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static int buyReport = 0;
+    private static int supplyReport = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        File fileFrom = new File(fromFileName);
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(fileFrom));
-            StringBuilder stringBuilder = new StringBuilder();
-            String value = reader.readLine();
-            while (value != null) {
-                stringBuilder.append(value).append(System.lineSeparator());
-                value = reader.readLine();
+        String fileLineContent;
+        int rowsCount = 0;
+        StringBuilder str = new StringBuilder();
+        try (BufferedReader br = new BufferedReader(new FileReader(fromFileName))) {
+            while ((fileLineContent = br.readLine()) != null) {
+                str.append(fileLineContent).append(System.lineSeparator());
+                rowsCount++;
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read file", e);
         }
-        String[] toFile = new String[]{toFileName};
-        File report = new File(toFileName);
-        for (String result : toFile) {
-            try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(report, true))) {
-                bufferedWriter.write(result);
-            } catch (IOException e) {
-                throw new RuntimeException("Can't write data to file", e);
+        String[] dataArray = str.toString().split(System.lineSeparator());
+        String[][] dataMatrix = new String[rowsCount][2];
+        rowsCount = 0;
+        for (String dataArrayItem : dataArray) {
+            dataMatrix[rowsCount] = dataArrayItem.split(",");
+            rowsCount++;
+        }
+        for (String[] dataMatrixItem : dataMatrix) {
+            for (rowsCount = 0; rowsCount < 1; rowsCount++) {
+                if (dataMatrixItem[0].equals("supply")) {
+                    supplyReport = supplyReport + Integer.parseInt(dataMatrixItem[1]);
+                } else if (dataMatrixItem[0].equals("buy")) {
+                    buyReport = buyReport + Integer.parseInt(dataMatrixItem[1]);
+                }
             }
+        }
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(toFileName))) {
+            bw.write("supply," + supplyReport + System.lineSeparator()
+                    + "buy," + buyReport + System.lineSeparator()
+                    + "result," + (supplyReport - buyReport));
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write the file", e);
         }
     }
 }
