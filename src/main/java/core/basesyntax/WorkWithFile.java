@@ -40,11 +40,11 @@ public class WorkWithFile {
                 String[] split = datum.split(",");
                 if (split[0].equals("buy")) {
                     sumBuy = sumBuy
-                            + Integer.parseInt(split[1].substring(0, split[1].length()-1));
+                            + Integer.parseInt(split[1].substring(0, split[1].length() - 1));
                 }
                 if (split[0].equals("supply")) {
                     sumSupply = sumSupply
-                            + Integer.parseInt(split[1].substring(0, split[1].length()-1));
+                            + Integer.parseInt(split[1].substring(0, split[1].length() - 1));
                 }
             }
             String report = "supply," + sumSupply + System.lineSeparator()
