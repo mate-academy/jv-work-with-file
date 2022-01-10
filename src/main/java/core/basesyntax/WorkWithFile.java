@@ -8,44 +8,51 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private String[] data;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        File file = new File(fromFileName);
-        File file1 = new File(toFileName);
-        StringBuilder stringBuilder = new StringBuilder();
-        try (BufferedReader reader = new BufferedReader(new FileReader(file));
-                 BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file1, true))) {
+        data = readFromFile(fromFileName);
+        writeToFile(toFileName);
+    }
 
-            String value = reader.readLine();
+    public String[] readFromFile(String fromFile) {
+        File file = new File(fromFile);
+        StringBuilder stringBuilder = new StringBuilder();
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
+            String value = bufferedReader.readLine();
             while (value != null) {
                 stringBuilder.append(value).append(System.lineSeparator());
-                value = reader.readLine();
+                value = bufferedReader.readLine();
             }
+            data = stringBuilder.toString().split("[;\n]");
+            return data;
+        } catch (IOException e) {
+            throw new RuntimeException("Can't read from file ", e);
+        }
+    }
 
-            String[] data = stringBuilder.toString().split("[;\n]");
-
+    public void writeToFile(String toFile) {
+        File file = new File(toFile);
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
             int sumBuy = 0;
             int sumSupply = 0;
-            int index;
             for (String datum : data) {
-                if (datum.startsWith("buy")) {
-                    index = datum.indexOf(",");
+                String[] split = datum.split(",");
+                if (split[0].equals("buy")) {
                     sumBuy = sumBuy
-                            + Integer.parseInt(datum.substring(index + 1, datum.length() - 1));
+                            + Integer.parseInt(split[1].substring(0, split[1].length()-1));
                 }
-                if (datum.startsWith("supply")) {
-                    index = datum.indexOf(",");
+                if (split[0].equals("supply")) {
                     sumSupply = sumSupply
-                            + Integer.parseInt(datum.substring(index + 1, datum.length() - 1));
+                            + Integer.parseInt(split[1].substring(0, split[1].length()-1));
                 }
             }
             String report = "supply," + sumSupply + System.lineSeparator()
                     + "buy," + sumBuy + System.lineSeparator()
                     + "result," + (sumSupply - sumBuy);
-
             bufferedWriter.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file ", e);
+            throw new RuntimeException("Report didn't create");
         }
     }
 }
