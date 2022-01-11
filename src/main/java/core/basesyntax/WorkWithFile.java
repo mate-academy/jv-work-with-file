@@ -8,8 +8,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static int buyReport = 0;
-    private static int supplyReport = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String fileLineContent;
@@ -22,7 +20,10 @@ public class WorkWithFile {
             throw new RuntimeException("Can't read file", e);
         }
         String[] rows = str.toString().split(System.lineSeparator());
+        int buyReport = 0;
+        int supplyReport = 0;
         for (String row : rows) {
+
             String[] record = row.split(",");
             if (record[0].equals("supply")) {
                 supplyReport = supplyReport + Integer.parseInt(record[1]);
