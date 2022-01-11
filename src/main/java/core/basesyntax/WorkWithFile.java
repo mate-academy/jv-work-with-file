@@ -24,7 +24,7 @@ public class WorkWithFile {
                 stringBuilder.append(value).append(System.lineSeparator());
                 value = bufferedReader.readLine();
             }
-            data = stringBuilder.toString().split("[;\n]");
+            data = stringBuilder.toString().split("[;\n\r]");
             return data;
         } catch (IOException e) {
             throw new RuntimeException("Can't read from file ", e);
@@ -40,11 +40,11 @@ public class WorkWithFile {
                 String[] split = datum.split(",");
                 if (split[0].equals("buy")) {
                     sumBuy = sumBuy
-                            + Integer.parseInt(split[1].substring(0, split[1].length() - 1));
+                            + Integer.parseInt(split[1]);
                 }
                 if (split[0].equals("supply")) {
                     sumSupply = sumSupply
-                            + Integer.parseInt(split[1].substring(0, split[1].length() - 1));
+                            + Integer.parseInt(split[1]);
                 }
             }
             String report = "supply," + sumSupply + System.lineSeparator()
