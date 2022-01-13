@@ -8,12 +8,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private int supplySum = 0;
+    private int buySum = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
         File fromFile = new File(fromFileName);
         File toFile = new File(toFileName);
-        int supplySum = 0;
-        int buySum = 0;
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFile));
             while (bufferedReader.ready()) {
