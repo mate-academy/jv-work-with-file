@@ -8,14 +8,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private int supplySum = 0;
-    private int buySum = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
         File fromFile = new File(fromFileName);
         File toFile = new File(toFileName);
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFile));
+        int supplySum = 0;
+        int buySum = 0;
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFile))) {
             while (bufferedReader.ready()) {
                 String line = bufferedReader.readLine();
                 String[] splitData = line.split(",");
@@ -32,31 +31,18 @@ public class WorkWithFile {
         writeToFile(reportData,toFile);
     }
 
-    public String createReport(int supplySum, int buySum) {
+    private String createReport(int supplySum, int buySum) {
         int differenceSupplyBuy = supplySum - buySum;
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("supply,").append(supplySum).append(System.lineSeparator());
-        stringBuilder.append("buy,").append(buySum).append(System.lineSeparator());
-        stringBuilder.append("result,").append(differenceSupplyBuy).append(System.lineSeparator());
-        return stringBuilder.toString();
+        return "supply," + supplySum + System.lineSeparator()
+                + "buy," + buySum + System.lineSeparator()
+                + "result," + differenceSupplyBuy + System.lineSeparator();
     }
 
-    public void writeToFile(String reportData, File toFile) {
-        BufferedWriter bufferedWriter = null;
-        try {
-            bufferedWriter = new BufferedWriter(new FileWriter(toFile,true));
+    private void writeToFile(String reportData, File toFile) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFile,true))) {
             bufferedWriter.write(reportData);
-            bufferedWriter.flush();
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to file",e);
-        } finally {
-            if (bufferedWriter != null) {
-                try {
-                    bufferedWriter.close();
-                } catch (IOException e) {
-                    throw new RuntimeException("Can't close BufferedWriter",e);
-                }
-            }
         }
     }
 }
