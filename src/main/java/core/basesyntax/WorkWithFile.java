@@ -8,11 +8,15 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private int supplyAll = 0;
-    private int buyAll = 0;
-    private int result = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
+        String report = getReport(fromFileName);
+        writeStatisticToFile(report, toFileName);
+    }
+
+    private String getReport(String fromFileName) {
+        int supplyAll = 0;
+        int buyAll = 0;
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String line = bufferedReader.readLine();
             while (line != null) {
@@ -27,11 +31,12 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from the file" + fromFileName, e);
         }
-        result = supplyAll - buyAll;
-        writeStatisticToFile(toFileName);
+        int result = supplyAll - buyAll;
+        return "supply," + supplyAll + System.lineSeparator() + "buy," + buyAll
+                + System.lineSeparator() + "result," + result;
     }
 
-    public void writeStatisticToFile(String toFileName) {
+    private void writeStatisticToFile(String report, String toFileName) {
         File file = new File(toFileName);
         try {
             file.createNewFile();
@@ -39,12 +44,7 @@ public class WorkWithFile {
             throw new RuntimeException("Can't create the file" + toFileName, e);
         }
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
-            bufferedWriter.write("supply," + String.valueOf(supplyAll));
-            bufferedWriter.newLine();
-            bufferedWriter.write("buy," + String.valueOf(buyAll));
-            bufferedWriter.newLine();
-            bufferedWriter.write("result," + String.valueOf(result));
-            bufferedWriter.newLine();
+            bufferedWriter.write(report);
         } catch (IOException e) {
             throw new RuntimeException("can't write to a file", e);
         }
