@@ -48,15 +48,8 @@ class WorkWithFile {
         Map<String, Integer> mapResult = listLines.stream()
                 .collect(Collectors.groupingBy(FileObject::getName,
                         Collectors.summingInt(FileObject::getSum)));
-
-        if (mapResult.get("buy") > mapResult.get("supply")) {
-            stringBuilder.append("buy,").append(mapResult.get("buy")).append("\n");
-            stringBuilder.append("supply,").append(mapResult.get("supply")).append("\n");
-        } else {
-            stringBuilder.append("supply,").append(mapResult.get("supply")).append("\n");
-            stringBuilder.append("buy,").append(mapResult.get("buy")).append("\n");
-        }
-
+        stringBuilder.append("supply,").append(mapResult.get("supply")).append("\n");
+        stringBuilder.append("buy,").append(mapResult.get("buy")).append("\n");
         stringBuilder.append("result")
                 .append(",").append(mapResult.get("supply") - mapResult.get("buy"));
         return stringBuilder.toString().split(" ");
