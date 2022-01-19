@@ -9,6 +9,32 @@ import java.io.IOException;
 public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
+        String [] arrayFromFile = readFromFile(fromFileName);
+        String report = createReport(arrayFromFile);
+        writeToFile(report, toFileName);
+    }
+
+    public String createReport(String [] arrayResultsFromFile) {
+        StringBuilder resultBuilder = new StringBuilder();
+        int sumSupply = 0;
+        int sumBuy = 0;
+
+        for (String arrayResult: arrayResultsFromFile) {
+            String [] arrays = arrayResult.split(",");
+            if (arrays[0].equals("supply")) {
+                sumSupply += Integer.parseInt(arrays[1]);
+            } else if (arrays[0].equals("buy")) {
+                sumBuy += Integer.parseInt(arrays[1]);
+            }
+        }
+        int getResult = sumSupply - sumBuy;
+        resultBuilder.append("supply").append(",").append(sumSupply).append(System.lineSeparator());
+        resultBuilder.append("buy").append(",").append(sumBuy).append(System.lineSeparator());
+        resultBuilder.append("result").append(",").append(getResult).append(System.lineSeparator());
+        return resultBuilder.toString();
+    }
+
+    public String [] readFromFile(String fromFileName) {
         StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String value = bufferedReader.readLine();
@@ -17,34 +43,17 @@ public class WorkWithFile {
                 value = bufferedReader.readLine();
             }
         } catch (Exception e) {
-            throw new RuntimeException("Can't reader file " + fromFileName, e);
+            throw new RuntimeException("Can't read file " + fromFileName, e);
         }
         String getFromFile = stringBuilder.toString();
-        String [] arrayResults = getFromFile.split(";");
+        return getFromFile.split(";");
+    }
 
-        int sumSupply = 0;
-        int sumBuy = 0;
-        String supply = "supply";
-        String buy = "buy";
-
-        for (String arrayResult: arrayResults) {
-            String [] arrays = arrayResult.split(",");
-            if (arrays[0].equals(supply)) {
-                sumSupply += Integer.parseInt(arrays[1]);
-            } else if (arrays[0].equals(buy)) {
-                sumBuy += Integer.parseInt(arrays[1]);
-            }
-        }
-        int getResult = sumSupply - sumBuy;
-        StringBuilder resultBuilder = new StringBuilder();
-        resultBuilder.append(supply).append(",").append(sumSupply).append(System.lineSeparator());
-        resultBuilder.append(buy).append(",").append(sumBuy).append(System.lineSeparator());
-        resultBuilder.append("result").append(",").append(getResult).append(System.lineSeparator());
-        String result = resultBuilder.toString();
+    public void writeToFile(String result, String toFileName) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(result);
         } catch (IOException e) {
-            throw new RuntimeException("Can't writer file " + toFileName, e);
+            throw new RuntimeException("Can't write file " + toFileName, e);
         }
     }
 }
