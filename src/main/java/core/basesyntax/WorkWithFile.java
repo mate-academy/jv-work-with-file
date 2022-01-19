@@ -1,10 +1,10 @@
 package core.basesyntax;
 
 import java.io.*;
-import java.util.Arrays;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class WorkWithFile {
-
     public void getStatistic(String fromFileName, String toFileName) {
         File file = new File(fromFileName);
         StringBuilder builder = new StringBuilder();
@@ -22,8 +22,31 @@ public class WorkWithFile {
         }
 
         String data = builder.toString();
-//        System.out.println(data);
         String[] arrayData = data.split(System.lineSeparator());
+        int supplyAmout = 0;
+        int buyAmout = 0;
+
+        for (int i = 0; i < arrayData.length; i++) {
+            String[] temp = arrayData[i].split(",");
+            if (temp[0].equals("supply")) {
+                supplyAmout += Integer.parseInt(temp[1]);
+            }
+            if (temp[0].equals("buy")) {
+                buyAmout += Integer.parseInt(temp[1]);
+            }
+        }
+
+        StringBuilder builderResult = new StringBuilder();
+        builderResult.append("supply").append(",").append(supplyAmout).append(System.lineSeparator());
+        builderResult.append("buy").append(",").append(buyAmout).append(System.lineSeparator());
+        builderResult.append("result").append(",").append(supplyAmout - buyAmout);
+        byte[] result = builderResult.toString().getBytes();
+
+        try {
+            Files.write(Path.of(toFileName), result);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write data to the file", e);
+        }
 
 
     }
