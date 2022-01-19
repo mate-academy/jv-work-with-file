@@ -15,19 +15,16 @@ class WorkWithFile {
         writeToFile(toFileName, readFromFile(fromFileName));
     }
 
-    private void writeToFile(String toFileName, String[] arrayToWrite) {
-        for (String s : arrayToWrite) {
+    private void writeToFile(String toFileName, String arrayToWrite) {
             try (BufferedWriter bufferedWriter
                          = new BufferedWriter(new FileWriter(toFileName, true))) {
-                bufferedWriter.write(s);
-                bufferedWriter.write("\n");
+                bufferedWriter.write(arrayToWrite);
             } catch (IOException e) {
                 throw new RuntimeException("Can't open the file " + e);
             }
-        }
     }
 
-    private String[] readFromFile(String fromFileName) {
+    private String readFromFile(String fromFileName) {
         List<FileObject> listLines = new ArrayList<FileObject>();
         FileObject fileObject;
         String line = "";
@@ -48,10 +45,10 @@ class WorkWithFile {
         Map<String, Integer> mapResult = listLines.stream()
                 .collect(Collectors.groupingBy(FileObject::getName,
                         Collectors.summingInt(FileObject::getSum)));
-        stringBuilder.append("supply,").append(mapResult.get("supply")).append("\n");
-        stringBuilder.append("buy,").append(mapResult.get("buy")).append("\n");
+        stringBuilder.append("supply,").append(mapResult.get("supply")).append(System.lineSeparator());
+        stringBuilder.append("buy,").append(mapResult.get("buy")).append(System.lineSeparator());
         stringBuilder.append("result")
-                .append(",").append(mapResult.get("supply") - mapResult.get("buy"));
-        return stringBuilder.toString().split(" ");
+                .append(",").append(mapResult.get("supply") - mapResult.get("buy")).append(System.lineSeparator());
+        return stringBuilder.toString();
     }
 }
