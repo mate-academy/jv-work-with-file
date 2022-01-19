@@ -1,6 +1,10 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -37,9 +41,17 @@ public class WorkWithFile {
         }
 
         StringBuilder builderResult = new StringBuilder();
-        builderResult.append("supply").append(",").append(supplyAmout).append(System.lineSeparator());
-        builderResult.append("buy").append(",").append(buyAmout).append(System.lineSeparator());
-        builderResult.append("result").append(",").append(supplyAmout - buyAmout);
+        builderResult.append("supply")
+                .append(",")
+                .append(supplyAmout)
+                .append(System.lineSeparator())
+                .append("buy")
+                .append(",")
+                .append(buyAmout)
+                .append(System.lineSeparator())
+                .append("result")
+                .append(",")
+                .append(supplyAmout - buyAmout);
         byte[] result = builderResult.toString().getBytes();
 
         try {
@@ -47,7 +59,5 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to the file", e);
         }
-
-
     }
 }
