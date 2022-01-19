@@ -1,6 +1,10 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +17,8 @@ class WorkWithFile {
 
     private void writeToFile(String toFileName, String[] arrayToWrite) {
         for (String s : arrayToWrite) {
-            try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true))) {
+            try (BufferedWriter bufferedWriter
+                         = new BufferedWriter(new FileWriter(toFileName, true))) {
                 bufferedWriter.write(s);
                 bufferedWriter.write("\n");
             } catch (IOException e) {
@@ -40,13 +45,20 @@ class WorkWithFile {
             throw new RuntimeException("Can't read data from the file " + e);
         }
         stringBuilder.setLength(0);
-        Map<String, Integer> result1 = listLines.stream()
+        Map<String, Integer> mapResult = listLines.stream()
                 .collect(Collectors.groupingBy(FileObject::getName,
                         Collectors.summingInt(FileObject::getSum)));
-        for (Map.Entry<String, Integer> pair : result1.entrySet()) {
-            stringBuilder.append(pair.getKey()).append(",").append(pair.getValue()).append(" ");
+
+        if (mapResult.get("buy") > mapResult.get("supply")) {
+            stringBuilder.append("buy,").append(mapResult.get("buy")).append("\n");
+            stringBuilder.append("supply,").append(mapResult.get("supply")).append("\n");
+        } else {
+            stringBuilder.append("supply,").append(mapResult.get("supply")).append("\n");
+            stringBuilder.append("buy,").append(mapResult.get("buy")).append("\n");
         }
-        stringBuilder.append("result").append(",").append(result1.get("supply") - result1.get("buy"));
+
+        stringBuilder.append("result")
+                .append(",").append(mapResult.get("supply") - mapResult.get("buy"));
         return stringBuilder.toString().split(" ");
     }
 }

@@ -4,6 +4,11 @@ public class FileObject {
     private String name;
     private int sum;
 
+    FileObject(String name, int sum) {
+        this.name = name;
+        this.sum = sum;
+    }
+
     public String getName() {
         return name;
     }
@@ -17,11 +22,6 @@ public class FileObject {
     }
 
     public void setSum(int sum) {
-        this.sum = sum;
-    }
-
-    FileObject(String name, int sum) {
-        this.name = name;
         this.sum = sum;
     }
 }
