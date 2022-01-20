@@ -25,7 +25,7 @@ public class WorkWithFile {
         writeFile(toWrite, toFileName);
     }
 
-    private static String readFile(String fromFileName) {
+    private String readFile(String fromFileName) {
         StringBuilder builder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String read = bufferedReader.readLine();
