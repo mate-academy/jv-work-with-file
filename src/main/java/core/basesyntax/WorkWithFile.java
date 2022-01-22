@@ -1,6 +1,10 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 
 public class WorkWithFile {
 
@@ -35,15 +39,15 @@ public class WorkWithFile {
         int buy = 0;
         for (int i = 0; i < dataFromMarket.length; i++) {
             if (dataFromMarket[i].contains("supply")) {
-                supply += Integer.parseInt(dataFromMarket[i].substring(dataFromMarket[i].
-                        indexOf(",") + 1, dataFromMarket[i].length()));
+                supply += Integer.parseInt(dataFromMarket[i].substring(dataFromMarket[i]
+                        .indexOf(",") + 1, dataFromMarket[i].length()));
             } else if (dataFromMarket[i].contains("buy")) {
-                buy += Integer.parseInt(dataFromMarket[i].substring(dataFromMarket[i].
-                        indexOf(",") + 1, dataFromMarket[i].length()));
+                buy += Integer.parseInt(dataFromMarket[i].substring(dataFromMarket[i]
+                        .indexOf(",") + 1, dataFromMarket[i].length()));
             }
         }
-        return "supply," + supply
-                + "\nbuy," + buy
-                + "\nresult," + (supply - buy);
+        return "supply," + supply + System.lineSeparator()
+                + "buy," + buy + System.lineSeparator()
+                + "result," + (supply - buy);
     }
 }
