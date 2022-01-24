@@ -35,11 +35,13 @@ public class WorkWithFile {
         String line;
         try (BufferedReader reader = new BufferedReader(new FileReader(incomeInfo))) {
             line = reader.readLine();
+            String[] lineArray = null;
             while (line != null) {
-                if (line.split(COMA)[TITLE_INDEX].equals(SUPPLIER)) {
+                 lineArray = line.split(COMA);
+                if (lineArray[TITLE_INDEX].equals(SUPPLIER)) {
                     supplySum += Integer.parseInt(line.split(COMA)[AMOUNT_INDEX]);
                 }
-                if (line.split(COMA)[TITLE_INDEX].equals(BUYER)) {
+                if (lineArray[TITLE_INDEX].equals(BUYER)) {
                     buySum += Integer.parseInt(line.split(COMA)[AMOUNT_INDEX]);
                 }
                 line = reader.readLine();
