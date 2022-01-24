@@ -10,17 +10,16 @@ import java.io.IOException;
 
 public class WorkWithFile {
     private static final String SUPPLY_STRING = "supply";
-    private static final String BUY_STRING = "buy,";
-    private static final String RESULT_STRING = "result,";
     private static final String FILE_NOT_FOUND = "File not found";
     private static final String READING_FILE_ERROR = "Reading file error";
+    private static final String COMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] inputData = getDataFromFile(fromFileName);
         int supply = 0;
         int buy = 0;
         for (String line: inputData) {
-            String[] record = line.split(",");
+            String[] record = line.split(COMA);
             if (record[0].equals(SUPPLY_STRING)) {
                 supply += Integer.parseInt(record[1]);
             } else {
@@ -35,10 +34,9 @@ public class WorkWithFile {
         StringBuilder builder = new StringBuilder();
         String[] inputData;
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileToRead))) {
-            String value = bufferedReader.readLine();
-            while (value != null) {
+            String value;
+            while ((value = bufferedReader.readLine()) != null) {
                 builder.append(value).append(" ");
-                value = bufferedReader.readLine();
             }
             String line = new String(builder);
             inputData = line.split(" ");
@@ -53,9 +51,9 @@ public class WorkWithFile {
     private void writeDataToFile(String toFileName, int supply, int buy) {
         File fileToWrite = new File(toFileName);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileToWrite))) {
-            writer.write(SUPPLY_STRING + "," + supply + System.lineSeparator());
-            writer.write(BUY_STRING + buy + System.lineSeparator());
-            writer.write(RESULT_STRING + (supply - buy));
+            writer.write(SUPPLY_STRING + COMA + supply + System.lineSeparator());
+            writer.write("buy," + buy + System.lineSeparator());
+            writer.write("result," + (supply - buy));
         } catch (FileNotFoundException e) {
             throw new RuntimeException(FILE_NOT_FOUND, e);
         } catch (IOException e) {
