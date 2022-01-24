@@ -11,10 +11,11 @@ public class WorkWithFile {
     private static final String SUPPLY_DEFINITION = "supply";
     private static final String BUY_DEFINITION = "buy";
     private static final String RESULT_DEFINITION = "result";
+    private static final String SEPARATOR = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String data = readFile(fromFileName);
-        writeReportIntoFile(mkReport(data),toFileName);
+        writeReportIntoFile(makeReport(data),toFileName);
     }
 
     private String readFile(String readFileName) {
@@ -31,12 +32,11 @@ public class WorkWithFile {
         return build.toString();
     }
 
-    private String mkReport(String data) {
+    private String makeReport(String data) {
         int supply = 0;
         int buy = 0;
         int result;
-        String[] arrayData = data.split(" ");
-        for (String stat : arrayData) {
+        for (String stat : data.split(" ")) {
             if (stat.contains(SUPPLY_DEFINITION)) {
                 supply += Integer.parseInt(stat.substring(SUPPLY_DEFINITION.length() + 1));
             } else {
@@ -45,9 +45,12 @@ public class WorkWithFile {
         }
         result = supply - buy;
         StringBuilder build = new StringBuilder();
-        build.append(SUPPLY_DEFINITION).append(",").append(supply).append(System.lineSeparator());
-        build.append(BUY_DEFINITION).append(",").append(buy).append(System.lineSeparator());
-        build.append(RESULT_DEFINITION).append(",").append(result).append(System.lineSeparator());
+        build.append(SUPPLY_DEFINITION).append(SEPARATOR)
+                .append(supply).append(System.lineSeparator());
+        build.append(BUY_DEFINITION).append(SEPARATOR)
+                .append(buy).append(System.lineSeparator());
+        build.append(RESULT_DEFINITION).append(SEPARATOR)
+                .append(result).append(System.lineSeparator());
         return build.toString();
     }
 
