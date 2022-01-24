@@ -21,10 +21,9 @@ public class WorkWithFile {
     private String readFile(String fromFileName) {
         StringBuilder builder = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
-            String value = reader.readLine();
-            while (value != null) {
+            String value;
+            while ((value = reader.readLine()) != null) {
                 builder.append(value).append(SEPARATOR);
-                value = reader.readLine();
             }
             return builder.toString();
         } catch (IOException e) {
