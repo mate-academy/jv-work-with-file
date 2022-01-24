@@ -50,14 +50,18 @@ public class WorkWithFile {
     private void writeData(String file, int supply, int buy, int result) {
         File fileName = new File(file);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append(SUPPLY).append(SEPARATOR).append(supply)
-                    .append(System.lineSeparator()).append(BUY).append(SEPARATOR)
-                    .append(buy).append(System.lineSeparator()).append(RESULT)
-                    .append(SEPARATOR).append(result);
-            bufferedWriter.write(stringBuilder.toString());
+            bufferedWriter.write(createReport(supply, buy, result));
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to file", e);
         }
+    }
+
+    private String createReport(int supply, int buy, int result) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(SUPPLY).append(SEPARATOR).append(supply)
+                .append(System.lineSeparator()).append(BUY).append(SEPARATOR)
+                .append(buy).append(System.lineSeparator()).append(RESULT)
+                .append(SEPARATOR).append(result);
+        return stringBuilder.toString();
     }
 }
