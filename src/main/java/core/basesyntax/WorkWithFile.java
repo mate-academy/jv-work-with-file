@@ -11,10 +11,12 @@ public class WorkWithFile {
     private int supply = 0;
     private int buy = 0;
     private int result = 0;
-    static final String REGEX = ",";
-    static final String SUPPLYWORDS = "supply";
-    static final String BUYWORDS = "buy";
-    static final String RESULTWORDS = "result";
+    private String value = "";
+    static private String REGEX = ",";
+    static private String SUPPLYWORDS = "supply";
+    static private String BUYWORDS = "buy";
+    static private String RESULTWORDS = "result";
+
 
 
     public void getStatistic(String fromFileName, String toFileName) {
@@ -25,8 +27,7 @@ public class WorkWithFile {
     public void readFile(String fromFileName) {
         File fileIn = new File(fromFileName);
         try (BufferedReader reader = new BufferedReader(new FileReader(fileIn))) {
-            String value = reader.readLine();
-            while (value != null) {
+            while ((value = reader.readLine()) != null) {
                 String[] numbersString = value.split(REGEX);
                 if (numbersString[0].equals(SUPPLYWORDS)) {
                     supply = supply + Integer.parseInt(numbersString[1]);
@@ -34,7 +35,7 @@ public class WorkWithFile {
                 if (numbersString[0].equals(BUYWORDS)) {
                     buy = buy + Integer.parseInt(numbersString[1]);
                 }
-                value = reader.readLine();
+                //value = reader.readLine();
             }
             result = supply - buy;
         } catch (IOException e) {
