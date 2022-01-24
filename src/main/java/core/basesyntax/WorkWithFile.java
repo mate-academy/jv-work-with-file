@@ -8,16 +8,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    static final String REGEX = ",";
+    static final String SUPPLYWORDS = "supply";
+    static final String BUYWORDS = "buy";
+    static final String RESULTWORDS = "result";
     private int supply = 0;
     private int buy = 0;
     private int result = 0;
     private String value = "";
-    static private String REGEX = ",";
-    static private String SUPPLYWORDS = "supply";
-    static private String BUYWORDS = "buy";
-    static private String RESULTWORDS = "result";
-
-
 
     public void getStatistic(String fromFileName, String toFileName) {
         readFile(fromFileName);
