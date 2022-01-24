@@ -37,7 +37,7 @@ public class WorkWithFile {
             line = reader.readLine();
             String[] lineArray = null;
             while (line != null) {
-                 lineArray = line.split(COMA);
+                lineArray = line.split(COMA);
                 if (lineArray[TITLE_INDEX].equals(SUPPLIER)) {
                     supplySum += Integer.parseInt(line.split(COMA)[AMOUNT_INDEX]);
                 }
