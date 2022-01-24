@@ -12,30 +12,6 @@ public class WorkWithFile {
     private int buy = 0;
     private int result = 0;
 
-    public int getSupply() {
-        return supply;
-    }
-
-    public void setSupply(int supply) {
-        this.supply = supply;
-    }
-
-    public int getBuy() {
-        return buy;
-    }
-
-    public void setBuy(int buy) {
-        this.buy = buy;
-    }
-
-    public int getResult() {
-        return result;
-    }
-
-    public void setResult(int result) {
-        this.result = result;
-    }
-
     public void getStatistic(String fromFileName, String toFileName) {
         readFile(fromFileName);
         createReport(toFileName);
