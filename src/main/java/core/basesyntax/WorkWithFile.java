@@ -7,9 +7,15 @@ import java.io.FileReader;
 import java.io.FileWriter;
 
 public class WorkWithFile {
+    private StringBuilder stringBuilder = new StringBuilder();
 
     public void getStatistic(String fromFileName, String toFileName) {
-        StringBuilder stringBuilder = new StringBuilder();
+        String[] dataFromMarket = readData(fromFileName);
+        String report = processData(dataFromMarket);
+        createReport(toFileName, report);
+    }
+
+    private String[] readData(String fromFileName) {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String value = bufferedReader.readLine();
             while (value != null) {
@@ -17,10 +23,30 @@ public class WorkWithFile {
                 value = bufferedReader.readLine();
             }
         } catch (Exception e) {
-            throw new RuntimeException("I can't read read file" + toFileName, e);
+            throw new RuntimeException("I can't read read file" + fromFileName, e);
         }
-        String[] dataFromMarket = stringBuilder.toString().split(System.lineSeparator());
-        String report = createReport(dataFromMarket);
+        return stringBuilder.toString().split(System.lineSeparator());
+    }
+
+    private String processData(String[] dataFromMarket) {
+        stringBuilder.setLength(0);
+        int supply = 0;
+        int buy = 0;
+        for (int i = 0; i < dataFromMarket.length; i++) {
+            if (dataFromMarket[i].contains("supply")) {
+                supply += Integer.parseInt(dataFromMarket[i].substring(dataFromMarket[i]
+                        .indexOf(",") + 1));
+            } else if (dataFromMarket[i].contains("buy")) {
+                buy += Integer.parseInt(dataFromMarket[i].substring(dataFromMarket[i]
+                        .indexOf(",") + 1));
+            }
+        }
+        return stringBuilder.append("supply,").append(supply).append(System.lineSeparator())
+                .append("buy,").append(buy).append(System.lineSeparator())
+                .append("result,").append(supply - buy).toString();
+    }
+
+    private void createReport(String toFileName, String report) {
         try {
             File toFilFile = new File(toFileName);
             toFilFile.createNewFile();
@@ -32,22 +58,5 @@ public class WorkWithFile {
         } catch (Exception e) {
             throw new RuntimeException("I can't write information to the file" + toFileName, e);
         }
-    }
-
-    public String createReport(String[] dataFromMarket) {
-        int supply = 0;
-        int buy = 0;
-        for (int i = 0; i < dataFromMarket.length; i++) {
-            if (dataFromMarket[i].contains("supply")) {
-                supply += Integer.parseInt(dataFromMarket[i].substring(dataFromMarket[i]
-                        .indexOf(",") + 1, dataFromMarket[i].length()));
-            } else if (dataFromMarket[i].contains("buy")) {
-                buy += Integer.parseInt(dataFromMarket[i].substring(dataFromMarket[i]
-                        .indexOf(",") + 1, dataFromMarket[i].length()));
-            }
-        }
-        return "supply," + supply + System.lineSeparator()
-                + "buy," + buy + System.lineSeparator()
-                + "result," + (supply - buy);
     }
 }
