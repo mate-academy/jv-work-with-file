@@ -8,6 +8,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final int TITLE_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
+    private static final String SUPPLIER = "supply";
+    private static final String BUYER = "buy";
+    private static final String COMA = ",";
+
     public void getStatistic(String fromFileName, String toFileName) {
         String report = readFile(fromFileName);
         writeToFile(toFileName, report);
@@ -30,11 +36,11 @@ public class WorkWithFile {
         try (BufferedReader reader = new BufferedReader(new FileReader(incomeInfo))) {
             line = reader.readLine();
             while (line != null) {
-                if (line.split(",")[0].equals("supply")) {
-                    supplySum += Integer.parseInt(line.split(",")[1]);
+                if (line.split(COMA)[TITLE_INDEX].equals(SUPPLIER)) {
+                    supplySum += Integer.parseInt(line.split(COMA)[AMOUNT_INDEX]);
                 }
-                if (line.split(",")[0].equals("buy")) {
-                    buySum += Integer.parseInt(line.split(",")[1]);
+                if (line.split(COMA)[TITLE_INDEX].equals(BUYER)) {
+                    buySum += Integer.parseInt(line.split(COMA)[AMOUNT_INDEX]);
                 }
                 line = reader.readLine();
             }
@@ -42,8 +48,8 @@ public class WorkWithFile {
             throw new RuntimeException("Can't read a file", e);
         }
         StringBuilder builder = new StringBuilder()
-                .append("supply,").append(supplySum).append(System.lineSeparator())
-                .append("buy,").append(buySum).append(System.lineSeparator())
+                .append(SUPPLIER).append(COMA).append(supplySum).append(System.lineSeparator())
+                .append(BUYER).append(COMA).append(buySum).append(System.lineSeparator())
                 .append("result,").append(supplySum - buySum);
         return builder.toString();
     }
