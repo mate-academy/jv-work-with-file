@@ -33,7 +33,6 @@ public class WorkWithFile {
                 if (numbersString[0].equals(BUYWORDS)) {
                     buy = buy + Integer.parseInt(numbersString[1]);
                 }
-                //value = reader.readLine();
             }
             result = supply - buy;
         } catch (IOException e) {
