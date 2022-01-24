@@ -9,9 +9,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class WorkWithFile {
-    private static final int INDEX_FOR_ARRAYDATA = 0;
     private static final int INDEX_FOR_OPERATION_TYPE = 0;
     private static final int INDEX_FOR_AMOUNT = 1;
+    private static final String SEPARATOR_FOR_DATA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         File file = new File(fromFileName);
@@ -31,8 +31,8 @@ public class WorkWithFile {
         String[] arrayData = data.split(System.lineSeparator());
         int supplyAmout = 0;
         int buyAmout = 0;
-        for (int i = INDEX_FOR_ARRAYDATA; i < arrayData.length; i++) {
-            String[] temp = arrayData[i].split(",");
+        for (int i = 0; i < arrayData.length; i++) {
+            String[] temp = arrayData[i].split(SEPARATOR_FOR_DATA);
             if (temp[INDEX_FOR_OPERATION_TYPE].equals("supply")) {
                 supplyAmout += Integer.parseInt(temp[INDEX_FOR_AMOUNT]);
             }
