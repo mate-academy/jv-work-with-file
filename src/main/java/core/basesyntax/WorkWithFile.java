@@ -9,10 +9,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class WorkWithFile {
+    private static final int INDEX_FOR_ARRAYDATA = 0;
+    private static final int INDEX_FOR_OPERATION_TYPE = 0;
+    private static final int INDEX_FOR_AMOUNT = 1;
+
     public void getStatistic(String fromFileName, String toFileName) {
         File file = new File(fromFileName);
         StringBuilder builder = new StringBuilder();
-
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String value = reader.readLine();
             while (value != null) {
@@ -24,22 +27,19 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read the file" + fromFileName, e);
         }
-
         String data = builder.toString();
         String[] arrayData = data.split(System.lineSeparator());
         int supplyAmout = 0;
         int buyAmout = 0;
-
-        for (int i = 0; i < arrayData.length; i++) {
+        for (int i = INDEX_FOR_ARRAYDATA; i < arrayData.length; i++) {
             String[] temp = arrayData[i].split(",");
-            if (temp[0].equals("supply")) {
-                supplyAmout += Integer.parseInt(temp[1]);
+            if (temp[INDEX_FOR_OPERATION_TYPE].equals("supply")) {
+                supplyAmout += Integer.parseInt(temp[INDEX_FOR_AMOUNT]);
             }
-            if (temp[0].equals("buy")) {
-                buyAmout += Integer.parseInt(temp[1]);
+            if (temp[INDEX_FOR_OPERATION_TYPE].equals("buy")) {
+                buyAmout += Integer.parseInt(temp[INDEX_FOR_AMOUNT]);
             }
         }
-
         StringBuilder builderResult = new StringBuilder();
         builderResult.append("supply")
                 .append(",")
@@ -53,7 +53,6 @@ public class WorkWithFile {
                 .append(",")
                 .append(supplyAmout - buyAmout);
         byte[] result = builderResult.toString().getBytes();
-
         try {
             Files.write(Path.of(toFileName), result);
         } catch (IOException e) {
