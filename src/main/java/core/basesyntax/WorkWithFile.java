@@ -55,10 +55,9 @@ public class WorkWithFile {
         File file = new File(fileName);
         StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
-            String value = bufferedReader.readLine();
-            while (value != null) {
+            String value;
+            while ((value = bufferedReader.readLine()) != null) {
                 stringBuilder.append(value).append(System.lineSeparator());
-                value = bufferedReader.readLine();
             }
         } catch (FileNotFoundException e) {
             throw new RuntimeException("Can't find file!", e);
