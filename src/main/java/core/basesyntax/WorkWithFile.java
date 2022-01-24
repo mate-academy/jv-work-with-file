@@ -13,6 +13,7 @@ public class WorkWithFile {
     private static final String SUPPLIER = "supply";
     private static final String BUYER = "buy";
     private static final String COMA = ",";
+    private static final int SUM = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String report = readFile(fromFileName);
@@ -29,8 +30,8 @@ public class WorkWithFile {
     }
 
     private String readFile(String incomeFile) {
-        int buySum = 0;
-        int supplySum = 0;
+        int buySum = SUM;
+        int supplySum = SUM;
         File incomeInfo = new File(incomeFile);
         String line;
         try (BufferedReader reader = new BufferedReader(new FileReader(incomeInfo))) {
