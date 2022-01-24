@@ -8,10 +8,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    static final String REGEX = ",";
-    static final String SUPPLYWORDS = "supply";
-    static final String BUYWORDS = "buy";
-    static final String RESULTWORDS = "result";
+    private static final String REGEX = ",";
+    private static final String SUPPLYWORDS = "supply";
+    private static final String BUYWORDS = "buy";
+    private static final String RESULTWORDS = "result";
     private int supply = 0;
     private int buy = 0;
     private int result = 0;
