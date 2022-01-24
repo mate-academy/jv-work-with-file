@@ -1,80 +1,59 @@
 package core.basesyntax;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.util.Collections;
+import java.util.List;
 
 public class WorkWithFile {
-    private static final int INDEX_OF_SUPPLY = 0;
-    private static final int INDEX_OF_BUY = 1;
-    private static final int INDEX_OF_RESULT = 2;
+
+    private static final String COMA = ",";
     private static final int INDEX_OF_SUPPLY_OR_BUY = 0;
     private static final int INDEX_OF_QUANTITY = 1;
-    private static final int REQUIRED_CAPACITY = 3;
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
+    private int buyValue = 0;
+    private int supplyValue = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int[] supplyAndBuyAndResult = getSupplyAndBuyAndResult(fromFileName);
-        createReport(supplyAndBuyAndResult, toFileName);
+        readFromFile(fromFileName);
+        StringBuilder report = createReport();
+        writeToFile(report, toFileName);
     }
 
-    private int[] getSupplyAndBuyAndResult(String fromFileName) {
+    private void readFromFile(String fromFileName) {
         File file = new File(fromFileName);
-        int[] supplyAndBuyAndResult = new int[REQUIRED_CAPACITY];
-        String[] split;
+        String[] splitLine;
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(file));
-            String lineOfFile = reader.readLine();
-
-            while (lineOfFile != null) {
-                split = lineOfFile.split(",");
-                if (split[INDEX_OF_SUPPLY_OR_BUY].equals("supply")) {
-                    supplyAndBuyAndResult[INDEX_OF_SUPPLY]
-                            += Integer.parseInt(split[INDEX_OF_QUANTITY]);
-                } else if (split[INDEX_OF_SUPPLY_OR_BUY].equals("buy")) {
-                    supplyAndBuyAndResult[INDEX_OF_BUY]
-                            += Integer.parseInt(split[INDEX_OF_QUANTITY]);
+            List<String> allLines = Files.readAllLines(file.toPath());
+            for (String allLine : allLines) {
+                splitLine = allLine.split(COMA);
+                if (splitLine[INDEX_OF_SUPPLY_OR_BUY].equals(SUPPLY)) {
+                    supplyValue = supplyValue + Integer.parseInt(splitLine[INDEX_OF_QUANTITY]);
+                } else if (splitLine[INDEX_OF_SUPPLY_OR_BUY].equals(BUY)) {
+                    buyValue = buyValue + Integer.parseInt(splitLine[INDEX_OF_QUANTITY]);
                 }
-                lineOfFile = reader.readLine();
             }
-            reader.close();
-            supplyAndBuyAndResult[INDEX_OF_RESULT] = supplyAndBuyAndResult[INDEX_OF_SUPPLY]
-                    - supplyAndBuyAndResult[INDEX_OF_BUY];
         } catch (IOException e) {
-            throw new RuntimeException("File " + file.getName() + " does not exist!", e);
+            throw new RuntimeException("Can't read file!", e);
         }
-        return supplyAndBuyAndResult;
     }
 
-    private void createReport(int[] supplyAndBuyAndResult, String toFileName) {
+    private StringBuilder createReport() {
+        return new StringBuilder()
+                .append(SUPPLY + COMA).append(supplyValue).append(System.lineSeparator())
+                .append(BUY + COMA).append(buyValue).append(System.lineSeparator())
+                .append(RESULT + COMA).append(supplyValue - buyValue);
+    }
+
+    private void writeToFile(StringBuilder report, String toFileName) {
         File file = new File(toFileName);
         try {
-            file.createNewFile();
-            BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-            for (int i = 0; i < supplyAndBuyAndResult.length; i++) {
-                switch (i) {
-                    case INDEX_OF_SUPPLY:
-                        writer.write("supply,");
-                        writer.write(String.valueOf(supplyAndBuyAndResult[i]));
-                        writer.write(System.lineSeparator());
-                        break;
-                    case INDEX_OF_BUY:
-                        writer.write("buy,");
-                        writer.write(String.valueOf(supplyAndBuyAndResult[i]));
-                        writer.write(System.lineSeparator());
-                        break;
-                    default:
-                        writer.write("result,");
-                        writer.write(String.valueOf(supplyAndBuyAndResult[i]));
-                        writer.write(System.lineSeparator());
-                        break;
-                }
-            }
-            writer.close();
+            Files.write(file.toPath(), Collections.singleton(report));
         } catch (IOException e) {
-            throw new RuntimeException("File " + file.getName() + " does not exist!", e);
+            throw new RuntimeException("Can't write to file!", e);
         }
     }
 }
