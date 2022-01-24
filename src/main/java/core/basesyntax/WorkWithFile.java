@@ -9,11 +9,11 @@ import java.io.IOException;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
-        String report = fileReader(fromFileName);
-        fileWriter(toFileName, report);
+        String report = readFile(fromFileName);
+        writeToFile(toFileName, report);
     }
 
-    private void fileWriter(String fileToWrite, String dataToBeWritten) {
+    private void writeToFile(String fileToWrite, String dataToBeWritten) {
         File resultedInfo = new File(fileToWrite);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(resultedInfo))) {
             writer.write(dataToBeWritten);
@@ -22,7 +22,7 @@ public class WorkWithFile {
         }
     }
 
-    private String fileReader(String incomeFile) {
+    private String readFile(String incomeFile) {
         int buySum = 0;
         int supplySum = 0;
         File incomeInfo = new File(incomeFile);
