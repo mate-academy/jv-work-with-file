@@ -11,6 +11,11 @@ public class WorkWithFile {
     private int supply = 0;
     private int buy = 0;
     private int result = 0;
+    static final String REGEX = ",";
+    static final String SUPPLYWORDS = "supply";
+    static final String BUYWORDS = "buy";
+    static final String RESULTWORDS = "result";
+
 
     public void getStatistic(String fromFileName, String toFileName) {
         readFile(fromFileName);
@@ -22,11 +27,11 @@ public class WorkWithFile {
         try (BufferedReader reader = new BufferedReader(new FileReader(fileIn))) {
             String value = reader.readLine();
             while (value != null) {
-                String[] numbersString = value.split(",");
-                if (numbersString[0].equals("supply")) {
+                String[] numbersString = value.split(REGEX);
+                if (numbersString[0].equals(SUPPLYWORDS)) {
                     supply = supply + Integer.parseInt(numbersString[1]);
                 }
-                if (numbersString[0].equals("buy")) {
+                if (numbersString[0].equals(BUYWORDS)) {
                     buy = buy + Integer.parseInt(numbersString[1]);
                 }
                 value = reader.readLine();
@@ -40,9 +45,9 @@ public class WorkWithFile {
     public void createReport(String toFileName) {
         File fileOut = new File(toFileName);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileOut, true))) {
-            writer.write("supply," + supply + System.lineSeparator());
-            writer.write("buy," + buy + System.lineSeparator());
-            writer.write("result," + result + System.lineSeparator());
+            writer.write(SUPPLYWORDS + REGEX + supply + System.lineSeparator());
+            writer.write(BUYWORDS + REGEX + buy + System.lineSeparator());
+            writer.write(RESULTWORDS + REGEX + result + System.lineSeparator());
         } catch (IOException e) {
             System.out.println("Can`t write data to file" + fileOut);
         }
