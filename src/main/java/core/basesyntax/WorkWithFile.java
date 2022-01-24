@@ -11,6 +11,7 @@ public class WorkWithFile {
     private static final String SPLITTER = "\\W+";
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
+    private static final String COMMA_SEPARATOR = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         writeFile(createReport(fromFileName), toFileName);
@@ -49,8 +50,8 @@ public class WorkWithFile {
                 buy += Integer.parseInt(valluesArray[i + 1]);
             }
         }
-        return SUPPLY + "," + supply + System.lineSeparator()
-                + BUY + "," + buy + System.lineSeparator()
-                + "result," + (supply - buy) + System.lineSeparator();
+        return SUPPLY + COMMA_SEPARATOR + supply + System.lineSeparator()
+                + BUY + COMMA_SEPARATOR + buy + System.lineSeparator()
+                + "result" + COMMA_SEPARATOR + (supply - buy) + System.lineSeparator();
     }
 }
