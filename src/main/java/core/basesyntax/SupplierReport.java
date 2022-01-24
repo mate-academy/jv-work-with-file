@@ -1,25 +1,28 @@
 package core.basesyntax;
 
 public class SupplierReport {
-    private static final String SUPPLY = "supply";
-    private static final String BUY = "buy";
-    private static final String RESULT = "result";
-    private final StringBuilder toWrite = new StringBuilder();
-
     public String creatReport(String data) {
-        String[] readiedData = (data).split(" ");
+        final String comaSeparator = ",";
+        final String spaceSeparator = " ";
+        final String supply = "supply";
+        final String buy = "buy";
+        final String result = "result";
+        final int inexOfAmount = 1;
         int supplyAmount = 0;
         int buyAmount = 0;
+        String[] readiedData = (data).split(spaceSeparator);
+        StringBuilder toWrite = new StringBuilder();
         for (String s : readiedData) {
-            if (s.contains(SUPPLY)) {
-                supplyAmount += Integer.parseInt(s.split(",")[1]);
+            if (s.contains(supply)) {
+                supplyAmount += Integer.parseInt(s.split(comaSeparator)[inexOfAmount]);
             } else {
-                buyAmount += Integer.parseInt(s.split(",")[1]);
+                buyAmount += Integer.parseInt(s.split(comaSeparator)[inexOfAmount]);
             }
         }
-        toWrite.append(SUPPLY).append(",").append(supplyAmount).append(System.lineSeparator());
-        toWrite.append(BUY).append(",").append(buyAmount).append(System.lineSeparator());
-        toWrite.append(RESULT).append(",").append(supplyAmount - buyAmount);
+        toWrite.append(supply).append(comaSeparator);
+        toWrite.append(supplyAmount).append(System.lineSeparator());
+        toWrite.append(buy).append(comaSeparator).append(buyAmount).append(System.lineSeparator());
+        toWrite.append(result).append(comaSeparator).append(supplyAmount - buyAmount);
         return toWrite.toString();
     }
 }

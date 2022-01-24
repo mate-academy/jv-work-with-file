@@ -1,13 +1,12 @@
 package core.basesyntax;
 
 public class WorkWithFile {
-    private final ReadFile readFile = new ReadFile();
-    private final SupplierReport supplierReport = new SupplierReport();
-    private final WriteToFile writeToFile = new WriteToFile();
-
     public void getStatistic(String fromFileName, String toFileName) {
+        ReadFile readFile = new ReadFile();
         String readiedFile = readFile.read(fromFileName);
+        SupplierReport supplierReport = new SupplierReport();
         String readyToWrite = supplierReport.creatReport(readiedFile);
+        WriteToFile writeToFile = new WriteToFile();
         writeToFile.write(readyToWrite, toFileName);
     }
 }

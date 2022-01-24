@@ -6,13 +6,13 @@ import java.io.IOException;
 
 public class ReadFile {
     public String read(String fileName) {
+        final String spaceSeparator = " ";
         StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
-            String line = reader.readLine();
-            while (line != null) {
+            String line;
+            while ((line = reader.readLine()) != null) {
                 stringBuilder.append(line);
-                stringBuilder.append(" ");
-                line = reader.readLine();
+                stringBuilder.append(spaceSeparator);
             }
         } catch (IOException e) {
             throw new RuntimeException("Cann`t read file", e);
