@@ -7,10 +7,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String SEPARATOR = ",";
+    private static final String BUY = "buy";
+    private static final String SUPPLY = "supply";
+    private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String dataInfo = readFile(fromFileName);
-        String report = dateProcessing(dataInfo);
+        String report = processingData(dataInfo);
         writeReport(report, toFileName);
     }
 
@@ -19,7 +23,7 @@ public class WorkWithFile {
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String value = reader.readLine();
             while (value != null) {
-                builder.append(value).append(",");
+                builder.append(value).append(SEPARATOR);
                 value = reader.readLine();
             }
             return builder.toString();
@@ -28,23 +32,23 @@ public class WorkWithFile {
         }
     }
 
-    private String dateProcessing(String dataInfo) {
-        String[] valueArr = dataInfo.split(",");
+    private String processingData(String dataInfo) {
+        String[] valueArr = dataInfo.split(SEPARATOR);
         int supply = 0;
         int buy = 0;
         int counter = 1;
+        StringBuilder builder = new StringBuilder();
         for (int i = 0; i < valueArr.length; i += 2) {
-            if (valueArr[i].equals("supply")) {
+            if (valueArr[i].equals(SUPPLY)) {
                 supply += Integer.parseInt(valueArr[counter]);
             } else {
                 buy += Integer.parseInt(valueArr[counter]);
             }
             counter += 2;
         }
-        StringBuilder builder = new StringBuilder();
-        builder.append("supply,").append(supply).append(System.lineSeparator())
-                .append("buy,").append(buy).append(System.lineSeparator())
-                .append("result,").append(supply - buy).append(System.lineSeparator());
+        builder.append(SUPPLY + SEPARATOR).append(supply).append(System.lineSeparator())
+                .append(BUY + SEPARATOR).append(buy).append(System.lineSeparator())
+                .append(RESULT + SEPARATOR).append(supply - buy).append(System.lineSeparator());
         return builder.toString();
     }
 
