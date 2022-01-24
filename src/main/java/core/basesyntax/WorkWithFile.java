@@ -7,7 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 class WorkWithFile {
-    private static String[] OPERATION_TYPE_NAMES = new String[]{"supply", "buy", "result"};
+    private static final String[] OPERATION_TYPE_NAMES = new String[]{"supply", "buy", "result"};
 
     public void getStatistic(String fromFileName, String toFileName) {
         writeToFile(toFileName, readFromFile(fromFileName));
