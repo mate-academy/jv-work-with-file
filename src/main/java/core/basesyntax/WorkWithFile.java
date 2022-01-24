@@ -9,11 +9,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private final String SUPPLY_STRING = "supply";
-    private final String BUY_STRING ="buy,";
-    private final String RESULT_STRING = "result,";
-    private final String FILE_NOT_FOUND = "File not found";
-    private final String READING_FILE_ERROR = "Reading file error";
+    private static final String SUPPLY_STRING = "supply";
+    private static final String BUY_STRING = "buy,";
+    private static final String RESULT_STRING = "result,";
+    private static final String FILE_NOT_FOUND = "File not found";
+    private static final String READING_FILE_ERROR = "Reading file error";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] inputData = getDataFromFile(fromFileName);
