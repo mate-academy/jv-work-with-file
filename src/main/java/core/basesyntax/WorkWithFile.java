@@ -9,79 +9,16 @@ import java.io.IOException;
 import java.util.Arrays;
 
 public class WorkWithFile {
-
     public void getStatistic(String fromFileName, String toFileName) {
-        dataWrite(toFileName, dataRead(fromFileName));
+        writeToFile(countData(readFromFile(fromFileName)), toFileName);
     }
 
-    private void dataWrite(String toFileName, String dataRead) {
+    private void writeToFile(String [] sortInfo, String toFileName) {
         File file1 = new File(toFileName);
         try {
             BufferedWriter bufWrite = new BufferedWriter(new FileWriter(file1));
-            String readInfo = "";
-            String [] allInfo = dataRead.split(" ");
-            Arrays.sort(allInfo);
-            String lineInfo = allInfo [0].substring(0, (allInfo [0].indexOf(",")));
-            int count1 = 0;
-            int count2 = 0;
-            for (int i = 0; i < allInfo.length; i++) {
-                if (i == allInfo.length - 1) {
-                    if (lineInfo.equals(allInfo [i].substring(0, (allInfo [i].indexOf(","))))) {
-                        count1 = Integer.parseInt(allInfo [i].substring(allInfo [i].indexOf(",")
-                                + 1, allInfo [i].length())) + count1;
-                        if (count2 <= count1) {
-                            bufWrite.close();
-                            BufferedReader bufRead1 = new BufferedReader(new FileReader(file1));
-                            readInfo = bufRead1.readLine();
-                            BufferedWriter bufWrite2 = new BufferedWriter(new FileWriter(file1));
-                            bufWrite2.write(lineInfo + "," + count1 + System.lineSeparator());
-                            bufWrite2.write(readInfo + System.lineSeparator());
-                            bufWrite2.write("result" + ","
-                                    + Math.abs(count1 - count2));
-                            bufRead1.close();
-                            bufWrite2.close();
-                            continue;
-                        }
-                        bufWrite.write(lineInfo + "," + count1 + System.lineSeparator());
-                        bufWrite.write("result" + ","
-                                + Math.abs(count1 - count2));
-                        continue;
-                    } else {
-                        bufWrite.write(lineInfo + "," + count1 + System.lineSeparator());
-                        lineInfo = allInfo [i].substring(0, (allInfo [i].indexOf(",")));
-                        count2 = count1;
-                        count1 = Integer.parseInt(allInfo [i].substring(allInfo [i].indexOf(",")
-                                + 1, allInfo [i].length()));
-                        if (count2 < count1) {
-                            bufWrite.close();
-                            BufferedReader bufRead1 = new BufferedReader(new FileReader(file1));
-                            readInfo = bufRead1.readLine();
-                            BufferedWriter bufWrite2 = new BufferedWriter(new FileWriter(file1));
-                            bufWrite2.write(lineInfo + "," + count1 + System.lineSeparator());
-                            bufWrite2.write(readInfo + System.lineSeparator());
-                            bufWrite2.write("result" + ","
-                                    + Math.abs(count1 - count2));
-                            bufRead1.close();
-                            bufWrite2.close();
-                            continue;
-                        }
-                        bufWrite.write(lineInfo + "," + count1 + System.lineSeparator());
-                        bufWrite.write("result" + ","
-                                + Math.abs(count1 - count2));
-                        continue;
-                    }
-
-                }
-                if (lineInfo.equals(allInfo [i].substring(0, (allInfo [i].indexOf(","))))) {
-                    count1 = Integer.parseInt(allInfo[i].substring(allInfo[i].indexOf(",")
-                            + 1, allInfo[i].length())) + count1;
-                } else {
-                    bufWrite.write(lineInfo + "," + count1 + System.lineSeparator());
-                    lineInfo = allInfo [i].substring(0, (allInfo [i].indexOf(",")));
-                    count2 = count1;
-                    count1 = Integer.parseInt(allInfo [i].substring(allInfo [i].indexOf(",")
-                            + 1, allInfo [i].length()));
-                }
+            for (String writeLine: sortInfo) {
+                bufWrite.write(writeLine + System.lineSeparator());
             }
             bufWrite.close();
         } catch (IOException e) {
@@ -89,7 +26,36 @@ public class WorkWithFile {
         }
     }
 
-    private String dataRead(String fromFileName) {
+    private String [] countData(String allData) {
+        String [] allInfo = allData.split(" ");
+        Arrays.sort(allInfo);
+        String [] sortInfo = new String [3];
+        String lineInfo = allInfo [0].substring(0, (allInfo [0].indexOf(",")));
+        int count1 = 0;
+        int count2 = 0;
+        for (int i = 0; i < allInfo.length; i++) {
+            if (lineInfo.equals(allInfo [i].substring(0, (allInfo [i].indexOf(","))))) {
+                count1 = Integer.parseInt(allInfo [i].substring(allInfo [i].indexOf(",")
+                        + 1, allInfo [i].length())) + count1;
+            } else {
+                count2 = Integer.parseInt(allInfo [i].substring(allInfo [i].indexOf(",")
+                        + 1, allInfo [i].length())) + count2;
+            }
+        }
+        if (count1 > count2) {
+            sortInfo [0] = (allInfo [0].substring(0, (allInfo [0].indexOf(","))) + "," + count1);
+            sortInfo [1] = (allInfo [allInfo.length - 1].substring(0,
+                    (allInfo [allInfo.length - 1].indexOf(","))) + "," + count2);
+        } else {
+            sortInfo [1] = (allInfo [0].substring(0, (allInfo [0].indexOf(","))) + "," + count1);
+            sortInfo [0] = (allInfo [allInfo.length - 1].substring(0,
+                    (allInfo [allInfo.length - 1].indexOf(","))) + "," + count2);
+        }
+        sortInfo [2] = "result," + Math.abs(count1 - count2);
+        return sortInfo;
+    }
+
+    private String readFromFile(String fromFileName) {
         File file = new File(fromFileName);
         StringBuilder fileInfo = new StringBuilder();
         try {
