@@ -12,6 +12,11 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] readData = readFromFile(fromFileName);
+        String report = createReport(readData);
+        writeToFile(report, toFileName);
+    }
+
+    private String createReport(String[] readData) {
         int supply = 0;
         int buy = 0;
         for (int i = 0; i < readData.length; i += 2) {
@@ -25,7 +30,7 @@ public class WorkWithFile {
         stringBuilder.append("supply,").append(supply).append(System.lineSeparator())
                 .append("buy,").append(buy).append(System.lineSeparator())
                 .append("result,").append(supply - buy).append(System.lineSeparator());
-        writeToFile(stringBuilder.toString(), toFileName);
+        return stringBuilder.toString();
     }
 
     private void writeToFile(String report, String toFileName) {
