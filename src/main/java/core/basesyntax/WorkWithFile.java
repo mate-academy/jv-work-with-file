@@ -17,17 +17,8 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] data = readFromFile(fromFileName);
-        String report;
-        for (String datum : data) {
-            String[] note = datum.split(separator);
-            supplySum += note[0].equals(supply) ? Integer.parseInt(note[1]) : 0;
-            buySum += note[0].equals(buy) ? Integer.parseInt(note[1]) : 0;
-        }
-        report = (new StringBuilder(supply).append(separator).append(supplySum)
-                .append(System.lineSeparator()).append(buy).append(separator)
-                .append(buySum).append(System.lineSeparator()).append("result,")
-                .append(supplySum - buySum)).toString();
-        writeToFile(report, toFileName);
+        countData(data);
+        writeToFile(createReport(), toFileName);
     }
 
     public String[] readFromFile(String fromFileName) {
@@ -44,6 +35,21 @@ public class WorkWithFile {
             throw new RuntimeException("Can't read from file", e);
         }
         return stringBuilder.toString().split(System.lineSeparator());
+    }
+
+    private void countData(String[]data) {
+        for (String datum : data) {
+            String[] note = datum.split(separator);
+            supplySum += note[0].equals(supply) ? Integer.parseInt(note[1]) : 0;
+            buySum += note[0].equals(buy) ? Integer.parseInt(note[1]) : 0;
+        }
+    }
+
+    private String createReport() {
+        return (new StringBuilder(supply).append(separator).append(supplySum)
+                .append(System.lineSeparator()).append(buy).append(separator)
+                .append(buySum).append(System.lineSeparator()).append("result,")
+                .append(supplySum - buySum)).toString();
     }
 
     public void writeToFile(String data, String toFileName) {
