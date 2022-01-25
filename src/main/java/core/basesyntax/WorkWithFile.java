@@ -12,9 +12,9 @@ public class WorkWithFile {
     private static final String BUY_DEFINITION = "buy";
     private static final String RESULT_DEFINITION = "result";
     private static final String SEPARATOR = ",";
-    private int supply = 0;
-    private int buy = 0;
-    private int result = 0;
+    private int supply;
+    private int buy;
+    private int result;
 
     public void getStatistic(String fromFileName, String toFileName) {
         countStock(readFile(fromFileName));
