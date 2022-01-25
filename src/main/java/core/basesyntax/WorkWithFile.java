@@ -12,10 +12,10 @@ public class WorkWithFile {
     public static final int AMOUNT_INDEX = 1;
     public static final String SUPPLY = "supply";
     public static final String BUY = "buy";
+    public static final String COMMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        File file = new File(fromFileName);
-        String contentFromFile = readFile(file);
+        String contentFromFile = readFile(fromFileName);
         int totalSupply = getDataFrom(SUPPLY, contentFromFile);
         int totalBuy = getDataFrom(BUY, contentFromFile);
         String report = createReport(totalSupply, totalBuy);
@@ -32,12 +32,13 @@ public class WorkWithFile {
     }
 
     private String createReport(int supply, int buy) {
-        return SUPPLY + "," + supply + System.lineSeparator()
-                + BUY + "," + buy + System.lineSeparator()
+        return SUPPLY + COMMA + supply + System.lineSeparator()
+                + BUY + COMMA + buy + System.lineSeparator()
                 + "result," + (supply - buy);
     }
 
-    private String readFile(File file) {
+    private String readFile(String fileName) {
+        File file = new File(fileName);
         StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
             String line = bufferedReader.readLine();
@@ -56,7 +57,7 @@ public class WorkWithFile {
         String[] splitLine;
         String[] splitContentOfFile = fileContent.split(System.lineSeparator());
         for (String line : splitContentOfFile) {
-            splitLine = line.split(",");
+            splitLine = line.split(COMMA);
             if (splitLine[DATA_INDEX].equals(requestedData)) {
                 result += Integer.parseInt(splitLine[AMOUNT_INDEX]);
             }
