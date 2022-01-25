@@ -1,10 +1,6 @@
 package core.basesyntax;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 
 public class WorkWithFile {
     private static final String BUY = "buy";
@@ -12,26 +8,12 @@ public class WorkWithFile {
     private static final String RESULT = "result";
     private static final String REGEX = ",";
 
-    public void getStatistic(String fromFileName, String toFileName) {
-        int supplyAmount = 0;
-        int buyAmount = 0;
+    private int supplyAmount = 0;
+    private int buyAmount = 0;
 
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
-            String currentLine = bufferedReader.readLine();
-            while (currentLine != null) {
-                int amount = Integer.parseInt(
-                        currentLine.substring(currentLine.indexOf(REGEX) + 1));
-                if (currentLine.startsWith(BUY)) {
-                    buyAmount += amount;
-                }
-                if (currentLine.startsWith(SUPPLY)) {
-                    supplyAmount += amount;
-                }
-                currentLine = bufferedReader.readLine();
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("Can't read from file " + e);
-        }
+    public void getStatistic(String fromFileName, String toFileName) {
+        readFromFile(fromFileName);
+
         StringBuilder buyString = new StringBuilder(BUY)
                 .append(REGEX).append(buyAmount).append(System.lineSeparator());
         StringBuilder supplyString = new StringBuilder(SUPPLY)
@@ -45,6 +27,30 @@ public class WorkWithFile {
             bufferedWriter.write(resultString.toString());
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file " + e);
+        }
+    }
+
+    private void readFromFile(String fromFileName) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
+            String currentLine = bufferedReader.readLine();
+
+            while (currentLine != null) {
+                countData(currentLine);
+                currentLine = bufferedReader.readLine();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Can't read from file `" + fromFileName + "`" + e);
+        }
+    }
+
+    private void countData(String currentLine) {
+        int amount = Integer.parseInt(
+                currentLine.substring(currentLine.indexOf(REGEX) + 1));
+        if (currentLine.startsWith(BUY)) {
+            buyAmount += amount;
+        }
+        if (currentLine.startsWith(SUPPLY)) {
+            supplyAmount += amount;
         }
     }
 }
