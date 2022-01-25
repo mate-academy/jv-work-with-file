@@ -1,6 +1,6 @@
 package core.basesyntax;
 
-public class WorkWithFile extends FileManager {
+public class WorkWithFile {
     private static final String SPLITTER_FOR_FILE_NAME = ",";
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
@@ -14,8 +14,9 @@ public class WorkWithFile extends FileManager {
     private static final int RESULT_INDEX = 2;
 
     public void getStatistic(String fromFileName, String toFileName) {
+        FileManager fileManager = new FileManager();
         WorkWithFile workWithFile = new WorkWithFile();
-        String[] split = workWithFile.readFile(fromFileName).split(System.lineSeparator());
+        String[] split = fileManager.readFile(fromFileName).split(System.lineSeparator());
         int[] buildReport = workWithFile.separateFile(split);
         StringBuilder stringBuilderReport = new StringBuilder(SUPPLY).append(SPLITTER_FOR_FILE_NAME)
                 .append(buildReport[SUPPLY_INDEX]).append(System.lineSeparator()).append(BUY)
@@ -23,7 +24,7 @@ public class WorkWithFile extends FileManager {
                 .append(System.lineSeparator()).append(RESULT)
                 .append(SPLITTER_FOR_FILE_NAME).append(buildReport[RESULT_INDEX]);
 
-        workWithFile.writeFile(stringBuilderReport.toString(), toFileName);
+        fileManager.writeFile(stringBuilderReport.toString(), toFileName);
     }
 
     public int[] separateFile(String[] split) {
