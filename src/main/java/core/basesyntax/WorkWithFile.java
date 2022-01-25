@@ -2,7 +2,6 @@ package core.basesyntax;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -14,11 +13,15 @@ public class WorkWithFile {
     private static final String COMMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String[] data = readFromFile(fromFileName).split(System.lineSeparator());
-        String[] sepData;
+        writeToFile(createReport(countData(readFromFile(fromFileName))), toFileName);
+    }
+
+    private String countData(String data) {
+        StringBuilder countBuilder = new StringBuilder();
+        String[] sepData = data.split(System.lineSeparator());
         int supply = 0;
         int buy = 0;
-        for (String datum : data) {
+        for (String datum : sepData) {
             sepData = datum.split(COMMA);
             if (sepData[0].contains(SUPPLY)) {
                 supply += Integer.parseInt(sepData[1]);
@@ -28,13 +31,13 @@ public class WorkWithFile {
             }
         }
         int result = supply - buy;
-        writeToFile(toFileName, supply, buy, result);
+        return countBuilder.append(supply).append(COMMA).append(buy)
+                .append(COMMA).append(result).toString();
     }
 
     private String readFromFile(String fromFile) {
-        File fileName = new File(fromFile);
         StringBuilder builder = new StringBuilder();
-        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFile))) {
             String file;
             while ((file = reader.readLine()) != null) {
                 builder.append(file).append("\n");
@@ -45,16 +48,20 @@ public class WorkWithFile {
         return builder.toString();
     }
 
-    private void writeToFile(String toFile, int supply, int buy, int result) {
-        File fileName = new File(toFile);
-        StringBuilder builder = new StringBuilder();
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
-            builder.append(SUPPLY).append(COMMA).append(supply).append("\n")
-                    .append(BUY).append(COMMA).append(buy)
-                    .append("\n").append(RESULT).append(COMMA).append(result);
-            writer.write(builder.toString());
+    private void writeToFile(String report, String toFile) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFile, true))) {
+            writer.write(report);
         } catch (IOException e) {
             throw new RuntimeException("File cannot be write", e);
         }
+    }
+
+    private String createReport(String data) {
+        StringBuilder reportBuilder = new StringBuilder();
+        String[] elements = data.split(COMMA);
+        reportBuilder.append(SUPPLY).append(COMMA).append(elements[0]).append("\n")
+                .append(BUY).append(COMMA).append(elements[1])
+                .append("\n").append(RESULT).append(COMMA).append(elements[2]);
+        return reportBuilder.toString();
     }
 }
