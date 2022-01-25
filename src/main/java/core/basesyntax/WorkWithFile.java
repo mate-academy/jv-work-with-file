@@ -13,20 +13,14 @@ public class WorkWithFile {
     private static final String FILE_NOT_FOUND = "File not found";
     private static final String READING_FILE_ERROR = "Reading file error";
     private static final String COMA = ",";
+    private static final int POSITION_OF_SUPPLY = 0;
+    private static final int POSITION_OF_BUY = 1;
+    private static final int POSITION_OF_QUANTITY = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] inputData = getDataFromFile(fromFileName);
-        int supply = 0;
-        int buy = 0;
-        for (String line: inputData) {
-            String[] record = line.split(COMA);
-            if (record[0].equals(SUPPLY_STRING)) {
-                supply += Integer.parseInt(record[1]);
-            } else {
-                buy += Integer.parseInt(record[1]);
-            }
-        }
-        writeDataToFile(toFileName, supply, buy);
+        int[] countResult = countData(inputData);
+        writeDataToFile(toFileName, countResult);
     }
 
     private String[] getDataFromFile(String fromFileName) {
@@ -48,16 +42,36 @@ public class WorkWithFile {
         return inputData;
     }
 
-    private void writeDataToFile(String toFileName, int supply, int buy) {
+    private void writeDataToFile(String toFileName, int[] countResult) {
         File fileToWrite = new File(toFileName);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileToWrite))) {
-            writer.write(SUPPLY_STRING + COMA + supply + System.lineSeparator());
-            writer.write("buy," + buy + System.lineSeparator());
-            writer.write("result," + (supply - buy));
+            writer.write(createReport(countResult));
         } catch (FileNotFoundException e) {
             throw new RuntimeException(FILE_NOT_FOUND, e);
         } catch (IOException e) {
             throw new RuntimeException(READING_FILE_ERROR, e);
         }
+    }
+
+    private int[] countData(String[] inputData) {
+        int supply = 0;
+        int buy = 0;
+        for (String line: inputData) {
+            String[] record = line.split(COMA);
+            if (record[0].equals(SUPPLY_STRING)) {
+                supply += Integer.parseInt(record[POSITION_OF_QUANTITY]);
+            } else {
+                buy += Integer.parseInt(record[POSITION_OF_QUANTITY]);
+            }
+        }
+        return new int[] {supply, buy};
+    }
+
+    private String createReport(int[] countResult) {
+        String result = SUPPLY_STRING + COMA + countResult[POSITION_OF_SUPPLY]
+                + System.lineSeparator();
+        result += "buy," + countResult[POSITION_OF_BUY] + System.lineSeparator();
+        result += "result," + (countResult[POSITION_OF_SUPPLY] - countResult[POSITION_OF_BUY]);
+        return result;
     }
 }
