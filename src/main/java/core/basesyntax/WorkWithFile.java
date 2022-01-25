@@ -29,13 +29,12 @@ public class WorkWithFile {
     }
 
     private String readFile(String incomeFile) {
-        StringBuilder builder;
+        StringBuilder builder = new StringBuilder();
         File incomeInfo = new File(incomeFile);
         try (BufferedReader reader = new BufferedReader(new FileReader(incomeInfo))) {
             String temporaryString = reader.readLine();
             while (temporaryString != null) {
-                builder = new StringBuilder()
-                        .append(temporaryString)
+                builder.append(temporaryString)
                         .append(System.lineSeparator());
                 temporaryString = reader.readLine();
             }
