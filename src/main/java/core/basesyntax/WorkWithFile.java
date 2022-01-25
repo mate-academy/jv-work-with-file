@@ -7,14 +7,12 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Array;
 
 public class WorkWithFile {
     private static final String COMA = ",";
     private static final String SLASH = "/";
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
-
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] data = readFromFile(fromFileName);
@@ -42,8 +40,7 @@ public class WorkWithFile {
         File file = new File(toFileName);
         if (data != null) {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
-                    writer.write(data);
-                    writer.newLine();
+                writer.write(data);
             } catch (IOException e) {
                 throw new RuntimeException("Can't write to " + toFileName);
             }
