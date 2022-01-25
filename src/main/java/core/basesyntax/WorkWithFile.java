@@ -18,12 +18,7 @@ public class WorkWithFile {
         WorkWithFile workWithFile = new WorkWithFile();
         String[] split = fileManager.readFile(fromFileName).split(System.lineSeparator());
         int[] buildReport = workWithFile.separateFile(split);
-        StringBuilder stringBuilderReport = new StringBuilder(SUPPLY).append(SPLITTER_FOR_FILE_NAME)
-                .append(buildReport[SUPPLY_INDEX]).append(System.lineSeparator()).append(BUY)
-                .append(SPLITTER_FOR_FILE_NAME).append(buildReport[BUY_INDEX])
-                .append(System.lineSeparator()).append(RESULT)
-                .append(SPLITTER_FOR_FILE_NAME).append(buildReport[RESULT_INDEX]);
-
+        StringBuilder stringBuilderReport = workWithFile.createReport(buildReport);
         fileManager.writeFile(stringBuilderReport.toString(), toFileName);
     }
 
@@ -40,5 +35,13 @@ public class WorkWithFile {
         }
         int result = supplyValue - buyValue;
         return new int[] {supplyValue, buyValue, result};
+    }
+
+    public StringBuilder createReport(int[] buildReport) {
+        return new StringBuilder(SUPPLY).append(SPLITTER_FOR_FILE_NAME)
+                .append(buildReport[SUPPLY_INDEX]).append(System.lineSeparator()).append(BUY)
+                .append(SPLITTER_FOR_FILE_NAME).append(buildReport[BUY_INDEX])
+                .append(System.lineSeparator()).append(RESULT)
+                .append(SPLITTER_FOR_FILE_NAME).append(buildReport[RESULT_INDEX]);
     }
 }
