@@ -12,6 +12,8 @@ public class WorkWithFile {
     private static final int INDEX_FOR_OPERATION_TYPE = 0;
     private static final int INDEX_FOR_AMOUNT = 1;
     private static final String SEPARATOR_FOR_DATA = ",";
+    private static final String WORD_BUY = "buy";
+    private static final String WORD_SUPPLY = "supply";
 
     public void getStatistic(String fromFileName, String toFileName) {
         File file = new File(fromFileName);
@@ -23,9 +25,9 @@ public class WorkWithFile {
                 value = reader.readLine();
             }
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("Can't open the file" + fromFileName, e);
+            throw new RuntimeException("Can't open the file " + fromFileName, e);
         } catch (IOException e) {
-            throw new RuntimeException("Can't read the file" + fromFileName, e);
+            throw new RuntimeException("Can't read the file " + fromFileName, e);
         }
         String data = builder.toString();
         String[] arrayData = data.split(System.lineSeparator());
@@ -33,24 +35,24 @@ public class WorkWithFile {
         int buyAmout = 0;
         for (int i = 0; i < arrayData.length; i++) {
             String[] temp = arrayData[i].split(SEPARATOR_FOR_DATA);
-            if (temp[INDEX_FOR_OPERATION_TYPE].equals("supply")) {
+            if (temp[INDEX_FOR_OPERATION_TYPE].equals(WORD_SUPPLY)) {
                 supplyAmout += Integer.parseInt(temp[INDEX_FOR_AMOUNT]);
             }
-            if (temp[INDEX_FOR_OPERATION_TYPE].equals("buy")) {
+            if (temp[INDEX_FOR_OPERATION_TYPE].equals(WORD_BUY)) {
                 buyAmout += Integer.parseInt(temp[INDEX_FOR_AMOUNT]);
             }
         }
         StringBuilder builderResult = new StringBuilder();
-        builderResult.append("supply")
-                .append(",")
+        builderResult.append(WORD_SUPPLY)
+                .append(SEPARATOR_FOR_DATA)
                 .append(supplyAmout)
                 .append(System.lineSeparator())
-                .append("buy")
-                .append(",")
+                .append(WORD_BUY)
+                .append(SEPARATOR_FOR_DATA)
                 .append(buyAmout)
                 .append(System.lineSeparator())
                 .append("result")
-                .append(",")
+                .append(SEPARATOR_FOR_DATA)
                 .append(supplyAmout - buyAmout);
         byte[] result = builderResult.toString().getBytes();
         try {
