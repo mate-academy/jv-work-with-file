@@ -13,21 +13,7 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         readFromFile(fromFileName);
-
-        StringBuilder buyString = new StringBuilder(BUY)
-                .append(REGEX).append(buyAmount).append(System.lineSeparator());
-        StringBuilder supplyString = new StringBuilder(SUPPLY)
-                .append(REGEX).append(supplyAmount).append(System.lineSeparator());
-        StringBuilder resultString = new StringBuilder(RESULT)
-                .append(REGEX).append(supplyAmount - buyAmount);
-
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write(supplyString.toString());
-            bufferedWriter.write(buyString.toString());
-            bufferedWriter.write(resultString.toString());
-        } catch (IOException e) {
-            throw new RuntimeException("Can't write to file " + e);
-        }
+        writeToFile(toFileName, createReport());
     }
 
     private void readFromFile(String fromFileName) {
@@ -51,6 +37,20 @@ public class WorkWithFile {
         }
         if (currentLine.startsWith(SUPPLY)) {
             supplyAmount += amount;
+        }
+    }
+
+    private String createReport() {
+        return SUPPLY + REGEX + supplyAmount + System.lineSeparator() +
+                BUY + REGEX + buyAmount + System.lineSeparator() +
+                RESULT + REGEX + (supplyAmount - buyAmount);
+    }
+
+    private void writeToFile(String toFileName, String report) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
+            bufferedWriter.write(report);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write to file " + e);
         }
     }
 }
