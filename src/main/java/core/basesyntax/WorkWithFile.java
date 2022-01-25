@@ -1,6 +1,10 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class WorkWithFile {
     private static final String BUY = "buy";
@@ -41,9 +45,9 @@ public class WorkWithFile {
     }
 
     private String createReport() {
-        return SUPPLY + REGEX + supplyAmount + System.lineSeparator() +
-                BUY + REGEX + buyAmount + System.lineSeparator() +
-                RESULT + REGEX + (supplyAmount - buyAmount);
+        return SUPPLY + REGEX + supplyAmount + System.lineSeparator()
+                + BUY + REGEX + buyAmount + System.lineSeparator()
+                + RESULT + REGEX + (supplyAmount - buyAmount);
     }
 
     private void writeToFile(String toFileName, String report) {
