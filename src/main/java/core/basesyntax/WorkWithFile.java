@@ -12,10 +12,13 @@ public class WorkWithFile {
     private static final String BUY_DEFINITION = "buy";
     private static final String RESULT_DEFINITION = "result";
     private static final String SEPARATOR = ",";
+    private int supply = 0;
+    private int buy = 0;
+    private int result = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String data = readFile(fromFileName);
-        writeReportIntoFile(makeReport(data),toFileName);
+        countStock(readFile(fromFileName));
+        writeReportIntoFile(makeReport(),toFileName);
     }
 
     private String readFile(String readFileName) {
@@ -32,10 +35,7 @@ public class WorkWithFile {
         return build.toString();
     }
 
-    private String makeReport(String data) {
-        int supply = 0;
-        int buy = 0;
-        int result;
+    private void countStock(String data) {
         for (String stat : data.split(" ")) {
             if (stat.contains(SUPPLY_DEFINITION)) {
                 supply += Integer.parseInt(stat.substring(SUPPLY_DEFINITION.length() + 1));
@@ -44,6 +44,9 @@ public class WorkWithFile {
             }
         }
         result = supply - buy;
+    }
+
+    private String makeReport() {
         StringBuilder build = new StringBuilder();
         build.append(SUPPLY_DEFINITION).append(SEPARATOR)
                 .append(supply).append(System.lineSeparator());
