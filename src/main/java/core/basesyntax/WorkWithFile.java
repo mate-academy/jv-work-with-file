@@ -7,15 +7,18 @@ import java.io.FileReader;
 import java.io.FileWriter;
 
 public class WorkWithFile {
-    private StringBuilder stringBuilder = new StringBuilder();
+    private static final int SUPPLY_INDEX = 0;
+    private static final int BUY_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] dataFromMarket = readData(fromFileName);
-        String report = processData(dataFromMarket);
-        createReport(toFileName, report);
+        int[] supplyAndBuyInfo = countData(dataFromMarket);
+        String report = createReport(supplyAndBuyInfo);
+        writeToFile(toFileName, report);
     }
 
     private String[] readData(String fromFileName) {
+        StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String value = bufferedReader.readLine();
             while (value != null) {
@@ -28,8 +31,7 @@ public class WorkWithFile {
         return stringBuilder.toString().split(System.lineSeparator());
     }
 
-    private String processData(String[] dataFromMarket) {
-        stringBuilder.setLength(0);
+    private int[] countData(String[] dataFromMarket) {
         int supply = 0;
         int buy = 0;
         for (int i = 0; i < dataFromMarket.length; i++) {
@@ -41,12 +43,20 @@ public class WorkWithFile {
                         .indexOf(",") + 1));
             }
         }
-        return stringBuilder.append("supply,").append(supply).append(System.lineSeparator())
-                .append("buy,").append(buy).append(System.lineSeparator())
-                .append("result,").append(supply - buy).toString();
+        return new int[] {supply, buy};
     }
 
-    private void createReport(String toFileName, String report) {
+    private String createReport(int[] supplyAndBuyInfo) {
+        StringBuilder stringBuilder = new StringBuilder();
+        return stringBuilder.append("supply,").append(supplyAndBuyInfo[SUPPLY_INDEX])
+                .append(System.lineSeparator())
+                .append("buy,").append(supplyAndBuyInfo[BUY_INDEX])
+                .append(System.lineSeparator())
+                .append("result,").append(supplyAndBuyInfo[SUPPLY_INDEX]
+                        - supplyAndBuyInfo[BUY_INDEX]).toString();
+    }
+
+    private void writeToFile(String toFileName, String report) {
         try {
             File toFilFile = new File(toFileName);
             toFilFile.createNewFile();
