@@ -18,26 +18,30 @@ public class WorkWithFile {
     private int supplyValue = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        readFromFile(fromFileName);
+        List<String> allLines = readFromFile(fromFileName);
+        countSupplyAndBuy(allLines);
         StringBuilder report = createReport();
         writeToFile(report, toFileName);
     }
 
-    private void readFromFile(String fromFileName) {
+    private List<String> readFromFile(String fromFileName) {
         File file = new File(fromFileName);
-        String[] splitLine;
         try {
-            List<String> allLines = Files.readAllLines(file.toPath());
-            for (String allLine : allLines) {
-                splitLine = allLine.split(COMA);
-                if (splitLine[INDEX_OF_SUPPLY_OR_BUY].equals(SUPPLY)) {
-                    supplyValue = supplyValue + Integer.parseInt(splitLine[INDEX_OF_QUANTITY]);
-                } else if (splitLine[INDEX_OF_SUPPLY_OR_BUY].equals(BUY)) {
-                    buyValue = buyValue + Integer.parseInt(splitLine[INDEX_OF_QUANTITY]);
-                }
-            }
+            return Files.readAllLines(file.toPath());
         } catch (IOException e) {
             throw new RuntimeException("Can't read file!", e);
+        }
+    }
+
+    private void countSupplyAndBuy(List<String> allLines) {
+        String[] splitLine;
+        for (String allLine : allLines) {
+            splitLine = allLine.split(COMA);
+            if (splitLine[INDEX_OF_SUPPLY_OR_BUY].equals(SUPPLY)) {
+                supplyValue = supplyValue + Integer.parseInt(splitLine[INDEX_OF_QUANTITY]);
+            } else if (splitLine[INDEX_OF_SUPPLY_OR_BUY].equals(BUY)) {
+                buyValue = buyValue + Integer.parseInt(splitLine[INDEX_OF_QUANTITY]);
+            }
         }
     }
 
