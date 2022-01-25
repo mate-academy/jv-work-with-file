@@ -11,7 +11,11 @@ public class WorkWithFile {
     private static final String SPLITTER = "\\W+";
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
+    private static final String RESULT = "result";
     private static final String COMMA_SEPARATOR = ",";
+    private static final int SUPPLY_POSITION = 0;
+    private static final int BUY_POSITION = 1;
+    private static final int RESULT_POSITION = 2;
 
     public void getStatistic(String fromFileName, String toFileName) {
         writeFile(createReport(fromFileName), toFileName);
@@ -39,7 +43,7 @@ public class WorkWithFile {
         }
     }
 
-    private String createReport(String fromFileName) {
+    private int[] countStock(String fromFileName) {
         int supply = 0;
         int buy = 0;
         String[] valluesArray = readFile(fromFileName).split(SPLITTER);
@@ -50,8 +54,13 @@ public class WorkWithFile {
                 buy += Integer.parseInt(valluesArray[i + 1]);
             }
         }
-        return SUPPLY + COMMA_SEPARATOR + supply + System.lineSeparator()
-                + BUY + COMMA_SEPARATOR + buy + System.lineSeparator()
-                + "result" + COMMA_SEPARATOR + (supply - buy) + System.lineSeparator();
+        return new int[] {supply, buy, supply - buy};
+    }
+
+    private String createReport(String fromFileName) {
+        int[] stock = countStock(fromFileName);
+        return SUPPLY + COMMA_SEPARATOR + stock[SUPPLY_POSITION] + System.lineSeparator()
+                + BUY + COMMA_SEPARATOR + stock[BUY_POSITION] + System.lineSeparator()
+                + RESULT + COMMA_SEPARATOR + stock[RESULT_POSITION] + System.lineSeparator();
     }
 }
