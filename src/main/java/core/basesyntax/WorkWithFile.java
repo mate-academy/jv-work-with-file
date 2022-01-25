@@ -9,15 +9,21 @@ import java.util.List;
 
 public class WorkWithFile {
 
+    private static final String COMMA_SEPARATOR = ",";
+    private int supply = 0;
+    private int buy = 0;
+    private int result = 0;
+    private StringBuilder stringBuilder = new StringBuilder();
+    private String[] res;
+    private StringBuilder builder = new StringBuilder();
+
     public void getStatistic(String fromFileName, String toFileName) {
+        readFromFile(fromFileName);
+        writeToFile(toFileName, createReport());
+    }
+
+    private void readFromFile(String fromFileName) {
         File file = new File(fromFileName);
-        StringBuilder stringBuilder = new StringBuilder();
-        String[] res;
-        StringBuilder builder = new StringBuilder();
-        final String CommaSeperator = ",";
-        int supply = 0;
-        int buy = 0;
-        int result = 0;
         try {
             List<String> strings = Files.readAllLines(file.toPath());
             res = strings.toArray(new String[strings.size()]);
@@ -29,16 +35,23 @@ public class WorkWithFile {
                     buy += Integer.valueOf(temporary[1]);
                 }
             }
-            result += supply - buy;
-            builder.append("supply").append(CommaSeperator).append(supply
-            ).append(System.lineSeparator()).append("buy").append(CommaSeperator
-            ).append(buy).append(System.lineSeparator()
-            ).append("result").append(CommaSeperator
-            ).append(result).append(System.lineSeparator());
         } catch (IOException e) {
-            throw new RuntimeException("error", e);
+            throw new RuntimeException("cant read file", e);
         }
-        File fileOne = new File(toFileName);
+    }
+
+    private String createReport() {
+        result += supply - buy;
+        builder.append("supply").append(COMMA_SEPARATOR).append(supply
+        ).append(System.lineSeparator()).append("buy").append(COMMA_SEPARATOR
+        ).append(buy).append(System.lineSeparator()
+        ).append("result").append(COMMA_SEPARATOR
+        ).append(result).append(System.lineSeparator());
+        return builder.toString();
+    }
+
+    private void writeToFile(String fileName, String report) {
+        File fileOne = new File(fileName);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileOne, true));) {
             writer.write(builder.toString());
         } catch (IOException e) {
