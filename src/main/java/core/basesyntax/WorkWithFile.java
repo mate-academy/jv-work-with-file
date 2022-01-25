@@ -5,7 +5,7 @@ public class WorkWithFile {
         ReadFile readFile = new ReadFile();
         String readiedFile = readFile.read(fromFileName);
         SupplierReport supplierReport = new SupplierReport();
-        String readyToWrite = supplierReport.creatReport(readiedFile);
+        String readyToWrite = supplierReport.creatReport(supplierReport.countData(readiedFile));
         WriteToFile writeToFile = new WriteToFile();
         writeToFile.write(readyToWrite, toFileName);
     }
