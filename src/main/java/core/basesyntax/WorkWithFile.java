@@ -9,9 +9,8 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
-    private static final String SUPPLY_FIELD = "supply,";
-    private static final String BUY_FIELD = "buy,";
-    private static final String RESULT_FIELD = "result,";
+    private static final String SEPARATOR = ",";
+    private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String dataFromFile = readData(fromFileName);
@@ -45,9 +44,10 @@ public class WorkWithFile {
             }
         }
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(SUPPLY_FIELD).append(supplySum).append(System.lineSeparator())
-                .append(BUY_FIELD).append(buySum).append(System.lineSeparator())
-                .append(RESULT_FIELD).append(supplySum - buySum).append(System.lineSeparator());
+        stringBuilder.append(SUPPLY + SEPARATOR).append(supplySum).append(System.lineSeparator())
+                .append(BUY + SEPARATOR).append(buySum).append(System.lineSeparator())
+                .append(RESULT + SEPARATOR).append(supplySum - buySum)
+                .append(System.lineSeparator());
         return stringBuilder.toString();
     }
 
