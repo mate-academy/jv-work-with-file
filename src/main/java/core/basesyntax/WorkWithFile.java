@@ -2,7 +2,6 @@ package core.basesyntax;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -14,40 +13,49 @@ public class WorkWithFile {
     private static final String RESULTWORDS = "result";
     private int supply = 0;
     private int buy = 0;
-    private int result = 0;
-    private String value = "";
+    private int counter = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        readFile(fromFileName);
-        createReport(toFileName);
+        String dataInfo = readFile(fromFileName);
+        String report = makeReport(dataInfo);
+        writeToFile(report, toFileName);
     }
 
-    public void readFile(String fromFileName) {
-        File fileIn = new File(fromFileName);
-        try (BufferedReader reader = new BufferedReader(new FileReader(fileIn))) {
+    private String readFile(String fromFileName) {
+        StringBuilder stringBuilder = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
+            String value;
             while ((value = reader.readLine()) != null) {
-                String[] numbersString = value.split(REGEX);
-                if (numbersString[0].equals(SUPPLYWORDS)) {
-                    supply = supply + Integer.parseInt(numbersString[1]);
-                }
-                if (numbersString[0].equals(BUYWORDS)) {
-                    buy = buy + Integer.parseInt(numbersString[1]);
-                }
+                stringBuilder.append(value).append(REGEX);
             }
-            result = supply - buy;
+            return stringBuilder.toString();
         } catch (IOException e) {
-            System.out.println("Can`t read file with name" + fileIn);
+            throw new RuntimeException("Can't read file" + fromFileName, e);
         }
     }
 
-    public void createReport(String toFileName) {
-        File fileOut = new File(toFileName);
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileOut, true))) {
-            writer.write(SUPPLYWORDS + REGEX + supply + System.lineSeparator());
-            writer.write(BUYWORDS + REGEX + buy + System.lineSeparator());
-            writer.write(RESULTWORDS + REGEX + result + System.lineSeparator());
+    private String makeReport(String dataInfo) {
+        String[] valueArr = dataInfo.split(REGEX);
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < valueArr.length; i += 2) {
+            if (valueArr[i].equals(SUPPLYWORDS)) {
+                supply += Integer.parseInt(valueArr[counter]);
+            } else {
+                buy += Integer.parseInt(valueArr[counter]);
+            }
+            counter += 2;
+        }
+        stringBuilder.append(SUPPLYWORDS + REGEX).append(supply).append(System.lineSeparator())
+                .append(BUYWORDS + REGEX).append(buy).append(System.lineSeparator())
+                .append(RESULTWORDS + REGEX).append(supply - buy).append(System.lineSeparator());
+        return stringBuilder.toString();
+    }
+
+    private void writeToFile(String report, String toFileName) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
+            bufferedWriter.write(report);
         } catch (IOException e) {
-            System.out.println("Can`t write data to file" + fileOut);
+            throw new RuntimeException("Can't writer file" + toFileName, e);
         }
     }
 }
