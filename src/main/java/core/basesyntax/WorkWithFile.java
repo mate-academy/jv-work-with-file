@@ -13,11 +13,10 @@ public class WorkWithFile {
     private static final String SUPPLIER = "supply";
     private static final String BUYER = "buy";
     private static final String COMA = ",";
-    private static final int SUM = 0;
+    private static final int ZERO = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String report = readFile(fromFileName);
-        writeToFile(toFileName, report);
+        writeToFile(toFileName, createReport(calculateStock(readFile(fromFileName))));
     }
 
     private void writeToFile(String fileToWrite, String dataToBeWritten) {
@@ -30,30 +29,45 @@ public class WorkWithFile {
     }
 
     private String readFile(String incomeFile) {
-        int buySum = SUM;
-        int supplySum = SUM;
+        StringBuilder builder;
         File incomeInfo = new File(incomeFile);
-        String line;
         try (BufferedReader reader = new BufferedReader(new FileReader(incomeInfo))) {
-            line = reader.readLine();
-            String[] lineArray = null;
-            while (line != null) {
-                lineArray = line.split(COMA);
-                if (lineArray[TITLE_INDEX].equals(SUPPLIER)) {
-                    supplySum += Integer.parseInt(line.split(COMA)[AMOUNT_INDEX]);
-                }
-                if (lineArray[TITLE_INDEX].equals(BUYER)) {
-                    buySum += Integer.parseInt(line.split(COMA)[AMOUNT_INDEX]);
-                }
-                line = reader.readLine();
+            String temporaryString = reader.readLine();
+            while (temporaryString != null) {
+                builder = new StringBuilder()
+                        .append(temporaryString)
+                        .append(System.lineSeparator());
+                temporaryString = reader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read a file", e);
         }
-        StringBuilder builder = new StringBuilder()
-                .append(SUPPLIER).append(COMA).append(supplySum).append(System.lineSeparator())
-                .append(BUYER).append(COMA).append(buySum).append(System.lineSeparator())
-                .append("result,").append(supplySum - buySum);
         return builder.toString();
+    }
+
+    private int[] calculateStock(String data) {
+        int buySum = ZERO;
+        int supplySum = ZERO;
+        String[] lineArray = data.split(System.lineSeparator());
+        String[] wordArray;
+        for (int i = 0; i < lineArray.length; i++) {
+            wordArray = lineArray[i].split(",");
+            if (wordArray[TITLE_INDEX].equals(SUPPLIER)) {
+                supplySum += Integer.parseInt(wordArray[AMOUNT_INDEX]);
+            }
+            if (wordArray[TITLE_INDEX].equals(BUYER)) {
+                buySum += Integer.parseInt(wordArray[AMOUNT_INDEX]);
+            }
+        }
+        int[] amounts = new int[]{supplySum, buySum, supplySum - buySum};
+        return amounts;
+    }
+
+    private String createReport(int[] array) {
+        StringBuilder reportBuilder = new StringBuilder()
+                .append(SUPPLIER).append(COMA).append(array[0]).append(System.lineSeparator())
+                .append(BUYER).append(COMA).append(array[1]).append(System.lineSeparator())
+                .append("result,").append(array[2]);
+        return reportBuilder.toString();
     }
 }
