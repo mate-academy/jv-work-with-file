@@ -9,16 +9,12 @@ import java.io.IOException;
 public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
-        try {
-            String fromFileText = readFromFile(fromFileName);
-            String report = createReport(fromFileText);
-            writeToFile(report, toFileName);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        String fromFileText = readFromFile(fromFileName);
+        String report = calculateReport(fromFileText);
+        writeToFile(report, toFileName);
     }
 
-    public String readFromFile(String fromFileName) throws IOException {
+    public String readFromFile(String fromFileName) {
         File file = new File(fromFileName);
         StringBuilder builder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
@@ -33,7 +29,7 @@ public class WorkWithFile {
         }
     }
 
-    public String createReport(String contentFromFile) {
+    public String calculateReport(String contentFromFile) {
         int supplySum = 0;
         int buySum = 0;
         final int stringPart = 0;
@@ -53,17 +49,21 @@ public class WorkWithFile {
                 buySum += Integer.parseInt(line.split(",")[intPart]);
             }
         }
+        return createReport(supplySum, buySum);
+    }
+
+    public String createReport(int supplySum, int buySum) {
         return "supply," + supplySum + System.lineSeparator()
                 + "buy," + buySum + System.lineSeparator()
                 + "result," + (supplySum - buySum);
     }
 
-    public void writeToFile(String report, String toFileName) throws IOException {
+    public void writeToFile(String report, String toFileName) {
         File file = new File(toFileName);
         try (FileWriter fileWriter = new FileWriter(file)) {
             fileWriter.write(report);
         } catch (IOException e) {
-            throw new IOException("Write to file problem", e);
+            throw new RuntimeException("Write to file problem", e);
         }
     }
 }
