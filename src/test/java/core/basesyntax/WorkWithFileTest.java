@@ -22,7 +22,7 @@ public class WorkWithFileTest {
             Files.deleteIfExists(Path.of(ORANGE_RESULT_FILE));
             Files.deleteIfExists(Path.of(BANANA_RESULT_FILE));
         } catch (IOException e) {
-            throw new RuntimeException("Can't correctly clear result files after test ", e);
+            throw new RuntimeException("Can't correctly clear RESULT files after test ", e);
         }
     }
 
@@ -33,7 +33,7 @@ public class WorkWithFileTest {
         String actualResult = readFromFile(APPLE_RESULT_FILE).trim();
         String expectedResult = "supply,188" + System.lineSeparator()
                 + "buy,115" + System.lineSeparator()
-                + "result,73";
+                + "RESULT,73";
         Assert.assertEquals(expectedResult, actualResult);
     }
 
@@ -44,7 +44,7 @@ public class WorkWithFileTest {
         String actualResult = readFromFile(ORANGE_RESULT_FILE).trim();
         String expectedResult = "supply,295" + System.lineSeparator()
                 + "buy,154" + System.lineSeparator()
-                + "result,141";
+                + "RESULT,141";
         Assert.assertEquals(expectedResult, actualResult);
     }
 
@@ -55,7 +55,7 @@ public class WorkWithFileTest {
         String actualResult = readFromFile(GRAPE_RESULT_FILE).trim();
         String expectedResult = "supply,352" + System.lineSeparator()
                 + "buy,352" + System.lineSeparator()
-                + "result,0";
+                + "RESULT,0";
         Assert.assertEquals(expectedResult, actualResult);
     }
 
@@ -66,7 +66,7 @@ public class WorkWithFileTest {
         String actualResult = readFromFile(BANANA_RESULT_FILE).trim();
         String expectedResult = "supply,491" + System.lineSeparator()
                 + "buy,293" + System.lineSeparator()
-                + "result,198";
+                + "RESULT,198";
         Assert.assertEquals(expectedResult, actualResult);
     }
 
