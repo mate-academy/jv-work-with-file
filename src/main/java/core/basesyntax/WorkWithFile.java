@@ -7,8 +7,14 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Array;
 
 public class WorkWithFile {
+    private static final String COMA = ",";
+    private static final String SLASH = "/";
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] data = readFromFile(fromFileName);
@@ -16,35 +22,28 @@ public class WorkWithFile {
             int countSupply = 0;
             int countBuy = 0;
             for (String dataLine : data) {
-                int indexOfComa = dataLine.indexOf(',') + 1;
-                if (dataLine.contains("supply")) {
+                int indexOfComa = dataLine.indexOf(COMA) + 1;
+                if (dataLine.contains(SUPPLY)) {
                     countSupply += Integer.parseInt(dataLine.substring(indexOfComa));
                 }
-                if (dataLine.contains("buy")) {
+                if (dataLine.contains(BUY)) {
                     countBuy += Integer.parseInt(dataLine.substring(indexOfComa));
                 }
             }
-            String result = "supply,"
-                    + countSupply
-                    + '/'
-                    + "buy,"
-                    + countBuy
-                    + '/'
-                    + "result,"
-                    + (countSupply - countBuy);
-            String[] dataToReport = result.split("/");
-            writeToFile(dataToReport,toFileName);
+            StringBuilder result = new StringBuilder();
+            result.append("supply,").append(countSupply).append(System.lineSeparator())
+                    .append("buy,").append(countBuy).append(System.lineSeparator())
+                    .append("result,").append(countSupply - countBuy);
+            writeToFile(result.toString(),toFileName);
         }
     }
 
-    private void writeToFile(String[] data, String toFileName) {
+    private void writeToFile(String data, String toFileName) {
         File file = new File(toFileName);
         if (data != null) {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
-                for (String dataLine : data) {
-                    writer.write(dataLine);
+                    writer.write(data);
                     writer.newLine();
-                }
             } catch (IOException e) {
                 throw new RuntimeException("Can't write to " + toFileName);
             }
@@ -56,15 +55,11 @@ public class WorkWithFile {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             StringBuilder stringBuilder = new StringBuilder();
             String line = reader.readLine();
-            if (line != null) {
-                while (line != null) {
-                    stringBuilder.append(line).append("/");
-                    line = reader.readLine();
-                }
-                return stringBuilder.toString().split("/");
-            } else {
-                return null;
+            while (line != null) {
+                stringBuilder.append(line).append(SLASH);
+                line = reader.readLine();
             }
+            return stringBuilder.toString().split(SLASH);
         } catch (FileNotFoundException e) {
             throw new RuntimeException("There is no such file: " + fileName, e);
         } catch (IOException e) {
