@@ -19,26 +19,16 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         int buy = 0;
         int supply = 0;
-
         String[] resultingData = readFromFile(fromFileName).split(("\\W+"));
         System.out.print(Arrays.toString(resultingData));
-
         for (int i = 0; i < resultingData.length - 1; i += 2) {
-            supply += resultingData[i].equals("supply") ? Integer.parseInt(resultingData[i + 1])
+            supply += resultingData[i].equals(SUPPLY) ? Integer.parseInt(resultingData[i + 1])
                     : 0;
-            buy += resultingData[i].equals("buy") ? Integer.parseInt(resultingData[i + 1])
+            buy += resultingData[i].equals(BUY) ? Integer.parseInt(resultingData[i + 1])
                     : 0;
         }
-
         int delta = supply - buy;
         writeDataToFile(createsStatistic(supply, buy, delta), toFileName);
-
-    }
-
-    public static void main(String[] args) {
-        WorkWithFile wf = new WorkWithFile();
-        wf.getStatistic("apple.csv", "report.csv");
-
     }
 
     private String readFromFile(String filePathName) {
