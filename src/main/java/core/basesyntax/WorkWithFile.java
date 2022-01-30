@@ -7,8 +7,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    public static final String SUPPLY_KEYWORD = "supply";
     public static final String BUY_KEYWORD = "buy";
+    public static final String SUPPLY_KEYWORD = "supply";
     public static final int KEYWORD_INDEX = 0;
     public static final int COUNT_INDEX = 1;
 
