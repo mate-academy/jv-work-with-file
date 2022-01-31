@@ -13,17 +13,11 @@ public class WorkWithFile {
     public static final int COUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        BufferedReader bufferedReader = null;
-        StringBuilder builder = new StringBuilder();
-
-        try {
-            bufferedReader = new BufferedReader(new FileReader(fromFileName));
+        int result = 0;
+        int supply = 0;
+        int buy = 0;
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String text = bufferedReader.readLine();
-
-            int result = 0;
-            int supply = 0;
-            int buy = 0;
-
             while (text != null) {
                 String[] split = text.split("\\W+");
                 if (split[KEYWORD_INDEX].equals(SUPPLY_KEYWORD)) {
@@ -34,17 +28,20 @@ public class WorkWithFile {
                 result = supply - buy;
                 text = bufferedReader.readLine();
             }
-            builder.append("supply,").append(supply).append(System.lineSeparator())
-                    .append("buy,").append(buy).append(System.lineSeparator())
-                    .append("result,").append(result);
         } catch (IOException e) {
             throw new RuntimeException("Can`t read data to file", e);
         }
 
-        BufferedWriter bufferedWriter = null;
-        try {
-            bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true));
-            bufferedWriter.write(builder.toString());
+        StringBuilder builder = new StringBuilder();
+        builder.append("supply,").append(supply).append(System.lineSeparator())
+                .append("buy,").append(buy).append(System.lineSeparator())
+                .append("result,").append(result);
+        writeToFile(builder.toString(), toFileName);
+    }
+
+    private void writeToFile(String builder, String toFileName) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true))) {
+            bufferedWriter.write(builder);
             bufferedWriter.close();
         } catch (IOException e) {
             throw new RuntimeException("Can`t write data to file", e);
