@@ -4,24 +4,23 @@ import java.io.*;
 
 public class WorkWithFile {
 
-    public void getStatistic(String fromFileName, String toFileName) throws IOException {
+    public void getStatistic(String fromFileName, String toFileName) {
         File fromFile = new File(fromFileName);
         int supplyCounter = 0;
         int buyCounter = 0;
-        BufferedReader newBufferedReader = null;
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
-            int value = bufferedReader.read();
-            while (value != -1) {
-                String[] dataFromFile = (bufferedReader.readLine()).split(",");
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFile))) {
+            String lineFromFile = bufferedReader.readLine();
+            while (lineFromFile != null) {
+                String[] dataFromFile = lineFromFile.split(",");
                 if (dataFromFile[0].equals("supply")) {
-                    supplyCounter += Integer.getInteger(dataFromFile[1]);
+                    supplyCounter += Integer.parseInt(dataFromFile[1]);
                 } else {
-                    buyCounter += Integer.getInteger(dataFromFile[1]);
+                    buyCounter += Integer.parseInt(dataFromFile[1]);
                 }
-                value = bufferedReader.read();
+                lineFromFile = bufferedReader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Read error for file " + fromFileName + "!", e);
+            throw new RuntimeException("Read error from file " + fromFileName + "!", e);
         }
         String result = getResult(supplyCounter,buyCounter);
         fileWriter(toFileName, result);
@@ -32,12 +31,12 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFile, true))) {
             bufferedWriter.write(infoToWrite);
         } catch(IOException e){
-            throw new RuntimeException("Write error for file " + fileToWrite + "!", e);
+            throw new RuntimeException("Write error to file " + fileToWrite + "!", e);
         }
     }
     private String getResult(int supply, int buy) {
-        return ("supply, " + supply + System.lineSeparator() + "buy, " + buy
-                + System.lineSeparator() + "result, " + (supply - buy));
+        return ("supply," + supply + System.lineSeparator() + "buy," + buy
+                + System.lineSeparator() + "result," + (supply - buy));
     }
 }
 
