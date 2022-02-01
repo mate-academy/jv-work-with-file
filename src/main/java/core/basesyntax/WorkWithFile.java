@@ -1,6 +1,11 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class WorkWithFile {
 
@@ -25,15 +30,17 @@ public class WorkWithFile {
         String result = getResult(supplyCounter,buyCounter);
         fileWriter(toFileName, result);
     }
+
     private void fileWriter(String fileToWrite, String infoToWrite) {
         BufferedWriter startBufferedWriter = null;
         File toFile = new File(fileToWrite);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFile, true))) {
             bufferedWriter.write(infoToWrite);
-        } catch(IOException e){
+        } catch (IOException e) {
             throw new RuntimeException("Write error to file " + fileToWrite + "!", e);
         }
     }
+    
     private String getResult(int supply, int buy) {
         return ("supply," + supply + System.lineSeparator() + "buy," + buy
                 + System.lineSeparator() + "result," + (supply - buy));
