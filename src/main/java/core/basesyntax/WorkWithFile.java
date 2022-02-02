@@ -8,15 +8,20 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-
     private int buyResult = 0;
     private int supplyResult = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
+        WorkWithFile workWithFile = new WorkWithFile();
+        String report = workWithFile.readCount(fromFileName);
+        workWithFile.writeInFile(report, toFileName);
+    }
+
+    public String readCount(String fromFileName) {
+        String report;
         File file = new File(fromFileName);
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
-            String value = bufferedReader.readLine();
+        try (BufferedReader bufferReader = new BufferedReader(new FileReader(fromFileName));) {
+            String value = bufferReader.readLine();
             while (value != null) {
                 String[] array = value.split(",");
                 if (array[0].equals("buy")) {
@@ -26,25 +31,29 @@ public class WorkWithFile {
                     int temp = Integer.parseInt(array[1]);
                     supplyResult += temp;
                 }
-                value = bufferedReader.readLine();
+                value = bufferReader.readLine();
             }
         } catch (Exception e) {
-            throw new RuntimeException();
+            throw new RuntimeException("File can not be read");
         }
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("supply,")
-                    .append(supplyResult)
-                    .append(System.lineSeparator())
-                    .append("buy,")
-                    .append(buyResult)
+                .append(supplyResult)
+                .append(System.lineSeparator())
+                .append("buy,")
+                .append(buyResult)
                 .append(System.lineSeparator())
                 .append("result,")
                 .append(supplyResult - buyResult).toString();
-        String s = stringBuilder.toString();
+        report = stringBuilder.toString();
+        return report;
+    }
+
+    public void writeInFile(String s, String toFileName) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName));) {
             bufferedWriter.write(s);
         } catch (IOException e) {
-            throw new RuntimeException();
+            throw new RuntimeException("File can not be written");
         }
     }
 }
