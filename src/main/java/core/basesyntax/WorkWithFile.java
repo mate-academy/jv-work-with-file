@@ -48,7 +48,7 @@ public class WorkWithFile {
         String[] report = new String[3];
         report[0] = "supply," + data[1] + System.lineSeparator();
         report[1] = "buy," + data[0] + System.lineSeparator();
-        report[2] = "result," + (Integer.parseInt(data[1]) - Integer.parseInt(data[0])+"\n");
+        report[2] = "result," + (Integer.parseInt(data[1]) - Integer.parseInt(data[0]) + "\n");
         return report;
     }
 
