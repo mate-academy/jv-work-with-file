@@ -1,13 +1,15 @@
 package core.basesyntax;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
+import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
+    private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
         int supplyCounter = 0;
@@ -17,7 +19,7 @@ public class WorkWithFile {
             while (value != null) {
                 String[] splited = value.split(",");
                 int parsed = Integer.parseInt(splited[1]);
-                if (splited[0].equals(SUPPLY)){
+                if (splited[0].equals(SUPPLY)) {
                     supplyCounter += parsed;
                 } else if (splited[0].equals(BUY)) {
                     buyCounter += parsed;
@@ -28,12 +30,21 @@ public class WorkWithFile {
             throw new RuntimeException("Cann't read file...", e);
         }
         int result = supplyCounter - buyCounter;
-        System.out.println(result + " " + supplyCounter + " " + buyCounter );
+
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true))) {
+            bufferedWriter.write(SUPPLY + "," + supplyCounter);
+            bufferedWriter.newLine();
+            bufferedWriter.write(BUY + "," + buyCounter);
+            bufferedWriter.newLine();
+            bufferedWriter.write(RESULT + "," + result);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write to file...", e);
+        }
     }
 
     public static void main(String[] args) {
         WorkWithFile workWithFile = new WorkWithFile();
-        workWithFile.getStatistic("apple.csv", "AppleStat.csv");
+        workWithFile.getStatistic("test.csv", "AppleStat.csv");
     }
 }
 
