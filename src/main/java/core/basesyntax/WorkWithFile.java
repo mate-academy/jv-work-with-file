@@ -8,16 +8,15 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private int buyResult = 0;
-    private int supplyResult = 0;
-
     public void getStatistic(String fromFileName, String toFileName) {
-        WorkWithFile workWithFile = new WorkWithFile();
-        String report = workWithFile.readCount(fromFileName);
-        workWithFile.writeInFile(report, toFileName);
+        int[] countResult = readCount(fromFileName);
+        String data = createReport(countResult);
+        writeInFile(data, toFileName);
     }
 
-    public String readCount(String fromFileName) {
+    public int[] readCount(String fromFileName) {
+        int buyResult = 0;
+        int supplyResult = 0;
         String report;
         File file = new File(fromFileName);
         try (BufferedReader bufferReader = new BufferedReader(new FileReader(fromFileName));) {
@@ -36,29 +35,33 @@ public class WorkWithFile {
         } catch (Exception e) {
             throw new RuntimeException("File can not be read");
         }
+        int[] countResult = new int[2];
+        countResult[0] = supplyResult;
+        countResult[1] = buyResult;
+        return countResult;
+    }
+
+    public String createReport(int[] countResult) {
+        String supply = String.valueOf(countResult[0]);
+        String buy = String.valueOf(countResult[1]);
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("supply,")
-                .append(supplyResult)
+                .append(supply)
                 .append(System.lineSeparator())
                 .append("buy,")
-                .append(buyResult)
+                .append(buy)
                 .append(System.lineSeparator())
                 .append("result,")
-                .append(supplyResult - buyResult).toString();
-        report = stringBuilder.toString();
+                .append(String.valueOf(countResult[0] - countResult[1])).toString();
+        String report = stringBuilder.toString();
         return report;
     }
 
-    public void writeInFile(String s, String toFileName) {
+    public void writeInFile(String data, String toFileName) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName));) {
-            bufferedWriter.write(s);
+            bufferedWriter.write(data);
         } catch (IOException e) {
             throw new RuntimeException("File can not be written");
         }
     }
 }
-
-
-
-
-
