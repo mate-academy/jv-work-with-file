@@ -37,7 +37,7 @@ public class WorkWithFile {
         }
     }
 
-    public void writeData(String fromFileName, String toFileName) {
+    private void writeData(String fromFileName, String toFileName) {
         File file = new File(toFileName);
         String dataToWrite = fromFileName;
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, false))) {
