@@ -27,7 +27,7 @@ public class WorkWithFile {
                 value = bufferedReader.readLine();
             }
         } catch (Exception e) {
-            throw new RuntimeException("Cann't read file...", e);
+            throw new RuntimeException("Cann't read file" + fromFileName, e);
         }
         int result = supplyCounter - buyCounter;
         StringBuilder report = createReport(supplyCounter, buyCounter, result);
@@ -38,7 +38,7 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(String.valueOf(report));
         } catch (IOException e) {
-            throw new RuntimeException("Can't write to file", e);
+            throw new RuntimeException("Can't write to file" + toFileName, e);
         }
     }
 
