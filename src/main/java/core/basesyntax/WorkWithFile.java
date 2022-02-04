@@ -30,16 +30,26 @@ public class WorkWithFile {
             throw new RuntimeException("Cann't read file...", e);
         }
         int result = supplyCounter - buyCounter;
+        StringBuilder report = createReport(supplyCounter, buyCounter, result);
+        writeReportToFile(report, toFileName);
+    }
 
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true))) {
-            bufferedWriter.write(SUPPLY + "," + supplyCounter);
-            bufferedWriter.newLine();
-            bufferedWriter.write(BUY + "," + buyCounter);
-            bufferedWriter.newLine();
-            bufferedWriter.write(RESULT + "," + result);
+    private void writeReportToFile(StringBuilder report, String toFileName) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
+            bufferedWriter.write(String.valueOf(report));
         } catch (IOException e) {
-            throw new RuntimeException("Can't write to file...", e);
+            throw new RuntimeException("Can't write to file", e);
         }
+    }
+
+    private StringBuilder createReport(int supplyCounter, int buyCounter, int result) {
+        StringBuilder report = new StringBuilder();
+        report.append(SUPPLY + "," + supplyCounter)
+                .append(System.lineSeparator())
+                .append(BUY + "," + buyCounter)
+                .append(System.lineSeparator())
+                .append(RESULT + "," + result);
+        return report;
     }
 }
 
