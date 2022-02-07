@@ -9,10 +9,11 @@ import java.io.IOException;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
-        writeData(readFrom(fromFileName), toFileName);
+        String report = readFrom(fromFileName);
+        writeData(report, toFileName);
     }
 
-    private static String readFrom(String fileName) {
+    private String readFrom(String fileName) {
         String data;
         File file = new File(fileName);
         String line = "";
