@@ -13,16 +13,15 @@ public class WorkWithFile {
     private final List<String> allLines = new ArrayList<>();
 
     public void getStatistic(String fromFileName, String toFileName) {
-        File file1 = new File(fromFileName);
-        File file2 = new File(toFileName);
+        File inputFile = new File(fromFileName);
+        File outputFile = new File(toFileName);
         StringBuilder stringBuilder = new StringBuilder();
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(file1));
+            BufferedReader reader = new BufferedReader(new FileReader(inputFile));
             String line;
             while ((line = reader.readLine()) != null) {
                 allLines.add(line);
             }
-            reader.close();
             String[] reportString = {"supply", "buy", "result"};
             for (int j = 0; j < reportString.length; j++) {
                 int[] reportInt = new int[reportString.length];
@@ -41,11 +40,8 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read data to file", e);
         }
-        BufferedWriter bufferedWriter;
-        try {
-            bufferedWriter = new BufferedWriter(new FileWriter(file2));
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(outputFile))) {
             bufferedWriter.write(stringBuilder.toString());
-            bufferedWriter.close();
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to file", e);
         }
