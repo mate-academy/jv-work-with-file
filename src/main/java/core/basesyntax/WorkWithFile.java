@@ -2,7 +2,6 @@ package core.basesyntax;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -10,33 +9,38 @@ import java.io.IOException;
 public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
-        File fileFromFileName = new File(fromFileName);
         StringBuilder stringBuilder = new StringBuilder();
 
-        //read file
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(fileFromFileName));
-            int value = reader.read();
-            while (value != -1) {
-                stringBuilder.append((char) value);
-                value = reader.read();
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
+            String value = bufferedReader.readLine();
+            while (value != null) {
+                stringBuilder.append(value).append(System.lineSeparator());
             }
         } catch (IOException e) {
             throw new RuntimeException("\"Can't read file\"", e);
         }
 
-        //remake array to string and split
-        String[] resultFootAge = stringBuilder.toString().split("\\W+");
+        String[] lines = stringBuilder.toString().split(System.lineSeparator());
+        int supply = 0;
+        int buy = 0;
 
-        //create cycle for and write to file
-        for (String words: resultFootAge) {
-            File fileToFileName = new File(toFileName);
-            try {
-                BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileToFileName));
-                bufferedWriter.write(words);
-            } catch (IOException e) {
-                throw new RuntimeException("\"Can't write to file\"", e);
+        for (String words : lines) {
+            String[] wordsFromLine = words.split(",");
+            if (wordsFromLine[0].equals("supply")) {
+                supply = supply + Integer.parseInt(wordsFromLine[1]);
+            } else if (wordsFromLine[0].equals("buy")) {
+                buy = buy + Integer.parseInt(wordsFromLine[1]);
             }
+        }
+
+        try {
+            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName));
+            bufferedWriter.write("supply" + supply + System.lineSeparator()
+                    + "buy" + buy + System.lineSeparator()
+                    + "total" + (supply - buy));
+        } catch (IOException e) {
+            throw new RuntimeException("\"Can't write to file\"", e);
         }
     }
 }
