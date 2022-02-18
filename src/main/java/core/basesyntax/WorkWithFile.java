@@ -11,15 +11,16 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         StringBuilder stringBuilder = new StringBuilder();
 
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
-            String value = bufferedReader.readLine();
-            while (value != null) {
-                stringBuilder.append(value).append(System.lineSeparator());
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
+            int value = bufferedReader.read();
+            while (value != -1) {
+                stringBuilder.append((char) value);
+                value = bufferedReader.read();
             }
         } catch (IOException e) {
-            throw new RuntimeException("\"Can't read file\"", e);
+            throw new RuntimeException("Can't read file", e);
         }
+        System.out.println(stringBuilder);
 
         String[] lines = stringBuilder.toString().split(System.lineSeparator());
         int supply = 0;
@@ -34,13 +35,12 @@ public class WorkWithFile {
             }
         }
 
-        try {
-            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName));
-            bufferedWriter.write("supply" + supply + System.lineSeparator()
-                    + "buy" + buy + System.lineSeparator()
-                    + "total" + (supply - buy));
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
+            bufferedWriter.write("supply," + supply + System.lineSeparator()
+                    + "buy," + buy + System.lineSeparator()
+                    + "result," + (supply - buy));
         } catch (IOException e) {
-            throw new RuntimeException("\"Can't write to file\"", e);
+            throw new RuntimeException("Can't write to file", e);
         }
     }
 }
