@@ -22,7 +22,7 @@ public class WorkWithFile {
                 sb.append(s).append(System.lineSeparator());
             }
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("The file cannot be opened for reading", e);
+            throw new RuntimeException("The file cannot be opened for reading. File: " + fromFileName, e);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
