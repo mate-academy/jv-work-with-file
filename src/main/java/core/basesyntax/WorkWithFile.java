@@ -22,7 +22,8 @@ public class WorkWithFile {
                 sb.append(s).append(System.lineSeparator());
             }
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("The file cannot be opened for reading. File: " + fromFileName, e);
+            throw new RuntimeException("The file cannot be opened for reading. File: "
+                    + fromFileName, e);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -52,7 +53,8 @@ public class WorkWithFile {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("The file cannot be opened for writing. File: " + toFileName, e);
+            throw new RuntimeException("The file cannot be opened for writing. File: "
+                    + toFileName, e);
         }
     }
 }
