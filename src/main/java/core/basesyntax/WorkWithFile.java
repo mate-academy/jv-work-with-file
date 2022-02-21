@@ -52,7 +52,7 @@ public class WorkWithFile {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("The file cannot be opened for writing", e);
+            throw new RuntimeException("The file cannot be opened for writing. File: " + toFileName, e);
         }
     }
 }
