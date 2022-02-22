@@ -2,9 +2,9 @@ package core.basesyntax;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class WorkWithFile {
 
@@ -14,9 +14,7 @@ public class WorkWithFile {
     }
 
     private String getData(String fromFileName) {
-        BufferedReader bufferedReader = null;
-        try {
-            bufferedReader = new BufferedReader(new FileReader(fromFileName));
+        try (BufferedReader bufferedReader = Files.newBufferedReader(Paths.get(fromFileName))) {
             int supplyAmount = 0;
             int buyAmount = 0;
             while (bufferedReader.ready()) {
@@ -30,15 +28,6 @@ public class WorkWithFile {
             return getReport(supplyAmount, buyAmount);
         } catch (IOException e) {
             throw new RuntimeException("Can't find or read the file", e);
-        } finally {
-            try {
-                if (bufferedReader != null) {
-                    bufferedReader.close();
-                }
-            } catch (IOException e) {
-                throw new RuntimeException("Can't close BufferedReader", e);
-            }
-
         }
     }
 
@@ -52,20 +41,10 @@ public class WorkWithFile {
     }
 
     private void reportData(String statistic, String toFileName) {
-        BufferedWriter bufferedWriter = null;
-        try {
-            bufferedWriter = new BufferedWriter(new FileWriter(toFileName));
+        try (BufferedWriter bufferedWriter = Files.newBufferedWriter(Paths.get(toFileName))) {
             bufferedWriter.write(statistic);
         } catch (IOException e) {
             throw new RuntimeException("Can't write in the file", e);
-        } finally {
-            try {
-                if (bufferedWriter != null) {
-                    bufferedWriter.close();
-                }
-            } catch (IOException e) {
-                throw new RuntimeException("Can't close BufferedWriter", e);
-            }
         }
     }
 }
