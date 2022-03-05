@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,9 +34,11 @@ public class WorkWithFile {
 
     private String getFormater(HashMap<String, Integer> hashMap) {
         StringBuilder stringBuilder = new StringBuilder();
-        for (Map.Entry entry : hashMap.entrySet()) {
-            stringBuilder.append(entry.getKey()).append(",").append(entry.getValue()).append("\n");
-        }
+        hashMap.entrySet().stream()
+                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                .forEach(entry -> stringBuilder
+                        .append(entry.getKey()).append(",").append(entry.getValue()).append("\n"));
+
         return stringBuilder.toString();
     }
 
