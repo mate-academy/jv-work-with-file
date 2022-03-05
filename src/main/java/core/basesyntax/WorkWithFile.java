@@ -1,32 +1,29 @@
 package core.basesyntax;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         HashMap<String, Integer> hashMap = new HashMap<>();
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
-            String s;
-            while ((s = bufferedReader.readLine()) != null) {
-                String[] strings = s.split(",");
-                if (hashMap.containsKey(strings[0])) {
-                    hashMap.put(strings[0], Integer.valueOf(hashMap.get(strings[0])) + Integer.valueOf(strings[1]));
-                } else {
-                    hashMap.put(strings[0], Integer.valueOf(strings[1]));
-                }
-            }
+        File file = new File(fromFileName);
+        List<String> stringList = null;
+        try {
+            stringList = Files.readAllLines(file.toPath());
         } catch (IOException e) {
             throw new RuntimeException("File does not exist: " + fromFileName, e);
+        }
+        for (String s : stringList) {
+            String[] arr = s.split(",");
+            if (hashMap.containsKey(arr[0])){
+                hashMap.put(arr[0], hashMap.get(arr[0]) + Integer.valueOf(arr[1]));
+            } else {
+                hashMap.put(arr[0], Integer.valueOf(arr[1]));
+            }
         }
         hashMap.put("result", hashMap.get("supply") - hashMap.get("buy"));
         saveToFile(toFileName, getFormater(hashMap));
@@ -37,7 +34,7 @@ public class WorkWithFile {
         hashMap.entrySet().stream()
                 .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
                 .forEach(entry -> stringBuilder
-                        .append(entry.getKey()).append(",").append(entry.getValue()).append("\n"));
+                        .append(entry.getKey()).append(",").append(entry.getValue()).append(System.lineSeparator()));
 
         return stringBuilder.toString();
     }
