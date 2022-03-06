@@ -9,7 +9,7 @@ import java.util.*;
 public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
-        HashMap<String, Integer> hashMap = new HashMap<>();
+        Map<String, Integer> hashMap = new  LinkedHashMap<>();
         File file = new File(fromFileName);
         List<String> stringList = null;
         try {
@@ -29,7 +29,7 @@ public class WorkWithFile {
         saveToFile(toFileName, getFormater(hashMap));
     }
 
-    private String getFormater(HashMap<String, Integer> hashMap) {
+    private String getFormater(Map<String, Integer> hashMap) {
         StringBuilder stringBuilder = new StringBuilder();
         hashMap.entrySet().stream()
                 .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
