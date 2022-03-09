@@ -9,7 +9,7 @@ import java.util.*;
 public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
-        Map<String, Integer> hashMap = new  LinkedHashMap<>();
+        Map<String, Integer> hashMap = new LinkedHashMap<>();
         File file = new File(fromFileName);
         List<String> stringList = null;
         try {
@@ -19,7 +19,7 @@ public class WorkWithFile {
         }
         for (String s : stringList) {
             String[] arr = s.split(",");
-            if (hashMap.containsKey(arr[0])){
+            if (hashMap.containsKey(arr[0])) {
                 hashMap.put(arr[0], hashMap.get(arr[0]) + Integer.valueOf(arr[1]));
             } else {
                 hashMap.put(arr[0], Integer.valueOf(arr[1]));
