@@ -4,7 +4,11 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Comparator;
 
 public class WorkWithFile {
 
@@ -34,7 +38,8 @@ public class WorkWithFile {
         hashMap.entrySet().stream()
                 .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
                 .forEach(entry -> stringBuilder
-                        .append(entry.getKey()).append(",").append(entry.getValue()).append(System.lineSeparator()));
+                        .append(entry.getKey()).append(",")
+                        .append(entry.getValue()).append(System.lineSeparator()));
 
         return stringBuilder.toString();
     }
