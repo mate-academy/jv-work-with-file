@@ -9,12 +9,15 @@ import java.nio.file.Files;
 public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
+        writeFile(toFileName, readFile(fromFileName));
+    }
+
+    public String readFile(String fromFileName) {
         int buy = 0;
         int supply = 0;
         StringBuilder stringBuilder = new StringBuilder();
         File file = new File(fromFileName);
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
             String value = bufferedReader.readLine();
             while (value != null) {
                 String[] dataLine = value.toLowerCase().split("\\W+");
@@ -29,13 +32,17 @@ public class WorkWithFile {
             stringBuilder.append("buy,").append(buy).append(System.lineSeparator());
             stringBuilder.append("result,").append(supply - buy);
         } catch (Exception e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't read file" + fromFileName, e);
         }
-        file = new File(toFileName);
+        return stringBuilder.toString();
+    }
+
+    public void writeFile(String toFileName, String data) {
+        File file = new File(toFileName);
         try {
-            Files.write(file.toPath(), stringBuilder.toString().getBytes());
+            Files.write(file.toPath(), data.getBytes());
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data to file", e);
+            throw new RuntimeException("Can't write data to file" + toFileName, e);
         }
     }
 }
