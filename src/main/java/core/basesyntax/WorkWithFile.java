@@ -12,7 +12,7 @@ public class WorkWithFile {
         writeFile(toFileName, readFile(fromFileName));
     }
 
-    public String readFile(String fromFileName) {
+    private String readFile(String fromFileName) {
         int buy = 0;
         int supply = 0;
         StringBuilder stringBuilder = new StringBuilder();
@@ -37,7 +37,7 @@ public class WorkWithFile {
         return stringBuilder.toString();
     }
 
-    public void writeFile(String toFileName, String data) {
+    private void writeFile(String toFileName, String data) {
         File file = new File(toFileName);
         try {
             Files.write(file.toPath(), data.getBytes());
