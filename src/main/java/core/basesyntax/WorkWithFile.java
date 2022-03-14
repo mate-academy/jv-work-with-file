@@ -13,7 +13,7 @@ import java.util.Map;
 public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
-        Map<String, Integer> hashMap = new LinkedHashMap<>();
+        Map<String, Integer> hashMap = new LinkedHashMap();
         File file = new File(fromFileName);
         List<String> stringList = null;
         try {
@@ -21,22 +21,25 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("File does not exist: " + fromFileName, e);
         }
-        for (String s : stringList) {
-            String[] arr = s.split(",");
-            if (hashMap.containsKey(arr[0])) {
-                hashMap.put(arr[0], hashMap.get(arr[0]) + Integer.valueOf(arr[1]));
+        hashMap.put("supply",0);
+        hashMap.put("buy",0);
+        hashMap.put("result",0);
+        for (String string : stringList) {
+            String[] arrayConst = string.split(",");
+            if (hashMap.containsKey(arrayConst[0])) {
+                hashMap.put(arrayConst[0], hashMap.get(arrayConst[0])
+                                           + Integer.valueOf(arrayConst[1]));
             } else {
-                hashMap.put(arr[0], Integer.valueOf(arr[1]));
+                hashMap.put(arrayConst[0], Integer.valueOf(arrayConst[1]));
             }
         }
         hashMap.put("result", hashMap.get("supply") - hashMap.get("buy"));
-        saveToFile(toFileName, getFormater(hashMap));
+        saveToFile(toFileName, getReport(hashMap));
     }
 
-    private String getFormater(Map<String, Integer> hashMap) {
+    private String getReport(Map<String, Integer> hashMap) {
         StringBuilder stringBuilder = new StringBuilder();
         hashMap.entrySet().stream()
-                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
                 .forEach(entry -> stringBuilder
                         .append(entry.getKey()).append(",")
                         .append(entry.getValue()).append(System.lineSeparator()));
