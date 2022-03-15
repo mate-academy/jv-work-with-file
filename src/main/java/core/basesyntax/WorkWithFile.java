@@ -7,9 +7,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private final String buyOperationKey = "buy";
-    private final String supplyOperationKey = "supply";
-    private final String resultKey = "result";
+    private static final String BUY_OPERATION_KEY = "buy";
+    private static final String SUPPLY_OPERATION_KEY = "supply";
+    private static final String RESULT_KEY = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String dataFromFile = getDataFromFile(fromFileName);
@@ -20,11 +20,11 @@ public class WorkWithFile {
         for (int i = 0; i < splitData.length; i++) {
             String[] operationTypeAndAmount = splitData[i].split(",");
 
-            if (operationTypeAndAmount[0].equals(buyOperationKey)) {
+            if (operationTypeAndAmount[0].equals(BUY_OPERATION_KEY)) {
                 countBuyOperation += Integer.parseInt(operationTypeAndAmount[1]);
             }
 
-            if (operationTypeAndAmount[0].equals(supplyOperationKey)) {
+            if (operationTypeAndAmount[0].equals(SUPPLY_OPERATION_KEY)) {
                 countSupplyOperation += Integer.parseInt(operationTypeAndAmount[1]);
             }
         }
@@ -55,11 +55,11 @@ public class WorkWithFile {
     private String prepareStatisticDataReport(int countSupplyOperation, int countBuyOperation,
                                               int result) {
         return new StringBuilder()
-                .append(supplyOperationKey).append(",").append(countSupplyOperation)
+                .append(SUPPLY_OPERATION_KEY).append(",").append(countSupplyOperation)
                 .append(System.lineSeparator())
-                .append(buyOperationKey).append(",").append(countBuyOperation)
+                .append(BUY_OPERATION_KEY).append(",").append(countBuyOperation)
                 .append(System.lineSeparator())
-                .append(resultKey).append(",").append(result)
+                .append(RESULT_KEY).append(",").append(result)
                 .append(System.lineSeparator()).toString();
     }
 
@@ -71,4 +71,3 @@ public class WorkWithFile {
         }
     }
 }
-
