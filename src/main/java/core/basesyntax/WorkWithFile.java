@@ -8,22 +8,27 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String COMMA = ",";
+    private static final String RESULT = "result";
+
     public void getStatistic(String fromFileName, String toFileName) {
         int buySum = 0;
         int supplySum = 0;
         String[] input = readFromFile(fromFileName).split(System.lineSeparator());
         for (String element : input) {
-            if (element.contains("buy")) {
-                buySum += Integer.parseInt(element.substring(element.indexOf(',') + 1));
+            if (element.contains(BUY)) {
+                buySum += Integer.parseInt(element.substring(element.indexOf(COMMA) + 1));
             }
-            if (element.contains("supply")) {
-                supplySum += Integer.parseInt(element.substring(element.indexOf(',') + 1));
+            if (element.contains(SUPPLY)) {
+                supplySum += Integer.parseInt(element.substring(element.indexOf(COMMA) + 1));
             }
         }
         StringBuilder result = new StringBuilder();
-        result.append("supply,").append(supplySum).append(System.lineSeparator())
-                .append("buy,").append(buySum).append(System.lineSeparator())
-                .append("result,").append(supplySum - buySum);
+        result.append(SUPPLY).append(COMMA).append(supplySum).append(System.lineSeparator())
+                .append(BUY).append(COMMA).append(buySum).append(System.lineSeparator())
+                .append(RESULT).append(COMMA).append(supplySum - buySum);
         writeToFile(toFileName, result);
     }
 
@@ -47,7 +52,7 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(result.toString());
         } catch (IOException e) {
-            throw new RuntimeException("Can't create file", e);
+            throw new RuntimeException("Can't write to file" + toFileName, e);
         }
     }
 }
