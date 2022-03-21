@@ -10,8 +10,8 @@ import java.io.IOException;
 public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String openData = openFile(fromFileName);
-        String[] splitData = openData.split(System.lineSeparator());
+        String readData = readFromFile(fromFileName);
+        String[] splitData = readData.split(System.lineSeparator());
         int supply = 0;
         int buy = 0;
         for (String element : splitData) {
@@ -27,7 +27,7 @@ public class WorkWithFile {
         writeToFile(toFileName, reportData);
     }
 
-    private String openFile(String fromFileName) {
+    private String readFromFile(String fromFileName) {
         File importFile = new File(fromFileName);
         StringBuilder importData = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(importFile))) {
