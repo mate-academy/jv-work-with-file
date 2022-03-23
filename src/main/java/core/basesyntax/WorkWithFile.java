@@ -1,16 +1,12 @@
 package core.basesyntax;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.Arrays;
+import java.io.*;
+
 
 public class WorkWithFile {
     public static void main(String[] args) {  //delete main method
         WorkWithFile example = new WorkWithFile();
-        example.getStatistic("apple.csv", "smth");
+        example.getStatistic("apple.csv", "example");
     }
 
     public void getStatistic(String fromFileName, String toFileName) {
@@ -38,11 +34,15 @@ public class WorkWithFile {
             String supplyString = "supply," + supply;
             String buyString = "buy," + buy;
             String result = "result," + res;
-            System.out.println(supplyString + "\n" + buyString + "\n" + result);
+
+            String[] reportArray = {supplyString, buyString, result};
+            for (String reportLine:reportArray) {
+                BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true));
+                bufferedWriter.write(reportLine + "\n");
+                bufferedWriter.close();
+            }
 
 
-            //System.out.println(Arrays.toString(array));
-            //System.out.println(toFileName);
         } catch (FileNotFoundException e) {
             throw new RuntimeException("File can`t be read", e);
         } catch (IOException e) {
