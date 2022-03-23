@@ -1,12 +1,17 @@
 package core.basesyntax;
 
-import java.io.*;
-import java.nio.file.Files;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class WorkWithFile {
     private static final String RESULT_WORD = "result";
     private static final String SUPPLY_WORD = "supply";
     private static final String BUY_WORD = "buy";
+
     public void getStatistic(String fromFileName, String toFileName) {
         String[] dataArray = getData(fromFileName);
         int valueSupply = 0;
@@ -41,7 +46,7 @@ public class WorkWithFile {
 
     }
 
-    public String[] getData (String fromFileName) {
+    public String[] getData(String fromFileName) {
         File file = new File(fromFileName);
         StringBuilder builder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
