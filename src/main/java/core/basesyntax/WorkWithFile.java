@@ -16,13 +16,13 @@ public class WorkWithFile {
         String[] dataArray = readFromFile(fromFileName);
         int valueSupply = 0;
         int valueBuy = 0;
-        for (String s : dataArray) {
-            String[] bothTypes = s.split(",");
-            if (bothTypes[0].equals(BUY_WORD)) {
-                valueBuy += Integer.parseInt(bothTypes[1]);
+        for (String line : dataArray) {
+            String[] typeAndValue = line.split(",");
+            if (typeAndValue[0].equals(BUY_WORD)) {
+                valueBuy += Integer.parseInt(typeAndValue[1]);
             }
-            if (bothTypes[0].equals(SUPPLY_WORD)) {
-                valueSupply += Integer.parseInt(bothTypes[1]);
+            if (typeAndValue[0].equals(SUPPLY_WORD)) {
+                valueSupply += Integer.parseInt(typeAndValue[1]);
             }
         }
         int result = valueSupply - valueBuy;
@@ -38,8 +38,8 @@ public class WorkWithFile {
         return builder.toString();
     }
 
-    private void writeToFile(String result, String toFileName) {
-        File file = new File(toFileName);
+    private void writeToFile(String result, String fileName) {
+        File file = new File(fileName);
         BufferedWriter bufferedWriter = null;
         try {
             bufferedWriter = new BufferedWriter(new FileWriter(file));
@@ -57,10 +57,10 @@ public class WorkWithFile {
 
     }
 
-    public String[] readFromFile(String fromFileName) {
-        File file = new File(fromFileName);
+    public String[] readFromFile(String fileName) {
+        File file = new File(fileName);
         StringBuilder builder = new StringBuilder();
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
             String string = bufferedReader.readLine();
             while (string != null) {
                 builder.append(string).append(System.lineSeparator());
