@@ -9,13 +9,15 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy,";
+    private static final String RESULT = "result,";
+
     public void getStatistic(String fromFileName, String toFileName) {
+        String[] array = readFromFile(fromFileName);
+        String reportArray = generateReport(array);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true))) {
-            String[] array = reader(fromFileName);
-            String[] reportArray = reportGenerator(array);
-            for (String reportLine : reportArray) {
-                bufferedWriter.write(reportLine);
-            }
+            bufferedWriter.write(reportArray);
         } catch (FileNotFoundException e) {
             throw new RuntimeException("Can`t find a file", e);
         } catch (IOException e) {
@@ -23,14 +25,11 @@ public class WorkWithFile {
         }
     }
 
-    private String[] reader(String fileName) {
+    private String[] readFromFile(String fileName) {
         File file = new File(fileName);
         StringBuilder stringBuilder = new StringBuilder();
-        BufferedReader bufferedReader;
-        try {
-            bufferedReader = new BufferedReader(new FileReader(file));
-            String value;
-            value = bufferedReader.readLine();
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
+            String value = bufferedReader.readLine();
             while (value != null) {
                 stringBuilder.append(value).append(" ");
                 value = bufferedReader.readLine();
@@ -41,21 +40,21 @@ public class WorkWithFile {
         }
     }
 
-    private String[] reportGenerator(String[] readFile) {
+    private String generateReport(String[] data) {
         int supply = 0;
         int buy = 0;
-        for (String position: readFile) {
-            int amount = Integer.parseInt(position.substring(position.indexOf(',') + 1));
-            if (position.charAt(0) == 's') {
+        for (String line: data) {
+            int amount = Integer.parseInt(line.substring(line.indexOf(',') + 1));
+            if (line.contains(SUPPLY)) {
                 supply += amount;
             } else {
                 buy += amount;
             }
         }
         int res = supply - buy;
-        String supplyString = "supply," + supply + System.lineSeparator();
-        String buyString = "buy," + buy + System.lineSeparator();
-        String result = "result," + res;
-        return new String[]{supplyString, buyString, result};
+        StringBuilder builder = new StringBuilder();
+        builder.append(SUPPLY).append(",").append(supply).append(System.lineSeparator()).append(BUY)
+                .append(buy).append(System.lineSeparator()).append(RESULT).append(res);
+        return builder.toString();
     }
 }
