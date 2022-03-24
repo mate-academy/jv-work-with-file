@@ -13,16 +13,16 @@ public class WorkWithFile {
     private static final String BUY_WORD = "buy";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String[] dataArray = getData(fromFileName);
+        String[] dataArray = readFromFile(fromFileName);
         int valueSupply = 0;
         int valueBuy = 0;
         for (String s : dataArray) {
-            String[] bothTypes = s.split(",");
-            if (bothTypes[0].equals(BUY_WORD)) {
-                valueBuy += Integer.parseInt(bothTypes[1]);
+            String[] typeAndValue = s.split(",");
+            if (typeAndValue[0].equals(BUY_WORD)) {
+                valueBuy += Integer.parseInt(typeAndValue[1]);
             }
-            if (bothTypes[0].equals(SUPPLY_WORD)) {
-                valueSupply += Integer.parseInt(bothTypes[1]);
+            if (typeAndValue[0].equals(SUPPLY_WORD)) {
+                valueSupply += Integer.parseInt(typeAndValue[1]);
             }
         }
         int result = valueSupply - valueBuy;
@@ -39,14 +39,20 @@ public class WorkWithFile {
         try {
             bufferedWriter = new BufferedWriter(new FileWriter(file));
             bufferedWriter.write(result);
-            bufferedWriter.close();
+
         } catch (IOException e) {
-            throw new RuntimeException("ABOBA", e);
+            throw new RuntimeException("Can't write to file", e);
+        } finally {
+            try {
+                bufferedWriter.close();
+            } catch (IOException e) {
+                throw new RuntimeException("Can't close the file", e);
+            }
         }
 
     }
 
-    public String[] getData(String fromFileName) {
+    public String[] readFromFile(String fromFileName) {
         File file = new File(fromFileName);
         StringBuilder builder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
