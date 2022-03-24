@@ -47,7 +47,7 @@ public class WorkWithFile {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName, true))) {
             writer.write(statisticContent);
         } catch (IOException e) {
-            throw new RuntimeException("Error during file writing");
+            throw new RuntimeException("Error during file writing", e);
         }
     }
 
@@ -56,7 +56,7 @@ public class WorkWithFile {
         try {
             return Files.readAllLines(file.toPath());
         } catch (IOException e) {
-            throw new RuntimeException("Failed reading the file");
+            throw new RuntimeException("Failed reading the file", e);
         }
     }
 }
