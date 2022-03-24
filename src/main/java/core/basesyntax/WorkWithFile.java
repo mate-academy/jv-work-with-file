@@ -10,19 +10,13 @@ import java.io.IOException;
 
 public class WorkWithFile {
     private static final String SUPPLY = "supply";
-    private static final String BUY = "buy,";
-    private static final String RESULT = "result,";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] array = readFromFile(fromFileName);
-        String reportArray = generateReport(array);
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true))) {
-            bufferedWriter.write(reportArray);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException("Can`t find a file", e);
-        } catch (IOException e) {
-            throw new RuntimeException("Line can`t be written", e);
-        }
+        String report = generateReport(array);
+        writeToFile(toFileName, report);
     }
 
     private String[] readFromFile(String fileName) {
@@ -51,10 +45,21 @@ public class WorkWithFile {
                 buy += amount;
             }
         }
-        int res = supply - buy;
+        int result = supply - buy;
         StringBuilder builder = new StringBuilder();
         builder.append(SUPPLY).append(",").append(supply).append(System.lineSeparator()).append(BUY)
-                .append(buy).append(System.lineSeparator()).append(RESULT).append(res);
+                .append(",").append(buy).append(System.lineSeparator()).append(RESULT).append(",")
+                .append(result);
         return builder.toString();
+    }
+
+    private void writeToFile(String toFileName, String report) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true))) {
+            bufferedWriter.write(report);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException("Can`t find a file", e);
+        } catch (IOException e) {
+            throw new RuntimeException("Line can`t be written", e);
+        }
     }
 }
