@@ -17,20 +17,25 @@ public class WorkWithFile {
         int valueSupply = 0;
         int valueBuy = 0;
         for (String s : dataArray) {
-            String[] typeAndValue = s.split(",");
-            if (typeAndValue[0].equals(BUY_WORD)) {
-                valueBuy += Integer.parseInt(typeAndValue[1]);
+            String[] bothTypes = s.split(",");
+            if (bothTypes[0].equals(BUY_WORD)) {
+                valueBuy += Integer.parseInt(bothTypes[1]);
             }
-            if (typeAndValue[0].equals(SUPPLY_WORD)) {
-                valueSupply += Integer.parseInt(typeAndValue[1]);
+            if (bothTypes[0].equals(SUPPLY_WORD)) {
+                valueSupply += Integer.parseInt(bothTypes[1]);
             }
         }
         int result = valueSupply - valueBuy;
+        String report = createReport(valueSupply, valueBuy, result);
+        writeToFile(report, toFileName);
+    }
+
+    private String createReport(int valueSupply, int valueBuy, int result) {
         StringBuilder builder = new StringBuilder();
         builder.append(SUPPLY_WORD).append(",").append(valueSupply).append(System.lineSeparator())
                 .append(BUY_WORD).append(",").append(valueBuy).append(System.lineSeparator())
                 .append(RESULT_WORD).append(",").append(result);
-        writeToFile(builder.toString(), toFileName);
+        return builder.toString();
     }
 
     private void writeToFile(String result, String toFileName) {
