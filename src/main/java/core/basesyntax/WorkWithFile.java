@@ -11,9 +11,6 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
 
-    private final StringBuilder lineRead = new StringBuilder();
-    private final StringBuilder report = new StringBuilder();
-
     public void getStatistic(String fromFileName, String toFileName) {
         String[] data = readFromFile(fromFileName).split(",");
         String report = createReport(getResult(data));
@@ -22,13 +19,14 @@ public class WorkWithFile {
 
     private String readFromFile(String fromFileName) {
         File file = new File(fromFileName);
+        StringBuilder lineRead = new StringBuilder();
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = br.readLine()) != null) {
                 lineRead.append(line).append(",");
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read all line", e);
+            throw new RuntimeException("Can't read all line" + fromFileName, e);
         }
         return lineRead.toString();
     }
@@ -48,6 +46,7 @@ public class WorkWithFile {
     }
 
     private String createReport(int[] result) {
+        StringBuilder report = new StringBuilder();
         String nextLine = System.lineSeparator();
         report.append("supply,")
                 .append(result[0])
@@ -64,7 +63,7 @@ public class WorkWithFile {
         try {
             Files.writeString(Path.of(toFileName), report);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write text in file", e);
+            throw new RuntimeException("Can't write text in file" + toFileName, e);
         }
     }
 }
