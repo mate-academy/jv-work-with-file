@@ -22,7 +22,7 @@ public class WorkWithFile {
         }
     }
 
-    private int getCalculate(List<String> data, String category) {
+    private int calculateAmount(List<String> data, String category) {
         int sum = 0;
         for (String value : data) {
             String[] values = value.split(",");
@@ -34,16 +34,18 @@ public class WorkWithFile {
     }
 
     private String makeReport(String supply, String buy, List<String> data) {
+        int sumOfSupply = calculateAmount(data, supply);
+        int sumOfBuy = calculateAmount(data, buy);
         StringBuilder report = new StringBuilder(supply)
                 .append(",")
-                .append(getCalculate(data, supply))
+                .append(sumOfSupply)
                 .append(System.lineSeparator())
                 .append(buy)
                 .append(",")
-                .append(getCalculate(data,buy))
+                .append(sumOfBuy)
                 .append(System.lineSeparator())
                 .append("result,")
-                .append(getCalculate(data, supply) - getCalculate(data,buy));
+                .append(sumOfSupply - sumOfBuy);
         return report.toString();
     }
 }
