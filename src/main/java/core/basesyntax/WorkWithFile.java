@@ -17,24 +17,25 @@ public class WorkWithFile {
                 builder.append(value).append(System.lineSeparator());
                 value = bufferedReader.readLine();
             }
-            String[] arr = builder.toString().split(System.lineSeparator());
+            String[] separateLine = builder.toString().split(System.lineSeparator());
             int [] result = new int[] {0, 0};
-            for (String s : arr) {
-                String[] res = s.split(",");
-                if (res[0].equals("supply")) {
-                    result[0] += Integer.parseInt(res[1]);
+            for (String str : separateLine) {
+                String[] ammount = str.split(",");
+                if (ammount[0].equals("supply")) {
+                    result[0] += Integer.parseInt(ammount[1]);
                 } else {
-                    result[1] += Integer.parseInt(res[1]);
+                    result[1] += Integer.parseInt(ammount[1]);
                 }
             }
-            String[] res = new String[3];
-            res[0] = "supply," + result[0];
-            res[1] = System.lineSeparator() + "buy," + result[1];
-            res[2] = System.lineSeparator() + "result," + (result[0] - result[1]);
-            for (String dat : res) {
+            String[] operationType = new String[] {"supply,", "buy,", "result,"};
+            String[] spreadsheet = new String[3];
+            spreadsheet [0] = operationType[0] + result[0];
+            spreadsheet [1] = System.lineSeparator() + operationType[1] + result[1];
+            spreadsheet [2] = System.lineSeparator() + operationType[2] + (result[0] - result[1]);
+            for (String finishSpreadsheet : spreadsheet) {
                 try (BufferedWriter bufferedWriter = new BufferedWriter(
                         new FileWriter(toFileName, true))) {
-                    bufferedWriter.write(dat);
+                    bufferedWriter.write(finishSpreadsheet);
                 } catch (IOException e) {
                     throw new RuntimeException("Can't write file" + toFileName, e);
                 }
