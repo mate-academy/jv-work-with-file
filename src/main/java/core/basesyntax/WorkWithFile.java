@@ -9,8 +9,8 @@ import java.io.IOException;
 public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String[] stuffFromFile = readFromFile(fromFileName);
-        String[] report = makeReport(stuffFromFile);
+        String[] lines = readFromFile(fromFileName);
+        String[] report = makeReport(lines);
         writeToFile(toFileName, report);
     }
 
@@ -38,25 +38,22 @@ public class WorkWithFile {
         }
     }
 
-    private String[] makeReport(String[] stuff) {
-        String[] report;
-        String buy = "buy";
-        String supply = "supply";
-        String result = "result";
+    private String[] makeReport(String[] lines) {
+        StringBuilder stringBuilder = new StringBuilder();
         int buySum = 0;
         int supplySum = 0;
         int tempSum = 0;
-        for (String temp : stuff) {
-            tempSum = Integer.parseInt(temp.substring(temp.indexOf(",") + 1));
-            if (temp.substring(0, temp.indexOf(",")).equals(buy)) {
+        for (String line : lines) {
+            tempSum = Integer.parseInt(line.substring(line.indexOf(",") + 1));
+            if (line.substring(0, line.indexOf(",")).equals("buy")) {
                 buySum += tempSum;
-            }
-            if (temp.substring(0, temp.indexOf(",")).equals(supply)) {
+            } else {
                 supplySum += tempSum;
             }
         }
-        return report = new String[]{supply + "," + supplySum,
-                buy + "," + buySum,
-                result + "," + (supplySum - buySum)};
+        stringBuilder.append("supply,").append(supplySum).append(" ")
+                .append("buy,").append(buySum).append(" ")
+                .append("result,").append(supplySum - buySum);
+        return stringBuilder.toString().split(" ");
     }
 }
