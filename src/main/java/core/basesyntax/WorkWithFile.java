@@ -9,6 +9,9 @@ import java.io.IOException;
 
 public class WorkWithFile {
     public static final String BUY = "buy";
+    public static final String SUPPLY = "supply";
+    public static final String RESULT = "result";
+    public static final String COMMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         readFromFile(fromFileName);
@@ -23,9 +26,7 @@ public class WorkWithFile {
             while ((temp = reader.readLine()) != null) {
                 stringBuilder.append(temp).append(System.lineSeparator());
             }
-            String [] records = stringBuilder.toString().split("\\n");
-            return records;
-
+            return stringBuilder.toString().split("\\n");
         } catch (IOException e) {
             throw new RuntimeException("Error while reading file: " + fromFileName, e);
         }
@@ -34,31 +35,33 @@ public class WorkWithFile {
     private int[] getCreateDataForReport(String[] records) {
         int countBuy = 0;
         int countSupply = 0;
-        int result;
-        for (String element : records) {
-            String[] line = element.split(",");
-            if (line[0].equals(BUY)) {
-                countBuy += Integer.parseInt(line[1]);
-            } else {
-                countSupply += Integer.parseInt(line[1]);
+        for (String record : records) {
+            String[] splittedRecord = record.split(",");
+            int amountBuyOrSupply = Integer.parseInt(splittedRecord[1]);
+            if (splittedRecord[0].equals(BUY)) {
+                countBuy += amountBuyOrSupply;
+            }
+            if (splittedRecord[0].equals(SUPPLY)) {
+                countSupply += amountBuyOrSupply;
             }
         }
-        result = countSupply - countBuy;
+        int result = countSupply - countBuy;
         return new int[]{countSupply, countBuy, result};
     }
 
-    private String createReport(int[] report) {
-        return "supply," + report[0] + System.lineSeparator()
-                + "buy," + report[1] + System.lineSeparator()
-                + "result," + report[2];
+    private String createReport(int[] reportNumbers) {
+        return new StringBuilder()
+                .append(SUPPLY).append(COMMA).append(reportNumbers[0])
+                .append(System.lineSeparator())
+                .append(BUY).append(COMMA).append(reportNumbers[1])
+                .append(System.lineSeparator())
+                .append(RESULT).append(COMMA).append(reportNumbers[2]).toString();
     }
 
     private void writeFile(String toFileName, String createReport) {
         File file = new File(toFileName);
-        try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             writer.write(createReport);
-            writer.close();
         } catch (IOException e) {
             throw new RuntimeException("Can't write file");
         }
