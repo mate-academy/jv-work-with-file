@@ -7,16 +7,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private String readData;
-    private String report;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        readFromFile(fromFileName);
-        createReport();
-        writeToFile(toFileName);
+        writeToFile((createReport(readFromFile(fromFileName))), toFileName);
     }
 
-    private void readFromFile(String fromFileName) {
+    private String readFromFile(String fromFileName) {
+        String readData;
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
             StringBuilder stringBuilder = new StringBuilder();
@@ -29,29 +26,31 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read file");
         }
+        return readData;
     }
 
-    private void createReport() {
+    private String createReport(String readData) {
         int supply = 0;
         int buy = 0;
         String[] info = readData.split(System.lineSeparator());
         for (int i = 0; i < info.length; i++) {
-            if (info[i].startsWith("s")) {
-                String[] supplied = info[i].split(",");
-                supply += Integer.parseInt(supplied[1]);
+            String[] result = info[i].split(",");
+            int sum = Integer.parseInt(result[1]);
+            if (result[0].startsWith("s")) {
+                supply += sum;
             } else {
-                String[] bought = info[i].split(",");
-                buy += Integer.parseInt(bought[1]);
+                buy += sum;
             }
         }
         StringBuilder stringReport = new StringBuilder();
         stringReport.append("supply,").append(supply).append(System.lineSeparator())
                 .append("buy,").append(buy).append(System.lineSeparator())
                 .append("result,").append(supply - buy);
-        report = stringReport.toString();
+        String report = stringReport.toString();
+        return report;
     }
 
-    private void writeToFile(String toFileName) {
+    private void writeToFile(String report, String toFileName) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(report);
         } catch (IOException e) {
