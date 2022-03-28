@@ -39,7 +39,6 @@ public class WorkWithFile {
                     throw new RuntimeException("Can't write file" + toFileName, e);
                 }
             }
-
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from the file " + fromFileName, e);
         }
