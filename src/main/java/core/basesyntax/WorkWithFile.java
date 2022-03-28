@@ -29,8 +29,8 @@ public class WorkWithFile {
 
     private void writeToFile(String nameFile, String[] report) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(nameFile))) {
-            for (String s : report) {
-                bufferedWriter.write(s);
+            for (String lines : report) {
+                bufferedWriter.write(lines);
                 bufferedWriter.append(System.lineSeparator());
             }
         } catch (IOException e) {
@@ -39,7 +39,6 @@ public class WorkWithFile {
     }
 
     private String[] makeReport(String[] lines) {
-        StringBuilder stringBuilder = new StringBuilder();
         int buySum = 0;
         int supplySum = 0;
         int tempSum = 0;
@@ -51,9 +50,10 @@ public class WorkWithFile {
                 supplySum += tempSum;
             }
         }
-        stringBuilder.append("supply,").append(supplySum).append(" ")
+        StringBuilder reportBuilder = new StringBuilder();
+        reportBuilder.append("supply,").append(supplySum).append(" ")
                 .append("buy,").append(buySum).append(" ")
                 .append("result,").append(supplySum - buySum);
-        return stringBuilder.toString().split(" ");
+        return reportBuilder.toString().split(" ");
     }
 }
