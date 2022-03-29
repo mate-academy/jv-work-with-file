@@ -7,11 +7,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private StringBuilder builder = new StringBuilder();
 
-    public String [] calculating(StringBuilder builder) {
-        String [] separateLine = builder.toString().split(System.lineSeparator());
-        int [] result = new int[] {0, 0};
-        for (String str : separateLine) {
+    private String[] getReport(StringBuilder builder) {
+        String[] splitLine = builder.toString().split(System.lineSeparator());
+        int[] result = new int[] {0, 0};
+        for (String str : splitLine) {
             String[] amounts = str.split(",");
             if (amounts[0].equals("supply")) {
                 result[0] += Integer.parseInt(amounts[1]);
@@ -30,13 +31,13 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
-            StringBuilder builder = new StringBuilder();
             String value = bufferedReader.readLine();
             while (value != null) {
                 builder.append(value).append(System.lineSeparator());
                 value = bufferedReader.readLine();
             }
-            for (String finishSpreadsheet : calculating(builder)) {
+            bufferedReader.close();
+            for (String finishSpreadsheet : getReport(builder)) {
                 try (BufferedWriter bufferedWriter = new BufferedWriter(
                         new FileWriter(toFileName, true))) {
                     bufferedWriter.write(finishSpreadsheet);
