@@ -18,7 +18,7 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         String value = getDataFromFile(fromFileName);
-        String sentence = dataCalculation(value);
+        String sentence = calculateData(value);
         writeToFile(sentence, toFileName);
     }
 
@@ -45,13 +45,13 @@ public class WorkWithFile {
         return stringBuilder.toString().trim();
     }
 
-    private String dataCalculation(String value) {
+    private String calculateData(String value) {
         int supplyCount = 0;
         int buyCount = 0;
         StringBuilder calculatorResult = new StringBuilder();
         String[] array = value.split(" ");
-        for (String s : array) {
-            String[] split = s.split(",");
+        for (String element : array) {
+            String[] split = element.split(",");
             if (split[FIRST_POINT].equals(SUPPLY_LINE)) {
                 supplyCount += Integer.parseInt(split[SECOND_POINT]);
             } else {
