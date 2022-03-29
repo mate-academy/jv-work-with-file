@@ -8,10 +8,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    public static final String BUY = "buy";
-    public static final String SUPPLY = "supply";
-    public static final String RESULT = "result";
-    public static final String COMMA = ",";
+    private static final int SUPPLY_NUMBER_INDEX = 0;
+    private static final int BUY_NUMBER_INDEX = 1;
+    private static final int RESULT_NUMBER_INDEX = 2;
 
     public void getStatistic(String fromFileName, String toFileName) {
         readFromFile(fromFileName);
@@ -37,12 +36,12 @@ public class WorkWithFile {
         int countSupply = 0;
         for (String record : records) {
             String[] splittedRecord = record.split(",");
-            int amountBuyOrSupply = Integer.parseInt(splittedRecord[1]);
-            if (splittedRecord[0].equals(BUY)) {
-                countBuy += amountBuyOrSupply;
+            int amount = Integer.parseInt(splittedRecord[1]);
+            if (splittedRecord[0].equals("buy")) {
+                countBuy += amount;
             }
-            if (splittedRecord[0].equals(SUPPLY)) {
-                countSupply += amountBuyOrSupply;
+            if (splittedRecord[0].equals("supply")) {
+                countSupply += amount;
             }
         }
         int result = countSupply - countBuy;
@@ -51,11 +50,11 @@ public class WorkWithFile {
 
     private String createReport(int[] reportNumbers) {
         return new StringBuilder()
-                .append(SUPPLY).append(COMMA).append(reportNumbers[0])
+                .append("supply,").append(reportNumbers[SUPPLY_NUMBER_INDEX])
                 .append(System.lineSeparator())
-                .append(BUY).append(COMMA).append(reportNumbers[1])
+                .append("buy,").append(reportNumbers[BUY_NUMBER_INDEX])
                 .append(System.lineSeparator())
-                .append(RESULT).append(COMMA).append(reportNumbers[2]).toString();
+                .append("result,").append(reportNumbers[RESULT_NUMBER_INDEX]).toString();
     }
 
     private void writeFile(String toFileName, String createReport) {
