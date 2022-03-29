@@ -37,13 +37,13 @@ public class WorkWithFile {
                 value = bufferedReader.readLine();
             }
             bufferedReader.close();
-            for (String finishSpreadsheet : getReport(builder)) {
-                try (BufferedWriter bufferedWriter = new BufferedWriter(
-                        new FileWriter(toFileName, true))) {
+            try (BufferedWriter bufferedWriter = new BufferedWriter(
+                    new FileWriter(toFileName, true))) {
+                for (String finishSpreadsheet : getReport(builder)) {
                     bufferedWriter.write(finishSpreadsheet);
-                } catch (IOException e) {
-                    throw new RuntimeException("Can't write file" + toFileName, e);
                 }
+            } catch (IOException e) {
+                throw new RuntimeException("Can't write file" + toFileName, e);
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from the file " + fromFileName, e);
