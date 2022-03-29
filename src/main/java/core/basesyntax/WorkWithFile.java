@@ -7,39 +7,42 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final int WORD_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
+    private static final String FIRST_CHARACTER = "s";
 
     public void getStatistic(String fromFileName, String toFileName) {
         writeToFile((createReport(readFromFile(fromFileName))), toFileName);
     }
 
     private String readFromFile(String fromFileName) {
-        String readData;
+        String data;
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
             StringBuilder stringBuilder = new StringBuilder();
-            String data = bufferedReader.readLine();
-            while (data != null) {
-                stringBuilder.append(data).append(System.lineSeparator());
-                data = bufferedReader.readLine();
+            String line = bufferedReader.readLine();
+            while (line != null) {
+                stringBuilder.append(line).append(System.lineSeparator());
+                line = bufferedReader.readLine();
             }
-            readData = stringBuilder.toString();
+            data = stringBuilder.toString();
         } catch (IOException e) {
             throw new RuntimeException("Can't read file");
         }
-        return readData;
+        return data;
     }
 
-    private String createReport(String readData) {
+    private String createReport(String data) {
         int supply = 0;
         int buy = 0;
-        String[] info = readData.split(System.lineSeparator());
-        for (int i = 0; i < info.length; i++) {
-            String[] result = info[i].split(",");
-            int sum = Integer.parseInt(result[1]);
-            if (result[0].startsWith("s")) {
-                supply += sum;
+        String[] lines = data.split(System.lineSeparator());
+        for (int i = 0; i < lines.length; i++) {
+            String[] splittedLine = lines[i].split(",");
+            int amount = Integer.parseInt(splittedLine[AMOUNT_INDEX]);
+            if (splittedLine[WORD_INDEX].startsWith(FIRST_CHARACTER)) {
+                supply += amount;
             } else {
-                buy += sum;
+                buy += amount;
             }
         }
         StringBuilder stringReport = new StringBuilder();
