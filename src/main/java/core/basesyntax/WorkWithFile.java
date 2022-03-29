@@ -7,15 +7,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private StringBuilder builder = new StringBuilder();
-
     public void getStatistic(String fromFileName, String toFileName) {
-        reading(fromFileName);
-        writing(toFileName);
+        StringBuilder stringBuilder = read(fromFileName);
+        write(toFileName, stringBuilder);
     }
 
     private String[] getReport(StringBuilder builder) {
-
         String[] separateLine = builder.toString().split(System.lineSeparator());
         int[] result = new int[] {0, 0};
         for (String split : separateLine) {
@@ -34,23 +31,24 @@ public class WorkWithFile {
         return spreadsheet;
     }
 
-    private void reading(String fromFileName) {
+    private StringBuilder read(String fromFileName) {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
+            StringBuilder builder = new StringBuilder();
             String value = bufferedReader.readLine();
             while (value != null) {
                 builder.append(value).append(System.lineSeparator());
                 value = bufferedReader.readLine();
             }
-
+            return builder;
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from the file " + fromFileName, e);
         }
     }
 
-    private void writing(String toFileName) {
+    private void write(String toFileName, StringBuilder stringBuilder) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(
                 new FileWriter(toFileName, true))) {
-            for (String finishSpreadsheet : getReport(builder)) {
+            for (String finishSpreadsheet : getReport(stringBuilder)) {
                 bufferedWriter.write(finishSpreadsheet);
             }
         } catch (IOException e) {
