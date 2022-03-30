@@ -7,7 +7,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-
     public void getStatistic(String fromFileName, String toFileName) {
         StringBuilder result = new StringBuilder();
         int supplyCounter = 0;
@@ -20,7 +19,6 @@ public class WorkWithFile {
                 buyCounter += Integer.parseInt(values[1]);
             }
         }
-        result.setLength(0);
         result.append("supply,").append(supplyCounter).append(System.lineSeparator())
                 .append("buy,").append(buyCounter).append(System.lineSeparator())
                 .append("result,").append(supplyCounter - buyCounter);
