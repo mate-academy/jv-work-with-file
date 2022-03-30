@@ -25,10 +25,12 @@ public class WorkWithFile {
             String line = bufferedReader.readLine();
             while (line != null) {
                 String[] splitted = line.split(",");
-                if (splitted[0].equals("buy")) {
-                    buyScore += Integer.valueOf(splitted[1]);
-                } else {
-                    supplyScore += Integer.valueOf(splitted[1]);
+                switch (splitted[0]) {
+                    case "buy":
+                        buyScore += Integer.valueOf(splitted[1]);
+                        break;
+                    default:
+                        supplyScore += Integer.valueOf(splitted[1]);
                 }
                 line = bufferedReader.readLine();
             }
