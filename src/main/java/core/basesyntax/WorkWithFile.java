@@ -7,27 +7,28 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private StringBuilder stringBuilder = new StringBuilder();
 
     public void getStatistic(String fromFileName, String toFileName) {
+        StringBuilder result = new StringBuilder();
         int supplyCounter = 0;
         int buyCounter = 0;
-        for (String string : readerService(fromFileName)) {
-            String[] s = string.split(",");
+        for (String data : readerService(fromFileName)) {
+            String[] s = data.split(",");
             if (s[0].equals("supply")) {
                 supplyCounter += Integer.parseInt(s[1]);
             } else {
                 buyCounter += Integer.parseInt(s[1]);
             }
         }
-        stringBuilder.setLength(0);
-        stringBuilder.append("supply,").append(supplyCounter).append(System.lineSeparator())
+        result.setLength(0);
+        result.append("supply,").append(supplyCounter).append(System.lineSeparator())
                 .append("buy,").append(buyCounter).append(System.lineSeparator())
                 .append("result,").append(supplyCounter - buyCounter);
-        writerService(stringBuilder.toString(), toFileName);
+        writerService(result.toString(), toFileName);
     }
 
     private String[] readerService(String fromFileName) {
+        StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String value = bufferedReader.readLine();
             while (value != null) {
