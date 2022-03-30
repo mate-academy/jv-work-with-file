@@ -8,14 +8,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private int supply;
-    private int buy;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        WorkWithFile workFile = new WorkWithFile();
-        StringBuilder resultOfread = workFile.read(fromFileName);
-        workFile.calculate(resultOfread);
-        workFile.write(toFileName);
+
+        StringBuilder resultOfread = read(fromFileName);
+        String resultCalculate = calculate(resultOfread);
+        write(toFileName, resultCalculate);
     }
 
     private StringBuilder read(String fromFileName) {
@@ -33,7 +31,9 @@ public class WorkWithFile {
         return stringBuilder;
     }
 
-    private void calculate(StringBuilder stringBuilder) {
+    private String calculate(StringBuilder stringBuilder) {
+        int supply = 0;
+        int buy = 0;
         String[] strings = stringBuilder.toString().split(System.lineSeparator());
         String[] arraySpliter = new String[2];
         for (String string : strings) {
@@ -44,15 +44,17 @@ public class WorkWithFile {
                 buy += Integer.parseInt(arraySpliter[1]);
             }
         }
-    }
-
-    private void write(String toFileName) {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("supply,").append(supply).append(System.lineSeparator())
+        StringBuilder bilder = new StringBuilder();
+        bilder.append("supply,").append(supply).append(System.lineSeparator())
                 .append("buy,").append(buy).append(System.lineSeparator())
                 .append("result,").append(supply - buy);
+        return bilder.toString();
+    }
+
+    private void write(String toFileName, String resultCalculate) {
+
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            writer.write(stringBuilder.toString());
+            writer.write(resultCalculate);
         } catch (IOException e) {
             throw new RuntimeException("Can't read file", e);
         }
