@@ -16,8 +16,8 @@ public class WorkWithFile {
         String[] dataBefore = dataFromFile.split(System.lineSeparator());
         int buyCount = 0;
         int supplyCount = 0;
-        for (String s : dataBefore) {
-            String[] dataAfter = s.split(",");
+        for (String data : dataBefore) {
+            String[] dataAfter = data.split(",");
             if (dataAfter[0].equals(BUY)) {
                 buyCount += Integer.parseInt(dataAfter[1]);
             }
