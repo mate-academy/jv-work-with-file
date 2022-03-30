@@ -14,15 +14,15 @@ public class WorkWithFile {
     private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String [] data = readFromFile(fromFileName).split(System.lineSeparator());
+        String[] data = readFromFile(fromFileName).split(System.lineSeparator());
         int sumOfSupply = 0;
         int sumOfBuy = 0;
         for (String value : data) {
             if (value.startsWith(SUPPLY)) {
-                sumOfSupply += Integer.parseInt(value.split(",") [1]);
+                sumOfSupply += Integer.parseInt(value.split(",")[1]);
             }
             if (value.startsWith(BUY)) {
-                sumOfBuy += Integer.parseInt(value.split(",") [1]);
+                sumOfBuy += Integer.parseInt(value.split(",")[1]);
             }
         }
         int result = sumOfSupply - sumOfBuy;
@@ -34,7 +34,6 @@ public class WorkWithFile {
     }
 
     private String readFromFile(String fromFileName) {
-        String dataResult = "";
         File file = new File(fromFileName);
         StringBuilder result = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
@@ -48,8 +47,7 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can`t read data from file " + fromFileName, e);
         }
-        dataResult += result.toString();
-        return dataResult;
+        return result.toString();
     }
 
     private void writeToFile(String report, String toFileName) {
