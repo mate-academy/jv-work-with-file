@@ -7,18 +7,37 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WorkWithFile {
+    private List<String> values;
+    private List<String> reports = new ArrayList<>();
+
     public void getStatistic(String fromFileName, String toFileName) {
+        reading(fromFileName);
+        calculating();
+        writing(toFileName);
+    }
+
+    private void reading(String fromFileName) {
         File readFile = new File(fromFileName);
-        File writeFile = new File(toFileName);
-        List<String> values;
-        List<String> reports = new ArrayList<>();
 
         try {
             values = Files.readAllLines(readFile.toPath());
         } catch (IOException ex) {
             throw new RuntimeException("Can not read from file");
         }
+    }
 
+    private void writing(String toFileName) {
+        File writeFile = new File(toFileName);
+
+        try {
+            Files.write(writeFile.toPath(), reports);
+
+        } catch (IOException ex) {
+            throw new RuntimeException("Can not write to file");
+        }
+    }
+
+    private void calculating() {
         int supplySum = 0;
         int buySum = 0;
 
@@ -36,13 +55,8 @@ public class WorkWithFile {
         reports.add("supply," + supplySum);
         reports.add("buy," + buySum);
         reports.add("result," + (supplySum - buySum));
-
-        try {
-            Files.write(writeFile.toPath(), reports);
-
-        } catch (IOException ex) {
-            throw new RuntimeException("Can not write to file");
-        }
     }
 }
+
+
 
