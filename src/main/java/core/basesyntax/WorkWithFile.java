@@ -12,8 +12,7 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         int supply = 0;
         int buy = 0;
-        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
-                    BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String value = reader.readLine();
             while (value != null) {
                 if (value.split(",")[0].equals(SUPPLY)) {
@@ -23,16 +22,20 @@ public class WorkWithFile {
                 }
                 value = reader.readLine();
             }
-            writeStatistic(writer, buy, supply);
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file ", e);
+            throw new RuntimeException("Can't read data from the file " + fromFileName, e);
         }
+        writeStatistic(toFileName, buy, supply);
     }
 
-    public void writeStatistic(BufferedWriter writer, int buy, int supply) throws IOException {
-        String str = "supply," + supply + System.lineSeparator() + "buy," + buy
-                + System.lineSeparator() + "result,"
-                + (supply - buy);
-        writer.write(str);
+    private void writeStatistic(String toFileName, int buy, int supply) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
+            String str = "supply," + supply + System.lineSeparator() + "buy," + buy
+                    + System.lineSeparator() + "result,"
+                    + (supply - buy);
+            writer.write(str);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write data to the file " + toFileName, e);
+        }
     }
 }
