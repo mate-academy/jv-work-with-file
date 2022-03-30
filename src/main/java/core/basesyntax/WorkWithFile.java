@@ -7,7 +7,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-
     public void getStatistic(String fromFileName, String toFileName) {
         int supplyStats = 0;
         int buyStats = 0;
@@ -15,12 +14,10 @@ public class WorkWithFile {
         String[] generalizedData = readFile(fromFileName).split(System.lineSeparator());
 
         for (String data : generalizedData) {
-            int dataIndex = data.indexOf(",");
-
             if (data.startsWith("supply")) {
-                supplyStats += Integer.parseInt(data.substring(dataIndex + 1));
+                supplyStats += Integer.parseInt(data.split(",")[1]);
             } else if (data.startsWith("buy")) {
-                buyStats += Integer.parseInt(data.substring(dataIndex + 1));
+                buyStats += Integer.parseInt(data.split(",")[1]);
             }
         }
 
@@ -35,7 +32,7 @@ public class WorkWithFile {
         writeToFile(toFileName, report);
     }
 
-    public String readFile(String fromFileName) {
+    private String readFile(String fromFileName) {
         StringBuilder stringBuilder = new StringBuilder();
 
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
@@ -52,7 +49,7 @@ public class WorkWithFile {
         return stringBuilder.toString();
     }
 
-    public void writeToFile(String toFileName, String report) {
+    private void writeToFile(String toFileName, String report) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(report);
         } catch (IOException e) {
