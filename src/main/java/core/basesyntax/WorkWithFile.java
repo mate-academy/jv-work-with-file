@@ -8,9 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-
     public void getStatistic(String fromFileName, String toFileName) {
-
         StringBuilder resultOfread = read(fromFileName);
         String resultCalculate = calculate(resultOfread);
         write(toFileName, resultCalculate);
@@ -52,7 +50,6 @@ public class WorkWithFile {
     }
 
     private void write(String toFileName, String resultCalculate) {
-
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write(resultCalculate);
         } catch (IOException e) {
