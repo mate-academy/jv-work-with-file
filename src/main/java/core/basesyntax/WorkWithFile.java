@@ -15,8 +15,7 @@ public class WorkWithFile {
         int buy = 0;
         String[] split = resultOfRead.split(System.lineSeparator());
         for (String each : split) {
-            String[] commaArray = new String[2];
-            commaArray = each.split(",");
+            String[] commaArray = each.split(",");
             if (commaArray[0].equals("supply")) {
                 supply += Integer.parseInt(commaArray[1]);
             } else {
@@ -46,9 +45,9 @@ public class WorkWithFile {
         return builder.toString();
     }
 
-    private void write(String toFileName, String resultStat) {
+    private void write(String toFileName, String resultStatistic) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            writer.write(resultStat);
+            writer.write(resultStatistic);
         } catch (IOException e) {
             throw new RuntimeException("Something is going wrong", e);
         }
