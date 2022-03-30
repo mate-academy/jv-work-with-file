@@ -7,34 +7,29 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class WorkWithFile {
-    private StringBuilder temp = new StringBuilder();
-    private StringBuilder report = new StringBuilder();
-    private String file = null;
-
     public void getStatistic(String fromFileName, String toFileName) {
-        file = fromFileName;
-        readFile();
-        try {
-            Files.write(Path.of(toFileName), prepareReport().getBytes());
-        } catch (IOException e) {
-            throw new RuntimeException("Error while writing to file : " + file, e);
-        }
+        String readData = readFile(fromFileName);
+        String report = prepareReport(readData);
+        writeToFile(toFileName, report);
     }
 
-    private void readFile() {
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
+    private String readFile(String fromFileName) {
+        StringBuilder result = new StringBuilder();
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String line = bufferedReader.readLine();
             while (line != null) {
-                temp.append(line).append(" ");
+                result.append(line).append(" ");
                 line = bufferedReader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Error while reading the file : " + file, e);
+            throw new RuntimeException("Error while reading the file : " + fromFileName, e);
         }
+        return result.toString();
     }
 
-    private String prepareReport() {
-        String[] reportData = temp.toString().split("\\W+");
+    private String prepareReport(String readFile) {
+        StringBuilder report = new StringBuilder();
+        String[] reportData = readFile.split("\\W+");
         String value;
         int supply = 0;
         int buy = 0;
@@ -54,6 +49,12 @@ public class WorkWithFile {
                 .append("result,").append(result);
         return report.toString();
     }
+
+    private void writeToFile(String toFileName, String report) {
+        try {
+            Files.write(Path.of(toFileName), report.getBytes());
+        } catch (IOException e) {
+            throw new RuntimeException("Error while writing to file : " + toFileName, e);
+        }
+    }
 }
-
-
