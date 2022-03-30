@@ -15,16 +15,15 @@ public class WorkWithFile {
     private String getFromFile(String fromFileName) {
         File myFile = new File(fromFileName);
         StringBuilder dataFromFile = new StringBuilder();
-        try {
-            FileReader fileReader = new FileReader(myFile);
-            BufferedReader reader = new BufferedReader(fileReader);
+        try (FileReader fileReader = new FileReader(myFile);
+                BufferedReader reader = new BufferedReader(fileReader)) {
             String value = reader.readLine();
             while (value != null) {
                 dataFromFile.append(value).append(" ");
                 value = reader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("", e);
+            throw new RuntimeException("Can not read from file: " + fromFileName, e);
         }
         return dataFromFile.toString();
     }
@@ -32,26 +31,20 @@ public class WorkWithFile {
     private String getCalculated(String builder) {
         StringBuilder calculation = new StringBuilder();
         String[] splitData = builder.split(" ");
-        String[] fieldsToCalc = new String[]{"supply", "buy"};
         int buy = 0;
         int supply = 0;
-        for (String name : fieldsToCalc) {
-            int sumAmount = 0;
-            for (int i = 0; i < splitData.length; i++) {
-                String[] temp = splitData[i].split(",");
-                if (name.equals(temp[0])) {
-                    sumAmount += Integer.parseInt(temp[1]);
-                }
-            }
-            if (name.equals("buy")) {
-                buy = sumAmount;
+        for (String line : splitData) {
+            String[] parts = line.split(",");
+            if ("buy".equals(parts[0])) {
+                buy += Integer.parseInt(parts[1]);
             } else {
-                supply = sumAmount;
+                supply += Integer.parseInt(parts[1]);
             }
-            calculation.append(name).append(",").append(sumAmount).append(System.lineSeparator());
         }
-        calculation.append("result").append(",").append(supply - buy);
-        return calculation.toString();
+        return calculation
+                .append("supply").append(",").append(supply).append(System.lineSeparator())
+                .append("buy").append(",").append(buy).append(System.lineSeparator())
+                .append("result").append(",").append(supply - buy).toString();
     }
 
     private void writeToFile(String calculation, String toFileName) {
