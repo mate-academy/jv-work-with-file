@@ -13,11 +13,11 @@ public class WorkWithFile {
         int supplyCounter = 0;
         int buyCounter = 0;
         for (String data : readerService(fromFileName)) {
-            String[] s = data.split(",");
-            if (s[0].equals("supply")) {
-                supplyCounter += Integer.parseInt(s[1]);
+            String[] values = data.split(",");
+            if (values[0].equals("supply")) {
+                supplyCounter += Integer.parseInt(values[1]);
             } else {
-                buyCounter += Integer.parseInt(s[1]);
+                buyCounter += Integer.parseInt(values[1]);
             }
         }
         result.setLength(0);
