@@ -10,17 +10,17 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
-    private int buyScore = 0;
-    private int supplyScore = 0;
-    private int resultScore = 0;
-    private StringBuilder report = new StringBuilder();
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String read = readFromFile(fromFileName);
-        writeToFile(toFileName, read);
+        String data = readFromFile(fromFileName);
+        writeToFile(toFileName, data);
     }
 
-    public String readFromFile(String fromFileName) {
+    private String readFromFile(String fromFileName) {
+        int buyScore = 0;
+        int supplyScore = 0;
+        int resultScore = 0;
+        StringBuilder report = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String line = bufferedReader.readLine();
             while (line != null) {
@@ -43,7 +43,7 @@ public class WorkWithFile {
                 .append(RESULT).append(",").append(resultScore).toString();
     }
 
-    public void writeToFile(String toFileName, String report) {
+    private void writeToFile(String toFileName, String report) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(String.valueOf(report));
         } catch (IOException e) {
