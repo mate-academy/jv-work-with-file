@@ -16,14 +16,14 @@ public class WorkWithFile {
         int buySum = 0;
         int supplySum = 0;
         String[] lines = readFromFile(fromFileName);
-        for (String s : lines) {
-            String[] line = s.split(SEPARATOR);
-            switch (line[0]) {
+        for (String line : lines) {
+            String[] splitData = line.split(SEPARATOR);
+            switch (splitData[0]) {
                 case SUPPLY_OPERATION:
-                    supplySum += Integer.parseInt(line[1]);
+                    supplySum += Integer.parseInt(splitData[1]);
                     break;
                 case BUY_OPERATION:
-                    buySum += Integer.parseInt(line[1]);
+                    buySum += Integer.parseInt(splitData[1]);
                     break;
                 default:
                     throw new RuntimeException("Incorrect data");
@@ -42,7 +42,7 @@ public class WorkWithFile {
                 line = bufferedReader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can`t read data from file");
+            throw new RuntimeException("Can`t read data from file", e);
         }
         return stringBuilder.toString().split(System.lineSeparator());
     }
@@ -62,7 +62,7 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
             bufferedWriter.write(data);
         } catch (IOException e) {
-            throw new RuntimeException("Can`t create file");
+            throw new RuntimeException("Can`t create file", e);
         }
     }
 }
