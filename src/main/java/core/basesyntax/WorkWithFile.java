@@ -30,10 +30,11 @@ public class WorkWithFile {
 
     private void writeStatistic(String toFileName, int buy, int supply) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            String str = "supply," + supply + System.lineSeparator() + "buy," + buy
-                    + System.lineSeparator() + "result,"
-                    + (supply - buy);
-            writer.write(str);
+            String report = new StringBuilder()
+                    .append("supply,").append(supply).append(System.lineSeparator())
+                    .append("buy,").append(buy).append(System.lineSeparator())
+                    .append("result,").append(supply - buy).toString();
+            writer.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to the file " + toFileName, e);
         }
