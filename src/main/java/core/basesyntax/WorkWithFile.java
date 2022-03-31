@@ -12,11 +12,11 @@ public class WorkWithFile {
         write(toFileName, calculate(read(fromFileName)));
     }
 
-   private List<String> read(String fromFileName) {
+    private List<String> read(String fromFileName) {
         File readFile = new File(fromFileName);
 
         try {
-           return Files.readAllLines(readFile.toPath());
+            return Files.readAllLines(readFile.toPath());
         } catch (IOException ex) {
             throw new RuntimeException("Can not read from file");
         }
