@@ -7,42 +7,39 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WorkWithFile {
-    private List<String> values;
-    private List<String> reports = new ArrayList<>();
 
     public void getStatistic(String fromFileName, String toFileName) {
-        reading(fromFileName);
-        calculating();
-        writing(toFileName);
+        write(toFileName, calculate(read(fromFileName)));
     }
 
-    private void reading(String fromFileName) {
+   private List<String> read(String fromFileName) {
         File readFile = new File(fromFileName);
 
         try {
-            values = Files.readAllLines(readFile.toPath());
+           return Files.readAllLines(readFile.toPath());
         } catch (IOException ex) {
             throw new RuntimeException("Can not read from file");
         }
     }
 
-    private void writing(String toFileName) {
+    private void write(String toFileName, List<String> data) {
         File writeFile = new File(toFileName);
 
         try {
-            Files.write(writeFile.toPath(), reports);
+            Files.write(writeFile.toPath(), data);
 
         } catch (IOException ex) {
             throw new RuntimeException("Can not write to file");
         }
     }
 
-    private void calculating() {
+    private List<String> calculate(List<String> data) {
+        List<String> reports = new ArrayList<>();
         int supplySum = 0;
         int buySum = 0;
 
-        for (int i = 0; i < values.size(); i++) {
-            String[] splitValue = values.get(i).split(",");
+        for (int i = 0; i < data.size(); i++) {
+            String[] splitValue = data.get(i).split(",");
             if (splitValue[0].equals("supply")) {
                 supplySum += Integer.parseInt(splitValue[1]);
             }
@@ -51,10 +48,11 @@ public class WorkWithFile {
                 buySum += Integer.parseInt(splitValue[1]);
             }
         }
-
         reports.add("supply," + supplySum);
         reports.add("buy," + buySum);
         reports.add("result," + (supplySum - buySum));
+
+        return reports;
     }
 }
 
