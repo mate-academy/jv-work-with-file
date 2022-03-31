@@ -12,8 +12,7 @@ public class WorkWithFile {
         int supply = 0;
         int buy = 0;
         int result = 0;
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String stringFromFile = bufferedReader.readLine();
             while (stringFromFile != null) {
                 String[] info = stringFromFile.split(",");
