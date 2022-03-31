@@ -10,34 +10,49 @@ import java.io.IOException;
 public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
-        File file1 = new File(fromFileName);
-        File file2 = new File(toFileName);
-        int supply = 0;
-        int buy = 0;
+        writer(toFileName, calculator(reader(fromFileName).split(" ")));
+    }
 
-        //1st part: reading from file
+    public String reader(String fromFileName) {
+        File file1 = new File(fromFileName);
+        StringBuilder data = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file1));) {
             String string = bufferedReader.readLine();
             while (string != null) {
-                if (string.contains("supply")) {
-                    supply += Integer.parseInt(string.trim().substring(7));
-                } else if (string.contains("buy")) {
-                    buy += Integer.parseInt(string.trim().substring(4));
-                }
+                data.append(string).append(" ");
                 string = bufferedReader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("Some problems", e);
         }
+        return data.toString();
+    }
 
-        //2nd part: making report
-        int result = supply - buy;
+    public int[] calculator(String[] str) {
+        int[] answer = new int[3];
+        // answer[0] - supply
+        // answer[1] - buy
+        // answer[2] - result
+        for (String data : str) {
+            if (data.contains("supply")) {
+                answer[0] += Integer.parseInt(data.trim().substring(7));
+            } else if (data.contains("buy")) {
+                answer[1] += Integer.parseInt(data.trim().substring(4));
+            }
+        }
+        answer[2] = answer[0] - answer[1];
+        return answer;
+    }
 
-        //3d part: create file and write to it
+    public void writer(String toFileName, int[] answer) {
+        // answer[0] - supply
+        // answer[1] - buy
+        // answer[2] - result
+        File file2 = new File(toFileName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file2, true))) {
             file2.createNewFile();
-            bufferedWriter.write("supply," + supply + System.lineSeparator()
-                    + "buy," + buy + System.lineSeparator() + "result," + result);
+            bufferedWriter.write("supply," + answer[0] + System.lineSeparator()
+                    + "buy," + answer[1] + System.lineSeparator() + "result," + answer[2]);
         } catch (IOException e) {
             throw new RuntimeException("Some problems", e);
         }
