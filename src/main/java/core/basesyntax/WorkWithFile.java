@@ -8,7 +8,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-
     public void getStatistic(String fromFileName, String toFileName) {
         String resultOfRead = readFromFile(fromFileName);
         int supply = 0;
@@ -22,11 +21,11 @@ public class WorkWithFile {
                 buy += Integer.parseInt(commaArray[1]);
             }
         }
-        StringBuilder reportBuilder = new StringBuilder();
-        reportBuilder.append("supply,").append(supply).append(System.lineSeparator())
+        StringBuilder resultBuilder = new StringBuilder();
+        resultBuilder.append("supply,").append(supply).append(System.lineSeparator())
                 .append("buy,").append(buy).append(System.lineSeparator())
                 .append("result,").append(supply - buy);
-        String resultStat = reportBuilder.toString();
+        String resultStat = resultBuilder.toString();
         write(toFileName, resultStat);
     }
 
