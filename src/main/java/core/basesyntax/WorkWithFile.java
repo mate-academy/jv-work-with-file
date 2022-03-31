@@ -25,8 +25,8 @@ public class WorkWithFile {
         resultBuilder.append("supply,").append(supply).append(System.lineSeparator())
                 .append("buy,").append(buy).append(System.lineSeparator())
                 .append("result,").append(supply - buy);
-        String resultStat = resultBuilder.toString();
-        write(toFileName, resultStat);
+        String resultStatistic = resultBuilder.toString();
+        write(toFileName, resultStatistic);
     }
 
     private String readFromFile(String fromFileName) {
