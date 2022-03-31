@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WorkWithFile {
-
     public void getStatistic(String fromFileName, String toFileName) {
         write(toFileName, calculate(read(fromFileName)));
     }
