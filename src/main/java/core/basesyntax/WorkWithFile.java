@@ -11,9 +11,7 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         int supply = 0;
         int buy = 0;
-        int result = 0;
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String line = reader.readLine();
             while (line != null) {
                 String[] info = line.split(",");
@@ -25,28 +23,27 @@ public class WorkWithFile {
                 }
                 line = reader.readLine();
             }
-
         } catch (FileNotFoundException e) {
-            throw new RuntimeException(" Problem whis file! ");
+            throw new RuntimeException("Can't read in file ", e);
         } catch (IOException e) {
-            throw new RuntimeException(" Problem whis file! ");
+            throw new RuntimeException("Can't read in file ", e);
         }
-        result = supply - buy;
-        String allResult = infoOfDay(supply, buy, result);
+        int result = supply - buy;
+        String allResult = getInfoOfDay(supply, buy, result);
         writeStatistik(toFileName, allResult);
     }
 
-    private String infoOfDay(int supple, int buy, int result) {
+    private String getInfoOfDay(int supple, int buy, int result) {
         return new StringBuilder("supply").append(",").append(supple).append(System.lineSeparator())
                 .append("buy").append(",").append(buy).append(System.lineSeparator())
                 .append("result").append(",").append(result).toString();
     }
 
-    public void writeStatistik(String toFileName, String allResult) {
+    private void writeStatistik(String toFileName, String allResult) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName, true))) {
             writer.write(allResult);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write in file");
+            throw new RuntimeException("Can't write in file" + toFileName, e);
         }
     }
 }
