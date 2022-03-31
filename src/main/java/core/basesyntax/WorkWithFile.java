@@ -9,7 +9,12 @@ import java.io.IOException;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
+        writing(calculating(reading(fromFileName)),toFileName);
+    }
+
+    private String reading(String fromFileName) {
         StringBuilder stringBuilder = new StringBuilder();
+
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String reader = bufferedReader.readLine();
             while (reader != null) {
@@ -19,6 +24,11 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can`t read data from file", e);
         }
+        return stringBuilder.toString();
+    }
+
+    private String[] calculating(String reader) {
+        StringBuilder stringBuilder = new StringBuilder(reader);
         String[] array = stringBuilder.toString().split(" ");
         int supplyCount = 0;
         int buyCount = 0;
@@ -30,12 +40,6 @@ public class WorkWithFile {
             if (split[0].equals("buy")) {
                 buyCount += Integer.parseInt(split[1]);
             }
-        }
-        File file = new File(toFileName);
-        try {
-            file.createNewFile();
-        } catch (IOException e) {
-            throw new RuntimeException("Can`t create file", e);
         }
         stringBuilder = new StringBuilder();
         String[] report = {stringBuilder.append("supply")
@@ -49,6 +53,16 @@ public class WorkWithFile {
                         .append("result")
                         .append(",")
                         .append(supplyCount - buyCount).toString()};
+        return report;
+    }
+
+    private void writing(String[] report, String toFileName) {
+        File file = new File(toFileName);
+        try {
+            file.createNewFile();
+        } catch (IOException e) {
+            throw new RuntimeException("Can`t create file", e);
+        }
         for (String line : report) {
             try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
                 bufferedWriter.write(line);
