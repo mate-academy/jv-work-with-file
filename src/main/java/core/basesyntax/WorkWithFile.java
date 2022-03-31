@@ -27,9 +27,9 @@ public class WorkWithFile {
             }
 
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("Error catch!");
+            throw new RuntimeException("Error: File not found!" + toFileName, e);
         } catch (IOException e) {
-            throw new RuntimeException("Error catch!");
+            throw new RuntimeException("Error IOException: File not found" + toFileName, e);
         }
         result = supply - buy;
         String allResult = outputInfo(supply, buy, result);
@@ -43,11 +43,11 @@ public class WorkWithFile {
                 .append("result").append(",").append(result).toString();
     }
 
-    public void writeToFile(String toFileName, String allResult) {
+    private void writeToFile(String toFileName, String allResult) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName, true))) {
             writer.write(allResult);
         } catch (IOException e) {
-            throw new RuntimeException("Some mistake with coding");
+            throw new RuntimeException("Some mistake with writing to file " + toFileName, e);
         }
     }
 
