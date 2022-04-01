@@ -13,7 +13,7 @@ public class WorkWithFile {
     private static final int RESULT_INDEX = 2;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        writer(toFileName, calculator(read(fromFileName)));
+        writer(toFileName, getResult(read(fromFileName)));
     }
 
     public String read(String fromFileName) {
@@ -31,9 +31,9 @@ public class WorkWithFile {
         return data.toString();
     }
 
-    public int[] calculator(String str) {
+    public int[] getResult(String data) {
         int[] result = new int[3];
-        String[] lines = str.split(" ");
+        String[] lines = data.split(" ");
         for (String line : lines) {
             if (line.contains("supply")) {
                 result[SUPPLY_INDEX] += Integer.parseInt(line.trim().substring(7));
