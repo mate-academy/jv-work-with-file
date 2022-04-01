@@ -8,6 +8,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final int SUPPLY_INDEX = 0;
+    private static final int BUY_INDEX = 1;
+    private static final int RESULT_INDEX = 2;
 
     public void getStatistic(String fromFileName, String toFileName) {
         writer(toFileName, calculator(read(fromFileName)));
@@ -33,9 +36,9 @@ public class WorkWithFile {
         String[] lines = str.split(" ");
         for (String line : lines) {
             if (line.contains("supply")) {
-                result[0] += Integer.parseInt(line.trim().substring(7));
+                result[SUPPLY_INDEX] += Integer.parseInt(line.trim().substring(7));
             } else if (line.contains("buy")) {
-                result[1] += Integer.parseInt(line.trim().substring(4));
+                result[BUY_INDEX] += Integer.parseInt(line.trim().substring(4));
             }
         }
         result[2] = result[0] - result[1];
@@ -47,9 +50,10 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, true))) {
             file.createNewFile();
             StringBuilder stringBuilder = new StringBuilder();
-            bufferedWriter.write(String.valueOf(stringBuilder.append("supply,").append(result[0])
-                    .append(System.lineSeparator()).append("buy,").append(result[1])
-                    .append(System.lineSeparator()).append("result,").append(result[2])));
+            bufferedWriter.write(String.valueOf(stringBuilder.append("supply,")
+                    .append(result[SUPPLY_INDEX]).append(System.lineSeparator())
+                    .append("buy,").append(result[BUY_INDEX]).append(System.lineSeparator())
+                    .append("result,").append(result[RESULT_INDEX])));
         } catch (IOException e) {
             throw new RuntimeException("Some problems", e);
         }
