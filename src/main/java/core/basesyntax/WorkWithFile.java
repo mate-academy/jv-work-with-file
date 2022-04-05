@@ -34,8 +34,8 @@ public class WorkWithFile {
         int result = supplySum - buySum;
 
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("buy,").append(buySum).append(System.lineSeparator());
         stringBuilder.append("supply,").append(supplySum).append(System.lineSeparator());
+        stringBuilder.append("buy,").append(buySum).append(System.lineSeparator());
         stringBuilder.append("result,").append(result);
 
         File resultFile = new File(toFileName);
