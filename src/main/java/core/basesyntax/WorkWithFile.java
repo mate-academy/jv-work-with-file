@@ -34,7 +34,8 @@ public class WorkWithFile {
                         supply += Integer.parseInt(split[AMMOUNT_INDEX]);
                         break;
                     default:
-                        System.out.println("Unexpected input information");
+                        throw new RuntimeException("Unexpected input information "
+                                + split[OPERATION_TYPE_INDEX]);
                 }
                 result = supply - buy;
                 line = bufferedReader.readLine();
