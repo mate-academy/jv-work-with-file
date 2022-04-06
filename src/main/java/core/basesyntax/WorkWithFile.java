@@ -7,18 +7,23 @@ import java.nio.file.StandardOpenOption;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
-        File fromFile = new File(fromFileName);
-        File toFile = new File(toFileName);
-        String[] strings;
+        writeToFile(toFileName, readFromFile(fromFileName));
+    }
+
+    private String[] readFromFile(String fromFileName) {
         try {
-            strings = Files.readAllLines(fromFile.toPath()).toArray(new String[0]);
+            File fromFile = new File(fromFileName);
+            return Files.readAllLines(fromFile.toPath()).toArray(new String[0]);
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from the file " + fromFileName, e);
         }
+    }
+
+    private void writeToFile(String toFileName, String[] strings) {
         try {
+            File toFile = new File(toFileName);
             toFile.createNewFile();
-            WorkWithFile workWithFile = new WorkWithFile();
-            String[] outputString = workWithFile.outputString(strings);
+            String[] outputString = outputString(strings);
             for (String string: outputString) {
                 Files.writeString(toFile.toPath(),string, StandardOpenOption.APPEND);
             }
