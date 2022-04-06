@@ -30,8 +30,11 @@ public class WorkWithFile {
                     case "buy":
                         buy += Integer.parseInt(split[AMMOUNT_INDEX]);
                         break;
-                    default:
+                    case "supply":
                         supply += Integer.parseInt(split[AMMOUNT_INDEX]);
+                        break;
+                    default:
+                        System.out.println("Unexpected input information");
                 }
                 result = supply - buy;
                 line = bufferedReader.readLine();
