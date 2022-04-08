@@ -30,7 +30,7 @@ public class WorkWithFile {
                 result = supply - buy;
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read from file", e);
+            throw new RuntimeException("Can't read from file" + fromFileName, e);
         }
         return stringBuilder.append("supply," + supply + System.lineSeparator())
                 .append("buy," + buy + System.lineSeparator())
@@ -45,9 +45,3 @@ public class WorkWithFile {
         }
     }
 }
-
-
-
-
-
-
