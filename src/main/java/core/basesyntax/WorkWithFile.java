@@ -1,6 +1,11 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
@@ -38,8 +43,7 @@ public class WorkWithFile {
         return statisticForReport;
     }
 
-    private String[][] calculateStatisticForReport
-            (String[][] statisticForReport) {
+    private String[][] calculateStatisticForReport(String[][] statisticForReport) {
         String[] statisticsFields = new String[]{"supply", "buy", "result"};
         String[][] resultOfMiscalculations = new String[3][2];
         for (int i = 0; i < resultOfMiscalculations.length; i++) {
@@ -55,7 +59,8 @@ public class WorkWithFile {
                 }
             }
         }
-        int result = Integer.parseInt(resultOfMiscalculations[0][1]) - Integer.parseInt(resultOfMiscalculations[1][1]);
+        int result = Integer.parseInt(resultOfMiscalculations[0][1])
+                - Integer.parseInt(resultOfMiscalculations[1][1]);
         resultOfMiscalculations[2][1] = Integer.toString(result);
         return resultOfMiscalculations;
     }
