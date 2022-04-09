@@ -2,7 +2,6 @@ package core.basesyntax;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -13,25 +12,22 @@ public class WorkWithFile {
         File file = new File(fromFileName);
         int buySum = 0;
         int supplySum = 0;
-        try (FileReader fileReader = new FileReader(file)) {
-            try (BufferedReader reader = new BufferedReader(fileReader)) {
-                String value = reader.readLine();
-                while (value != null) {
-                    String[] tempSplit = value.split(",");
-                    int tempValue = Integer.parseInt(tempSplit[1]);
-                    if (tempSplit[0].equals("buy")) {
-                        buySum += tempValue;
-                    } else {
-                        supplySum += tempValue;
-                    }
-                    value = reader.readLine();
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String value = reader.readLine();
+            while (value != null) {
+                String[] tempSplit = value.split(",");
+                int tempValue = Integer.parseInt(tempSplit[1]);
+                if (tempSplit[0].equals("buy")) {
+                    buySum += tempValue;
+                } else {
+                    supplySum += tempValue;
                 }
-            } catch (FileNotFoundException f) {
-                throw new RuntimeException("can not open file", f);
+                value = reader.readLine();
             }
-        } catch (IOException e) {
-            throw new RuntimeException("can not create BufferedReader", e);
+        } catch (IOException f) {
+            throw new RuntimeException("can not open file" + fromFileName, f);
         }
+
         int result = supplySum - buySum;
 
         StringBuilder stringBuilder = new StringBuilder();
@@ -44,7 +40,7 @@ public class WorkWithFile {
             Files.write(resultFile.toPath(),
                     stringBuilder.toString().getBytes(StandardCharsets.UTF_8));
         } catch (Exception e) {
-            throw new RuntimeException("cant write to file", e);
+            throw new RuntimeException("cant write to file" + toFileName, e);
         }
     }
 }
