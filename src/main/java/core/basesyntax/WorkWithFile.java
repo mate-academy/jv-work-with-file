@@ -9,22 +9,25 @@ import java.util.List;
 import java.util.Map;
 
 public class WorkWithFile {
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
         Map<String, Integer> mapCsv;
         try {
             mapCsv = readingCsv(Path.of(fromFileName));
         } catch (IOException e) {
-            throw new RuntimeException("Reading error", e);
+            throw new RuntimeException("Can't read data from the file " + fromFileName, e);
         }
         List<String> result = new ArrayList<>();
-        result.add("supply," + mapCsv.get("supply"));
-        result.add("buy," + mapCsv.get("buy"));
-        result.add("result," + (mapCsv.get("supply") - mapCsv.get("buy")));
+        result.add(SUPPLY + "," + mapCsv.get(SUPPLY));
+        result.add(BUY + "," + mapCsv.get(BUY));
+        result.add(RESULT + "," + (mapCsv.get(SUPPLY) - mapCsv.get(BUY)));
         try {
             Files.write(Path.of(toFileName), result);
         } catch (IOException e) {
-            throw new RuntimeException("Writing error", e);
+            throw new RuntimeException("Can't write data to the file " + toFileName, e);
         }
     }
 
