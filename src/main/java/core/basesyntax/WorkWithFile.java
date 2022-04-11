@@ -34,8 +34,8 @@ public class WorkWithFile {
         for (String s : lines) {
             String[] split = s.split(",");
             Integer value = Integer.parseInt(split[1]);
-            mapCsv.put(split[0], mapCsv.containsKey(split[0]) ?
-                    mapCsv.get(split[0]) + value : value);
+            mapCsv.put(split[0], mapCsv.containsKey(split[0])
+                    ? mapCsv.get(split[0]) + value : value);
         }
         return mapCsv;
     }
