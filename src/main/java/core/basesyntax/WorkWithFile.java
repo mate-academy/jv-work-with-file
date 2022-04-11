@@ -9,37 +9,35 @@ import java.util.List;
 import java.util.Map;
 
 public class WorkWithFile {
-    private static final String SUPPLY = "supply";
-    private static final String BUY = "buy";
-    private static final String RESULT = "result";
-
     public void getStatistic(String fromFileName, String toFileName) {
-        Map<String, Integer> mapCsv;
+        List<String> lines;
         try {
-            mapCsv = readingCsv(Path.of(fromFileName));
+            //1. read from file, return List
+            lines = Files.readAllLines(Path.of(fromFileName));
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from the file " + fromFileName, e);
         }
-        List<String> result = new ArrayList<>();
-        result.add(SUPPLY + "," + mapCsv.get(SUPPLY));
-        result.add(BUY + "," + mapCsv.get(BUY));
-        result.add(RESULT + "," + (mapCsv.get(SUPPLY) - mapCsv.get(BUY)));
+        //2. process List and form report, return report
+        List<String> report = getReport(lines);
         try {
-            Files.write(Path.of(toFileName), result);
+            //3. write to file
+            Files.write(Path.of(toFileName), report);
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to the file " + toFileName, e);
         }
     }
 
-    private Map<String, Integer> readingCsv(Path fromPath) throws IOException {
-        List<String> lines = Files.readAllLines(fromPath);
-        Map<String, Integer> mapCsv = new HashMap<>();
+    private List<String> getReport(List<String> lines) {
+        Map<String, Integer> map = new HashMap<>();
         for (String s : lines) {
             String[] split = s.split(",");
             Integer value = Integer.parseInt(split[1]);
-            mapCsv.put(split[0], mapCsv.containsKey(split[0])
-                    ? mapCsv.get(split[0]) + value : value);
+            map.put(split[0], map.containsKey(split[0]) ? map.get(split[0]) + value : value);
         }
-        return mapCsv;
+        List<String> report = new ArrayList<>();
+        report.add("supply," + map.get("supply"));
+        report.add("buy," + map.get("buy"));
+        report.add("result," + (map.get("supply") - map.get("buy")));
+        return report;
     }
 }
