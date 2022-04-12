@@ -9,10 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WorkWithFile {
-    private static final int ZERO_INDEX = 0;
-    private static final int FIRST_INDEX = 1;
-    private static final String[] SUPPLY_AND_BUY = new String[]{"supply", "buy"};
-
     public void getStatistic(String fromFileName, String toFileName) {
         List<String> lines = readFile(fromFileName);
         String report = getReport(lines);
@@ -40,24 +36,21 @@ public class WorkWithFile {
     }
 
     private String getReport(List<String> lines) {
-        StringBuilder report = new StringBuilder();
         int quantityOfSupplies = 0;
         int quantityOfBuys = 0;
-        for (String supplyAndBuy : SUPPLY_AND_BUY) {
-            Integer quantity = 0;
-            for (String line : lines) {
-                String[] split = line.split(",");
-                if (supplyAndBuy.equals(split[ZERO_INDEX])) {
-                    quantity += Integer.parseInt(split[FIRST_INDEX]);
-                }
-            }
-            if (supplyAndBuy.equals(SUPPLY_AND_BUY[ZERO_INDEX])) {
-                quantityOfSupplies = quantity;
+        for (String line : lines) {
+            String[] split = line.split(",");
+            String typeOfOperation = split[0];
+            int quantity = Integer.parseInt(split[1]);
+            if (typeOfOperation.equals("supply")) {
+                quantityOfSupplies += quantity;
             } else {
-                quantityOfBuys = quantity;
+                quantityOfBuys += quantity;
             }
-            report.append(supplyAndBuy).append(",").append(quantity).append(System.lineSeparator());
         }
+        StringBuilder report = new StringBuilder();
+        report.append("supply,").append(quantityOfSupplies).append(System.lineSeparator());
+        report.append("buy,").append(quantityOfBuys).append(System.lineSeparator());
         report.append("result,").append(quantityOfSupplies - quantityOfBuys);
         return report.toString();
     }
