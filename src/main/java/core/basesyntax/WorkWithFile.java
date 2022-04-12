@@ -9,48 +9,51 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WorkWithFile {
+    private static final int CONDITION_FOR_INDEX = 0;
+    private static final int SPLIT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         writeFile(toFileName, readFile(fromFileName));
     }
 
-    private List readFile(String fileNameRead) {
-        List<String> str = new ArrayList<>();
-        String text;
-        try (FileReader fileFrom = new FileReader(fileNameRead)) {
+    private List readFile(String fileName) {
+        List<String> lines = new ArrayList<>();
+        String line;
+        try (FileReader fileFrom = new FileReader(fileName)) {
             BufferedReader bufferedReader = new BufferedReader(fileFrom);
-            while ((text = bufferedReader.readLine()) != null) {
-                str.add(text);
+            while ((line = bufferedReader.readLine()) != null) {
+                lines.add(line);
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read data from the file " + fileNameRead, e);
+            throw new RuntimeException("Can't read data from the file " + fileName, e);
         }
-        return str;
+        return lines;
     }
 
-    private void writeFile(String fileNameWrite, List<String> str) {
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileNameWrite))) {
-            bufferedWriter.write(getNumber(str));
+    private void writeFile(String fileName, List<String> lines) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
+            bufferedWriter.write(getReport(lines));
             bufferedWriter.flush();
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data to the file " + fileNameWrite, e);
+            throw new RuntimeException("Can't write data to the file " + fileName, e);
         }
     }
 
-    public String getNumber(List<String> str) {
+    public String getReport(List<String> str) {
         int supplyOperation = 0;
         int buyOperation = 0;
         for (String line : str) {
-            String[] splitFile = line.split(",");
-            if (splitFile[0].equals("buy")) {
-                buyOperation += Integer.parseInt(splitFile[1]);
+            String[] splittedLine = line.split(",");
+            if (splittedLine [CONDITION_FOR_INDEX].equals("buy")) {
+                buyOperation += Integer.parseInt(splittedLine [SPLIT_INDEX]);
             }
-            if (splitFile[0].equals("supply")) {
-                supplyOperation += Integer.parseInt(splitFile[1]);
+            if (splittedLine [CONDITION_FOR_INDEX].equals("supply")) {
+                supplyOperation += Integer.parseInt(splittedLine [SPLIT_INDEX]);
             }
         }
-        StringBuilder b = new StringBuilder();
-        return b.append("supply,").append(supplyOperation).append(System.lineSeparator())
+        StringBuilder reportBuilder = new StringBuilder();
+        return reportBuilder.append("supply,").append(supplyOperation)
+                .append(System.lineSeparator())
                 .append("buy,").append(buyOperation).append(System.lineSeparator())
                 .append("result,").append(supplyOperation - buyOperation).toString();
     }
