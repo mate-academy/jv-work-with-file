@@ -28,8 +28,9 @@ public class WorkWithFile {
                     buyAmount += Integer.parseInt(operation.substring(4));
                 }
             }
-            bufferedWriter.write("supply," + supllyAmount + "\r"
-                    + "buy," + buyAmount + "\r" + "result," + (supllyAmount - buyAmount));
+            bufferedWriter.write("supply," + supllyAmount + System.lineSeparator()
+                    + "buy," + buyAmount + System.lineSeparator()
+                    + "result," + (supllyAmount - buyAmount));
             bufferedWriter.close();
         } catch (FileNotFoundException e) {
             throw new RuntimeException("File " + fromFileName + "is not founded!", e);
