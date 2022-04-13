@@ -10,13 +10,13 @@ import java.util.List;
 
 public class WorkWithFile {
     private static final int CONDITION_FOR_INDEX = 0;
-    private static final int SPLIT_INDEX = 1;
+    private static final int QUANTITY_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         writeFile(toFileName, readFile(fromFileName));
     }
 
-    private List readFile(String fileName) {
+    private List<String> readFile(String fileName) {
         List<String> lines = new ArrayList<>();
         String line;
         try (FileReader fileFrom = new FileReader(fileName)) {
@@ -39,16 +39,16 @@ public class WorkWithFile {
         }
     }
 
-    public String getReport(List<String> str) {
+    public String getReport(List<String> lines) {
         int supplyOperation = 0;
         int buyOperation = 0;
-        for (String line : str) {
+        for (String line : lines) {
             String[] splittedLine = line.split(",");
             if (splittedLine [CONDITION_FOR_INDEX].equals("buy")) {
-                buyOperation += Integer.parseInt(splittedLine [SPLIT_INDEX]);
+                buyOperation += Integer.parseInt(splittedLine [QUANTITY_INDEX]);
             }
             if (splittedLine [CONDITION_FOR_INDEX].equals("supply")) {
-                supplyOperation += Integer.parseInt(splittedLine [SPLIT_INDEX]);
+                supplyOperation += Integer.parseInt(splittedLine [QUANTITY_INDEX]);
             }
         }
         StringBuilder reportBuilder = new StringBuilder();
