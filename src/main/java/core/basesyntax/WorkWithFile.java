@@ -29,7 +29,7 @@ public class WorkWithFile {
                 }
             }
             bufferedWriter.write("supply," + supllyAmount + "\r"
-                    + "\nbuy," + buyAmount + "\r" + "\nresult," + (supllyAmount - buyAmount));
+                    + "buy," + buyAmount + "\r" + "result," + (supllyAmount - buyAmount));
             bufferedWriter.close();
         } catch (FileNotFoundException e) {
             throw new RuntimeException("File " + fromFileName + "is not founded!", e);
