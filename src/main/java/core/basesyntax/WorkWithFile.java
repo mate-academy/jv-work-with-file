@@ -8,6 +8,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final int OPERATION_NAME_INDEX = 0;
+    private static final int OPERATION_AMOUNT_INDEX = 1;
+
     public void getStatistic(String fromFileName, String toFileName) {
         try {
             BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName));
@@ -39,11 +42,11 @@ public class WorkWithFile {
         int supply = 0;
         int buy = 0;
         for (String operation : operations) {
-            String[] split = operation.split(",");
-            if (split[0].equals("supply")) {
-                supply += Integer.parseInt(split[1]);
+            String[] splittedOperationLine = operation.split(",");
+            if (splittedOperationLine[OPERATION_NAME_INDEX].equals("supply")) {
+                supply += Integer.parseInt(splittedOperationLine[OPERATION_AMOUNT_INDEX]);
             } else {
-                buy += Integer.parseInt(split[1]);
+                buy += Integer.parseInt(splittedOperationLine[OPERATION_AMOUNT_INDEX]);
             }
         }
         return "supply," + supply + System.lineSeparator()
