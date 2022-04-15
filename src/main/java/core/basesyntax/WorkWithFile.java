@@ -18,7 +18,7 @@ public class WorkWithFile {
         }
     }
 
-    public String[] readFromFile(String fromFileName) {
+    private String[] readFromFile(String fromFileName) {
         try {
             BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
             StringBuilder stringBuilder = new StringBuilder();
@@ -35,14 +35,15 @@ public class WorkWithFile {
         }
     }
 
-    public String calculateStatistic(String[] operations) {
+    private String calculateStatistic(String[] operations) {
         int supply = 0;
         int buy = 0;
         for (String operation : operations) {
-            if (operation.substring(0, operation.indexOf(",")).equals("supply")) {
-                supply += Integer.parseInt(operation.substring(7));
+            String[] split = operation.split(",");
+            if (split[0].equals("supply")) {
+                supply += Integer.parseInt(split[1]);
             } else {
-                buy += Integer.parseInt(operation.substring(4));
+                buy += Integer.parseInt(split[1]);
             }
         }
         return "supply," + supply + System.lineSeparator()
