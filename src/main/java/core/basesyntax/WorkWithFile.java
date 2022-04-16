@@ -47,4 +47,10 @@ public class WorkWithFile {
         result = supply - buy;
         return new int[] {supply, buy, result};
     }
+
+    public String createReport (int[] results) {
+        return "supply," + results[0] + System.lineSeparator() +
+                "buy," + results[1] + System.lineSeparator() +
+                "result," + results[2];
+    }
 }
