@@ -1,12 +1,20 @@
 package core.basesyntax;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 
 public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
+        String stringFromFile = readFile(fromFileName);
+        String[][] separatedData = separateData(stringFromFile);
+        int[] results = calculateData(separatedData);
+        String report = createReport(results);
+        File file = new File(toFileName);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))){
+            writer.write(report);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write data to file", e);
+        }
     }
 
     public String readFile(String fromFileName) {
