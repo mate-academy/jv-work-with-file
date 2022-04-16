@@ -1,6 +1,11 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class WorkWithFile {
 
@@ -10,19 +15,19 @@ public class WorkWithFile {
         int[] results = calculateData(separatedData);
         String report = createReport(results);
         File file = new File(toFileName);
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))){
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             writer.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to file", e);
         }
     }
 
-    public String readFile(String fromFileName) {
+    private String readFile(String fromFileName) {
         StringBuilder builder = new StringBuilder();
         String string;
-        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))){
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             string = reader.readLine();
-            while (string!= null) {
+            while (string != null) {
                 builder.append(string).append(System.lineSeparator());
                 string = reader.readLine();
             }
@@ -32,7 +37,7 @@ public class WorkWithFile {
         return builder.toString();
     }
 
-    public String[][] separateData(String stringFromFile) {
+    private String[][] separateData(String stringFromFile) {
         String[] splitTable = stringFromFile.split(System.lineSeparator());
         String[][] splitLine = new String[splitTable.length][2];
         for (int i = 0; i < splitLine.length; i++) {
@@ -41,7 +46,7 @@ public class WorkWithFile {
         return splitLine;
     }
 
-    public int[] calculateData(String[][] separatedData) {
+    private int[] calculateData(String[][] separatedData) {
         int supply = 0;
         int buy = 0;
         int result;
@@ -56,9 +61,9 @@ public class WorkWithFile {
         return new int[] {supply, buy, result};
     }
 
-    public String createReport (int[] results) {
-        return "supply," + results[0] + System.lineSeparator() +
-                "buy," + results[1] + System.lineSeparator() +
-                "result," + results[2];
+    private String createReport(int[] results) {
+        return "supply," + results[0] + System.lineSeparator()
+                + "buy," + results[1] + System.lineSeparator()
+                + "result," + results[2];
     }
 }
