@@ -33,4 +33,18 @@ public class WorkWithFile {
         return splitLine;
     }
 
+    public int[] calculateData(String[][] separatedData) {
+        int supply = 0;
+        int buy = 0;
+        int result;
+        for (String[] separatedDatum : separatedData) {
+            if (separatedDatum[0].equals("supply")) {
+                supply += Integer.parseInt(separatedDatum[1]);
+            } else if (separatedDatum[0].equals("buy")) {
+                buy += Integer.parseInt(separatedDatum[1]);
+            }
+        }
+        result = supply - buy;
+        return new int[] {supply, buy, result};
+    }
 }
