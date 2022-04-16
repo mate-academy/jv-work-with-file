@@ -23,4 +23,14 @@ public class WorkWithFile {
         }
         return builder.toString();
     }
+
+    public String[][] separateData(String stringFromFile) {
+        String[] splitTable = stringFromFile.split(System.lineSeparator());
+        String[][] splitLine = new String[splitTable.length][2];
+        for (int i = 0; i < splitLine.length; i++) {
+            splitLine[i] = splitTable[i].split("\\W+");
+        }
+        return splitLine;
+    }
+
 }
