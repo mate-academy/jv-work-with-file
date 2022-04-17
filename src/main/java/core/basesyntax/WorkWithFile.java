@@ -43,7 +43,7 @@ public class WorkWithFile {
 
     private void reportGeneration(int[] data, String filename) {
         File file = new File(filename);
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file,true))){
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file,true))) {
             writer.write(OPERATION_SUPPLY + SEPARATOR + data[SUPPLY_INDEX] + System.lineSeparator()
                     + OPERATION_BUY + SEPARATOR + data[BUY_INDEX] + System.lineSeparator()
                     + RESULT + SEPARATOR + data[RESULT_INDEX] + System.lineSeparator());
