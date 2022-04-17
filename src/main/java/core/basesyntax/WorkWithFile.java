@@ -17,8 +17,9 @@ public class WorkWithFile {
     private static final int RESULT_INDEX = 2;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        writeToFile(calculateData(readFromFile(fromFileName)), toFileName);
-
+        String[] content = readFromFile(fromFileName);
+        int[] report = calculateData(content);
+        writeToFile(report, toFileName);
     }
 
     private String[] readFromFile(String fromFileName) {
@@ -37,17 +38,17 @@ public class WorkWithFile {
     }
 
     private void writeToFile(int[] data, String fileName) {
-        File file = new File(fileName);
-        try {
-            //file.createNewFile();
-            BufferedWriter writer = new BufferedWriter(new FileWriter(file,true));
-            writer.write(
-                    OPERATION_SUPPLY + SEPARATOR + data[SUPPLY_INDEX] + System.lineSeparator()
-                       + OPERATION_BUY + SEPARATOR + data[BUY_INDEX] + System.lineSeparator()
-                            + RESULT + SEPARATOR + data[RESULT_INDEX] + System.lineSeparator());
-            writer.close();
+        reportGeneration(data,fileName);
+    }
+
+    private void reportGeneration(int[] data, String filename) {
+        File file = new File(filename);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file,true))){
+            writer.write(OPERATION_SUPPLY + SEPARATOR + data[SUPPLY_INDEX] + System.lineSeparator()
+                    + OPERATION_BUY + SEPARATOR + data[BUY_INDEX] + System.lineSeparator()
+                    + RESULT + SEPARATOR + data[RESULT_INDEX] + System.lineSeparator());
         } catch (IOException e) {
-            throw new RuntimeException("Can`t write to file " + fileName + e);
+            throw new RuntimeException("Can`t write data to file " + e);
         }
     }
 
@@ -70,5 +71,4 @@ public class WorkWithFile {
         }
         return new int[]{supplyTotal, buyTotal, supplyTotal - buyTotal};
     }
-
 }
