@@ -18,7 +18,7 @@ public class WorkWithFile {
         try {
             fileReader = new FileReader(file);
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("File " + fromFileName + " not found");
+            throw new RuntimeException("File " + fromFileName + " not found", e);
         }
         BufferedReader bufferedReader = new BufferedReader(fileReader);
         String line = "";
