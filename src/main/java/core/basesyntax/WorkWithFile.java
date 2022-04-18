@@ -14,11 +14,16 @@ public class WorkWithFile {
         String[][] separatedData = separateData(stringFromFile);
         int[] results = calculateData(separatedData);
         String report = createReport(results);
+        writeToFile(report, toFileName);
+    }
+
+    private void writeToFile(String report, String toFileName) {
         File file = new File(toFileName);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             writer.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data to file", e);
+            throw new RuntimeException("Can't create report in file with specified path"
+                    + toFileName, e);
         }
     }
 
@@ -32,7 +37,7 @@ public class WorkWithFile {
                 string = reader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read data from file", e);
+            throw new RuntimeException("Can't read data from file" + fromFileName, e);
         }
         return builder.toString();
     }
