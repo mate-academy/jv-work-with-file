@@ -45,7 +45,7 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(result);
         } catch (IOException e) {
-            throw new RuntimeException("IOException in bufferedWriter when writing to file");
+            throw new RuntimeException("IOException in bufferedWriter when writing to file " + toFileName, e);
         }
     }
 }
