@@ -11,18 +11,7 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         int supply = 0;
         int buy = 0;
-        StringBuilder builder = new StringBuilder();
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
-            String value = reader.readLine();
-            while (value != null) {
-                builder.append(value).append(" ");
-                value = reader.readLine();
-            }
-        } catch (IOException e) {
-            throw new RuntimeException();
-        }
-        String file = builder.toString();
+        String file = readFromFile(fromFileName);
         String[] split = file.split(" ");
         for (int i = 0; i < split.length; i++) {
             String[] divided = split[i].split(",");
@@ -33,26 +22,30 @@ public class WorkWithFile {
             }
         }
         int result = supply - buy;
-        String[] finalFile = new String[3];
-        finalFile[0] = "supply," + Integer.toString(supply);
-        finalFile[1] = "buy," + Integer.toString(buy);
-        finalFile[2] = "result," + Integer.toString(result);
+        StringBuilder builder1 = new StringBuilder();
+        builder1.append("supply,").append(Integer.toString(supply))
+                .append(System.lineSeparator()).append("buy,")
+                .append(Integer.toString(buy)).append(System.lineSeparator())
+                .append("result,").append(Integer.toString(result));
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
+            writer.write(builder1.toString());
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot write to file " + toFileName, e);
+        }
+    }
 
-        BufferedWriter writer = null;
-        try {
-            writer = new BufferedWriter(new FileWriter(toFileName));
-            for (String res: finalFile) {
-                writer.write(res);
-                writer.append(System.lineSeparator());
+    public String readFromFile(String fromFileName) {
+        StringBuilder builder = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
+            String value = reader.readLine();
+            while (value != null) {
+                builder.append(value).append(" ");
+                value = reader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Cannot write file", e);
-        } finally {
-            try {
-                writer.close();
-            } catch (IOException e) {
-                throw new RuntimeException("Can`t close the file");
-            }
+            throw new RuntimeException("Cannot read the file", e);
         }
+        String file = builder.toString();
+        return file;
     }
 }
