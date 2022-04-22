@@ -9,10 +9,18 @@ import java.io.IOException;
 public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
+        String report = getCreatedReport(readFromFile(fromFileName));
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
+            writer.write(report);
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot write to file " + toFileName, e);
+        }
+    }
+
+    private String getCreatedReport(String readFromFile) {
         int supply = 0;
         int buy = 0;
-        String file = readFromFile(fromFileName);
-        String[] split = file.split(" ");
+        String[] split = readFromFile.split(" ");
         for (int i = 0; i < split.length; i++) {
             String[] divided = split[i].split(",");
             if (divided[0].equals("supply")) {
@@ -22,19 +30,15 @@ public class WorkWithFile {
             }
         }
         int result = supply - buy;
-        StringBuilder builder1 = new StringBuilder();
-        builder1.append("supply,").append(Integer.toString(supply))
+        StringBuilder builder = new StringBuilder();
+        builder.append("supply,").append(Integer.toString(supply))
                 .append(System.lineSeparator()).append("buy,")
                 .append(Integer.toString(buy)).append(System.lineSeparator())
                 .append("result,").append(Integer.toString(result));
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            writer.write(builder1.toString());
-        } catch (IOException e) {
-            throw new RuntimeException("Cannot write to file " + toFileName, e);
-        }
+        return builder.toString();
     }
 
-    public String readFromFile(String fromFileName) {
+    private String readFromFile(String fromFileName) {
         StringBuilder builder = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String value = reader.readLine();
@@ -45,7 +49,6 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Cannot read the file", e);
         }
-        String file = builder.toString();
-        return file;
+        return builder.toString();
     }
 }
