@@ -7,13 +7,11 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class WorkWithFile {
-    private int supplyInt = 0;
-    private int buyInt = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] textArray = fileTextToArray(fromFileName);
-        countSupplyAndBuy(textArray);
-        writeTextToFile(toFileName);
+        int[] supplyAndBuy = countSupplyAndBuy(textArray);
+        writeTextToFile(toFileName, supplyAndBuy);
     }
 
     private String[] fileTextToArray(String fromFileName) {
@@ -26,7 +24,9 @@ public class WorkWithFile {
         return text.split(System.lineSeparator());
     }
 
-    private void countSupplyAndBuy(String[] textArray) {
+    private int[] countSupplyAndBuy(String[] textArray) {
+        int supplyInt = 0;
+        int buyInt = 0;
         for (String element : textArray) {
             String[] elementSplit = element.split(",");
             if (elementSplit[0].equals("supply")) {
@@ -35,13 +35,14 @@ public class WorkWithFile {
                 buyInt += Integer.parseInt(elementSplit[1]);
             }
         }
+        return new int[] {supplyInt, buyInt};
     }
 
-    private void writeTextToFile(String toFileName) {
+    private void writeTextToFile(String toFileName, int[] supplyAndBuy) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            writer.write(System.lineSeparator() + "supply," + supplyInt
-                    + System.lineSeparator() + "buy," + buyInt
-                    + System.lineSeparator() + "result," + (supplyInt - buyInt));
+            writer.write(System.lineSeparator() + "supply," + supplyAndBuy[0]
+                    + System.lineSeparator() + "buy," + supplyAndBuy[1]
+                    + System.lineSeparator() + "result," + (supplyAndBuy[0] - supplyAndBuy[1]));
         } catch (IOException e) {
             throw new RuntimeException("Cant write to file" + toFileName, e);
         }
