@@ -8,18 +8,8 @@ import java.util.List;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
-        File file = new File(toFileName);
         String report = processingData(getFileContent(fromFileName));
-        try {
-            file.createNewFile();
-        } catch (IOException e) {
-            throw new RuntimeException("Can't create new file " + toFileName, e);
-        }
-        try {
-            Files.write(file.toPath(), report.getBytes(), StandardOpenOption.APPEND);
-        } catch (IOException e) {
-            throw new RuntimeException("Can't write file " + toFileName, e);
-        }
+        writeFile(toFileName, report);
     }
 
     private List<String> getFileContent(String fromFileName) {
@@ -52,5 +42,19 @@ public class WorkWithFile {
                 .append(System.lineSeparator())
                 .append("result,").append(result);
         return builder.toString();
+    }
+
+    private void writeFile(String toFileName, String report) {
+        File file = new File(toFileName);
+        try {
+            file.createNewFile();
+        } catch (IOException e) {
+            throw new RuntimeException("Can't create new file " + toFileName, e);
+        }
+        try {
+            Files.write(file.toPath(), report.getBytes(), StandardOpenOption.APPEND);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write file " + toFileName, e);
+        }
     }
 }
