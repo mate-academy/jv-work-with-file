@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class WorkWithFile {
-    String splitter = ",";
+    private String splitter = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         writeToFile(createStatistic(readFromFile(fromFileName)), toFileName);
