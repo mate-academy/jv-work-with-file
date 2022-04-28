@@ -8,20 +8,21 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class WorkWithFile {
+    String splitter = ",";
 
-    private ArrayList readFromFile(String fromFileName) {
+    private List readFromFile(String fromFileName) {
         File fromFile = new File(fromFileName);
         BufferedReader reader = null;
-        ArrayList<String>  inputData = new ArrayList<>();
-        String[] line;
+        List<List<String>>  fileData = new ArrayList<>();
         try {
             reader = new BufferedReader(new FileReader(fromFile));
             String value = reader.readLine();
             while (value != null) {
-                line = value.split(","));
-                inputData.add(Arrays.asList(line));
+                String[] line = value.split(splitter);
+                fileData.add(Arrays.asList(line));
                 value = reader.readLine();
             }
         } catch (IOException e) {
@@ -31,26 +32,42 @@ public class WorkWithFile {
                 try {
                     reader.close();
                 } catch (IOException e) {
-                    throw new RuntimeException("Can't close file");
+                    throw new RuntimeException("Can't close file", e);
                 }
             }
         }
-        return inputData;
+        return fileData;
     }
 
-    private StringBuilder createStatistic(StringBuilder inputData ) {
+    private StringBuilder createStatistic(List<List<String>> inputData ) {
         int allSupply = 0;
         int allBuy = 0;
-        inputData.
-        switch (tempData[0]) {
-            case BUY:
-                allBuy += Integer.valueOf(tempData[1]);
-                break;
-            case SUPPLY:
-                allSupply += Integer.valueOf(tempData[1]);
-                break;
-            default:
-        return null;
+        for (List<String> line : inputData) {
+            String[] tempData = line.toArray(new String[line.size()]);
+            switch (tempData[0]) {
+                case "buy":
+                    allBuy += Integer.valueOf(tempData[1]);
+                    break;
+                case "supply":
+                    allSupply += Integer.valueOf(tempData[1]);
+                    break;
+                default:
+            }
+        }
+        int result = allSupply - allBuy;
+        StringBuilder reportStatictic = new StringBuilder();
+        reportStatictic.append("supply")
+                .append(splitter)
+                .append(allSupply)
+                .append(System.lineSeparator())
+                .append("buy")
+                .append(splitter)
+                .append(allBuy)
+                .append(System.lineSeparator())
+                .append("result")
+                .append(splitter)
+                .append(result);
+        return reportStatictic;
     }
 
     public void getStatistic(String fromFileName, String toFileName) {
@@ -63,32 +80,11 @@ public class WorkWithFile {
 
         try {
 
-                switch (tempData[0]) {
-                    case BUY:
-                        allBuy += Integer.valueOf(tempData[1]);
-                        break;
-                    case SUPPLY:
-                        allSupply += Integer.valueOf(tempData[1]);
-                        break;
-                    default:
 
-                }
-                value = reader.readLine();
-            }
-            int result = allSupply - allBuy;
+
+
             writer = new BufferedWriter(new FileWriter(tofile));
-            StringBuilder outData = new StringBuilder();
-            outData.append(SUPPLY)
-                    .append(",")
-                    .append(allSupply)
-                    .append(System.lineSeparator())
-                    .append(BUY)
-                    .append(",")
-                    .append(allBuy)
-                    .append(System.lineSeparator())
-                    .append("result")
-                    .append(",")
-                    .append(result);
+
             writer.write(outData.toString());
         } catch (IOException e) {
             throw new RuntimeException("Can't read file", e);
