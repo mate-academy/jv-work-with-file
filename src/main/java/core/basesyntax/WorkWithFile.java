@@ -13,10 +13,14 @@ import java.util.List;
 public class WorkWithFile {
     String splitter = ",";
 
+    public void getStatistic(String fromFileName, String toFileName) {
+
+    }
+
     private List readFromFile(String fromFileName) {
         File fromFile = new File(fromFileName);
         BufferedReader reader = null;
-        List<List<String>>  fileData = new ArrayList<>();
+        List<List<String>> fileData = new ArrayList<>();
         try {
             reader = new BufferedReader(new FileReader(fromFile));
             String value = reader.readLine();
@@ -26,8 +30,8 @@ public class WorkWithFile {
                 value = reader.readLine();
             }
         } catch (IOException e) {
-                throw new RuntimeException("Can't read file", e);
-            } finally {
+            throw new RuntimeException("Can't read file", e);
+        } finally {
             if (reader != null) {
                 try {
                     reader.close();
@@ -39,7 +43,7 @@ public class WorkWithFile {
         return fileData;
     }
 
-    private StringBuilder createStatistic(List<List<String>> inputData ) {
+    private StringBuilder createStatistic(List<List<String>> inputData) {
         int allSupply = 0;
         int allBuy = 0;
         for (List<String> line : inputData) {
@@ -70,22 +74,12 @@ public class WorkWithFile {
         return reportStatictic;
     }
 
-    public void getStatistic(String fromFileName, String toFileName) {
-
+    private void writeToFile(StringBuilder report, String toFileName) {
         File tofile = new File(toFileName);
-
-        String[] tempData = new String[FIELDS];
         BufferedWriter writer = null;
-
-
         try {
-
-
-
-
             writer = new BufferedWriter(new FileWriter(tofile));
-
-            writer.write(outData.toString());
+            writer.write(report.toString());
         } catch (IOException e) {
             throw new RuntimeException("Can't read file", e);
         } finally {
