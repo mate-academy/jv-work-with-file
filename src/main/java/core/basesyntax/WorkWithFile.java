@@ -1,7 +1,11 @@
 package core.basesyntax;
 
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class WorkWithFile {
     private static final String SUPPLY = "supply";
@@ -24,9 +28,12 @@ public class WorkWithFile {
                 switch (tempData[0]) {
                     case BUY:
                         allBuy += Integer.valueOf(tempData[1]);
+                        break;
                     case SUPPLY:
                         allSupply += Integer.valueOf(tempData[1]);
                         break;
+                    default:
+
                 }
                 value = reader.readLine();
             }
