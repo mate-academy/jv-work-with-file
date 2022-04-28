@@ -14,7 +14,7 @@ public class WorkWithFile {
     String splitter = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-
+        writeToFile(createStatistic(readFromFile(fromFileName)), toFileName);
     }
 
     private List readFromFile(String fromFileName) {
