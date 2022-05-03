@@ -9,13 +9,11 @@ import java.io.IOException;
 
 public class WorkWithFile {
     private static final String[] operationTypeArray = {"supply", "buy", "result"};
-    private int[] reportNumberArray;
-    private int sumOfSupply = 0;
-    private int sumOfBuy = 0;
-    private int result;
-    private String report;
 
     public void getStatistic(String fromFileName, String toFileName) {
+        int[] reportNumberArray;
+        int sumOfSupply = 0;
+        int sumOfBuy = 0;
         String[] splitStatistic = readFromFile(fromFileName).split("\\W");
         for (int i = 0; i < splitStatistic.length / 2; i++) {
             if (splitStatistic[i * 2].equals("supply")) {
@@ -24,9 +22,9 @@ public class WorkWithFile {
                 sumOfBuy += Integer.parseInt(splitStatistic[i * 2 + 1]);
             }
         }
-        result = sumOfSupply - sumOfBuy;
+        int result = sumOfSupply - sumOfBuy;
         reportNumberArray = new int[]{sumOfSupply, sumOfBuy, result};
-        report = createReport(operationTypeArray, reportNumberArray);
+        String report = createReport(operationTypeArray, reportNumberArray);
         createFile(toFileName);
         writeToFile(report, toFileName);
     }
