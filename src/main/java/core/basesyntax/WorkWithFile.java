@@ -10,10 +10,12 @@ import java.io.IOException;
 public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
-        writeToFile(calculateStatistic(readFrom(fromFileName)), toFileName);
+        String fileData = readFile(fromFileName);
+        String[] statistics = calculateStatistic(fileData);
+        writeToFile(statistics, toFileName);
     }
 
-    private String readFrom(String fromFileName) {
+    private String readFile(String fromFileName) {
         File file = new File(fromFileName);
         StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
@@ -23,7 +25,7 @@ public class WorkWithFile {
                 line = bufferedReader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read from file ", e);
+            throw new RuntimeException("Can't read from file " + fromFileName, e);
         }
         return stringBuilder.toString();
     }
@@ -58,7 +60,7 @@ public class WorkWithFile {
             try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
                 bufferedWriter.write(reportStatistics);
             } catch (IOException e) {
-                throw new RuntimeException("Can't write data to file ", e);
+                throw new RuntimeException("Can't write data to file " + toFileName, e);
             }
         }
     }
