@@ -8,66 +8,50 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
 
 public class WorkWithFile {
-    static final int MAX_LINES = 100;
+    int countLinesInFile = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String[] rawFields = readToTable(fromFileName);
-        String[] sumFields = sumTogether(rawFields);
+
+        String baseString = readToString(fromFileName);
+        String[] sumFields = sumTogether(baseString);
         saveToFile(sumFields, toFileName);
     }
 
-    public String [] readToTable(String fileName) {
-        String [] temporaryFields = new String[MAX_LINES];
-        int count = 0;
+    public String readToString(String fileName) {
+        StringBuilder allInOne = new StringBuilder();
         File file = new File(fileName);
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(file));
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String value = reader.readLine();
-
             while (value != null) {
-                temporaryFields[count] = value;
-                count++;
+                allInOne.append(value).append(",");
+                countLinesInFile++;
                 value = reader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Cannot read", e);
+            throw new RuntimeException("Cannot read data from file " + fileName, e);
         }
-        //CLEAN FROM NULLS
-        String [] resultingFields = new String [count];
-        for (int i = 0; i < count; i++) {
-            resultingFields [i] = temporaryFields[i];
-        }
-        Arrays.sort(resultingFields, Collections.reverseOrder());
-        return resultingFields;
+        return allInOne.toString();
     }
 
-    public String [] sumTogether(String [] dataFields) {
-        int currentId = 0;
-        String [] temporaryFields = new String[dataFields.length];
-        for (int i = 0; i < dataFields.length; i++) {
-            int isIt = getExistingIndex(temporaryFields, dataFields[i].split(",")[0]);
-            if (isIt >= 0) {
-                temporaryFields[isIt] = dataFields[i].split(",")[0] + ","
-                        + (parseInt(temporaryFields[isIt].split(",")[1])
-                        + parseInt(dataFields[i].split(",")[1]));
+    public String [] sumTogether(String baseString) {
+        String oneOfTwo = "supply";
+        int supply_total = 0;
+        int buy_total = 0;
+        final int LINES_IN_REPORT=3;
+        String [] resultFields = new String[LINES_IN_REPORT];
+        for (int i = 0; i < countLinesInFile; i++) {
+            if (baseString.split(",")[i*2].equals(oneOfTwo)){
+                supply_total += parseInt(baseString.split(",")[i*2+1]);
             } else {
-                temporaryFields[currentId] = dataFields[i];
-                currentId++;
+                buy_total += parseInt(baseString.split(",")[i*2+1]);
             }
+            resultFields[0]="supply," + supply_total;
+            resultFields[1]="buy," + buy_total;
+            resultFields[2]="result," + (supply_total-buy_total);
         }
-        //CLEAN FROM NULLS
-        String [] resultingFields = new String [currentId + 1];
-        for (int i = 0; i <= currentId; i++) {
-            resultingFields [i] = temporaryFields[i];
-        }
-        resultingFields[currentId] = "result," 
-            + Math.abs(parseInt(temporaryFields[0].split(",")[1]) 
-            - parseInt(temporaryFields[1].split(",")[1]));
-        return resultingFields;
+        return resultFields;
     }
 
     public void saveToFile(String [] finishedFields, String fileName) {
@@ -75,30 +59,16 @@ public class WorkWithFile {
         try {
             file.createNewFile();
         } catch (IOException e) {
-            throw new RuntimeException("Cannot create a file...", e);
+            throw new RuntimeException("Cannot create a file " + fileName, e);
         }
-
-        try {
-            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, true));
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, true))) {
             StringBuilder stringBuilder = new StringBuilder();
             for (String dat : finishedFields) {
                 stringBuilder.append(dat).append(System.lineSeparator());
             }
             bufferedWriter.write(stringBuilder.toString());
-            System.out.println(stringBuilder.toString());
-            bufferedWriter.close();
         } catch (IOException e) {
-            throw new RuntimeException("Cannot add to the file...", e);
+            throw new RuntimeException("Cannot add data to the file " + fileName, e);
         }
-    }
-
-    public int getExistingIndex(String [] tempTable, String value) {
-        int re = -1;
-        for (int i = 0; i < tempTable.length; i++) {
-            if (tempTable[i] != null && value.equals(tempTable[i].split(",")[0])) {
-                re = i;
-            }
-        }
-        return re;
     }
 }
