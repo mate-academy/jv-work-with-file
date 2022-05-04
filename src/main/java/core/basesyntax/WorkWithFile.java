@@ -33,7 +33,7 @@ public class WorkWithFile {
         return fileData.toString();
     }
 
-    public String [] sumTogether(String baseString) {
+    private String [] sumTogether(String baseString) {
         String supply = "supply";
         int supplyTotal = 0;
         int buyTotal = 0;
@@ -48,7 +48,7 @@ public class WorkWithFile {
                 + (supplyTotal - buyTotal)};
     }
 
-    public void saveToFile(String [] finishedFields, String fileName) {
+    private void saveToFile(String [] finishedFields, String fileName) {
         File file = new File(fileName);
         try {
             file.createNewFile();
