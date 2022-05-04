@@ -10,7 +10,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    int countLinesInFile = 0;
+    private int countLinesInFile = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
 
@@ -37,19 +37,19 @@ public class WorkWithFile {
 
     public String [] sumTogether(String baseString) {
         String oneOfTwo = "supply";
-        int supply_total = 0;
-        int buy_total = 0;
-        final int LINES_IN_REPORT=3;
-        String [] resultFields = new String[LINES_IN_REPORT];
+        int supplyTotal = 0;
+        int buyTotal = 0;
+        final int linesInReport = 3;
+        String [] resultFields = new String[linesInReport];
         for (int i = 0; i < countLinesInFile; i++) {
-            if (baseString.split(",")[i*2].equals(oneOfTwo)){
-                supply_total += parseInt(baseString.split(",")[i*2+1]);
+            if (baseString.split(",")[i * 2].equals(oneOfTwo)) {
+                supplyTotal += parseInt(baseString.split(",")[i * 2 + 1]);
             } else {
-                buy_total += parseInt(baseString.split(",")[i*2+1]);
+                buyTotal += parseInt(baseString.split(",")[i * 2 + 1]);
             }
-            resultFields[0]="supply," + supply_total;
-            resultFields[1]="buy," + buy_total;
-            resultFields[2]="result," + (supply_total-buy_total);
+            resultFields[0] = "supply," + supplyTotal;
+            resultFields[1] = "buy," + buyTotal;
+            resultFields[2] = "result," + (supplyTotal - buyTotal);
         }
         return resultFields;
     }
