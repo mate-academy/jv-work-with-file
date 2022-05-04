@@ -10,7 +10,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private int countLinesInFile = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
 
@@ -19,39 +18,34 @@ public class WorkWithFile {
         saveToFile(sumFields, toFileName);
     }
 
-    public String readToString(String fileName) {
-        StringBuilder allInOne = new StringBuilder();
+    private String readToString(String fileName) {
+        StringBuilder fileData = new StringBuilder();
         File file = new File(fileName);
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String value = reader.readLine();
             while (value != null) {
-                allInOne.append(value).append(",");
-                countLinesInFile++;
+                fileData.append(value).append(",");
                 value = reader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("Cannot read data from file " + fileName, e);
         }
-        return allInOne.toString();
+        return fileData.toString();
     }
 
     public String [] sumTogether(String baseString) {
-        String oneOfTwo = "supply";
+        String supply = "supply";
         int supplyTotal = 0;
         int buyTotal = 0;
-        final int linesInReport = 3;
-        String [] resultFields = new String[linesInReport];
-        for (int i = 0; i < countLinesInFile; i++) {
-            if (baseString.split(",")[i * 2].equals(oneOfTwo)) {
+        for (int i = 0; i < baseString.split(",").length / 2; i++) {
+            if (baseString.split(",")[i * 2].equals(supply)) {
                 supplyTotal += parseInt(baseString.split(",")[i * 2 + 1]);
             } else {
                 buyTotal += parseInt(baseString.split(",")[i * 2 + 1]);
             }
-            resultFields[0] = "supply," + supplyTotal;
-            resultFields[1] = "buy," + buyTotal;
-            resultFields[2] = "result," + (supplyTotal - buyTotal);
         }
-        return resultFields;
+        return new String[]{"supply," + supplyTotal, "buy," + buyTotal, "result,"
+                + (supplyTotal - buyTotal)};
     }
 
     public void saveToFile(String [] finishedFields, String fileName) {
