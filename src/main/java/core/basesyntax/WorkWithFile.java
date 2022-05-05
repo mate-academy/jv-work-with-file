@@ -24,7 +24,7 @@ public class WorkWithFile {
         int suply;
         int buy;
         int result;
-        suply = buy =  0;
+        suply = buy = 0;
         for (String shopInf :inputData) {
             String [] shopInformation = shopInf.split(",");
             if (shopInformation[0].equals("buy")) {
