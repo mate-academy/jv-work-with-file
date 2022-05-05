@@ -1,95 +1,65 @@
 package core.basesyntax;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class WorkWithFile {
-    private String splitter = ",";
+    private static final String SUPPLY_INDEX = "supply";
+    private static final String BUY_INDEX = "buy";
 
     public void getStatistic(String fromFileName, String toFileName) {
         writeToFile(createStatistic(readFromFile(fromFileName)), toFileName);
     }
 
-    private List readFromFile(String fromFileName) {
+    private List<String> readFromFile(String fromFileName) {
         File fromFile = new File(fromFileName);
-        BufferedReader reader = null;
-        List<List<String>> fileData = new ArrayList<>();
+        List<String> fileData = new ArrayList<>();
         try {
-            reader = new BufferedReader(new FileReader(fromFile));
-            String value = reader.readLine();
-            while (value != null) {
-                String[] line = value.split(splitter);
-                fileData.add(Arrays.asList(line));
-                value = reader.readLine();
-            }
+            fileData = Files.readAllLines(fromFile.toPath());
         } catch (IOException e) {
             throw new RuntimeException("Can't read file", e);
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    throw new RuntimeException("Can't close file", e);
-                }
-            }
         }
         return fileData;
     }
 
-    private StringBuilder createStatistic(List<List<String>> inputData) {
+    private String createStatistic(List<String> lines) {
         int allSupply = 0;
         int allBuy = 0;
-        for (List<String> line : inputData) {
-            String[] tempData = line.toArray(new String[line.size()]);
-            switch (tempData[0]) {
-                case "buy":
-                    allBuy += Integer.valueOf(tempData[1]);
-                    break;
-                case "supply":
-                    allSupply += Integer.valueOf(tempData[1]);
-                    break;
-                default:
+        for (String line : lines) {
+            String[] tempData = line.split(",",0);
+            if (tempData[0].equals(BUY_INDEX)) {
+                allBuy += Integer.valueOf(tempData[1]);
+            }
+            if (tempData[0].equals(SUPPLY_INDEX)) {
+                allSupply += Integer.valueOf(tempData[1]);
             }
         }
         int result = allSupply - allBuy;
-        StringBuilder reportStatictic = new StringBuilder();
-        reportStatictic.append("supply")
-                .append(splitter)
+        StringBuilder statisticBuilder = new StringBuilder();
+        statisticBuilder.append(SUPPLY_INDEX)
+                .append(",")
                 .append(allSupply)
                 .append(System.lineSeparator())
-                .append("buy")
-                .append(splitter)
+                .append(BUY_INDEX)
+                .append(",")
                 .append(allBuy)
                 .append(System.lineSeparator())
                 .append("result")
-                .append(splitter)
+                .append(",")
                 .append(result);
-        return reportStatictic;
+        return statisticBuilder.toString();
     }
 
-    private void writeToFile(StringBuilder report, String toFileName) {
-        File tofile = new File(toFileName);
-        BufferedWriter writer = null;
-        try {
-            writer = new BufferedWriter(new FileWriter(tofile));
-            writer.write(report.toString());
+    private void writeToFile(String report, String toFileName) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
+            writer.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
-        } finally {
-            if (writer != null) {
-                try {
-                    writer.close();
-                } catch (IOException e) {
-                    throw new RuntimeException("Can't close file");
-                }
-            }
+            throw new RuntimeException("Can't write file", e);
         }
     }
 }
