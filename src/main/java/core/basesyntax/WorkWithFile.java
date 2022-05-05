@@ -9,6 +9,10 @@ import java.io.IOException;
 public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
+        writeDataTofile(toFileName,getStat(readFromFile(fromFileName)));
+    }
+
+    private String readFromFile(String fromFileName) {
         StringBuilder res = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String value = reader.readLine();
@@ -16,17 +20,20 @@ public class WorkWithFile {
                 res.append(value).append(" ");
                 value = reader.readLine();
             }
-        } catch (IOException k) {
-            throw new RuntimeException("Couldnt read from file",k);
+        } catch (IOException e) {
+            throw new RuntimeException("Couldnt read from file " + fromFileName,e);
         }
-        String data = res.toString();
-        String [] inputData = data.split(" ");
+        return res.toString();
+    }
+
+    private int[] getStat(String data) {
+        String[] inputData = data.split(" ");
         int suply;
         int buy;
         int result;
         suply = buy = 0;
-        for (String shopInf :inputData) {
-            String [] shopInformation = shopInf.split(",");
+        for (String shopInf : inputData) {
+            String[] shopInformation = shopInf.split(",");
             if (shopInformation[0].equals("buy")) {
                 buy += Integer.parseInt(shopInformation[1]);
 
@@ -35,26 +42,21 @@ public class WorkWithFile {
             }
         }
         result = suply - buy;
+        return new int[]{suply, buy, result};
+    }
+
+    private void writeDataTofile(String toFileName,int [] statictic) {
         StringBuilder outputToFile = new StringBuilder();
-        String out = outputToFile.append("supply,").append(suply).append(System.lineSeparator())
-                        .append("buy,").append(buy).append(System.lineSeparator())
-                        .append("result,").append(result).append(System.lineSeparator()).toString();
-        BufferedWriter writer = null;
-        try {
-            writer = new BufferedWriter(new FileWriter(toFileName,true));
+        String out = outputToFile.append("supply,").append(statictic[0])
+                .append(System.lineSeparator())
+                .append("buy,").append(statictic[1]).append(System.lineSeparator())
+                .append("result,").append(statictic[2]).append(System.lineSeparator()).toString();
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName,true))) {
             writer.write(out);
             writer.flush();
-
         } catch (IOException e) {
-            throw new RuntimeException("Couldnt write to file", e);
-        } finally {
-            if (writer != null) {
-                try {
-                    writer.close();
-                } catch (IOException e) {
-                    throw new RuntimeException("Couldnt close file",e);
-                }
-            }
+            throw new RuntimeException("Couldnt write to file" + toFileName, e);
         }
     }
 }
