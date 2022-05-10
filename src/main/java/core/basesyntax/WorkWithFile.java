@@ -32,18 +32,12 @@ public class WorkWithFile {
         } finally {
             values[2] = values[0] - values[1];
         }
-
-        try {
-            writeToFile(toFileName, new String[]{"supply", "buy", "result"}, values);
-        } catch (WorkWithFilesException e) {
-            throw new RuntimeException("Can't run writeToFile method", e);
-        }
+        writeToFile(toFileName, new String[]{"supply", "buy", "result"}, values);
     }
 
-    public void writeToFile(String toFileName, String[] params, int[] values)
-            throws WorkWithFilesException {
+    public void writeToFile(String toFileName, String[] params, int[] values) {
         if (params.length != values.length) {
-            throw new WorkWithFilesException("Params and values has different length: params["
+            System.out.println("Params and values has different length: params["
                     + params.length
                     + "] and values[" + values.length + "].");
         }
