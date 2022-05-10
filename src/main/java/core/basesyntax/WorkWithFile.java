@@ -10,6 +10,10 @@ import java.io.IOException;
 
 public class WorkWithFile {
 
+    public static final int SUPPLY_INDEX = 0;
+    public static final int BUY_INDEX = 1;
+    public static final int RESULT_INDEX = 2;
+
     public void getStatistic(String fromFileName, String toFileName) {
         File fromFile = new File(fromFileName);
         String stringLine;
@@ -17,12 +21,11 @@ public class WorkWithFile {
 
         try (BufferedReader br = new BufferedReader(new FileReader(fromFile))) {
             while ((stringLine = br.readLine()) != null) {
-                int value = Integer.parseInt(stringLine.substring(stringLine.indexOf(",") + 1));
-                if (stringLine.substring(0, stringLine.indexOf(",")).equals("supply")) {
-                    values[0] += value;
+                if (stringLine.split(",")[0].equals("supply")) {
+                    values[SUPPLY_INDEX] += Integer.valueOf(stringLine.split(",")[1]);
                 }
-                if (stringLine.substring(0, stringLine.indexOf(",")).equals("buy")) {
-                    values[1] += value;
+                if (stringLine.split(",")[0].equals("buy")) {
+                    values[BUY_INDEX] += Integer.valueOf(stringLine.split(",")[1]);
                 }
             }
         } catch (FileNotFoundException e) {
@@ -30,7 +33,7 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read file: " + fromFileName, e);
         } finally {
-            values[2] = values[0] - values[1];
+            values[RESULT_INDEX] = values[SUPPLY_INDEX] - values[BUY_INDEX];
         }
         writeToFile(toFileName, new String[]{"supply", "buy", "result"}, values);
     }
@@ -40,6 +43,7 @@ public class WorkWithFile {
             System.out.println("Params and values has different length: params["
                     + params.length
                     + "] and values[" + values.length + "].");
+            return;
         }
 
         StringBuilder stringBuilder = new StringBuilder();
