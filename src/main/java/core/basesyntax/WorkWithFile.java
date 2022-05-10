@@ -1,114 +1,65 @@
 package core.basesyntax;
 
 import java.io.*;
-import java.util.Arrays;
-
 
 public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         File fromFile = new File(fromFileName);
-        File toFile = new File(toFileName);
-        int rows = countRows(fromFileName);
-
         String stringLine;
-        StringBuilder stringBuilder = new StringBuilder();
-        String[] params = new String[rows];
-        int[] values = new int[rows];
+        int[] values = {0, 0, 0};
 
         try (BufferedReader br = new BufferedReader(new FileReader(fromFile))) {
-            for (int i = 0; i < rows; i++) {
-                stringLine = br.readLine();
-                params[i] = stringLine.substring(0, stringLine.indexOf(","));
-                values[i] = Integer.valueOf(stringLine.substring(stringLine.indexOf(",")+1));
+            while ((stringLine = br.readLine()) != null) {
+                int value = Integer.parseInt(stringLine.substring(stringLine.indexOf(",") + 1));
+                if (stringLine.substring(0, stringLine.indexOf(",")).equals("supply")) {
+                    values[0] += value;
+                }
+                if (stringLine.substring(0, stringLine.indexOf(",")).equals("buy")) {
+                    values[1] += value;
+                }
             }
         } catch (FileNotFoundException e) {
             throw new RuntimeException("File not found: " + fromFileName, e);
         } catch (IOException e) {
             throw new RuntimeException("Can't read file: " + fromFileName, e);
+        } finally {
+            values[2] = values[0] - values[1];
         }
-
-        System.out.println(Arrays.toString(getUnique(params)));
-
-        String[] uniqueParams = getUnique(params);
-        String[] resultArray = new String[uniqueParams.length + 1];
-        int num = 0;
-        int sum = 0;
-        for (int i = 0; i <= uniqueParams.length; i++) {
-            resultArray[i] = uniqueParams[i];
-            for (int j = 0; j < params.length; j++) {
-                if (params[j].equals(uniqueParams[i])) {
-                    sum += values[j];
-                }
-            }
-            resultArray[i] +=
-        }
-
 
         try {
-            writeToFile(toFileName, params, values);
+            writeToFile(toFileName, new String[]{"supply", "buy", "result"}, values);
         } catch (WorkWithFilesException e) {
             throw new RuntimeException("Can't run writeToFile method", e);
         }
-
-        String[] resultString = stringBuilder.toString().split(" ");
-        Arrays.sort(resultString);
-        System.out.println(Arrays.toString(resultString));
-
     }
 
-    public void writeToFile(String toFileName, String[] params, int[] values) throws WorkWithFilesException {
+    public void writeToFile(String toFileName, String[] params, int[] values)
+            throws WorkWithFilesException {
         if (params.length != values.length) {
-            throw new WorkWithFilesException("Params and values has different length: params[" + params.length
+            throw new WorkWithFilesException("Params and values has different length: params["
+                    + params.length
                     + "] and values[" + values.length + "].");
         }
 
-        StringBuilder stringBuilder = new StringBuilder("");
+        StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < params.length; i++) {
-            stringBuilder.append(params[i]).append(",").append(values[i]).append("\n");
+            stringBuilder.append(params[i]).append(",").append(values[i])
+                    .append(System.lineSeparator());
         }
 
         File file = new File(toFileName);
-        FileWriter fileWriter = null;
-        BufferedWriter bufferedWriter = null;
+        FileWriter fileWriter;
+        BufferedWriter bufferedWriter;
 
-        try{
+        try {
             fileWriter = new FileWriter(file);
             bufferedWriter = new BufferedWriter(fileWriter);
             bufferedWriter.write(stringBuilder.toString());
+            bufferedWriter.close();
+            fileWriter.close();
         } catch (IOException e) {
-            e.printStackTrace();
-        }finally{
-            try {
-                bufferedWriter.close();
-                fileWriter.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            throw new RuntimeException("Can't write or close the file " + toFileName, e);
         }
-    }
-
-    public int countRows(String fileName) {
-        int rows = 0;
-        File file = new File(fileName);
-        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-            while (br.readLine() != null) {
-                rows++;
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("Can't read file: " + file.getAbsoluteFile(), e);
-        }
-        return rows;
-    }
-
-    public String[] getUnique(String[] array) {
-        StringBuilder builder = new StringBuilder();
-        for (String param :
-                array) {
-            if (builder.indexOf(param) < 0) {
-                builder.append(param).append(";");
-            }
-        }
-        return builder.toString().split(";");
     }
 }
