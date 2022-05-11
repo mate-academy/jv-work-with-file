@@ -5,23 +5,28 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-
 public class WorkWithFile {
 
-    public static final int SUPPLY_INDEX = 0;
-    public static final int BUY_INDEX = 1;
-    public static final int RESULT_INDEX = 2;
+    private static final int SUPPLY_INDEX = 0;
+    private static final int BUY_INDEX = 1;
+    private static final int RESULT_INDEX = 2;
+    private static final int PARAM_INDEX = 0;
+    private static final int VALUE_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String stringLine;
+        String line;
         int[] values = {0, 0, 0};
+        int value;
+        String param;
         try (BufferedReader br = new BufferedReader(new FileReader(fromFileName))) {
-            while ((stringLine = br.readLine()) != null) {
-                if (stringLine.split(",")[0].equals("supply")) {
-                    values[SUPPLY_INDEX] += Integer.valueOf(stringLine.split(",")[1]);
+            while ((line = br.readLine()) != null) {
+                value = Integer.valueOf(line.split(",")[VALUE_INDEX]);
+                param = line.split(",")[PARAM_INDEX];
+                if (param.equals("supply")) {
+                    values[SUPPLY_INDEX] += value;
                 }
-                if (stringLine.split(",")[0].equals("buy")) {
-                    values[BUY_INDEX] += Integer.valueOf(stringLine.split(",")[1]);
+                if (param.equals("buy")) {
+                    values[BUY_INDEX] += value;
                 }
             }
         } catch (IOException e) {
