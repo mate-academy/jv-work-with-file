@@ -1,6 +1,9 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 
 public class WorkWithFile {
 
@@ -16,17 +19,15 @@ public class WorkWithFile {
                 }
                 line = buffer.readLine();
             }
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException("File not found", e);
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new RuntimeException("Can't write to file", e);
         }
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write("supply," + arr[0] + System.lineSeparator());
             bufferedWriter.write("buy," + arr[1] + System.lineSeparator());
             bufferedWriter.write("result," + (arr[0] - arr[1]));
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            throw new RuntimeException("Can't write to file", e);
         }
     }
 }
