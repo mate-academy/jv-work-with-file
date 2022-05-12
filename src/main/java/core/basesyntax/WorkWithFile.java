@@ -11,16 +11,15 @@ public class WorkWithFile {
     private static final int SUPPLY_INDEX = 0;
     private static final int BUY_INDEX = 1;
     private static final int RESULT_INDEX = 2;
-    private static final int PARAM_INDEX = 0;
-    private static final int VALUE_INDEX = 1;
-    private static final String[] params = {"supply", "buy", "result"};
+    private static final int OPERATION_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         writeToFile(toFileName, getReport(calculateStatistic(readFromFile(fromFileName)
                 .toString().split(System.lineSeparator()))));
     }
 
-    public void writeToFile(String toFileName, String statistic) {
+    private void writeToFile(String toFileName, String statistic) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(toFileName))) {
             bw.write(statistic);
         } catch (IOException e) {
@@ -28,34 +27,33 @@ public class WorkWithFile {
         }
     }
 
-    public String getReport(int[] values) {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < params.length; i++) {
-            stringBuilder.append(params[i]).append(",").append(values[i])
+    private String getReport(int[] values) {
+        StringBuilder statisticBuilder = new StringBuilder();
+        for (int i = 0; i < Operations.values().length; i++) {
+            statisticBuilder.append(Operations.values()[i]).append(",").append(values[i])
                     .append(System.lineSeparator());
         }
-        return stringBuilder.toString();
+        return statisticBuilder.toString();
     }
 
-    public int[] calculateStatistic(String[] lines) {
-        int[] values = {0, 0, 0};
-        int value;
-        String param;
+    private int[] calculateStatistic(String[] lines) {
+        int[] amounts = {0, 0, 0};
         for (String line : lines) {
-            value = Integer.valueOf(line.split(",")[VALUE_INDEX]);
-            param = line.split(",")[PARAM_INDEX];
-            if (param.equals(params[SUPPLY_INDEX])) {
-                values[SUPPLY_INDEX] += value;
+            String[] splittedLine = line.split(",");
+            int amount = Integer.parseInt(splittedLine[AMOUNT_INDEX]);
+            String operation = splittedLine[OPERATION_INDEX];
+            if (operation.equals(Operations.values()[SUPPLY_INDEX].toString())) {
+                amounts[SUPPLY_INDEX] += amount;
             }
-            if (param.equals(params[BUY_INDEX])) {
-                values[BUY_INDEX] += value;
+            if (operation.equals(Operations.values()[BUY_INDEX].toString())) {
+                amounts[BUY_INDEX] += amount;
             }
         }
-        values[RESULT_INDEX] = values[SUPPLY_INDEX] - values[BUY_INDEX];
-        return values;
+        amounts[RESULT_INDEX] = amounts[SUPPLY_INDEX] - amounts[BUY_INDEX];
+        return amounts;
     }
 
-    public StringBuilder readFromFile(String fileName) {
+    private StringBuilder readFromFile(String fileName) {
         String line;
         StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
