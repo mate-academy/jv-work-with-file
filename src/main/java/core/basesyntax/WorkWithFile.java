@@ -7,21 +7,21 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final int OPERATION_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        final int operation_index = 0;
-        final int amount_index = 1;
         int allSupply = 0;
         int allBuy = 0;
         String resStr = readFromFile(fromFileName);
         String[] input = resStr.split(System.lineSeparator());
         for (String line : input) {
             String[] splittedLine = line.split(",");
-            if (splittedLine[operation_index].equals("supply")) {
-                allSupply += Integer.parseInt(splittedLine[amount_index]);
+            if (splittedLine[OPERATION_INDEX].equals("supply")) {
+                allSupply += Integer.parseInt(splittedLine[AMOUNT_INDEX]);
                 continue;
             }
-            allBuy += Integer.parseInt(splittedLine[amount_index]);
+            allBuy += Integer.parseInt(splittedLine[AMOUNT_INDEX]);
         }
         int result = allSupply - allBuy;
         writeToFile(toFileName, prepareReport(allSupply, allBuy, result));
