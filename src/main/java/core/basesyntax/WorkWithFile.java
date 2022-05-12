@@ -7,13 +7,28 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final int STATEMENT_INDEX = 0;
-    private static final int VALUE_INDEX = 1;
-    private final StringBuilder resultString = new StringBuilder();
 
     public void getStatistic(String fromFileName, String toFileName) {
+        final int operation_index = 0;
+        final int amount_index = 1;
         int allSupply = 0;
         int allBuy = 0;
+        String resStr = readFromFile(fromFileName);
+        String[] input = resStr.split(System.lineSeparator());
+        for (String line : input) {
+            String[] splittedLine = line.split(",");
+            if (splittedLine[operation_index].equals("supply")) {
+                allSupply += Integer.parseInt(splittedLine[amount_index]);
+                continue;
+            }
+            allBuy += Integer.parseInt(splittedLine[amount_index]);
+        }
+        int result = allSupply - allBuy;
+        writeToFile(toFileName, prepareReport(allSupply, allBuy, result));
+    }
+
+    private String readFromFile(String fromFileName) {
+        final StringBuilder resultString = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String line = reader.readLine();
             while (line != null) {
@@ -23,25 +38,15 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can`t read file " + fromFileName, e);
         }
-        String[] input = resultString.toString().split(System.lineSeparator());
-        for (String inf : input) {
-            String[] inform = inf.split(",");
-            if (inform[STATEMENT_INDEX].equals("supply")) {
-                allSupply += Integer.parseInt(inform[VALUE_INDEX]);
-                continue;
-            }
-            allBuy += Integer.parseInt(inform[VALUE_INDEX]);
-        }
-        int result = allSupply - allBuy;
-        toWriteFile(toFileName, toPrepareReport(allSupply, allBuy, result));
+        return resultString.toString();
     }
 
-    private String toPrepareReport(int allSupply, int allBuy, int result) {
+    private String prepareReport(int allSupply, int allBuy, int result) {
         return "supply," + allSupply + System.lineSeparator() + "buy,"
                 + allBuy + System.lineSeparator() + "result," + result;
     }
 
-    private void toWriteFile(String toFileName, String readyReport) {
+    private void writeToFile(String toFileName, String readyReport) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName, true))) {
             writer.write(readyReport);
         } catch (IOException e) {
