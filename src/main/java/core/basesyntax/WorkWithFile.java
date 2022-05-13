@@ -28,12 +28,9 @@ public class WorkWithFile {
     }
 
     private String getReport(int[] values) {
-        StringBuilder statisticBuilder = new StringBuilder();
-        for (int i = 0; i < Operations.values().length; i++) {
-            statisticBuilder.append(Operations.values()[i]).append(",").append(values[i])
-                    .append(System.lineSeparator());
-        }
-        return statisticBuilder.toString();
+        return "supply," + values[SUPPLY_INDEX] + System.lineSeparator()
+                + "buy," + values[BUY_INDEX] + System.lineSeparator()
+                + "result," + values[RESULT_INDEX];
     }
 
     private int[] calculateStatistic(String[] lines) {
@@ -42,10 +39,10 @@ public class WorkWithFile {
             String[] splittedLine = line.split(",");
             int amount = Integer.parseInt(splittedLine[AMOUNT_INDEX]);
             String operation = splittedLine[OPERATION_INDEX];
-            if (operation.equals(Operations.values()[SUPPLY_INDEX].toString())) {
+            if (operation.equals("supply")) {
                 amounts[SUPPLY_INDEX] += amount;
             }
-            if (operation.equals(Operations.values()[BUY_INDEX].toString())) {
+            if (operation.equals("buy")) {
                 amounts[BUY_INDEX] += amount;
             }
         }
