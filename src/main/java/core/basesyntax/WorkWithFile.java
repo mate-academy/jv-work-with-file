@@ -34,7 +34,7 @@ public class WorkWithFile {
                 value = reader.read();
             }
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't found file", e);
         } catch (IOException e) {
             throw new RuntimeException("Can't read file", e);
         }
@@ -46,7 +46,7 @@ public class WorkWithFile {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             writer.write(report);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can't read file", e);
         }
     }
 
