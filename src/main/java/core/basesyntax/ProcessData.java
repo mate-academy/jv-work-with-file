@@ -2,8 +2,7 @@ package core.basesyntax;
 
 public class ProcessData {
     private static final String[] NAMES = new String[]{"supply", "buy", "result"};
-
-    private int[] values = new int[]{0, 0};
+    private final int[] values = new int[]{0, 0};
 
     public String createReport(String sourceData) {
         if (sourceData == null || sourceData.isEmpty()) {

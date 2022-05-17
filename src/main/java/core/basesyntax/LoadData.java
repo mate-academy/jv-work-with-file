@@ -8,9 +8,9 @@ public class LoadData {
     public String readData(String fileName) {
         StringBuilder data = new StringBuilder();
 
-        try (BufferedReader rb = new BufferedReader(new FileReader(fileName))) {
+        try (var bufferedReader = new BufferedReader(new FileReader(fileName))) {
             String line;
-            while ((line = rb.readLine()) != null) {
+            while ((line = bufferedReader.readLine()) != null) {
                 data.append(line);
                 data.append(System.lineSeparator());
             }
