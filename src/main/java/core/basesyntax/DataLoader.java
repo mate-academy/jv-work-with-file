@@ -8,7 +8,7 @@ public class DataLoader {
     public String readData(String fileName) {
         StringBuilder data = new StringBuilder();
 
-        try (var bufferedReader = new BufferedReader(new FileReader(fileName))) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 data.append(line).append(System.lineSeparator());

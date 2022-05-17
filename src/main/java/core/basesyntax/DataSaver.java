@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public class DataSaver {
     public void writeData(String fileName, String saveData) {
-        try (var fileWriter = new BufferedWriter(new FileWriter(fileName))) {
+        try (BufferedWriter fileWriter = new BufferedWriter(new FileWriter(fileName))) {
             fileWriter.write(saveData);
         } catch (IOException e) {
             throw new RuntimeException(
