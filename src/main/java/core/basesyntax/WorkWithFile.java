@@ -17,8 +17,8 @@ public class WorkWithFile {
         int sumSupply = getSumOfSupply(dataFromFile);
         int sumBuy = getSumOfBuy(dataFromFile);
         StringBuilder report = new StringBuilder();
-        report.append(SUPPLY + "," + sumSupply).append(System.lineSeparator())
-                .append(BUY + "," + sumBuy).append(System.lineSeparator())
+        report.append(SUPPLY).append(",").append(sumSupply).append(System.lineSeparator())
+                .append(BUY).append(",").append(sumBuy).append(System.lineSeparator())
                 .append("result,").append(sumSupply - sumBuy);
         writeDataToFile(report.toString(), toFileName);
     }
@@ -51,12 +51,7 @@ public class WorkWithFile {
     }
 
     private boolean isInteger(String data) {
-        try {
-            Integer.parseInt(data);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
+        return data.matches("\\d+");
     }
 
     private int getSumOfSupply(String[] data) {
