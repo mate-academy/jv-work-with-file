@@ -12,23 +12,10 @@ public class WorkWithFile {
     private String[] split;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        File file = new File(fromFileName);
-        try {
-            file.createNewFile();
-        } catch (IOException e) {
-            throw new RuntimeException("Can't  create a file", e);
-        }
-        File fileName = new File(toFileName);
-        try {
-            fileName.createNewFile();
-        } catch (IOException e) {
-            throw new RuntimeException("Can't  create a file, e");
-        }
-        WorkWithFile work = new WorkWithFile();
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(file));
-            StringBuilder builder = new StringBuilder();
-            String value = reader.readLine();
+        String value;
+        StringBuilder builder = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
+            value = reader.readLine();
             while (value != null) {
                 builder.append(value).append(",");
                 System.out.println(value);
@@ -36,18 +23,18 @@ public class WorkWithFile {
             }
             split = builder.toString().split(",");
         } catch (IOException e) {
-            throw new RuntimeException("Can't read a file", e);
+            throw new RuntimeException("Can't read a file " + fromFileName, e);
         }
-        String report = work.createReport(split);
-        File resultReport = work.writeToFile(fileName, report);
+        String report = createReport(split);
+        File resultReport = writeToFile(new File(toFileName), report);
         try {
             resultReport.createNewFile();
         } catch (IOException e) {
-            throw new RuntimeException("Can't  create a file, e");
+            throw new RuntimeException("Can't  create a file " + resultReport, e);
         }
     }
 
-    public String createReport(String[] array) {
+    private String createReport(String[] array) {
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < array.length; i += 2) {
             if (array[i].equals("supply")) {
@@ -72,7 +59,7 @@ public class WorkWithFile {
         try {
             Files.write(file.toPath(), string.getBytes());
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data to file");
+            throw new RuntimeException("Can't write data to file " + file, e);
         }
         return file;
     }
