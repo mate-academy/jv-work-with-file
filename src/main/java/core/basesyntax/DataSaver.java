@@ -4,7 +4,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class SaveData {
+public class DataSaver {
     public void writeData(String fileName, String saveData) {
         try (var fileWriter = new BufferedWriter(new FileWriter(fileName))) {
             fileWriter.write(saveData);

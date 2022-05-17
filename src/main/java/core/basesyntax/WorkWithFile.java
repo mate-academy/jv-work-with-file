@@ -7,8 +7,8 @@ public class WorkWithFile {
     }
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String sourceData = new LoadData().readData(fromFileName);
-        String report = new ProcessData().createReport(sourceData);
-        new SaveData().writeData(toFileName, report);
+        String sourceData = new DataLoader().readData(fromFileName);
+        String report = new DataProcessing().createReport(sourceData);
+        new DataSaver().writeData(toFileName, report);
     }
 }
