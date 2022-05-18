@@ -16,7 +16,14 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         File file = new File(fromFileName);
-        int[] info = new int[]{0, 0};
+        int[] info = readInfo(file);
+        String report = report(info);
+        file = new File(toFileName);
+        writeToFile(file, report);
+    }
+
+    private int[] readInfo(File file) {
+        int[] info = new int[2];
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
             String readString = bufferedReader.readLine();
             while (readString != null) {
@@ -33,9 +40,7 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Cant read file ", e);
         }
-        String report = report(info);
-        file = new File(toFileName);
-        writeToFile(file, report);
+        return info;
     }
 
     private String report(int[] info) {
