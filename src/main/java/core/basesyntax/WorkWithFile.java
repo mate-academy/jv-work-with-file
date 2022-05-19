@@ -8,7 +8,11 @@ import java.nio.file.Files;
 
 public class WorkWithFile {
     private static final String SPLITTER = "&";
+    private static final String COMMA = ",";
     private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
+    private static final String SEPARATOR = System.lineSeparator();
     private static final int OPERATION_CELL = 0;
     private static final int AMOUNT_CELL = 1;
 
@@ -19,16 +23,16 @@ public class WorkWithFile {
         String[] tableRow;
         String[] data = readFile(new File(fromFileName));
         for (int i = 0; i < data.length; i++) {
-            tableRow = data[i].split(",");
+            tableRow = data[i].split(COMMA);
             if (tableRow[OPERATION_CELL].equals(SUPPLY)) {
                 totalSupply += Integer.parseInt(tableRow[AMOUNT_CELL]);
             } else {
                 totalBuy += Integer.parseInt(tableRow[AMOUNT_CELL]);
             }
         }
-        builder.append("supply").append(",").append(totalSupply).append(System.lineSeparator())
-                        .append("buy").append(",").append(totalBuy).append(System.lineSeparator())
-                        .append("result").append(",").append(totalSupply - totalBuy);
+        builder.append(SUPPLY).append(COMMA).append(totalSupply).append(SEPARATOR)
+                        .append(BUY).append(COMMA).append(totalBuy).append(SEPARATOR)
+                        .append(RESULT).append(COMMA).append(totalSupply - totalBuy);
         writeFile(new File(toFileName), builder.toString());
     }
 
