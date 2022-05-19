@@ -9,15 +9,16 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    public static final int IDENTIFICATION_DATE = 0;
-    public static final int CASH_INFO = 1;
-    public static final int SUPPLY = 0;
-    public static final int BUY = 1;
+    public static final int IDENTIFICATION_DATE_INDEX = 0;
+    public static final int CASH_INFO_INDEX = 1;
+    public static final int SUPPLY_INDEX = 0;
+    public static final int BUY_INDEX = 1;
+    public static final String DELIMITER = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         File file = new File(fromFileName);
         int[] info = readInfo(file);
-        String report = report(info);
+        String report = makeReport(info);
         file = new File(toFileName);
         writeToFile(file, report);
     }
@@ -27,11 +28,11 @@ public class WorkWithFile {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
             String readString = bufferedReader.readLine();
             while (readString != null) {
-                String[] dataArray = readString.split(",");
-                if (dataArray[IDENTIFICATION_DATE].equals("supply")) {
-                    info[SUPPLY] += Integer.parseInt(dataArray[CASH_INFO]);
+                String[] dataArray = readString.split(DELIMITER);
+                if (dataArray[IDENTIFICATION_DATE_INDEX].equals("supply")) {
+                    info[SUPPLY_INDEX] += Integer.parseInt(dataArray[CASH_INFO_INDEX]);
                 } else {
-                    info[BUY] += Integer.parseInt(dataArray[CASH_INFO]);
+                    info[BUY_INDEX] += Integer.parseInt(dataArray[CASH_INFO_INDEX]);
                 }
                 readString = bufferedReader.readLine();
             }
@@ -43,16 +44,16 @@ public class WorkWithFile {
         return info;
     }
 
-    private String report(int[] info) {
+    private String makeReport(int[] info) {
         StringBuilder builder = new StringBuilder();
         builder.append("supply,")
-                .append(info[SUPPLY])
+                .append(info[SUPPLY_INDEX])
                 .append(System.lineSeparator())
                 .append("buy,")
-                .append(info[BUY])
+                .append(info[BUY_INDEX])
                 .append(System.lineSeparator())
                 .append("result,")
-                .append(info[SUPPLY] - info[BUY]);
+                .append(info[SUPPLY_INDEX] - info[BUY_INDEX]);
         return builder.toString();
     }
 
