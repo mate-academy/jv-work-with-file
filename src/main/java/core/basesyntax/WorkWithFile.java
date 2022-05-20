@@ -7,55 +7,50 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class WorkWithFile {
-    private int supply = 0;
-    private int buy = 0;
-
-    public int getBuy() {
-        return buy;
-    }
-
-    public void setBuy(int buy) {
-        this.buy = buy;
-    }
-
-    public int getSupply() {
-        return supply;
-    }
-
-    public void setSupply(int supply) {
-        this.supply = supply;
-    }
-
     public void getStatistic(String fromFileName, String toFileName) {
-        readFile(fromFileName);
-        writeFile(toFileName);
+        String rawData = readFile(fromFileName);
+        String evaluatedData = evaluateData(rawData);
+        writeFile(toFileName, evaluatedData);
     }
 
-    public void readFile(String fileName) {
+    public String readFile(String fileName) {
         try (BufferedReader bufferedReader =
                      Files.newBufferedReader(Paths.get(fileName))) {
             String value = bufferedReader.readLine();
+            StringBuilder stringBuilder = new StringBuilder();
             while (value != null) {
-                if (value.toCharArray()[0] == 'b') {
-                    setBuy(getBuy() + Integer.parseInt(value.split(",")[1]));
-                } else {
-                    setSupply(getSupply() + Integer.parseInt(value.split(",")[1]));
-                }
+                stringBuilder.append(value).append(System.lineSeparator());
                 value = bufferedReader.readLine();
             }
+            return stringBuilder.toString();
         } catch (IOException e) {
             throw new RuntimeException("Can't correctly read data from file " + fileName, e);
         }
     }
 
-    public void writeFile(String fileName) {
+    public String evaluateData(String data) {
+        int supply = 0;
+        int buy = 0;
+        StringBuilder stringBuilder = new StringBuilder();
+        String[] array = data.split(System.lineSeparator());
+        System.out.println(data);
+        for (String line : array) {
+            if (line.toCharArray()[0] == 'b') {
+                buy += Integer.parseInt(line.split(",")[1]);
+            } else {
+                supply += Integer.parseInt(line.split(",")[1]);
+            }
+        }
+        stringBuilder.append("supply,").append(supply).append(System.lineSeparator())
+                .append("buy,").append(buy).append(System.lineSeparator())
+                .append("result,").append(supply - buy);
+        return stringBuilder.toString();
+    }
+
+    public void writeFile(String fileName, String data) {
         try (BufferedWriter bufferedWriter =
                      Files.newBufferedWriter(Paths.get(fileName))) {
-            StringBuilder stringBuilder = new StringBuilder("supply,");
-            stringBuilder.append(getSupply()).append(System.lineSeparator())
-                    .append("buy,").append(getBuy()).append(System.lineSeparator())
-                    .append("result,").append(getSupply() - getBuy());
-            bufferedWriter.write(stringBuilder.toString());
+            bufferedWriter.write(data);
         } catch (IOException e) {
             throw new RuntimeException("Can't correctly write data to file " + fileName, e);
         }
