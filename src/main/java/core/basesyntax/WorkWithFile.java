@@ -12,7 +12,7 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
-    private static final String SEPARATOR = System.lineSeparator();
+    private static final String LINE_SEPARATOR = System.lineSeparator();
     private static final int OPERATION_CELL = 0;
     private static final int AMOUNT_CELL = 1;
 
@@ -30,8 +30,8 @@ public class WorkWithFile {
                 totalBuy += Integer.parseInt(tableRow[AMOUNT_CELL]);
             }
         }
-        builder.append(SUPPLY).append(COMMA).append(totalSupply).append(SEPARATOR)
-                        .append(BUY).append(COMMA).append(totalBuy).append(SEPARATOR)
+        builder.append(SUPPLY).append(COMMA).append(totalSupply).append(LINE_SEPARATOR)
+                        .append(BUY).append(COMMA).append(totalBuy).append(LINE_SEPARATOR)
                         .append(RESULT).append(COMMA).append(totalSupply - totalBuy);
         writeFile(new File(toFileName), builder.toString());
     }
