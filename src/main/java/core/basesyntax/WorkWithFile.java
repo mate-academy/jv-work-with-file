@@ -41,7 +41,7 @@ public class WorkWithFile {
         int countBuy = 0;
         for (int i = 0; i < arrayToSplit.length; i += 2) {
             if (arrayToSplit[i].equals(SUPPLY)) {
-                countSupply = countBuy + Integer.parseInt(arrayToSplit[i + 1]);
+                countSupply = countSupply + Integer.parseInt(arrayToSplit[i + 1]);
             } else if (arrayToSplit[i].equals(BUY)) {
                 countBuy = countBuy + Integer.parseInt(arrayToSplit[i + 1]);
             }
