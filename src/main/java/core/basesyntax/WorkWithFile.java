@@ -14,21 +14,8 @@ public class WorkWithFile {
             + System.lineSeparator() + "result,%d";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int supplyAmmount = 0;
-        int buyAmmount = 0;
         String[] lines = readFile(fromFileName).split(LINE_DILIMITER);
-
-        for (String line : lines) {
-            String[] data = line.split(DILIMITER);
-            if (data[OPERATION_TYPE_POINTER].equals(BUY)) {
-                buyAmmount += Integer.parseInt(data[AMMOUNT_POINTER]);
-            } else if (data[OPERATION_TYPE_POINTER].equals(SUPPLY)) {
-                supplyAmmount += Integer.parseInt(data[AMMOUNT_POINTER]);
-            }
-        }
-
-        writeFile(toFileName, String.format(OUT_PATTERN,
-                supplyAmmount, buyAmmount, supplyAmmount - buyAmmount));
+        writeFile(toFileName, createReport(lines));
     }
 
     private String readFile(String fileName) {
@@ -45,5 +32,22 @@ public class WorkWithFile {
         } catch (Exception e) {
             throw new RuntimeException("Can`t write file: " + fileName);
         }
+    }
+
+    private String createReport(String[] lines) {
+        int supplyAmmount = 0;
+        int buyAmmount = 0;
+
+        for (String line : lines) {
+            String[] data = line.split(DILIMITER);
+            if (data[OPERATION_TYPE_POINTER].equals(BUY)) {
+                buyAmmount += Integer.parseInt(data[AMMOUNT_POINTER]);
+            } else if (data[OPERATION_TYPE_POINTER].equals(SUPPLY)) {
+                supplyAmmount += Integer.parseInt(data[AMMOUNT_POINTER]);
+            }
+        }
+
+        return String.format(OUT_PATTERN,
+                supplyAmmount, buyAmmount, supplyAmmount - buyAmmount);
     }
 }
