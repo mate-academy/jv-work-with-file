@@ -49,23 +49,11 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't create file", e);
         }
-        BufferedWriter bufferedwriter = null;
-        try {
-            bufferedwriter = new BufferedWriter(new FileWriter(toFileName, true));
-            {
-                bufferedwriter.write(statisticFromFile);
-            }
+
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true))) {
+            bufferedWriter.write(statisticFromFile);
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to file " + toFileName, e);
-        } finally {
-            if (bufferedwriter != null) {
-                try {
-                    bufferedwriter.close();
-                } catch (IOException e) {
-                    throw new RuntimeException("Can't close BufferedWriter", e);
-                }
-            }
-
         }
     }
 
