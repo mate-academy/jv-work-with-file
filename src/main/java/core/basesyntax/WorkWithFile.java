@@ -12,8 +12,8 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         analyzeData(fromFileName);
-        createReport(totalSupply, totalBuy);
-        writeReport(toFileName);
+        String report = createReport(totalSupply, totalBuy);
+        writeReport(toFileName, report);
     }
 
     private void analyzeData(String fromFileName) {
@@ -43,10 +43,10 @@ public class WorkWithFile {
                 + "result," + (totalSupply - totalBuy);
     }
 
-    private void writeReport(String toFileName) {
+    private void writeReport(String toFileName, String report) {
         try {
             File statistic = new File(toFileName);
-            Files.write(statistic.toPath(), createReport(totalSupply, totalBuy).getBytes());
+            Files.write(statistic.toPath(), report.getBytes());
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to file", e);
         }
