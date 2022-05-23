@@ -8,19 +8,22 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    public static final String RESULT = "result,";
-    public static final String SUPPLY = "supply";
-    public static final String BUY = "buy";
-    private final StringBuilder dataFromFile = new StringBuilder();
+    private static final String RESULT = "result";
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String SEPARATOR = ",";
+    private static final int NAME_OF_OPERATION = 0;
+    private static final int VALUE = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        this.readFile(fromFileName);
-        String[][] csv = fileToCvs(dataFromFile);
-        String report = createReport(csv);
+        String dataFromFile = this.readFile(fromFileName);
+        String[][] processedData = processData(dataFromFile);
+        String report = createReport(processedData);
         writeFile(toFileName, report);
     }
 
-    private void readFile(String fileName) {
+    private String readFile(String fileName) {
+        final StringBuilder dataFromFile = new StringBuilder();
         final File fromFile = new File(fileName);
         String value;
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFile))) {
@@ -29,6 +32,7 @@ public class WorkWithFile {
                 dataFromFile.append(value).append(System.lineSeparator());
                 value = reader.readLine();
             }
+            return dataFromFile.toString();
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from file", e);
         }
@@ -43,15 +47,15 @@ public class WorkWithFile {
         }
     }
 
-    private String[][] fileToCvs(StringBuilder data) {
-        String[] temp = data.toString().split(System.lineSeparator());
-        String[][] csv = new String[temp.length][2];
+    private String[][] processData(String data) {
+        String[] temp = data.split(System.lineSeparator());
+        String[][] processedData = new String[temp.length][2];
         for (int i = 0; i < temp.length; i++) {
-            String[] tempo = temp[i].split(",");
-            csv[i][0] = tempo[0];
-            csv[i][1] = tempo[1];
+            String[] tempo = temp[i].split(SEPARATOR);
+            processedData[i][NAME_OF_OPERATION] = tempo[NAME_OF_OPERATION];
+            processedData[i][VALUE] = tempo[VALUE];
         }
-        return csv;
+        return processedData;
     }
 
     private String createReport(String[][] csv) {
@@ -68,9 +72,9 @@ public class WorkWithFile {
             }
         }
         result = supply - buy;
-        report = SUPPLY + "," + supply + System.lineSeparator()
-                + BUY + "," + buy + System.lineSeparator()
-                + RESULT + result;
+        report = SUPPLY + SEPARATOR + supply + System.lineSeparator()
+                + BUY + SEPARATOR + buy + System.lineSeparator()
+                + RESULT + SEPARATOR + result;
         return report;
     }
 }
