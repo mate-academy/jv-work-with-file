@@ -7,6 +7,14 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class WorkWithFile {
+    private static final String BUY_PARAMETER = "buy";
+    private static final String SUPPLY_PARAMETER = "supply";
+    private static final String WORD_RESULT = "result";
+    private static final String COMMA_JOINER = ",";
+    private static final String LINE_SEPARATOR = System.lineSeparator();
+    private static final int PARAMETER_INDEX = 0;
+    private static final int VALUE_INDEX = 1;
+
     public void getStatistic(String fromFileName, String toFileName) {
         String rawData = readFile(fromFileName);
         String evaluatedData = evaluateData(rawData);
@@ -31,24 +39,20 @@ public class WorkWithFile {
     private String evaluateData(String data) {
         int supply = 0;
         int buy = 0;
-        final String wordBuy = "buy";
-        final String wordSupply = "supply";
-        final String wordResult = "result";
-        final String comma = ",";
-        final String separator = System.lineSeparator();
-        final StringBuilder stringBuilder = new StringBuilder();
-        final String[] array = data.split(separator);
+        StringBuilder stringBuilder = new StringBuilder();
+        String[] array = data.split(LINE_SEPARATOR);
         for (String line : array) {
-            final String[] words = line.split(comma);
-            if (words[0].equals(wordBuy)) {
+            String[] words = line.split(COMMA_JOINER);
+            if (words[PARAMETER_INDEX].equals(BUY_PARAMETER)) {
                 buy += Integer.parseInt(words[1]);
-            } else if (words[0].equals(wordSupply)) {
-                supply += Integer.parseInt(words[1]);
+            } else if (words[PARAMETER_INDEX].equals(SUPPLY_PARAMETER)) {
+                supply += Integer.parseInt(words[VALUE_INDEX]);
             }
         }
-        stringBuilder.append(wordSupply).append(comma).append(supply).append(separator)
-                .append(wordBuy).append(comma).append(buy).append(separator)
-                .append(wordResult).append(comma).append(supply - buy);
+        stringBuilder.append(SUPPLY_PARAMETER).append(COMMA_JOINER)
+                .append(supply).append(LINE_SEPARATOR)
+                .append(BUY_PARAMETER).append(COMMA_JOINER).append(buy).append(LINE_SEPARATOR)
+                .append(WORD_RESULT).append(COMMA_JOINER).append(supply - buy);
         return stringBuilder.toString();
     }
 
