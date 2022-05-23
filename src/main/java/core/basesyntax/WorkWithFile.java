@@ -16,14 +16,16 @@ public class WorkWithFile {
     private static final int INDEX_OF_BUY = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        writeDataToFile(toFileName, writeDataToSting(calculateDate(readFromFile(fromFileName))));
+        String read = readFromFile(fromFileName);
+        int[] calculate = calculateDate(read);
+        String toString = writeDataToSting(calculate);
+        writeDataToFile(toFileName, toString);
     }
 
     private String readFromFile(String fromFileName) {
         File file = new File(fromFileName);
         StringBuilder dataString = new StringBuilder();
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(file));
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String value = reader.readLine();
             while (value != null) {
                 dataString.append(value).append(COMA);
