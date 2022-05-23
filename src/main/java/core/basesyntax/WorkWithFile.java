@@ -8,6 +8,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final int INDEX_OF_NAME = 0;
+    private static final int INDEX_OF_NUM = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         StringBuilder builder = new StringBuilder();
@@ -31,17 +33,17 @@ public class WorkWithFile {
         }
     }
 
-    public String getReport(String allData) {
+    private String getReport(String allData) {
         StringBuilder builder1 = new StringBuilder();
         String [] arr = allData.split(" ");
         int sumBuy = 0;
         int sumSupply = 0;
         for (String ar : arr) {
             String [] info = ar.split(",");
-            if (info[0].equals("buy")) {
-                sumBuy += Integer.parseInt(info[1]);
+            if (info[INDEX_OF_NAME].equals("buy")) {
+                sumBuy += Integer.parseInt(info[INDEX_OF_NUM]);
             } else {
-                sumSupply += Integer.parseInt(info[1]);
+                sumSupply += Integer.parseInt(info[INDEX_OF_NUM]);
             }
         }
         int result = sumSupply - sumBuy;
