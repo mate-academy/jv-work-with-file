@@ -9,15 +9,20 @@ import java.io.IOException;
 
 public class WorkWithFile {
     private static final String[] namesOfAction = new String[] {"supply", "buy"};
-    private static final int COL_ACTIONS = 2;
+    private static final int NUMBER_OF_ACTIONS = 2;
+    private static final int ACTION_SUPPLY = 0;
+    private static final int ACTION_BUY = 1;
+    private static final String COMMA = ",";
+    private static final int AMMOUNT = 1;
+    private static final String RESULT_SUM_OF_ACTIONS = "result,";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String inputData = this.readingFile(fromFileName);
-        String dataToWrite = calculator(inputData);
-        writtingFile(dataToWrite, toFileName);
+        String inputData = this.readFile(fromFileName);
+        String dataToWrite = calculateData(inputData);
+        writeFile(dataToWrite, toFileName);
     }
 
-    private void writtingFile(String outputData, String toFileName) {
+    private void writeFile(String outputData, String toFileName) {
         File file = new File(toFileName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
             bufferedWriter.write(outputData);
@@ -26,41 +31,29 @@ public class WorkWithFile {
         }
     }
 
-    private String calculator(String inputData) {
-        String[] values = new String[COL_ACTIONS];
-        int[] sumOfRecords = new int[COL_ACTIONS];
+    private String calculateData(String inputData) {
+        String[] values = new String[NUMBER_OF_ACTIONS];
+        int[] sumOfRecords = new int[NUMBER_OF_ACTIONS];
         String[] records = inputData.split(System.lineSeparator());
-        for (int i = 0; i < namesOfAction.length; i++) {
-            for (int j = 0; j < records.length; j++) {
-                String[] record = records[j].split(",");
-                if (namesOfAction[i].equals(record[0])) {
-                    sumOfRecords[i] += Integer.parseInt(record[1]);
-                }
+        StringBuilder calculatedData = new StringBuilder();
+        for (int j = 0; j < records.length; j++) {
+            String[] record = records[j].split(COMMA);
+            if (namesOfAction[ACTION_SUPPLY].equals(record[ACTION_SUPPLY])) {
+                sumOfRecords[ACTION_SUPPLY] += Integer.parseInt(record[AMMOUNT]);
+            }
+            if (namesOfAction[ACTION_BUY].equals(record[ACTION_SUPPLY])) {
+                sumOfRecords[ACTION_BUY] += Integer.parseInt(record[AMMOUNT]);
             }
         }
-        StringBuilder calculatedData = new StringBuilder();
-        for (int i = 0; i < namesOfAction.length; i++) {
-            calculatedData.append(namesOfAction[i]).append(",").append(sumOfRecords[i])
-                    .append(System.lineSeparator());
-        }
-        calculatedData.append("result,").append(sumOfRecords[0] - sumOfRecords[1]);
+        calculatedData.append(namesOfAction[ACTION_SUPPLY]).append(COMMA).append(sumOfRecords[ACTION_SUPPLY])
+                .append(System.lineSeparator());
+        calculatedData.append(namesOfAction[ACTION_BUY]).append(COMMA).append(sumOfRecords[ACTION_BUY])
+                .append(System.lineSeparator());
+        calculatedData.append(RESULT_SUM_OF_ACTIONS).append(sumOfRecords[ACTION_SUPPLY] - sumOfRecords[ACTION_BUY]);
         return calculatedData.toString();
     }
 
-    private String[] getNames(String data) {
-        String[] linesData = data.split(System.lineSeparator());
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < linesData.length; i++) {
-            if (stringBuilder.toString().matches(".*"
-                    + (linesData[i].split(",")[0]) + ".*")) {
-                continue;
-            }
-            stringBuilder.append(linesData[i].split(",")[0]).append(" ");
-        }
-        return stringBuilder.toString().trim().split(" ");
-    }
-
-    private String readingFile(String fromFileName) {
+    private String readFile(String fromFileName) {
         File file = new File(fromFileName);
         StringBuilder builder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
@@ -74,5 +67,4 @@ public class WorkWithFile {
         }
         return builder.toString();
     }
-
 }
