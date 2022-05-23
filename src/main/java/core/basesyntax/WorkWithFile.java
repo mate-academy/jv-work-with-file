@@ -34,7 +34,7 @@ public class WorkWithFile {
                 lineFromFile = bufferedReader.readLine();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Can't correctly read data from file " + fromFileName, e);
         }
         return dataFromFile.toString().split(SPLITTER);
     }
