@@ -12,6 +12,7 @@ public class WorkWithFile {
     public static final String BUY = "buy";
     public static final String RESULT = "result";
     public static final String LINE_SEPARATOR = System.lineSeparator();
+    public static final String SEPARATOR = ",";
 
     private String readFromFile(String fromFileName) {
         File fileFrom = new File(fromFileName);
@@ -19,7 +20,7 @@ public class WorkWithFile {
         try (BufferedReader reader = new BufferedReader(new FileReader(fileFrom))) {
             String line = reader.readLine();
             while (line != null) {
-                dataFromFile.append(line).append(",");
+                dataFromFile.append(line).append(SEPARATOR);
                 line = reader.readLine();
             }
         } catch (IOException e) {
@@ -31,8 +32,8 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         String statistic = readFromFile(fromFileName);
         String[] statisticToArray = statistic.split(",");
-        int resultSupply = resultSupply(statisticToArray);
-        int resultBuy = resultBuy(statisticToArray);
+        int resultSupply = getResultSupply(statisticToArray);
+        int resultBuy = getResultBuy(statisticToArray);
         StringBuilder statisticFromFile = new StringBuilder();
         statisticFromFile.append(SUPPLY).append(",").append(resultSupply)
                 .append(System.lineSeparator()).append(BUY)
@@ -43,13 +44,6 @@ public class WorkWithFile {
     }
 
     private void writeFile(String statisticFromFile, String toFileName) {
-        File toFile = new File(toFileName);
-        try {
-            toFile.createNewFile();
-        } catch (IOException e) {
-            throw new RuntimeException("Can't create file", e);
-        }
-
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true))) {
             bufferedWriter.write(statisticFromFile);
         } catch (IOException e) {
@@ -57,8 +51,7 @@ public class WorkWithFile {
         }
     }
 
-    private int resultBuy(String [] fileToArray) {
-
+    private int getResultBuy(String [] fileToArray) {
         int resultBuy = 0;
         for (int i = 0; i < fileToArray.length; i++) {
             if (fileToArray[i].equals(BUY)) {
@@ -68,7 +61,7 @@ public class WorkWithFile {
         return resultBuy;
     }
 
-    private int resultSupply(String [] fileToArray) {
+    private int getResultSupply(String [] fileToArray) {
 
         int resultSupply = 0;
         for (int i = 0; i < fileToArray.length; i++) {
