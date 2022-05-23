@@ -48,23 +48,23 @@ public class WorkWithFile {
     }
 
     private String[][] processData(String data) {
-        String[] temp = data.split(System.lineSeparator());
-        String[][] processedData = new String[temp.length][2];
-        for (int i = 0; i < temp.length; i++) {
-            String[] tempo = temp[i].split(SEPARATOR);
+        String[] splittedData = data.split(System.lineSeparator());
+        String[][] processedData = new String[splittedData.length][2];
+        for (int i = 0; i < splittedData.length; i++) {
+            String[] tempo = splittedData[i].split(SEPARATOR);
             processedData[i][NAME_OF_OPERATION] = tempo[NAME_OF_OPERATION];
             processedData[i][VALUE] = tempo[VALUE];
         }
         return processedData;
     }
 
-    private String createReport(String[][] csv) {
+    private String createReport(String[][] processedData) {
         int supply = 0;
         int buy = 0;
         int result;
         String report;
 
-        for (String[] strings : csv) {
+        for (String[] strings : processedData) {
             if (strings[0].equals(SUPPLY)) {
                 supply += Integer.parseInt(strings[1]);
             } else if (strings[0].equals(BUY)) {
