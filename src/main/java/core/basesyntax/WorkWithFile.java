@@ -45,11 +45,14 @@ public class WorkWithFile {
                 sumOfRecords[ACTION_BUY] += Integer.parseInt(record[AMMOUNT]);
             }
         }
-        calculatedData.append(namesOfAction[ACTION_SUPPLY]).append(COMMA).append(sumOfRecords[ACTION_SUPPLY])
+        calculatedData.append(namesOfAction[ACTION_SUPPLY])
+                .append(COMMA).append(sumOfRecords[ACTION_SUPPLY])
                 .append(System.lineSeparator());
-        calculatedData.append(namesOfAction[ACTION_BUY]).append(COMMA).append(sumOfRecords[ACTION_BUY])
+        calculatedData.append(namesOfAction[ACTION_BUY])
+                .append(COMMA).append(sumOfRecords[ACTION_BUY])
                 .append(System.lineSeparator());
-        calculatedData.append(RESULT_SUM_OF_ACTIONS).append(sumOfRecords[ACTION_SUPPLY] - sumOfRecords[ACTION_BUY]);
+        calculatedData.append(RESULT_SUM_OF_ACTIONS)
+                .append(sumOfRecords[ACTION_SUPPLY] - sumOfRecords[ACTION_BUY]);
         return calculatedData.toString();
     }
 
