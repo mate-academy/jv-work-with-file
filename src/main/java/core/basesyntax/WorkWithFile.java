@@ -1,7 +1,11 @@
 package core.basesyntax;
 
-import java.io.*;
-import java.util.Arrays;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class WorkWithFile {
 
@@ -9,14 +13,17 @@ public class WorkWithFile {
         StringBuilder builder = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String data = reader.readLine();
-            builder.append(data).append(" ");
-        }catch (FileNotFoundException e) {
+            while (data != null) {
+                builder.append(data).append(" ");
+                data = reader.readLine();
+            }
+        } catch (FileNotFoundException e) {
             throw new RuntimeException("Can't find file" + e);
         } catch (IOException e) {
             throw new RuntimeException("Can't read file" + e);
         }
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))){
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             String allData = getReport(builder.toString());
             writer.write(allData);
         } catch (IOException e) {
@@ -32,12 +39,15 @@ public class WorkWithFile {
         for (String ar : arr) {
             String [] info = ar.split(",");
             if (info[0].equals("buy")) {
-              sumBuy += Integer.parseInt(info[1]);
+                sumBuy += Integer.parseInt(info[1]);
+            } else {
+                sumSupply += Integer.parseInt(info[1]);
             }
-            sumSupply += Integer.parseInt(info[1]);
         }
-        int result = sumBuy - sumSupply;
-        builder1
+        int result = sumSupply - sumBuy;
+        builder1.append("supply,").append(sumSupply).append(System.lineSeparator())
+                .append("buy,").append(sumBuy).append(System.lineSeparator())
+                .append("result,").append(result);
         return builder1.toString();
     }
 
