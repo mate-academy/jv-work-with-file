@@ -15,7 +15,5 @@ public class TaskFinalizer {
                 .append(",")
                 .append(supply.getCounter() - buy.getCounter())
                 .toString();
-        
-        
     }
 }

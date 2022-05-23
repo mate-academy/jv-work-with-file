@@ -14,7 +14,7 @@ public class DataExtractor {
         } catch (IOException e) {
             throw new RuntimeException("Can't read file", e);
         }
-        String result = builder.toString().substring(1, builder.length() -1 );
+        String result = builder.toString().substring(1, builder.length() - 1);
         return result.split(" ");
     }
 }
