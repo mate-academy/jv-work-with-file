@@ -50,7 +50,7 @@ public class WorkWithFile {
             writer.write(BUY_TITLE + CSV_DELIMITER + buyAmount + System.lineSeparator());
             writer.write(RESULT_TITLE + CSV_DELIMITER + (supplyAmount - buyAmount));
         } catch (IOException e) {
-            throw new RuntimeException("Couldn't write file", e);
+            throw new RuntimeException("Couldn't write file" + " + toFileName", e);
         }
     }
 }
