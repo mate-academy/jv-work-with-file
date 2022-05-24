@@ -1,12 +1,12 @@
 package core.basesyntax;
 
 public class ContentConverter {
-    public static final String SUPPLY_VAR = "supply";
-    public static final String BUY_VAR = "buy";
-    public static final String RESULT_VAR = "result";
-    public static final String SPLIT_VAR = ",";
-    public static final byte FIRST_ARRAY_VAR = 0;
-    public static final byte SECOND_ARRAY_VAR = 1;
+    private static final String SUPPLY_VAR = "supply";
+    private static final String BUY_VAR = "buy";
+    private static final String RESULT_VAR = "result";
+    private static final String SPLIT_VAR = ",";
+    private static final byte FIRST_ARRAY_VAR = 0;
+    private static final byte SECOND_ARRAY_VAR = 1;
 
     public String getHandledFileContent(String content) {
         int buySum = 0;
