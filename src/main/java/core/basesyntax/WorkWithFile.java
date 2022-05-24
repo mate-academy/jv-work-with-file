@@ -15,6 +15,12 @@ public class WorkWithFile {
     private static final int INDEX_AMOUNT = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
+
+        String reportData = getReport(fromFileName);
+        writeToFile(toFileName, reportData);
+    }
+
+    private String getReport(String fromFileName) {
         int sumSupply = 0;
         int sumBuy = 0;
         String[] arrayInfo = readFile(fromFileName).split(System.lineSeparator());
@@ -28,11 +34,6 @@ public class WorkWithFile {
             }
         }
         int differenceOfValues = sumSupply - sumBuy;
-        String reportData = getReport(sumBuy, sumSupply, differenceOfValues);
-        writeToFile(toFileName, reportData);
-    }
-
-    private String getReport(int sumBuy, int sumSupply, int differenceOfValues) {
         StringBuilder builder = new StringBuilder();
         return builder.append(SUPPLY_AMOUNT).append(SEPARATOR)
                 .append(sumSupply).append(System.lineSeparator())
@@ -50,7 +51,7 @@ public class WorkWithFile {
             }
             return builder.toString();
         } catch (IOException e) {
-            throw new RuntimeException("File cannot be read", e);
+            throw new RuntimeException("File cannot be read" + fromFileName, e);
         }
     }
 
@@ -58,7 +59,7 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true))) {
             bufferedWriter.write(data);
         } catch (IOException e) {
-            throw new RuntimeException("Cannot write data to file", e);
+            throw new RuntimeException("Cannot write data to file" + toFileName, e);
         }
     }
 }
