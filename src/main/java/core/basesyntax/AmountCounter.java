@@ -1,18 +1,29 @@
 package core.basesyntax;
 
 public class AmountCounter {
-    private int counter;
+    private int supplyCounter;
+    private int buyCounter;
 
-    public int getCounter() {
-        return counter;
-    }
-
-    public String count(String[] data, String name) {
+    public String count(String[] data) {
         for (String value : data) {
-            if (value.split(",")[0].equals(name)) {
-                counter += Integer.parseInt(value.split(",")[1]);
+            if (value.split(",")[0].equals("supply")) {
+                supplyCounter += Integer.parseInt(value.split(",")[1]);
+            } else if (value.split(",")[0].equals("buy")) {
+                buyCounter += Integer.parseInt(value.split(",")[1]);
             }
         }
-        return new StringBuilder().append(name).append(",").append(counter).toString();
+        return new StringBuilder()
+                .append("supply")
+                .append(",")
+                .append(supplyCounter)
+                .append(System.lineSeparator())
+                .append("buy")
+                .append(",")
+                .append(buyCounter)
+                .append(System.lineSeparator())
+                .append("result")
+                .append(",")
+                .append(supplyCounter - buyCounter)
+                .toString();
     }
 }
