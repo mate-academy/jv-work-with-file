@@ -15,17 +15,12 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
+
     public void getStatistic(String fromFileName, String toFileName) {
-        File file = new File(toFileName);
         String inputString = readFile(fromFileName);
         String report = createReport(inputString);
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
-            bufferedWriter.write(createReport(report));
-        } catch (IOException e) {
-            throw new RuntimeException("Can`t write data to file",e);
-        }
+        writeFile(report,toFileName);
     }
-
 
     private String readFile(String fromFileName) {
         File file = new File(fromFileName);
@@ -38,8 +33,7 @@ public class WorkWithFile {
             }
             String inputString = stringBuilder.toString();
             return inputString;
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException("Can`t read file",e);
         }
     }
@@ -74,5 +68,14 @@ public class WorkWithFile {
         System.out.println(report);
         return report;
     }
+
+    private void writeFile(String report, String toFileName) {
+        File file = new File(toFileName);
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
+            bufferedWriter.write(report);
+        } catch (IOException e) {
+            throw new RuntimeException("Can`t write data to file" + toFileName,e);
+        }
     }
+}
 
