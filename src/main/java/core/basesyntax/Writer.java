@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 public class Writer {
-    public void write(String data, String toFileName) {
+    public void writeDataToFile(String data, String toFileName) {
         File file = new File(toFileName);
         try {
             Files.write(file.toPath(), data.getBytes());

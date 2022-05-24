@@ -6,7 +6,7 @@ import java.nio.file.Files;
 import java.util.List;
 
 public class DataReader {
-    public String[] extract(File file) {
+    public String[] readFile(File file) {
         StringBuilder builder = new StringBuilder();
         try {
             List<String> strings = Files.readAllLines(file.toPath());

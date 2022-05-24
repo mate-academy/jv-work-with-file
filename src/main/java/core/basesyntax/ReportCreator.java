@@ -1,13 +1,13 @@
 package core.basesyntax;
 
-public class GetCalculation {
+public class ReportCreator {
 
     private static final String SUPPLY_STRING = "supply";
     private static final String BUY_STRING = "buy";
     private static final String RESULT_STRING = "result";
     private static final String COMMA_SEPARATOR = ",";
 
-    public String count(String[] data) {
+    public String getReport(String[] data) {
         int supplyCounter = 0;
         int buyCounter = 0;
         for (String value : data) {
