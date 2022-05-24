@@ -15,7 +15,9 @@ public class WorkWithFile {
     private static final String VARIABLE_RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        writeToFile(getReport(readInfoFromFile(fromFileName)),toFileName);
+        String inputData = readInfoFromFile(fromFileName);
+        String report = getReport(inputData);
+        writeToFile(report,toFileName);
     }
 
     private void writeToFile(String report, String toFileName) {
