@@ -7,10 +7,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    public static final int INDEX_OF_COUNT = 1;
-    public static final String BUY = "buy";
-    public static final String SUPPLY = "supply";
-    public static final String COMMA = ",";
+    private static final int INDEX_OF_COUNT = 1;
+    private static final String BUY = "buy";
+    private static final String SUPPLY = "supply";
+    private static final String COMMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String inputData = readFromFile(fromFileName);
@@ -28,7 +28,7 @@ public class WorkWithFile {
             }
             return fileBuilder.toString();
         } catch (IOException e) {
-            throw new RuntimeException("Can't read the file.", e);
+            throw new RuntimeException("Can't read the file." + fromFileName, e);
         }
     }
 
@@ -54,12 +54,10 @@ public class WorkWithFile {
 
     private void writeToFile(String toFileName, String calculateData) {
         File file = new File(toFileName);
-        try {
-            FileWriter fileWriter = new FileWriter(file);
+        try (FileWriter fileWriter = new FileWriter(file)) {
             fileWriter.write(calculateData);
-            fileWriter.close();
         } catch (IOException e) {
-            throw new RuntimeException("Can't write the file.", e);
+            throw new RuntimeException("Can't write the file." + toFileName, e);
         }
     }
 }
