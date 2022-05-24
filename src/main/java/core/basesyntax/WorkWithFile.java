@@ -22,7 +22,7 @@ public class WorkWithFile {
             data[i][AMOUNT_ID] = buffer[AMOUNT_ID];
         }
         int[] report = countAmountByOperation(data);
-        String output = "supply," + report[1] + System.lineSeparator() + "buy," + report[0]
+        String output = SUPPLY + "," + report[1] + System.lineSeparator() + BUY + "," + report[0]
                 + System.lineSeparator() + "result," + report[2];
         writeToFile(output, toFileName);
     }
@@ -54,7 +54,7 @@ public class WorkWithFile {
         int buyAmount = 0;
         int supplyAmount = 0;
         for (String[] line: data) {
-            if (line[OPERATION_ID].equals("buy")) {
+            if (line[OPERATION_ID].equals(BUY)) {
                 buyAmount += Integer.parseInt(line[AMOUNT_ID]);
                 continue;
             }
