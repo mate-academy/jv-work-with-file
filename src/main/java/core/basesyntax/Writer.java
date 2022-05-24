@@ -10,7 +10,7 @@ public class Writer {
         try {
             Files.write(file.toPath(), data.getBytes());
         } catch (IOException e) {
-            throw new RuntimeException("Can't write to file");
+            throw new RuntimeException("Can't write to file: " + toFileName, e);
         }
     }
 }
