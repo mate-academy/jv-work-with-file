@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
 
-public class DataExtractor {
+public class DataReader {
     public String[] extract(File file) {
         StringBuilder builder = new StringBuilder();
         try {
