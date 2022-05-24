@@ -7,32 +7,48 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 public class WorkWithFile {
+    private static final String RECORD_SEPARATOR = ",";
+    private static final int ITEM_INDEX = 0;
+    private static final int VALUE_INDEX = 1;
+    private static final String SUPPLY_NAME = "supply";
+    private static final String BUY_NAME = "buy";
+
     public void getStatistic(String fromFileName, String toFileName) {
-        String report = createReport(fromFileName);
+        String data = readFile(fromFileName);
+        String report = createReport(data);
         writeReport(toFileName, report);
     }
 
-    private String createReport(String fromFileName) {
+    private String readFile(String fromFileName) {
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
-            int totalSupply = 0;
-            int totalBuy = 0;
+            StringBuilder stringBuilder = new StringBuilder();
             String line = reader.readLine();
-
             while (line != null) {
-                String[] info = line.split(",");
-                if (info[0].equals("supply")) {
-                    totalSupply += Integer.parseInt(info[1]);
-                } else if (info[0].equals("buy")) {
-                    totalBuy += Integer.parseInt(info[1]);
-                }
+                stringBuilder.append(line).append(System.lineSeparator());
                 line = reader.readLine();
             }
-            return "supply," + totalSupply + System.lineSeparator()
-                    + "buy," + totalBuy + System.lineSeparator()
-                    + "result," + (totalSupply - totalBuy);
+            return stringBuilder.toString();
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't read file: " + fromFileName, e);
         }
+    }
+
+    private String createReport(String data) {
+        int totalSupply = 0;
+        int totalBuy = 0;
+        String[] rows = data.split(System.lineSeparator());
+        for (String row : rows) {
+            String[] record = row.split(RECORD_SEPARATOR);
+            if (record[ITEM_INDEX].equals(SUPPLY_NAME)) {
+                totalSupply += Integer.parseInt(record[VALUE_INDEX]);
+            }
+            if (record[ITEM_INDEX].equals(BUY_NAME)) {
+                totalBuy += Integer.parseInt(record[VALUE_INDEX]);
+            }
+        }
+        return SUPPLY_NAME + RECORD_SEPARATOR + totalSupply + System.lineSeparator()
+                + BUY_NAME + RECORD_SEPARATOR + totalBuy + System.lineSeparator()
+                + "result" + RECORD_SEPARATOR + (totalSupply - totalBuy);
     }
 
     private void writeReport(String toFileName, String report) {
@@ -40,7 +56,7 @@ public class WorkWithFile {
             File statistic = new File(toFileName);
             Files.write(statistic.toPath(), report.getBytes());
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data to file", e);
+            throw new RuntimeException("Can't write data to file: " + toFileName, e);
         }
     }
 }
