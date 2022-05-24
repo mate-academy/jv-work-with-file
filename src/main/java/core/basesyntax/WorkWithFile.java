@@ -16,7 +16,7 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         String statistic = readFromFile(fromFileName);
-        String[] statisticToArray = statistic.split(",");
+        String[] statisticToArray = statistic.split(SEPARATOR);
         int resultSupply = getResultSupply(statisticToArray);
         int resultBuy = getResultBuy(statisticToArray);
         StringBuilder statisticFromFile = new StringBuilder();
