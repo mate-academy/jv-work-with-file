@@ -13,6 +13,7 @@ public class WorkWithFile {
     private static final String BUY = "buy";
     private static final int WORD = 0;
     private static final int NUMBER = 1;
+    private static final String SEPARATOR = System.lineSeparator();
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] inputData = getDataFromFile(fromFileName);
@@ -41,8 +42,8 @@ public class WorkWithFile {
         StringBuilder builder = new StringBuilder();
         int sumSupply = getSumFromSupply(data);
         int sumBuy = getSumFromBuy(data);
-        return builder.append(SUPPLY).append(",").append(sumSupply).append(System.lineSeparator())
-                .append(BUY).append(",").append(sumBuy).append(System.lineSeparator())
+        return builder.append(SUPPLY).append(",").append(sumSupply).append(SEPARATOR)
+                .append(BUY).append(",").append(sumBuy).append(SEPARATOR)
                 .append("result,").append(sumSupply - sumBuy).toString();
     }
 
