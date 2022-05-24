@@ -7,7 +7,6 @@ public class GetCalculation {
     private static final String RESULT_STRING = "result";
     private static final String COMMA_SEPARATOR = ",";
 
-
     public String count(String[] data) {
         int supplyCounter = 0;
         int buyCounter = 0;
