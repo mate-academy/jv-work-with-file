@@ -31,10 +31,9 @@ public class WorkWithFile {
                 stringBuilder.append(value).append(" ");
                 value = bufferedReader.readLine();
             }
-            String inputString = stringBuilder.toString();
-            return inputString;
+            return stringBuilder.toString();
         } catch (IOException e) {
-            throw new RuntimeException("Can`t read file",e);
+            throw new RuntimeException("Can`t read file" + fromFileName,e);
         }
     }
 
@@ -64,9 +63,7 @@ public class WorkWithFile {
                 .append(RESULT)
                 .append(DELIMITER)
                 .append(result);
-        String report = stringBuilderReport.toString();
-        System.out.println(report);
-        return report;
+        return stringBuilderReport.toString();
     }
 
     private void writeFile(String report, String toFileName) {
@@ -78,4 +75,3 @@ public class WorkWithFile {
         }
     }
 }
-
