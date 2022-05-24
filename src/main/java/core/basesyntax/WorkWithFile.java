@@ -11,6 +11,8 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
+    private static final int WORD = 0;
+    private static final int NUMBER = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] inputData = getDataFromFile(fromFileName);
@@ -46,10 +48,10 @@ public class WorkWithFile {
 
     private int getSumFromSupply(String[] data) {
         int sumOfSupply = 0;
-        for (int i = 0; i < data.length; i++) {
-            String[] wordAndNum = data[i].split(",");
-            if (wordAndNum[0].equals(SUPPLY)) {
-                sumOfSupply += Integer.parseInt(wordAndNum[1]);
+        for (String string : data) {
+            String[] wordAndNum = string.split(",");
+            if (wordAndNum[WORD].equals(SUPPLY)) {
+                sumOfSupply += Integer.parseInt(wordAndNum[NUMBER]);
             }
         }
         return sumOfSupply;
@@ -57,10 +59,10 @@ public class WorkWithFile {
 
     private int getSumFromBuy(String[] data) {
         int sumOfBuy = 0;
-        for (int i = 0; i < data.length; i++) {
-            String[] wordAndNum = data[i].split(",");
-            if (wordAndNum[0].equals(BUY)) {
-                sumOfBuy += Integer.parseInt(wordAndNum[1]);
+        for (String string : data) {
+            String[] wordAndNum = string.split(",");
+            if (wordAndNum[WORD].equals(BUY)) {
+                sumOfBuy += Integer.parseInt(wordAndNum[NUMBER]);
             }
         }
         return sumOfBuy;
