@@ -5,7 +5,7 @@ import java.io.IOException;
 
 public class FileReader {
 
-    public String getFileContent(String fromFileName) {
+    public String getRawContent(String fromFileName) {
         try {
             BufferedReader reader = new BufferedReader(new java.io.FileReader(fromFileName));
             String value;

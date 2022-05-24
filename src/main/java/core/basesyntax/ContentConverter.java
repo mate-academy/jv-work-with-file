@@ -5,19 +5,21 @@ public class ContentConverter {
     public static final String BUY_VAR = "buy";
     public static final String RESULT_VAR = "result";
     public static final String SPLIT_VAR = ",";
+    public static final byte FIRST_ARRAY_VAR = 0;
+    public static final byte SECOND_ARRAY_VAR = 1;
 
-    public String getFileContent(String content) {
+    public String getHandledFileContent(String content) {
         int buySum = 0;
         int supplySum = 0;
         String[] contentArray = content.split(" ");
         StringBuilder builder = new StringBuilder();
         for (String line : contentArray) {
             String[] valuesArray = line.split(SPLIT_VAR);
-            if (valuesArray[0].equals(BUY_VAR)) {
-                buySum += Integer.parseInt(valuesArray[1]);
+            if (valuesArray[FIRST_ARRAY_VAR].equals(BUY_VAR)) {
+                buySum += Integer.parseInt(valuesArray[SECOND_ARRAY_VAR]);
             }
-            if (valuesArray[0].equals(SUPPLY_VAR)) {
-                supplySum += Integer.parseInt(valuesArray[1]);
+            if (valuesArray[FIRST_ARRAY_VAR].equals(SUPPLY_VAR)) {
+                supplySum += Integer.parseInt(valuesArray[SECOND_ARRAY_VAR]);
             }
         }
         builder.append(SUPPLY_VAR)
