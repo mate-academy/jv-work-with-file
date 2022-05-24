@@ -33,7 +33,7 @@ public class WorkWithFile {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             writer.write(text);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write file", e);
+            throw new RuntimeException("Can't write file" + file, e);
         }
     }
 
@@ -48,7 +48,7 @@ public class WorkWithFile {
             }
             return text.toString();
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't read file" + file, e);
         }
     }
 
