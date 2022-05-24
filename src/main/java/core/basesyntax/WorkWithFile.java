@@ -8,6 +8,8 @@ public class WorkWithFile {
         File file = new File(fromFileName);
         TaskFinalizer taskFinalizer = new TaskFinalizer();
         Writer writer = new Writer();
-        writer.write(taskFinalizer.finalString(new DataExtractor().extract(file)), toFileName);
+        String[] data = new DataExtractor().extract(file);
+        String finalString = taskFinalizer.finalString(data);
+        writer.write(finalString, toFileName);
     }
 }
