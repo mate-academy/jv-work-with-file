@@ -15,7 +15,9 @@ public class WorkWithFile {
     private static final String NEW_LINE = System.lineSeparator();
 
     public void getStatistic(String fromFileName, String toFileName) {
-        writeReport(fromFileName, toFileName);
+        String dataFromFile = readFile(fromFileName);
+        String report = getReport(dataFromFile);
+        writeReport(toFileName, report);
     }
 
     private String readFile(String fromFileName) {
@@ -29,14 +31,14 @@ public class WorkWithFile {
             }
             return builder.toString();
         } catch (IOException e) {
-            throw new RuntimeException("Can't read data from the file " + fromFile, e);
+            throw new RuntimeException("Can't read data from the file " + fromFileName, e);
         }
     }
 
-    private String getReport(String fromFileName) {
+    private String getReport(String dataFile) {
         int sumSupply = 0;
         int sumBuy = 0;
-        String[] dataArray = readFile(fromFileName).split(" ");
+        String[] dataArray = dataFile.split(" ");
         for (String data : dataArray) {
             int index = data.indexOf(",");
             String string = data.substring(0,index);
@@ -55,12 +57,12 @@ public class WorkWithFile {
         return builder.toString();
     }
 
-    private void writeReport(String fromFileName, String toFileName) {
-        File toFile = new File(toFileName);
+    private void writeReport(String file, String report) {
+        File toFile = new File(file);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFile))) {
-            writer.write(getReport(fromFileName));
+            writer.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data to the file" + toFileName, e);
+            throw new RuntimeException("Can't write data to the file" + file, e);
         }
     }
 }
