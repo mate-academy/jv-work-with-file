@@ -15,15 +15,16 @@ public class WorkWithFile {
     private static final int INDEX_AMOUNT = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String reportData = getReport(fromFileName);
+        String arrayInfo = readFile(fromFileName);
+        String reportData = getReport(arrayInfo);
         writeToFile(toFileName, reportData);
     }
 
     private String getReport(String inputData) {
+        String[] inputInfo = inputData.split(System.lineSeparator());
         int sumSupply = 0;
         int sumBuy = 0;
-        String[] arrayInfo = readFile(inputData).split(System.lineSeparator());
-        for (String separateInformation : arrayInfo) {
+        for (String separateInformation : inputInfo) {
             String[] eachValue = separateInformation.split(SEPARATOR);
             if (eachValue[INDEX_TYPE].equals(SUPPLY_AMOUNT)) {
                 sumSupply += Integer.parseInt(eachValue[INDEX_AMOUNT]);
