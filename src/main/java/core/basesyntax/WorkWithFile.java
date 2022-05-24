@@ -19,7 +19,7 @@ public class WorkWithFile {
         String[][] data = new String[lines.length][2];
         String[] buffer;
         for (int i = 0; i < lines.length; i++) {
-            buffer = lines[i].split(",");
+            buffer = lines[i].split(SEPARATOR);
             data[i][OPERATION_ID] = buffer[OPERATION_ID];
             data[i][AMOUNT_ID] = buffer[AMOUNT_ID];
         }
