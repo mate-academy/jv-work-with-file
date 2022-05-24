@@ -15,12 +15,12 @@ public class WorkWithFile {
     private static final String VARIABLE_RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        writeToFile(fromFileName, toFileName);
+        writeToFile(getReport(readInfoFromFile(fromFileName)),toFileName);
     }
 
-    private void writeToFile(String fromFileName, String toFileName) {
+    private void writeToFile(String report, String toFileName) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            writer.write(getReport(readInfoFromFile(fromFileName)));
+            writer.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to file: " + toFileName, e);
         }
