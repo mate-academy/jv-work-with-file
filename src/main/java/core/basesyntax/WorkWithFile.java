@@ -24,8 +24,8 @@ public class WorkWithFile {
             data[i][AMOUNT_ID] = buffer[AMOUNT_ID];
         }
         int[] report = countAmountByOperation(data);
-        String output = SUPPLY + SEPARATOR + report[1] + System.lineSeparator() + BUY + SEPARATOR + report[0]
-                + System.lineSeparator() + RESULT + SEPARATOR + report[2];
+        String output = SUPPLY + SEPARATOR + report[1] + System.lineSeparator() + BUY + SEPARATOR
+                + report[0] + System.lineSeparator() + RESULT + SEPARATOR + report[2];
         writeToFile(output, toFileName);
     }
 
