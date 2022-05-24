@@ -8,24 +8,18 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    public static final String SUPPLY = "supply";
-    public static final String BUY = "buy";
-    public static final String RESULT = "result";
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
+    private static final String COMMA = ",";
+    //private static final String SPACE = " ";
+    private static final String NEW_LINE = System.lineSeparator();
 
     public void getStatistic(String fromFileName, String toFileName) {
-        File toFile = new File(toFileName);
-        String[] statisticArray = getReport(readFile(fromFileName));
-        for (String data : statisticArray) {
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFile, true))) {
-                writer.write(data);
-                writer.newLine();
-            } catch (IOException e1) {
-                throw new RuntimeException("Can't write data to the file" + toFileName, e1);
-            }
-        }
+        writeReport(fromFileName, toFileName);
     }
 
-    public String readFile(String fromFileName) {
+    private String readFile(String fromFileName) {
         File fromFile = new File(fromFileName);
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFile))) {
             StringBuilder builder = new StringBuilder();
@@ -40,10 +34,10 @@ public class WorkWithFile {
         }
     }
 
-    public String[] getReport(String dataString) {
+    private String getReport(String fromFileName) {
         int sumSupply = 0;
         int sumBuy = 0;
-        String[] dataArray = dataString.split(" ");
+        String[] dataArray = readFile(fromFileName).split(" ");
         for (String data : dataArray) {
             int index = data.indexOf(",");
             String string = data.substring(0,index);
@@ -56,10 +50,18 @@ public class WorkWithFile {
         }
         int result = sumSupply - sumBuy;
         StringBuilder builder = new StringBuilder();
-        builder.append(SUPPLY).append(",").append(sumSupply).append(" ").append(BUY)
-                .append(",").append(sumBuy).append(" ").append(RESULT).append(",").append(result);
-        String stringReport = builder.toString();
-        return stringReport.split(" ");
+        builder.append(SUPPLY).append(COMMA).append(sumSupply).append(NEW_LINE)
+                .append(BUY).append(COMMA).append(sumBuy).append(NEW_LINE)
+                .append(RESULT).append(COMMA).append(result);
+        return builder.toString();
+    }
+
+    private void writeReport(String fromFileName, String toFileName) {
+        File toFile = new File(toFileName);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFile))) {
+            writer.write(getReport(fromFileName));
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write data to the file" + toFileName, e);
+        }
     }
 }
-
