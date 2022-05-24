@@ -14,6 +14,20 @@ public class WorkWithFile {
     public static final String LINE_SEPARATOR = System.lineSeparator();
     public static final String SEPARATOR = ",";
 
+    public void getStatistic(String fromFileName, String toFileName) {
+        String statistic = readFromFile(fromFileName);
+        String[] statisticToArray = statistic.split(",");
+        int resultSupply = getResultSupply(statisticToArray);
+        int resultBuy = getResultBuy(statisticToArray);
+        StringBuilder statisticFromFile = new StringBuilder();
+        statisticFromFile.append(SUPPLY).append(SEPARATOR).append(resultSupply)
+                .append(System.lineSeparator()).append(BUY)
+                .append(SEPARATOR).append(resultBuy)
+                .append(LINE_SEPARATOR)
+                .append(RESULT).append(SEPARATOR).append(resultSupply - resultBuy);
+        writeFile(statisticFromFile.toString(), toFileName);
+    }
+
     private String readFromFile(String fromFileName) {
         File fileFrom = new File(fromFileName);
         StringBuilder dataFromFile = new StringBuilder();
@@ -24,23 +38,9 @@ public class WorkWithFile {
                 line = reader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't read file: " + fromFileName, e);
         }
         return dataFromFile.toString();
-    }
-
-    public void getStatistic(String fromFileName, String toFileName) {
-        String statistic = readFromFile(fromFileName);
-        String[] statisticToArray = statistic.split(",");
-        int resultSupply = getResultSupply(statisticToArray);
-        int resultBuy = getResultBuy(statisticToArray);
-        StringBuilder statisticFromFile = new StringBuilder();
-        statisticFromFile.append(SUPPLY).append(",").append(resultSupply)
-                .append(System.lineSeparator()).append(BUY)
-                .append(",").append(resultBuy)
-                .append(LINE_SEPARATOR)
-                .append(RESULT).append(",").append(resultSupply - resultBuy);
-        writeFile(statisticFromFile.toString(), toFileName);
     }
 
     private void writeFile(String statisticFromFile, String toFileName) {
@@ -62,7 +62,6 @@ public class WorkWithFile {
     }
 
     private int getResultSupply(String [] fileToArray) {
-
         int resultSupply = 0;
         for (int i = 0; i < fileToArray.length; i++) {
             if (fileToArray[i].equals(SUPPLY)) {
