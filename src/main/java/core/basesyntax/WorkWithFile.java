@@ -8,13 +8,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    public static final String SUPPLY = "supply";
-    public static final String BUY = "buy";
-    public static final int ITEM = 0;
-    public static final int VALUE = 1;
-    public static final String SEPARATOR = System.lineSeparator();
-    public static final String SPACE = " ";
-    public static final String COMMA = ",";
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final int ACTION = 0;
+    private static final int VALUE = 1;
+    private static final String SEPARATOR = System.lineSeparator();
+    private static final String SPACE = " ";
+    private static final String COMMA = ",";
+    private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] rawData = readData(fromFileName);
@@ -42,17 +43,17 @@ public class WorkWithFile {
         int buyCount = 0;
         for (String record : data) {
             String[] splitRecord = record.split(COMMA);
-            if (splitRecord[ITEM].equals(SUPPLY)) {
+            if (splitRecord[ACTION].equals(SUPPLY)) {
                 supplyCount = supplyCount + Integer.parseInt(splitRecord[VALUE]);
             }
-            if (splitRecord[ITEM].equals(BUY)) {
+            if (splitRecord[ACTION].equals(BUY)) {
                 buyCount = buyCount + Integer.parseInt(splitRecord[VALUE]);
             }
         }
         int result = supplyCount - buyCount;
-        return "supply," + supplyCount + SEPARATOR
-                + "buy," + buyCount + SEPARATOR
-                + "result," + result;
+        return SUPPLY + COMMA + supplyCount + SEPARATOR
+                + BUY + COMMA + buyCount + SEPARATOR
+                + RESULT + COMMA + result;
     }
 
     private void writeData(String report, String toFileName) {
