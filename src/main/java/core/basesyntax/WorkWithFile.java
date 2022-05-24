@@ -12,7 +12,6 @@ public class WorkWithFile {
     private static final String BUY = "buy";
     private static final String RESULT = "result";
     private static final String COMMA = ",";
-    //private static final String SPACE = " ";
     private static final String NEW_LINE = System.lineSeparator();
 
     public void getStatistic(String fromFileName, String toFileName) {
