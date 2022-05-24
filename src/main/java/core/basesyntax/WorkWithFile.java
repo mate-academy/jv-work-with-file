@@ -20,8 +20,7 @@ public class WorkWithFile {
 
     private void writeToFile(String fromFileName, String toFileName) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            String allData = getReport(readInfoFromFile(fromFileName));
-            writer.write(allData);
+            writer.write(getReport(readInfoFromFile(fromFileName)));
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to file: " + toFileName, e);
         }
@@ -45,11 +44,11 @@ public class WorkWithFile {
 
     private String getReport(String allData) {
         StringBuilder reportInfo = new StringBuilder();
-        String [] arr = allData.split(" ");
+        String [] dataArray = allData.split(" ");
         int sumBuy = 0;
         int sumSupply = 0;
-        for (String ar : arr) {
-            String [] info = ar.split(",");
+        for (String record : dataArray) {
+            String [] info = record.split(",");
             if (info[INDEX_OF_NAME].equals(VARIABLE_BUY)) {
                 sumBuy += Integer.parseInt(info[INDEX_OF_NUM]);
             } else {
