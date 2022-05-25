@@ -34,7 +34,6 @@ public class WorkWithFile {
                 }
                 value = reader.readLine();
             }
-
             str.append(SUPPLY + SEPARATOR).append(numberOfSupply).append(System.lineSeparator());
             str.append(BUY + SEPARATOR).append(numberOfBuy).append(System.lineSeparator());
             str.append(RESULT + SEPARATOR).append(numberOfSupply - numberOfBuy)
@@ -44,7 +43,6 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't write data", e);
         }
-
         File fileResult = new File(toFileName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileResult, true))) {
             bufferedWriter.write(str.toString());
