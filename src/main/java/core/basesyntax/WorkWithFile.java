@@ -49,7 +49,6 @@ public class WorkWithFile {
         }
     }
 
-
     private void writeToFile(String toFileName, String statistic) {
         File file = new File(toFileName);
         try {
