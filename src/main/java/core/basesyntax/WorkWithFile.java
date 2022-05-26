@@ -21,7 +21,7 @@ public class WorkWithFile {
             }
             return builder.toString();
         } catch (IOException e) {
-            throw new RuntimeException("Can not read this fila:" + fromFileName, e);
+            throw new RuntimeException("Can not read this file:" + fromFileName, e);
         }
     }
 
@@ -38,20 +38,20 @@ public class WorkWithFile {
             }
         }
         int result = countSupply - countBuy;
-        StringBuilder count = new StringBuilder();
-        return count.append("supply").append(",").append(countSupply).append("\n").append("buy")
-                .append(",").append(countBuy).append("\n")
+        StringBuilder statisticBuilder = new StringBuilder();
+        return statisticBuilder.append("supply").append(",").append(countSupply).append(System.lineSeparator()).append("buy")
+                .append(",").append(countBuy).append(System.lineSeparator())
                 .append("result,").append(result).toString();
     }
 
-    private void writeToFile(String toFileName, String calculatorData) {
+    private void writeToFile(String toFileName, String statistic) {
         File file = new File(toFileName);
         try {
             FileWriter fileWriter = new FileWriter(file);
-            fileWriter.write(calculatorData);
+            fileWriter.write(statistic);
             fileWriter.close();
         } catch (IOException e) {
-            throw new RuntimeException("Can not write this fail: " + toFileName, e);
+            throw new RuntimeException("Can not write this file: " + toFileName, e);
         }
     }
 }
