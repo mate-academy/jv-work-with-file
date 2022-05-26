@@ -1,20 +1,15 @@
 package core.basesyntax;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 
 public class WorkWithFile {
-    private static final String SUPPLY = "supply";
-    private static final String BUY = "buy";
-    private static final int INDEX_OF_COUNT = 1;
+    private static final int INDEX_OF_AMOUNT = 1;
+    private static final int ZERO_INDEX = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String inputData = readFromFile(fromFileName);
-        String calculatorData = calculatorData(inputData);
-        writeToFile(toFileName, calculatorData);
+        String statistic = getStatistic(inputData);
+        writeToFile(toFileName, statistic);
     }
 
     private String readFromFile(String fromFileName) {
@@ -30,21 +25,21 @@ public class WorkWithFile {
         }
     }
 
-    private String calculatorData(String inputDate) {
+    private String getStatistic(String inputDate) {
         int countSupply = 0;
         int countBuy = 0;
         String[] dataFromFile = inputDate.split(" ");
         for (String data : dataFromFile) {
             String[] splitComa = data.split(",");
-            if (splitComa[0].equals(BUY)) {
-                countBuy += Integer.parseInt(splitComa[INDEX_OF_COUNT]);
+            if (splitComa[ZERO_INDEX].equals("buy")) {
+                countBuy += Integer.parseInt(splitComa[INDEX_OF_AMOUNT]);
             } else {
-                countSupply += Integer.parseInt(splitComa[INDEX_OF_COUNT]);
+                countSupply += Integer.parseInt(splitComa[INDEX_OF_AMOUNT]);
             }
         }
         int result = countSupply - countBuy;
         StringBuilder count = new StringBuilder();
-        return count.append(SUPPLY).append(",").append(countSupply).append("\n").append(BUY)
+        return count.append("supply").append(",").append(countSupply).append("\n").append("buy")
                 .append(",").append(countBuy).append("\n")
                 .append("result,").append(result).toString();
     }
