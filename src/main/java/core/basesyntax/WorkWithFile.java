@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public class WorkWithFile {
     private static final int INDEX_OF_AMOUNT = 1;
-    private static final int ZERO_INDEX = 0;
+    private static final int INDEX_OF_OPERATION = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String inputData = readFromFile(fromFileName);
@@ -22,7 +22,7 @@ public class WorkWithFile {
         String[] dataFromFile = inputDate.split(" ");
         for (String data : dataFromFile) {
             String[] splitComa = data.split(",");
-            if (splitComa[ZERO_INDEX].equals("buy")) {
+            if (splitComa[INDEX_OF_OPERATION].equals("buy")) {
                 countBuy += Integer.parseInt(splitComa[INDEX_OF_AMOUNT]);
             } else {
                 countSupply += Integer.parseInt(splitComa[INDEX_OF_AMOUNT]);
