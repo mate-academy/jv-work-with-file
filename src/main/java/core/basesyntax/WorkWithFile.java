@@ -1,6 +1,10 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class WorkWithFile {
     private static final int INDEX_OF_AMOUNT = 1;
@@ -10,19 +14,6 @@ public class WorkWithFile {
         String inputData = readFromFile(fromFileName);
         String statistic = getStatistic(inputData);
         writeToFile(toFileName, statistic);
-    }
-
-    private String readFromFile(String fromFileName) {
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
-            StringBuilder builder = new StringBuilder();
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                builder.append(line).append(" ");
-            }
-            return builder.toString();
-        } catch (IOException e) {
-            throw new RuntimeException("Can not read this file:" + fromFileName, e);
-        }
     }
 
     private String getStatistic(String inputDate) {
@@ -39,10 +30,25 @@ public class WorkWithFile {
         }
         int result = countSupply - countBuy;
         StringBuilder statisticBuilder = new StringBuilder();
-        return statisticBuilder.append("supply").append(",").append(countSupply).append(System.lineSeparator()).append("buy")
+        return statisticBuilder.append("supply").append(",").append(countSupply)
+                .append(System.lineSeparator()).append("buy")
                 .append(",").append(countBuy).append(System.lineSeparator())
                 .append("result,").append(result).toString();
     }
+
+    private String readFromFile(String fromFileName) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
+            StringBuilder builder = new StringBuilder();
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                builder.append(line).append(" ");
+            }
+            return builder.toString();
+        } catch (IOException e) {
+            throw new RuntimeException("Can not read this file:" + fromFileName, e);
+        }
+    }
+
 
     private void writeToFile(String toFileName, String statistic) {
         File file = new File(toFileName);
