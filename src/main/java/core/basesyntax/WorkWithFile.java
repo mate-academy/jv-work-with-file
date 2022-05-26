@@ -12,6 +12,7 @@ public class WorkWithFile {
         String calculatorData = calculatorData(inputData);
         writeToFile(toFileName, calculatorData);
     }
+
     private String readFromFile(String fromFileName) {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             StringBuilder builder = new StringBuilder();
@@ -20,10 +21,11 @@ public class WorkWithFile {
                 builder.append(line).append(" ");
             }
             return builder.toString();
-            } catch (IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException("Can not read this fila:" + fromFileName, e);
         }
     }
+
     private String calculatorData(String inputDate) {
         int countSupply = 0;
         int countBuy = 0;
@@ -42,6 +44,7 @@ public class WorkWithFile {
                 .append(",").append(countBuy).append("\n")
                 .append("result,").append(result).toString();
     }
+
     private void writeToFile(String toFileName, String calculatorData) {
         File file = new File(toFileName);
         try {
