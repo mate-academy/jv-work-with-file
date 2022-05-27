@@ -17,22 +17,22 @@ public class WorkWithFile {
     }
 
     private String getStatistic(String inputDate) {
-        int countSupply = 0;
-        int countBuy = 0;
-        String[] dataFromFile = inputDate.split(" ");
-        for (String data : dataFromFile) {
-            String[] splitComa = data.split(",");
-            if (splitComa[INDEX_OF_OPERATION].equals("buy")) {
-                countBuy += Integer.parseInt(splitComa[INDEX_OF_AMOUNT]);
+        int suppleCounter = 0;
+        int buyCounter = 0;
+        String[] data = inputDate.split(" ");
+        for (String line : data) {
+            String[] splittedLine = line.split(",");
+            if (splittedLine[INDEX_OF_OPERATION].equals("buy")) {
+                buyCounter += Integer.parseInt(splittedLine[INDEX_OF_AMOUNT]);
             } else {
-                countSupply += Integer.parseInt(splitComa[INDEX_OF_AMOUNT]);
+                suppleCounter += Integer.parseInt(splittedLine[INDEX_OF_AMOUNT]);
             }
         }
-        int result = countSupply - countBuy;
+        int result = suppleCounter - buyCounter;
         StringBuilder statisticBuilder = new StringBuilder();
-        return statisticBuilder.append("supply").append(",").append(countSupply)
+        return statisticBuilder.append("supply").append(",").append(suppleCounter)
                 .append(System.lineSeparator()).append("buy")
-                .append(",").append(countBuy).append(System.lineSeparator())
+                .append(",").append(buyCounter).append(System.lineSeparator())
                 .append("result,").append(result).toString();
     }
 
