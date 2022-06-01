@@ -6,13 +6,13 @@ import java.nio.file.Paths;
 import java.util.List;
 
 public class WorkWithFile {
-    static final String COMMA_SPLITTER = ",";
+    private static final String COMMA_SPLITTER = ",";
+    private static final int OPERATION_COLUMN = 0;
+    private static final int COUNT_COLUMN = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         List<String> fileData = readDataFromFile(fromFileName);
-
         String report = createReport(fileData);
-
         writeDataToFile(toFileName, report.getBytes());
     }
 
@@ -29,10 +29,10 @@ public class WorkWithFile {
         int buy = 0;
 
         for (String line:fileData) {
-            if ("supply".equals(line.split(COMMA_SPLITTER)[0])) {
-                supply += Integer.parseInt(line.split(COMMA_SPLITTER)[1]);
-            } else if ("buy".equals(line.split(COMMA_SPLITTER)[0])) {
-                buy += Integer.parseInt(line.split(COMMA_SPLITTER)[1]);
+            if ("supply".equals(line.split(COMMA_SPLITTER)[OPERATION_COLUMN])) {
+                supply += Integer.parseInt(line.split(COMMA_SPLITTER)[COUNT_COLUMN]);
+            } else if ("buy".equals(line.split(COMMA_SPLITTER)[OPERATION_COLUMN])) {
+                buy += Integer.parseInt(line.split(COMMA_SPLITTER)[COUNT_COLUMN]);
             }
         }
 
