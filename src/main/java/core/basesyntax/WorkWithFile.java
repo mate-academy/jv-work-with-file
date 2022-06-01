@@ -6,6 +6,7 @@ import java.nio.file.Paths;
 import java.util.List;
 
 public class WorkWithFile {
+    static final String COMMA_SPLITTER = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         List<String> fileData = readDataFromFile(fromFileName);
@@ -28,10 +29,10 @@ public class WorkWithFile {
         int buy = 0;
 
         for (String line:fileData) {
-            if ("supply".equals(line.split(",")[0])) {
-                supply += Integer.parseInt(line.split(",")[1]);
-            } else if ("buy".equals(line.split(",")[0])) {
-                buy += Integer.parseInt(line.split(",")[1]);
+            if ("supply".equals(line.split(COMMA_SPLITTER)[0])) {
+                supply += Integer.parseInt(line.split(COMMA_SPLITTER)[1]);
+            } else if ("buy".equals(line.split(COMMA_SPLITTER)[0])) {
+                buy += Integer.parseInt(line.split(COMMA_SPLITTER)[1]);
             }
         }
 
