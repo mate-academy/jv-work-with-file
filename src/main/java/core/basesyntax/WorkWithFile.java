@@ -8,15 +8,16 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final int OPERATION_TYPE = 0;
-    private static final int AMOUNT = 1;
+    private static final int OPERATION_TYPE_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
     private static final String OPERATION_TYPE_BUY = "buy";
     private static final String OPERATION_TYPE_SUPPLY = "supply";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int buy = 0;
-        int supply = 0;
-        int result = 0;
+        writeStatistic(toFileName, getOperationType(readStatistic(fromFileName)));
+    }
+
+    public String[] readStatistic(String fromFileName) {
         File fileReade = new File(fromFileName);
         StringBuilder stringBuilder;
         try {
@@ -27,22 +28,34 @@ public class WorkWithFile {
                 stringBuilder.append(value).append(System.lineSeparator());
                 value = bufferedReader.readLine();
             }
-            String[] allOperation = stringBuilder.toString().split(System.lineSeparator());
-            for (String operation : allOperation) {
-                String[] oneOperation = operation.split(",");
-                if (oneOperation[OPERATION_TYPE].equals(OPERATION_TYPE_BUY)) {
-                    buy += Integer.parseInt(oneOperation[AMOUNT]);
-                } else if (oneOperation[OPERATION_TYPE].equals(OPERATION_TYPE_SUPPLY)) {
-                    supply += Integer.parseInt(oneOperation[AMOUNT]);
-                }
-            }
-            result = supply - buy;
         } catch (IOException e) {
             throw new RuntimeException("Can't read file", e);
         }
+        String[] allOperation = stringBuilder.toString().split(System.lineSeparator());
+        return allOperation;
+    }
+
+    public String[] getOperationType(String[] allOperation) {
+        int buy = 0;
+        int supply = 0;
+        int result = 0;
+        for (String operation : allOperation) {
+            String[] oneOperation = operation.split(",");
+            if (oneOperation[OPERATION_TYPE_INDEX].equals(OPERATION_TYPE_BUY)) {
+                buy += Integer.parseInt(oneOperation[AMOUNT_INDEX]);
+            } else if (oneOperation[OPERATION_TYPE_INDEX].equals(OPERATION_TYPE_SUPPLY)) {
+                supply += Integer.parseInt(oneOperation[AMOUNT_INDEX]);
+            }
+        }
+        result = supply - buy;
         String[] resultData = new String[]{"supply," + supply + System.lineSeparator()
                 + "buy," + buy + System.lineSeparator()
                 + "result," + result};
+        return resultData;
+    }
+
+    public void writeStatistic(String toFileName, String[] resultData) {
+
         File fileWrite = new File(toFileName);
         for (String data : resultData) {
             try (BufferedWriter bufferedWriter = new BufferedWriter(
