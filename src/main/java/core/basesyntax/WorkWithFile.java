@@ -27,7 +27,7 @@ public class WorkWithFile {
                 stringBuilder.append(value).append(System.lineSeparator());
                 value = bufferedReader.readLine();
             }
-            String[] allOperation = stringBuilder.toString().split("\r\n");
+            String[] allOperation = stringBuilder.toString().split(System.lineSeparator());
             for (String operation : allOperation) {
                 String[] oneOperation = operation.split(",");
                 if (oneOperation[OPERATION_TYPE].equals(OPERATION_TYPE_BUY)) {
