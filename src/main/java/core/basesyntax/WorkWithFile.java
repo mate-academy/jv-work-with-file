@@ -16,7 +16,7 @@ public class WorkWithFile {
     private static final int OPERATION_CELL = 0;
     private static final int AMOUNT_CELL = 1;
 
-    public void getStatistic (String fromFileName, String toFileName){
+    public void getStatistic(String fromFileName, String toFileName) {
         int totalSupply = 0;
         int totalBuy = 0;
         StringBuilder builder = new StringBuilder();
@@ -36,26 +36,26 @@ public class WorkWithFile {
         writeFile(new File(toFileName), builder.toString());
     }
 
-        private String[] readFile(File file) {
-            StringBuilder builder = new StringBuilder();
-            String value;
-            try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
+    private String[] readFile(File file) {
+        StringBuilder builder = new StringBuilder();
+        String value;
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
+            value = bufferedReader.readLine();
+            while (value != null) {
+                builder.append(value).append(SPLITTER);
                 value = bufferedReader.readLine();
-                while (value != null) {
-                    builder.append(value).append(SPLITTER);
-                    value = bufferedReader.readLine();
-                }
-            } catch (IOException e) {
-                throw new RuntimeException("Cannot read file: " + e);
             }
-            return builder.toString().split(SPLITTER);
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot read file: " + e);
         }
+        return builder.toString().split(SPLITTER);
+    }
 
-        private void writeFile(File file, String message) {
-            try {
-                Files.write(file.toPath(), message.getBytes());
-            } catch (IOException e) {
-                throw new RuntimeException("Can't write data to file " + e);
-            }
+    private void writeFile(File file, String message) {
+        try {
+            Files.write(file.toPath(), message.getBytes());
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write data to file " + e);
         }
     }
+}
