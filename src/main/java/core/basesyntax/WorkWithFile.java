@@ -1,14 +1,22 @@
 package core.basesyntax;
 
-import java.io.*;
-import java.util.Arrays;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class WorkWithFile {
-    private final int OPERATION_TYPE = 0;
-    private final int AMOUNT = 1;
+    private static final int OPERATION_TYPE = 0;
+    private static final int AMOUNT = 1;
+    private static final String OPERATION_TYPE_BUY = "buy";
+    private static final String OPERATION_TYPE_SUPPLY = "supply";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int buy = 0, supply = 0, result = 0;
+        int buy = 0;
+        int supply = 0;
+        int result = 0;
         File fileReade = new File(fromFileName);
         StringBuilder stringBuilder;
         try {
@@ -22,9 +30,9 @@ public class WorkWithFile {
             String[] allOperation = stringBuilder.toString().split("\r\n");
             for (String operation : allOperation) {
                 String[] oneOperation = operation.split(",");
-                if (oneOperation[OPERATION_TYPE].equals("buy")) {
+                if (oneOperation[OPERATION_TYPE].equals(OPERATION_TYPE_BUY)) {
                     buy += Integer.parseInt(oneOperation[AMOUNT]);
-                } else if (oneOperation[OPERATION_TYPE].equals("supply")) {
+                } else if (oneOperation[OPERATION_TYPE].equals(OPERATION_TYPE_SUPPLY)) {
                     supply += Integer.parseInt(oneOperation[AMOUNT]);
                 }
             }
@@ -37,7 +45,8 @@ public class WorkWithFile {
                 + "result," + result};
         File fileWrite = new File(toFileName);
         for (String data : resultData) {
-            try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileWrite, true))) {
+            try (BufferedWriter bufferedWriter = new BufferedWriter(
+                    new FileWriter(fileWrite, true))) {
                 bufferedWriter.write(data);
             } catch (IOException e) {
                 throw new RuntimeException("Can't write file", e);
