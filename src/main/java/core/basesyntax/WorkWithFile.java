@@ -20,8 +20,7 @@ public class WorkWithFile {
     public String[] readStatistic(String fromFileName) {
         File fileReade = new File(fromFileName);
         StringBuilder stringBuilder;
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(fileReade));
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileReade))) {
             stringBuilder = new StringBuilder();
             String value = bufferedReader.readLine();
             while (value != null) {
@@ -29,7 +28,7 @@ public class WorkWithFile {
                 value = bufferedReader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't read data from file " + fromFileName, e);
         }
         String[] allOperation = stringBuilder.toString().split(System.lineSeparator());
         return allOperation;
@@ -62,7 +61,7 @@ public class WorkWithFile {
                     new FileWriter(fileWrite, true))) {
                 bufferedWriter.write(data);
             } catch (IOException e) {
-                throw new RuntimeException("Can't write file", e);
+                throw new RuntimeException("Can't write data to file " + toFileName, e);
             }
         }
     }
