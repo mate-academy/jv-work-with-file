@@ -19,7 +19,6 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         int totalSupply = 0;
         int totalBuy = 0;
-        StringBuilder builder = new StringBuilder();
         String[] tableRow;
         String[] data = readFile(new File(fromFileName));
         for (int i = 0; i < data.length; i++) {
@@ -30,6 +29,11 @@ public class WorkWithFile {
                 totalBuy += Integer.parseInt(tableRow[AMOUNT_CELL]);
             }
         }
+        buildAppend(totalSupply,totalBuy,toFileName);
+    }
+
+    private void buildAppend(int totalSupply, int totalBuy, String toFileName) {
+        StringBuilder builder = new StringBuilder();
         builder.append(SUPPLY).append(COMMA).append(totalSupply).append(LINE_SEPARATOR)
                 .append(BUY).append(COMMA).append(totalBuy).append(LINE_SEPARATOR)
                 .append(RESULT).append(COMMA).append(totalSupply - totalBuy);
