@@ -1,55 +1,56 @@
 package core.basesyntax;
 
+import static java.lang.Integer.parseInt;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.List;
 
 public class WorkWithFile {
-    private static final String COMMA_SPLITTER = ",";
-    private static final int OPERATION_COLUMN = 0;
-    private static final int COUNT_COLUMN = 1;
+    private static final String BUY = "buy";
+    private static final char SEPARATOR = ',';
+    private static final String SUPPLY = "supply";
+    private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        List<String> fileData = readDataFromFile(fromFileName);
-        String report = createReport(fileData);
-        writeDataToFile(toFileName, report.getBytes());
-    }
-
-    private List<String> readDataFromFile(String fromFileName) {
+        File file = new File(fromFileName);
+        StringBuilder str = new StringBuilder();
         try {
-            return Files.readAllLines(Paths.get(fromFileName));
-        } catch (IOException e) {
-            throw new RuntimeException("Can`t read file: " + fromFileName, e);
-        }
-    }
-
-    private String createReport(List<String> fileData) {
-        int supply = 0;
-        int buy = 0;
-
-        for (String line:fileData) {
-            if ("supply".equals(line.split(COMMA_SPLITTER)[OPERATION_COLUMN])) {
-                supply += Integer.parseInt(line.split(COMMA_SPLITTER)[COUNT_COLUMN]);
-            } else if ("buy".equals(line.split(COMMA_SPLITTER)[OPERATION_COLUMN])) {
-                buy += Integer.parseInt(line.split(COMMA_SPLITTER)[COUNT_COLUMN]);
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            String value = reader.readLine();
+            int numberOfSupply = 0;
+            int numberOfBuy = 0;
+            int index;
+            while (value != null) {
+                index = value.indexOf(',');
+                if (value.substring(0,index).equals(SUPPLY)) {
+                    numberOfSupply += parseInt(value.substring(index + 1));
+                } else {
+                    numberOfBuy += parseInt(value.substring(index + 1));
+                }
+                value = reader.readLine();
             }
+
+            str.append(SUPPLY + SEPARATOR).append(numberOfSupply).append(System.lineSeparator());
+            str.append(BUY + SEPARATOR).append(numberOfBuy).append(System.lineSeparator());
+            str.append(RESULT + SEPARATOR).append(numberOfSupply - numberOfBuy)
+                    .append(System.lineSeparator())
+                    .append("\n");
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException("Can't read data from file", e);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write data", e);
         }
 
-        return new StringBuilder().append(String.format("%s,%d", "supply", supply))
-                .append(System.lineSeparator())
-                .append(String.format("%s,%d", "buy", buy))
-                .append(System.lineSeparator())
-                .append(String.format("%s,%d", "result", supply - buy))
-                .append(System.lineSeparator())
-                .toString();
-    }
-
-    private void writeDataToFile(String toFileName, byte[] writeData) {
-        try {
-            Files.write(Paths.get(toFileName), writeData);
+        File fileResult = new File(toFileName);
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileResult, true))) {
+            bufferedWriter.write(str.toString());
         } catch (IOException e) {
-            throw new RuntimeException("Can`t write file: " + toFileName, e);
+            throw new RuntimeException("Cant write to file", e);
         }
     }
 }
