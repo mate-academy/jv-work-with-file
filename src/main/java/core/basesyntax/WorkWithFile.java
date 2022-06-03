@@ -29,10 +29,10 @@ public class WorkWithFile {
                 totalBuy += Integer.parseInt(tableRow[AMOUNT_CELL]);
             }
         }
-        buildAppend(totalSupply,totalBuy,toFileName);
+        buildReport(totalSupply,totalBuy,toFileName);
     }
 
-    private void buildAppend(int totalSupply, int totalBuy, String toFileName) {
+    private void buildReport(int totalSupply, int totalBuy, String toFileName) {
         StringBuilder builder = new StringBuilder();
         builder.append(SUPPLY).append(COMMA).append(totalSupply).append(LINE_SEPARATOR)
                 .append(BUY).append(COMMA).append(totalBuy).append(LINE_SEPARATOR)
