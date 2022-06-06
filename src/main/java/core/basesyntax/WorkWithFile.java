@@ -42,7 +42,6 @@ public class WorkWithFile {
             extractedBuy(writer, "buy", totalBuy);
             extractedResult(writer, "result", result);
 
-
         } catch (FileNotFoundException e) {
             throw new RuntimeException("File not found" + fromFileName + e);
         } catch (IOException | CsvException e) {
