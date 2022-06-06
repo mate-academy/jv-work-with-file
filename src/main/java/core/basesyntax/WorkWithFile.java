@@ -38,16 +38,28 @@ public class WorkWithFile {
                 }
             }
             int result = totalSupply - totalBuy;
+            extractedSupply(writer, "supply", totalSupply);
+            extractedBuy(writer, "buy", totalBuy);
+            extractedResult(writer, "result", result);
 
-            writer.writeNext(new String[]{"supply", String.valueOf(totalSupply)}, false);
-            writer.writeNext(new String[]{"buy", String.valueOf(totalBuy)}, false);
-            writer.writeNext(new String[]{"result", String.valueOf(result)}, false);
 
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("File not found", e);
+            throw new RuntimeException("File not found" + fromFileName + e);
         } catch (IOException | CsvException e) {
-            throw new RuntimeException("Something wrong while reading csv", e);
+            throw new RuntimeException("Something wrong while reading csv" + fromFileName + e);
         }
 
+    }
+
+    private void extractedResult(CSVWriter writer, String result, int result1) {
+        writer.writeNext(new String[]{result, String.valueOf(result1)}, false);
+    }
+
+    private void extractedBuy(CSVWriter writer, String buy, int totalBuy) {
+        writer.writeNext(new String[]{buy, String.valueOf(totalBuy)}, false);
+    }
+
+    private void extractedSupply(CSVWriter writer, String supply, int totalSupply) {
+        writer.writeNext(new String[]{supply, String.valueOf(totalSupply)}, false);
     }
 }
