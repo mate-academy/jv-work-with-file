@@ -1,11 +1,11 @@
 package core.basesyntax;
 
 public class WorkWithFile {
+    private FileReader fileReader = new FileReader();
+    private FileWriter fileWriter = new FileWriter();
+    private ReportCreator reportCreator = new ReportCreator();
 
     public void getStatistic(String fromFileName, String toFileName) {
-        FileReader fileReader = new FileReader();
-        FileWriter fileWriter = new FileWriter();
-        ReportCreator reportCreator = new ReportCreator();
         fileWriter.writeToFile(toFileName, reportCreator
                 .createReport(fileReader.readFile(fromFileName)));
     }

@@ -7,13 +7,10 @@ import java.util.List;
 
 public class FileReader {
 
-    public String[] readFile(String fromFileName) {
+    public List<String> readFile(String fromFileName) {
         File fromFile = new File(fromFileName);
         try {
-            List<String> strings = Files.readAllLines(fromFile.toPath());
-            String[] data = new String[strings.size()];
-            strings.toArray(data);
-            return data;
+            return Files.readAllLines(fromFile.toPath());
         } catch (IOException e) {
             throw new RuntimeException("Can`t read file", e);
         }
