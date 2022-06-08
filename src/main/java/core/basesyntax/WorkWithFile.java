@@ -1,64 +1,77 @@
 package core.basesyntax;
 
-import com.opencsv.CSVReader;
-import com.opencsv.CSVWriter;
-import com.opencsv.exceptions.CsvException;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.List;
 
 public class WorkWithFile {
+    private static final String COMA = ",";
+    private static final String SUPPLY_TITLE = "supply";
+    private static final String BUY_TITLE = "buy";
+    private static final String RESULT_TITLE = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
-
-        try (CSVReader reader = new CSVReader(new FileReader(fromFileName));
-                CSVWriter writer = new CSVWriter(new FileWriter(toFileName),
-                        ',',
-                        CSVWriter.NO_QUOTE_CHARACTER,
-                        CSVWriter.NO_ESCAPE_CHARACTER,
-                        System.lineSeparator())) {
-
-            List<String[]> strings = reader.readAll();
-
-            int totalBuy = 0;
-            int totalSupply = 0;
-
-            for (String[] data : strings) {
-                switch (data[0]) {
-                    case "buy":
-                        totalBuy += Integer.parseInt(data[1]);
-                        break;
-                    case "supply":
-                        totalSupply += Integer.parseInt(data[1]);
-                        break;
-                    default:
-                        throw new RuntimeException("invalid data");
-                }
-            }
-            int result = totalSupply - totalBuy;
-            extractedSupply(writer, "supply", totalSupply);
-            extractedBuy(writer, "buy", totalBuy);
-            extractedResult(writer, "result", result);
-
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException("File not found" + fromFileName + e);
-        } catch (IOException | CsvException e) {
-            throw new RuntimeException("Something wrong while reading csv" + fromFileName + e);
+        writeFile(fromFileName);
+        try {
+            resultLine(writeFile(fromFileName),toFileName);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
 
     }
 
-    private void extractedResult(CSVWriter writer, String result, int result1) {
-        writer.writeNext(new String[]{result, String.valueOf(result1)}, false);
+    private BufferedReader writeFile(String fromFileName) {
+        File srcFile = new File(fromFileName);
+        BufferedReader reader;
+
+        try {
+            reader = new BufferedReader(new FileReader(srcFile));
+
+        } catch (FileNotFoundException ex) {
+            throw new RuntimeException(ex);
+        }
+        return reader;
     }
 
-    private void extractedBuy(CSVWriter writer, String buy, int totalBuy) {
-        writer.writeNext(new String[]{buy, String.valueOf(totalBuy)}, false);
+    private void resultLine(BufferedReader reader,String toFileName) throws IOException {
+        int supplyAmount = 0;
+        int buyAmount = 0;
+
+        String line;
+        while ((line = reader.readLine()) != null) {
+            String[] column = line.split(COMA);
+            if (column.length != 2) {
+                throw new RuntimeException("Incorrect column count in '" + line + "'");
+            }
+            switch (column[0]) {
+                case SUPPLY_TITLE: {
+                    supplyAmount += Integer.parseInt(column[1]);
+                    break;
+                }
+                case BUY_TITLE: {
+                    buyAmount += Integer.parseInt(column[1]);
+                    break;
+                }
+                default:
+                    throw new RuntimeException("Incorrect title '"
+                            + column[0] + "' in '" + line + "'");
+            }
+        }
+
+        saveStatistic(supplyAmount, buyAmount, toFileName);
     }
 
-    private void extractedSupply(CSVWriter writer, String supply, int totalSupply) {
-        writer.writeNext(new String[]{supply, String.valueOf(totalSupply)}, false);
+    private void saveStatistic(int supplyAmount, int buyAmount, String toFileName) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
+            writer.write(SUPPLY_TITLE + COMA + supplyAmount + System.lineSeparator());
+            writer.write(BUY_TITLE + COMA + buyAmount + System.lineSeparator());
+            writer.write(RESULT_TITLE + COMA + (supplyAmount - buyAmount));
+        } catch (IOException e) {
+            throw new RuntimeException("Couldn't write file" + toFileName, e);
+        }
     }
 }
