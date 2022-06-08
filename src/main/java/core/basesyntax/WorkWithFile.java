@@ -9,8 +9,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final String COMA = ",";
     private static final String SUPPLY_TITLE = "supply";
+    private static final String COMA = ",";
     private static final String BUY_TITLE = "buy";
     private static final String RESULT_TITLE = "result";
 
