@@ -21,7 +21,7 @@ public class WorkWithFile {
             if (reportFile[SUPPLY].equals("supply")) {
                 supplyCount += Integer.parseInt(reportFile[SUPPLY_ELEMENT]);
             } else {
-                buyCount += Integer.parseInt(reportFile[1]);
+                buyCount += Integer.parseInt(reportFile[SUPPLY_ELEMENT]);
             }
         }
         builder.append("supply").append(",").append(supplyCount).append(System.lineSeparator())
