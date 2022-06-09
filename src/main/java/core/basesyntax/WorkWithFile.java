@@ -8,8 +8,8 @@ import java.nio.file.Path;
 import java.util.List;
 
 public class WorkWithFile {
-    private static final int OPERATION_TYPE = 0;
-    private static final int AMOUNT = 1;
+    private static final int OPERATION_TYPE_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
     private static final int SIZE_LINE = 2;
 
     public void getStatistic(String fromFileName, String toFileName) {
@@ -36,18 +36,18 @@ public class WorkWithFile {
             if (column.length != SIZE_LINE) {
                 throw new RuntimeException("Incorrect column count in '" + line + "'");
             }
-            switch (column[OPERATION_TYPE]) {
+            switch (column[OPERATION_TYPE_INDEX]) {
                 case "supply": {
-                    supplyAmount += Integer.parseInt(column[AMOUNT]);
+                    supplyAmount += Integer.parseInt(column[AMOUNT_INDEX]);
                     break;
                 }
                 case "buy": {
-                    buyAmount += Integer.parseInt(column[AMOUNT]);
+                    buyAmount += Integer.parseInt(column[AMOUNT_INDEX]);
                     break;
                 }
                 default:
                     throw new RuntimeException("Incorrect title '"
-                            + column[OPERATION_TYPE] + "' in '" + line + "'");
+                            + column[OPERATION_TYPE_INDEX] + "' in '" + line + "'");
             }
         }
         saveStatistic(supplyAmount, buyAmount, toFileName);
