@@ -8,16 +8,18 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private int supplyCount = 0;
-    private int buyCount = 0;
+    private static final int SUPPLY = 0;
+    private static final int SUPPLY_COUNT = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
+        int supplyCount = 0;
+        int buyCount = 0;
         StringBuilder builder = new StringBuilder();
         String[] file = readFile(new File(fromFileName));
         for (String files : file) {
             String[] reportFile = files.split(",");
-            if (reportFile[0].equals("supply")) {
-                supplyCount += Integer.parseInt(reportFile[1]);
+            if (reportFile[SUPPLY].equals("supply")) {
+                supplyCount += Integer.parseInt(reportFile[SUPPLY_COUNT]);
             } else {
                 buyCount += Integer.parseInt(reportFile[1]);
             }
@@ -41,7 +43,7 @@ public class WorkWithFile {
         return builder.toString().split(System.lineSeparator());
     }
 
-    private void writeReportFile(File file,String writeToFile) {
+    private void writeReportFile(File file, String writeToFile) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file,true))) {
             bufferedWriter.write(writeToFile);
         } catch (IOException e) {
