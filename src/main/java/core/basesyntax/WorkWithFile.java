@@ -9,7 +9,7 @@ import java.io.IOException;
 
 public class WorkWithFile {
     private static final int SUPPLY = 0;
-    private static final int SUPPLY_COUNT = 1;
+    private static final int SUPPLY_ELEMENT = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         int supplyCount = 0;
@@ -19,7 +19,7 @@ public class WorkWithFile {
         for (String files : file) {
             String[] reportFile = files.split(",");
             if (reportFile[SUPPLY].equals("supply")) {
-                supplyCount += Integer.parseInt(reportFile[SUPPLY_COUNT]);
+                supplyCount += Integer.parseInt(reportFile[SUPPLY_ELEMENT]);
             } else {
                 buyCount += Integer.parseInt(reportFile[1]);
             }
