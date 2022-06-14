@@ -15,19 +15,19 @@ public class WorkWithFile {
         int supplyCount = 0;
         int buyCount = 0;
         StringBuilder builder = new StringBuilder();
-        String[] line = readFile(String.valueOf(new File(fromFileName)));
-        for (String lines : line) {
-            String[] splittedLine = lines.split(",");
-            if (splittedLine[OPERATION_INDEX].equals("supply")) {
-                supplyCount += Integer.parseInt(splittedLine[AMOUNT_INDEX]);
+        String[] lines = readFile(String.valueOf(new File(fromFileName)));
+        for (String line : lines) {
+            String[] splitLine = line.split(",");
+            if (splitLine[OPERATION_INDEX].equals("supply")) {
+                supplyCount += Integer.parseInt(splitLine[AMOUNT_INDEX]);
             } else {
-                buyCount += Integer.parseInt(splittedLine[AMOUNT_INDEX]);
+                buyCount += Integer.parseInt(splitLine[AMOUNT_INDEX]);
             }
         }
         builder.append("supply").append(",").append(supplyCount).append(System.lineSeparator())
                 .append("buy").append(",").append(buyCount).append(System.lineSeparator())
                 .append("result").append(",").append(supplyCount - buyCount);
-        writeReportFile(new File(toFileName), builder.toString());
+        writeReportFile(toFileName, builder.toString());
     }
 
     private String[] readFile(String fromFileName) {
@@ -43,11 +43,11 @@ public class WorkWithFile {
         return builder.toString().split(System.lineSeparator());
     }
 
-    private void writeReportFile(File file, String statisitic) {
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file,true))) {
-            bufferedWriter.write(statisitic);
+    private void writeReportFile(String toFileName, String statistic) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName,true))) {
+            bufferedWriter.write(statistic);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write file: " + statisitic, e);
+            throw new RuntimeException("Can't write file: " + statistic, e);
         }
     }
 }
