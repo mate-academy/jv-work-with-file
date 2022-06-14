@@ -8,67 +8,54 @@ import java.io.IOException;
 
 public class WorkWithFile {
     private static final int TRANSACTION_TYPE_POSITION = 0;
+    private static final int SUPPLY_AMOUNT = 0;
+    private static final int BUY_AMOUNT = 1;
     private static final int MONEY_AMOUNT_POSITION = 1;
-    private static final String SUPPLY = "supply";
-    private static final String BUY = "buy";
-    private int supplyAmount = 0;
-    private int buyAmount = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        readFromFile(fromFileName);
-        writeStatisticToFile(toFileName, getSupplyAmount(), getBuyAmount());
+        writeStatisticToFile(toFileName,
+                readFromFile(fromFileName)[SUPPLY_AMOUNT],
+                readFromFile(fromFileName)[BUY_AMOUNT]);
     }
 
     private void writeStatisticToFile(String toFileName, int supplyAmount, int buyAmount) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName, true))) {
-            writer.write(SUPPLY + "," + supplyAmount + System.lineSeparator()
-                    + BUY + "," + buyAmount + System.lineSeparator()
+            writer.write("supply" + "," + supplyAmount + System.lineSeparator()
+                    + "buy" + "," + buyAmount + System.lineSeparator()
                     + "result" + "," + (supplyAmount - buyAmount));
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file " + toFileName, e);
         }
     }
 
-    private void readFromFile(String fromFileName) {
+    private int[] readFromFile(String fromFileName) {
+        int [] supplyBuyCounter = new int[2];
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                countTransactions(line);
+                supplyBuyCounter[SUPPLY_AMOUNT] += countTransactions(line)[SUPPLY_AMOUNT];
+                supplyBuyCounter[BUY_AMOUNT] += countTransactions(line)[BUY_AMOUNT];
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read from " + fromFileName, e);
         }
+        return supplyBuyCounter;
     }
 
-    private void countTransactions(String line) {
+    private int[] countTransactions(String line) {
+        int supplyAmount = 0;
+        int buyAmount = 0;
         String[] transactionType = line.split(",");
         switch (transactionType[TRANSACTION_TYPE_POSITION]) {
-            case SUPPLY:
-                setSupplyAmount(getSupplyAmount()
-                        + Integer.parseInt(transactionType[MONEY_AMOUNT_POSITION]));
+            case "supply":
+                supplyAmount += Integer.parseInt(transactionType[MONEY_AMOUNT_POSITION]);
                 break;
-            case BUY:
-                setBuyAmount(getBuyAmount()
-                        + Integer.parseInt(transactionType[MONEY_AMOUNT_POSITION]));
+            case "buy":
+                buyAmount += Integer.parseInt(transactionType[MONEY_AMOUNT_POSITION]);
                 break;
             default:
-                System.out.println("Invalid transaction type");
+                throw new RuntimeException("Invalid transaction type");
         }
-    }
-
-    public int getSupplyAmount() {
-        return supplyAmount;
-    }
-
-    public void setSupplyAmount(int supplyAmount) {
-        this.supplyAmount = supplyAmount;
-    }
-
-    public int getBuyAmount() {
-        return buyAmount;
-    }
-
-    public void setBuyAmount(int buyAmount) {
-        this.buyAmount = buyAmount;
+        return new int[]{supplyAmount,buyAmount};
     }
 }
