@@ -13,33 +13,35 @@ public class WorkWithFile {
     private static final int MONEY_AMOUNT_POSITION = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        writeStatisticToFile(toFileName,
-                readFromFile(fromFileName)[SUPPLY_AMOUNT],
-                readFromFile(fromFileName)[BUY_AMOUNT]);
+        writeStatisticToFile(toFileName,readFromFile(fromFileName));
     }
 
-    private void writeStatisticToFile(String toFileName, int supplyAmount, int buyAmount) {
+    private void writeStatisticToFile(String toFileName, int[] supplyBuyArray) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName, true))) {
-            writer.write("supply" + "," + supplyAmount + System.lineSeparator()
-                    + "buy" + "," + buyAmount + System.lineSeparator()
-                    + "result" + "," + (supplyAmount - buyAmount));
+            writer.write(reportCreator(supplyBuyArray));
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file " + toFileName, e);
         }
     }
 
+    private String reportCreator(int[] supplyBuyArray) {
+        return "supply" + "," + supplyBuyArray[SUPPLY_AMOUNT] + System.lineSeparator()
+                + "buy" + "," + supplyBuyArray[BUY_AMOUNT] + System.lineSeparator()
+                + "result" + "," + (supplyBuyArray[SUPPLY_AMOUNT] - supplyBuyArray[BUY_AMOUNT]);
+    }
+
     private int[] readFromFile(String fromFileName) {
-        int [] supplyBuyCounter = new int[2];
+        int [] supplyBuyArray = new int[2];
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                supplyBuyCounter[SUPPLY_AMOUNT] += countTransactions(line)[SUPPLY_AMOUNT];
-                supplyBuyCounter[BUY_AMOUNT] += countTransactions(line)[BUY_AMOUNT];
+                supplyBuyArray[SUPPLY_AMOUNT] += countTransactions(line)[SUPPLY_AMOUNT];
+                supplyBuyArray[BUY_AMOUNT] += countTransactions(line)[BUY_AMOUNT];
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read from " + fromFileName, e);
         }
-        return supplyBuyCounter;
+        return supplyBuyArray;
     }
 
     private int[] countTransactions(String line) {
