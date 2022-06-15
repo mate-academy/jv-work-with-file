@@ -32,16 +32,12 @@ public class WorkWithFile {
     }
 
     private String createReport(String data) {
-        String separator = System.lineSeparator();
-        String supplyOperation = "supply";
-        String buyOperation = "buy";
-        String comma = ",";
         int supplySum = 0;
         int buySum = 0;
-        String[] splittedData = data.split(separator);
+        String[] splittedData = data.split(System.lineSeparator());
         for (String line : splittedData) {
-            String[] splittedLine = line.split(comma);
-            if (splittedLine[OPERATION_TYPE_INDEX].equals(supplyOperation)) {
+            String[] splittedLine = line.split(",");
+            if (splittedLine[OPERATION_TYPE_INDEX].equals("supply")) {
                 supplySum += Integer.parseInt(splittedLine[AMOUNT_INDEX]);
             } else {
                 buySum += Integer.parseInt(splittedLine[AMOUNT_INDEX]);
@@ -49,9 +45,9 @@ public class WorkWithFile {
         }
         int result = supplySum - buySum;
         StringBuilder report = new StringBuilder();
-        return report.append(supplyOperation).append(comma).append(supplySum).append(separator)
-                .append(buyOperation).append(comma).append(buySum).append(separator)
-                .append("result").append(comma).append(result).toString();
+        return report.append("supply").append(",").append(supplySum).append(System.lineSeparator())
+                .append("buy").append(",").append(buySum).append(System.lineSeparator())
+                .append("result").append(",").append(result).toString();
     }
 
     private void writeToFile(String toFileName, String data) {
