@@ -9,64 +9,60 @@ import java.io.IOException;
 
 public class WorkWithFile {
     private static final String COMMA_SEPARATOR = ",";
-    private static final String SUPPLY = "supply";
-    private static final String BUY = "buy";
     private static final int OPERATION_TYPE_INDEX = 0;
     private static final int AMOUNT_INDEX = 1;
-    private int supplySum;
-    private int buySum;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        readFromFileAndSum(fromFileName);
-        writeToFile(toFileName, createReport());
+        String data = readFromFileToString(fromFileName);
+        writeToFile(toFileName, createReport(data));
     }
 
-    private void readFromFileAndSum(String fname) {
-        File file = new File(fname);
+    private String readFromFileToString(String filename) {
+        File file = new File(filename);
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
             String data = bufferedReader.readLine();
+            StringBuilder builder = new StringBuilder();
             while (data != null) {
-                sumAmountByOperation(data);
+                builder.append(data).append(" ");
                 data = bufferedReader.readLine();
             }
+            return builder.toString();
         } catch (IOException e) {
-            throw new RuntimeException("Can't read the file.", e);
+            throw new RuntimeException("Can't read the file " + filename, e);
         }
     }
 
-    private void sumAmountByOperation(String data) {
-        String[] splittedData = data.split(COMMA_SEPARATOR);
-        switch (splittedData[OPERATION_TYPE_INDEX]) {
-            case SUPPLY:
-                supplySum += Integer.parseInt(splittedData[AMOUNT_INDEX]);
-                break;
-            case BUY:
-                buySum += Integer.parseInt(splittedData[AMOUNT_INDEX]);
-                break;
-            default:
+    private String createReport(String data) {
+        int supplySum = 0;
+        int buySum = 0;
+        String[] splittedLines = data.split(" ");
+        for (String value : splittedLines) {
+            String[] splittedData = value.split(COMMA_SEPARATOR);
+            switch (splittedData[OPERATION_TYPE_INDEX]) {
+                case "supply":
+                    supplySum += Integer.parseInt(splittedData[AMOUNT_INDEX]);
+                    break;
+                case "buy":
+                    buySum += Integer.parseInt(splittedData[AMOUNT_INDEX]);
+                    break;
+                default:
+            }
         }
-    }
-
-    private int getResult() {
-        return supplySum - buySum;
-    }
-
-    private String createReport() {
         StringBuilder resultReport = new StringBuilder();
-        resultReport.append(SUPPLY).append(COMMA_SEPARATOR).append(supplySum)
+        resultReport.append("supply").append(COMMA_SEPARATOR).append(supplySum)
                 .append(System.lineSeparator())
-                .append(BUY).append(COMMA_SEPARATOR).append(buySum)
+                .append("buy").append(COMMA_SEPARATOR).append(buySum)
                 .append(System.lineSeparator())
-                .append("result").append(COMMA_SEPARATOR).append(getResult());
+                .append("result").append(COMMA_SEPARATOR).append(supplySum - buySum);
         return resultReport.toString();
     }
 
-    private void writeToFile(String fname, String data) {
-        File myFile = new File(fname);
+    private void writeToFile(String filename, String data) {
+        File myFile = new File(filename);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(myFile))) {
             bufferedWriter.write(data);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write the file.", e);
+            throw new RuntimeException("Can't write the file " + filename, e);
         }
     }
 }
