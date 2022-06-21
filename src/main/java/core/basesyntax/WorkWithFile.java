@@ -7,39 +7,42 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    public void getStatistic(String fromFileName, String toFileName) {
-        String data = readDataFromFile(fromFileName);
-        writeDataToFile(toFileName, data);
-    }
+    private static final int AMOUNT_INDEX = 1;
 
     private String readDataFromFile(String fromFileName) {
-        int countSupply = 0;
-        int countBuy = 0;
-        int countResult = 0;
-        StringBuilder report = new StringBuilder();
+        StringBuilder builder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
-            String line = bufferedReader.readLine();
-            while (line != null) {
-                String[] splitData = line.split(",");
-                switch (splitData[0]) {
-                    case "supply" :
-                        countSupply += Integer.parseInt(splitData[1]);
-                        break;
-                    default:
-                        countBuy += Integer.parseInt(splitData[1]);
-                }
-                line = bufferedReader.readLine();
+            String value = bufferedReader.readLine();
+            while (value != null) {
+                builder.append(value).append(System.lineSeparator());
+                value = bufferedReader.readLine();
             }
-            countResult = countSupply - countBuy;
-
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from a file" + fromFileName, e);
         }
-        return report.append("supply,").append(countSupply)
+        return builder.toString();
+    }
+
+    public void getStatistic(String fromFileName, String toFileName) {
+        int supplyCounter = 0;
+        int buyCounter = 0;
+        String[] splittedData = readDataFromFile(fromFileName).split(System.lineSeparator());
+        for (String data : splittedData) {
+            if (data.startsWith("supply")) {
+                supplyCounter += Integer.parseInt(data.split(",")[AMOUNT_INDEX]);
+            } else {
+                buyCounter += Integer.parseInt(data.split(",")[AMOUNT_INDEX]);
+            }
+        }
+        StringBuilder reportBuilder = new StringBuilder();
+        reportBuilder.append("supply,").append(supplyCounter)
                 .append(System.lineSeparator())
-                .append("buy,").append(countBuy)
+                .append("buy,").append(buyCounter)
                 .append(System.lineSeparator())
-                .append("result,").append(countResult).toString();
+                .append("result,").append(supplyCounter - buyCounter);
+        String report = reportBuilder.toString();
+
+        writeDataToFile(toFileName, report);
     }
 
     private void writeDataToFile(String toFileName, String report) {
