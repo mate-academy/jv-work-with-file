@@ -14,10 +14,11 @@ public class WorkWithFile {
         int buyCounter = 0;
         String[] lines = readDataFromFile(fromFileName).split(System.lineSeparator());
         for (String line : lines) {
+            int amount = Integer.parseInt(line.split(",")[AMOUNT_INDEX]);
             if (line.startsWith("supply")) {
-                supplyCounter += Integer.parseInt(line.split(",")[AMOUNT_INDEX]);
+                supplyCounter += amount;
             } else {
-                buyCounter += Integer.parseInt(line.split(",")[AMOUNT_INDEX]);
+                buyCounter += amount;
             }
         }
         StringBuilder reportBuilder = new StringBuilder();
