@@ -1,12 +1,17 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] arrayData = fileReader(fromFileName).split(System.lineSeparator());
-        int supplyCount = 0, buyCount = 0;
+        int supplyCount = 0;
+        int buyCount = 0;
         for (String data: arrayData) {
             String[] separationData = data.split(",");
             if (separationData[0].equals("buy")) {
@@ -37,7 +42,8 @@ public class WorkWithFile {
 
     private void fileWriter(String[] report, String toFileName) {
         for (String reportLine: report) {
-            try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true))) {
+            try (BufferedWriter bufferedWriter =
+                         new BufferedWriter(new FileWriter(toFileName, true))) {
                 bufferedWriter.write(reportLine + System.lineSeparator());
             } catch (IOException e) {
                 throw new RuntimeException("Can't write data to file", e);
