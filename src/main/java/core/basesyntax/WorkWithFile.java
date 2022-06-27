@@ -7,6 +7,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final int AMOUNT_INDEX = 1;
+    private static final int OPERATION_NAME_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] arrayData = fileReader(fromFileName).split(System.lineSeparator());
@@ -14,10 +16,10 @@ public class WorkWithFile {
         int buyCount = 0;
         for (String data: arrayData) {
             String[] separationData = data.split(",");
-            if (separationData[0].equals("buy")) {
-                buyCount += Integer.parseInt(separationData[1]);
+            if (separationData[OPERATION_NAME_INDEX].equals("buy")) {
+                buyCount += Integer.parseInt(separationData[AMOUNT_INDEX]);
             } else {
-                supplyCount += Integer.parseInt(separationData[1]);
+                supplyCount += Integer.parseInt(separationData[AMOUNT_INDEX]);
             }
         }
         String[] report = { "supply," + supplyCount,
@@ -35,7 +37,7 @@ public class WorkWithFile {
                 lineData = reader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read data to file", e);
+            throw new RuntimeException("Can't read data to file" + fromFileName, e);
         }
         return stringBuilder.toString();
     }
@@ -46,7 +48,7 @@ public class WorkWithFile {
                          new BufferedWriter(new FileWriter(toFileName, true))) {
                 bufferedWriter.write(reportLine + System.lineSeparator());
             } catch (IOException e) {
-                throw new RuntimeException("Can't write data to file", e);
+                throw new RuntimeException("Can't write data to file" + toFileName, e);
             }
         }
     }
