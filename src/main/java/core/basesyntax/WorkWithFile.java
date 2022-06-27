@@ -5,6 +5,23 @@ import java.io.*;
 public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
+        String[] arrayData = fileReader(fromFileName).split(System.lineSeparator());
+        int supplyCount = 0, buyCount = 0;
+        for (String data: arrayData) {
+            String[] separationData = data.split(",");
+            if (separationData[0].equals("buy")) {
+                buyCount += Integer.parseInt(separationData[1]);
+            } else {
+                supplyCount += Integer.parseInt(separationData[1]);
+            }
+        }
+        String[] report = { "supply," + supplyCount,
+                "buy," + buyCount,
+                "result," + (supplyCount - buyCount)};
+        fileWriter(report, toFileName);
+    }
+
+    private String fileReader(String fromFileName) {
         StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String lineData = reader.readLine();
@@ -15,19 +32,10 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read data to file", e);
         }
-        String stringData = stringBuilder.toString();
-        String[] arrayData = stringData.split(System.lineSeparator());
-        int supply = 0, buy = 0;
-        for (String data: arrayData) {
-            if (data.substring(0,3).equals("buy")) {
-                buy += Integer.parseInt(data.substring(4));
-            } else {
-                supply += Integer.parseInt(data.substring(7));
-            }
-        }
-        String[] report = { "supply," + supply,
-                "buy," + buy,
-                "result," + (supply - buy)};
+        return stringBuilder.toString();
+    }
+
+    private void fileWriter(String[] report, String toFileName) {
         for (String reportLine: report) {
             try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true))) {
                 bufferedWriter.write(reportLine + System.lineSeparator());
