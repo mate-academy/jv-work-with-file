@@ -45,7 +45,7 @@ public class WorkWithFile {
                 lineOfInputData = inputReader.readLine();
             }
         } catch (IOException er) {
-            throw new RuntimeException("Can't read or write  file",er);
+            throw new RuntimeException("Can't read file" + inputFile,er);
         }
         return buildInputData.toString();
     }
@@ -55,11 +55,11 @@ public class WorkWithFile {
                 new FileWriter(nameFile, true))) {
             try {
                 bufferedWriter.write(dataToFile);
-            } catch (IOException e) {
-                throw new RuntimeException("Can't created file", e);
+            } catch (IOException ew) {
+                throw new RuntimeException("Can't write to file" + nameFile, ew);
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can't created file" + nameFile, e);
         }
     }
 }
