@@ -9,11 +9,9 @@ import java.io.IOException;
 
 public class WorkWithFile {
     private static final String DIVIDED_CHAR = ",";
-    private static final String RESULT = "result";
-    private static final String[] OPERATION_ARRAY = {"supply","buy"};
+    private static final String[] operations = {"supply","buy"};
     private static final int OPERATION_INDEX = 0;
     private static final int AMMOUNT_INDEX = 1;
-    private StringBuilder readBuilder = new StringBuilder();
 
     public void getStatistic(String fromFileName, String toFileName) {
         String result = readFromFile(fromFileName);
@@ -31,6 +29,7 @@ public class WorkWithFile {
     }
 
     private String readFromFile(String fromFileName) {
+        StringBuilder readBuilder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String value = bufferedReader.readLine();
             while (value != null) {
@@ -44,16 +43,16 @@ public class WorkWithFile {
     }
 
     private String getReportFromFile(String data) {
-        readBuilder.delete(0,readBuilder.length());
+        StringBuilder reportBuilder = new StringBuilder();
         int totalReport = 0;
-        for (String operation:OPERATION_ARRAY) {
+        for (String operation:operations) {
             int totalOperation = getTotalOperation(0,operation,data);
-            readBuilder.append(operation).append(",").append(totalOperation);
-            readBuilder.append(System.lineSeparator());
+            reportBuilder.append(operation).append(",").append(totalOperation);
+            reportBuilder.append(System.lineSeparator());
             totalReport = totalOperation - totalReport;
         }
-        readBuilder.append(RESULT).append(",").append(- totalReport);
-        return readBuilder.toString();
+        reportBuilder.append("result").append(",").append(- totalReport);
+        return reportBuilder.toString();
     }
 
     private int getTotalOperation(int ammount, String nameOperation, String data) {
