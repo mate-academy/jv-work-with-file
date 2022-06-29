@@ -43,16 +43,16 @@ public class WorkWithFile {
     }
 
     private String getReportFromFile(String data) {
-        StringBuilder reportBuilder = new StringBuilder();
+        StringBuilder totalReportBuilder = new StringBuilder();
         int totalReport = 0;
         for (String operation:operations) {
             int totalOperation = getTotalOperation(0,operation,data);
-            reportBuilder.append(operation).append(",").append(totalOperation);
-            reportBuilder.append(System.lineSeparator());
+            totalReportBuilder.append(operation).append(",").append(totalOperation);
+            totalReportBuilder.append(System.lineSeparator());
             totalReport = totalOperation - totalReport;
         }
-        reportBuilder.append("result").append(",").append(- totalReport);
-        return reportBuilder.toString();
+        totalReportBuilder.append("result").append(",").append(- totalReport);
+        return totalReportBuilder.toString();
     }
 
     private int getTotalOperation(int ammount, String nameOperation, String data) {
