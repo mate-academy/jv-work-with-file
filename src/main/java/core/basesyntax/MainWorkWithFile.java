@@ -13,7 +13,7 @@ public class MainWorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't create file", e);
         }
-        workWithFile.getStatistic("orange.csv",reportFile.getName());
+        workWithFile.getStatistic("apple.csv",reportFile.getName());
 
     }
 

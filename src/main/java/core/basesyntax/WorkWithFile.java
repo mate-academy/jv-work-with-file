@@ -1,11 +1,11 @@
 package core.basesyntax;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Comparator;
 
 public class WorkWithFile {
     private static final String BUY = "buy";
@@ -28,19 +28,24 @@ public class WorkWithFile {
             int supply = 0;
             for (int i = 0; i < wordsReadFile.length; i++) {
                 if (wordsReadFile[i].equals(BUY)) {
-                    buy = buy+Integer.valueOf(wordsReadFile[i+1]);
+                    buy = buy + Integer.valueOf(wordsReadFile[i + 1]);
                 } else if (wordsReadFile[i].equals(SUPPLY)) {
-                    supply = supply + Integer.valueOf(wordsReadFile[i+1]);
+                    supply = supply + Integer.valueOf(wordsReadFile[i + 1]);
                 }
             }
             writeReport.append("supply,").append(supply).append(System.lineSeparator())
                     .append("buy,").append(buy).append(System.lineSeparator())
-                    .append("result,").append(supply-buy);
+                    .append("result,").append(supply - buy);
             System.out.println(writeReport.toString());
         } catch (IOException e) {
             throw new RuntimeException("Can't to read file", e);
         }
-
+        try {
+            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName));
+            bufferedWriter.write(String.valueOf(writeReport));
+            bufferedWriter.close();
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write file",e);
+        }
     }
-
 }
