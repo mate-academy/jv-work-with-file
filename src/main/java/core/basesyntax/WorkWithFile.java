@@ -15,7 +15,6 @@ public class WorkWithFile {
         File file = new File(fromFileName);
         StringBuilder readFile = new StringBuilder();
         StringBuilder writeReport = new StringBuilder();
-
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
             int value = bufferedReader.read();
@@ -36,16 +35,15 @@ public class WorkWithFile {
             writeReport.append("supply,").append(supply).append(System.lineSeparator())
                     .append("buy,").append(buy).append(System.lineSeparator())
                     .append("result,").append(supply - buy);
-            System.out.println(writeReport.toString());
         } catch (IOException e) {
-            throw new RuntimeException("Can't to read file", e);
+            throw new RuntimeException("Can't read file " + fromFileName, e);
         }
         try {
             BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName));
             bufferedWriter.write(String.valueOf(writeReport));
             bufferedWriter.close();
         } catch (IOException e) {
-            throw new RuntimeException("Can't write file",e);
+            throw new RuntimeException("Can't write file " + toFileName,e);
         }
     }
 }
