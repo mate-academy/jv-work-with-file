@@ -24,7 +24,7 @@ public class WorkWithFile {
                 value = bufferedReader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't read file " + fromFileName, e);
         }
         String[] lines = stringBuilder.toString().split(" ");
         String[][] data = new String[lines.length][2];
@@ -48,7 +48,7 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, true));) {
             bufferedWriter.write(stringBuilder.toString());
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't write to file " + toFileName, e);
         }
     }
 }
