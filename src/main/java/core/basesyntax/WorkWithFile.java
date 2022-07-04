@@ -12,10 +12,14 @@ public class WorkWithFile {
         String[] dataLine = readFromFile.readFile(fromFileName);
         for (String split:dataLine) {
             String[] data = split.split(",");
-            if (data[OPERATION_TYPE].equals("supply")) {
-                supply += Integer.parseInt(data[VALUE]);
-            } else if (data[OPERATION_TYPE].equals("buy")) {
-                buy += Integer.parseInt(data[VALUE]);
+            try {
+                if (data[OPERATION_TYPE].equals("supply")) {
+                    supply += Integer.parseInt(data[VALUE]);
+                } else if (data[OPERATION_TYPE].equals("buy")) {
+                    buy += Integer.parseInt(data[VALUE]);
+                }
+            }catch (NumberFormatException e){
+                throw new RuntimeException("not a number", e);
             }
         }
         String[] report = {"supply," + supply, "buy," + buy, "result," + (supply - buy)};
