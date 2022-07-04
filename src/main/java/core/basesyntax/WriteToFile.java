@@ -13,7 +13,7 @@ public class WriteToFile {
             bufferedWriter = new BufferedWriter(new FileWriter(file, true));
             for (String dt:data) {
                 bufferedWriter.write(dt);
-                bufferedWriter.write("\r\n");
+                bufferedWriter.write(System.lineSeparator());
                 bufferedWriter.flush();
             }
         } catch (IOException e) {

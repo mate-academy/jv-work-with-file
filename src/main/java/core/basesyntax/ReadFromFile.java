@@ -19,6 +19,6 @@ public class ReadFromFile {
         } catch (IOException e) {
             throw new RuntimeException("Where's the file?", e);
         }
-        return fileLine.toString().split("\r\n");
+        return fileLine.toString().split(System.lineSeparator());
     }
 }
