@@ -7,9 +7,9 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         int supply = 0;
         int buy = 0;
-        WriteToFile writeToFile = new WriteToFile();
-        ReadFromFile readFromFile = new ReadFromFile();
-        String[] dataLine = readFromFile.readFile(fromFileName);
+        FileReader fileReader = new FileReader();
+        FileWriter fileWriter = new FileWriter();
+        String[] dataLine = fileReader.readFile(fromFileName);
         for (String split:dataLine) {
             String[] data = split.split(",");
             if (data[OPERATION_TYPE].equals("supply")) {
@@ -19,6 +19,6 @@ public class WorkWithFile {
             }
         }
         String[] report = {"supply," + supply, "buy," + buy, "result," + (supply - buy)};
-        writeToFile.writeFile(toFileName, report);
+        fileWriter.writeToFile(toFileName, report);
     }
 }
