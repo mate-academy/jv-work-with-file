@@ -20,6 +20,5 @@ public class WorkWithFile {
         }
         String[] report = {"supply," + supply, "buy," + buy, "result," + (supply - buy)};
         writeToFile.writeFile(toFileName, report);
-
     }
 }
