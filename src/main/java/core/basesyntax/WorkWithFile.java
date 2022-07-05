@@ -11,10 +11,15 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final byte OPERATION_TYPE_INDEX = 0;
     private static final byte AMOUNT_INDEX = 1;
+    private int supplyTotal = 0;
+    private int buyTotal = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int supplyTotal = 0;
-        int buyTotal = 0;
+        calculateReportData(fromFileName);
+        outputReportToFile(toFileName);
+    }
+
+    private void calculateReportData(String fromFileName) {
         File fileInput = new File(fromFileName);
         try {
             BufferedReader reader = new BufferedReader(new FileReader(fileInput));
@@ -38,6 +43,9 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read from Input file", e);
         }
+    }
+
+    private void outputReportToFile(String toFileName) {
         File outputFile = new File(toFileName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(outputFile))) {
             bufferedWriter.write("supply," + supplyTotal + System.lineSeparator());
