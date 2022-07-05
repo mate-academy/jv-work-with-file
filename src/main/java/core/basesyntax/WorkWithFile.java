@@ -23,7 +23,7 @@ public class WorkWithFile {
         File fileInput = new File(fromFileName);
         try {
             BufferedReader reader = new BufferedReader(new FileReader(fileInput));
-            String line = "";
+            String line;
             while ((line = reader.readLine()) != null) {
                 String[] splitLine = line.split(",");
                 switch (splitLine[OPERATION_TYPE_INDEX]) {
