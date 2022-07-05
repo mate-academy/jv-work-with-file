@@ -16,7 +16,7 @@ public class FileReader {
                 symbol = reader.read();
             }
         } catch (IOException e) {
-            throw new RuntimeException("File not found", e);
+            throw new RuntimeException("File not found: " + fileName, e);
         }
         return builder.toString().split(System.lineSeparator());
     }
