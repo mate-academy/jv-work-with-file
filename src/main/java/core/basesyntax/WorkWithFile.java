@@ -9,19 +9,19 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         int supply = 0;
         int buy = 0;
-        String[] dataLine = fileReader.readFile(fromFileName);
-        for (String split:dataLine) {
-            String[] data = split.split(",");
-            if (data[OPERATION_INDEX].equals("supply")) {
-                supply += Integer.parseInt(data[QUANTITY_INDEX]);
-            } else if (data[OPERATION_INDEX].equals("buy")) {
-                buy += Integer.parseInt(data[QUANTITY_INDEX]);
+        String[] data = fileReader.readFile(fromFileName);
+        for (String line : data) {
+            String[] splittedLine = line.split(",");
+            if (splittedLine[OPERATION_INDEX].equals("supply")) {
+                supply += Integer.parseInt(splittedLine[QUANTITY_INDEX]);
+            } else if (splittedLine[OPERATION_INDEX].equals("buy")) {
+                buy += Integer.parseInt(splittedLine[QUANTITY_INDEX]);
             }
         }
-        StringBuilder report = new StringBuilder();
-        report.append("supply," + supply + System.lineSeparator())
+        StringBuilder reportBuilder = new StringBuilder();
+        reportBuilder.append("supply," + supply + System.lineSeparator())
                 .append("buy," + buy + System.lineSeparator())
                 .append("result," + (supply - buy));
-        fileWriter.writeToFile(toFileName, report.toString());
+        fileWriter.writeToFile(toFileName, reportBuilder.toString());
     }
 }
