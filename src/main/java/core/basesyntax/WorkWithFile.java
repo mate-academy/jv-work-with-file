@@ -15,13 +15,11 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         int supplyTotal = 0;
         int buyTotal = 0;
-        int currentAmount;
-        String[] splittedLine;
 
         String[] linesFromFile = readFromFile(fromFileName);
         for (String line: linesFromFile) {
-            splittedLine = line.split(COLUMN_SEPARATOR);
-            currentAmount = Integer.parseInt(splittedLine[AMOUNT_INDEX]);
+            String[] splittedLine = line.split(COLUMN_SEPARATOR);
+            int currentAmount = Integer.parseInt(splittedLine[AMOUNT_INDEX]);
             if (splittedLine[OPERATION_TYPE_INDEX].equals("supply")) {
                 supplyTotal += currentAmount;
             } else {
