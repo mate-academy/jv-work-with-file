@@ -27,9 +27,9 @@ public class WorkWithFile {
                 }
             }
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("Can't open Input file", e);
+            throw new RuntimeException("Can't open input file " + fromFileName, e);
         } catch (IOException e) {
-            throw new RuntimeException("Can't read from Input file", e);
+            throw new RuntimeException("Can't read from input file " + fromFileName, e);
         }
         writeToFile(toFileName, supplyTotal, buyTotal);
     }
@@ -41,7 +41,7 @@ public class WorkWithFile {
             bufferedWriter.write("buy," + buyTotal + System.lineSeparator());
             bufferedWriter.write("result," + (supplyTotal - buyTotal) + System.lineSeparator());
         } catch (IOException e) {
-            throw new RuntimeException("Can't create Output file or write to file", e);
+            throw new RuntimeException("Can't create output file " + toFileName + " or write to file", e);
         }
     }
 }
