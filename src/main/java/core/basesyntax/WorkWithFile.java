@@ -41,7 +41,8 @@ public class WorkWithFile {
             bufferedWriter.write("buy," + buyTotal + System.lineSeparator());
             bufferedWriter.write("result," + (supplyTotal - buyTotal) + System.lineSeparator());
         } catch (IOException e) {
-            throw new RuntimeException("Can't create output file " + toFileName + " or write to file", e);
+            throw new RuntimeException("Can't create output file "
+                    + toFileName + " or write to file", e);
         }
     }
 }
