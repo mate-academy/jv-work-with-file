@@ -10,7 +10,6 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final byte OPERATION_TYPE_INDEX = 0;
     private static final byte AMOUNT_INDEX = 1;
-    private static final String COLUMN_SEPARATOR = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         int supplyTotal = 0;
@@ -18,7 +17,7 @@ public class WorkWithFile {
 
         String[] linesFromFile = readFromFile(fromFileName);
         for (String line: linesFromFile) {
-            String[] splittedLine = line.split(COLUMN_SEPARATOR);
+            String[] splittedLine = line.split(",");
             int currentAmount = Integer.parseInt(splittedLine[AMOUNT_INDEX]);
             if (splittedLine[OPERATION_TYPE_INDEX].equals("supply")) {
                 supplyTotal += currentAmount;
