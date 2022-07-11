@@ -1,7 +1,12 @@
 package core.basesyntax;
 
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class WorkWithFile {
 
@@ -12,7 +17,7 @@ public class WorkWithFile {
         int sumSupply = 0;
 
         try (BufferedReader reader = new BufferedReader(new FileReader(fileIn));
-             BufferedWriter writer = new BufferedWriter(new FileWriter(fileOut, true))) {
+                BufferedWriter writer = new BufferedWriter(new FileWriter(fileOut, true))) {
 
             String value = reader.readLine();
 
