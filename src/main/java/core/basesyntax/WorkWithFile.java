@@ -8,20 +8,19 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final int ACTION_POS = 0;
-    private static final int COST_POS = 1;
+    private static final int ACTION_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] fileContent = readTheFile(fromFileName);
-        System.out.println(fileContent[0]);
         int buy = 0;
         int supply = 0;
         for (String line : fileContent) {
             String[] splitLine = line.split(",");
-            if (splitLine[ACTION_POS].equals("buy")) {
-                buy += Integer.parseInt(splitLine[COST_POS]);
+            if (splitLine[ACTION_INDEX].equals("buy")) {
+                buy += Integer.parseInt(splitLine[AMOUNT_INDEX]);
             } else {
-                supply += Integer.parseInt(splitLine[COST_POS]);
+                supply += Integer.parseInt(splitLine[AMOUNT_INDEX]);
             }
         }
         writeToFile(buy, supply, toFileName);
@@ -29,15 +28,14 @@ public class WorkWithFile {
 
     private String[] readTheFile(String fromFileName) {
         StringBuilder stringBuilder = new StringBuilder();
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String line = reader.readLine();
             while (line != null) {
                 stringBuilder.append(line).append(" ");
                 line = reader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can`t read the file", e);
+            throw new RuntimeException("Can`t read the file " + fromFileName, e);
         }
         return stringBuilder.toString().split(" ");
     }
@@ -50,7 +48,7 @@ public class WorkWithFile {
             bufferedWriter.write("buy," + buy + System.lineSeparator());
             bufferedWriter.write("result," + (supply - buy));
         } catch (IOException e) {
-            throw new RuntimeException("Can`t write data to file", e);
+            throw new RuntimeException("Can`t write data to file " + toFileName, e);
         }
     }
 }
