@@ -16,7 +16,6 @@ public class WorkWithFile {
     private int[] getTotalData(String fileName) {
         File fileIn = new File(fileName);
         int [] totalData = {0, 0};
-
         try (BufferedReader reader = new BufferedReader(new FileReader(fileIn))) {
             String value = reader.readLine();
 
@@ -30,14 +29,13 @@ public class WorkWithFile {
                 value = reader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't read file " + fileName, e);
         }
         return totalData;
     }
 
     private void writeResult(String toFileName, int [] totalData) {
         File fileOut = new File(toFileName);
-
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileOut, true))) {
 
             writer.write("supply," + totalData[1] + System.lineSeparator());
@@ -45,8 +43,7 @@ public class WorkWithFile {
             writer.write("result," + (totalData[1] - totalData[0]));
 
         } catch (IOException e) {
-            throw new RuntimeException("Can't wright file", e);
+            throw new RuntimeException("Can't wright data to file " + toFileName, e);
         }
     }
-
 }
