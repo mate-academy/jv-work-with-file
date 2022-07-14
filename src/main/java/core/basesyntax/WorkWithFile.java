@@ -14,15 +14,14 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         File fromFile = new File(fromFileName);
         StringBuilder builder = new StringBuilder();
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(fromFile));
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFile))) {
             String value = reader.readLine();
             while (value != null) {
                 builder.append(value).append("; ");
                 value = reader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't read file" + fromFileName, e);
         }
         String[] fromFileStrings = builder.toString().split("; ");
         int buyCounter = 0;
@@ -42,7 +41,7 @@ public class WorkWithFile {
             writer.write("buy," + buyCounter + "\n");
             writer.write("result," + (supplyCounter - buyCounter));
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data to file", e);
+            throw new RuntimeException("Can't write data to file" + toFileName, e);
         }
     }
 }
