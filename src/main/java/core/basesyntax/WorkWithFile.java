@@ -12,6 +12,21 @@ public class WorkWithFile {
     private static final int INDEX_OF_VALUE = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
+        String[] fromFileStrings = readFromFile(fromFileName);
+        int buyCounter = 0;
+        int supplyCounter = 0;
+        for (String line : fromFileStrings) {
+            String[] splitLines = line.split(",");
+            if (splitLines[INDEX_OF_NAME].equals("buy")) {
+                buyCounter += Integer.parseInt(splitLines[INDEX_OF_VALUE]);
+            } else {
+                supplyCounter += Integer.parseInt(splitLines[INDEX_OF_VALUE]);
+            }
+        }
+        writeToFile(buyCounter, supplyCounter, toFileName);
+    }
+
+    private String[] readFromFile(String fromFileName) {
         File fromFile = new File(fromFileName);
         StringBuilder builder = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFile))) {
@@ -23,18 +38,10 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read file" + fromFileName, e);
         }
-        String[] fromFileStrings = builder.toString().split("; ");
-        int buyCounter = 0;
-        int supplyCounter = 0;
-        for (String line : fromFileStrings) {
-            String[] splitLines = line.split(",");
-            if (splitLines[INDEX_OF_NAME].equals("buy")) {
-                buyCounter += Integer.parseInt(splitLines[INDEX_OF_VALUE]);
-            } else {
-                supplyCounter += Integer.parseInt(splitLines[INDEX_OF_VALUE]);
-            }
-        }
-        int result = buyCounter + supplyCounter;
+        return builder.toString().split("; ");
+    }
+
+    private void writeToFile(int buyCounter, int supplyCounter, String toFileName) {
         File toFile = new File(toFileName);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFile, true))) {
             writer.write("supply," + supplyCounter + "\n");
