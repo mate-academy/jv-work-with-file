@@ -39,16 +39,16 @@ public class WorkWithFile {
                 value = reader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't read file " + incomeFile, e);
         }
         return stringBuilder.toString();
     }
 
-    public void writeFile(String inputString, String whereToFile) {
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(whereToFile))) {
-            bufferedWriter.write(inputString);
+    public void writeFile(String report, String toFileName) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
+            bufferedWriter.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write file", e);
+            throw new RuntimeException("Can't write data to file " + toFileName, e);
         }
     }
 }
