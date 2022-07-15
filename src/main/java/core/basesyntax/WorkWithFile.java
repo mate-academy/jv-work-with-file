@@ -10,13 +10,18 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final byte OPERATION_TYPE = 0, AMMOUNT = 1;
-    private StringBuilder resultString = new StringBuilder();
-    private int supply, buy;
+    private static final byte OPERATION_TYPE = 0;
+    private static final byte AMMOUNT = 1;
+    private int supply;
+    private int buy;
 
     public void getStatistic(String fromFileName, String toFileName) {
+        StringBuilder resultString = new StringBuilder();
         readFile(fromFileName);
-        writeFile(toFileName);
+        resultString.append("supply,").append(supply).append(System.lineSeparator())
+                .append("buy,").append(buy).append(System.lineSeparator())
+                .append("result,").append(supply - buy).append(System.lineSeparator());
+        writeFile(toFileName, resultString.toString());
     }
 
     private void readFile(String fileName) {
@@ -34,9 +39,9 @@ public class WorkWithFile {
         }
     }
 
-    private void writeFile(String fileName) {
+    private void writeFile(String fileName, String dataToWrite) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
-            bufferedWriter.write(resultString.toString());
+            bufferedWriter.write(dataToWrite);
         } catch (IOException e) {
             throw new RuntimeException("Error writing file " + fileName + e);
         }
@@ -53,9 +58,5 @@ public class WorkWithFile {
                 buy = buy + Integer.parseInt(processingData[AMMOUNT]);
                 break;
         }
-        resultString.setLength(0);
-        resultString.append("supply,").append(supply).append(System.lineSeparator())
-                .append("buy,").append(buy).append(System.lineSeparator()).
-                append("result,").append(supply - buy).append(System.lineSeparator());
     }
 }
