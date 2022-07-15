@@ -16,12 +16,12 @@ public class WorkWithFile {
     private int buy;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        StringBuilder resultString = new StringBuilder();
+        StringBuilder resultStringBuilder = new StringBuilder();
         readFile(fromFileName);
-        resultString.append("supply,").append(supply).append(System.lineSeparator())
+        resultStringBuilder.append("supply,").append(supply).append(System.lineSeparator())
                 .append("buy,").append(buy).append(System.lineSeparator())
                 .append("result,").append(supply - buy).append(System.lineSeparator());
-        writeFile(toFileName, resultString.toString());
+        writeFile(toFileName, resultStringBuilder.toString());
     }
 
     private void readFile(String fileName) {
