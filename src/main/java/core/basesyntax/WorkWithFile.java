@@ -12,6 +12,7 @@ public class WorkWithFile {
     private static final byte AMMOUNT_INDEX = 1;
     private static final byte SUPPLY_INDEX = 0;
     private static final byte BUY_INDEX = 1;
+    private static final String SEPARATOR = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         int[] processedData = readFile(fromFileName);
@@ -44,7 +45,7 @@ public class WorkWithFile {
     }
 
     private int[] dataProcessing(String data, int[] totalSupplyAndBuy) {
-        String[] processingData = data.split(",");
+        String[] processingData = data.split(SEPARATOR);
         switch (processingData[OPERATION_TYPE_INDEX]) {
             case ("supply"):
                 totalSupplyAndBuy[SUPPLY_INDEX] = totalSupplyAndBuy[SUPPLY_INDEX]
