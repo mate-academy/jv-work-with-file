@@ -10,21 +10,17 @@ import java.io.IOException;
 
 public class WorkWithFile {
 
-    private static final String SUPPLY = "supply";
-    private static final String BUY = "buy";
-    private static final String RESULT = "result";
-    private static final String DELIMITER = ",";
-
     public void getStatistic(String fromFileName, String toFileName) {
+        final String supply = "supply";
+        final String delimiter = ",";
         int totalSupply = 0;
         int totalBuy = 0;
         File file = new File(fromFileName);
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
             String value = bufferedReader.readLine();
             while (value != null) {
-                String[] tempArray = value.split(DELIMITER);
-                if (tempArray[0].equals(SUPPLY)) {
+                String[] tempArray = value.split(delimiter);
+                if (tempArray[0].equals(supply)) {
                     totalSupply += Integer.parseInt(tempArray[1]);
                 } else {
                     totalBuy += Integer.parseInt(tempArray[1]);
@@ -39,25 +35,21 @@ public class WorkWithFile {
         writeStatistic(toFileName, totalSupply, totalBuy, totalSupply - totalBuy);
     }
 
-    private void writeStatistic(String toFileName, int totalSupply, int totalBuy, int result) {
+    private void writeStatistic(String toFileName, int totalSupply, int totalBuy, int totalResult) {
+        final String supply = "supply";
+        final String buy = "buy";
+        final String result = "result";
+        final String delimiter = ",";
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(SUPPLY).append(DELIMITER).append(totalSupply)
+        stringBuilder.append(supply).append(delimiter).append(totalSupply)
                 .append(System.lineSeparator())
-                .append(BUY).append(DELIMITER).append(totalBuy).append(System.lineSeparator())
-                .append(RESULT).append(DELIMITER).append(result);
+                .append(buy).append(delimiter).append(totalBuy).append(System.lineSeparator())
+                .append(result).append(delimiter).append(totalResult);
         File file = new File(toFileName);
-        BufferedWriter bufferedWriter = null;
-        try {
-            bufferedWriter = new BufferedWriter(new FileWriter(file, true));
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
             bufferedWriter.write(stringBuilder.toString());
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to a file", e);
-        } finally {
-            try {
-                bufferedWriter.close();
-            } catch (IOException e) {
-                throw new RuntimeException("Can't close a file", e);
-            }
         }
     }
 }
