@@ -9,11 +9,10 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final int OPERATION_TYPE_INDEX = 0;
     private static final int AMOUNT_INDEX = 1;
-    private StringBuilder stringBuilder = null;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] lineArray = readFile(fromFileName).split(System.lineSeparator());
-        stringBuilder = new StringBuilder();
+        StringBuilder stringBuilder = new StringBuilder();
         int supplySum = 0;
         int buySum = 0;
         for (String line : lineArray) {
@@ -30,8 +29,8 @@ public class WorkWithFile {
         writeFile(stringBuilder.toString(),toFileName);
     }
 
-    public String readFile(String incomeFile) {
-        stringBuilder = new StringBuilder();
+    private String readFile(String incomeFile) {
+        StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(incomeFile))) {
             String value = reader.readLine();
             while (value != null) {
@@ -44,7 +43,7 @@ public class WorkWithFile {
         return stringBuilder.toString();
     }
 
-    public void writeFile(String report, String toFileName) {
+    private void writeFile(String report, String toFileName) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(report);
         } catch (IOException e) {
