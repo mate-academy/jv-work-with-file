@@ -10,8 +10,14 @@ public class WorkWithFile {
     private static final String SPECIAL_CHAR = "s";
 
     public void getStatistic(String fromFileName, String toFileName) {
+        String readFile = readingFile(fromFileName);
+        String supplier = supply(readFile);
+        writeToFile(toFileName, supplier);
+    }
+
+    public String readingFile(String fromFile) {
         StringBuilder builder = new StringBuilder();
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFile))) {
             String value = bufferedReader.readLine();
             while (value != null) {
                 builder.append(value).append(System.lineSeparator());
@@ -20,13 +26,7 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can`t read file", e);
         }
-        String text = builder.toString();
-
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            writer.write(supply(text));
-        } catch (IOException e) {
-            throw new RuntimeException("Can`t write to file", e);
-        }
+        return builder.toString();
     }
 
     public String supply(String text) {
@@ -46,5 +46,13 @@ public class WorkWithFile {
         return "supply," + summSupplies + System.lineSeparator()
                 + "buy," + summPurchases + System.lineSeparator()
                 + "result," + result;
+    }
+
+    public void writeToFile(String toFile, String content) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFile))) {
+            writer.write(content);
+        } catch (IOException e) {
+            throw new RuntimeException("Can`t write to file", e);
+        }
     }
 }
