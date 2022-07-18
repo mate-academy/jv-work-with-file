@@ -8,23 +8,28 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final String CSV_SEPARATOR = ",";
+    private static final String LINE_SEPARATOR = ",";
+    private static final int INDEX_NAME_OPERATION = 0;
+    private static final int INDEX_AMOUNT = 1;
+    private static final String NAME_ADD_PRODUCT = "supply";
+    private static final String NAME_SUBTRACT_PRODUCT = "buy";
+    private static final String NAME_RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String[] dataProduct = readFile(fromFileName);
-        String statistic = calcStatistic(dataProduct);
+        String[] lines = readFile(fromFileName);
+        String statistic = calculateStatistic(lines);
         writeStatistic(toFileName, statistic);
     }
 
-    private String calcStatistic(String[] dataProduct) {
+    private String calculateStatistic(String[] lines) {
         int supplyProduct = 0;
         int buyProduct = 0;
-        for (String data : dataProduct) {
-            String operation = extractOperation(data);
-            int amount = extractAmount(data);
-            if (operation.equals("supply")) {
+        for (String data : lines) {
+            String operation = data.split(LINE_SEPARATOR)[INDEX_NAME_OPERATION];
+            int amount = Integer.valueOf(data.split(LINE_SEPARATOR)[INDEX_AMOUNT].trim());
+            if (operation.equals(NAME_ADD_PRODUCT)) {
                 supplyProduct += amount;
-            } else if (operation.equals("buy")) {
+            } else if (operation.equals(NAME_SUBTRACT_PRODUCT)) {
                 buyProduct += amount;
             }
         }
@@ -39,25 +44,17 @@ public class WorkWithFile {
                 builder.append(line).append(System.lineSeparator());
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't open file " + fileName, e);
+            throw new RuntimeException("Can't read from file " + fileName, e);
         }
         return builder.toString().split(System.lineSeparator());
     }
 
     private String formatStatistic(int supplyProduct, int buyProduct) {
         StringBuilder builder = new StringBuilder();
-        return builder.append("supply").append(CSV_SEPARATOR).append(supplyProduct)
-                .append(System.lineSeparator()).append("buy").append(CSV_SEPARATOR)
-                .append(buyProduct).append(System.lineSeparator()).append("result")
-                .append(CSV_SEPARATOR).append(supplyProduct - buyProduct).toString();
-    }
-
-    private String extractOperation(String dataProduct) {
-        return dataProduct.split(CSV_SEPARATOR)[0];
-    }
-
-    private int extractAmount(String dataProduct) {
-        return Integer.valueOf(dataProduct.split(CSV_SEPARATOR)[1].trim());
+        return builder.append(NAME_ADD_PRODUCT).append(LINE_SEPARATOR).append(supplyProduct)
+                .append(System.lineSeparator()).append(NAME_SUBTRACT_PRODUCT).append(LINE_SEPARATOR)
+                .append(buyProduct).append(System.lineSeparator()).append(NAME_RESULT)
+                .append(LINE_SEPARATOR).append(supplyProduct - buyProduct).toString();
     }
 
     private void writeStatistic(String fileName, String statistic) {
