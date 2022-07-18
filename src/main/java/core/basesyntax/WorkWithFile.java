@@ -31,7 +31,7 @@ public class WorkWithFile {
                 buyProduct += amount;
             }
         }
-        return formatStatistic(supplyProduct, buyProduct);
+        return buildStatistic(supplyProduct, buyProduct);
     }
 
     private String[] readFile(String fileName) {
@@ -47,7 +47,7 @@ public class WorkWithFile {
         return builder.toString().split(System.lineSeparator());
     }
 
-    private String formatStatistic(int supplyProduct, int buyProduct) {
+    private String buildStatistic(int supplyProduct, int buyProduct) {
         StringBuilder builder = new StringBuilder();
         return builder.append("supply").append(LINE_SEPARATOR).append(supplyProduct)
                 .append(System.lineSeparator()).append("buy").append(LINE_SEPARATOR)
