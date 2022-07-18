@@ -19,11 +19,11 @@ public class WorkWithFile {
     }
 
     private String readFile(String fileName) {
-        StringBuilder readData = new StringBuilder();
+        StringBuilder builder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
             String line = bufferedReader.readLine();
             while (line != null) {
-                readData.append(line).append(System.lineSeparator());
+                builder.append(line).append(System.lineSeparator());
                 line = bufferedReader.readLine();
             }
         } catch (FileNotFoundException e) {
@@ -31,7 +31,7 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Error reading from file" + fileName, e);
         }
-        return readData.toString();
+        return builder.toString();
     }
 
     private void writeFile(String fileName, String data) {
@@ -43,23 +43,23 @@ public class WorkWithFile {
     }
 
     private int[] calculate(String data) {
-        int[] totalSupplyAndBuy = new int[2];
-        String[] processingData = data.split(System.lineSeparator());
-        for (String line : processingData) {
+        int[] result = new int[2];
+        String[] lines = data.split(System.lineSeparator());
+        for (String line : lines) {
             String[] calculateData = line.split(SEPARATOR);
             switch (calculateData[OPERATION_TYPE_INDEX]) {
                 case "supply":
-                    totalSupplyAndBuy[SUPPLY_INDEX] = totalSupplyAndBuy[SUPPLY_INDEX]
+                    result[SUPPLY_INDEX] = result[SUPPLY_INDEX]
                             + Integer.parseInt(calculateData[AMMOUNT_INDEX]);
                     break;
                 case "buy":
                 default:
-                    totalSupplyAndBuy[BUY_INDEX] = totalSupplyAndBuy[BUY_INDEX]
+                    result[BUY_INDEX] = result[BUY_INDEX]
                             + Integer.parseInt(calculateData[AMMOUNT_INDEX]);
                     break;
             }
         }
-        return totalSupplyAndBuy;
+        return result;
     }
 
     private String createReport(int[] result) {
