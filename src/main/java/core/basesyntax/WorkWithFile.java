@@ -9,11 +9,8 @@ import java.io.IOException;
 
 public class WorkWithFile {
     private static final String LINE_SEPARATOR = ",";
-    private static final int INDEX_NAME_OPERATION = 0;
-    private static final int INDEX_AMOUNT = 1;
-    private static final String NAME_ADD_PRODUCT = "supply";
-    private static final String NAME_SUBTRACT_PRODUCT = "buy";
-    private static final String NAME_RESULT = "result";
+    private static final int INDEX_OF_OPERATION = 0;
+    private static final int INDEX_OF_AMOUNT = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] lines = readFile(fromFileName);
@@ -24,12 +21,13 @@ public class WorkWithFile {
     private String calculateStatistic(String[] lines) {
         int supplyProduct = 0;
         int buyProduct = 0;
-        for (String data : lines) {
-            String operation = data.split(LINE_SEPARATOR)[INDEX_NAME_OPERATION];
-            int amount = Integer.valueOf(data.split(LINE_SEPARATOR)[INDEX_AMOUNT].trim());
-            if (operation.equals(NAME_ADD_PRODUCT)) {
+        for (String line : lines) {
+            String operation = line.split(LINE_SEPARATOR)[INDEX_OF_OPERATION];
+            int amount = Integer.valueOf(line.split(LINE_SEPARATOR)[INDEX_OF_AMOUNT].trim());
+
+            if (operation.equals("supply")) {
                 supplyProduct += amount;
-            } else if (operation.equals(NAME_SUBTRACT_PRODUCT)) {
+            } else if (operation.equals("buy")) {
                 buyProduct += amount;
             }
         }
@@ -51,15 +49,14 @@ public class WorkWithFile {
 
     private String formatStatistic(int supplyProduct, int buyProduct) {
         StringBuilder builder = new StringBuilder();
-        return builder.append(NAME_ADD_PRODUCT).append(LINE_SEPARATOR).append(supplyProduct)
-                .append(System.lineSeparator()).append(NAME_SUBTRACT_PRODUCT).append(LINE_SEPARATOR)
-                .append(buyProduct).append(System.lineSeparator()).append(NAME_RESULT)
+        return builder.append("supply").append(LINE_SEPARATOR).append(supplyProduct)
+                .append(System.lineSeparator()).append("buy").append(LINE_SEPARATOR)
+                .append(buyProduct).append(System.lineSeparator()).append("result")
                 .append(LINE_SEPARATOR).append(supplyProduct - buyProduct).toString();
     }
 
     private void writeStatistic(String fileName, String statistic) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File(fileName)))) {
-
             writer.write(statistic);
             writer.flush();
         } catch (IOException e) {
