@@ -15,60 +15,62 @@ public class WorkWithFile {
     private static final String SEPARATOR = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int[] processedData = readFile(fromFileName);
-        writeFile(toFileName, getResultToWrite(processedData));
+        writeFile(toFileName, createReport(calculate(readFile(fromFileName))));
     }
 
-    private int[] readFile(String fileName) {
-        String readString;
-        int[] totalSupplyAndBuy = new int[2];
+    private String readFile(String fileName) {
+        StringBuilder readData = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
-            readString = bufferedReader.readLine();
-            while (readString != null) {
-                totalSupplyAndBuy = dataProcessing(readString, totalSupplyAndBuy);
-                readString = bufferedReader.readLine();
+            String line = bufferedReader.readLine();
+            while (line != null) {
+                readData.append(line).append(System.lineSeparator());
+                line = bufferedReader.readLine();
             }
         } catch (FileNotFoundException e) {
             throw new RuntimeException("File " + fileName + " not found", e);
         } catch (IOException e) {
             throw new RuntimeException("Error reading from file" + fileName, e);
         }
-        return totalSupplyAndBuy;
+        return readData.toString();
     }
 
-    private void writeFile(String fileName, String dataToWrite) {
+    private void writeFile(String fileName, String data) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
-            bufferedWriter.write(dataToWrite);
+            bufferedWriter.write(data);
         } catch (IOException e) {
             throw new RuntimeException("Error writing file " + fileName, e);
         }
     }
 
-    private int[] dataProcessing(String data, int[] totalSupplyAndBuy) {
-        String[] processingData = data.split(SEPARATOR);
-        switch (processingData[OPERATION_TYPE_INDEX]) {
-            case ("supply"):
-                totalSupplyAndBuy[SUPPLY_INDEX] = totalSupplyAndBuy[SUPPLY_INDEX]
-                        + Integer.parseInt(processingData[AMMOUNT_INDEX]);
-                break;
-            case ("buy"):
-            default:
-                totalSupplyAndBuy[BUY_INDEX] = totalSupplyAndBuy[BUY_INDEX]
-                        + Integer.parseInt(processingData[AMMOUNT_INDEX]);
-                break;
+    private int[] calculate(String data) {
+        int[] totalSupplyAndBuy = new int[2];
+        String[] processingData = data.split(System.lineSeparator());
+        for (String line : processingData) {
+            String[] calculateData = line.split(SEPARATOR);
+            switch (calculateData[OPERATION_TYPE_INDEX]) {
+                case "supply":
+                    totalSupplyAndBuy[SUPPLY_INDEX] = totalSupplyAndBuy[SUPPLY_INDEX]
+                            + Integer.parseInt(calculateData[AMMOUNT_INDEX]);
+                    break;
+                case "buy":
+                default:
+                    totalSupplyAndBuy[BUY_INDEX] = totalSupplyAndBuy[BUY_INDEX]
+                            + Integer.parseInt(calculateData[AMMOUNT_INDEX]);
+                    break;
+            }
         }
         return totalSupplyAndBuy;
     }
 
-    private String getResultToWrite(int[] processedData) {
-        StringBuilder resultStringBuilder = new StringBuilder();
-        resultStringBuilder.append("supply,")
-                .append(processedData[SUPPLY_INDEX])
+    private String createReport(int[] result) {
+        StringBuilder reportBuilder = new StringBuilder();
+        reportBuilder.append("supply,")
+                .append(result[SUPPLY_INDEX])
                 .append(System.lineSeparator()).append("buy,")
-                .append(processedData[BUY_INDEX])
+                .append(result[BUY_INDEX])
                 .append(System.lineSeparator()).append("result,")
-                .append(processedData[SUPPLY_INDEX] - processedData[BUY_INDEX])
+                .append(result[SUPPLY_INDEX] - result[BUY_INDEX])
                 .append(System.lineSeparator());
-        return resultStringBuilder.toString();
+        return reportBuilder.toString();
     }
 }
