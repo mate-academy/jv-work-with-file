@@ -9,8 +9,8 @@ import java.io.IOException;
 
 public class WorkWithFile {
     private static final String COMMA_CHARACTER = ",";
-    private static final int RESULTS_FOR_BUY = 0;
-    private static final int RESULTS_FOR_SUPPLY = 1;
+    private static final int BUY_SUM_INDEX = 0;
+    private static final int SUPPLY_SUM_INDEX = 1;
     private final int[] resultArray = new int[2];
     private File file = null;
 
