@@ -8,7 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final String COMMA_CHARACTER = ",";
+    private static final String LINE_SEPARATOR = ",";
     private static final int BUY_SUM_INDEX = 0;
     private static final int SUPPLY_SUM_INDEX = 1;
     private final int[] resultArray = new int[2];
