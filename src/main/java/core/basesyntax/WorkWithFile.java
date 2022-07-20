@@ -30,15 +30,15 @@ public class WorkWithFile {
     }
 
     private String getReport() {
-        int reportResult = resultArray[RESULTS_FOR_SUPPLY] - resultArray[RESULTS_FOR_BUY];
+        int reportResult = resultArray[SUPPLY_SUM_INDEX] - resultArray[BUY_SUM_INDEX];
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("supply");
         stringBuilder.append(COMMA_CHARACTER);
-        stringBuilder.append(resultArray[RESULTS_FOR_SUPPLY]);
+        stringBuilder.append(resultArray[SUPPLY_SUM_INDEX]);
         stringBuilder.append(System.lineSeparator());
         stringBuilder.append("buy");
         stringBuilder.append(COMMA_CHARACTER);
-        stringBuilder.append(resultArray[RESULTS_FOR_BUY]);
+        stringBuilder.append(resultArray[BUY_SUM_INDEX]);
         stringBuilder.append(System.lineSeparator());
         stringBuilder.append("result");
         stringBuilder.append(COMMA_CHARACTER);
@@ -53,9 +53,9 @@ public class WorkWithFile {
             while (temporaryString != null) {
                 String[] temporaryArray = temporaryString.split(COMMA_CHARACTER);
                 if (temporaryArray[0].equals("buy")) {
-                    resultArray[RESULTS_FOR_BUY] += Integer.parseInt(temporaryArray[1]);
+                    resultArray[BUY_SUM_INDEX] += Integer.parseInt(temporaryArray[1]);
                 } else if (temporaryArray[0].equals("supply")) {
-                    resultArray[RESULTS_FOR_SUPPLY] += Integer.parseInt(temporaryArray[1]);
+                    resultArray[SUPPLY_SUM_INDEX] += Integer.parseInt(temporaryArray[1]);
                 }
                 temporaryString = bufferedReader.readLine();
             }
