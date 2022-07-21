@@ -10,43 +10,54 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final byte OPERATION_TYPE_INDEX = 0;
     private static final byte AMMOUNT_INDEX = 1;
-    private int sumSupply = 0;
-    private int sumBuy = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        readFromFile(fromFileName);
-        writeToFile(toFileName);
+        String[] lines = readFromFile(fromFileName);
+        String statistic = calculateTotalValues(lines);
+        writeToFile(toFileName, statistic);
     }
 
-    private void readFromFile(String fromFileName) {
+    private String[] readFromFile(String fromFileName) {
+        StringBuilder builder = new StringBuilder();
         File file = new File(fromFileName);
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            String value = reader.readLine();
-            while (value != null) {
-                String[] data = value.split(",");
-                if (data[OPERATION_TYPE_INDEX].equals("buy")) {
-                    sumBuy += Integer.parseInt(data[AMMOUNT_INDEX]);
-                } else if (data[OPERATION_TYPE_INDEX].equals("supply")) {
-                    sumSupply += Integer.parseInt(data[AMMOUNT_INDEX]);
-                }
-                value = reader.readLine();
+            while (reader.ready()) {
+                String line = reader.readLine();
+                builder.append(line).append(System.lineSeparator());
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can`t read file", e);
+            throw new RuntimeException("Can't read from file " + fromFileName + e);
         }
+        return builder.toString().split(System.lineSeparator());
     }
 
-    private void writeToFile(String toFileName) {
+    private String calculateTotalValues(String[] lines) {
+        int sumBuy = 0;
+        int sumSupply = 0;
+        for (String line : lines) {
+            if (line.split(",")[OPERATION_TYPE_INDEX].equals("buy")) {
+                sumBuy += Integer.parseInt(line.split(",")[AMMOUNT_INDEX]);
+            } else if (line.split(",")[OPERATION_TYPE_INDEX].equals("supply")) {
+                sumSupply += Integer.parseInt(line.split(",")[AMMOUNT_INDEX]);
+            }
+        }
+        return createReport(sumBuy, sumSupply);
+    }
+
+    private String createReport(int sumBuy, int sumSupply) {
         StringBuilder builder = new StringBuilder();
-        int result = sumSupply - sumBuy;
         builder.append("supply,").append(sumSupply).append(System.lineSeparator())
                 .append("buy,").append(sumBuy).append(System.lineSeparator())
-                .append("result,").append(result);
+                .append("result,").append(sumSupply - sumBuy);
+        return builder.toString();
+    }
+
+    private void writeToFile(String toFileName, String statistic) {
         File toFile = new File(toFileName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFile, true))) {
-            bufferedWriter.write(builder.toString());
+            bufferedWriter.write(statistic);
         } catch (IOException e) {
-            throw new RuntimeException("Can`t write data to file", e);
+            throw new RuntimeException("Can`t write data to file" + toFileName + e);
         }
     }
 }
