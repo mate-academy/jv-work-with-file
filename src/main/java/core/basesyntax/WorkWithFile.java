@@ -13,8 +13,23 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] lines = readFromFile(fromFileName);
-        String statistic = calculateTotalValues(lines);
+        String statistic = getStatistic(lines);
         writeToFile(toFileName, statistic);
+    }
+
+    private String getStatistic(String[] lines) {
+        int sumBuy = 0;
+        int sumSupply = 0;
+        for (String line : lines) {
+            String splitOperation = line.split(",")[OPERATION_TYPE_INDEX];
+            int amount = Integer.parseInt(line.split(",")[AMMOUNT_INDEX]);
+            if (splitOperation.equals("buy")) {
+                sumBuy += amount;
+            } else if (splitOperation.equals("supply")) {
+                sumSupply += amount;
+            }
+        }
+        return createReport(sumBuy, sumSupply);
     }
 
     private String[] readFromFile(String fromFileName) {
@@ -31,19 +46,6 @@ public class WorkWithFile {
         return builder.toString().split(System.lineSeparator());
     }
 
-    private String calculateTotalValues(String[] lines) {
-        int sumBuy = 0;
-        int sumSupply = 0;
-        for (String line : lines) {
-            if (line.split(",")[OPERATION_TYPE_INDEX].equals("buy")) {
-                sumBuy += Integer.parseInt(line.split(",")[AMMOUNT_INDEX]);
-            } else if (line.split(",")[OPERATION_TYPE_INDEX].equals("supply")) {
-                sumSupply += Integer.parseInt(line.split(",")[AMMOUNT_INDEX]);
-            }
-        }
-        return createReport(sumBuy, sumSupply);
-    }
-
     private String createReport(int sumBuy, int sumSupply) {
         StringBuilder builder = new StringBuilder();
         builder.append("supply,").append(sumSupply).append(System.lineSeparator())
@@ -53,8 +55,8 @@ public class WorkWithFile {
     }
 
     private void writeToFile(String toFileName, String statistic) {
-        File toFile = new File(toFileName);
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFile, true))) {
+        File file = new File(toFileName);
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, true))) {
             bufferedWriter.write(statistic);
         } catch (IOException e) {
             throw new RuntimeException("Can`t write data to file" + toFileName + e);
