@@ -11,7 +11,6 @@ public class WorkWithFile {
     private static final byte AMMOUNT_INDEX = 1;
     private static final byte OPERATION_TYPE_INDEX = 0;
 
-
     public void getStatistic(String fromFileName, String toFileName) {
         String[] lines = readFromFile(fromFileName);
         String statistic = getStatistic(lines);
