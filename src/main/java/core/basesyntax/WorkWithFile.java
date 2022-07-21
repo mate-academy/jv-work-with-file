@@ -21,11 +21,12 @@ public class WorkWithFile {
         int sumBuy = 0;
         int sumSupply = 0;
         for (String line : lines) {
-            String splitOperation = line.split(",")[OPERATION_TYPE_INDEX];
-            int amount = Integer.parseInt(line.split(",")[AMMOUNT_INDEX]);
-            if (splitOperation.equals("buy")) {
+            String[] splittedLine = line.split(",");
+            String operationType = splittedLine[OPERATION_TYPE_INDEX];
+            int amount = Integer.parseInt(splittedLine[AMMOUNT_INDEX]);
+            if (operationType.equals("buy")) {
                 sumBuy += amount;
-            } else if (splitOperation.equals("supply")) {
+            } else if (operationType.equals("supply")) {
                 sumSupply += amount;
             }
         }
