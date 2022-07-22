@@ -7,37 +7,34 @@ import java.nio.file.StandardOpenOption;
 import java.util.List;
 
 public class WorkWithFile {
-    private static final byte VALUE_INDEX = 1;
-    private static final byte TYPE_OF_OPERATION = 0;
+    private static final byte AMOUNT_INDEX = 1;
+    private static final byte TYPE_OF_OPERATION_INDEX = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
+        writeToFile(fromFileName, toFileName);
+    }
+
+    public void writeToFile(String fromFileName, String toFileName) {
         File file = new File(toFileName);
-        String data = getSumData(fromFileName);
+        String data = createReport(fromFileName);
         try {
             file.createNewFile();
-        } catch (IOException e) {
-            throw new RuntimeException("Can`t create file", e);
-        }
-        try {
             Files.write(file.toPath(), data.getBytes(), StandardOpenOption.APPEND);
         } catch (IOException e) {
             throw new RuntimeException("Can`t write data to file", e);
         }
     }
 
-    public String[][] getArrayData(String nameFile) {
+    public String[][] readFromFile(String nameFile) {
         File file = new File(nameFile);
-        List<String> stringList;
+        List<String> lines;
+        String[][] arrayData;
         try {
-            stringList = Files.readAllLines(file.toPath());
-        } catch (IOException e) {
-            throw new RuntimeException("Can`t read file", e);
-        }
-        String[][] arrayData = new String[stringList.size()][2];
-        try {
-            stringList = Files.readAllLines(file.toPath());
-            for (int i = 0; i < stringList.size(); i++) {
-                arrayData[i] = stringList.get(i).split(",");
+            lines = Files.readAllLines(file.toPath());
+            arrayData = new String[lines.size()][2];
+            lines = Files.readAllLines(file.toPath());
+            for (int i = 0; i < lines.size(); i++) {
+                arrayData[i] = lines.get(i).split(",");
             }
         } catch (IOException e) {
             throw new RuntimeException("Can`t read file", e);
@@ -45,24 +42,24 @@ public class WorkWithFile {
         return arrayData;
     }
 
-    public String getSumData(String nameFile) {
-        String[][] data = getArrayData(nameFile);
+    public String createReport(String nameFile) {
+        String[][] data = readFromFile(nameFile);
         int buy = 0;
         int supply = 0;
-        StringBuilder stringBuilder = new StringBuilder();
+        StringBuilder reportBuilder = new StringBuilder();
         for (int i = 0; i < data.length; i++) {
-            if (data[i][TYPE_OF_OPERATION].equals("supply")) {
-                supply = supply + Integer.parseInt(data[i][VALUE_INDEX]);
+            if (data[i][TYPE_OF_OPERATION_INDEX].equals("supply")) {
+                supply = supply + Integer.parseInt(data[i][AMOUNT_INDEX]);
             } else {
-                buy = buy + Integer.parseInt(data[i][VALUE_INDEX]);
+                buy = buy + Integer.parseInt(data[i][AMOUNT_INDEX]);
             }
         }
         int result = supply - buy;
-        stringBuilder.append("supply,")
+        reportBuilder.append("supply,")
                 .append(supply).append(System.lineSeparator())
                 .append("buy,").append(buy)
                 .append(System.lineSeparator())
                 .append("result,").append(result);
-        return stringBuilder.toString();
+        return reportBuilder.toString();
     }
 }
