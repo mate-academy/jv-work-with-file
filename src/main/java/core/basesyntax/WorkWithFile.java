@@ -32,7 +32,7 @@ public class WorkWithFile {
     private String createReport(String line) {
         int sumBuy = 0;
         int sumSupply = 0;
-        StringBuilder stringBuilder = new StringBuilder();
+        StringBuilder reportBuilder = new StringBuilder();
         String[] splittedLine = line.split(SEPARATOR);
         for (int i = 0; i < splittedLine.length; i += 2) {
             if (splittedLine[i].equals(BUY)) {
@@ -43,11 +43,11 @@ public class WorkWithFile {
             }
         }
         int result = sumSupply - sumBuy;
-        stringBuilder.append(SUPPLY).append(SEPARATOR).append(sumSupply)
+        reportBuilder.append(SUPPLY).append(SEPARATOR).append(sumSupply)
                 .append(System.lineSeparator()).append(BUY).append(SEPARATOR)
                 .append(sumBuy).append(System.lineSeparator())
                 .append("result,").append(result);
-        return stringBuilder.toString();
+        return reportBuilder.toString();
     }
 
     public void writeToReport(String toFileName, String report) {
