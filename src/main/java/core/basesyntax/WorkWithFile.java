@@ -1,66 +1,57 @@
 package core.basesyntax;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.util.List;
 
 public class WorkWithFile {
     private static final String LINE_SEPARATOR = ",";
     private static final int BUY_SUM_INDEX = 0;
     private static final int SUPPLY_SUM_INDEX = 1;
-    private final int[] resultArray = new int[2];
-    private File file = null;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        readFromFile(fromFileName);
-        writeToFile(toFileName);
+        String incomeData = readFromFile(fromFileName);
+        String reportString = getReport(incomeData);
+        writeToFile(toFileName,reportString);
     }
 
-    private void writeToFile(String toFileName) {
-        file = new File(toFileName);
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
-            String reportString = getReport();
+    private void writeToFile(String toFileName, String reportString) {
+        File fileToWrite = new File(toFileName);
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileToWrite))) {
             bufferedWriter.write(reportString);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write to file " + file);
+            throw new RuntimeException("Can't write to file " + fileToWrite);
         }
     }
 
-    private String getReport() {
+    private String getReport(String incomeData) {
+        int[] resultArray = new int[2];
+        String[] temporaryArray = incomeData.split(LINE_SEPARATOR);
+        for (int i = 0; i < temporaryArray.length; i += 2) {
+            if (temporaryArray[i].trim().equals("supply")) {
+                resultArray[SUPPLY_SUM_INDEX] += Integer.parseInt(temporaryArray[i + 1]);
+            } else if (temporaryArray[i].trim().equals("buy")) {
+                resultArray[BUY_SUM_INDEX] += Integer.parseInt(temporaryArray[i + 1]);
+            }
+        }
         int reportResult = resultArray[SUPPLY_SUM_INDEX] - resultArray[BUY_SUM_INDEX];
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("supply");
-        stringBuilder.append(COMMA_CHARACTER);
-        stringBuilder.append(resultArray[SUPPLY_SUM_INDEX]);
-        stringBuilder.append(System.lineSeparator());
-        stringBuilder.append("buy");
-        stringBuilder.append(COMMA_CHARACTER);
-        stringBuilder.append(resultArray[BUY_SUM_INDEX]);
-        stringBuilder.append(System.lineSeparator());
-        stringBuilder.append("result");
-        stringBuilder.append(COMMA_CHARACTER);
-        stringBuilder.append(reportResult);
-        return stringBuilder.toString();
+        return "supply" + LINE_SEPARATOR + resultArray[SUPPLY_SUM_INDEX]
+                + System.lineSeparator()
+                + "buy" + LINE_SEPARATOR + resultArray[BUY_SUM_INDEX]
+                + System.lineSeparator()
+                + "result" + LINE_SEPARATOR + reportResult;
     }
 
-    private void readFromFile(String fromFileName) {
-        file = new File(fromFileName);
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
-            String temporaryString = bufferedReader.readLine();
-            while (temporaryString != null) {
-                String[] temporaryArray = temporaryString.split(COMMA_CHARACTER);
-                if (temporaryArray[0].equals("buy")) {
-                    resultArray[BUY_SUM_INDEX] += Integer.parseInt(temporaryArray[1]);
-                } else if (temporaryArray[0].equals("supply")) {
-                    resultArray[SUPPLY_SUM_INDEX] += Integer.parseInt(temporaryArray[1]);
-                }
-                temporaryString = bufferedReader.readLine();
-            }
+    private String readFromFile(String fromFileName) {
+        File fileToRead = new File(fromFileName);
+        try {
+            List<String> stringList = Files.readAllLines(fileToRead.toPath());
+            return String.join(",",stringList);
         } catch (IOException e) {
-            throw new RuntimeException("Can't read from file" + file);
+            throw new RuntimeException("Can't read from file" + fileToRead);
         }
     }
 }
