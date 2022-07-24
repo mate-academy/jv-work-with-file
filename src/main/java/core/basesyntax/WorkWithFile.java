@@ -8,61 +8,61 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final int OPERATION_TYPE = 0;
-    private static final int AMOUNT = 1;
-    private static final int SUPPLY_AMOUNT = 0;
-    private static final int BUY_AMOUNT = 1;
-    private static final int RESULT_AMOUNT = 2;
+    private static final int OPERATION_TYPE_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int [] report = createReport(fromFileName);
-        writeToFile(report,toFileName);
+        String[] report = createReport(readToFile(fromFileName));
+        writeToFile(report, toFileName);
     }
 
-    private int[] createReport(String fromFileName) {
+    private String[] readToFile(String fromFileName) {
         File file = new File(fromFileName);
-        int buy = 0;
-        int supply = 0;
-        int result = 0;
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(file));
+        StringBuilder builder = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String data = reader.readLine();
             while (data != null) {
-                String[] splittedLine = data.split(",");
-                if (splittedLine[OPERATION_TYPE].equals("buy")) {
-                    buy = buy + Integer.parseInt(splittedLine[AMOUNT]);
-                }
-                if (splittedLine[OPERATION_TYPE].equals("supply")) {
-                    supply = supply + Integer.parseInt(splittedLine[AMOUNT]);
-                }
+                builder.append(data).append(" ");
                 data = reader.readLine();
-                result = supply - buy;
             }
-            return new int[]{supply, buy, result};
+            String[] text = builder.toString().split(" ");
+            for (String b : text) {
+                System.out.println(b);
+            }
+            return text;
         } catch (IOException e) {
             throw new RuntimeException("Cant read file ");
         }
     }
 
-    private void writeToFile(int [] report,String toFileName) {
+    private String[] createReport(String[] text) {
+        int buy = 0;
+        int supply = 0;
+        int result = 0;
+        for (String lines : text) {
+            String[] splittedLine = lines.split(",");
+            if (splittedLine[OPERATION_TYPE_INDEX].equals("buy")) {
+                buy = buy + Integer.parseInt(splittedLine[AMOUNT_INDEX]);
+            }
+            if (splittedLine[OPERATION_TYPE_INDEX].equals("supply")) {
+                supply = supply + Integer.parseInt(splittedLine[AMOUNT_INDEX]);
+            }
+            result = supply - buy;
+        }
+        return new String[]{"supply," + supply, "buy," + buy, "result," + result};
+    }
+
+    private void writeToFile(String[] report, String toFileName) {
         File fileResult = new File(toFileName);
-        String[] writtenReport = new String[]
-                {"supply," + report[SUPPLY_AMOUNT], "buy,"
-                        + report[BUY_AMOUNT], "result,"
-                        + report[RESULT_AMOUNT]};
-        for (String lines : writtenReport) {
+        for (String reportLines : report) {
             try (BufferedWriter bufferedWriter = new BufferedWriter(
                     new FileWriter(fileResult, true))) {
-                bufferedWriter.write(lines);
+                bufferedWriter.write(reportLines);
                 bufferedWriter.newLine();
             } catch (IOException e) {
-                throw new RuntimeException("Cant read file ");
+                throw new RuntimeException("Cant write to file: " + toFileName);
             }
 
         }
-
     }
 }
-
-
-
