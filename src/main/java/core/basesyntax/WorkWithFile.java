@@ -12,11 +12,11 @@ public class WorkWithFile {
     private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String[] report = createReport(readToFile(fromFileName));
+        String[] report = createReport(readFromFile(fromFileName));
         writeToFile(report, toFileName);
     }
 
-    private String[] readToFile(String fromFileName) {
+    private String[] readFromFile(String fromFileName) {
         File file = new File(fromFileName);
         StringBuilder builder = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
@@ -25,11 +25,7 @@ public class WorkWithFile {
                 builder.append(data).append(" ");
                 data = reader.readLine();
             }
-            String[] text = builder.toString().split(" ");
-            for (String b : text) {
-                System.out.println(b);
-            }
-            return text;
+            return builder.toString().split(" ");
         } catch (IOException e) {
             throw new RuntimeException("Cant read file ");
         }
