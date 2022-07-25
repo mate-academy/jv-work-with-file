@@ -10,37 +10,34 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final int OPERATION_TYPE_INDEX = 0;
     private static final int AMMOUNT_INDEX = 1;
+    private static final int TOTAL_SUPPLY_INDEX = 0;
+    private static final int TOTAL_BUY_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] data = readFromFile(fromFileName);
-        int totalResult = calculateTotalSupply(data) - calculateTotalBuy(data);
+        int totalResult = calculateTotalSupplyAndBuy(data)[TOTAL_SUPPLY_INDEX]
+                - calculateTotalSupplyAndBuy(data)[TOTAL_BUY_INDEX];
         String reportStatistic =
-                "supply" + "," + calculateTotalSupply(data) + System.lineSeparator()
-                + "buy" + "," + calculateTotalBuy(data) + System.lineSeparator()
+                "supply" + "," + calculateTotalSupplyAndBuy(data)[TOTAL_SUPPLY_INDEX]
+                        + System.lineSeparator()
+                + "buy" + "," + calculateTotalSupplyAndBuy(data)[TOTAL_BUY_INDEX]
+                        + System.lineSeparator()
                 + "result" + "," + totalResult;
         writeToFile(reportStatistic, toFileName);
     }
 
-    private int calculateTotalSupply(String[] data) {
+    private int[] calculateTotalSupplyAndBuy(String[] data) {
         int totalSupply = 0;
+        int totalBuy = 0;
         for (String line : data) {
             String[] splittedLine = line.split(",");
             if (splittedLine[OPERATION_TYPE_INDEX].equals("supply")) {
                 totalSupply += Integer.parseInt(splittedLine[AMMOUNT_INDEX]);
-            }
-        }
-        return totalSupply;
-    }
-
-    private int calculateTotalBuy(String[] data) {
-        int totalBuy = 0;
-        for (String line : data) {
-            String[] splittedLine = line.split(",");
-            if (splittedLine[OPERATION_TYPE_INDEX].equals("buy")) {
+            } else {
                 totalBuy += Integer.parseInt(splittedLine[AMMOUNT_INDEX]);
             }
         }
-        return totalBuy;
+        return new int[]{totalSupply, totalBuy};
     }
 
     private String[] readFromFile(String fileName) {
