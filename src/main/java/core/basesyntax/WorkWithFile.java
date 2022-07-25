@@ -8,26 +8,39 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final int TYPE_OF_FIGURES_INDEX = 0;
-    private static final int FIGURES_INDEX = 1;
+    private static final int OPERATION_TYPE_INDEX = 0;
+    private static final int AMMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] data = readFromFile(fromFileName);
+        int totalResult = calculateTotalSupply(data) - calculateTotalBuy(data);
+        String reportStatistic =
+                "supply" + "," + calculateTotalSupply(data) + System.lineSeparator()
+                + "buy" + "," + calculateTotalBuy(data) + System.lineSeparator()
+                + "result" + "," + totalResult;
+        writeToFile(reportStatistic, toFileName);
+    }
+
+    private int calculateTotalSupply(String[] data) {
         int totalSupply = 0;
+        for (String line : data) {
+            String[] splittedLine = line.split(",");
+            if (splittedLine[OPERATION_TYPE_INDEX].equals("supply")) {
+                totalSupply += Integer.parseInt(splittedLine[AMMOUNT_INDEX]);
+            }
+        }
+        return totalSupply;
+    }
+
+    private int calculateTotalBuy(String[] data) {
         int totalBuy = 0;
         for (String line : data) {
             String[] splittedLine = line.split(",");
-            if (splittedLine[TYPE_OF_FIGURES_INDEX].equals("supply")) {
-                totalSupply += Integer.parseInt(splittedLine[FIGURES_INDEX]);
-            } else {
-                totalBuy += Integer.parseInt(splittedLine[FIGURES_INDEX]);
+            if (splittedLine[OPERATION_TYPE_INDEX].equals("buy")) {
+                totalBuy += Integer.parseInt(splittedLine[AMMOUNT_INDEX]);
             }
         }
-        int totalResult = totalSupply - totalBuy;
-        String reportStatistic = "supply" + "," + totalSupply + System.lineSeparator()
-                + "buy" + "," + totalBuy + System.lineSeparator()
-                + "result" + "," + totalResult;
-        writeToFile(reportStatistic, toFileName);
+        return totalBuy;
     }
 
     private String[] readFromFile(String fileName) {
