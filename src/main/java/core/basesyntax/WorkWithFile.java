@@ -12,10 +12,10 @@ public class WorkWithFile {
         try (BufferedReader buffer = new BufferedReader(new FileReader(fromFileName))) {
             String line = buffer.readLine();
             while (line != null) {
-                if (line.substring(0, line.indexOf(',')).equals("supply")) {
-                    arr[0] += Integer.parseInt(line.substring(line.indexOf(',') + 1));
+                if (line.split(",")[0].equals("supply")) {
+                    arr[0] += Integer.parseInt(line.split(",")[1]);
                 } else {
-                    arr[1] += Integer.parseInt(line.substring(line.indexOf(',') + 1));
+                    arr[1] += Integer.parseInt(line.split(",")[1]);
                 }
                 line = buffer.readLine();
             }
