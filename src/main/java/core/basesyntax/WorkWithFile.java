@@ -8,63 +8,76 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    //services in daily report
+    private static final String SERVICE_SUPPLY = "supply";
+    private static final String SERVICE_BUY = "buy";
+    private static final String SERVICE_RESULT = "result";
+    //daily report line structure
     private static final int NUMBER_OF_COLUMNS = 2;
     private static final int COLUMN_WITH_NAME = 0;
     private static final int COLUMN_WITH_SUM = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        File fileFrom = new File(fromFileName);
-        //split by "," lines from fromFileName to String
-        String[] lineSeparator = new String[NUMBER_OF_COLUMNS];
+        String[] dataFromFile = getStringFromFile(fromFileName);
+        String report = makeReport(dataFromFile);
+        writeReportToFile(report, toFileName);
+    }
 
-        //will count daily sums of supplies and buys to write it later to toFileName
+    //read file, return array of Strings from the file
+    //each of the elements of array is a line in a fromFileName
+    private String[] getStringFromFile(String fromFileName) {
+        StringBuilder stringBuilder = new StringBuilder();
+        File fileFrom = new File(fromFileName);
+
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(fileFrom));
+            String lineFromFile = bufferedReader.readLine();
+            while (lineFromFile != null) {
+                stringBuilder.append(lineFromFile).append(" ");
+                lineFromFile = bufferedReader.readLine();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Can't read file" + fileFrom, e);
+        }
+        //return array of Strings, each of the elements is a line in a file
+        return stringBuilder.toString().split(" ");
+    }
+
+    private String makeReport(String[] dataFromFile) {
         int dailySupply = 0;
         int dailyBuy = 0;
         int dailyResult = 0;
+        String[] lineFromArray = new String[NUMBER_OF_COLUMNS];
 
-        //reading from file fromFileName, split lines, count sums of supply, buy, result
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(fileFrom));
-            String lineInFromFile = bufferedReader.readLine();
-            System.out.println(lineInFromFile);
-            while (lineInFromFile != null) {
-                lineSeparator = lineInFromFile.split(",");
-                if (lineSeparator[COLUMN_WITH_NAME].equals("supply")) {
-                    dailySupply += Integer.parseInt(lineSeparator[COLUMN_WITH_SUM]);
-                } else if (lineSeparator[COLUMN_WITH_NAME].equals("buy")) {
-                    dailyBuy += Integer.parseInt(lineSeparator[COLUMN_WITH_SUM]);
-                }
-                lineInFromFile = bufferedReader.readLine();
-                System.out.println(lineInFromFile);
+        for (String data : dataFromFile) {
+            lineFromArray = data.split(",");
+            if (lineFromArray[COLUMN_WITH_NAME].equals(SERVICE_SUPPLY)) {
+                dailySupply += Integer.parseInt(lineFromArray[COLUMN_WITH_SUM]);
+            } else if (lineFromArray[COLUMN_WITH_NAME].equals(SERVICE_BUY)) {
+                dailyBuy += Integer.parseInt(lineFromArray[COLUMN_WITH_SUM]);
             }
-        } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
         }
         dailyResult = dailySupply - dailyBuy;
 
-        //collect all information to stringBuilder before write it to toFileName
+        //collect all report information to stringBuilder
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("supply,").append(dailySupply).append(System.lineSeparator())
-                .append("buy,").append(dailyBuy).append(System.lineSeparator())
-                .append("result,").append(dailyResult);
+        stringBuilder.append(SERVICE_SUPPLY).append(",").append(dailySupply)
+                .append(System.lineSeparator())
+                .append(SERVICE_BUY).append(",").append(dailyBuy)
+                .append(System.lineSeparator())
+                .append(SERVICE_RESULT).append(",").append(dailyResult);
 
-        //write report information to file toFileName
+        //return String with the report
+        return stringBuilder.toString();
+    }
+
+    //write to toFileName info from the String report
+    private void writeReportToFile(String report, String toFileName) {
         File fileTo = new File(toFileName);
-        BufferedWriter bufferedWriter = null;
-        try {
-            bufferedWriter = new BufferedWriter(new FileWriter(fileTo, true));
-            bufferedWriter.write(stringBuilder.toString());
-
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileTo, true))) {
+            bufferedWriter.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write to file", e);
-        } finally {
-            if (bufferedWriter != null) {
-                try {
-                    bufferedWriter.close();
-                } catch (IOException e) {
-                    throw new RuntimeException("Can't close the file", e);
-                }
-            }
+            throw new RuntimeException("Can't write to file" + fileTo, e);
         }
     }
 }
