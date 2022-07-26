@@ -6,22 +6,26 @@ import java.io.FileReader;
 import java.io.FileWriter;
 
 public class WorkWithFile {
-    private final String supplyWord = "supply";
-    private final String buyWord = "buy";
+    private static final String supplyRow = "supply";
+    private static final String buyRow = "buy";
+    private static final String lineSeparator = ",";
+    private static String operationTypeValue;
+    private static int amountValue;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int supplySum = getFromFileSumOf(fromFileName, supplyWord);
-        int buySum = getFromFileSumOf(fromFileName, buyWord);
+        int supplySum = getFromFileSumOf(fromFileName, supplyRow);
+        int buySum = getFromFileSumOf(fromFileName, buyRow);
         writeToFile(toFileName, supplySum, buySum);
     }
 
-    private int getFromFileSumOf(String fromFileName, String word) {
+    private int getFromFileSumOf(String fromFileName, String rowNameValue) {
         try (BufferedReader file = new BufferedReader(new FileReader(fromFileName))) {
             String line = file.readLine();
             int amountSum = 0;
 
             while (line != null) {
-                amountSum += getAmountValue(line, word);
+                lineSplit(line);
+                amountSum += getAmountValue(rowNameValue);
                 line = file.readLine();
             }
             return amountSum;
@@ -30,8 +34,14 @@ public class WorkWithFile {
         }
     }
 
-    private int getAmountValue(String line, String word) {
-        return line.contains(word) ? Integer.parseInt(line.split(",")[1]) : 0;
+    private int getAmountValue(String word) {
+        return operationTypeValue.equals(word) ? amountValue : 0;
+    }
+
+    private void lineSplit(String line) {
+        String[] lineValues = line.split(lineSeparator);
+        operationTypeValue = lineValues[0];
+        amountValue = Integer.parseInt(lineValues[1]);
     }
 
     private int getResultValue(int supplySum, int buySum) {
@@ -40,8 +50,8 @@ public class WorkWithFile {
 
     private void writeToFile(String toFileName, int supplySum, int buySum) {
         try (BufferedWriter toFile = new BufferedWriter(new FileWriter(toFileName))) {
-            toFile.write(supplyWord + "," + supplySum + System.lineSeparator()
-                    + buyWord + "," + buySum + System.lineSeparator()
+            toFile.write(supplyRow + "," + supplySum + System.lineSeparator()
+                    + buyRow + "," + buySum + System.lineSeparator()
                     + "result," + getResultValue(supplySum, buySum));
         } catch (Exception e) {
             throw new RuntimeException("Can't write data to the file " + toFileName, e);
