@@ -15,8 +15,8 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         int supplySum = 0;
         int buySum = 0;
-        String[] linesArray = readFile(fromFileName).split(System.lineSeparator());
-        for (String line : linesArray) {
+        String[] dataFromFile = readFile(fromFileName).split(System.lineSeparator());
+        for (String line : dataFromFile) {
             String[] tableRow = line.split(",");
             if (tableRow[0].equals(SUPPLY_TRANSACTION_NAME)) {
                 supplySum += Integer.parseInt(tableRow[1]);
@@ -42,19 +42,18 @@ public class WorkWithFile {
             }
             return builder.toString();
         } catch (IOException e) {
-            throw new RuntimeException("Can't read the file", e);
+            throw new RuntimeException("Can't read the file " + fromFileName, e);
         }
     }
 
     private void writeReportToFile(String toFileName, String [] report) {
         File file = new File(toFileName);
-
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, true))) {
             for (String tableRow : report) {
                 bufferedWriter.write(tableRow + System.lineSeparator());
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't write to the file");
+            throw new RuntimeException("Can't write to the file " + toFileName, e);
         }
     }
 }
