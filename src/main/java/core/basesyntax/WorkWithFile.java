@@ -28,28 +28,24 @@ public class WorkWithFile {
                 value = bufferedReader.readLine();
             }
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("File not found ", e);
+            throw new RuntimeException("File not found " + fromFileName, e);
         } catch (IOException e) {
-            throw new RuntimeException("Can't read a file", e);
+            throw new RuntimeException("Can't read a file " + fromFileName, e);
         }
         writeStatistic(toFileName, totalSupply, totalBuy, totalSupply - totalBuy);
     }
 
     private void writeStatistic(String toFileName, int totalSupply, int totalBuy, int totalResult) {
-        final String supply = "supply";
-        final String buy = "buy";
-        final String result = "result";
-        final String delimiter = ",";
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(supply).append(delimiter).append(totalSupply)
+        stringBuilder.append("supply").append(",").append(totalSupply)
                 .append(System.lineSeparator())
-                .append(buy).append(delimiter).append(totalBuy).append(System.lineSeparator())
-                .append(result).append(delimiter).append(totalResult);
+                .append("buy").append(",").append(totalBuy).append(System.lineSeparator())
+                .append("result").append(",").append(totalResult);
         File file = new File(toFileName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
             bufferedWriter.write(stringBuilder.toString());
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data to a file", e);
+            throw new RuntimeException("Can't write data to a file " + toFileName, e);
         }
     }
 }
