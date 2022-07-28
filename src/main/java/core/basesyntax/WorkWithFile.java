@@ -3,23 +3,26 @@ package core.basesyntax;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 
 public class WorkWithFile {
     private static final String SUPPLY_CONDITION = "supply";
     private static final String BUY_CONDITION = "buy";
     private static final String REGEX_CONDITION = "\\D";
     private StringBuilder stringBuilder = new StringBuilder();
-    private int supplySum = 0;
-    private int buySum = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
-
-        calculateResultForDay(fromFileName);
+        String textFromFile = readDataFromFile(fromFileName);
+        int[] array = calculateResultForDay(textFromFile);
+        String result = toStringForNewFile(array);
+        writeToFile(toFileName, result);
 
     }
-        //отдал стринг билдер
+
+    //прочитал файл и отдал стринг билдер
     private String readDataFromFile(String fromFileName) {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String value = null;
@@ -44,35 +47,50 @@ public class WorkWithFile {
         }
         return stringBuilder.toString();
     }
-        //отдал массив с двумя индексами
+
     public int[] calculateResultForDay(String fromFileNam) {
-        String[] sortedArray = readDataFromFile(fromFileNam).split(System.lineSeparator());
+        int result = 0;
+        int numberFromLine = 0;
+        String[] sortedArray = fromFileNam.split(System.lineSeparator());
+        int supplySum = 0;
+        int buySum = 0;
         for (String line : sortedArray) {
-            //получил массив который нужно просчитать
             sortedArray = line.split(" ");
-            //получил число из линии
-            int numberFromLine = Integer.parseInt(line.replaceAll(REGEX_CONDITION, ""));
-            //посчитали числа
+            if (line.length() > 1) {
+                numberFromLine = Integer.parseInt(line.replaceAll(REGEX_CONDITION, ""));
+            }
             if (sortedArray[0].contains(SUPPLY_CONDITION)) {
                 supplySum += numberFromLine;
             }
-            if (sortedArray[0].contains(BUY_CONDITION)){
+            if (sortedArray[0].contains(BUY_CONDITION)) {
                 buySum += numberFromLine;
             }
+            result = supplySum - buySum;
         }
-        return new int[] {buySum, supplySum, supplySum - buySum};
-    }
-        //это пишем в файл
-    public String toString(int[] results) {
-        StringBuilder SBtoString = new StringBuilder();
-        SBtoString.append("supply,").append(results[1]).append(System.lineSeparator());
-        SBtoString.append("buy,").append(results[0]).append(System.lineSeparator());
-        SBtoString.append("result,").append(results[2]).append(System.lineSeparator());
-        return SBtoString.toString();
+        return new int[]{buySum, supplySum, result};
     }
 
-    public static void main(String[] args) {
-        System.out.println(new WorkWithFile().calculateResultForDay("apple.csv"));
+    public String toStringForNewFile(int[] results) {
+        StringBuilder sbtoString = new StringBuilder();
+        return sbtoString.append("supply,").append(results[1]).append(System.lineSeparator())
+                .append("buy,").append(results[0]).append(System.lineSeparator())
+                .append("result,").append(results[2]).append(System.lineSeparator()).toString();
 
     }
+
+    public void writeToFile(String toFileName, String string) {
+        File file = new File(toFileName);
+        try {
+            file.createNewFile();
+        } catch (IOException e) {
+            throw new RuntimeException("Can't create file " + e);
+        }
+        try {
+            Files.write(file.toPath(), string.getBytes(), StandardOpenOption.APPEND);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write to file " + e);
+
+        }
+    }
+
 }
