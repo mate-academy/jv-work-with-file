@@ -89,5 +89,4 @@ public class WorkWithFile {
             throw new RuntimeException("Can't write to file " + e);
         }
     }
-
 }
