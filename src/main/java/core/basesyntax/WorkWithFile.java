@@ -1,47 +1,57 @@
 package core.basesyntax;
 
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 
 public class WorkWithFile {
     private static final int OPERATION_TYPE = 0;
     private static final int AMOUNT = 1;
+    private static final int EMPTY_ARRAY = 0;
+    private static final String SEPARATOR = ",";
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        List<String> list = new ArrayList<String>();
+        writeToFile(toFileName, createReport(readFromFile(fromFileName)));
+    }
+
+    private String[] readFromFile(String fromFileName) {
+        List<String> list;
         try {
             list = Files.readAllLines(Paths.get(fromFileName));
         } catch (IOException e) {
-            throw new RuntimeException("File cant read", e);
+            throw new RuntimeException("Can`t read the file: " + fromFileName, e);
         }
-        String[] fromFileArray = list.toArray(new String[0]);
+        return list.toArray(new String[EMPTY_ARRAY]);
+    }
+
+    private StringBuilder createReport(String[] fromFileArray) {
         int counterSupply = 0;
         int counterBuy = 0;
         for (String fromFileArrayLine : fromFileArray) {
-            if (fromFileArrayLine.split(",")[OPERATION_TYPE].equals("supply")) {
-                counterSupply += Integer.parseInt(fromFileArrayLine.split(",")[AMOUNT]);
+            if (fromFileArrayLine.split(SEPARATOR)[OPERATION_TYPE].equals(SUPPLY)) {
+                counterSupply += Integer.parseInt(fromFileArrayLine.split(SEPARATOR)[AMOUNT]);
             } else {
-                counterBuy += Integer.parseInt(fromFileArrayLine.split(",")[AMOUNT]);
+                counterBuy += Integer.parseInt(fromFileArrayLine.split(SEPARATOR)[AMOUNT]);
             }
         }
         int result = counterSupply - counterBuy;
-
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("supply,").append(counterSupply).append(System.lineSeparator())
-                .append("buy,").append(counterBuy).append(System.lineSeparator())
-                .append("result,").append(result);
+        return stringBuilder.append(SUPPLY).append(SEPARATOR).append(counterSupply)
+                .append(System.lineSeparator()).append(BUY).append(SEPARATOR).append(counterBuy)
+                .append(System.lineSeparator()).append(RESULT).append(SEPARATOR).append(result);
+    }
 
-        File file = new File(toFileName);
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-            writer.append(stringBuilder);
+    private void writeToFile(String toFileName, StringBuilder report) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
+            writer.append(report);
         } catch (IOException e) {
-            throw new RuntimeException("File cant write", e);
+            throw new RuntimeException("Can`t write to file; " + toFileName, e);
         }
     }
 }
