@@ -1,9 +1,9 @@
 package core.basesyntax;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
@@ -22,7 +22,6 @@ public class WorkWithFile {
 
     }
 
-    //прочитал файл и отдал стринг билдер
     private String readDataFromFile(String fromFileName) {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String value = null;
@@ -75,7 +74,6 @@ public class WorkWithFile {
         return sbtoString.append("supply,").append(results[1]).append(System.lineSeparator())
                 .append("buy,").append(results[0]).append(System.lineSeparator())
                 .append("result,").append(results[2]).append(System.lineSeparator()).toString();
-
     }
 
     public void writeToFile(String toFileName, String string) {
@@ -89,7 +87,6 @@ public class WorkWithFile {
             Files.write(file.toPath(), string.getBytes(), StandardOpenOption.APPEND);
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file " + e);
-
         }
     }
 
