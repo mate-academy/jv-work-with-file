@@ -60,7 +60,15 @@ public class WorkWithFile {
                 buySum += numberFromLine;
             }
         }
-        return new int[] {buySum, supplySum};
+        return new int[] {buySum, supplySum, supplySum - buySum};
+    }
+        //это пишем в файл
+    public String toString(int[] results) {
+        StringBuilder SBtoString = new StringBuilder();
+        SBtoString.append("supply,").append(results[1]).append(System.lineSeparator());
+        SBtoString.append("buy,").append(results[0]).append(System.lineSeparator());
+        SBtoString.append("result,").append(results[2]).append(System.lineSeparator());
+        return SBtoString.toString();
     }
 
     public static void main(String[] args) {
