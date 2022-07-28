@@ -13,12 +13,12 @@ public class WorkWithFile {
         String[] resultData = getTotalSupplyReport(supplyData).split(" ");
         File file = new File(toFileName);
 
-        for (String data : resultData) {
-            try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, true))) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, true))) {
+            for (String data : resultData) {
                 bufferedWriter.write(data);
-            } catch (IOException e) {
-                throw new RuntimeException("Can't write data to file: " + toFileName, e);
             }
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write data to file: " + toFileName, e);
         }
     }
 
