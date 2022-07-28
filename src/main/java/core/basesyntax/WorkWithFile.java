@@ -9,22 +9,21 @@ import java.io.IOException;
 
 public class WorkWithFile {
     public static void getStatistic(String fromFileName, String toFileName) {
-        String supplyData = readSupplyDataFromFile(fromFileName);
-        String[] resultData = countDataAfterWorkingDay(supplyData);
+        String supplyData = readFromFile(fromFileName);
+        String[] resultData = getTotalSupplyReport(supplyData).split(" ");
         File file = new File(toFileName);
 
         for (String data : resultData) {
-
             try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, true))) {
                 bufferedWriter.write(data);
             } catch (IOException e) {
-                throw new RuntimeException("Can't write data to file.", e);
+                throw new RuntimeException("Can't write data to file: " + toFileName, e);
             }
         }
     }
 
-    public static String readSupplyDataFromFile(String filename) {
-        File file = new File(filename);
+    private static String readFromFile(String fileName) {
+        File file = new File(fileName);
         StringBuilder stringBuilder = new StringBuilder();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
@@ -34,28 +33,28 @@ public class WorkWithFile {
                 value = reader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file.", e);
+            throw new RuntimeException("Can't read file: " + fileName, e);
         }
         return stringBuilder.toString();
     }
 
-    public static String[] countDataAfterWorkingDay(String fromFileName) {
+    private static String getTotalSupplyReport(String fromFileName) {
         int countBuy = 0;
         int countSupply = 0;
 
-        String[] supplyList = fromFileName.split("\n");
-        for (String s : supplyList) {
-            if (s.contains("buy")) {
-                countBuy += Integer.parseInt(s.replaceAll("[\\D]", ""));
+        String[] lines = fromFileName.split(System.lineSeparator());
+        for (String line : lines) {
+            if (line.contains("buy")) {
+                countBuy += Integer.parseInt(line.replaceAll("[\\D]", ""));
             }
-            if (s.contains("supply")) {
-                countSupply += Integer.parseInt(s.replaceAll("[\\D]", ""));
+            if (line.contains("supply")) {
+                countSupply += Integer.parseInt(line.replaceAll("[\\D]", ""));
             }
         }
         int result = countSupply - countBuy;
 
-        return new String[]{"supply," + countSupply + System.lineSeparator(),
-                "buy," + countBuy + System.lineSeparator(),
-                "result," + result};
+        return "supply," + countSupply + System.lineSeparator()
+                + "buy," + countBuy + System.lineSeparator()
+                + "result," + result;
     }
 }
