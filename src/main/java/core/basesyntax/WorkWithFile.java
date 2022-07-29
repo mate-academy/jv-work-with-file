@@ -16,7 +16,7 @@ public class WorkWithFile {
         File file = new File(fromFileName);
 
         try (FileReader fileReader = new FileReader(file);
-             BufferedReader bufferedReader = new BufferedReader(fileReader)) {
+                BufferedReader bufferedReader = new BufferedReader(fileReader)) {
             String line;
             String [] data;
 
