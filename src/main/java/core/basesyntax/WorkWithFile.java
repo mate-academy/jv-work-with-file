@@ -6,34 +6,35 @@ import java.io.FileReader;
 import java.io.FileWriter;
 
 public class WorkWithFile {
-    private static final String SUPPLY = "supply";
-    private static final String BUY = "buy";
-    private static final int OPERATION = 0;
-    private static final int AMOUNT = 1;
+    private static final int OPERATION_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         int totalSupply = 0;
         int totalBuy = 0;
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
                 BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            String value = bufferedReader.readLine();
-            while (value != null) {
-                String[] valueArray = value.split(",");
-                String operation = valueArray[OPERATION];
-                int amount = Integer.parseInt(valueArray[AMOUNT]);
-                totalSupply = operation.equals(SUPPLY) ? totalSupply + amount : totalSupply;
-                totalBuy = operation.equals(BUY) ? totalBuy + amount : totalBuy;
-                value = bufferedReader.readLine();
+            String line = bufferedReader.readLine();
+            while (line != null) {
+                String[] valueArray = line.split(",");
+                String operation = valueArray[OPERATION_INDEX];
+                int amount = Integer.parseInt(valueArray[AMOUNT_INDEX]);
+                if (operation.equals("supply")) {
+                    totalSupply += amount;
+                } else if (operation.equals("buy")) {
+                    totalBuy += amount;
+                }
+                line = bufferedReader.readLine();
             }
-            bufferedWriter.write(getResult(totalSupply, totalBuy));
+            bufferedWriter.write(createReport(totalSupply, totalBuy));
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can't read/write a file", e);
         }
     }
 
-    private String getResult(int totalSupply, int totalBuy) {
+    private String createReport(int totalSupply, int totalBuy) {
         int result = totalSupply - totalBuy;
-        return SUPPLY + "," + totalSupply + System.lineSeparator() + BUY
+        return "supply" + "," + totalSupply + System.lineSeparator() + "buy"
                 + "," + totalBuy + System.lineSeparator()
                 + "result," + result;
     }
