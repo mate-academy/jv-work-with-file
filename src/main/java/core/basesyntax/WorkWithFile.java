@@ -12,42 +12,39 @@ public class WorkWithFile {
     private static final int AMOUNT = 1;
     private static final int EMPTY_ARRAY = 0;
     private static final String SEPARATOR = ",";
-    private static final String SUPPLY = "supply";
-    private static final String BUY = "buy";
-    private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
         writeToFile(toFileName, createReport(readFromFile(fromFileName)));
     }
 
     private String[] readFromFile(String fromFileName) {
-        List<String> list;
+        List<String> dataFromFile;
         try {
-            list = Files.readAllLines(Paths.get(fromFileName));
+            dataFromFile = Files.readAllLines(Paths.get(fromFileName));
         } catch (IOException e) {
             throw new RuntimeException("Can`t read the file: " + fromFileName, e);
         }
-        return list.toArray(new String[EMPTY_ARRAY]);
+        return dataFromFile.toArray(new String[EMPTY_ARRAY]);
     }
 
-    private StringBuilder createReport(String[] fromFileArray) {
+    private String createReport(String[] fileRows) {
         int counterSupply = 0;
         int counterBuy = 0;
-        for (String fromFileArrayLine : fromFileArray) {
-            if (fromFileArrayLine.split(SEPARATOR)[OPERATION_TYPE].equals(SUPPLY)) {
-                counterSupply += Integer.parseInt(fromFileArrayLine.split(SEPARATOR)[AMOUNT]);
+        for (String row : fileRows) {
+            if (row.split(SEPARATOR)[OPERATION_TYPE].equals("supply")) {
+                counterSupply += Integer.parseInt(row.split(SEPARATOR)[AMOUNT]);
             } else {
-                counterBuy += Integer.parseInt(fromFileArrayLine.split(SEPARATOR)[AMOUNT]);
+                counterBuy += Integer.parseInt(row.split(SEPARATOR)[AMOUNT]);
             }
         }
         int result = counterSupply - counterBuy;
         StringBuilder stringBuilder = new StringBuilder();
-        return stringBuilder.append(SUPPLY).append(SEPARATOR).append(counterSupply)
-                .append(System.lineSeparator()).append(BUY).append(SEPARATOR).append(counterBuy)
-                .append(System.lineSeparator()).append(RESULT).append(SEPARATOR).append(result);
+        return stringBuilder.append("supply,").append(counterSupply)
+                .append(System.lineSeparator()).append("buy,").append(counterBuy)
+                .append(System.lineSeparator()).append("result,").append(result).toString();
     }
 
-    private void writeToFile(String toFileName, StringBuilder report) {
+    private void writeToFile(String toFileName, String report) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.append(report);
         } catch (IOException e) {
