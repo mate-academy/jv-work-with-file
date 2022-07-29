@@ -12,8 +12,7 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         int totalSupply = 0;
         int totalBuy = 0;
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
-                BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String line = bufferedReader.readLine();
             while (line != null) {
                 String[] valueArray = line.split(",");
@@ -26,9 +25,9 @@ public class WorkWithFile {
                 }
                 line = bufferedReader.readLine();
             }
-            bufferedWriter.write(createReport(totalSupply, totalBuy));
+            writeReportToFile(totalSupply, totalBuy, toFileName);
         } catch (Exception e) {
-            throw new RuntimeException("Can't read/write a file", e);
+            throw new RuntimeException("Can't read a file", e);
         }
     }
 
@@ -37,5 +36,13 @@ public class WorkWithFile {
         return "supply" + "," + totalSupply + System.lineSeparator() + "buy"
                 + "," + totalBuy + System.lineSeparator()
                 + "result," + result;
+    }
+
+    private void writeReportToFile(int totalSupply, int totalBuy, String toFileName) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
+            bufferedWriter.write(createReport(totalSupply, totalBuy));
+        } catch (Exception e) {
+            throw new RuntimeException("Can't write a file", e);
+        }
     }
 }
