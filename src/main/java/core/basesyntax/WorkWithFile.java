@@ -23,7 +23,7 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileToWrite))) {
             bufferedWriter.write(reportString);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write to file " + fileToWrite);
+            throw new RuntimeException("Can't write to file " + fileToWrite, e);
         }
     }
 
