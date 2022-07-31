@@ -51,7 +51,7 @@ public class WorkWithFile {
             List<String> stringList = Files.readAllLines(fileToRead.toPath());
             return String.join(",",stringList);
         } catch (IOException e) {
-            throw new RuntimeException("Can't read from file" + fileToRead);
+            throw new RuntimeException("Can't read from file " + fileToRead, e);
         }
     }
 }
