@@ -23,7 +23,7 @@ public class WorkWithFile {
         String result = "";
         int sumSupply = 0;
         int sumBuy = 0;
-        String[] arrayFullText = text.split("\r\n");
+        String[] arrayFullText = text.split("\n");
         for (String lineArray : arrayFullText) {
             String[] line = lineArray.split(SEPARATOR);
             if (lineArray.contains(SUPPLY_NAME)) {
