@@ -16,10 +16,11 @@ public class WorkWithFile {
         int buy = 0;
         for (String string : readFileToList(fromFileName)) {
             String[] stringArray = string.split("\\,");
+            int amount = Integer.parseInt(stringArray[1]);
             if (stringArray[0].equals("supply")) {
-                supply += Integer.parseInt(stringArray[1]);
+                supply += amount;
             } else {
-                buy += Integer.parseInt(stringArray[1]);
+                buy += amount;
             }
         }
         writeToFile(toFileName, supply, buy);
