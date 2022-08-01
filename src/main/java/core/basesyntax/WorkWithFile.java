@@ -3,7 +3,6 @@ package core.basesyntax;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -29,15 +28,12 @@ public class WorkWithFile {
     private static List<String> readFileToList(String fromFileName) {
         File fromFile = new File(fromFileName);
         List<String> list = new ArrayList<>();
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(fromFile));
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFile))) {
             String value = reader.readLine();
             while (value != null) {
                 list.add(value);
                 value = reader.readLine();
             }
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException("File not found", e);
         } catch (IOException e) {
             throw new RuntimeException("Can't read file" + fromFile, e);
         }
@@ -46,12 +42,10 @@ public class WorkWithFile {
 
     private static void writeToFile(String toFileName, int supply, int buy) {
         File toFile = new File(toFileName);
-        try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(toFile));
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFile))) {
             writer.write("supply," + supply + System.lineSeparator());
             writer.write("buy," + buy + System.lineSeparator());
             writer.write("result," + (supply - buy));
-            writer.close();
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file" + toFile, e);
         }
