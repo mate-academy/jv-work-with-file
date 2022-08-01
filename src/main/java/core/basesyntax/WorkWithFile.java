@@ -1,15 +1,31 @@
 package core.basesyntax;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String SUPPLY_OPERATION_TYPE = "supply";
+    private static final String BUY_OPERATION_TYPE = "buy";
+    private static final String COMA_SEPARATOR = ",";
 
-    public void getStatistic(String fromFileName, String toFileName) {
-        readFileByLines(fromFileName);
+    public void getStatistic (String fromFileName, String toFileName) {
+        String[] lines = readFileByLines(fromFileName);
+        int[] statistic = countStatistic(lines);
+    }
+
+    private int[] countStatistic (String[] strings) {
+        int buyAmount = 0;
+        int supplyAmount = 0;
+        for (String string : strings) {
+            String[] operation = string.split(COMA_SEPARATOR);
+            if (SUPPLY_OPERATION_TYPE.equals(operation[0])) {
+                supplyAmount += Integer.parseInt(operation[1]);
+            } else {
+                buyAmount += Integer.parseInt(operation[1]);
+            }
+        }
+        return new int[]{supplyAmount, buyAmount, supplyAmount - buyAmount};
     }
 
     private String[] readFileByLines (String fileName) {
