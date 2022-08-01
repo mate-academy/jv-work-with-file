@@ -8,8 +8,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    static final int INDEX_ARRAY_FROM_THE_NUMBER = 1;
-    static final String SEARCH_NAME = "supply";
+    private static final int INDEX_ARRAY_FROM_THE_NUMBER = 1;
+    private static final String SUPPLY_NAME = "supply";
+    private static final String BUY_NAME = "buy";
+    private static final String SEPARATOR = ",";
+    private static final String RESULT_NAME = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String inputCsv = fileReader(fromFileName);
@@ -22,16 +25,16 @@ public class WorkWithFile {
         int sumBuy = 0;
         String[] arrayFullText = text.split("\r\n");
         for (String lineArray : arrayFullText) {
-            String[] line = lineArray.split(",");
-            if (lineArray.contains(SEARCH_NAME)) {
+            String[] line = lineArray.split(SEPARATOR);
+            if (lineArray.contains(SUPPLY_NAME)) {
                 sumSupply += Integer.parseInt(line[INDEX_ARRAY_FROM_THE_NUMBER]);
             } else {
                 sumBuy += Integer.parseInt(line[INDEX_ARRAY_FROM_THE_NUMBER]);
             }
         }
-        result += "supply," + sumSupply + System.lineSeparator();
-        result += "buy," + sumBuy + System.lineSeparator();
-        result += "result," + (sumSupply - sumBuy);
+        result += SUPPLY_NAME + SEPARATOR + sumSupply + System.lineSeparator();
+        result += BUY_NAME + SEPARATOR + sumBuy + System.lineSeparator();
+        result += RESULT_NAME + SEPARATOR + (sumSupply - sumBuy);
         return result;
     }
 
