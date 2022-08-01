@@ -12,13 +12,13 @@ public class WorkWithFile {
     private static final String RESULT = "result";
     private static final String COMA_SEPARATOR = ",";
 
-    public void getStatistic (String fromFileName, String toFileName) {
+    public void getStatistic(String fromFileName, String toFileName) {
         String[] lines = readFileByLines(fromFileName);
         String statistic = countStatistic(lines);
         writeStatisticToFile(toFileName,statistic);
     }
 
-    private void writeStatisticToFile (String toFileName, String statistic) {
+    private void writeStatisticToFile(String toFileName, String statistic) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true))) {
             bufferedWriter.write(statistic);
         } catch (IOException e) {
@@ -26,7 +26,7 @@ public class WorkWithFile {
         }
     }
 
-    private String countStatistic (String[] strings) {
+    private String countStatistic(String[] strings) {
         int buyAmount = 0;
         int supplyAmount = 0;
         for (String string : strings) {
@@ -37,16 +37,17 @@ public class WorkWithFile {
                 buyAmount += Integer.parseInt(operation[1]);
             }
         }
+        int resultAmount = supplyAmount - buyAmount;
         return new StringBuilder()
                 .append(SUPPLY_OPERATION_TYPE).append(COMA_SEPARATOR)
                 .append(supplyAmount).append(System.lineSeparator())
                 .append(BUY_OPERATION_TYPE).append(COMA_SEPARATOR)
                 .append(buyAmount).append(System.lineSeparator())
-                .append(RESULT).append(buyAmount)
+                .append(RESULT).append(COMA_SEPARATOR).append(resultAmount)
                 .toString();
     }
 
-    private String[] readFileByLines (String fileName) {
+    private String[] readFileByLines(String fileName) {
         StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
             String line = bufferedReader.readLine();
