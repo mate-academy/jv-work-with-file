@@ -8,22 +8,25 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    static final int INDEX_ARRAY_FROM_THE_NUMBER = 1;
+    static final String SEARCH_NAME = "supply";
+
     public void getStatistic(String fromFileName, String toFileName) {
         String inputCsv = fileReader(fromFileName);
         fileWriter(findSupplyAndBuy(inputCsv),toFileName);
     }
 
-    public String findSupplyAndBuy(String text) {
+    private String findSupplyAndBuy(String text) {
         String result = "";
         int sumSupply = 0;
         int sumBuy = 0;
-        String[] array = text.split("\r\n");
-        for (String lineArray : array) {
+        String[] arrayFullText = text.split("\r\n");
+        for (String lineArray : arrayFullText) {
             String[] line = lineArray.split(",");
-            if (lineArray.contains("supply")) {
-                sumSupply += Integer.parseInt(line[1]);
+            if (lineArray.contains(SEARCH_NAME)) {
+                sumSupply += Integer.parseInt(line[INDEX_ARRAY_FROM_THE_NUMBER]);
             } else {
-                sumBuy += Integer.parseInt(line[1]);
+                sumBuy += Integer.parseInt(line[INDEX_ARRAY_FROM_THE_NUMBER]);
             }
         }
         result += "supply," + sumSupply + System.lineSeparator();
@@ -32,7 +35,7 @@ public class WorkWithFile {
         return result;
     }
 
-    public String fileReader(String fromFileName) {
+    private String fileReader(String fromFileName) {
         File file = new File(fromFileName);
         StringBuilder stringBuilder = new StringBuilder();
         try {
@@ -48,7 +51,7 @@ public class WorkWithFile {
         return stringBuilder.toString();
     }
 
-    public void fileWriter(String result,String toFileName) {
+    private void fileWriter(String result,String toFileName) {
         File output = new File(toFileName);
         try {
             BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(output));
