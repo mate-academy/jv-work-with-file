@@ -1,6 +1,6 @@
 package core.basesyntax;
 
-import core.basesyntax.services.ParseLine;
+import core.basesyntax.services.ReportService;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -16,14 +16,14 @@ public class WorkWithFile {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(inFile));
                  BufferedWriter bufferedWriter = new BufferedWriter(
                          new FileWriter(outFile, true))) {
-            ParseLine parseLine = new ParseLine();
+            ReportService reportService = new ReportService();
             String line = "";
             while ((line = bufferedReader.readLine()) != null) {
-                parseLine.run(line);
+                reportService.process(line);
             }
-            bufferedWriter.write(parseLine.printSumSupply());
-            bufferedWriter.write(parseLine.printSumBuy());
-            bufferedWriter.write(parseLine.printResult());
+            bufferedWriter.write(reportService.getSumSupply());
+            bufferedWriter.write(reportService.getSumBuy());
+            bufferedWriter.write(reportService.getResult());
         } catch (FileNotFoundException e) {
             throw new RuntimeException("Can not read file " + fromFileName, e);
         } catch (IOException e) {
