@@ -9,15 +9,16 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
-    private String line;
-    private int buy = 0;
-    private int supply = 0;
-    private int result;
 
     public void getStatistic(String fromFileName, String toFileName) {
 
         StringBuilder builder = new StringBuilder();
+        String line;
+        int supply = 0;
+        int buy = 0;
+        int result = 0;
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
+
             while ((line = bufferedReader.readLine()) != null) {
                 String [] reader = line.split(",");
                 if (reader[0].equals(SUPPLY)) {
