@@ -10,9 +10,18 @@ import java.io.IOException;
 public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
-                BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName,
-                        true))) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName,
+                true))) {
+            for (String res : arraysResult(readFile(fromFileName))) {
+                bufferedWriter.write(res + System.lineSeparator());
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Can't reader file", e);
+        }
+    }
+
+    private String readFile(String fromFileName) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             StringBuilder builder = new StringBuilder();
             String value = bufferedReader.readLine();
             while (value != null) {
@@ -21,28 +30,29 @@ public class WorkWithFile {
                 value = bufferedReader.readLine();
             }
             String stringBuilder = builder.toString().replace("[^A-Za-z0-9]", " ");
-            String [] arrayFromFileName = stringBuilder.split(",");
-            int supplyTotal = 0;
-            int buyTotal = 0;
-            int resultTotal;
-            for (int i = 0; i < arrayFromFileName.length; i++) {
-                if (arrayFromFileName[i].equals("supply")) {
-                    supplyTotal += Integer.parseInt(arrayFromFileName[i + 1]);
-                } else if (arrayFromFileName[i].equals("buy")) {
-                    buyTotal += Integer.parseInt(arrayFromFileName[i + 1]);
-                }
-            }
-            resultTotal = supplyTotal - buyTotal;
-            String[] results = {"supply," + supplyTotal, "buy," + buyTotal,
-                    "result," + resultTotal};
-            for (String res : results) {
-                bufferedWriter.write(res + System.lineSeparator());
-            }
-
+            return stringBuilder;
         } catch (FileNotFoundException e) {
             throw new RuntimeException("Can't reader file", e);
-        } catch (IOException r) {
-            throw new RuntimeException("Can't reader file", r);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't reader file", e);
         }
+    }
+
+    private String[] arraysResult(String stringBuilder) {
+        String[] arrayFromFileName = stringBuilder.split(",");
+        int supplyTotal = 0;
+        int buyTotal = 0;
+        int resultTotal;
+        for (int i = 0; i < arrayFromFileName.length; i++) {
+            if (arrayFromFileName[i].equals("supply")) {
+                supplyTotal += Integer.parseInt(arrayFromFileName[i + 1]);
+            } else if (arrayFromFileName[i].equals("buy")) {
+                buyTotal += Integer.parseInt(arrayFromFileName[i + 1]);
+            }
+        }
+        resultTotal = supplyTotal - buyTotal;
+        String[] results = {"supply," + supplyTotal, "buy," + buyTotal,
+                "result," + resultTotal};
+        return results;
     }
 }
