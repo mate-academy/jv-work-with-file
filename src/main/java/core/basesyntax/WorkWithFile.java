@@ -11,7 +11,7 @@ public class WorkWithFile {
     private static final int INDEX_OF_SUPPLY = 0;
     private static final String BUY_ROW = "buy";
     private static final int INDEX_OF_BUY = 1;
-    private static final String REPORT_ROW = "result";
+    private static final String RESULT_ROW = "result";
     private static final String LINE_SPLITTER = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
@@ -19,7 +19,7 @@ public class WorkWithFile {
         try {
             fileContent = Files.readString(Path.of(fromFileName));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can't read from file" + fromFileName, e);
         }
         fileContent = fileContent.replace("\n", LINE_SPLITTER)
                 .replace("\r", "")
@@ -27,30 +27,33 @@ public class WorkWithFile {
         String[] appleArray = fileContent.split(LINE_SPLITTER);
         String[] categoriesArray = {SUPPLY_ROW, BUY_ROW};
         int supplyAmount = 0;
-        int buyAmmount = 0;
+        int buyAmount = 0;
 
         for (int j = 0; j < appleArray.length; j++) {
             if (categoriesArray[INDEX_OF_SUPPLY].equals(appleArray[j])) {
                 supplyAmount += Integer.parseInt(appleArray[j + 1]);
             }
             if (categoriesArray[INDEX_OF_BUY].equals(appleArray[j])) {
-                buyAmmount += Integer.parseInt(appleArray[j + 1]);
+                buyAmount += Integer.parseInt(appleArray[j + 1]);
             }
         }
+
+        int resultAmmount = supplyAmount - buyAmount;
+        String supplyRowForReport = SUPPLY_ROW + LINE_SPLITTER
+                + supplyAmount + System.lineSeparator();
+        String buyRowForReport = BUY_ROW + LINE_SPLITTER
+                + buyAmount + System.lineSeparator();
+        String resultRowForReport = RESULT_ROW + LINE_SPLITTER
+                + resultAmmount;
         StringBuilder reportStringbuilder = new StringBuilder();
-        reportStringbuilder.append(SUPPLY_ROW).append(LINE_SPLITTER)
-                .append(supplyAmount).append(System.lineSeparator())
-                .append(BUY_ROW).append(LINE_SPLITTER)
-                .append(buyAmmount).append(System.lineSeparator())
-                .append(REPORT_ROW).append(LINE_SPLITTER)
-                .append(supplyAmount - buyAmmount);
+        reportStringbuilder.append(supplyRowForReport)
+                .append(buyRowForReport)
+                .append(resultRowForReport);
 
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(String.valueOf(reportStringbuilder));
         } catch (Exception e) {
-            throw new RuntimeException("Can't write to file", e);
-
+            throw new RuntimeException("Can't write to file" + toFileName, e);
         }
-
     }
 }
