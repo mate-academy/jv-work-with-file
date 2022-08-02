@@ -8,40 +8,50 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final String SUPPLY = "supply";
-    private static final String BUY = "buy";
-    private static final String RESULT = "result";
-    private static final int OPERATION_TYPE_COLUMN = 0;
-    private static final int AMOUNT_COLUMN = 1;
+    private static final int OPERATION_TYPE_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
+        String readFromFile = readFromFile(fromFileName);
+        String statistic = getStatistic(readFromFile);
+        writeToFile(toFileName, statistic);
+    }
+
+    private String getStatistic(String data) {
+        String[] splitedData = data.split(" ");
         int supplySum = 0;
         int buySum = 0;
+        for (String line : splitedData) {
+            String[] splitLine = line.split(",");
+            if (splitLine[OPERATION_TYPE_INDEX].equals("supply")) {
+                supplySum += Integer.parseInt(splitLine[AMOUNT_INDEX]);
+            } else if (splitLine[OPERATION_TYPE_INDEX].equals("buy")) {
+                buySum += Integer.parseInt(splitLine[AMOUNT_INDEX]);
+            }
+        }
+        StringBuilder statisticBuilder = new StringBuilder();
+        statisticBuilder.append("supply").append(",").append(supplySum)
+                .append(System.lineSeparator())
+                .append("buy").append(",").append(buySum)
+                .append(System.lineSeparator())
+                .append("result").append(",").append(supplySum - buySum);
+        return statisticBuilder.toString();
+    }
+
+    private String readFromFile(String fromFileName) {
         File fromFile = new File(fromFileName);
+        StringBuilder stringBuilder = new StringBuilder();
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFile));
             String line = bufferedReader.readLine();
             while (line != null) {
-                String[] splitLine = line.split(",");
-                if (splitLine[OPERATION_TYPE_COLUMN].equals(SUPPLY)) {
-                    supplySum += Integer.parseInt(splitLine[AMOUNT_COLUMN]);
-                } else if (splitLine[OPERATION_TYPE_COLUMN].equals(BUY)) {
-                    buySum += Integer.parseInt(splitLine[AMOUNT_COLUMN]);
-                }
+                stringBuilder.append(line)
+                        .append(" ");
                 line = bufferedReader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't open the file", e);
         }
-        String result = getResult(supplySum, buySum);
-        writeToFile(toFileName, result);
-    }
-
-    private String getResult(int supplySum, int buySum) {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(SUPPLY).append(",").append(supplySum).append(System.lineSeparator())
-                .append(BUY).append(",").append(buySum).append(System.lineSeparator())
-                .append(RESULT).append(",").append(supplySum - buySum);
         return stringBuilder.toString();
     }
 
