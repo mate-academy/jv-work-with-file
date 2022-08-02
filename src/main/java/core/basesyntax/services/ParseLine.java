@@ -17,15 +17,15 @@ public class ReportService {
         }
     }
 
-    public String printSumBuy() {
+    public String getSumBuy() {
         return "buy," + sumBuy + System.lineSeparator();
     }
 
-    public String printSumSupply() {
+    public String getSumSupply() {
         return "supply," + sumSupply + System.lineSeparator();
     }
 
-    public String printResult() {
+    public String getResult() {
         return "result," + (sumSupply - sumBuy);
     }
 }
