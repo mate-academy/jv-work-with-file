@@ -15,14 +15,13 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         int supplySum = getOperationTypeAmountSum(fromFileName, OPERATION_TYPE_SUPPLY);
         int buySum = getOperationTypeAmountSum(fromFileName, OPERATION_TYPE_BUY);
-        writeToFile(toFileName, supplySum, buySum);
+        writeToFile(toFileName, report(supplySum, buySum));
     }
 
     private int getOperationTypeAmountSum(String fileName, String operationType) {
         try (BufferedReader file = new BufferedReader(new FileReader(fileName))) {
             String line = file.readLine();
             int amountSum = 0;
-
             while (line != null) {
                 amountSum += getAmountValue(line, operationType);
                 line = file.readLine();
@@ -40,17 +39,21 @@ public class WorkWithFile {
         return operationTypeValue.equals(operationType) ? amountValue : 0;
     }
 
-    private int getResultValue(int supplySum, int buySum) {
-        return supplySum - buySum;
-    }
-
-    private void writeToFile(String toFile, int supplySum, int buySum) {
+    private void writeToFile(String toFile, String report) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFile))) {
-            bufferedWriter.write(OPERATION_TYPE_SUPPLY + "," + supplySum + System.lineSeparator()
-                    + OPERATION_TYPE_BUY + "," + buySum + System.lineSeparator()
-                    + "result," + getResultValue(supplySum, buySum));
+            bufferedWriter.write(report);
         } catch (Exception e) {
             throw new RuntimeException("Can't write data to the file " + toFile, e);
         }
+    }
+
+    private String report(int supplySum, int buySum) {
+        StringBuilder result = new StringBuilder();
+        result.append(OPERATION_TYPE_SUPPLY).append(",").append(supplySum)
+                .append(System.lineSeparator())
+                .append(OPERATION_TYPE_BUY).append(",").append(buySum)
+                .append(System.lineSeparator())
+                .append("result,").append(supplySum - buySum);
+        return result.toString();
     }
 }
