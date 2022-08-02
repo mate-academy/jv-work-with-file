@@ -11,21 +11,15 @@ import java.util.ArrayList;
 
 public class WorkWithFile {
     private ArrayList<DataFromFile> dataList = new ArrayList<>();
-    private int supply = 0;
-    private int buy = 0;
-    private int result = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
         WorkWithFile work = new WorkWithFile();
         work.getDataFile(fromFileName);
-        result = work.calculating();
-        work.writeToFile(toFileName, result);
+        work.writeToFile(toFileName, work.calculating());
     }
 
-    public void getDataFile(String fromFileName) {
-        FileInputStream filein;
-        try {
-            filein = new FileInputStream(fromFileName);
+    private void getDataFile(String fromFileName) {
+        try (FileInputStream filein = new FileInputStream(fromFileName)) {
             if (filein.available() == 0) {
                 throw new RuntimeException("File is empty");
             } else {
@@ -36,9 +30,7 @@ public class WorkWithFile {
                     String[] strings = line.split(",");
                     data = new DataFromFile(strings[0], Integer.valueOf(strings[1]));
                     dataList.add(data);
-                    data = null;
                 }
-                filein.close();
                 br.close();
             }
         } catch (IOException e) {
@@ -46,38 +38,31 @@ public class WorkWithFile {
         }
     }
 
-    public int calculating() {
+    private int[] calculating() {
+        int[] sumOfResults = new int[3];
         for (DataFromFile data : dataList) {
             if (data.getOperationType().equals("supply")) {
-                supply += data.getAmount();
+                sumOfResults[0] += data.getAmount();
             }
             if (data.getOperationType().equals("buy")) {
-                buy += data.getAmount();
+                sumOfResults[1] += data.getAmount();
             }
         }
-        return result = supply - buy;
+        sumOfResults[2] = sumOfResults[0] - sumOfResults[1];
+        return sumOfResults;
     }
 
-    public void writeToFile(String toFileName, int result) {
-        String[] strings = new String[]{"supply," + supply, "buy," + buy, "result," + result};
+    private void writeToFile(String toFileName, int[] sumOfResults) {
+        String[] strings = new String[]{"supply," + sumOfResults[0], "buy,"
+                + sumOfResults[1], "result," + sumOfResults[2]};
         File file = new File(toFileName);
-        BufferedWriter bw = null;
-        try {
-            bw = new BufferedWriter(new FileWriter(file, true));
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(file, true))) {
             for (String data : strings) {
                 bw.write(data + "\n");
                 bw.flush();
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to file", e);
-        } finally {
-            if (bw != null) {
-                try {
-                    bw.close();
-                } catch (IOException e) {
-                    throw new RuntimeException("Can't close BufferedWriter", e);
-                }
-            }
         }
     }
 }

@@ -13,15 +13,7 @@ public class DataFromFile {
         return operationType;
     }
 
-    public void setOperationType(String operationType) {
-        this.operationType = operationType;
-    }
-
     public int getAmount() {
         return amount;
-    }
-
-    public void setAmount(int amount) {
-        this.amount = amount;
     }
 }
