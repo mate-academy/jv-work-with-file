@@ -14,12 +14,13 @@ public class WorkWithFile {
     private static final String RESULT = "result";
     private static final String SEPARATOR = ",";
     private static final String SUPPLY = "supply";
+    private int buySum = 0;
+    private int supplySum = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String[] data = fileString(fromFileName).replace("\n", SEPARATOR).split(SEPARATOR);
+        String[] data = readFromFile(fromFileName).replace(System.lineSeparator(), SEPARATOR)
+                .split(SEPARATOR);
         String[] categories = {SUPPLY, BUY};
-        int buySum = 0;
-        int supplySum = 0;
         for (int i = 0; i < data.length; i++) {
             if (categories[BUY_INDEX].equals(data[i])) {
                 buySum += Integer.parseInt(data[i + 1]);
@@ -28,25 +29,33 @@ public class WorkWithFile {
                 supplySum += Integer.parseInt(data[i + 1]);
             }
         }
-        StringBuilder report = new StringBuilder();
-        report.append(SUPPLY).append(SEPARATOR).append(supplySum).append(System.lineSeparator())
-                .append(BUY).append(SEPARATOR).append(buySum).append(System.lineSeparator())
-                .append(RESULT).append(SEPARATOR).append((supplySum - buySum));
-
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            writer.write(String.valueOf(report));
-        } catch (IOException e) {
-            throw new RuntimeException("Can't write to file", e);
-        }
+        writeToFile(toFileName);
     }
 
-    private String fileString(String fileName) {
+    private String writeToFile(String toFileName) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
+            writer.write(String.valueOf(createReport()));
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write to file" + toFileName, e);
+        }
+        return toFileName;
+    }
+
+    private String readFromFile(String fileName) {
         String fileData;
         try {
             fileData = Files.readString(Path.of(fileName));
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't read file" + fileName, e);
         }
         return fileData;
+    }
+
+    private StringBuilder createReport() {
+        StringBuilder report = new StringBuilder();
+        return report.append(SUPPLY).append(SEPARATOR).append(supplySum)
+                .append(System.lineSeparator())
+                .append(BUY).append(SEPARATOR).append(buySum).append(System.lineSeparator())
+                .append(RESULT).append(SEPARATOR).append((supplySum - buySum));
     }
 }
