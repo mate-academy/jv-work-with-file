@@ -19,18 +19,18 @@ public class WorkWithFile {
         writeReportToFile(report, toFileName);
     }
 
-    private String calculate(String[] cells) {
+    private String calculate(String[] data) {
         int supply = 0;
         int buy = 0;
 
-        for (int i = 0; i < cells.length; i += 2) {
-            switch (cells[i]) {
+        for (int i = 0; i < data.length; i += 2) {
+            switch (data[i]) {
                 case SUPPLY: {
-                    supply += Integer.parseInt(cells[i + 1]);
+                    supply += Integer.parseInt(data[i + 1]);
                     break;
                 }
                 case BUY: {
-                    buy += Integer.parseInt(cells[i + 1]);
+                    buy += Integer.parseInt(data[i + 1]);
                     break;
                 }
                 default: {
@@ -53,11 +53,11 @@ public class WorkWithFile {
 
     private String getDataFromFile(String fileName) {
         StringBuilder builder = new StringBuilder();
-        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
-            String value = br.readLine();
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            String value = reader.readLine();
             while (value != null) {
                 builder.append(value).append(System.lineSeparator());
-                value = br.readLine();
+                value = reader.readLine();
             }
         } catch (FileNotFoundException e) {
             throw new RuntimeException("File not found", e);
@@ -68,8 +68,8 @@ public class WorkWithFile {
     }
 
     private void writeReportToFile(String report, String toFileName) {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(toFileName))) {
-            bw.write(report);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
+            writer.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file", e);
         }
