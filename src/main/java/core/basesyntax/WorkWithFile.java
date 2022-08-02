@@ -7,13 +7,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    public static final int TYPE_OPERATION = 0;
-    public static final int SUM_INDEX = 1;
+    private static final int TYPE_OPERATION_TYPE_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] linesFromFile = readFromFile(fromFileName);
-        String statisticOfData = statistic(linesFromFile);
-        writeDataToFile(toFileName, statisticOfData);
+        String statistic = createStatistic(linesFromFile);
+        writeDataToFile(toFileName, statistic);
     }
 
     private String[] readFromFile(String fromFileName) {
@@ -29,27 +29,28 @@ public class WorkWithFile {
         return builder.toString().split(" ");
     }
 
-    private String statistic(String[] linesFromFile) {
-        int amountBuy = 0;
-        int amountSupply = 0;
+    private String createStatistic(String[] linesFromFile) {
+        int buyAmount = 0;
+        int supplyAmount = 0;
         for (String lineFromFile : linesFromFile) {
-            String[] splitLine = lineFromFile.split(",");
-            String typeOfOperation = splitLine[TYPE_OPERATION];
-            int sum = Integer.parseInt(splitLine[SUM_INDEX]);
+            String[] splittedLine = lineFromFile.split(",");
+            String typeOfOperation = splittedLine[TYPE_OPERATION_TYPE_INDEX];
+            int sum = Integer.parseInt(splittedLine[AMOUNT_INDEX]);
             if (typeOfOperation.equals("buy")) {
-                amountBuy += sum;
+                buyAmount += sum;
             } else if (typeOfOperation.equals("supply")) {
-                amountSupply += sum;
+                supplyAmount += sum;
             }
         }
-        return reportOfData(amountBuy, amountSupply);
+        return createStatistic(buyAmount, supplyAmount);
     }
 
-    private String reportOfData(int amountBuy, int amountSupply) {
-        return "supply," + amountSupply + System.lineSeparator()
-                + "buy," + amountBuy + System.lineSeparator()
-                + "result," + (amountSupply - amountBuy);
-
+    private String createStatistic(int buyAmount, int supplyAmount) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("supply,").append(supplyAmount).append(System.lineSeparator())
+                .append("buy,").append(buyAmount).append(System.lineSeparator())
+                .append("result,").append(supplyAmount - buyAmount);
+        return builder.toString();
     }
 
     private void writeDataToFile(String toFileName, String statisticOfData) {
