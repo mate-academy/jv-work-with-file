@@ -13,9 +13,9 @@ public class WorkWithFile {
     public static final int SECOND_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        readDataFromFile(fromFileName);
-        calculateResult(readDataFromFile(fromFileName));
-        writeDataToFile(toFileName, calculateResult(readDataFromFile(fromFileName)));
+        String[] lines = readDataFromFile(fromFileName);
+        String statistic = calculateResult(lines);
+        writeDataToFile(toFileName,statistic);
     }
 
     private String[] readDataFromFile(String fromFileName) {
