@@ -4,7 +4,7 @@ public class ReportService {
     private int sumBuy = 0;
     private int sumSupply = 0;
 
-    public void run(String lineText) {
+    public void process(String dataLine) {
         if (lineText == null) {
             return;
         }
