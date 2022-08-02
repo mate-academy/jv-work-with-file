@@ -38,17 +38,11 @@ public class WorkWithFile {
             }
         }
 
-        int resultAmmount = supplyAmount - buyAmount;
-        String supplyRowForReport = SUPPLY_ROW + LINE_SPLITTER
-                + supplyAmount + System.lineSeparator();
-        String buyRowForReport = BUY_ROW + LINE_SPLITTER
-                + buyAmount + System.lineSeparator();
-        String resultRowForReport = RESULT_ROW + LINE_SPLITTER
-                + resultAmmount;
+        int resultAmount = supplyAmount - buyAmount;
         StringBuilder reportStringbuilder = new StringBuilder();
-        reportStringbuilder.append(supplyRowForReport)
-                .append(buyRowForReport)
-                .append(resultRowForReport);
+        reportStringbuilder.append(getsupplyRowForReport(supplyAmount))
+                .append(getbuyRowForReport(buyAmount))
+                .append(getresultRowForReport(resultAmount));
 
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(String.valueOf(reportStringbuilder));
@@ -56,4 +50,20 @@ public class WorkWithFile {
             throw new RuntimeException("Can't write to file" + toFileName, e);
         }
     }
+
+    public String getsupplyRowForReport(int supplyAmount) {
+        return SUPPLY_ROW + LINE_SPLITTER
+                + supplyAmount + System.lineSeparator();
+    }
+
+    public String getbuyRowForReport(int buyAmount) {
+        return BUY_ROW + LINE_SPLITTER
+                + buyAmount + System.lineSeparator();
+    }
+
+    public String getresultRowForReport(int resultAmount) {
+        return RESULT_ROW + LINE_SPLITTER
+                + resultAmount;
+    }
+
 }
