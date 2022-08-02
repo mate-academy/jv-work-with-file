@@ -42,13 +42,13 @@ public class WorkWithFile {
     }
 
     private String createReport(int[] resultSupplyAndBuy) {
-        return "supply," +
-                resultSupplyAndBuy[SUPPLY_INDEX] +
-                System.lineSeparator() +
-                "buy," +
-                resultSupplyAndBuy[BUY_INDEX] +
-                System.lineSeparator() +
-                "result," +
-                (resultSupplyAndBuy[SUPPLY_INDEX] - resultSupplyAndBuy[BUY_INDEX]);
+        return "supply,"
+                + resultSupplyAndBuy[SUPPLY_INDEX]
+                + System.lineSeparator()
+                + "buy,"
+                + resultSupplyAndBuy[BUY_INDEX]
+                + System.lineSeparator()
+                + "result,"
+                + (resultSupplyAndBuy[SUPPLY_INDEX] - resultSupplyAndBuy[BUY_INDEX]);
     }
 }
