@@ -1,6 +1,6 @@
 package core.basesyntax.services;
 
-public class ParseLine {
+public class ReportService {
     private int sumBuy = 0;
     private int sumSupply = 0;
 
