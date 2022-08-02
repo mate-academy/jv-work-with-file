@@ -11,9 +11,6 @@ public class WorkWithFile {
     private static final String SERVICE_SUPPLY = "supply";
     private static final String SERVICE_BUY = "buy";
     private static final String SERVICE_RESULT = "result";
-    private static final int NUMBER_OF_COLUMNS = 2;
-    private static final int COLUMN_WITH_NAME = 0;
-    private static final int COLUMN_WITH_SUM = 1;
     private static final String SEPARATOR_IN_CSV_FILES = ",";
     private static final String TEMPORARY_SEPARATOR = " ";
 
@@ -26,8 +23,7 @@ public class WorkWithFile {
     private String[] getStringFromFile(String fromFileName) {
         StringBuilder stringBuilder = new StringBuilder();
         File fileFrom = new File(fromFileName);
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(fileFrom));
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileFrom))) {
             String lineFromFile = bufferedReader.readLine();
             while (lineFromFile != null) {
                 stringBuilder.append(lineFromFile).append(TEMPORARY_SEPARATOR);
@@ -43,14 +39,14 @@ public class WorkWithFile {
         int dailySupply = 0;
         int dailyBuy = 0;
         int dailyResult = 0;
-        String[] lineFromArray = new String[NUMBER_OF_COLUMNS];
+        String[] lineFromArray = new String[2];
 
         for (String data : dataFromFile) {
             lineFromArray = data.split(SEPARATOR_IN_CSV_FILES);
-            if (lineFromArray[COLUMN_WITH_NAME].equals(SERVICE_SUPPLY)) {
-                dailySupply += Integer.parseInt(lineFromArray[COLUMN_WITH_SUM]);
-            } else if (lineFromArray[COLUMN_WITH_NAME].equals(SERVICE_BUY)) {
-                dailyBuy += Integer.parseInt(lineFromArray[COLUMN_WITH_SUM]);
+            if (lineFromArray[0].equals(SERVICE_SUPPLY)) {
+                dailySupply += Integer.parseInt(lineFromArray[1]);
+            } else if (lineFromArray[0].equals(SERVICE_BUY)) {
+                dailyBuy += Integer.parseInt(lineFromArray[1]);
             }
         }
         dailyResult = dailySupply - dailyBuy;
