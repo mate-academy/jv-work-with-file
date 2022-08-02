@@ -12,8 +12,8 @@ public class WorkWithFile {
     public static void getStatistic(String fromFileName, String toFileName) {
         File myFile = new File(fromFileName);
         StringBuilder stringBuilder = new StringBuilder();
-        List<Integer> listOfSupplyCosts = new ArrayList<Integer>();
-        List<Integer> listOfBuyCosts = new ArrayList<Integer>();
+        List<Integer> listOfSupplyCosts = new ArrayList<>();
+        List<Integer> listOfBuyCosts = new ArrayList<>();
         String result = calculateResult(fromFileName, listOfSupplyCosts,
                 listOfBuyCosts, stringBuilder);
         createAndWriteToFile(toFileName, result);
@@ -22,11 +22,10 @@ public class WorkWithFile {
     public static String calculateResult(String fromFile, List<Integer> supplies,
                                          List<Integer> buys, StringBuilder stringBuilder) {
         try {
-            BufferedReader bufReader = new BufferedReader(new FileReader(fromFile));
-            String string = bufReader.readLine();
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFile));
+            String string = bufferedReader.readLine();
             while (string != null) {
                 String[] splitedString = string.split(" ");
-
                 for (String value : splitedString) {
                     if (value.contains("supply")) {
                         supplies.add(Integer.valueOf(value
@@ -36,7 +35,7 @@ public class WorkWithFile {
                                 .substring(value.indexOf(",") + 1, value.length())));
                     }
                 }
-                string = bufReader.readLine();
+                string = bufferedReader.readLine();
             }
 
             int sumOfSupplies = 0;
