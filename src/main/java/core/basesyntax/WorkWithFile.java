@@ -11,8 +11,18 @@ import java.util.ArrayList;
 
 public class WorkWithFile {
     private ArrayList<DataFromFile> dataList = new ArrayList<>();
+    private int supply = 0;
+    private int buy = 0;
+    private int result = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
+        WorkWithFile work = new WorkWithFile();
+        work.getDataFile(fromFileName);
+        result = work.calculating();
+        work.writeToFile(toFileName, result);
+    }
+
+    public void getDataFile(String fromFileName) {
         FileInputStream filein;
         try {
             filein = new FileInputStream(fromFileName);
@@ -34,9 +44,9 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from file", e);
         }
+    }
 
-        int supply = 0;
-        int buy = 0;
+    public int calculating() {
         for (DataFromFile data : dataList) {
             if (data.getOperationType().equals("supply")) {
                 supply += data.getAmount();
@@ -45,7 +55,10 @@ public class WorkWithFile {
                 buy += data.getAmount();
             }
         }
-        int result = supply - buy;
+        return result = supply - buy;
+    }
+
+    public void writeToFile(String toFileName, int result) {
         String[] strings = new String[]{"supply," + supply, "buy," + buy, "result," + result};
         File file = new File(toFileName);
         BufferedWriter bw = null;
