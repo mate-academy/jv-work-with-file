@@ -12,11 +12,10 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 
 public class WorkWithFile {
-
     public void getStatistic(String fromFileName, String toFileName) {
         String[] data = readFromFile(fromFileName);
-        String result = createStatistic(data);
-        writeToFile(result, toFileName);
+        String statistic = createStatistic(data);
+        writeToFile(statistic, toFileName);
     }
 
     private String[] readFromFile(String fileName) {
@@ -55,11 +54,11 @@ public class WorkWithFile {
         return statisticBuilder.toString();
     }
 
-    public void writeToFile(String result, String toFileName) {
+    public void writeToFile(String statistic, String toFileName) {
         Path filePath = Paths.get(toFileName);
         try {
             Files.createFile(filePath);
-            Files.write(filePath, result.getBytes(StandardCharsets.UTF_8),
+            Files.write(filePath, statistic.getBytes(StandardCharsets.UTF_8),
                     StandardOpenOption.APPEND);
         } catch (IOException e) {
             throw new RuntimeException("Can't create a file", e);
