@@ -38,7 +38,6 @@ public class WorkWithFile {
             throw new RuntimeException("Can't read the file", e);
         }
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true))) {
-            //BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true));
             bufferedWriter.append(SUPPLY)
                     .append(",")
                     .append(String.valueOf(supply))
