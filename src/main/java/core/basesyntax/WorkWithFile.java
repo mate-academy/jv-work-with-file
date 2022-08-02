@@ -6,18 +6,19 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class WorkWithFile {
 
     private String[] readFromFile(String fileName) {
-        ArrayList<String> lines = new ArrayList<>();
+        List<String> lines = new ArrayList<>();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
             String currentLine;
             while ((currentLine = bufferedReader.readLine()) != null) {
                 lines.add(currentLine);
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("file could not be read");
         }
         String[] result = lines.toArray(new String[0]);
         return result;
@@ -49,15 +50,13 @@ public class WorkWithFile {
                 bufferedWriter.write(line + System.lineSeparator());
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("file could not be written to");
         }
-
     }
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] lines = readFromFile(fromFileName);
         String[] report = createReport(lines);
         writeReport(report, toFileName);
-
     }
 }
