@@ -2,45 +2,50 @@ package core.basesyntax;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
 
+    private static final int ACTION = 0;
+    private static final int QUANTITY = 1;
+    private static final String BUY_ACTION = "buy";
+
     public void getStatistic(String fromFileName, String toFileName) {
         int outputBuy = 0;
         int outputSupply = 0;
-        File fileFrom = new File(fromFileName);
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileFrom))) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String transaction = bufferedReader.readLine();
             while (transaction != null) {
                 String[] trasactionInfoSplitted = transaction.split(",");
-                if (trasactionInfoSplitted[0].equals("buy")) {
-                    outputBuy = outputBuy + Integer.parseInt(trasactionInfoSplitted[1]);
+                if (trasactionInfoSplitted[ACTION].equals(BUY_ACTION)) {
+                    outputBuy += Integer.parseInt(trasactionInfoSplitted[QUANTITY]);
                 } else {
-                    outputSupply = outputSupply + Integer.parseInt(trasactionInfoSplitted[1]);
+                    outputSupply += Integer.parseInt(trasactionInfoSplitted[QUANTITY]);
                 }
                 transaction = bufferedReader.readLine();
             }
-        } catch (FileNotFoundException e) {
+        } catch (Exception e) {
             throw new RuntimeException("File not found" + fromFileName, e);
-        } catch (IOException e) {
-            throw new RuntimeException("Can't read the file" + fromFileName, e);
         }
-        sendStatisticToFile(outputBuy, outputSupply, toFileName);
+        reportCreator(outputBuy, outputSupply, toFileName);
     }
 
-    private void sendStatisticToFile(int outputBuy, int outputSupply, String fileTo) {
+    private void reportCreator(int outputBuy, int outputSupply, String toFileName) {
         int result = outputSupply - outputBuy;
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileTo))) {
-            bufferedWriter.write("supply," + outputSupply + System.lineSeparator()
-                    + "buy," + outputBuy + System.lineSeparator()
-                    + "result," + result);
+        String report = "supply," + outputSupply + System.lineSeparator()
+                + "buy," + outputBuy + System.lineSeparator()
+                + "result," + result;
+        sendReportToFile(toFileName, report);
+    }
+
+    private void sendReportToFile(String toFileName, String report) {
+
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
+            bufferedWriter.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data to file" + fileTo, e);
+            throw new RuntimeException("Can't write data to file" + toFileName, e);
         }
     }
 }
