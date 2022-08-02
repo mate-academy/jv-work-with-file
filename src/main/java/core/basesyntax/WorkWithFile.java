@@ -41,8 +41,7 @@ public class WorkWithFile {
     private String fileReader(String fromFileName) {
         File file = new File(fromFileName);
         StringBuilder stringBuilder = new StringBuilder();
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
             String value = bufferedReader.readLine();
             while (value != null) {
                 stringBuilder.append(value).append(System.lineSeparator());
@@ -56,10 +55,8 @@ public class WorkWithFile {
 
     private void fileWriter(String result,String toFileName) {
         File output = new File(toFileName);
-        try {
-            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(output));
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(output))) {
             bufferedWriter.write(result);
-            bufferedWriter.close();
         } catch (IOException e) {
             throw new RuntimeException("Can't write data",e);
         }
