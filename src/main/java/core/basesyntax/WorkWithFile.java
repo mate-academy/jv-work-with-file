@@ -7,7 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final int TYPE_OPERATION_TYPE_INDEX = 0;
+    private static final int OPERATION_TYPE_INDEX = 0;
     private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
@@ -34,7 +34,7 @@ public class WorkWithFile {
         int supplyAmount = 0;
         for (String lineFromFile : linesFromFile) {
             String[] splittedLine = lineFromFile.split(",");
-            String typeOfOperation = splittedLine[TYPE_OPERATION_TYPE_INDEX];
+            String typeOfOperation = splittedLine[OPERATION_TYPE_INDEX];
             int sum = Integer.parseInt(splittedLine[AMOUNT_INDEX]);
             if (typeOfOperation.equals("buy")) {
                 buyAmount += sum;
@@ -46,16 +46,16 @@ public class WorkWithFile {
     }
 
     private String createStatistic(int buyAmount, int supplyAmount) {
-        StringBuilder builder = new StringBuilder();
-        builder.append("supply,").append(supplyAmount).append(System.lineSeparator())
+        StringBuilder statisticBuilder = new StringBuilder();
+        statisticBuilder.append("supply,").append(supplyAmount).append(System.lineSeparator())
                 .append("buy,").append(buyAmount).append(System.lineSeparator())
                 .append("result,").append(supplyAmount - buyAmount);
-        return builder.toString();
+        return statisticBuilder.toString();
     }
 
-    private void writeDataToFile(String toFileName, String statisticOfData) {
+    private void writeDataToFile(String toFileName, String statistic) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            writer.write(statisticOfData);
+            writer.write(statistic);
         } catch (IOException e) {
             throw new RuntimeException("Error writing data to file " + toFileName, e);
         }
