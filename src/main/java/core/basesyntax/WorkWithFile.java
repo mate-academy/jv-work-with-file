@@ -15,22 +15,28 @@ public class WorkWithFile {
     private static final String COMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
+        File fromFile = new File(fromFileName);
+        File toFile = new File(toFileName);
+
+        String[] readRecords = readRecordsFromFile(fromFile);
+        String[] report = getReport(readRecords);
+        write(report, toFile);
+    }
+
+    private String[] getReport(String[] readRecords) {
         int buySum = 0;
         int supplySum = 0;
         int result = 0;
-        StringBuilder stringBuilder = new StringBuilder();
-        readToFile(fromFileName,stringBuilder);
-        String[] strings = stringBuilder.toString().split(COMA);
-        for (int i = 0; i < strings.length; i++) {
-            if (strings[i].equals(SUPPLY)) {
-                supplySum += Integer.parseInt(strings[i + 1]);
+        for (int i = 0; i < readRecords.length; i++) {
+            if (readRecords[i].equals(SUPPLY)) {
+                supplySum += Integer.parseInt(readRecords[i + 1]);
             }
-            if (strings[i].equals(BUY)) {
-                buySum += Integer.parseInt(strings[i + 1]);
+            if (readRecords[i].equals(BUY)) {
+                buySum += Integer.parseInt(readRecords[i + 1]);
             }
             result = supplySum - buySum;
         }
-        write(supplySum,buySum,result,toFileName);
+        return getReport(supplySum, buySum, result);
     }
 
     private String[] getReport(int supplySum, int buySum, int result) {
@@ -41,33 +47,29 @@ public class WorkWithFile {
         return array;
     }
 
-    private void write(int supplySum, int buySum, int result, String toFileName) {
-        File fileTo = new File(toFileName);
-        String[] array = getReport(supplySum, buySum, result);
-        for (String text : array) {
-            try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileTo, true))) {
-                bufferedWriter.write(text + System.lineSeparator());
+    private void write(String[] records, File toFile) {
+        for (String record : records) {
+            try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFile, true))) {
+                bufferedWriter.write(record + System.lineSeparator());
             } catch (IOException e) {
                 throw new RuntimeException("Can't write file", e);
             }
         }
     }
 
-    private String readToFile(String fromFileName, StringBuilder builder) {
-        File fileFrom = new File(fromFileName);
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(fileFrom));
+    private String[] readRecordsFromFile(File fromFile) {
+        StringBuilder recordBuilder = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFile))) {
             String string = reader.readLine();
             while (string != null) {
-                builder.append(string).append(",");
+                recordBuilder.append(string).append(COMA);
                 string = reader.readLine();
             }
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("File not found", e);
+            throw new RuntimeException("File not found " + fromFile.getName(), e);
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't read file " + fromFile.getName(), e);
         }
-
-        return fromFileName;
+        return recordBuilder.toString().split(COMA);
     }
 }
