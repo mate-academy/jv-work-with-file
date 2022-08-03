@@ -20,15 +20,14 @@ public class WorkWithFile {
 
         fileContent = replaceSymbols(fileContent);
         String[] appleArray = fileContent.split(LINE_SPLITTER);
-        String[] categoriesArray = {SUPPLY_ROW, BUY_ROW};
         int supplyAmount = 0;
         int buyAmount = 0;
 
         for (int j = 0; j < appleArray.length; j++) {
-            if (categoriesArray[INDEX_OF_SUPPLY].equals(appleArray[j])) {
+            if (SUPPLY_ROW.equals(appleArray[j])) {
                 supplyAmount += Integer.parseInt(appleArray[j + 1]);
             }
-            if (categoriesArray[INDEX_OF_BUY].equals(appleArray[j])) {
+            if (BUY_ROW.equals(appleArray[j])) {
                 buyAmount += Integer.parseInt(appleArray[j + 1]);
             }
         }
