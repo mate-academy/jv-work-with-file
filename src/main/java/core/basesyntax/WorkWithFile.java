@@ -9,30 +9,34 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WorkWithFile {
+    private static final String VALUE_CRITERIA = "supply";
+    private static final String LINE_SEPARATOR = " ";
+
     public static void getStatistic(String fromFileName, String toFileName) {
-        File myFile = new File(fromFileName);
         StringBuilder stringBuilder = new StringBuilder();
         List<Integer> listOfSupplyCosts = new ArrayList<>();
         List<Integer> listOfBuyCosts = new ArrayList<>();
-        String result = calculateResult(fromFileName, listOfSupplyCosts,
-                listOfBuyCosts, stringBuilder);
+        String result = createReport(fromFileName, listOfSupplyCosts,
+                                     listOfBuyCosts, stringBuilder);
         createAndWriteToFile(toFileName, result);
     }
 
-    public static String calculateResult(String fromFile, List<Integer> supplies,
-                                         List<Integer> buys, StringBuilder stringBuilder) {
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFile));
+    public static String createReport(String fromFile, List<Integer> supplies,
+                                      List<Integer> buys, StringBuilder stringBuilder) {
+
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFile))) {
             String string = bufferedReader.readLine();
+            String[] splitedString = null;
+
             while (string != null) {
-                String[] splitedString = string.split(" ");
+                splitedString = string.split(LINE_SEPARATOR);
                 for (String value : splitedString) {
-                    if (value.contains("supply")) {
+                    if (value.contains(VALUE_CRITERIA)) {
                         supplies.add(Integer.valueOf(value
-                                .substring(value.indexOf(",") + 1, value.length())));
+                                            .substring(value.indexOf(",") + 1, value.length())));
                     } else {
                         buys.add(Integer.valueOf(value
-                                .substring(value.indexOf(",") + 1, value.length())));
+                                        .substring(value.indexOf(",") + 1, value.length())));
                     }
                 }
                 string = bufferedReader.readLine();
