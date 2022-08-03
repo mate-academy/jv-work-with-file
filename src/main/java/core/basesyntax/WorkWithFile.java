@@ -9,19 +9,15 @@ import java.io.IOException;
 
 public class WorkWithFile {
     private static final int DATA_VALUE = 1;
-    private static final String DELIMETR = ",";
-    private static final String NEW_LINE_DELIMETR = System.lineSeparator();
+    private static final String DELIMITER = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        File outputFile = new File(toFileName);
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile))) {
-            writer.write(readFile(fromFileName));
-        } catch (IOException e) {
-            throw new RuntimeException("Can`t write to the file:" + toFileName, e);
-        }
+        String data = readFile(fromFileName);
+        String result = calculateResult(data);
+        writeToFile(toFileName, result);
     }
 
-    public String readFile(String fromFileName) {
+    private String readFile(String fromFileName) {
         File inputFile = new File(fromFileName);
         StringBuilder builder = new StringBuilder();
         int supplyValue = 0;
@@ -36,27 +32,36 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can`t read file:" + fromFileName, e);
         }
-        return calculateResult(builder.toString());
+        return builder.toString();
     }
 
-    public String calculateResult(String data) {
+    private String calculateResult(String data) {
         StringBuilder builder = new StringBuilder();
         int supplyValue = 0;
         int buyValue = 0;
-        String[] dataArr = data.split(System.lineSeparator());
-        for (String string : dataArr) {
+        String[] dataArray = data.split(System.lineSeparator());
+        for (String string : dataArray) {
             if (string.contains("supply")) {
                 supplyValue += Integer.parseInt(string
-                        .substring(string.indexOf(DELIMETR) + DATA_VALUE));
+                        .substring(string.indexOf(DELIMITER) + DATA_VALUE));
             }
             if (string.contains("buy")) {
                 buyValue += Integer.parseInt(string
-                        .substring(string.indexOf(DELIMETR) + DATA_VALUE));
+                        .substring(string.indexOf(DELIMITER) + DATA_VALUE));
             }
         }
         builder.append("supply,").append(supplyValue).append(System.lineSeparator())
                 .append("buy,").append(buyValue).append(System.lineSeparator())
                 .append("result,").append(supplyValue - buyValue);
         return builder.toString();
+    }
+
+    private void writeToFile(String toFileName, String data) {
+        File outputFile = new File(toFileName);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile))) {
+            writer.write(data);
+        } catch (IOException e) {
+            throw new RuntimeException("Can`t write to the file:" + toFileName, e);
+        }
     }
 }
