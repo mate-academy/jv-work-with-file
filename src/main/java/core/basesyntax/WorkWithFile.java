@@ -23,7 +23,7 @@ public class WorkWithFile {
             while ((line = bufferedReader.readLine()) != null) {
                 data = line.split(DEMILITER);
                 if (data[0].equals(OPERATION_BUY)) {
-                    totalBuy += Integer.parseInt(data[0]);
+                    totalBuy += Integer.parseInt(data[1]);
                 } else {
                     totalSupply += Integer.parseInt(data[1]);
                 }
