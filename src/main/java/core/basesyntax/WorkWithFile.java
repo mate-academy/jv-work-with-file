@@ -26,7 +26,7 @@ public class WorkWithFile {
     private String[] getReport(String[] readRecords) {
         int buySum = 0;
         int supplySum = 0;
-        int result = 0;
+        int result;
         for (int i = 0; i < readRecords.length; i++) {
             if (readRecords[i].equals(SUPPLY)) {
                 supplySum += Integer.parseInt(readRecords[i + 1]);
@@ -34,8 +34,8 @@ public class WorkWithFile {
             if (readRecords[i].equals(BUY)) {
                 buySum += Integer.parseInt(readRecords[i + 1]);
             }
-            result = supplySum - buySum;
         }
+        result = supplySum - buySum;
         return getReport(supplySum, buySum, result);
     }
 
@@ -48,12 +48,12 @@ public class WorkWithFile {
     }
 
     private void write(String[] records, File toFile) {
-        for (String record : records) {
-            try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFile, true))) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFile, true))) {
+            for (String record : records) {
                 bufferedWriter.write(record + System.lineSeparator());
-            } catch (IOException e) {
-                throw new RuntimeException("Can't write file", e);
             }
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write file", e);
         }
     }
 
