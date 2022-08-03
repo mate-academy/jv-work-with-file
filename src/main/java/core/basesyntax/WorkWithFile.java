@@ -19,8 +19,7 @@ public class WorkWithFile {
 
         StringBuilder builder = new StringBuilder();
 
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(fromFile));
+        try ( BufferedReader reader = new BufferedReader(new FileReader(fromFile))) {
             String value = reader.readLine();
 
             while (value != null) {
@@ -39,7 +38,7 @@ public class WorkWithFile {
                                 + "buy," + buy + System.lineSeparator()
                                 + "result," + result);
         } catch (IOException e) {
-            throw new RuntimeException("Can't read this file", e);
+            throw new RuntimeException("Can't read file" + fromFileName, e);
         }
 
         String finalSupply = "supply," + supply;
@@ -48,13 +47,13 @@ public class WorkWithFile {
 
         String[] res = new String[]{finalSupply, finalBuy, finalResult};
 
-        for (String resources : res) {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFile, true))) {
+                for (String resources : res) {
                 writer.write(resources);
                 writer.newLine();
+                }
             } catch (IOException e) {
-                throw new RuntimeException("Can't write data to file", e);
+                throw new RuntimeException("Can't write data to file" + toFileName, e);
             }
-        }
     }
 }
