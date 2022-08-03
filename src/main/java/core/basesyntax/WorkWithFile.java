@@ -8,9 +8,15 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String REGEX = "[\\D]";
+
     public static void getStatistic(String fromFileName, String toFileName) {
         String supplyData = readFromFile(fromFileName);
         String[] resultData = getTotalSupplyReport(supplyData).split(" ");
+        writeToFile(toFileName, resultData);
+    }
+
+    private static void writeToFile(String toFileName, String[] resultData) {
         File file = new File(toFileName);
 
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, true))) {
@@ -45,16 +51,17 @@ public class WorkWithFile {
         String[] lines = fromFileName.split(System.lineSeparator());
         for (String line : lines) {
             if (line.contains("buy")) {
-                countBuy += Integer.parseInt(line.replaceAll("[\\D]", ""));
+                countBuy += Integer.parseInt(line.replaceAll(REGEX, ""));
             }
             if (line.contains("supply")) {
-                countSupply += Integer.parseInt(line.replaceAll("[\\D]", ""));
+                countSupply += Integer.parseInt(line.replaceAll(REGEX, ""));
             }
         }
         int result = countSupply - countBuy;
 
-        return "supply," + countSupply + System.lineSeparator()
-                + "buy," + countBuy + System.lineSeparator()
-                + "result," + result;
+        return new StringBuilder()
+                .append("supply,").append(countSupply).append(System.lineSeparator())
+                .append("buy,").append(countBuy).append(System.lineSeparator())
+                .append("result,").append(result).toString();
     }
 }
