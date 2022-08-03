@@ -13,7 +13,7 @@ public class WorkWithFile {
         File fromFile = new File(fromFileName);
         int supply = 0;
         int buy = 0;
-        int result = 0;
+        int result;
         try (BufferedReader lineReader = new BufferedReader(new FileReader(fromFile))) {
             String line = lineReader.readLine();
             while (line != null) {
@@ -30,7 +30,9 @@ public class WorkWithFile {
         result = supply - buy;
         File toFile = new File(toFileName);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFile, true))) {
-            writer.write("supply," + supply + "\r\nbuy," + buy + "\r\nresult," + result);
+            writer.write("supply," + supply + System.lineSeparator() + "buy,"
+                    + buy + System.lineSeparator()
+                    + "result," + result);
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file", e);
         }
