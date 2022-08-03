@@ -15,7 +15,8 @@ public class WorkWithFile {
     public static final int AMOUNT_COLUMN = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String report = createReport(fromFileName);
+        String data = readFromFile(fromFileName);
+        String report = createReport(data);
         writeToFile(report, toFileName);
     }
 
@@ -29,11 +30,11 @@ public class WorkWithFile {
                 writer.write(System.lineSeparator());
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data to the file", e);
+            throw new RuntimeException("Can't write data to the file " + toFileName, e);
         }
     }
 
-    private String createReport(String fromFileName) {
+    private String readFromFile(String fromFileName) {
         File file = new File(fromFileName);
         StringBuilder builder = new StringBuilder();
 
@@ -44,16 +45,21 @@ public class WorkWithFile {
                 value = reader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read data from the file", e);
+            throw new RuntimeException("Can't read data from the file " + fromFileName, e);
         }
 
-        String[] entries = builder.toString().split(System.lineSeparator());
+        return builder.toString();
+    }
+
+    private String createReport(String data) {
+        StringBuilder builder = new StringBuilder();
+        String[] entries = data.split(System.lineSeparator());
         int supplyAmount = 0;
         int buyAmount = 0;
         int result = 0;
 
-        for (int i = 0; i < entries.length; i++) {
-            String[] entryData = entries[i].split(",");
+        for (String entry : entries) {
+            String[] entryData = entry.split(",");
             String operationType = entryData[OPERATION_TYPE_COLUMN];
             if (operationType.equals(SUPPLY_OPERATION)) {
                 supplyAmount += Integer.parseInt(entryData[AMOUNT_COLUMN]);
@@ -63,7 +69,6 @@ public class WorkWithFile {
         }
 
         result = supplyAmount - buyAmount;
-        builder.setLength(0);
         builder.append(SUPPLY_OPERATION)
                 .append(",")
                 .append(supplyAmount)
