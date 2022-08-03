@@ -39,12 +39,10 @@ public class WorkWithFile {
         String[] dataArray = data.split(System.lineSeparator());
         for (String string : dataArray) {
             if (string.contains("supply")) {
-                supplyValue += Integer.parseInt(string
-                        .substring(string.indexOf(DELIMITER) + DATA_VALUE));
+                supplyValue += Integer.parseInt(string.split(DELIMITER)[DATA_VALUE]);
             }
             if (string.contains("buy")) {
-                buyValue += Integer.parseInt(string
-                        .substring(string.indexOf(DELIMITER) + DATA_VALUE));
+                buyValue += Integer.parseInt(string.split(DELIMITER)[DATA_VALUE]);
             }
         }
         builder.append("supply,").append(supplyValue).append(System.lineSeparator())
