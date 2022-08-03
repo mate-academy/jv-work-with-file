@@ -9,19 +9,22 @@ import java.util.List;
 
 public class WorkWithFile {
     private static final String BUY_OPERATION = "buy";
+    private static final String DELIMITER = ",";
+    private static final int OPERATION_INDEX = 0;
+    private static final int NUMBER_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String [] infoFromFile = getInfo(fromFileName).split(" ");
         String countedAmount = getCount(infoFromFile);
-        writeToFile(toFileName,countedAmount);
+        writeToFile(toFileName, countedAmount);
     }
 
-    private String getInfo(String file) {
+    private String getInfo(String fileName) {
         List<String> infoFromList;
         try {
-            infoFromList = Files.readAllLines(new File(file).toPath());
+            infoFromList = Files.readAllLines(new File(fileName).toPath());
         } catch (IOException e) {
-            throw new RuntimeException("Cannot read the file " + file, e);
+            throw new RuntimeException("Cannot read the file " + fileName, e);
         }
         StringBuilder builder = new StringBuilder();
         for (String info : infoFromList) {
@@ -39,24 +42,20 @@ public class WorkWithFile {
     }
 
     private String getCount(String [] info) {
+        StringBuilder stringBuilder = new StringBuilder();
         int buy = 0;
         int supply = 0;
-        int result;
         for (String rowInfo : info) {
-            String[] line = rowInfo.split(",");
-            if (line[0].equals(BUY_OPERATION)) {
-                buy += Integer.parseInt(line[1]);
+            String[] line = rowInfo.split(DELIMITER);
+            if (line[OPERATION_INDEX].equals(BUY_OPERATION)) {
+                buy += Integer.parseInt(line[NUMBER_INDEX]);
             } else {
-                supply += Integer.parseInt(line[1]);
+                supply += Integer.parseInt(line[NUMBER_INDEX]);
             }
         }
-        result = supply - buy;
-        return getAmountToString(supply, buy, result);
-    }
-
-    private String getAmountToString(int supply, int buy, int result) {
-        return "supply," + supply + System.lineSeparator()
-                + "buy," + buy + System.lineSeparator()
-                + "result," + result;
+        stringBuilder.append("supply,").append(supply).append(System.lineSeparator())
+                .append("buy,").append(buy).append(System.lineSeparator())
+                .append("result,").append(supply - buy);
+        return stringBuilder.toString();
     }
 }
