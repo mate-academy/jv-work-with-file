@@ -43,11 +43,11 @@ public class WorkWithFile {
 
     private String formStatistic(String data) {
         StringBuilder builder = new StringBuilder();
-        String[] lines = data.split(" ");
+        String [] dataLine = data.split(" ");
         int resultSupply = 0;
         int resultBuy = 0;
-        for (String line : lines) {
-            String[] splittedLine = line.split(",");
+        for (String record : dataLine) {
+            String[] lines = record.split(",");
             if (lines[TYPE_OF_OPERATION_INDEX].equals("buy")) {
                 resultBuy += Integer.parseInt(lines[AMOUNT_INDEX]);
             } else {
