@@ -4,53 +4,42 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 public class WorkWithFile {
-    private static final int MAX_ARRAY_LENGTH = 2;
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] readValue = read(fromFileName);
-        String replacedWordValue = "";
-        int replacedNumbValue = 0;
-        int firstSum = 0;
-        int secondSum = 0;
         StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < MAX_ARRAY_LENGTH; i++) {
-            String[] splitValue = readValue[i].split(",");
-            replacedWordValue = splitValue[0];
-            replacedNumbValue += Integer.parseInt(splitValue[1]);
-            for (int k = i + 1; k < readValue.length; k++) {
-                if (readValue[k].startsWith(splitValue[0])) {
-                    replacedNumbValue += Integer.parseInt(
-                            readValue[k].substring(readValue[k].indexOf(",") + 1)
-                    );
-                }
-            }
-            if (i == 0) {
-                firstSum = replacedNumbValue;
+        Map<String, Integer> map = new HashMap<>();
+        for (String s : readValue) {
+            String tempValue = s.substring(0, s.indexOf(","));
+            int tempNum = Integer.parseInt(s.substring(s.indexOf(",") + 1));
+            if (map.containsKey(tempValue)) {
+                Integer tempVal = map.get(tempValue);
+                map.replace(tempValue, tempVal + tempNum);
             } else {
-                secondSum = replacedNumbValue;
+                map.put(tempValue, tempNum);
             }
-            stringBuilder.append(replacedWordValue)
-                    .append(",")
-                    .append(replacedNumbValue)
-                    .append("\n").append(" ");
-            replacedNumbValue = 0;
         }
-        int temporarySum = firstSum - secondSum;
-        if (temporarySum < 0) {
-            temporarySum = temporarySum * -1;
-        }
-        stringBuilder.append("result").append(",").append(temporarySum);
-        String[] writeValue = stringBuilder.toString().split(" ");
-        String temporaryField = "";
-        if (writeValue[0].startsWith("buy")) {
-            temporaryField = writeValue[0];
-            writeValue[0] = writeValue[1];
-            writeValue[1] = temporaryField;
-        }
-
-        write(toFileName, writeValue);
+        Integer supplyNumValue = map.get(SUPPLY);
+        Integer buyNumValue = map.get(BUY);
+        stringBuilder.append(SUPPLY)
+                .append(",")
+                .append(supplyNumValue)
+                .append(System.lineSeparator())
+                .append(" ")
+                .append(BUY)
+                .append(",")
+                .append(buyNumValue)
+                .append(System.lineSeparator())
+                .append(" ")
+                .append("result,")
+                .append(supplyNumValue - buyNumValue);
+        write(toFileName, stringBuilder.toString().split(" "));
     }
 
     private String[] read(String fromFileName) {
@@ -62,19 +51,23 @@ public class WorkWithFile {
                 value = bufferedReader.read();
             }
         } catch (Exception ex) {
-            System.out.println("Can't read data from the file: " + fromFileName);
+            throw new RuntimeException(
+                    String.format("Can't read data from the file: %s", fromFileName)
+            );
         }
         return stringBuilder.toString().split("\n");
     }
 
     private void write(String toFileName, String[] toWrite) {
-        for (String s : toWrite) {
-            try (BufferedWriter bufferedWriter =
-                         new BufferedWriter(new FileWriter(toFileName, true))) {
+        try (BufferedWriter bufferedWriter =
+                     new BufferedWriter(new FileWriter(toFileName, true))) {
+            for (String s : toWrite) {
                 bufferedWriter.write(s);
-            } catch (Exception ex) {
-                System.out.println("Can't write data from the file: " + toFileName);
             }
+        } catch (Exception ex) {
+            throw new RuntimeException(
+                    String.format("Can't write data to file: %s", toFileName)
+            );
         }
     }
 }
