@@ -12,27 +12,15 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
+    private static final String COMA = ",";
 
-    public static void getStatistic(String fromFileName, String toFileName) {
+    public void getStatistic(String fromFileName, String toFileName) {
         int buySum = 0;
         int supplySum = 0;
         int result = 0;
-        File fileFrom = new File(fromFileName);
-        File fileTo = new File(toFileName);
         StringBuilder stringBuilder = new StringBuilder();
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(fileFrom));
-            String string = reader.readLine();
-            while (string != null) {
-                stringBuilder.append(string).append(",");
-                string = reader.readLine();
-            }
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException("File not found", e);
-        } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
-        }
-        String[] strings = stringBuilder.toString().split(",");
+        readToFile(fromFileName,stringBuilder);
+        String[] strings = stringBuilder.toString().split(COMA);
         for (int i = 0; i < strings.length; i++) {
             if (strings[i].equals(SUPPLY)) {
                 supplySum += Integer.parseInt(strings[i + 1]);
@@ -42,12 +30,44 @@ public class WorkWithFile {
             }
             result = supplySum - buySum;
         }
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileTo, true))) {
-            bufferedWriter.write(SUPPLY + "," + supplySum
-                    + System.lineSeparator() + BUY + "," + buySum
-                    + System.lineSeparator() + RESULT + "," + result);
-        } catch (IOException e) {
-            throw new RuntimeException("Can't write file", e);
+        write(supplySum,buySum,result,toFileName);
+    }
+
+    private String[] getReport(int supplySum, int buySum, int result) {
+        String[] array = new String[3];
+        array[0] = SUPPLY + COMA + supplySum;
+        array[1] = BUY + COMA + buySum;
+        array[2] = RESULT + COMA + result;
+        return array;
+    }
+
+    private void write(int supplySum, int buySum, int result, String toFileName) {
+        File fileTo = new File(toFileName);
+        String[] array = getReport(supplySum, buySum, result);
+        for (String text : array) {
+            try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileTo, true))) {
+                bufferedWriter.write(text + System.lineSeparator());
+            } catch (IOException e) {
+                throw new RuntimeException("Can't write file", e);
+            }
         }
+    }
+
+    private String readToFile(String fromFileName, StringBuilder builder) {
+        File fileFrom = new File(fromFileName);
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(fileFrom));
+            String string = reader.readLine();
+            while (string != null) {
+                builder.append(string).append(",");
+                string = reader.readLine();
+            }
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException("File not found", e);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't read file", e);
+        }
+
+        return fromFileName;
     }
 }
