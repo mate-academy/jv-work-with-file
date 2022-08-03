@@ -35,13 +35,16 @@ public class WorkWithFile {
     }
 
     private String createReport(int totalSupply, int totalBuy) {
+        StringBuilder report = new StringBuilder();
         int result = totalSupply - totalBuy;
 
-        return "supply," + totalSupply
-                + System.lineSeparator()
-                + "buy," + totalBuy
-                + System.lineSeparator()
-                + "result," + result;
+        report.append("supply,").append(totalSupply)
+                .append(System.lineSeparator())
+                .append("buy,").append(totalBuy)
+                .append(System.lineSeparator())
+                .append("result,").append(result);
+
+        return report.toString();
     }
 
     private void writeInResult(String toFile, int totalSupply, int totalBuy) {
