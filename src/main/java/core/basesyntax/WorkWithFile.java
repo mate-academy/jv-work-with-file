@@ -9,6 +9,8 @@ import java.io.IOException;
 
 public class WorkWithFile {
     private static final String SEPARATOR = ";";
+    private static final int NUMBER_INDEX = 1;
+    private static final String LINE_SPLIT_DELIMITED = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         File readFile = new File(fromFileName);
@@ -27,17 +29,17 @@ public class WorkWithFile {
                 value = bufferedReader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file" + file, e);
+            throw new RuntimeException("Can't read file " + file, e);
         }
         return builder.toString();
     }
 
     private MarketStatistic getMarketStatistic(String content) {
-        String[] listOfStatistic = content.split(";");
+        String[] listOfStatistic = content.split(SEPARATOR);
         int supplyCount = 0;
         int buyCount = 0;
         for (String statistic : listOfStatistic) {
-            int statisticNumber = Integer.parseInt(statistic.split(",")[1]);
+            int statisticNumber = Integer.parseInt(statistic.split(LINE_SPLIT_DELIMITED)[NUMBER_INDEX]);
             if (statistic.contains("supply")) {
                 supplyCount += statisticNumber;
             } else if (statistic.contains("buy")) {
@@ -54,7 +56,7 @@ public class WorkWithFile {
                     .append(System.lineSeparator()).append("buy,").append(buyCount)
                     .append(System.lineSeparator()).append("result,").append(result).toString());
         } catch (IOException e) {
-            throw new RuntimeException("Can't write to file" + file, e);
+            throw new RuntimeException("Can't write to file " + file, e);
         }
     }
 }
