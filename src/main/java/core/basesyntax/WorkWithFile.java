@@ -1,11 +1,9 @@
 package core.basesyntax;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
-import java.util.ArrayList;
+import java.nio.file.Files;
 import java.util.List;
 
 public class WorkWithFile {
@@ -33,17 +31,13 @@ public class WorkWithFile {
 
     private String[] reedToStringArray(String fromFileName) {
         File file = new File(fromFileName);
-        List<String> arrayList = new ArrayList<>();
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
-            String string = bufferedReader.readLine();
-            while (string != null) {
-                arrayList.add(string);
-                string = bufferedReader.readLine();
-            }
+        List<String> list;
+        try {
+            list = Files.readAllLines(file.toPath());
         } catch (Exception e) {
             throw new RuntimeException("Can't read data from the file " + file, e);
         }
-        return arrayList.toArray(new String[arrayList.size()]);
+        return list.toArray(new String[list.size()]);
     }
 
     private void writeToFile(String toFileName, int supply, int buy) {
