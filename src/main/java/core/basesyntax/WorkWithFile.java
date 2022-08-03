@@ -12,16 +12,14 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         String supplyData = readFromFile(fromFileName);
-        writeToFile(toFileName,getTotalSupplyReport(supplyData).split(" "));
+        writeToFile(toFileName, getTotalSupplyReport(supplyData));
     }
 
-    private void writeToFile(String toFileName, String[] resultData) {
+    private void writeToFile(String toFileName, String resultData) {
         File file = new File(toFileName);
 
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, true))) {
-            for (String data : resultData) {
-                bufferedWriter.write(data);
-            }
+            bufferedWriter.write(resultData);
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to file: " + toFileName, e);
         }
