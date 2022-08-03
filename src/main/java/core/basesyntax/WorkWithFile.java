@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.ArrayList;
+import java.util.List;
 
 public class WorkWithFile {
     private static final int OPERATION_COLUMN = 0;
@@ -32,9 +33,8 @@ public class WorkWithFile {
 
     private String[] reedToStringArray(String fromFileName) {
         File file = new File(fromFileName);
-        ArrayList<String> arrayList = new ArrayList<>();
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+        List<String> arrayList = new ArrayList<>();
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
             String string = bufferedReader.readLine();
             while (string != null) {
                 arrayList.add(string);
@@ -49,10 +49,12 @@ public class WorkWithFile {
     private void writeToFile(String toFileName, int supply, int buy) {
         File file = new File(toFileName);
         int result = supply - buy;
+        StringBuilder stringBuilder = new StringBuilder()
+                .append("supply,").append(supply).append(System.lineSeparator())
+                .append("buy,").append(buy).append(System.lineSeparator())
+                .append("result,").append(result);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
-            bufferedWriter.write("supply," + supply + System.lineSeparator()
-                    + "buy," + buy + System.lineSeparator()
-                    + "result," + result);
+            bufferedWriter.write(stringBuilder.toString());
         } catch (Exception e) {
             throw new RuntimeException("Can't write data to the file " + file, e);
         }
