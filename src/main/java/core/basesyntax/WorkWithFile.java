@@ -12,8 +12,7 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         int[] sumSupplyAndBuy = new int[2];
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String line = reader.readLine();
             while (line != null) {
                 String[] lineSplit = line.split(SPLIT_REGEX);
