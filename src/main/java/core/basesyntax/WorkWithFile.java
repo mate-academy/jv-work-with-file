@@ -21,10 +21,10 @@ public class WorkWithFile {
         workWithFile.writeToFile(stringBuffer.toString(), toFileName);
     }
 
-    private int[] readFromFile(String fileName) {
+    private int[] readFromFile(String fromFileName) {
         int supply = 0;
         int buy = 0;
-        File file = new File(fileName);
+        File file = new File(fromFileName);
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
             String row = bufferedReader.readLine();
             while (row != null) {
@@ -37,18 +37,18 @@ public class WorkWithFile {
                 row = bufferedReader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read from file " + fileName, e);
+            throw new RuntimeException("Can't read from file " + fromFileName, e);
         }
         return new int[]{supply, buy};
     }
 
-    private void writeToFile(String report, String fileName) {
-        File file = new File(fileName);
+    private void writeToFile(String report, String toFileName) {
+        File file = new File(toFileName);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             file.createNewFile();
             writer.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write to the file " + fileName, e);
+            throw new RuntimeException("Can't write to the file " + toFileName, e);
         }
     }
 }
