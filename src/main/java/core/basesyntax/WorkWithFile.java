@@ -6,61 +6,63 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.List;
 
 public class WorkWithFile {
+    private static final int OPERATION_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
+    private static final String BUY_OPERATION = "buy";
+    private static final String SUPPLY_OPERATION = "supply";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        File outputFile = new File(toFileName);
+        List<String> dataFromFile = readFromFile(fromFileName);
+        int[] statistic = countStatistic(dataFromFile);
+        String report = prepareReport(statistic);
         try {
-            ArrayList<String> result = readFromFile(fromFileName);
-            int[] finalResult = countStatistic(result);
-            StringBuilder outputResult = createStatistic(finalResult);
-            outputFile.createNewFile();
-            Files.write(outputFile.toPath(), outputResult.toString().getBytes());
-
+            Files.write(new File(toFileName).toPath(), report.getBytes());
         } catch (IOException e) {
-            throw new RuntimeException("File not found");
+            throw new RuntimeException("Can't write to file: " + toFileName, e);
         }
     }
 
-    public ArrayList<String> readFromFile(String file) {
-        try {
-            BufferedReader fileByLine = new BufferedReader(new FileReader(file));
-            String lines = fileByLine.readLine();
-            ArrayList<String> result = new ArrayList<>();
-            while (lines != null) {
-                result.add(lines);
-                lines = fileByLine.readLine();
+    public List<String> readFromFile(String fileName) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            String line = reader.readLine();
+            List<String> data = new ArrayList<>();
+            while (line != null) {
+                data.add(line);
+                line = reader.readLine();
             }
-            return result;
+            return data;
         } catch (IOException e) {
-            throw new RuntimeException("File not found", e);
+            throw new RuntimeException("Can't read from file: " + fileName, e);
         }
     }
 
-    public int[] countStatistic(ArrayList<String> result) {
-        int[] buySupply = new int[2];
-        String[] cutLine;
-
-        for (int i = 0; i < result.size();i++) {
-            cutLine = result.get(i).split(",");
-            if (cutLine[0].equals("buy")) {
-                buySupply[0] = buySupply[0] + Integer.parseInt(cutLine[1]);
+    public int[] countStatistic(List<String> data) {
+        int[] statistic = new int[2];
+        String[] splittedLine;
+        for (String line : data) {
+            splittedLine = line.split(",");
+            if (splittedLine[OPERATION_INDEX].equals(BUY_OPERATION)) {
+                statistic[0] += Integer.parseInt(splittedLine[AMOUNT_INDEX]);
             } else {
-                buySupply[1] = buySupply[1] + Integer.parseInt(cutLine[1]);
+                statistic[1] += Integer.parseInt(splittedLine[AMOUNT_INDEX]);
             }
         }
-        return buySupply;
+        return statistic;
     }
 
-    public StringBuilder createStatistic(int[] buySupply) {
-        StringBuilder outputResult = new StringBuilder();
-
-        outputResult.append("supply").append(",").append(buySupply[1])
+    public String prepareReport(int[] statistic) {
+        StringBuilder builder = new StringBuilder();
+        int totalSupply = statistic[1];
+        int totalBuy = statistic[0];
+        int result = totalSupply - totalBuy;
+        builder.append(SUPPLY_OPERATION).append(",").append(totalSupply)
                 .append(System.lineSeparator())
-                .append("buy").append(",").append(buySupply[0])
+                .append(BUY_OPERATION).append(",").append(totalBuy)
                 .append(System.lineSeparator())
-                .append("result,").append(buySupply[1] - buySupply[0]);
-        return outputResult;
+                .append("result,").append(result);
+        return builder.toString();
     }
 }
