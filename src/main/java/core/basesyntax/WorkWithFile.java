@@ -26,7 +26,7 @@ public class WorkWithFile {
         writeToFile(toFileName, supply, buy);
     }
 
-    private static List<String> readFileToList(String fromFileName) {
+    private List<String> readFileToList(String fromFileName) {
         File fromFile = new File(fromFileName);
         List<String> list = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFile))) {
@@ -41,7 +41,7 @@ public class WorkWithFile {
         return list;
     }
 
-    private static void writeToFile(String toFileName, int supply, int buy) {
+    private void writeToFile(String toFileName, int supply, int buy) {
         File toFile = new File(toFileName);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFile))) {
             writer.write("supply," + supply + System.lineSeparator());
