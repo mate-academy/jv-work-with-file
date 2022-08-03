@@ -14,10 +14,8 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         String information = getInfoFromFile(fromFileName);
         String[] delimitedInfo = information.split(" ");
-        int supply = countSupply(delimitedInfo);
-        int buy = countBuy(delimitedInfo);
-        int result = supply - buy;
-        writeToFile(toFileName, supply, buy, result);
+        String countedAmount = getCountedAmountAsString(delimitedInfo);
+        writeToFile(toFileName, countedAmount);
     }
 
     private String getInfoFromFile(String fileName) {
@@ -25,44 +23,44 @@ public class WorkWithFile {
         try {
             informationList = Files.readAllLines(new File(fileName).toPath());
         } catch (IOException e) {
-            throw new RuntimeException("Cannot read the file", e);
+            throw new RuntimeException("Cannot read the file " + fileName, e);
         }
         StringBuilder builder = new StringBuilder();
-        for (String s : informationList) {
-            builder.append(s).append(" ");
+        for (String rowWithInfo : informationList) {
+            builder.append(rowWithInfo).append(" ");
         }
         return builder.toString();
     }
 
-    private void writeToFile(String toFileName, int supply, int buy, int result) {
+    private void writeToFile(String toFileName, String content) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write("supply," + supply + System.lineSeparator());
-            bufferedWriter.write("buy," + buy + System.lineSeparator());
-            bufferedWriter.write("result," + result);
+            bufferedWriter.write(content);
         } catch (IOException e) {
-            throw new RuntimeException("Cannot write information into a file", e);
+            throw new RuntimeException("Cannot write information into the file " + toFileName, e);
         }
     }
 
-    private int countSupply(String[] delimitedInfo) {
-        int supply = 0;
-        for (String rowInfo : delimitedInfo) {
-            String[] delimitedRow = rowInfo.split(",");
-            if (delimitedRow[0].equals(SUPPLY_OPERATION)) {
-                supply += Integer.parseInt(delimitedRow[1]);
-            }
-        }
-        return supply;
-    }
-
-    private int countBuy(String[] delimitedInfo) {
+    private String getCountedAmountAsString(String[] delimitedInfo) {
         int buy = 0;
+        int supply = 0;
+        int result;
         for (String rowInfo : delimitedInfo) {
             String[] delimitedRow = rowInfo.split(",");
             if (delimitedRow[0].equals(BUY_OPERATION)) {
                 buy += Integer.parseInt(delimitedRow[1]);
+            } else {
+                supply += Integer.parseInt(delimitedRow[1]);
             }
         }
-        return buy;
+        result = supply - buy;
+        return getAmountToString(supply, buy, result);
+    }
+
+    private String getAmountToString(int supply, int buy, int result) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("supply,").append(supply).append(System.lineSeparator());
+        builder.append("buy,").append(buy).append(System.lineSeparator());
+        builder.append("result,").append(result);
+        return builder.toString();
     }
 }
