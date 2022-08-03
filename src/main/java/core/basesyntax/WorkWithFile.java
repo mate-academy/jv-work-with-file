@@ -7,46 +7,45 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.List;
 
 public class WorkWithFile {
+    private static final int FIRST_ELEMENT_IN_LINE = 0;
+    private static final int SECOND_ELEMENT_IN_LINE = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-
-        File before = new File(fromFileName);
-        String beforePath = before.getPath();
-        File result = new File(toFileName);
-
+        File inputFile = new File(fromFileName);
+        File outputFile = new File(toFileName);
         int supply = 0;
         int buy = 0;
 
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(before))) {
-            List<String> strings = Files.readAllLines(Path.of(beforePath));
-            for (String str : strings) {
-                String line = bufferedReader.readLine();
-                String[] lineElements = line.split(",");
-
-                if ("supply".equals(lineElements[0])) {
-                    supply += Integer.parseInt(lineElements[1]);
-                }
-                if ("buy".equals(lineElements[0])) {
-                    buy += Integer.parseInt(lineElements[1]);
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(inputFile))) {
+            String line;
+            String[] lineElements;
+            while ((line = bufferedReader.readLine()) != null) {
+                lineElements = line.split(",");
+                switch (lineElements[FIRST_ELEMENT_IN_LINE]) {
+                    case "supply":
+                        supply += Integer.parseInt(lineElements[SECOND_ELEMENT_IN_LINE]);
+                        break;
+                    case "buy":
+                        buy += Integer.parseInt(lineElements[SECOND_ELEMENT_IN_LINE]);
+                        break;
+                    default:
+                        throw new RuntimeException("Input file not valid");
                 }
             }
         } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("FileReader has problem to find file " + fromFileName, e);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("BufferedReader has problem to read line in file " + fromFileName, e);
         }
 
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(result));) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(outputFile))) {
             bufferedWriter.write("supply," + supply);
             bufferedWriter.write(System.lineSeparator() + "buy," + buy);
             bufferedWriter.write(System.lineSeparator() + "result," + (supply - buy));
         } catch (IOException e) {
-            throw new RuntimeException("We can not write file", e);
+            throw new RuntimeException("We can not write file " + toFileName, e);
         }
     }
 }
