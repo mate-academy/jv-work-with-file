@@ -20,9 +20,6 @@ public class WorkWithFile {
     private String readFile(String fromFileName) {
         File inputFile = new File(fromFileName);
         StringBuilder builder = new StringBuilder();
-        int supplyValue = 0;
-        int buyValue = 0;
-        String[] data;
         try (BufferedReader reader = new BufferedReader(new FileReader(inputFile))) {
             String value = reader.readLine();
             while (value != null) {
