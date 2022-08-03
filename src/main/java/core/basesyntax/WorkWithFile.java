@@ -11,7 +11,6 @@ public class WorkWithFile {
     private static final int SUPPLY_BUY_INDEX = 0;
     private static final int AMOUNT_INDEX = 1;
     private static final String SPLIT_REGEX = ",";
-    private StringBuilder builder = new StringBuilder();
 
     public void getStatistic(String fromFileName, String toFileName) {
         writeToFile(toFileName, readFromFile(fromFileName));
@@ -27,7 +26,6 @@ public class WorkWithFile {
             String value = reader.readLine();
 
             while (value != null) {
-                builder.append(value);
                 String[] splittedLine = value.split(SPLIT_REGEX);
                 if (splittedLine[SUPPLY_BUY_INDEX].equals("supply")) {
                     supply += Integer.parseInt(splittedLine[AMOUNT_INDEX]);
