@@ -7,7 +7,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class WorkWithFile {
-
     private static final int SUPPLY_INDEX = 0;
     private static final int BUY_INDEX = 1;
     private static final String BUY = "buy";
