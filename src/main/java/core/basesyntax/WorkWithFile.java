@@ -21,9 +21,7 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read from file" + fromFileName, e);
         }
-        fileContent = fileContent.replace("\n", LINE_SPLITTER)
-                .replace("\r", "")
-                .replaceAll(".$", "");
+        fileContent = replaceSymbols(fileContent);
         String[] appleArray = fileContent.split(LINE_SPLITTER);
         String[] categoriesArray = {SUPPLY_ROW, BUY_ROW};
         int supplyAmount = 0;
@@ -39,31 +37,40 @@ public class WorkWithFile {
         }
 
         int resultAmount = supplyAmount - buyAmount;
-        StringBuilder reportStringbuilder = new StringBuilder();
-        reportStringbuilder.append(getsupplyRowForReport(supplyAmount))
-                .append(getbuyRowForReport(buyAmount))
-                .append(getresultRowForReport(resultAmount));
+        StringBuilder reportStringBuilder = new StringBuilder();
+        reportStringBuilder.append(getSupplyRowForReport(supplyAmount))
+                .append(getBuyRowForReport(buyAmount))
+                .append(getResultRowForReport(resultAmount));
 
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write(String.valueOf(reportStringbuilder));
-        } catch (Exception e) {
+            bufferedWriter.write(reportToString(reportStringBuilder));
+        } catch (IOException e) {
             throw new RuntimeException("Can't write to file" + toFileName, e);
         }
     }
 
-    public String getsupplyRowForReport(int supplyAmount) {
+    public String replaceSymbols(String fileContent) {
+        return fileContent.replace("\n", LINE_SPLITTER)
+                .replace("\r", "")
+                .replaceAll(".$", "");
+    }
+
+    public String getSupplyRowForReport(int supplyAmount) {
         return SUPPLY_ROW + LINE_SPLITTER
                 + supplyAmount + System.lineSeparator();
     }
 
-    public String getbuyRowForReport(int buyAmount) {
+    public String getBuyRowForReport(int buyAmount) {
         return BUY_ROW + LINE_SPLITTER
                 + buyAmount + System.lineSeparator();
     }
 
-    public String getresultRowForReport(int resultAmount) {
+    public String getResultRowForReport(int resultAmount) {
         return RESULT_ROW + LINE_SPLITTER
                 + resultAmount;
     }
 
+    public String reportToString(StringBuilder reportStringBuilder) {
+        return String.valueOf(reportStringBuilder);
+    }
 }
