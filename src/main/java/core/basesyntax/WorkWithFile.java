@@ -10,6 +10,7 @@ import java.util.Arrays;
 public class WorkWithFile {
     private static final String BUY = "buy";
     private static final String SUPPLY = "supply";
+    private static final char COMA = ',';
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] dividedStrings = readFromFile(fromFileName);
@@ -39,7 +40,7 @@ public class WorkWithFile {
         int buyWord = 0;
         int supplyWord = 0;
         for (int i = 0; i < dividedString.length; i++) {
-            int comaPlace = dividedString[i].indexOf(',');
+            int comaPlace = dividedString[i].indexOf(COMA);
             String cutWord = dividedString[i].substring(0, comaPlace);
             String cutNumber = dividedString[i].substring(comaPlace
                     + 1, dividedString[i].length() - 1);
