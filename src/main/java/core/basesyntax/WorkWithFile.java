@@ -31,7 +31,11 @@ public class WorkWithFile {
             } else {
                 secondSum = replacedNumbValue;
             }
-            stringBuilder.append(replacedWordValue).append(",").append(replacedNumbValue).append("\n").append(" ");
+            stringBuilder.append(replacedWordValue)
+                    .append(",")
+                    .append(replacedNumbValue)
+                    .append("\n")
+                    .append(" ");
             replacedNumbValue = 0;
         }
         int temporarySum = firstSum - secondSum;
