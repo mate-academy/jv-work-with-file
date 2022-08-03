@@ -8,21 +8,19 @@ import java.io.FileWriter;
 public class WorkWithFile {
     private static final int SUPPLY_INDEX = 0;
     private static final int BUY_INDEX = 1;
-    private static final String SPLIT_REGEX = ",";
+    private static final String COMMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         int[] sumSupplyAndBuy = new int[2];
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String line = reader.readLine();
             while (line != null) {
-                String[] lineSplit = line.split(SPLIT_REGEX);
-                int quantity = Integer.parseInt(lineSplit[1]);
-                if (lineSplit[0].equals("supply")) {
+                String[] splittedLine = line.split(COMMA);
+                int quantity = Integer.parseInt(splittedLine[1]);
+                if (splittedLine[0].equals("supply")) {
                     sumSupplyAndBuy[SUPPLY_INDEX] += quantity;
                 } else {
-                    if (lineSplit[0].equals("buy")) {
-                        sumSupplyAndBuy[BUY_INDEX] += quantity;
-                    }
+                    sumSupplyAndBuy[BUY_INDEX] += quantity;
                 }
                 line = reader.readLine();
             }
@@ -40,14 +38,14 @@ public class WorkWithFile {
         }
     }
 
-    private String createReport(int[] resultSupplyAndBuy) {
+    private String createReport(int[] reportData) {
         return "supply,"
-                + resultSupplyAndBuy[SUPPLY_INDEX]
+                + reportData[SUPPLY_INDEX]
                 + System.lineSeparator()
                 + "buy,"
-                + resultSupplyAndBuy[BUY_INDEX]
+                + reportData[BUY_INDEX]
                 + System.lineSeparator()
                 + "result,"
-                + (resultSupplyAndBuy[SUPPLY_INDEX] - resultSupplyAndBuy[BUY_INDEX]);
+                + (reportData[SUPPLY_INDEX] - reportData[BUY_INDEX]);
     }
 }
