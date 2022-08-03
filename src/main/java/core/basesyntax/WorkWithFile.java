@@ -15,28 +15,43 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         File fileReader = new File(fromFileName);
+        int[] buyAndSupply = new int[2];
+        buyAndSupply[ZERO] = ZERO;
+        buyAndSupply[ONE] = ZERO;
+        buyAndSupply = getSupplyAndBuyFromFile(buyAndSupply, fileReader);
         File fileWriter = new File(toFileName);
+        setSupplyAndBuytoFile(buyAndSupply[ZERO], buyAndSupply[ONE], fileWriter);
+    }
+
+    private static int[] getSupplyAndBuyFromFile(int[] buyAndSupply, File fileReader) {
         try {
             List<String> lines = Files.readAllLines(fileReader.toPath());
-            int buy = ZERO;
-            int supply = ZERO;
             for (String line : lines) {
-                switch (line.substring(ZERO, line.indexOf(STRING_СOMA))) {
+                String[] split = line.split(",");
+                switch (split[ZERO]) {
                     case STRING_SUPPLY :
-                        supply += Integer.parseInt(line.substring(line.indexOf(STRING_СOMA) + ONE));
+                        buyAndSupply[ZERO] += Integer.parseInt(split[ONE]);
                         break;
                     case STRING_BUY :
-                        buy += Integer.parseInt(line.substring(line.indexOf(STRING_СOMA) + ONE));
+                        buyAndSupply[ONE] += Integer.parseInt(split[ONE]);
                         break;
                     default:
                 }
             }
+        } catch (IOException e) {
+            throw new RuntimeException("Can't read data from the file", e);
+        }
+        return buyAndSupply;
+    }
+
+    private void setSupplyAndBuytoFile(Integer supply, Integer buy, File fileWriter) {
+        try {
             Files.write(fileWriter.toPath(), Collections.singleton(
                     STRING_SUPPLY + STRING_СOMA + supply
-                    + System.lineSeparator() + STRING_BUY + STRING_СOMA + buy
-                    + System.lineSeparator() + "result" + STRING_СOMA + (supply - buy)));
+                            + System.lineSeparator() + STRING_BUY + STRING_СOMA + buy
+                            + System.lineSeparator() + "result" + STRING_СOMA + (supply - buy)));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can't write data from the file", e);
         }
     }
 }
