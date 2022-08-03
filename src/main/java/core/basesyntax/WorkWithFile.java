@@ -6,21 +6,15 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 
 public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         File outputFile = new File(toFileName);
         try {
-            ArrayList<String> result = addLines(fromFileName);
-            HashSet<String> uniqueNames = getUniqueNames(fromFileName);
-            HashMap<String, Integer> names = putNames(uniqueNames);
-            HashMap<String, Integer> namesStatistic = countStatistic(names, result);
-            StringBuilder outputResult = createStatistic(namesStatistic);
-
+            ArrayList<String> result = readFromFile(fromFileName);
+            int[] finalResult = countStatistic(result);
+            StringBuilder outputResult = createStatistic(finalResult);
             outputFile.createNewFile();
             Files.write(outputFile.toPath(), outputResult.toString().getBytes());
 
@@ -29,7 +23,7 @@ public class WorkWithFile {
         }
     }
 
-    public ArrayList<String> addLines(String file) {
+    public ArrayList<String> readFromFile(String file) {
         try {
             BufferedReader fileByLine = new BufferedReader(new FileReader(file));
             String lines = fileByLine.readLine();
@@ -40,69 +34,33 @@ public class WorkWithFile {
             }
             return result;
         } catch (IOException e) {
-            throw new RuntimeException("File not found");
+            throw new RuntimeException("File not found", e);
         }
     }
 
-    public HashSet<String> getUniqueNames(String file) {
-        try {
-            BufferedReader fileByLine = new BufferedReader(new FileReader(file));
-            String lines = fileByLine.readLine();
-            HashSet<String> uniqueNames = new HashSet<>();
-            String[] cutLine;
-            while (lines != null) {
-                cutLine = lines.split(",");
-                uniqueNames.add(cutLine[0]);
-                lines = fileByLine.readLine();
-            }
-            return uniqueNames;
-        } catch (IOException e) {
-            throw new RuntimeException("File not found");
-        }
-    }
-
-    public HashMap<String, Integer> putNames(HashSet<String> uniqueNames) {
-        HashMap<String, Integer> names = new HashMap<>();
-        Iterator<String> iteration = uniqueNames.iterator();
-
-        while (iteration.hasNext()) {
-            names.put(iteration.next(),0);
-        }
-        return names;
-    }
-
-    public HashMap<String, Integer> countStatistic(HashMap<String, Integer> names,
-             ArrayList<String> result) {
+    public int[] countStatistic(ArrayList<String> result) {
+        int[] buySupply = new int[2];
         String[] cutLine;
-        int buy = 0;
-        int supply = 0;
 
         for (int i = 0; i < result.size();i++) {
             cutLine = result.get(i).split(",");
-            if (names.containsKey(cutLine[0])) {
-                names.put(cutLine[0], names.get(cutLine[0]) + Integer.parseInt(cutLine[1]));
+            if (cutLine[0].equals("buy")) {
+                buySupply[0] = buySupply[0] + Integer.parseInt(cutLine[1]);
+            } else {
+                buySupply[1] = buySupply[1] + Integer.parseInt(cutLine[1]);
             }
         }
-
-        for (String key: names.keySet()) {
-            if (key.equals("supply")) {
-                supply = names.get(key);
-            }
-            if (key.equals("buy")) {
-                buy = names.get(key);
-            }
-        }
-        return names;
+        return buySupply;
     }
 
-    public StringBuilder createStatistic(HashMap<String, Integer> namesStatistic) {
+    public StringBuilder createStatistic(int[] buySupply) {
         StringBuilder outputResult = new StringBuilder();
 
-        outputResult.append("supply").append(",").append(namesStatistic.get("supply"))
+        outputResult.append("supply").append(",").append(buySupply[1])
                 .append(System.lineSeparator())
-                .append("buy").append(",").append(namesStatistic.get("buy"))
+                .append("buy").append(",").append(buySupply[0])
                 .append(System.lineSeparator())
-                .append("result,").append(namesStatistic.get("supply") - namesStatistic.get("buy"));
+                .append("result,").append(buySupply[1] - buySupply[0]);
         return outputResult;
     }
 }
