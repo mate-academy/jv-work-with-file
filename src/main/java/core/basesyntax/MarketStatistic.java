@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 public class MarketStatistic {
-
     private int buyCount;
     private int supplyCount;
 
