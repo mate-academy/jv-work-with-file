@@ -10,14 +10,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WorkWithFile {
+    private static final String COMMA_DELIMITER = "\\,";
+    private static final String SUPPLY_NAME = "supply";
+    private static final byte CATEGORY_NAME_INDEX = 0;
+    private static final byte AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         int supply = 0;
         int buy = 0;
         for (String string : readFileToList(fromFileName)) {
-            String[] stringArray = string.split("\\,");
-            int amount = Integer.parseInt(stringArray[1]);
-            if (stringArray[0].equals("supply")) {
+            String[] stringArray = string.split(COMMA_DELIMITER);
+            String categoryName = stringArray[CATEGORY_NAME_INDEX];
+            int amount = Integer.parseInt(stringArray[AMOUNT_INDEX]);
+            if (categoryName.equals(SUPPLY_NAME)) {
                 supply += amount;
             } else {
                 buy += amount;
