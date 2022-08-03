@@ -12,7 +12,7 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         String textFromFile = readDataFromFile(fromFileName);
         int[] array = calculateResultForDay(textFromFile);
-        String result = toStringForNewFile(array);
+        String result = createReport(array);
         writeToFile(toFileName, result);
     }
 
@@ -26,7 +26,6 @@ public class WorkWithFile {
             }
         } catch (FileNotFoundException e) {
             throw new RuntimeException("Can't find a file " + fromFileName + e);
-
         } catch (IOException e) {
             throw new RuntimeException("Can't read file " + fromFileName + e);
         }
@@ -35,25 +34,24 @@ public class WorkWithFile {
 
     private int[] calculateResultForDay(String text) {
         final String supply_condition = "supply";
-        final String
-                buy_condition = "buy";
+        final String buy_condition = "buy";
         final String regex_condition = "\\D";
         String[] allLines = text.split(System.lineSeparator());
         int supplySum = 0;
         int buySum = 0;
         for (String line : allLines) {
             allLines = line.split(",");
-            if (allLines [0].contains(supply_condition)) {
+            if (allLines[0].contains(supply_condition)) {
                 supplySum += Integer.parseInt(line.replaceAll(regex_condition, ""));
             }
-            if (allLines [0].contains(buy_condition)) {
+            if (allLines[0].contains(buy_condition)) {
                 buySum += Integer.parseInt(line.replaceAll(regex_condition, ""));
             }
         }
         return new int[]{buySum, supplySum, supplySum - buySum};
     }
 
-    private String toStringForNewFile(int[] results) {
+    private String createReport(int[] results) {
         StringBuilder stringBuilder = new StringBuilder();
         return stringBuilder.append("supply,").append(results[1]).append(System.lineSeparator())
                 .append("buy,").append(results[0]).append(System.lineSeparator())
