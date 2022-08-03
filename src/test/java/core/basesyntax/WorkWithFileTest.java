@@ -27,8 +27,8 @@ public class WorkWithFileTest {
     }
 
     @Test
-    public void getStatAboutApple() {
-        workWithFile.getStat("apple.csv", APPLE_RESULT_FILE);
+    public void getStatisticAboutApple() {
+        workWithFile.getStatistic("apple.csv", APPLE_RESULT_FILE);
 
         String actualResult = readFromFile(APPLE_RESULT_FILE).trim();
         String expectedResult = "supply,188" + System.lineSeparator()
@@ -38,8 +38,8 @@ public class WorkWithFileTest {
     }
 
     @Test
-    public void getStatAboutOrange() {
-        workWithFile.getStat("orange.csv", ORANGE_RESULT_FILE);
+    public void getStatisticAboutOrange() {
+        workWithFile.getStatistic("orange.csv", ORANGE_RESULT_FILE);
 
         String actualResult = readFromFile(ORANGE_RESULT_FILE).trim();
         String expectedResult = "supply,295" + System.lineSeparator()
@@ -49,8 +49,8 @@ public class WorkWithFileTest {
     }
 
     @Test
-    public void getStatAboutGrape() {
-        workWithFile.getStat("grape.csv", GRAPE_RESULT_FILE);
+    public void getStatisticAboutGrape() {
+        workWithFile.getStatistic("grape.csv", GRAPE_RESULT_FILE);
 
         String actualResult = readFromFile(GRAPE_RESULT_FILE).trim();
         String expectedResult = "supply,352" + System.lineSeparator()
@@ -60,8 +60,8 @@ public class WorkWithFileTest {
     }
 
     @Test
-    public void getStatAboutBanana() {
-        workWithFile.getStat("banana.csv", BANANA_RESULT_FILE);
+    public void getStatisticAboutBanana() {
+        workWithFile.getStatistic("banana.csv", BANANA_RESULT_FILE);
 
         String actualResult = readFromFile(BANANA_RESULT_FILE).trim();
         String expectedResult = "supply,491" + System.lineSeparator()

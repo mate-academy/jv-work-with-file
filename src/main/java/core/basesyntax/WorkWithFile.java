@@ -12,10 +12,10 @@ public class WorkWithFile {
     private static final String RESULT = "result";
     private static final String COMA = ",";
 
-    public void getStat(String fromFileName, String toFileName) {
-        String[] lines = readFileByLines(fromFileName);
+    public void getStatistic(String fromFileName, String toFileName) {
+        String[] lines = readFile(fromFileName);
         String statistic = countStatistic(lines);
-        writeStatToFile(toFileName,statistic);
+        writeStatToFile(toFileName, statistic);
     }
 
     private void writeStatToFile(String toFileName, String statistic) {
@@ -47,7 +47,7 @@ public class WorkWithFile {
                 .toString();
     }
 
-    private String[] readFileByLines(String fileName) {
+    private String[] readFile(String fileName) {
         StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
             String line = bufferedReader.readLine();
