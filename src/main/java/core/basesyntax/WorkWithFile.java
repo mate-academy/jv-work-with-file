@@ -14,13 +14,13 @@ public class WorkWithFile {
     private static final String RESULT = "result";
     private static final String DELIMITER = ",";
 
-    public static void readFromFile(String fromFileName,
+    private void readFromFile(String fromFileName,
                                     StringBuilder builder) {
         File file = new File(fromFileName);
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
             String value = bufferedReader.readLine();
             while (value != null) {
-                builder.append(value).append(",");
+                builder.append(value).append(DELIMITER);
                 value = bufferedReader.readLine();
             }
         } catch (FileNotFoundException e) {
@@ -30,7 +30,28 @@ public class WorkWithFile {
         }
     }
 
-    public static void getStatistic(String fromFileName, String toFileName) {
+    private String [] createReport(int sumOfSupply, int sumOfBuy, int result) {
+        String[] array = new String[3];
+        array[0] = SUPPLY + DELIMITER + sumOfSupply;
+        array[1] = BUY + DELIMITER + sumOfBuy;
+        array[2] = RESULT + DELIMITER + result;
+        return array;
+    }
+
+    private void write(String toFileName, int sumOfSupply, int sumOfBuy, int result) {
+        File outputFile = new File(toFileName);
+        String[] array = createReport(sumOfSupply, sumOfBuy, result);
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(outputFile,
+                true))) {
+            for (String element : array) {
+                bufferedWriter.write(element + System.lineSeparator());
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Can not find the file" + outputFile, e);
+        }
+    }
+
+    public void getStatistic(String fromFileName, String toFileName) {
         int sumOfBuy = 0;
         int sumOfSupply = 0;
         int result = 0;
@@ -49,31 +70,4 @@ public class WorkWithFile {
         }
         write(toFileName,sumOfSupply,sumOfBuy,result);
     }
-
-    public static String [] createReport(int sumOfSupply, int sumOfBuy, int result) {
-        String[] array = new String[3];
-        array[0] = SUPPLY + DELIMITER + sumOfSupply;
-        array[1] = BUY + DELIMITER + sumOfBuy;
-        array[2] = RESULT + DELIMITER + result;
-        return array;
-    }
-
-    public static void write(String toFileName, int sumOfSupply, int sumOfBuy, int result) {
-        File outputFile = new File(toFileName);
-        String[] array = createReport(sumOfSupply, sumOfBuy, result);
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(outputFile,
-                true))) {
-            for (String element : array) {
-                bufferedWriter.write(element + System.lineSeparator());
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("Can not find the file" + outputFile, e);
-        }
-    }
 }
-
-
-
-
-
-
