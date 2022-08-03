@@ -10,13 +10,12 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final String REGEX = "[\\D]";
 
-    public static void getStatistic(String fromFileName, String toFileName) {
+    public void getStatistic(String fromFileName, String toFileName) {
         String supplyData = readFromFile(fromFileName);
-        String[] resultData = getTotalSupplyReport(supplyData).split(" ");
-        writeToFile(toFileName, resultData);
+        writeToFile(toFileName,getTotalSupplyReport(supplyData).split(" "));
     }
 
-    private static void writeToFile(String toFileName, String[] resultData) {
+    private void writeToFile(String toFileName, String[] resultData) {
         File file = new File(toFileName);
 
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, true))) {
@@ -28,7 +27,7 @@ public class WorkWithFile {
         }
     }
 
-    private static String readFromFile(String fileName) {
+    private String readFromFile(String fileName) {
         File file = new File(fileName);
         StringBuilder stringBuilder = new StringBuilder();
 
@@ -44,11 +43,11 @@ public class WorkWithFile {
         return stringBuilder.toString();
     }
 
-    private static String getTotalSupplyReport(String fromFileName) {
+    private String getTotalSupplyReport(String supplyReport) {
         int countBuy = 0;
         int countSupply = 0;
 
-        String[] lines = fromFileName.split(System.lineSeparator());
+        String[] lines = supplyReport.split(System.lineSeparator());
         for (String line : lines) {
             if (line.contains("buy")) {
                 countBuy += Integer.parseInt(line.replaceAll(REGEX, ""));
