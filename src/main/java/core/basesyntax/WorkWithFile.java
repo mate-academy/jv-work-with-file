@@ -25,32 +25,23 @@ public class WorkWithFile {
     private String readDataFromFile(String fromFileName) {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String value = null;
-            try {
-                value = bufferedReader.readLine();
-            } catch (IOException e) {
-                throw new RuntimeException("Can't read file " + e);
-            }
+            value = bufferedReader.readLine();
             while (value != null) {
                 stringBuilder.append(value).append(System.lineSeparator());
-                try {
-                    value = bufferedReader.readLine();
-                } catch (IOException e) {
-                    throw new RuntimeException("Can't write file in StringBuilder " + e);
-                }
+                value = bufferedReader.readLine();
             }
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("Can't find a file " + e);
+            throw new RuntimeException("Can't find a file " + fromFileName + e);
 
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file " + e);
+            throw new RuntimeException("Can't read file " + fromFileName + e);
         }
         return stringBuilder.toString();
     }
 
-    public int[] calculateResultForDay(String fromFileNam) {
-        int result = 0;
+    public int[] calculateResultForDay(String stringFromFile) {
         int numberFromLine = 0;
-        String[] sortedArray = fromFileNam.split(System.lineSeparator());
+        String[] sortedArray = stringFromFile.split(System.lineSeparator());
         int supplySum = 0;
         int buySum = 0;
         for (String line : sortedArray) {
@@ -64,9 +55,8 @@ public class WorkWithFile {
             if (sortedArray[0].contains(BUY_CONDITION)) {
                 buySum += numberFromLine;
             }
-            result = supplySum - buySum;
         }
-        return new int[]{buySum, supplySum, result};
+        return new int[]{buySum, supplySum, supplySum - buySum};
     }
 
     public String toStringForNewFile(int[] results) {
@@ -81,12 +71,12 @@ public class WorkWithFile {
         try {
             file.createNewFile();
         } catch (IOException e) {
-            throw new RuntimeException("Can't create file " + e);
+            throw new RuntimeException("Can't create file " + toFileName + e);
         }
         try {
             Files.write(file.toPath(), string.getBytes(), StandardOpenOption.APPEND);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write to file " + e);
+            throw new RuntimeException("Can't write to file " + toFileName + e);
         }
     }
 }
