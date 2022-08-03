@@ -9,9 +9,9 @@ import java.io.IOException;
 public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
-        readFile(fromFileName);
-        prepareReport(readFile(fromFileName));
-        writeToFile(prepareReport(readFile(fromFileName)), toFileName);
+        String readFile = readFile(fromFileName);
+        String[] prepareReport = prepareReport(readFile);
+        writeToFile(prepareReport, toFileName);
     }
 
     private String readFile(String fromFileName) {
@@ -29,10 +29,10 @@ public class WorkWithFile {
         }
     }
 
-    private void writeToFile(String[] results, String toFileName) {
+    private void writeToFile(String[] prepareReport, String toFileName) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName,
                 true))) {
-            for (String res : results) {
+            for (String res : prepareReport) {
                 bufferedWriter.write(res + System.lineSeparator());
             }
         } catch (IOException e) {
