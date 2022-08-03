@@ -13,10 +13,10 @@ public class WorkWithFile {
     private static final String RESULT = "result";
     private static final String SEPARATOR = ",";
     private static final String SUPPLY = "supply";
-    private int buySum = 0;
-    private int supplySum = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
+        int buySum = 0;
+        int supplySum = 0;
         String[] data = readFromFile(fromFileName).replace(System.lineSeparator(), SEPARATOR)
                 .split(SEPARATOR);
         String[] categories = {SUPPLY, BUY};
@@ -28,12 +28,12 @@ public class WorkWithFile {
                 supplySum += Integer.parseInt(data[i + 1]);
             }
         }
-        writeToFile(toFileName);
+        writeToFile(toFileName, createReport(supplySum, buySum));
     }
 
-    private String writeToFile(String toFileName) {
+    private String writeToFile(String toFileName, String report) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            writer.write(String.valueOf(createReport()));
+            writer.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file" + toFileName, e);
         }
@@ -50,11 +50,11 @@ public class WorkWithFile {
         return fileData;
     }
 
-    private StringBuilder createReport() {
+    private String createReport(int supplySum, int buySum) {
         StringBuilder report = new StringBuilder();
         return report.append(SUPPLY).append(SEPARATOR).append(supplySum)
                 .append(System.lineSeparator())
                 .append(BUY).append(SEPARATOR).append(buySum).append(System.lineSeparator())
-                .append(RESULT).append(SEPARATOR).append((supplySum - buySum));
+                .append(RESULT).append(SEPARATOR).append((supplySum - buySum)).toString();
     }
 }
