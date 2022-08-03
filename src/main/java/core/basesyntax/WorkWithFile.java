@@ -47,7 +47,7 @@ public class WorkWithFile {
             writer.newLine();
             writer.write(RESULT_KEY + COMMA + (data[SUPPLY_INDEX] - data[BUY_INDEX]));
         } catch (IOException e) {
-            throw new RuntimeException("Can't write to file " + toFileName);
+            throw new RuntimeException("Can't write to file " + toFileName, e);
         }
     }
 }
