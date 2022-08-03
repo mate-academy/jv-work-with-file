@@ -40,11 +40,11 @@ public class WorkWithFile {
     }
 
     private int[] calculateResultForDay(String text) {
-        String[] allLines  = text.split(System.lineSeparator());
+        String[] allLines = text.split(System.lineSeparator());
         int supplySum = 0;
         int buySum = 0;
-        for (String line : allLines ) {
-            allLines  = line.split(",");
+        for (String line : allLines) {
+            allLines = line.split(",");
             if (allLines [0].contains(SUPPLY_CONDITION)) {
                 supplySum += Integer.parseInt(line.replaceAll(REGEX_CONDITION, ""));
             }
