@@ -39,7 +39,8 @@ public class WorkWithFile {
         int supplyCount = 0;
         int buyCount = 0;
         for (String statistic : listOfStatistic) {
-            int statisticNumber = Integer.parseInt(statistic.split(LINE_SPLIT_DELIMITED)[NUMBER_INDEX]);
+            int statisticNumber = Integer.parseInt(statistic
+                    .split(LINE_SPLIT_DELIMITED)[NUMBER_INDEX]);
             if (statistic.contains("supply")) {
                 supplyCount += statisticNumber;
             } else if (statistic.contains("buy")) {
