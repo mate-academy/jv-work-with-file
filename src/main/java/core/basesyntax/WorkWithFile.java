@@ -34,8 +34,7 @@ public class WorkWithFile {
             stringBuilder.append(replacedWordValue)
                     .append(",")
                     .append(replacedNumbValue)
-                    .append("\n")
-                    .append(" ");
+                    .append("\n").append(" ");
             replacedNumbValue = 0;
         }
         int temporarySum = firstSum - secondSum;
@@ -56,8 +55,7 @@ public class WorkWithFile {
 
     private String[] read(String fromFileName) {
         StringBuilder stringBuilder = new StringBuilder();
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             int value = bufferedReader.read();
             while (value != -1) {
                 stringBuilder.append((char) value);
