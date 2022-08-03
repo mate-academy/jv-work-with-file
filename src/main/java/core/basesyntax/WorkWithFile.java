@@ -14,7 +14,7 @@ public class WorkWithFile {
         try {
             strings = Files.readAllLines(file.toPath());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can't read file", e);
         }
         for (String line : strings) {
             int value = Integer.parseInt(line.substring(line.indexOf(",") + 1));
@@ -31,7 +31,7 @@ public class WorkWithFile {
         try {
             Files.write(newFile.toPath(), result.getBytes());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can't create file", e);
         }
     }
 }
