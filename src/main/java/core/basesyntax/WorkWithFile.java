@@ -11,13 +11,18 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final int FIRST_ELEMENT_IN_LINE = 0;
     private static final int SECOND_ELEMENT_IN_LINE = 1;
+    private int supply;
+    private int buy;
 
     public void getStatistic(String fromFileName, String toFileName) {
         File inputFile = new File(fromFileName);
         File outputFile = new File(toFileName);
-        int supply = 0;
-        int buy = 0;
 
+        readInputFile(inputFile);
+        writeInOutputFile(outputFile);
+    }
+
+    private void readInputFile(File inputFile) {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(inputFile))) {
             String line;
             String[] lineElements;
@@ -35,17 +40,21 @@ public class WorkWithFile {
                 }
             }
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("FileReader has problem to find file " + fromFileName, e);
+            throw new RuntimeException("FileReader has problem to find file "
+                    + inputFile.getName(), e);
         } catch (IOException e) {
-            throw new RuntimeException("BufferedReader has problem to read line in file " + fromFileName, e);
+            throw new RuntimeException("BufferedReader has problem to read line in file "
+                    + inputFile.getName(), e);
         }
+    }
 
+    private void writeInOutputFile(File outputFile) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(outputFile))) {
             bufferedWriter.write("supply," + supply);
             bufferedWriter.write(System.lineSeparator() + "buy," + buy);
             bufferedWriter.write(System.lineSeparator() + "result," + (supply - buy));
         } catch (IOException e) {
-            throw new RuntimeException("We can not write file " + toFileName, e);
+            throw new RuntimeException("We can not write file " + outputFile.getName(), e);
         }
     }
 }
