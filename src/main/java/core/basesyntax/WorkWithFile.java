@@ -14,8 +14,8 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
 
         String information = getInfoFromFile(fromFileName);
-        String[] split = information.split(" ");
-        String countedAmount = getCountedAmountAsString(split);
+        String[] lines = information.split(" ");
+        String countedAmount = calculateStatistic(lines);
         writeToFile(toFileName, countedAmount);
     }
 
@@ -41,12 +41,11 @@ public class WorkWithFile {
         }
     }
 
-    private String getCountedAmountAsString(String[] splitInfo) {
-
+    private String calculateStatistic(String[] lines) {
         int buy = 0;
         int supply = 0;
         int result;
-        for (String rowInfo : splitInfo) {
+        for (String rowInfo : lines) {
             String[] splitRow = rowInfo.split(",");
             if (splitRow[0].equals(BUY)) {
                 buy += Integer.parseInt(splitRow[1]);
@@ -55,15 +54,14 @@ public class WorkWithFile {
             }
         }
         result = supply - buy;
-        return getAmountToString(supply, buy, result);
+        return prepareReport(supply, buy, result);
     }
 
-    private String getAmountToString(int supply, int buy, int result) {
+    private String prepareReport(int supply, int buy, int result) {
         StringBuilder builder = new StringBuilder();
         builder.append("supply,").append(supply).append(System.lineSeparator());
         builder.append("buy,").append(buy).append(System.lineSeparator());
         builder.append("result,").append(result);
         return builder.toString();
-
     }
 }
