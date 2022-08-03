@@ -12,33 +12,33 @@ public class WorkWithFile {
     private static final String BUY = "buy";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String[] readValue = read(fromFileName);
+        String[] dataFromFile = read(fromFileName);
         StringBuilder stringBuilder = new StringBuilder();
         Map<String, Integer> map = new HashMap<>();
-        for (String s : readValue) {
-            String tempValue = s.substring(0, s.indexOf(","));
-            int tempNum = Integer.parseInt(s.substring(s.indexOf(",") + 1));
-            if (map.containsKey(tempValue)) {
-                Integer tempVal = map.get(tempValue);
-                map.replace(tempValue, tempVal + tempNum);
+        for (String s : dataFromFile) {
+            String operationType = s.substring(0, s.indexOf(","));
+            int amount = Integer.parseInt(s.substring(s.indexOf(",") + 1));
+            if (map.containsKey(operationType)) {
+                Integer oldAmount = map.get(operationType);
+                map.replace(operationType, oldAmount + amount);
             } else {
-                map.put(tempValue, tempNum);
+                map.put(operationType, amount);
             }
         }
-        Integer supplyNumValue = map.get(SUPPLY);
-        Integer buyNumValue = map.get(BUY);
+        Integer totalSupply = map.get(SUPPLY);
+        Integer totalBuy = map.get(BUY);
         stringBuilder.append(SUPPLY)
                 .append(",")
-                .append(supplyNumValue)
+                .append(totalSupply)
                 .append(System.lineSeparator())
                 .append(" ")
                 .append(BUY)
                 .append(",")
-                .append(buyNumValue)
+                .append(totalBuy)
                 .append(System.lineSeparator())
                 .append(" ")
                 .append("result,")
-                .append(supplyNumValue - buyNumValue);
+                .append(totalSupply - totalBuy);
         write(toFileName, stringBuilder.toString().split(" "));
     }
 
