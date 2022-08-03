@@ -10,21 +10,21 @@ import java.io.IOException;
 public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String[] stringArr = getStringInformation(fromFileName).split(System.lineSeparator());
+        String[] lines = readFromFile(fromFileName).split(System.lineSeparator());
         int totalSupply = 0;
         int totalBuy = 0;
-        for (String position : stringArr) {
-            String[] positionArr = position.split(",");
-            if (positionArr[0].equals("supply")) {
-                totalSupply += Integer.parseInt(positionArr[1]);
+        for (String line : lines) {
+            String[] splittedLine = line.split(",");
+            if (splittedLine[0].equals("supply")) {
+                totalSupply += Integer.parseInt(splittedLine[1]);
             } else {
-                totalBuy += Integer.parseInt(positionArr[1]);
+                totalBuy += Integer.parseInt(splittedLine[1]);
             }
         }
-        writeToFile(createReport(totalSupply,totalBuy),toFileName);
+        writeToFile(createReport(totalSupply, totalBuy), toFileName);
     }
 
-    private String getStringInformation(String fileName) {
+    private String readFromFile(String fileName) {
         StringBuilder builder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
             String value = bufferedReader.readLine();
@@ -44,7 +44,6 @@ public class WorkWithFile {
         StringBuilder builder = new StringBuilder();
 
         int totalResult = totalSupply - totalBuy;
-
         builder.append("supply,").append(totalSupply).append(System.lineSeparator())
                 .append("buy,").append(totalBuy).append(System.lineSeparator())
                 .append("result,").append(totalResult);
