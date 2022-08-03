@@ -11,19 +11,15 @@ public class WorkWithFile {
     static final int SUPPLY_BUY_INDEX = 0;
     static final int AMOUNT_INDEX = 1;
     static final String SPLIT_REGEX = ",";
-    private int supply = 0;
-    private int buy = 0;
-    private int result;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        readHealper(fromFileName);
-
-        result = supply - buy;
-
-        writeHelper(toFileName);
+        writeToFile(toFileName, readFromFile(fromFileName));
     }
 
-    public void readHealper(String fromFileName) {
+    private String[] readFromFile(String fromFileName) {
+        int supply = 0;
+        int buy = 0;
+        int result;
         File fromFile = new File(fromFileName);
 
         StringBuilder builder = new StringBuilder();
@@ -41,22 +37,24 @@ public class WorkWithFile {
                 }
                 value = reader.readLine();
             }
+            result = supply - buy;
+            String finalSupply = "supply," + supply;
+            String finalBuy = "buy," + buy;
+            String finalResult = "result," + result;
+
+            String[] report = new String[]{finalSupply, finalBuy, finalResult};
+            return report;
         } catch (IOException e) {
             throw new RuntimeException("Can't read file" + fromFileName, e);
         }
     }
 
-    public void writeHelper(String toFileName) {
+    private void writeToFile(String toFileName, String[] report) {
         File toFile = new File(toFileName);
-        String finalSupply = "supply," + supply;
-        String finalBuy = "buy," + buy;
-        String finalResult = "result," + result;
-
-        String[] report = new String[]{finalSupply, finalBuy, finalResult};
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFile, true))) {
-            for (String resources : report) {
-                writer.write(resources);
+            for (String line : report) {
+                writer.write(line);
                 writer.newLine();
             }
         } catch (IOException e) {
