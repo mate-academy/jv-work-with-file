@@ -8,9 +8,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    static final int SUPPLY_BUY_INDEX = 0;
-    static final int AMOUNT_INDEX = 1;
-    static final String SPLIT_REGEX = ",";
+    private static final int SUPPLY_BUY_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
+    private static final String SPLIT_REGEX = ",";
+    private StringBuilder builder = new StringBuilder();
 
     public void getStatistic(String fromFileName, String toFileName) {
         writeToFile(toFileName, readFromFile(fromFileName));
@@ -21,8 +22,6 @@ public class WorkWithFile {
         int buy = 0;
         int result;
         File fromFile = new File(fromFileName);
-
-        StringBuilder builder = new StringBuilder();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFile))) {
             String value = reader.readLine();
