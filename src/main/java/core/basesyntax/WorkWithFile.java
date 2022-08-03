@@ -10,7 +10,6 @@ public class WorkWithFile {
     private static final String STRING_BUY = "buy";
     private static final String STRING_SUPPLY = "supply";
     private static final String STRING_СOMA = ",";
-    private static final String NEW_LINE = "\r\n";
     private static final int ZERO = 0;
     private static final int ONE = 1;
 
@@ -34,8 +33,8 @@ public class WorkWithFile {
             }
             Files.write(fileWriter.toPath(), Collections.singleton(
                     STRING_SUPPLY + STRING_СOMA + supply
-                    + NEW_LINE + STRING_BUY + STRING_СOMA + buy
-                    + NEW_LINE + "result" + STRING_СOMA + (supply - buy)));
+                    + System.lineSeparator() + STRING_BUY + STRING_СOMA + buy
+                    + System.lineSeparator() + "result" + STRING_СOMA + (supply - buy)));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
