@@ -9,52 +9,71 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final String SUPPLY = "supply,";
-    private static final String BUY = "buy,";
-    private static final String RESULT = "result,";
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
+    private static final String DELIMITER = ",";
 
-    public static void getStatistic(String fromFileName, String toFileName) {
+    public static void readFromFile(String fromFileName,
+                                    StringBuilder builder) {
         File file = new File(fromFileName);
-        StringBuilder builder = new StringBuilder();
-
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
             String value = bufferedReader.readLine();
             while (value != null) {
                 builder.append(value).append(",");
                 value = bufferedReader.readLine();
             }
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("Can not find the file", e);
+            throw new RuntimeException("Can not find the file" + file, e);
         } catch (IOException e) {
-            throw new RuntimeException("Can not read the file", e);
+            throw new RuntimeException("Can not read the file" + file, e);
         }
-        String[] texts = builder.toString().split(",");
+    }
+
+    public static void getStatistic(String fromFileName, String toFileName) {
         int sumOfBuy = 0;
         int sumOfSupply = 0;
         int result = 0;
-        for (int i = 0; i < texts.length; i++) {
-            if (texts[i].equals("supply")) {
-                sumOfSupply += Integer.parseInt(texts[i + 1]);
+
+        StringBuilder builder = new StringBuilder();
+        readFromFile(fromFileName, builder);
+        String[] textParts = builder.toString().split(DELIMITER);
+        for (int i = 0; i < textParts.length; i++) {
+            if (textParts[i].equals(SUPPLY)) {
+                sumOfSupply += Integer.parseInt(textParts[i + 1]);
             }
-            if (texts[i].equals("buy")) {
-                sumOfBuy += Integer.parseInt(texts[i + 1]);
+            if (textParts[i].equals(BUY)) {
+                sumOfBuy += Integer.parseInt(textParts[i + 1]);
             }
             result = sumOfSupply - sumOfBuy;
         }
+        write(toFileName,sumOfSupply,sumOfBuy,result);
+    }
 
-        File fileChanged = new File(toFileName);
+    public static String [] createReport(int sumOfSupply, int sumOfBuy, int result) {
         String[] array = new String[3];
-        array[0] = SUPPLY + sumOfSupply;
-        array[1] = BUY + sumOfBuy;
-        array[2] = RESULT + result;
-        for (String element : array) {
-            try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileChanged,
-                    true))) {
+        array[0] = SUPPLY + DELIMITER + sumOfSupply;
+        array[1] = BUY + DELIMITER + sumOfBuy;
+        array[2] = RESULT + DELIMITER + result;
+        return array;
+    }
+
+    public static void write(String toFileName, int sumOfSupply, int sumOfBuy, int result) {
+        File outputFile = new File(toFileName);
+        String[] array = createReport(sumOfSupply, sumOfBuy, result);
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(outputFile,
+                true))) {
+            for (String element : array) {
                 bufferedWriter.write(element + System.lineSeparator());
-            } catch (IOException e) {
-                throw new RuntimeException("Can not find the file", e);
             }
+        } catch (IOException e) {
+            throw new RuntimeException("Can not find the file" + outputFile, e);
         }
     }
 }
+
+
+
+
+
+
