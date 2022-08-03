@@ -27,7 +27,7 @@ public class WorkWithFile {
         } catch (Exception e) {
             throw new RuntimeException("Can't read from file" + fromFileName, e);
         }
-        writeToFile(formReportFrom(result),toFileName);
+        writeToFile(formReportFrom(result), toFileName);
     }
 
     private void writeToFile(String report, String toFileName) {
