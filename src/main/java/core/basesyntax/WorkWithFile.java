@@ -8,8 +8,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final int INDEX_ZERO = 0;
-    private static final int INDEX_ONE = 1;
+    private static final int TYPE_OF_OPERATION_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String infoFromFile = readFromFile(fromFileName);
@@ -28,10 +28,10 @@ public class WorkWithFile {
     private String readFromFile(String fromFileName) {
         StringBuilder reportBuilder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
-            String message = bufferedReader.readLine();
-            while (message != null) {
-                reportBuilder.append(message).append(" ");
-                message = bufferedReader.readLine();
+            String line = bufferedReader.readLine();
+            while (line != null) {
+                reportBuilder.append(line).append(" ");
+                line = bufferedReader.readLine();
             }
         } catch (FileNotFoundException e) {
             throw new RuntimeException("File not found " + fromFileName, e);
@@ -43,15 +43,15 @@ public class WorkWithFile {
 
     private String formStatistic(String data) {
         StringBuilder builder = new StringBuilder();
-        String [] dataLine = data.split(" ");
+        String[] lines = data.split(" ");
         int resultSupply = 0;
         int resultBuy = 0;
-        for (String record : dataLine) {
-            String[] lines = record.split(",");
-            if (lines[INDEX_ZERO].equals("buy")) {
-                resultBuy += Integer.parseInt(lines[INDEX_ONE]);
+        for (String line : lines) {
+            String[] splittedLine = line.split(",");
+            if (lines[TYPE_OF_OPERATION_INDEX].equals("buy")) {
+                resultBuy += Integer.parseInt(lines[AMOUNT_INDEX]);
             } else {
-                resultSupply += Integer.parseInt(lines[INDEX_ONE]);
+                resultSupply += Integer.parseInt(lines[AMOUNT_INDEX]);
             }
         }
         int resultTotal = resultSupply - resultBuy;
