@@ -39,30 +39,30 @@ public class WorkWithFile {
         return stringBuilder.toString();
     }
 
-    public int[] calculateResultForDay(String stringFromFile) {
-        String[] sortedArray = stringFromFile.split(System.lineSeparator());
+    private int[] calculateResultForDay(String text) {
+        String[] allLines  = text.split(System.lineSeparator());
         int supplySum = 0;
         int buySum = 0;
-        for (String line : sortedArray) {
-            sortedArray = line.split(" ");
-            if (sortedArray[0].contains(SUPPLY_CONDITION)) {
+        for (String line : allLines ) {
+            allLines  = line.split(",");
+            if (allLines [0].contains(SUPPLY_CONDITION)) {
                 supplySum += Integer.parseInt(line.replaceAll(REGEX_CONDITION, ""));
             }
-            if (sortedArray[0].contains(BUY_CONDITION)) {
+            if (allLines [0].contains(BUY_CONDITION)) {
                 buySum += Integer.parseInt(line.replaceAll(REGEX_CONDITION, ""));
             }
         }
         return new int[]{buySum, supplySum, supplySum - buySum};
     }
 
-    public String toStringForNewFile(int[] results) {
-        StringBuilder sbtoString = new StringBuilder();
-        return sbtoString.append("supply,").append(results[1]).append(System.lineSeparator())
+    private String toStringForNewFile(int[] results) {
+        StringBuilder stringBuilder = new StringBuilder();
+        return stringBuilder.append("supply,").append(results[1]).append(System.lineSeparator())
                 .append("buy,").append(results[0]).append(System.lineSeparator())
                 .append("result,").append(results[2]).append(System.lineSeparator()).toString();
     }
 
-    public void writeToFile(String toFileName, String string) {
+    private void writeToFile(String toFileName, String string) {
         File file = new File(toFileName);
         try {
             file.createNewFile();
