@@ -15,39 +15,39 @@ public class WorkWithFile {
     private static final String COMMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        try (
-                BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
-                BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName, true))
-            ) {
-            int[] data = getDataFromFile(reader);
-            writeDataToFile(writer, data);
-
-        } catch (IOException e) {
-            throw new RuntimeException("I can't read file", e);
-        }
+        int[] data = getDataFromFile(fromFileName);
+        writeDataToFile(toFileName, data);
     }
 
-    private int[] getDataFromFile(BufferedReader reader) throws IOException {
-        String value = reader.readLine();
-        int buy = 0;
-        int supply = 0;
-        while (value != null) {
-            String[] array = value.split(",");
-            if (array[0].equals(SUPPLY_KEY)) {
-                supply += Integer.parseInt(array[1]);
-            } else if (array[0].equals(BUY_KEY)) {
-                buy += Integer.parseInt(array[1]);
+    private int[] getDataFromFile(String fromFileName) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
+            String value = reader.readLine();
+            int buy = 0;
+            int supply = 0;
+            while (value != null) {
+                String[] array = value.split(COMMA);
+                if (array[0].equals(SUPPLY_KEY)) {
+                    supply += Integer.parseInt(array[1]);
+                } else if (array[0].equals(BUY_KEY)) {
+                    buy += Integer.parseInt(array[1]);
+                }
+                value = reader.readLine();
             }
-            value = reader.readLine();
+            return new int[]{supply, buy};
+        } catch (IOException e) {
+            throw new RuntimeException("Can't read file " + fromFileName, e);
         }
-        return new int[]{supply, buy};
     }
 
-    private void writeDataToFile(BufferedWriter writer, int[] data) throws IOException {
-        writer.write(SUPPLY_KEY + COMMA + data[SUPPLY_INDEX]);
-        writer.newLine();
-        writer.write(BUY_KEY + COMMA + data[BUY_INDEX]);
-        writer.newLine();
-        writer.write(RESULT_KEY + COMMA + (data[SUPPLY_INDEX] - data[BUY_INDEX]));
+    private void writeDataToFile(String toFileName, int[] data) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
+            writer.write(SUPPLY_KEY + COMMA + data[SUPPLY_INDEX]);
+            writer.newLine();
+            writer.write(BUY_KEY + COMMA + data[BUY_INDEX]);
+            writer.newLine();
+            writer.write(RESULT_KEY + COMMA + (data[SUPPLY_INDEX] - data[BUY_INDEX]));
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write to file " + toFileName);
+        }
     }
 }
