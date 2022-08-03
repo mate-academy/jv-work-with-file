@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 
 public class WorkWithFile {
     public static final String COMMA = ",";
@@ -26,7 +27,7 @@ public class WorkWithFile {
                 builder.append(currentLine).append(System.lineSeparator());
                 currentLine = reader.readLine();
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new RuntimeException("Can't read file: " + fromFileName, e);
         }
         return builder.toString().split(System.lineSeparator());
@@ -55,7 +56,7 @@ public class WorkWithFile {
     private void writeDataToFile(String toFileName, String result) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName, true))) {
             writer.write(result);
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new RuntimeException("Can't write data to file:" + toFileName, e);
         }
     }
