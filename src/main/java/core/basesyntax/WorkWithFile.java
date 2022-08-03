@@ -58,7 +58,7 @@ public class WorkWithFile {
         File file = new File(toFileName);
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(file, true))) {
             for (String data : strings) {
-                bw.write(data + "\n");
+                bw.write(data + System.lineSeparator());
                 bw.flush();
             }
         } catch (IOException e) {
