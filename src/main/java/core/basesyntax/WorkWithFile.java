@@ -8,6 +8,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String SEPARATOR = ";";
+
     public void getStatistic(String fromFileName, String toFileName) {
         File readFile = new File(fromFileName);
         File writeFile = new File(toFileName);
@@ -17,7 +19,6 @@ public class WorkWithFile {
     }
 
     private String readFromFile(File file) {
-        final String SEPARATOR = ";";
         StringBuilder builder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
             String value = bufferedReader.readLine();
