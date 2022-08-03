@@ -8,37 +8,55 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final int DATA_VALUE = 1;
+    private static final String DELIMETR = ",";
+    private static final String NEW_LINE_DELIMETR = System.lineSeparator();
 
     public void getStatistic(String fromFileName, String toFileName) {
-        File readable = new File(fromFileName);
-        File writable = new File(toFileName);
+        File outputFile = new File(toFileName);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile))) {
+            writer.write(readFile(fromFileName));
+        } catch (IOException e) {
+            throw new RuntimeException("Can`t write to the file:" + toFileName, e);
+        }
+    }
+
+    public String readFile(String fromFileName) {
+        File inputFile = new File(fromFileName);
         StringBuilder builder = new StringBuilder();
         int supplyValue = 0;
         int buyValue = 0;
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(readable));
+        String[] data;
+        try (BufferedReader reader = new BufferedReader(new FileReader(inputFile))) {
             String value = reader.readLine();
             while (value != null) {
-                if (value.contains("supply")) {
-                    supplyValue += Integer.parseInt(value.substring(value.indexOf(',') + 1));
-                }
-                if (value.contains("buy")) {
-                    buyValue += Integer.parseInt(value.substring(value.indexOf(',') + 1));
-                }
+                builder.append(value).append(System.lineSeparator());
                 value = reader.readLine();
             }
-            builder.append("supply,").append(supplyValue).append(System.lineSeparator())
-                    .append("buy,").append(buyValue).append(System.lineSeparator())
-                    .append("result,").append(supplyValue - buyValue);
-
         } catch (IOException e) {
-            throw new RuntimeException("Can`t read file", e);
+            throw new RuntimeException("Can`t read file:" + fromFileName, e);
         }
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(writable));) {
-            writer.write(builder.toString());
-        } catch (IOException e) {
-            throw new RuntimeException("Can`t write to the file", e);
-        }
+        return calculateResult(builder.toString());
+    }
 
+    public String calculateResult(String data) {
+        StringBuilder builder = new StringBuilder();
+        int supplyValue = 0;
+        int buyValue = 0;
+        String[] dataArr = data.split(System.lineSeparator());
+        for (String string : dataArr) {
+            if (string.contains("supply")) {
+                supplyValue += Integer.parseInt(string
+                        .substring(string.indexOf(DELIMETR) + DATA_VALUE));
+            }
+            if (string.contains("buy")) {
+                buyValue += Integer.parseInt(string
+                        .substring(string.indexOf(DELIMETR) + DATA_VALUE));
+            }
+        }
+        builder.append("supply,").append(supplyValue).append(System.lineSeparator())
+                .append("buy,").append(buyValue).append(System.lineSeparator())
+                .append("result,").append(supplyValue - buyValue);
+        return builder.toString();
     }
 }
