@@ -9,23 +9,17 @@ import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 
 public class WorkWithFile {
-    private static final String SUPPLY_CONDITION = "supply";
-    private static final String BUY_CONDITION = "buy";
-    private static final String REGEX_CONDITION = "\\D";
-    private StringBuilder stringBuilder = new StringBuilder();
-
     public void getStatistic(String fromFileName, String toFileName) {
         String textFromFile = readDataFromFile(fromFileName);
         int[] array = calculateResultForDay(textFromFile);
         String result = toStringForNewFile(array);
         writeToFile(toFileName, result);
-
     }
 
     private String readDataFromFile(String fromFileName) {
+        StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
-            String value = null;
-            value = bufferedReader.readLine();
+            String value = bufferedReader.readLine();
             while (value != null) {
                 stringBuilder.append(value).append(System.lineSeparator());
                 value = bufferedReader.readLine();
@@ -40,16 +34,20 @@ public class WorkWithFile {
     }
 
     private int[] calculateResultForDay(String text) {
-        String[] allLines  = text.split(System.lineSeparator());
+        final String supply_condition = "supply";
+        final String
+                buy_condition = "buy";
+        final String regex_condition = "\\D";
+        String[] allLines = text.split(System.lineSeparator());
         int supplySum = 0;
         int buySum = 0;
-        for (String line : allLines ) {
-            allLines  = line.split(",");
-            if (allLines [0].contains(SUPPLY_CONDITION)) {
-                supplySum += Integer.parseInt(line.replaceAll(REGEX_CONDITION, ""));
+        for (String line : allLines) {
+            allLines = line.split(",");
+            if (allLines [0].contains(supply_condition)) {
+                supplySum += Integer.parseInt(line.replaceAll(regex_condition, ""));
             }
-            if (allLines [0].contains(BUY_CONDITION)) {
-                buySum += Integer.parseInt(line.replaceAll(REGEX_CONDITION, ""));
+            if (allLines [0].contains(buy_condition)) {
+                buySum += Integer.parseInt(line.replaceAll(regex_condition, ""));
             }
         }
         return new int[]{buySum, supplySum, supplySum - buySum};

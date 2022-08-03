@@ -1,0 +1,15 @@
+[33m178cb9b[m[33m ([m[1;36mHEAD -> [m[1;32mhome-work[m[33m)[m naming improvments
+[33me2c7304[m adelete variables
+[33mfdcd495[m[33m ([m[1;31morigin/home-work[m[33m)[m add improvements
+[33m265a99a[m fix files.csv
+[33m9e222b5[m fix check-style
+[33mbe51bd3[m implement writeToFile()
+[33m44055b2[m implement еtoString()
+[33m47fa522[m implement calculateResultForDay()
+[33m6dcd073[m implement readDataFromFile()
+[33m44f0d36[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m)[m Update CI config
+[33m4d3ee62[m Migrate from Travis to Github Actions
+[33md84bebb[m Update .travis.yml
+[33me29a974[m added removing result files after each test (#104)
+[33m48e0f68[m added task for writing and reading from file (#1)
+[33m03a94b1[m Initial commit
