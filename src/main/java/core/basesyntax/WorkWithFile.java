@@ -1,18 +1,14 @@
 package core.basesyntax;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.*;
 
 public class WorkWithFile {
     private static final String OPERATION_BUY = "buy";
     private static final String DEMILITER = ",";
-    private final StringBuilder report = new StringBuilder();
-    private int totalBuy = 0;
-    private int totalSupply = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
+        int totalBuy = 0;
+        int totalSupply = 0;
         File file = new File(fromFileName);
 
         try (FileReader fileReader = new FileReader(file);
@@ -23,41 +19,35 @@ public class WorkWithFile {
             while ((line = bufferedReader.readLine()) != null) {
                 data = line.split(DEMILITER);
                 if (data[0].equals(OPERATION_BUY)) {
-                    totalBuy += convertToInt(data[1]);
+                    totalBuy += Integer.parseInt(data[0]);
                 } else {
-                    totalSupply += convertToInt(data[1]);
+                    totalSupply += Integer.parseInt(data[1]);
                 }
             }
-        } catch (Exception e) {
-            throw new RuntimeException("Cant get data from file - " + fromFileName);
+        } catch (IOException e) {
+            throw new RuntimeException("Cant get data from file - " + fromFileName, e);
         }
-        writeInResult(toFileName);
+        writeInResult(toFileName, totalSupply, totalBuy);
     }
 
-    private int convertToInt(String num) {
-        return Integer.parseInt(num);
-    }
-
-    private String createReport() {
+    private String createReport(int totalSupply, int totalBuy) {
         int result = totalSupply - totalBuy;
 
-        report.append("supply,").append(totalSupply)
-                .append(System.lineSeparator())
-                .append("buy,").append(totalBuy)
-                .append(System.lineSeparator())
-                .append("result,").append(result);
-
-        return report.toString();
+        return "supply," + totalSupply +
+                System.lineSeparator() +
+                "buy," + totalBuy +
+                System.lineSeparator() +
+                "result," + result;
     }
 
-    private void writeInResult(String toFile) {
-        String reportToWrite = createReport();
+    private void writeInResult(String toFile, int totalSupply, int totalBuy) {
+        String reportToWrite = createReport(totalSupply, totalBuy);
         File inputFile = new File(toFile);
 
         try (FileWriter fileWriter = new FileWriter(inputFile)) {
             fileWriter.write(reportToWrite);
-        } catch (Exception e) {
-            throw new RuntimeException("Can't write data to the file" + toFile, e);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write data to the file " + toFile, e);
         }
     }
 }
