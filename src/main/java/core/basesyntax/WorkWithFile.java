@@ -40,20 +40,16 @@ public class WorkWithFile {
     }
 
     public int[] calculateResultForDay(String stringFromFile) {
-        int numberFromLine = 0;
         String[] sortedArray = stringFromFile.split(System.lineSeparator());
         int supplySum = 0;
         int buySum = 0;
         for (String line : sortedArray) {
             sortedArray = line.split(" ");
-            if (line.length() > 1) {
-                numberFromLine = Integer.parseInt(line.replaceAll(REGEX_CONDITION, ""));
-            }
             if (sortedArray[0].contains(SUPPLY_CONDITION)) {
-                supplySum += numberFromLine;
+                supplySum += Integer.parseInt(line.replaceAll(REGEX_CONDITION, ""));
             }
             if (sortedArray[0].contains(BUY_CONDITION)) {
-                buySum += numberFromLine;
+                buySum += Integer.parseInt(line.replaceAll(REGEX_CONDITION, ""));
             }
         }
         return new int[]{buySum, supplySum, supplySum - buySum};
