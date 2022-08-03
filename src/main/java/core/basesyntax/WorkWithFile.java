@@ -39,12 +39,12 @@ public class WorkWithFile {
     private String[] makeReport(String[] dividedString) {
         int buyWord = 0;
         int supplyWord = 0;
-        for (int i = 0; i < dividedString.length; i++) {
-            int comaPlace = dividedString[i].indexOf(COMA);
-            String cutWord = dividedString[i].substring(0, comaPlace);
-            String cutNumber = dividedString[i].substring(comaPlace
-                    + 1, dividedString[i].length() - 1);
-            Integer number = Integer.valueOf(cutNumber);
+        for (String s : dividedString) {
+            int comaPlace = s.indexOf(COMA);
+            String cutWord = s.substring(0, comaPlace);
+            String cutNumber = s.substring(comaPlace
+                    + 1, s.length() - 1);
+            int number = Integer.parseInt(cutNumber);
             if (cutWord.equals(BUY)) {
                 buyWord += number;
             } else if (cutWord.equals(SUPPLY)) {
