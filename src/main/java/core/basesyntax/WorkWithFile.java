@@ -8,10 +8,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final int INDEX_ARRAY_FROM_THE_NUMBER = 1;
+    private static final int AMOUNT_INDEX = 1;
     private static final String SUPPLY_NAME = "supply";
     private static final String BUY_NAME = "buy";
-    private static final String SEPARATOR = ",";
+    private static final String COMMA = ",";
     private static final String RESULT_NAME = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
@@ -23,18 +23,18 @@ public class WorkWithFile {
         String result = "";
         int sumSupply = 0;
         int sumBuy = 0;
-        String[] arrayFullText = text.split(System.lineSeparator());
-        for (String lineArray : arrayFullText) {
-            String[] line = lineArray.split(SEPARATOR);
-            if (lineArray.contains(SUPPLY_NAME)) {
-                sumSupply += Integer.parseInt(line[INDEX_ARRAY_FROM_THE_NUMBER]);
+        String[] records = text.split(System.lineSeparator());
+        for (String record : records) {
+            String[] splitted = record.split(COMMA);
+            if (record.contains(SUPPLY_NAME)) {
+                sumSupply += Integer.parseInt(splitted[AMOUNT_INDEX]);
             } else {
-                sumBuy += Integer.parseInt(line[INDEX_ARRAY_FROM_THE_NUMBER]);
+                sumBuy += Integer.parseInt(splitted[AMOUNT_INDEX]);
             }
         }
-        result += SUPPLY_NAME + SEPARATOR + sumSupply + System.lineSeparator();
-        result += BUY_NAME + SEPARATOR + sumBuy + System.lineSeparator();
-        result += RESULT_NAME + SEPARATOR + (sumSupply - sumBuy);
+        result += SUPPLY_NAME + COMMA + sumSupply + System.lineSeparator();
+        result += BUY_NAME + COMMA + sumBuy + System.lineSeparator();
+        result += RESULT_NAME + COMMA + (sumSupply - sumBuy);
         return result;
     }
 
@@ -53,7 +53,7 @@ public class WorkWithFile {
         return stringBuilder.toString();
     }
 
-    private void fileWriter(String result,String toFileName) {
+    private void fileWriter(String result, String toFileName) {
         File output = new File(toFileName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(output))) {
             bufferedWriter.write(result);
