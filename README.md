@@ -1,6 +1,6 @@
 # jv-work-with-file
 
-Implement method `getStatistic(String fromFileName, String toFileName)` 
+Implement method `getStat(String fromFileName, String toFileName)` 
 which will return some data from market after working day. 
 
 This method has two parameters:
