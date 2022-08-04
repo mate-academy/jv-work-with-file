@@ -13,17 +13,16 @@ public class WorkWithFile {
     private static final String LINE_SEPARATOR = " ";
 
     public static void getStatistic(String fromFileName, String toFileName) {
-        StringBuilder stringBuilder = new StringBuilder();
         List<Integer> listOfSupplyCosts = new ArrayList<>();
         List<Integer> listOfBuyCosts = new ArrayList<>();
-        String result = createReport(fromFileName, listOfSupplyCosts,
-                                     listOfBuyCosts, stringBuilder);
+        readFromFile(fromFileName, listOfSupplyCosts, listOfBuyCosts);
+        int sumOfSupplies = getSumOfList(listOfSupplyCosts);
+        int sumOfBuys = getSumOfList(listOfBuyCosts);
+        String result = createReport(sumOfSupplies, sumOfBuys, sumOfSupplies - sumOfBuys);
         createAndWriteToFile(toFileName, result);
     }
 
-    public static String createReport(String fromFile, List<Integer> supplies,
-                                      List<Integer> buys, StringBuilder stringBuilder) {
-
+    public static void readFromFile(String fromFile, List<Integer> supplies, List<Integer> buys) {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFile))) {
             String string = bufferedReader.readLine();
             String[] splitedString = null;
@@ -33,48 +32,40 @@ public class WorkWithFile {
                 for (String value : splitedString) {
                     if (value.contains(VALUE_CRITERIA)) {
                         supplies.add(Integer.valueOf(value
-                                            .substring(value.indexOf(",") + 1, value.length())));
+                                .substring(value.indexOf(",") + 1, value.length())));
                     } else {
                         buys.add(Integer.valueOf(value
-                                        .substring(value.indexOf(",") + 1, value.length())));
+                                .substring(value.indexOf(",") + 1, value.length())));
                     }
                 }
                 string = bufferedReader.readLine();
             }
-
-            int sumOfSupplies = 0;
-            for (int number : supplies) {
-                sumOfSupplies += number;
-            }
-
-            int sumOfBuys = 0;
-            for (int number : buys) {
-                sumOfBuys += number;
-            }
-            return stringBuilder.append("supply,").append(sumOfSupplies)
-                    .append(System.lineSeparator()).append("buy,")
-                    .append(sumOfBuys).append(System.lineSeparator())
-                    .append("result,").append(sumOfSupplies - sumOfBuys).toString();
         } catch (IOException e) {
             throw new RuntimeException("Can`t read data from file", e);
         }
     }
 
-    public static void createAndWriteToFile(String toFileName, String data) {
-        File resultFile = new File(toFileName);
-        try {
-            resultFile.createNewFile();
-        } catch (IOException e) {
-            throw new RuntimeException("Can't create file", e);
+    public static int getSumOfList(List<Integer> list) {
+        int sum = 0;
+        for (int number : list) {
+            sum += number;
         }
-        try {
-            Files.write(resultFile.toPath(), data.getBytes());
-        } catch (IOException e) {
-            throw new RuntimeException("Can't write data to file", e);
-        }
+        return sum;
     }
 
-    public static void main(String[] args) {
-        getStatistic("apple.csv", "appleResult.csv");
+    public static String createReport(int sumOfSupplies, int sumOfBuys, int result) {
+        StringBuilder stringBuilder = new StringBuilder();
+        return stringBuilder.append("supply,").append(sumOfSupplies)
+                .append(System.lineSeparator()).append("buy,")
+                .append(sumOfBuys).append(System.lineSeparator())
+                .append("result,").append(result).toString();
+    }
+
+    public static void createAndWriteToFile(String toFileName, String data) {
+        try {
+            Files.write(new File(toFileName).toPath(), data.getBytes());
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write data to file " + toFileName + " ", e);
+        }
     }
 }
