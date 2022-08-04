@@ -13,7 +13,7 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         readFromFile(fromFileName);
-        writeToFilee(doNeedForm(fromFileName),toFileName);
+        writeToFilee(doNeededForm(getSumValue(fromFileName)),toFileName);
     }
 
     private String readFromFile(String adres) {
@@ -32,23 +32,25 @@ public class WorkWithFile {
         return result;
     }
 
-    private String doNeedForm(String adres) {
-        StringBuilder stringBuilder = new StringBuilder();
+    private int [] getSumValue(String adres) {
+        int[] sumArray = new int[2];
         String[] array = readFromFile(adres).split(System.lineSeparator());
-        int sumOfSupply = ZERO_VALUE;
-        int sumOfBuy = ZERO_VALUE;
         for (int i = ZERO_VALUE; i < array.length; i++) {
             if (array[i].startsWith("supply")) {
-                sumOfSupply += Integer.parseInt(array[i].split(",")[SECOND_POSITION]);
+                sumArray[0] += Integer.parseInt(array[i].split(",")[SECOND_POSITION]);
             }
             if (array[i].startsWith("buy")) {
-                sumOfBuy += Integer.parseInt(array[i].split(",")[SECOND_POSITION]);
+                sumArray[1] += Integer.parseInt(array[i].split(",")[SECOND_POSITION]);
             }
         }
-        return stringBuilder.append("supply,").append(String.valueOf(sumOfSupply))
+        return sumArray;
+    }
+
+    private String doNeededForm(int [] array) {
+        return new StringBuilder().append("supply,").append(String.valueOf(array[0]))
          .append(System.lineSeparator())
-          .append("buy,").append(String.valueOf(sumOfBuy)).append(System.lineSeparator())
-         .append("result,").append(String.valueOf(sumOfSupply - sumOfBuy)).toString();
+          .append("buy,").append(String.valueOf(array[1])).append(System.lineSeparator())
+         .append("result,").append(String.valueOf(array[0] - array[1])).toString();
     }
 
     private void writeToFilee(String content,String to) {
