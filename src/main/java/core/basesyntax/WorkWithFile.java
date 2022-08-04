@@ -8,17 +8,23 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    public static final int OPERATION_INDEX = 0;
+    public static final int AMOUNT_INDEX = 1;
+    public static final int INDEX_SUPPLY = 0;
+    public static final int INDEX_BUY = 1;
+    public static final String OPERATION_BUY = "buy";
+    public static final String OPERATION_SUPPLY = "supply";
+    public static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        WorkWithFile workWithFile = new WorkWithFile();
-        int[] data = workWithFile.readFromFile(fromFileName);
+        int[] data = readFromFile(fromFileName);
         StringBuffer stringBuffer = new StringBuffer();
-        stringBuffer.append("supply,").append(data[0])
+        stringBuffer.append(OPERATION_SUPPLY).append(",").append(data[INDEX_SUPPLY])
                     .append(System.lineSeparator())
-                    .append("buy,").append(data[1])
+                    .append(OPERATION_BUY).append(",").append(data[INDEX_BUY])
                     .append(System.lineSeparator())
-                    .append("result,").append(data[0] - data[1]);
-        workWithFile.writeToFile(stringBuffer.toString(), toFileName);
+                    .append(RESULT).append(",").append(data[INDEX_SUPPLY] - data[INDEX_BUY]);
+        writeToFile(stringBuffer.toString(), toFileName);
     }
 
     private int[] readFromFile(String fromFileName) {
@@ -29,10 +35,10 @@ public class WorkWithFile {
             String row = bufferedReader.readLine();
             while (row != null) {
                 String[] data = row.split(",");
-                if (data[0].equals("supply")) {
-                    supply += Integer.parseInt(data[1]);
+                if (data[OPERATION_INDEX].equals(OPERATION_SUPPLY)) {
+                    supply += Integer.parseInt(data[AMOUNT_INDEX]);
                 } else {
-                    buy += Integer.parseInt(data[1]);
+                    buy += Integer.parseInt(data[AMOUNT_INDEX]);
                 }
                 row = bufferedReader.readLine();
             }
