@@ -5,20 +5,19 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Arrays;
 
 public class WorkWithFile {
     private static final String BUY = "buy";
     private static final String SUPPLY = "supply";
-    private static final char COMA = ',';
+    private static final String COMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String[] dividedStrings = readFromFile(fromFileName);
-        String[] report = makeReport(dividedStrings);
+        String input = readFromFile(fromFileName);
+        String[] report = makeReport(input);
         writeToFile(toFileName, report);
     }
 
-    private String[] readFromFile(String fromFileName) {
+    private String readFromFile(String fromFileName) {
         StringBuilder builder = new StringBuilder();
         try {
             BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
@@ -30,35 +29,26 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read file", e);
         }
-        String result = builder.toString();
-        String[] dividedString = result.split("\n");
-        Arrays.sort(dividedString);
-        return dividedString;
+        return builder.toString();
     }
 
-    private String[] makeReport(String[] dividedString) {
+    private String[] makeReport(String input) {
         int buyWord = 0;
         int supplyWord = 0;
-        for (String s : dividedString) {
-            int comaPlace = s.indexOf(COMA);
-            String cutWord = s.substring(0, comaPlace);
-            String cutNumber = s.substring(comaPlace
-                    + 1, s.length() - 1);
-            int number = Integer.parseInt(cutNumber);
-            if (cutWord.equals(BUY)) {
-                buyWord += number;
-            } else if (cutWord.equals(SUPPLY)) {
-                supplyWord += number;
+        String[] strings = input.split(System.lineSeparator());
+        for (String row : strings) {
+            String[] comaDivided = row.split(COMA);
+            if (row.contains(BUY)) {
+                buyWord += Integer.parseInt(comaDivided[1]);
+            } else if (row.contains(SUPPLY)) {
+                supplyWord += Integer.parseInt(comaDivided[1]);
             }
         }
         int differenceBuySupply = supplyWord - buyWord;
-        String buyString = String.valueOf(buyWord);
-        String supplyString = String.valueOf(supplyWord);
-        String differenceString = String.valueOf(differenceBuySupply);
         String[] buysAndSupplies = new String[3];
-        buysAndSupplies[0] = "supply," + supplyString + System.lineSeparator();
-        buysAndSupplies[1] = "buy," + buyString + System.lineSeparator();
-        buysAndSupplies[2] = "result," + differenceString;
+        buysAndSupplies[0] = "supply," + supplyWord + System.lineSeparator();
+        buysAndSupplies[1] = "buy," + buyWord + System.lineSeparator();
+        buysAndSupplies[2] = "result," + differenceBuySupply;
         return buysAndSupplies;
     }
 
