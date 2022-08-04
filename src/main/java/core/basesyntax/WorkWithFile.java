@@ -1,8 +1,11 @@
 package core.basesyntax;
 
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.StandardOpenOption;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class WorkWithFile {
     private static final int ZERO_VALUE = 0;
@@ -50,7 +53,7 @@ public class WorkWithFile {
 
     private void writeToFilee(String content,String to) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(to))) {
-              bufferedWriter.write(content);
+            bufferedWriter.write(content);
         } catch (IOException e) {
             throw new RuntimeException("Can not write data to file",e);
         }
