@@ -7,10 +7,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final int OPERATION_INDEX = 0;
+    private static final int QUANTITY_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String data = readFromFile(fromFileName);
-        String report = supply(data);
+        String report = createReport(data);
         writeToFile(toFileName, report);
     }
 
@@ -28,16 +30,16 @@ public class WorkWithFile {
         return builder.toString();
     }
 
-    public String supply(String text) {
+    private String createReport(String text) {
         int summSupplies = 0;
         int summPurchases = 0;
         String[] lines = text.split(System.lineSeparator());
         for (String words : lines) {
             String[] resultSplited = words.split(",");
-            if (resultSplited[0].startsWith("s")) {
-                summSupplies += Integer.parseInt(resultSplited[1]);
+            if (resultSplited[OPERATION_INDEX].equals("supply")) {
+                summSupplies += Integer.parseInt(resultSplited[QUANTITY_INDEX]);
             } else {
-                summPurchases += Integer.parseInt(resultSplited[1]);
+                summPurchases += Integer.parseInt(resultSplited[QUANTITY_INDEX]);
             }
         }
         int result = summSupplies - summPurchases;
@@ -47,11 +49,11 @@ public class WorkWithFile {
                 + "result," + result;
     }
 
-    public void writeToFile(String toFile, String content) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFile))) {
+    private void writeToFile(String toFileName, String content) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write(content);
         } catch (IOException e) {
-            throw new RuntimeException("Can`t write to file", e);
+            throw new RuntimeException("Can`t write to file " + toFileName, e);
         }
     }
 }
