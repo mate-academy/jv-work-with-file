@@ -11,18 +11,18 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final int FIRST_ELEMENT_IN_LINE = 0;
     private static final int SECOND_ELEMENT_IN_LINE = 1;
-    private int supply;
-    private int buy;
 
     public void getStatistic(String fromFileName, String toFileName) {
         File inputFile = new File(fromFileName);
         File outputFile = new File(toFileName);
 
-        readInputFile(inputFile);
-        writeInOutputFile(outputFile);
+        int[] statistics = readInputFile(inputFile);
+        writeInOutputFile(outputFile, statistics);
     }
 
-    private void readInputFile(File inputFile) {
+    private int[] readInputFile(File inputFile) {
+        int supply = 0;
+        int buy = 0;
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(inputFile))) {
             String line;
             String[] lineElements;
@@ -46,9 +46,12 @@ public class WorkWithFile {
             throw new RuntimeException("BufferedReader has problem to read line in file "
                     + inputFile.getName(), e);
         }
+        return new int[]{supply, buy};
     }
 
-    private void writeInOutputFile(File outputFile) {
+    private void writeInOutputFile(File outputFile, int[] statistics) {
+        int supply = statistics[0];
+        int buy = statistics[1];
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(outputFile))) {
             bufferedWriter.write("supply," + supply);
             bufferedWriter.write(System.lineSeparator() + "buy," + buy);
