@@ -1,9 +1,6 @@
 package core.basesyntax;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 
@@ -13,8 +10,7 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         readFromFile(fromFileName);
-        doNeedForm(fromFileName);
-        writeToFilee(fromFileName,toFileName);
+        writeToFilee(doNeedForm(fromFileName),toFileName);
     }
 
     private String readFromFile(String adres) {
@@ -52,15 +48,9 @@ public class WorkWithFile {
          .append("result,").append(String.valueOf(sumOfSupply - sumOfBuy)).toString();
     }
 
-    private void writeToFilee(String from,String to) {
-        File file1 = new File(to);
-        try {
-            file1.createNewFile();
-        } catch (IOException e) {
-            throw new RuntimeException("file cant be creaded",e);
-        }
-        try {
-            Files.write(file1.toPath(), doNeedForm(from).getBytes(), StandardOpenOption.APPEND);
+    private void writeToFilee(String content,String to) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(to))) {
+              bufferedWriter.write(content);
         } catch (IOException e) {
             throw new RuntimeException("Can not write data to file",e);
         }
