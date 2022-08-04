@@ -12,11 +12,8 @@ public class WorkWithFile {
     private static final String STRING_BUY = "buy";
     private static final String STRING_SUPPLY = "supply";
     private static final String STRING_СOMA = ",";
-    private static final int ZERO = 0;
-    private static final int OPERETION_INDEX = 0;
-    private static final int ONE = 1;
+    private static final int OPERATION_INDEX = 0;
     private static final int AMOUNT_INDEX = 1;
-    private static final int TWO = 2;
 
     public void getStatistic(String fromFileName, String toFileName) {
         File outputFile = new File(fromFileName);
@@ -31,31 +28,28 @@ public class WorkWithFile {
     private static int[] getSupplyAndBuyFromFile(File fileReader) {
         try {
             List<String> lines = Files.readAllLines(fileReader.toPath());
-            return addSupplyAndBuyto(lines);
+            return countStatistic(lines);
 
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from the file", e);
         }
     }
 
-    private static int[] addSupplyAndBuyto(List<String> lines) {
-        int[] buyAndSupply = new int[2];
-        buyAndSupply[ZERO] = ZERO;
-        buyAndSupply[ONE] = ZERO;
+    private static int[] countStatistic(List<String> lines) {
+        int[] statistic = new int[2];
         for (String line : lines) {
             String[] split = line.split(",");
-            switch (split[OPERETION_INDEX]) {
+            switch (split[OPERATION_INDEX]) {
                 case STRING_SUPPLY :
-                    buyAndSupply[ZERO] += Integer.parseInt(split[AMOUNT_INDEX]);
+                    statistic[0] += Integer.parseInt(split[AMOUNT_INDEX]);
                     break;
                 case STRING_BUY :
-                    buyAndSupply[ONE] += Integer.parseInt(split[AMOUNT_INDEX]);
+                    statistic[1] += Integer.parseInt(split[AMOUNT_INDEX]);
                     break;
                 default:
             }
         }
-        lines.removeAll(Collections.singleton(""));
-        return buyAndSupply;
+        return statistic;
     }
 
     private void writeToFile(int supply, int buy, File fileWriter) {
