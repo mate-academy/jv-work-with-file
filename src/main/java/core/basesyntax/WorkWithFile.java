@@ -8,7 +8,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-
     private static final String LINE_SPLITTER = ",";
     private static final String SUPPLY_STRING = "supply";
     private static final String BUY_STRING = "buy";
@@ -33,9 +32,14 @@ public class WorkWithFile {
             throw new RuntimeException("Can't read file " + fromFileName, e);
         }
         result = supply - buy;
+        String output = getOutput(supply, buy, result).toString();
+        writeToFile(toFileName, output);
+    }
+
+    private void writeToFile(String toFileName, String output) {
         File toFile = new File(toFileName);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFile, true))) {
-            writer.write(getOutput(supply, buy, result).toString());
+            writer.write(output);
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file " + toFileName, e);
         }
