@@ -9,20 +9,23 @@ import java.io.IOException;
 
 public class WorkWithFile {
 
+    private static final String LINE_SPLITTER = ",";
+    private static final String SUPPLY_STRING = "supply";
+    private static final String BUY_STRING = "buy";
+    private static final String RESULT_STRING = "result";
+
     public void getStatistic(String fromFileName, String toFileName) {
         File fromFile = new File(fromFileName);
         int supply = 0;
         int buy = 0;
         int result;
-        String lineSplitter = ",";
-        String supplyString = "supply";
         try (BufferedReader lineReader = new BufferedReader(new FileReader(fromFile))) {
             String line = lineReader.readLine();
             while (line != null) {
-                if (supplyString.equals(line.split(lineSplitter)[0])) {
-                    supply += Integer.parseInt(line.split(lineSplitter)[1]);
+                if (SUPPLY_STRING.equals(line.split(LINE_SPLITTER)[0])) {
+                    supply += Integer.parseInt(line.split(LINE_SPLITTER)[1]);
                 } else {
-                    buy += Integer.parseInt(line.split(lineSplitter)[1]);
+                    buy += Integer.parseInt(line.split(LINE_SPLITTER)[1]);
                 }
                 line = lineReader.readLine();
             }
@@ -40,9 +43,11 @@ public class WorkWithFile {
 
     private StringBuilder getOutput(int supply, int buy, int result) {
         StringBuilder output = new StringBuilder();
-        output.append("supply,").append(supply).append(System.lineSeparator())
-                .append("buy,").append(buy).append(System.lineSeparator())
-                .append("result,").append(result);
+        output.append(SUPPLY_STRING).append(LINE_SPLITTER).append(supply)
+                .append(System.lineSeparator())
+                .append(BUY_STRING).append(LINE_SPLITTER).append(buy)
+                .append(System.lineSeparator())
+                .append(RESULT_STRING).append(LINE_SPLITTER).append(result);
         return output;
     }
 }
