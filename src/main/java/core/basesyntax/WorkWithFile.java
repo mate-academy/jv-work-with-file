@@ -13,26 +13,25 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         String input = readFromFile(fromFileName);
-        String[] report = makeReport(input);
+        String report = makeReport(input);
         writeToFile(toFileName, report);
     }
 
     private String readFromFile(String fromFileName) {
         StringBuilder builder = new StringBuilder();
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             int value = reader.read();
             while (value != -1) {
                 builder.append((char) value);
                 value = reader.read();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't read file: " + fromFileName, e);
         }
         return builder.toString();
     }
 
-    private String[] makeReport(String input) {
+    private String makeReport(String input) {
         int buyWord = 0;
         int supplyWord = 0;
         String[] strings = input.split(System.lineSeparator());
@@ -45,21 +44,22 @@ public class WorkWithFile {
             }
         }
         int differenceBuySupply = supplyWord - buyWord;
-        String[] buysAndSupplies = new String[3];
-        buysAndSupplies[0] = "supply," + supplyWord + System.lineSeparator();
-        buysAndSupplies[1] = "buy," + buyWord + System.lineSeparator();
-        buysAndSupplies[2] = "result," + differenceBuySupply;
+        String buysAndSupplies = "";
+        StringBuilder builderBuySupply = new StringBuilder();
+        builderBuySupply.append(SUPPLY).append(",").append(supplyWord)
+                .append(System.lineSeparator()).append(BUY).append(",")
+                .append(buyWord).append(System.lineSeparator()).append("result,")
+                .append(differenceBuySupply);
+        buysAndSupplies = builderBuySupply.toString();
         return buysAndSupplies;
     }
 
-    private void writeToFile(String toFileName, String[] buysAndSupplies) {
-        for (String buySupply : buysAndSupplies) {
-            try (BufferedWriter bufferedWriter = new BufferedWriter(new
-                    FileWriter(toFileName, true))) {
-                bufferedWriter.write(buySupply);
-            } catch (IOException e) {
-                throw new RuntimeException("Can't write data to file", e);
-            }
+    private void writeToFile(String toFileName, String buysAndSupplies) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName,
+                true))) {
+            bufferedWriter.write(buysAndSupplies);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write data to file", e);
         }
     }
 }
