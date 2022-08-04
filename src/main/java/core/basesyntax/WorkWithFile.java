@@ -8,8 +8,8 @@ import java.nio.file.Files;
 import java.util.List;
 
 public class WorkWithFile {
-    private int sumSupply = 0;
-    private int sumBuy = 0;
+    private static final String COMA = ",";
+    private static final int NUMBER = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         int[] results = getValue(fromFileName);
@@ -17,6 +17,8 @@ public class WorkWithFile {
     }
 
     private int[] getValue(String fromFileName) {
+        int sumSupply = 0;
+        int sumBuy = 0;
         List<String> strings;
         try {
             strings = Files.readAllLines(new File(fromFileName).toPath());
@@ -24,7 +26,7 @@ public class WorkWithFile {
             throw new RuntimeException("Can't read file " + fromFileName, e);
         }
         for (String line : strings) {
-            int value = Integer.parseInt(line.split(",")[1]);
+            int value = Integer.parseInt(line.split(COMA)[NUMBER]);
             if (line.contains("buy")) {
                 sumBuy += value;
             } else {
@@ -36,11 +38,11 @@ public class WorkWithFile {
 
     private void writeToFile(String toFileName, int[] base) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            writer.write("supply," + sumSupply);
+            writer.write("supply," + base[1]);
             writer.newLine();
-            writer.write("buy," + sumBuy);
+            writer.write("buy," + base[0]);
             writer.newLine();
-            writer.write("result," + (sumSupply - sumBuy));
+            writer.write("result," + (base[1] - base[0]));
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file " + toFileName, e);
         }
