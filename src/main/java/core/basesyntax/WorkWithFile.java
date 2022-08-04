@@ -16,21 +16,20 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         File outputFile = new File(fromFileName);
-        int totalBuy = 0;
-        int totalSupply = 0;
-        totalSupply = getSupplyAndBuyFromFile(outputFile)[0];
-        totalBuy = getSupplyAndBuyFromFile(outputFile)[1];
+        int[] statistic = readFromFile(outputFile);
+        int totalBuy = statistic[1];
+        int totalSupply = statistic[0];
         File inputFile = new File(toFileName);
         writeToFile(totalSupply, totalBuy, inputFile);
     }
 
-    private static int[] getSupplyAndBuyFromFile(File fileReader) {
+    private static int[] readFromFile(File inputFile) {
         try {
-            List<String> lines = Files.readAllLines(fileReader.toPath());
+            List<String> lines = Files.readAllLines(inputFile.toPath());
             return countStatistic(lines);
 
         } catch (IOException e) {
-            throw new RuntimeException("Can't read data from the file", e);
+            throw new RuntimeException("Can't read data from the file: " + inputFile.getName(), e);
         }
     }
 
@@ -51,13 +50,23 @@ public class WorkWithFile {
         return statistic;
     }
 
-    private void writeToFile(int supply, int buy, File fileWriter) {
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileWriter))) {
-            bufferedWriter.write(STRING_SUPPLY + STRING_СOMA + supply);
-            bufferedWriter.write(System.lineSeparator() + STRING_BUY + STRING_СOMA + buy);
-            bufferedWriter.write(System.lineSeparator() + "result" + STRING_СOMA + (supply - buy));
+    private void writeToFile(int supply, int buy, File outputFile) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(outputFile))) {
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append(STRING_SUPPLY);
+            stringBuilder.append(STRING_СOMA);
+            stringBuilder.append(supply);
+            stringBuilder.append(System.lineSeparator());
+            stringBuilder.append(STRING_BUY);
+            stringBuilder.append(STRING_СOMA);
+            stringBuilder.append(buy);
+            stringBuilder.append(System.lineSeparator());
+            stringBuilder.append("result");
+            stringBuilder.append(STRING_СOMA);
+            stringBuilder.append((supply - buy));
+            bufferedWriter.write(stringBuilder.toString());
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data from the file", e);
+            throw new RuntimeException("Can't write data to the file: " + outputFile.getName(), e);
         }
     }
 }
