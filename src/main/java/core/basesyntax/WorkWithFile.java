@@ -31,21 +31,21 @@ public class WorkWithFile {
     }
 
     private String createReport(String text) {
-        int summSupplies = 0;
-        int summPurchases = 0;
+        int supplySum = 0;
+        int purchaseSum  = 0;
         String[] lines = text.split(System.lineSeparator());
         for (String words : lines) {
             String[] resultSplited = words.split(",");
             if (resultSplited[OPERATION_INDEX].equals("supply")) {
-                summSupplies += Integer.parseInt(resultSplited[QUANTITY_INDEX]);
+                supplySum += Integer.parseInt(resultSplited[QUANTITY_INDEX]);
             } else {
-                summPurchases += Integer.parseInt(resultSplited[QUANTITY_INDEX]);
+                purchaseSum += Integer.parseInt(resultSplited[QUANTITY_INDEX]);
             }
         }
-        int result = summSupplies - summPurchases;
+        int result = supplySum - purchaseSum;
 
-        return "supply," + summSupplies + System.lineSeparator()
-                + "buy," + summPurchases + System.lineSeparator()
+        return "supply," + supplySum + System.lineSeparator()
+                + "buy," + purchaseSum + System.lineSeparator()
                 + "result," + result;
     }
 
