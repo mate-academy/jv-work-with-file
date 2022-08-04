@@ -8,16 +8,19 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final int ZERO_VALUE = 0;
-    private static final int SECOND_POSITION = 1;
+    private static final int SUPPLY_TOTAL_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
+    private static final int BUY_TOTAL_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        readFromFile(fromFileName);
-        writeToFilee(doNeededForm(getSumValue(fromFileName)),toFileName);
+        String data = readFromFile(fromFileName);
+        int [] statistic = countStatistic(data);
+        String content = prepareReport(statistic);
+        writeToFile(content,toFileName);
     }
 
-    private String readFromFile(String adres) {
-        File file = new File(adres);
+    private String readFromFile(String fileName) {
+        File file = new File(fileName);
         StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
             String value = bufferedReader.readLine();
@@ -26,38 +29,40 @@ public class WorkWithFile {
                 value = bufferedReader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can not read this file: " + fileName, e);
         }
-        String result = stringBuilder.toString();
-        return result;
+        return stringBuilder.toString();
     }
 
-    private int [] getSumValue(String adres) {
-        int[] sumArray = new int[2];
-        String[] array = readFromFile(adres).split(System.lineSeparator());
-        for (int i = ZERO_VALUE; i < array.length; i++) {
-            if (array[i].startsWith("supply")) {
-                sumArray[0] += Integer.parseInt(array[i].split(",")[SECOND_POSITION]);
+    private int [] countStatistic(String data) {
+        int [] statistic = new int [2];
+        String [] lines = data.split(System.lineSeparator());
+        for (int i = 0; i < lines.length; i++) {
+            if (lines [i].startsWith("supply")) {
+                statistic [SUPPLY_TOTAL_INDEX] += Integer.parseInt(lines [i]
+                        .split(",")[AMOUNT_INDEX]);
             }
-            if (array[i].startsWith("buy")) {
-                sumArray[1] += Integer.parseInt(array[i].split(",")[SECOND_POSITION]);
+            if (lines [i].startsWith("buy")) {
+                statistic [BUY_TOTAL_INDEX] += Integer.parseInt(lines [i].split(",")[AMOUNT_INDEX]);
             }
         }
-        return sumArray;
+        return statistic;
     }
 
-    private String doNeededForm(int [] array) {
-        return new StringBuilder().append("supply,").append(String.valueOf(array[0]))
-         .append(System.lineSeparator())
-          .append("buy,").append(String.valueOf(array[1])).append(System.lineSeparator())
-         .append("result,").append(String.valueOf(array[0] - array[1])).toString();
+    private String prepareReport(int[] statistic) {
+        int totalSupply = statistic[0];
+        int totalBuy = statistic[1];
+        return new StringBuilder()
+        .append("supply,").append(String.valueOf(totalSupply)).append(System.lineSeparator())
+        .append("buy,").append(String.valueOf(totalBuy)).append(System.lineSeparator())
+        .append("result,").append(String.valueOf(totalSupply - totalBuy)).toString();
     }
 
-    private void writeToFilee(String content,String to) {
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(to))) {
+    private void writeToFile(String content, String fileName) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
             bufferedWriter.write(content);
         } catch (IOException e) {
-            throw new RuntimeException("Can not write data to file",e);
+            throw new RuntimeException("Can not write data to file: " + fileName, e);
         }
     }
 }
