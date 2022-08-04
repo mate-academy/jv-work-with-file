@@ -24,9 +24,9 @@ public class WorkWithFile {
         int supply = 0;
         int buy = 0;
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(inputFile))) {
-            String line;
+            String line = bufferedReader.readLine();
             String[] lineElements;
-            while ((line = bufferedReader.readLine()) != null) {
+            while (line != null) {
                 lineElements = line.split(",");
                 switch (lineElements[FIRST_ELEMENT_IN_LINE]) {
                     case "supply":
@@ -38,6 +38,7 @@ public class WorkWithFile {
                     default:
                         throw new RuntimeException("Input file not valid");
                 }
+                line = bufferedReader.readLine();
             }
         } catch (FileNotFoundException e) {
             throw new RuntimeException("FileReader has problem to find file "
