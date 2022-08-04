@@ -11,6 +11,11 @@ public class WorkWithFile {
     private static final String COMMA = ",";
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
+    private static final String REJEX = "\\W+";
+    private int sumOfSupply = 0;
+    private int sumOfBuy = 0;
+    private int result;
+    private String fileName;
 
     public void getStatistic(String fromFileName, String toFileName) {
         StringBuilder stringBuilder = new StringBuilder();
@@ -21,34 +26,37 @@ public class WorkWithFile {
                 value = bufferedReader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("File was not found!");
+            throw new RuntimeException("File was not found!" + fromFileName + e);
         }
-        String[] splitWords = stringBuilder.toString().split("\\W+");
+        String[] splitWords = stringBuilder.toString().split(REJEX);
 
-        int sumOfSupply = 0;
-        int sumOfBuy = 0;
-        for (int i = 1; i < splitWords.length;i++) {
+        for (int i = 1; i < splitWords.length; i++) {
             if (splitWords[i - 1].equals(SUPPLY)) {
                 sumOfSupply += Integer.parseInt(splitWords[i]);
             } else if (splitWords[i - 1].equals(BUY)) {
                 sumOfBuy += Integer.parseInt(splitWords[i]);
             }
         }
-        int result = sumOfSupply - sumOfBuy;
+        result = sumOfSupply - sumOfBuy;
+        fileName = toFileName;
+        writeToFile();
+    }
 
+    private void writeToFile() {
         try {
-            File file = new File(toFileName);
+            File file = new File(fileName);
             file.createNewFile();
         } catch (IOException e) {
-            throw new RuntimeException("Can't create file!", e);
+            throw new RuntimeException("Can't create file!" + fileName + e);
         }
 
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
             bufferedWriter.write(SUPPLY + COMMA + sumOfSupply + System.lineSeparator());
             bufferedWriter.write(BUY + COMMA + sumOfBuy + System.lineSeparator());
             bufferedWriter.write("result," + result + System.lineSeparator());
         } catch (IOException e) {
-            throw new RuntimeException("File was not found!");
+            throw new RuntimeException("File was not found!" + fileName + e);
         }
+        return;
     }
 }
