@@ -32,7 +32,7 @@ public class WorkWithFile {
 
     private String createReport(String text) {
         int supplySum = 0;
-        int purchaseSum  = 0;
+        int purchaseSum = 0;
         String[] lines = text.split(System.lineSeparator());
         for (String words : lines) {
             String[] resultSplited = words.split(",");
