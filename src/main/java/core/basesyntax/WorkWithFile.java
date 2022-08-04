@@ -41,7 +41,7 @@ public class WorkWithFile {
                 string = bufferedReader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can`t read data from file", e);
+            throw new RuntimeException("Can`t read data from file " + fromFile + " ", e);
         }
     }
 
