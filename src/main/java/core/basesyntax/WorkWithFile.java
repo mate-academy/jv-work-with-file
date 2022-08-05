@@ -12,12 +12,23 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String REJEX = "\\W+";
-    private int sumOfSupply = 0;
-    private int sumOfBuy = 0;
-    private int result;
-    private String fileName;
 
     public void getStatistic(String fromFileName, String toFileName) {
+        String dataFromFile = readFromFile(fromFileName);
+        String[] splitWords = dataFromFile.split(REJEX);
+        int sumOfSupply = 0;
+        int sumOfBuy = 0;
+        for (int i = 1; i < splitWords.length; i++) {
+            if (splitWords[i - 1].equals(SUPPLY)) {
+                sumOfSupply += Integer.parseInt(splitWords[i]);
+            } else if (splitWords[i - 1].equals(BUY)) {
+                sumOfBuy += Integer.parseInt(splitWords[i]);
+            }
+        }
+        writeToFile(toFileName,sumOfSupply,sumOfBuy);
+    }
+
+    private String readFromFile(String fromFileName) {
         StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String value = bufferedReader.readLine();
@@ -28,35 +39,24 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("File was not found!" + fromFileName + e);
         }
-        String[] splitWords = stringBuilder.toString().split(REJEX);
-
-        for (int i = 1; i < splitWords.length; i++) {
-            if (splitWords[i - 1].equals(SUPPLY)) {
-                sumOfSupply += Integer.parseInt(splitWords[i]);
-            } else if (splitWords[i - 1].equals(BUY)) {
-                sumOfBuy += Integer.parseInt(splitWords[i]);
-            }
-        }
-        result = sumOfSupply - sumOfBuy;
-        fileName = toFileName;
-        writeToFile();
+        return stringBuilder.toString();
     }
 
-    private void writeToFile() {
+    private void writeToFile(String toFileName, int sumOfSupply, int sumOfBuy) {
+        int result = sumOfSupply - sumOfBuy;
         try {
-            File file = new File(fileName);
+            File file = new File(toFileName);
             file.createNewFile();
         } catch (IOException e) {
-            throw new RuntimeException("Can't create file!" + fileName + e);
+            throw new RuntimeException("Can't create file!" + toFileName + e);
         }
 
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(SUPPLY + COMMA + sumOfSupply + System.lineSeparator());
             bufferedWriter.write(BUY + COMMA + sumOfBuy + System.lineSeparator());
             bufferedWriter.write("result," + result + System.lineSeparator());
         } catch (IOException e) {
-            throw new RuntimeException("File was not found!" + fileName + e);
+            throw new RuntimeException("File was not found!" + toFileName + e);
         }
-        return;
     }
 }
