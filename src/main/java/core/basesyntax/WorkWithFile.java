@@ -11,33 +11,42 @@ public class WorkWithFile {
     private static final String BUY = "buy";
 
     public void getStatistic(String fromFileName, String toFileName) {
+        String statistic = readFromFile(fromFileName);
+        reportData(statistic, toFileName);
+    }
 
-        StringBuilder builder = new StringBuilder();
-        String line;
-        int supply = 0;
-        int buy = 0;
-        int result = 0;
+    public String readFromFile(String fromFileName) {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
-
-            while ((line = bufferedReader.readLine()) != null) {
-                String [] reader = line.split(",");
+            int supply = 0;
+            int buy = 0;
+            while (bufferedReader.ready()) {
+                String [] reader = bufferedReader.readLine().split(",");
                 if (reader[0].equals(SUPPLY)) {
                     supply = supply + Integer.parseInt(reader[1]);
                 } else if (reader[0].equals(BUY)) {
                     buy = buy + Integer.parseInt(reader[1]);
                 }
-                result = supply - buy;
             }
+            return getReport(supply, buy);
         } catch (IOException e) {
             throw new RuntimeException("Can't read the file " + fromFileName, e);
         }
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write(System.lineSeparator() + "supply" + "," + supply);
-            bufferedWriter.write(System.lineSeparator() + "buy" + "," + buy);
-            bufferedWriter.write(System.lineSeparator() + "result" + "," + result);
+    }
 
+    public String getReport(int supply, int buy) {
+        int result = supply - buy;
+        StringBuilder builder = new StringBuilder();
+        builder.append("supply,").append(supply).append(System.lineSeparator());
+        builder.append("buy,").append(buy).append(System.lineSeparator());
+        builder.append("result,").append(result);
+        return builder.toString();
+    }
+
+    private void reportData(String statistic, String toFileName) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
+            bufferedWriter.write(statistic);
         } catch (IOException e) {
-            throw new RuntimeException("Can't read the file " + toFileName, e);
+            throw new RuntimeException("Can't write in the file", e);
         }
     }
 }
