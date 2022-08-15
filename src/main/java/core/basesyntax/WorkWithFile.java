@@ -7,20 +7,19 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final int INDEX_ZERO = 0;
+    private static final int OPERATION_INDEX = 0;
 
-    private static final int INDEX_ONE = 1;
+    private static final int NUMBER_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String[] linesFromFile = readFromFile(fromFileName);
-        String countOfData = count(linesFromFile);
-        writeToFile(countOfData, toFileName);
+        String[] dataFromFile = readFromFile(fromFileName);
+        String report = getReport(dataFromFile);
+        writeToFile(report, toFileName);
     }
 
     private String[] readFromFile(String fromFileName) {
         StringBuilder builder = new StringBuilder();
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String lines;
             while ((lines = reader.readLine()) != null) {
                 builder.append(lines).append(" ");
@@ -31,13 +30,13 @@ public class WorkWithFile {
         return builder.toString().split(" ");
     }
 
-    private String count(String[] linesFromFile) {
+    private String getReport(String[] dataFromFile) {
         int valueBuy = 0;
         int valueSupply = 0;
-        for (String lineFromFile : linesFromFile) {
+        for (String lineFromFile : dataFromFile) {
             String[] splitLine = lineFromFile.split(",");
-            String operationType = splitLine[INDEX_ZERO];
-            int sum = Integer.parseInt(splitLine[INDEX_ONE]);
+            String operationType = splitLine[OPERATION_INDEX];
+            int sum = Integer.parseInt(splitLine[NUMBER_INDEX]);
             if (operationType.equals("buy")) {
                 valueBuy += sum;
             }
@@ -45,18 +44,18 @@ public class WorkWithFile {
                 valueSupply += sum;
             }
         }
-        return reportOfData(valueBuy, valueSupply);
+        return createReport(valueBuy, valueSupply);
     }
 
-    private String reportOfData(int valueBuy, int valueSupply) {
+    private String createReport(int valueBuy, int valueSupply) {
         return "supply," + valueSupply + System.lineSeparator()
                 + "buy," + valueBuy + System.lineSeparator()
                 + "result," + (valueSupply - valueBuy);
     }
 
-    private void writeToFile(String countOfData, String toFileName) {
+    private void writeToFile(String report, String toFileName) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName, true))) {
-            writer.write(countOfData);
+            writer.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file", e);
         }
