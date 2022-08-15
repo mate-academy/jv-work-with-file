@@ -8,11 +8,11 @@ import java.util.List;
 
 public class WorkWithFile {
     private static final String COMMA = ",";
-    private int buy = 0;
-    private int supply = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        writeToFile(toFileName, createReport(readFromFile(fromFileName)));
+        String fileData = readFromFile(fromFileName);
+        String report = createReport(fileData);
+        writeToFile(toFileName, report);
     }
 
     private String readFromFile(String fromFileName) {
@@ -30,37 +30,37 @@ public class WorkWithFile {
         return stringBuilder.toString();
     }
 
-    private String[] createReport(String dataFromFile) {
+    private String createReport(String dataFromFile) {
+        int buy = 0;
+        int supply = 0;
         int result = 0;
-        String[] report = null;
-        String[] split = dataFromFile.split(COMMA);
-        for (int i = 0; i < split.length; i += 2) {
-            if (split[i].equals("buy")) {
-                buy = buy + Integer.parseInt(split[i + 1]);
+        String report;
+        String[] splittedFileData = dataFromFile.split(COMMA);
+        for (int i = 0; i < splittedFileData.length; i += 2) {
+            if (splittedFileData[i].equals("buy")) {
+                buy = buy + Integer.parseInt(splittedFileData[i + 1]);
             }
-            if (split[i].equals("supply")) {
-                supply = supply + Integer.parseInt(split[i + 1]);
+            if (splittedFileData[i].equals("supply")) {
+                supply = supply + Integer.parseInt(splittedFileData[i + 1]);
             }
             result = supply - buy;
         }
-        report = new String[]{"supply," + supply + System.lineSeparator()
-                + "buy," + buy + System.lineSeparator() + "result," + result};
+        report = "supply," + supply + System.lineSeparator()
+                + "buy," + buy + System.lineSeparator() + "result," + result;
         return report;
     }
 
-    private void writeToFile(String fileName, String[] report) {
+    private void writeToFile(String fileName, String report) {
         File file = new File(fileName);
         try {
             file.createNewFile();
         } catch (IOException e) {
-            throw new RuntimeException("Can't create file", e);
+            throw new RuntimeException("Can't create file " + fileName, e);
         }
-        for (String operation : report) {
-            try {
-                Files.write(file.toPath(), operation.getBytes(), StandardOpenOption.APPEND);
-            } catch (IOException e) {
-                throw new RuntimeException("Can't write data to file", e);
-            }
+        try {
+            Files.write(file.toPath(), report.getBytes(), StandardOpenOption.APPEND);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write data to file " + fileName, e);
         }
     }
 }
