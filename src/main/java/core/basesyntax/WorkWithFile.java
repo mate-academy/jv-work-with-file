@@ -9,40 +9,47 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
+    private static final int OPRATION_INDEX = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String statistic = readFromFile(fromFileName);
-        reportData(statistic, toFileName);
+        String data = readFromFile(fromFileName);
+        String report = getReport(data);
+        writeToFile(report, toFileName);
     }
 
     public String readFromFile(String fromFileName) {
+        StringBuilder builder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
-            int supply = 0;
-            int buy = 0;
-            while (bufferedReader.ready()) {
-                String [] reader = bufferedReader.readLine().split(",");
-                if (reader[0].equals(SUPPLY)) {
-                    supply = supply + Integer.parseInt(reader[1]);
-                } else if (reader[0].equals(BUY)) {
-                    buy = buy + Integer.parseInt(reader[1]);
-                }
+            String line = bufferedReader.readLine();
+            while (line != null) {
+                builder.append(line).append(System.lineSeparator());
+                line = bufferedReader.readLine();
             }
-            return getReport(supply, buy);
         } catch (IOException e) {
             throw new RuntimeException("Can't read the file " + fromFileName, e);
         }
-    }
-
-    public String getReport(int supply, int buy) {
-        int result = supply - buy;
-        StringBuilder builder = new StringBuilder();
-        builder.append("supply,").append(supply).append(System.lineSeparator());
-        builder.append("buy,").append(buy).append(System.lineSeparator());
-        builder.append("result,").append(result);
         return builder.toString();
     }
 
-    private void reportData(String statistic, String toFileName) {
+    public String getReport(String info) {
+        int supply = 0;
+        int buy = 0;
+        String [] lines = info.split(System.lineSeparator());
+        for (String words : lines) {
+            String[] resultSplited = words.split(",");
+            if (resultSplited[OPRATION_INDEX].equals(SUPPLY)) {
+                supply = supply + Integer.parseInt(resultSplited[1]);
+            } else if (resultSplited[OPRATION_INDEX].equals(BUY)) {
+                buy = buy + Integer.parseInt(resultSplited[1]);
+            }
+        }
+        int result = supply - buy;
+        return "supply," + supply + System.lineSeparator()
+                + "buy," + buy + System.lineSeparator()
+                + "result," + result;
+    }
+
+    private void writeToFile(String statistic, String toFileName) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(statistic);
         } catch (IOException e) {
