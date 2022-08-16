@@ -10,15 +10,14 @@ import java.util.Arrays;
 import java.util.List;
 
 public class WorkWithFile {
-    private List<String> listOfFilesData = new ArrayList<>();
 
     public void getStatistic(String fromFileName, String toFileName) {
         StringBuilder dataToWrite = new StringBuilder();
-        readDataFromFile(fromFileName);
-        String[] finalArrayOfData = generateArrayWithCorrectData(listOfFilesData, new String[2]);
+        List<String> dataFromFile = readDataFromFile(fromFileName);
+        String[] finalArrayOfData = generateArrayWithCorrectData(dataFromFile, new String[2]);
         int[] finalSumOfEachElementOfArrayData =
                 generateSumForEachElementOfCorrectDataArray(
-                        listOfFilesData,
+                        dataFromFile,
                         finalArrayOfData,
                         0,
                         0);
@@ -33,22 +32,24 @@ public class WorkWithFile {
         writeDataToFile(toFileName, dataToWrite);
     }
 
+    public List<String> readDataFromFile(String fromFileName) {
+        List<String> res = new ArrayList<>();
+        String line;
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
+            while ((line = reader.readLine()) != null) {
+                res.addAll(Arrays.asList(line.split(",")));
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Can't read data from file: " + fromFileName, e);
+        }
+        return res;
+    }
+
     public void writeDataToFile(String fileName, StringBuilder dataToWrite) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             writer.write(dataToWrite.toString());
         } catch (IOException e) {
             throw new RuntimeException("Can't find a file: " + fileName, e);
-        }
-    }
-
-    public void readDataFromFile(String fileName) {
-        String line;
-        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
-            while ((line = reader.readLine()) != null) {
-                listOfFilesData.addAll(Arrays.asList(line.split(",")));
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("Can't read data from file: " + fileName, e);
         }
     }
 
