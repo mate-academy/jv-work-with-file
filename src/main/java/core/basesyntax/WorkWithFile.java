@@ -13,7 +13,7 @@ public class WorkWithFile {
     private static final String REGEX = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true))){
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true))) {
             bufferedWriter.write(writeStatistic(fromFileName));
         } catch (IOException e) {
             throw new RuntimeException("Can't write file", e);
