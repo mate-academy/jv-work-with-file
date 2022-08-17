@@ -10,26 +10,13 @@ import java.util.Arrays;
 import java.util.List;
 
 public class WorkWithFile {
+    private StringBuilder dataToWrite = new StringBuilder();
 
     public void getStatistic(String fromFileName, String toFileName) {
-        StringBuilder dataToWrite = new StringBuilder();
         List<String> dataFromFile = readDataFromFile(fromFileName);
-        String[] finalArrayOfData = generateArrayWithCorrectData(dataFromFile, new String[2]);
-        int[] finalSumOfEachElementOfArrayData =
-                generateSumForEachElementOfCorrectDataArray(
-                        dataFromFile,
-                        finalArrayOfData,
-                        0,
-                        0);
-        dataToWrite.append(finalArrayOfData[1]).append(",")
-                .append(finalSumOfEachElementOfArrayData[1])
-                .append(System.lineSeparator())
-                .append(finalArrayOfData[0]).append(",")
-                .append(finalSumOfEachElementOfArrayData[0])
-                .append(System.lineSeparator())
-                .append("result").append(",")
-                .append(finalSumOfEachElementOfArrayData[1] - finalSumOfEachElementOfArrayData[0]);
-        writeDataToFile(toFileName, dataToWrite);
+        String finalArrayOfData = createReport(dataFromFile, new String[2],0,0);
+
+        writeDataToFile(toFileName, finalArrayOfData);
     }
 
     public List<String> readDataFromFile(String fromFileName) {
@@ -45,15 +32,17 @@ public class WorkWithFile {
         return res;
     }
 
-    public void writeDataToFile(String fileName, StringBuilder dataToWrite) {
+    public void writeDataToFile(String fileName, String dataToWrite) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
-            writer.write(dataToWrite.toString());
+            writer.write(dataToWrite);
         } catch (IOException e) {
             throw new RuntimeException("Can't find a file: " + fileName, e);
         }
     }
 
-    public String[] generateArrayWithCorrectData(List<String> data, String[] result) {
+    public String createReport(List<String> data, String[] result,
+                               int sumOfTheValuesOfTheFirstElements,
+                               int sumOfTheValuesOfTheSecondElements) {
         for (int i = 0; i < data.size(); i += 2) {
             for (int j = i + 2; j < data.size(); j += 2) {
                 if (data.get(i).equals(data.get(j))) {
@@ -66,23 +55,24 @@ public class WorkWithFile {
                 result[1] = data.get(i);
             }
         }
-        return result;
-    }
-
-    public int[] generateSumForEachElementOfCorrectDataArray(
-            List<String> listOfFilesData,
-            String[] finalArrayOfData,
-            int firstSum,
-            int secondSum) {
-        for (int i = 0; i < listOfFilesData.size(); i++) {
-            if (listOfFilesData.get(i).equals(finalArrayOfData[0])) {
-                firstSum += Integer.parseInt(listOfFilesData.get(i + 1));
+        for (int i = 0; i < data.size(); i++) {
+            if (data.get(i).equals(result[0])) {
+                sumOfTheValuesOfTheFirstElements += Integer.parseInt(data.get(i + 1));
             }
-            if (listOfFilesData.get(i).equals(finalArrayOfData[1])) {
-                secondSum += Integer.parseInt(listOfFilesData.get(i + 1));
+            if (data.get(i).equals(result[1])) {
+                sumOfTheValuesOfTheSecondElements += Integer.parseInt(data.get(i + 1));
             }
         }
-        int[] res = new int[]{firstSum, secondSum};
-        return res;
+        return dataToWrite.append(result[1]).append(",")
+                .append(sumOfTheValuesOfTheSecondElements)
+                .append(System.lineSeparator())
+                .append(result[0])
+                .append(",")
+                .append(sumOfTheValuesOfTheFirstElements)
+                .append(System.lineSeparator())
+                .append("result")
+                .append(",")
+                .append(sumOfTheValuesOfTheSecondElements - sumOfTheValuesOfTheFirstElements)
+                .toString();
     }
 }
