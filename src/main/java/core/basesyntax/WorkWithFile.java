@@ -14,11 +14,11 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         String infoAboutBuyOperation = getSumOfOperation(readTheFile(fromFileName), Operation.BUY);
-        String infoAboutSupplyOperation = getSumOfOperation(readTheFile(fromFileName)
-                , Operation.SUPPLY);
+        String infoAboutSupplyOperation = getSumOfOperation(readTheFile(fromFileName),
+                Operation.SUPPLY);
         String infoAboutResult = getResult(infoAboutBuyOperation, infoAboutSupplyOperation);
-        writeStatistic(infoAboutBuyOperation, infoAboutSupplyOperation
-                , infoAboutResult, toFileName);
+        writeStatistic(infoAboutBuyOperation, infoAboutSupplyOperation,
+                infoAboutResult, toFileName);
     }
 
     private String [] readTheFile(String fromFileName) {
@@ -55,8 +55,8 @@ public class WorkWithFile {
         return String.valueOf(Operation.RESULT).toLowerCase() + REGEX + resultAmount;
     }
 
-    private void writeStatistic(String infoAboutBuyOperation, String infoAboutSupplyOperation
-            , String infoAboutResult, String toFileName) {
+    private void writeStatistic(String infoAboutBuyOperation, String infoAboutSupplyOperation,
+                                String infoAboutResult, String toFileName) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName,true))) {
             bufferedWriter.write(infoAboutSupplyOperation);
             bufferedWriter.write(System.lineSeparator());
