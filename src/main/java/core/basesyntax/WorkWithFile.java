@@ -7,10 +7,16 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    static final int NEXT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int supply = 0;
-        int buy = 0;
+
+        String[] arrayData = getArrayData(fromFileName);
+        String report = makeReport(arrayData);
+        writeToFile(report, toFileName);
+    }
+
+    private String[] getArrayData(String fromFileName) {
         StringBuilder stringBuilder = new StringBuilder();
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
@@ -22,20 +28,24 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can`t read the file", e);
         }
-        String dataFromFile = stringBuilder.toString();
-        String[] arrayData = dataFromFile.split(",");
-        for (int i = 0; (i) < (arrayData.length - 1); i++) {
+        return stringBuilder.toString().split(",");
+    }
+
+    private String makeReport(String[] arrayData) {
+        int supply = 0;
+        int buy = 0;
+        for (int i = 0; i < (arrayData.length - NEXT_INDEX); i++) {
             if (arrayData[i].equals("supply")) {
-                supply += Integer.parseInt(arrayData[i + 1]);
+                supply += Integer.parseInt(arrayData[i + NEXT_INDEX]);
             } else if (arrayData[i].equals("buy")) {
-                buy += Integer.parseInt(arrayData[i + 1]);
+                buy += Integer.parseInt(arrayData[i + NEXT_INDEX]);
             }
         }
-        int result = supply - buy;
-        String report = "" + "supply," + supply
-                + System.lineSeparator() + "buy,"
-                + buy + System.lineSeparator()
-                + "result," + result;
+        return "" + "supply," + supply + System.lineSeparator() + "buy,"
+                + buy + System.lineSeparator() + "result," + (supply - buy);
+    }
+
+    private void writeToFile(String report, String toFileName) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true))) {
             bufferedWriter.write(report);
         } catch (IOException e) {
