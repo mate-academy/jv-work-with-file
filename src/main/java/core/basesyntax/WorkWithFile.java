@@ -8,19 +8,18 @@ import java.nio.file.Files;
 import java.util.List;
 
 public class WorkWithFile {
-    private static final int ELEMENT_PREVIOUSLY_COMMA = 0;
-    private static final int ELEMENT_AFTER_COMMA = 1;
+    private static final int OPERATION_NAME = 0;
+    private static final int OPERATION_AMOUNT = 1;
     private static final String REGEX = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true))) {
-            bufferedWriter.write(writeStatistic(fromFileName));
-        } catch (IOException e) {
-            throw new RuntimeException("Can't write file", e);
-        }
+        String infoAboutBuyOperation = getSumOfOperation(readTheFile(fromFileName), Operation.BUY);
+        String infoAboutSupplyOperation = getSumOfOperation(readTheFile(fromFileName), Operation.SUPPLY);
+        String infoAboutResult = getResult(infoAboutBuyOperation, infoAboutSupplyOperation);
+        writeStatistic(infoAboutBuyOperation, infoAboutSupplyOperation, infoAboutResult, toFileName);
     }
 
-    private String [] getReadingFiles(String fromFileName) {
+    private String [] readTheFile(String fromFileName) {
         File file = new File(fromFileName);
         List<String> strings;
         try {
@@ -35,35 +34,34 @@ public class WorkWithFile {
         return readingData;
     }
 
-    private int getSupplySum(String fromFileName) {
-        String[] fullData = getReadingFiles(fromFileName);
-        int supplySum = 0;
-        for (String fullDatum : fullData) {
-            String[] split = fullDatum.split(REGEX);
-            if (split[ELEMENT_PREVIOUSLY_COMMA].equals("supply")) {
-                supplySum += Integer.parseInt(split[ELEMENT_AFTER_COMMA]);
+    private String getSumOfOperation(String [] readingFiles, Enum operationName) {
+        int operationSum = 0;
+        for (String files : readingFiles) {
+            String[] split = files.split(REGEX);
+            if (split[OPERATION_NAME].equals(String.valueOf(operationName).toLowerCase())) {
+                operationSum += Integer.parseInt(split[OPERATION_AMOUNT]);
             }
         }
-        return supplySum;
+        return String.valueOf(operationName).toLowerCase() + REGEX + operationSum;
     }
 
-    private int getBuySum(String fromFileName) {
-        String[] fullData = getReadingFiles(fromFileName);
-        int buySum = 0;
-        for (String fullDatum : fullData) {
-            String[] split = fullDatum.split(REGEX);
-            if (split[ELEMENT_PREVIOUSLY_COMMA].equals("buy")) {
-                buySum += Integer.parseInt(split[ELEMENT_AFTER_COMMA]);
-            }
+    private String getResult (String infoAboutBuyOperation, String infoAboutSupplyOperation) {
+        String[] splittedBuyOperation = infoAboutBuyOperation.split(REGEX);
+        String[] splittedSupplyOperation = infoAboutSupplyOperation.split(REGEX);
+        int resultAmount = Integer.parseInt(splittedSupplyOperation[OPERATION_AMOUNT])
+                -  Integer.parseInt(splittedBuyOperation[OPERATION_AMOUNT]);
+        return String.valueOf(Operation.RESULT).toLowerCase() + REGEX + resultAmount;
+    }
+
+    private void writeStatistic(String infoAboutBuyOperation, String infoAboutSupplyOperation, String infoAboutResult, String toFileName) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName,true))) {
+            bufferedWriter.write(infoAboutSupplyOperation);
+            bufferedWriter.write(System.lineSeparator());
+            bufferedWriter.write(infoAboutBuyOperation);
+            bufferedWriter.write(System.lineSeparator());
+            bufferedWriter.write(infoAboutResult);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write to file", e);
         }
-        return buySum;
-    }
-
-    private String writeStatistic(String fromFileName) {
-        StringBuilder builder = new StringBuilder();
-        builder.append("supply,").append(getSupplySum(fromFileName)).append(System.lineSeparator())
-                .append("buy," + getBuySum(fromFileName)).append(System.lineSeparator())
-                .append("result," + (getSupplySum(fromFileName) - getBuySum(fromFileName)));
-        return builder.toString();
     }
 }
