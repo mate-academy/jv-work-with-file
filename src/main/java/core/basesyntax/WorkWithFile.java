@@ -13,23 +13,22 @@ public class WorkWithFile {
     private StringBuilder dataToWrite = new StringBuilder();
 
     public void getStatistic(String fromFileName, String toFileName) {
-        List<String> dataFromFile = readDataFromFile(fromFileName);
-        String finalArrayOfData = createReport(dataFromFile, new String[2],0,0);
-
-        writeDataToFile(toFileName, finalArrayOfData);
+        List<String> lines = readDataFromFile(fromFileName);
+        String statistic = createReport(lines, new String[2],0,0);
+        writeDataToFile(toFileName, statistic);
     }
 
     public List<String> readDataFromFile(String fromFileName) {
-        List<String> res = new ArrayList<>();
-        String line;
+        List<String> lines = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
+            String line;
             while ((line = reader.readLine()) != null) {
-                res.addAll(Arrays.asList(line.split(",")));
+                lines.addAll(Arrays.asList(line.split(",")));
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from file: " + fromFileName, e);
         }
-        return res;
+        return lines;
     }
 
     public void writeDataToFile(String fileName, String dataToWrite) {
