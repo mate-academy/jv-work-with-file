@@ -43,8 +43,8 @@ public class WorkWithFile {
             }
         }
         int result = supplySum - buySum;
-        builder.append(SUPPLY).append(DELIMITER).append(System.lineSeparator())
-                .append(BUY).append(DELIMITER).append(System.lineSeparator())
+        builder.append(SUPPLY).append(DELIMITER).append(supplySum).append(System.lineSeparator())
+                .append(BUY).append(DELIMITER).append(buySum).append(System.lineSeparator())
                 .append("result").append(DELIMITER).append(result);
         return builder.toString();
     }
