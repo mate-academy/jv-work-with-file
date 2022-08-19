@@ -18,7 +18,7 @@ public class WorkWithFile {
         writeStatistic(makeReport(readTheFile(fromFileName)), toFileName);
     }
 
-    private List <String> readTheFile(String fromFileName) {
+    private List<String> readTheFile(String fromFileName) {
         File file = new File(fromFileName);
         List<String> lines;
         try {
@@ -29,7 +29,7 @@ public class WorkWithFile {
         return lines;
     }
 
-    private String makeReport (List <String> lines) {
+    private String makeReport(List<String> lines) {
         int buySum = 0;
         int supplySum = 0;
         StringBuilder builder = new StringBuilder();
