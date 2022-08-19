@@ -8,9 +8,9 @@ import java.nio.file.Files;
 import java.util.List;
 
 public class WorkWithFile {
-    private static final int OPERATION_NAME = 0;
-    private static final int OPERATION_AMOUNT = 1;
-    private static final String REGEX = ",";
+    private static final int OPERATION_NAME_INDEX = 0;
+    private static final int OPERATION_AMOUNT_INDEX = 1;
+    private static final String DELIMITER = ",";
     private static final String BUY = "buy";
     private static final String SUPPLY = "supply";
 
@@ -20,36 +20,38 @@ public class WorkWithFile {
 
     private List <String> readTheFile(String fromFileName) {
         File file = new File(fromFileName);
-        List<String> strings;
+        List<String> lines;
         try {
-            strings = Files.readAllLines(file.toPath());
+            lines = Files.readAllLines(file.toPath());
         } catch (IOException e) {
             throw new RuntimeException("Can't read file" + fromFileName, e);
         }
-        return strings;
+        return lines;
     }
 
-    private String makeReport (List <String> readingFiles) {
+    private String makeReport (List <String> lines) {
         int buySum = 0;
         int supplySum = 0;
-        for (String files : readingFiles) {
-            String[] split = files.split(REGEX);
-            if (split[OPERATION_NAME].equals(BUY)) {
-                buySum += Integer.parseInt(split[OPERATION_AMOUNT]);
+        StringBuilder builder = new StringBuilder();
+        for (String line : lines) {
+            String[] split = line.split(DELIMITER);
+            if (split[OPERATION_NAME_INDEX].equals(BUY)) {
+                buySum += Integer.parseInt(split[OPERATION_AMOUNT_INDEX]);
             }
-            if (split[OPERATION_NAME].equals(SUPPLY)) {
-                supplySum += Integer.parseInt(split[OPERATION_AMOUNT]);
+            if (split[OPERATION_NAME_INDEX].equals(SUPPLY)) {
+                supplySum += Integer.parseInt(split[OPERATION_AMOUNT_INDEX]);
             }
         }
         int result = supplySum - buySum;
-        return SUPPLY + REGEX + supplySum + System.lineSeparator() +
-                BUY + REGEX + buySum + System.lineSeparator() +
-                "result" + REGEX + result;
+        builder.append(SUPPLY).append(DELIMITER).append(System.lineSeparator())
+                .append(BUY).append(DELIMITER).append(System.lineSeparator())
+                .append("result").append(DELIMITER).append(result);
+        return builder.toString();
     }
 
-    private void writeStatistic(String statistics, String toFileName) {
+    private void writeStatistic(String statistic, String toFileName) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName,true))) {
-            bufferedWriter.write(statistics);
+            bufferedWriter.write(statistic);
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file" + toFileName, e);
         }
