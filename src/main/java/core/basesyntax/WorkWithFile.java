@@ -9,7 +9,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final String WHITESPACE_REGEX = "\\s";
     private static final int REPORT_LENGTH = 3;
     private static final int RECORD_DETAIL_TYPE_INDEX = 0;
     private static final int RECORD_DETAIL_AMOUNT_INDEX = 1;
@@ -19,8 +18,8 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] records = readFromFile(fromFileName);
-        String[] report = getReport(records);
-        writeReportToFile(toFileName, report);
+        String report = getReport(records);
+        writeReportToFile(toFileName, report.split(System.lineSeparator()));
     }
 
     private String[] readFromFile(String fromFileName) {
@@ -29,19 +28,19 @@ public class WorkWithFile {
             StringBuilder recordsBuilder = new StringBuilder();
             String currentLine = bufferedReader.readLine();
             while (currentLine != null) {
-                recordsBuilder.append(currentLine).append(" ");
+                recordsBuilder.append(currentLine).append(System.lineSeparator());
                 currentLine = bufferedReader.readLine();
             }
-            records = recordsBuilder.toString().split(WHITESPACE_REGEX);
+            records = recordsBuilder.toString().split(System.lineSeparator());
         } catch (FileNotFoundException e) {
             throw new RuntimeException("File " + fromFileName + " not found", e);
         } catch (IOException e) {
-            throw new RuntimeException("Can't read data from file", e);
+            throw new RuntimeException("Can't read data from file: " + fromFileName, e);
         }
         return records;
     }
 
-    public void writeReportToFile(String targetFileName, String[] report) {
+    private void writeReportToFile(String targetFileName, String[] report) {
         try {
             File reportFile = new File(targetFileName);
             reportFile.createNewFile();
@@ -52,24 +51,18 @@ public class WorkWithFile {
             }
             reportWriter.close();
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data to file", e);
+            throw new RuntimeException("Can't write data to file: " + targetFileName, e);
         }
     }
 
-    private String[] getReport(String[] records) {
-        String[] report = new String[REPORT_LENGTH];
-        fillReport(report, records);
-        return report;
-    }
-
-    private void fillReport(String[] report, String[] records) {
+    private String getReport(String[] records) {
         int[] totals = calculateTotals(records);
-        calculateResult(totals);
         StringBuilder reportBuilder = new StringBuilder();
-        for (int i = 0; i < report.length; i++) {
-            report[i] = reportBuilder.append(getOperationType(i)).append(totals[i]).toString();
-            reportBuilder.setLength(0);
+        for (int i = 0; i < totals.length; i++) {
+            reportBuilder.append(getOperationType(i)).append(totals[i])
+                    .append(System.lineSeparator());
         }
+        return reportBuilder.toString();
     }
 
     private int[] calculateTotals(String[] records) {
@@ -88,11 +81,8 @@ public class WorkWithFile {
                     break;
             }
         }
-        return totals;
-    }
-
-    private void calculateResult(int[] totals) {
         totals[RESULT_ROW_INDEX] = totals[SUPPLY_ROW_INDEX] - totals[BUY_ROW_INDEX];
+        return totals;
     }
 
     private String getOperationType(int reportRowIndex) {
