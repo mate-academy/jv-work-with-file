@@ -8,6 +8,9 @@ import java.io.IOException;
 
 public class WorkWithFile {
     static final int NEXT_INDEX = 1;
+    static final String SUPPLY = "supply";
+    static final String BUY = "buy";
+    static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
 
@@ -35,14 +38,14 @@ public class WorkWithFile {
         int supply = 0;
         int buy = 0;
         for (int i = 0; i < (arrayData.length - NEXT_INDEX); i++) {
-            if (arrayData[i].equals("supply")) {
+            if (arrayData[i].equals(SUPPLY)) {
                 supply += Integer.parseInt(arrayData[i + NEXT_INDEX]);
-            } else if (arrayData[i].equals("buy")) {
+            } else if (arrayData[i].equals(BUY)) {
                 buy += Integer.parseInt(arrayData[i + NEXT_INDEX]);
             }
         }
-        return "" + "supply," + supply + System.lineSeparator() + "buy,"
-                + buy + System.lineSeparator() + "result," + (supply - buy);
+        return SUPPLY + "," + supply + System.lineSeparator() + BUY + ","
+                + buy + System.lineSeparator() + RESULT + "," + (supply - buy);
     }
 
     private void writeToFile(String report, String toFileName) {
