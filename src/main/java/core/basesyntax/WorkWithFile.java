@@ -1,51 +1,50 @@
 package core.basesyntax;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
 
 public class WorkWithFile {
     private static final int ACTION_INDEX = 0;
     private static final int VALUE_INDEX = 1;
-    private static final int SUPPLY_INDEX = 0;
-    private static final int BUY_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
+        List<String> listOfData = readFromFile(fromFileName);
+        String report = createReport(listOfData);
+        writeToFile(toFileName, report);
+    }
+
+    private List<String> readFromFile(String fileName) {
         try {
-            int[] data = readFromFile(fromFileName);
-            String report = createReport(data[SUPPLY_INDEX], data[BUY_INDEX]);
-            writeToFile(toFileName, report);
+            return Files.readAllLines(Path.of(fileName));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private int[] readFromFile(String fileName) throws IOException {
-        BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName));
-        String tempStr = bufferedReader.readLine();
-        int[] values = new int[2];
-        while (tempStr != null) {
-            String[] tempStrArr = tempStr.split(",");
-            int value = Integer.parseInt(tempStrArr[VALUE_INDEX]);
-            if (tempStrArr[ACTION_INDEX].equals("supply")) {
-                values[SUPPLY_INDEX] += value;
-            } else {
-                values[BUY_INDEX] += value;
-            }
-            tempStr = bufferedReader.readLine();
+    private void writeToFile(String fileName, String report) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
+            bufferedWriter.write(report);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        return values;
     }
 
-    private void writeToFile(String fileName, String report) throws IOException {
-        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName));
-        bufferedWriter.write(report);
-        bufferedWriter.close();
-    }
-
-    private String createReport(int supply, int buy) {
+    private String createReport(List<String> listOfData) {
+        int supply = 0;
+        int buy = 0;
+        for (String data : listOfData) {
+            String[] splittedData = data.split(",");
+            int value = Integer.parseInt(splittedData[VALUE_INDEX]);
+            if (splittedData[ACTION_INDEX].equals("supply")) {
+                supply += value;
+            } else {
+                buy += value;
+            }
+        }
         return new StringBuilder("supply,")
                 .append(supply)
                 .append(System.lineSeparator())
