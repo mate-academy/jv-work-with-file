@@ -39,40 +39,25 @@ public class WorkWithFile {
         }
     }
 
-    public String createReport(List<String> data) {
-        String[] result = new String[2];
-        int sumOfTheValuesOfTheFirstElements = 0;
-        int sumOfTheValuesOfTheSecondElements = 0;
-        for (int i = 0; i < data.size(); i += 2) {
-            for (int j = i + 2; j < data.size(); j += 2) {
-                if (data.get(i).equals(data.get(j))) {
-                    result[0] = data.get(j);
-                }
+    public String createReport(List<String> lines) {
+        int buy = 0;
+        int supply = 0;
+        for (int i = 0; i < lines.size(); i += 2) {
+            if (lines.get(i).equals("supply")) {
+                supply += Integer.parseInt(lines.get(i + 1));
+            }
+            if (lines.get(i).equals("buy")) {
+                buy += Integer.parseInt(lines.get(i + 1));
             }
         }
-        for (int i = 0; i < data.size(); i += 2) {
-            if (!result[0].equals(data.get(i))) {
-                result[1] = data.get(i);
-            }
-        }
-        for (int i = 0; i < data.size(); i++) {
-            if (data.get(i).equals(result[0])) {
-                sumOfTheValuesOfTheFirstElements += Integer.parseInt(data.get(i + 1));
-            }
-            if (data.get(i).equals(result[1])) {
-                sumOfTheValuesOfTheSecondElements += Integer.parseInt(data.get(i + 1));
-            }
-        }
-        return dataToWrite.append(result[1]).append(",")
-                .append(sumOfTheValuesOfTheSecondElements)
+
+        return dataToWrite.append("supply,").append(supply)
                 .append(System.lineSeparator())
-                .append(result[0])
-                .append(",")
-                .append(sumOfTheValuesOfTheFirstElements)
+                .append("buy,")
+                .append(buy)
                 .append(System.lineSeparator())
-                .append("result")
-                .append(",")
-                .append(sumOfTheValuesOfTheSecondElements - sumOfTheValuesOfTheFirstElements)
+                .append("result,")
+                .append(supply - buy)
                 .toString();
     }
 }
