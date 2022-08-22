@@ -14,7 +14,7 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         List<String> lines = readDataFromFile(fromFileName);
-        String statistic = createReport(lines, new String[2],0,0);
+        String statistic = createReport(lines);
         writeDataToFile(toFileName, statistic);
     }
 
@@ -39,9 +39,10 @@ public class WorkWithFile {
         }
     }
 
-    public String createReport(List<String> data, String[] result,
-                               int sumOfTheValuesOfTheFirstElements,
-                               int sumOfTheValuesOfTheSecondElements) {
+    public String createReport(List<String> data) {
+        String[] result = new String[2];
+        int sumOfTheValuesOfTheFirstElements = 0;
+        int sumOfTheValuesOfTheSecondElements = 0;
         for (int i = 0; i < data.size(); i += 2) {
             for (int j = i + 2; j < data.size(); j += 2) {
                 if (data.get(i).equals(data.get(j))) {
