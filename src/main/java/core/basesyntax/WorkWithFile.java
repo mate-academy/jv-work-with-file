@@ -10,7 +10,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class WorkWithFile {
-    private StringBuilder dataToWrite = new StringBuilder();
 
     public void getStatistic(String fromFileName, String toFileName) {
         List<String> lines = readDataFromFile(fromFileName);
@@ -40,6 +39,8 @@ public class WorkWithFile {
     }
 
     public String createReport(List<String> lines) {
+        StringBuilder dataToWrite = new StringBuilder();
+
         int buy = 0;
         int supply = 0;
         for (int i = 0; i < lines.size(); i += 2) {
