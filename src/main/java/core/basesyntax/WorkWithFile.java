@@ -12,6 +12,7 @@ public class WorkWithFile {
     private static final int ACTION_INDEX = 0;
     private static final int VALUE_INDEX = 1;
     private static final String SPLIT_INDEX = ",";
+    private static final String BUY_INDEX = "buy";
 
     public void getStatistic(String fromFileName, String toFileName) {
         List<String> listOfData = readFromFile(fromFileName);
@@ -41,7 +42,7 @@ public class WorkWithFile {
         for (String data : listOfData) {
             String[] splitData = data.split(SPLIT_INDEX);
             int value = Integer.parseInt(splitData[VALUE_INDEX]);
-            if (splitData[ACTION_INDEX].equals("buy")) {
+            if (splitData[ACTION_INDEX].equals(BUY_INDEX)) {
                 buy += value;
             } else {
                 supply += value;
