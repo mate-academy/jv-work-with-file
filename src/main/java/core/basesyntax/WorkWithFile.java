@@ -11,6 +11,7 @@ import java.util.List;
 public class WorkWithFile {
     private static final int ACTION_INDEX = 0;
     private static final int VALUE_INDEX = 1;
+    private static final String SPLIT_INDEX = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         List<String> listOfData = readFromFile(fromFileName);
@@ -35,10 +36,10 @@ public class WorkWithFile {
     }
 
     private String createReport(List<String> listOfData) {
-        int supply = 0;
         int buy = 0;
+        int supply = 0;
         for (String data : listOfData) {
-            String[] splitData = data.split(",");
+            String[] splitData = data.split(SPLIT_INDEX);
             int value = Integer.parseInt(splitData[VALUE_INDEX]);
             if (splitData[ACTION_INDEX].equals("buy")) {
                 buy += value;
