@@ -31,7 +31,7 @@ public class WorkWithFile {
             bufferedWriter.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Can't write file.", e);
-            }
+        }
     }
 
     private String createReport(List<String> listOfData) {
