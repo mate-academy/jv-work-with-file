@@ -11,8 +11,8 @@ import java.util.List;
 public class WorkWithFile {
     private static final int ACTION_INDEX = 0;
     private static final int VALUE_INDEX = 1;
-    private static final String SPLIT_INDEX = ",";
-    private static final String BUY_INDEX = "buy";
+    private static final String CSV_SEPARATOR = ",";
+    private static final String BUY = "buy";
 
     public void getStatistic(String fromFileName, String toFileName) {
         List<String> listOfData = readFromFile(fromFileName);
@@ -40,9 +40,9 @@ public class WorkWithFile {
         int buy = 0;
         int supply = 0;
         for (String data : listOfData) {
-            String[] splitData = data.split(SPLIT_INDEX);
+            String[] splitData = data.split(CSV_SEPARATOR);
             int value = Integer.parseInt(splitData[VALUE_INDEX]);
-            if (splitData[ACTION_INDEX].equals(BUY_INDEX)) {
+            if (splitData[ACTION_INDEX].equals(BUY)) {
                 buy += value;
             } else {
                 supply += value;
