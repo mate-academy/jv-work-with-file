@@ -1,3 +1,4 @@
+
 package core.basesyntax;
 
 import java.io.BufferedWriter;
@@ -26,10 +27,10 @@ public class WorkWithFile {
     }
 
     private void writeToFile(String fileName, String report) {
-            try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
-                bufferedWriter.write(report);
-            } catch (IOException e) {
-                throw new RuntimeException("Can't write file.", e);
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
+            bufferedWriter.write(report);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write file.", e);
             }
     }
 
