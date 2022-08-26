@@ -11,7 +11,7 @@ public class WorkWithFile {
     private int supply = 0;
     private int buy = 0;
 
-    public void getDataFromFile(String fromFileName) {
+    private void getDataFromFile(String fromFileName) {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String value = bufferedReader.readLine();
             while (value != null) {
@@ -31,7 +31,7 @@ public class WorkWithFile {
         }
     }
 
-    public void writeData(String toFileName) {
+    private void writeData(String toFileName) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write("supply," + supply + System.lineSeparator()
                     + "buy," + buy + System.lineSeparator()
