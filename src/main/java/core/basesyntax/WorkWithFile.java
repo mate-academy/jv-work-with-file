@@ -9,6 +9,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class WorkWithFile {
+    private static final int OPERATION_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
+
+    public void getStatistic(String fromFileName, String toFileName) {
+        ArrayList<String> data = getDataFromFile(fromFileName);
+        String report = createReport(data);
+        writeData(toFileName, report);
+    }
 
     private ArrayList<String> getDataFromFile(String fromFileName) {
         ArrayList<String> dataFile = new ArrayList<>();
@@ -38,25 +46,16 @@ public class WorkWithFile {
         int supply = 0;
         int buy = 0;
         for (String value : file) {
-            String[] name = value.split(",", 0);
-            if (name[0].equals("supply")) {
-                supply += Integer.parseInt(name[1]);
+            String[] name = value.split(",");
+            if (name[OPERATION_INDEX].equals("supply")) {
+                supply += Integer.parseInt(name[AMOUNT_INDEX]);
             }
-            if (name[0].equals("buy")) {
-                buy += Integer.parseInt(name[1]);
+            if (name[OPERATION_INDEX].equals("buy")) {
+                buy += Integer.parseInt(name[AMOUNT_INDEX]);
             }
         }
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("supply," + supply + System.lineSeparator())
+        return new StringBuilder().append("supply," + supply + System.lineSeparator())
                 .append("buy," + buy + System.lineSeparator())
-                .append("result," + (supply - buy));
-        return stringBuilder.toString();
-
-    }
-
-    public void getStatistic(String fromFileName, String toFileName) {
-        ArrayList<String> data = getDataFromFile(fromFileName);
-        String report = createReport(data);
-        writeData(toFileName,report);
+                .append("result," + (supply - buy)).toString();
     }
 }
