@@ -8,18 +8,23 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private int totalSupply = 0;
+    private int totalBuy = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int supply = 0;
-        int buy = 0;
+        readFromFile(fromFileName);
+        writeToFile(toFileName);
+    }
+
+    public void readFromFile(String fromFileName) {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String line = bufferedReader.readLine();
             while (line != null) {
                 String[] split = line.split(",");
                 if (split[0].equals("supply")) {
-                    supply += Integer.parseInt(split[1]);
+                    totalSupply += Integer.parseInt(split[1]);
                 } else {
-                    buy += Integer.parseInt(split[1]);
+                    totalBuy += Integer.parseInt(split[1]);
                 }
                 line = bufferedReader.readLine();
             }
@@ -28,9 +33,12 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Runtime Exception", e);
         }
+    }
+
+    public void writeToFile(String toFileName) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write("supply," + supply + System.lineSeparator() + "buy," + buy
-                    + System.lineSeparator() + "result," + (supply - buy));
+            bufferedWriter.write("supply," + totalSupply + System.lineSeparator() + "buy,"
+                    + totalBuy + System.lineSeparator() + "result," + (totalSupply - totalBuy));
         } catch (IOException e) {
             throw new RuntimeException("Runtime Exception", e);
         }
