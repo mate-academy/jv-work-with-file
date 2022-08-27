@@ -1,6 +1,12 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class WorkWithFile {
 
@@ -13,7 +19,7 @@ public class WorkWithFile {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(inputFile));
             BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(outputFile));
             String line = bufferedReader.readLine();
-            while (line != null){
+            while (line != null) {
                 String[] split = line.split(",");
                 switch (split[0]) {
                     case ("supply"):
@@ -22,10 +28,13 @@ public class WorkWithFile {
                     case ("buy"):
                         buy += Integer.parseInt(split[1]);
                         break;
+                    default:
+                        break;
                 }
                 line = bufferedReader.readLine();
             }
-            bufferedWriter.write("supply," + supply + System.lineSeparator() + "buy," + buy + System.lineSeparator() + "result," + (supply - buy));
+            bufferedWriter.write("supply," + supply + System.lineSeparator() + "buy," + buy
+                    + System.lineSeparator() + "result," + (supply - buy));
             bufferedReader.close();
             bufferedWriter.close();
         } catch (FileNotFoundException e) {
