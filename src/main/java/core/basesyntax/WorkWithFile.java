@@ -8,6 +8,8 @@ import java.nio.file.Path;
 import java.util.List;
 
 public class WorkWithFile {
+    private static final int OPERATION_TYPE = 0;
+    private static final int AMMOUNT = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         List<String> dataFromFile = readFromFile(fromFileName);
@@ -36,10 +38,10 @@ public class WorkWithFile {
         int totalBuy = 0;
         for (String line: data) {
             String[] split = line.split(",");
-            if (split[0].equals("supply")) {
-                totalSupply += Integer.parseInt(split[1]);
+            if (split[OPERATION_TYPE].equals("supply")) {
+                totalSupply += Integer.parseInt(split[AMMOUNT]);
             } else {
-                totalBuy += Integer.parseInt(split[1]);
+                totalBuy += Integer.parseInt(split[AMMOUNT]);
             }
         }
         return "supply," + totalSupply + System.lineSeparator() + "buy," + totalBuy
