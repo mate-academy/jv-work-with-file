@@ -11,11 +11,11 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         List<String> dataFromFile = readFromFile(fromFileName);
-        String report = report(dataFromFile);
+        String report = createReport(dataFromFile);
         writeToFile(toFileName, report);
     }
 
-    public List<String> readFromFile(String fromFileName) {
+    private List<String> readFromFile(String fromFileName) {
         try {
             return Files.readAllLines(Path.of(fromFileName));
         } catch (IOException e) {
@@ -23,7 +23,7 @@ public class WorkWithFile {
         }
     }
 
-    public void writeToFile(String toFileName, String data) {
+    private void writeToFile(String toFileName, String data) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(data);
         } catch (IOException e) {
@@ -31,7 +31,7 @@ public class WorkWithFile {
         }
     }
 
-    public String report(List<String> data) {
+    private String createReport(List<String> data) {
         int totalSupply = 0;
         int totalBuy = 0;
         for (String line: data) {
