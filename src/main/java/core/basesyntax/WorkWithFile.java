@@ -14,18 +14,22 @@ public class WorkWithFile {
     private static final int AMOUNT = 1;
     private static int supply = 0;
     private static int buy = 0;
-    private static int result = 0;
+    private static StringBuilder stringBuilder;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        File infoFile = new File(fromFileName);
-        File reportFile = new File(toFileName);
-        StringBuilder stringBuilder = null;
+        readFromFile(fromFileName);
+        createReport();
+        writeToFile(toFileName);
+    }
 
+    private String[] readFromFile(String fromFileName) {
+        File infoFile = new File(fromFileName);
+        String[] splittedLine = new String[]{};
         try (BufferedReader reader = new BufferedReader(new FileReader(infoFile))) {
             stringBuilder = new StringBuilder();
             String textFromFileName = reader.readLine();
             while (textFromFileName != null) {
-                String[] splittedLine = textFromFileName.split(",");
+                splittedLine = textFromFileName.split(",");
                 for (int i = 0; i < splittedLine.length; i++) {
                     if (splittedLine[i].equals(SUPPLY)) {
                         supply += Integer.parseInt(splittedLine[AMOUNT]);
@@ -35,21 +39,28 @@ public class WorkWithFile {
                 }
                 textFromFileName = reader.readLine();
             }
-            result = supply - buy;
-            stringBuilder.append(SUPPLY + ",").append(supply).append(System.lineSeparator())
-                    .append(BUY + ",").append(buy).append(System.lineSeparator())
-                    .append(RESULT + ",").append(result);
-
-            try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(reportFile))) {
-                bufferedWriter.write(String.valueOf(stringBuilder));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            supply = 0;
-            buy = 0;
-            result = 0;
         } catch (IOException e) {
             throw new RuntimeException("Can`t find the file", e);
+        }
+        return splittedLine;
+    }
+
+    private void createReport() {
+        int result = supply - buy;
+        stringBuilder.append(SUPPLY + ",").append(supply).append(System.lineSeparator())
+                .append(BUY + ",").append(buy).append(System.lineSeparator())
+                .append(RESULT + ",").append(result);
+        supply = 0;
+        buy = 0;
+        result = 0;
+    }
+
+    private void writeToFile(String toFileName) {
+        File reportFile = new File(toFileName);
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(reportFile))) {
+            bufferedWriter.write(String.valueOf(stringBuilder));
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write data to file " + reportFile,e);
         }
     }
 }
