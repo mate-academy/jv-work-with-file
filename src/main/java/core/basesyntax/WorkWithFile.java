@@ -6,19 +6,20 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.StringJoiner;
 
 public class WorkWithFile {
+    static final int OPERATION_INDEX = 0;
+    static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String dataFromFile = this.readFromFile(fromFileName);
-        String report = this.createReport(dataFromFile);
-        this.writeToFile(report, toFileName);
+        String dataFromFile = readFromFile(fromFileName);
+        String report = createReport(dataFromFile);
+        writeToFile(report, toFileName);
     }
 
     private String readFromFile(final String fromFileName) {
-        File file = new File("./" + fromFileName);
-        StringJoiner result = new StringJoiner("|");
+        File file = new File(fromFileName);
+        StringBuilder result = new StringBuilder();
 
         try (
                 FileReader fileReader = new FileReader(file);
@@ -27,12 +28,12 @@ public class WorkWithFile {
         ) {
             String nextString = bufferedReader.readLine();
             while (nextString != null) {
-                result.add(nextString);
+                result.append(nextString);
+                result.append(System.lineSeparator());
                 nextString = bufferedReader.readLine();
             }
-
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file: File not Found", e);
+            throw new RuntimeException("Can't read file: " + fromFileName, e);
         }
         return result.toString();
     }
@@ -41,13 +42,11 @@ public class WorkWithFile {
         StringBuilder result = new StringBuilder();
         int supply = 0;
         int buy = 0;
-        String[] dataFromFileArray = dataFromFile.split("\\|");
-
-        for (final String datum : dataFromFileArray) {
-            String[] datumArray = datum.split(",");
-            String operation = datumArray[0];
-            int amount = Integer.parseInt(datumArray[1]);
-
+        String[] dataFromFileArray = dataFromFile.split(System.lineSeparator());
+        for (final String line : dataFromFileArray) {
+            String[] datumArray = line.split(",");
+            String operation = datumArray[OPERATION_INDEX];
+            int amount = Integer.parseInt(datumArray[AMOUNT_INDEX]);
             if (operation.equals("supply")) {
                 supply += amount;
             } else {
@@ -75,7 +74,7 @@ public class WorkWithFile {
         ) {
             bufferedWriter.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write to file: File not Found", e);
+            throw new RuntimeException("Can't write to file: " + toFileName, e);
         }
     }
 }
