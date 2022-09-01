@@ -20,7 +20,6 @@ public class WorkWithFile {
     private String readFromFile(final String fromFileName) {
         File file = new File(fromFileName);
         StringBuilder result = new StringBuilder();
-
         try (FileReader fileReader = new FileReader(file);
                 BufferedReader bufferedReader = new BufferedReader(fileReader)) {
             String nextString = bufferedReader.readLine();
@@ -41,9 +40,9 @@ public class WorkWithFile {
         int buy = 0;
         String[] dataFromFileArray = dataFromFile.split(System.lineSeparator());
         for (final String line : dataFromFileArray) {
-            String[] datumArray = line.split(",");
-            String operation = datumArray[OPERATION_INDEX];
-            int amount = Integer.parseInt(datumArray[AMOUNT_INDEX]);
+            String[] lineArray = line.split(",");
+            String operation = lineArray[OPERATION_INDEX];
+            int amount = Integer.parseInt(lineArray[AMOUNT_INDEX]);
             if (operation.equals("supply")) {
                 supply += amount;
             } else {
