@@ -18,7 +18,7 @@ public class WorkWithFile {
         try (BufferedReader br = new BufferedReader(new FileReader(fromFileName))) {
             String value = br.readLine();
             while (value != null) {
-                firstFileData.append(value).append("|");
+                firstFileData.append(value).append(System.lineSeparator());
                 value = br.readLine();
             }
         } catch (IOException e) {
@@ -31,12 +31,12 @@ public class WorkWithFile {
         StringBuilder report = new StringBuilder();
         int supply = 0;
         int buy = 0;
-        for (String str : dataFromFile.split("\\|")) {
-            String[] a = str.split(",");
-            if (a[0].equals("buy")) {
-                buy += Integer.parseInt(a[1]);
+        for (String str : dataFromFile.split(System.lineSeparator())) {
+            String[] splitted = str.split(",");
+            if (splitted[0].equals("buy")) {
+                buy += Integer.parseInt(splitted[1]);
             } else {
-                supply += Integer.parseInt(a[1]);
+                supply += Integer.parseInt(splitted[1]);
             }
         }
         report.append("supply,").append(supply)
