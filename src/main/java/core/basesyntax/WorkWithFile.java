@@ -21,11 +21,8 @@ public class WorkWithFile {
         File file = new File(fromFileName);
         StringBuilder result = new StringBuilder();
 
-        try (
-                FileReader fileReader = new FileReader(file);
-                BufferedReader bufferedReader = new BufferedReader(fileReader)
-
-        ) {
+        try (FileReader fileReader = new FileReader(file);
+                BufferedReader bufferedReader = new BufferedReader(fileReader)) {
             String nextString = bufferedReader.readLine();
             while (nextString != null) {
                 result.append(nextString);
@@ -68,10 +65,8 @@ public class WorkWithFile {
     }
 
     private void writeToFile(final String report, final String toFileName) {
-        try (
-                FileWriter fileWriter = new FileWriter(toFileName);
-                BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)
-        ) {
+        try (FileWriter fileWriter = new FileWriter(toFileName);
+                BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
             bufferedWriter.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file: " + toFileName, e);
