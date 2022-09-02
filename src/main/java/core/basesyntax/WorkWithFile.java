@@ -7,6 +7,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final int ACTION_INDEX = 0;
+    private static final int VALUE_INDEX = 1;
+
     public void getStatistic(String fromFileName, String toFileName) {
         String dataFromFile = readFromFile(fromFileName);
         String report = createReport(dataFromFile);
@@ -33,10 +36,10 @@ public class WorkWithFile {
         int buy = 0;
         for (String str : dataFromFile.split(System.lineSeparator())) {
             String[] splitted = str.split(",");
-            if (splitted[0].equals("buy")) {
-                buy += Integer.parseInt(splitted[1]);
+            if (splitted[ACTION_INDEX].equals("buy")) {
+                buy += Integer.parseInt(splitted[VALUE_INDEX]);
             } else {
-                supply += Integer.parseInt(splitted[1]);
+                supply += Integer.parseInt(splitted[VALUE_INDEX]);
             }
         }
         report.append("supply,").append(supply)
