@@ -18,7 +18,13 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         int[] total = new int[AMOUNT_OF_OPERATIONS_TYPES];
+        total = readData(fromFileName);
+        writeResult(toFileName, total);
+    }
+
+    private int[] readData(String fromFileName) {
         File fromFile = new File(fromFileName);
+        int[] total = new int[AMOUNT_OF_OPERATIONS_TYPES];
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFile))) {
             String nextLine = bufferedReader.readLine();
             while (nextLine != null) {
@@ -33,6 +39,10 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read file " + fromFileName, e);
         }
+        return total;
+    }
+
+    private void writeResult(String toFileName, int[] total) {
         File toFile = new File(toFileName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFile))) {
             for (int i = 0; i < AMOUNT_OF_OPERATIONS_TYPES; i++) {
