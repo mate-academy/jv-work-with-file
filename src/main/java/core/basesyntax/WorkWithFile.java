@@ -17,40 +17,51 @@ public class WorkWithFile {
     private static final int INDEX_OF_TOTAL_BUY = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int[] total = new int[AMOUNT_OF_OPERATIONS_TYPES];
-        total = readData(fromFileName);
-        writeResult(toFileName, total);
+        String dataFromFile = readFromFile(fromFileName);
+        String report = createReport(dataFromFile);
+        writeToFile(toFileName, report);
     }
 
-    private int[] readData(String fromFileName) {
+    private String readFromFile(String fromFileName) {
         File fromFile = new File(fromFileName);
-        int[] total = new int[AMOUNT_OF_OPERATIONS_TYPES];
+        StringBuilder data = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFile))) {
             String nextLine = bufferedReader.readLine();
             while (nextLine != null) {
-                String[] currentData = nextLine.split(DELIMITING_SYMBOL);
-                for (int i = 0; i < AMOUNT_OF_OPERATIONS_TYPES; i++) {
-                    if (currentData[INDEX_OF_OPERATION_TYPE].equals(OPERATION_TYPES[i])) {
-                        total[i] += Integer.parseInt(currentData[INDEX_OF_OPERATION_VOLUE]);
-                    }
-                }
+                data.append(nextLine).append(System.lineSeparator());
                 nextLine = bufferedReader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read file " + fromFileName, e);
         }
-        return total;
+        return data.toString();
     }
 
-    private void writeResult(String toFileName, int[] total) {
+    private String createReport(String inputData) {
+        String[] lines = inputData.split(System.lineSeparator());
+        int[] total = new int[AMOUNT_OF_OPERATIONS_TYPES];
+        for (String line : lines) {
+            String[] lineData = line.split(DELIMITING_SYMBOL);
+            for (int typeIndex = 0; typeIndex < AMOUNT_OF_OPERATIONS_TYPES; typeIndex++) {
+                if (lineData[INDEX_OF_OPERATION_TYPE].equals(OPERATION_TYPES[typeIndex])) {
+                    total[typeIndex] += Integer.parseInt(lineData[INDEX_OF_OPERATION_VOLUE]);
+                }
+            }
+        }
+        StringBuilder report = new StringBuilder();
+        for (int typeIndex = 0; typeIndex < AMOUNT_OF_OPERATIONS_TYPES; typeIndex++) {
+            report.append(OPERATION_TYPES[typeIndex]).append(DELIMITING_SYMBOL)
+                    .append(total[typeIndex]).append(System.lineSeparator());
+        }
+        int result = total[INDEX_OF_TOTAL_SUPPLY] - total[INDEX_OF_TOTAL_BUY];
+        report.append("result").append(DELIMITING_SYMBOL).append(result);
+        return report.toString();
+    }
+
+    private void writeToFile(String toFileName, String report) {
         File toFile = new File(toFileName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFile))) {
-            for (int i = 0; i < AMOUNT_OF_OPERATIONS_TYPES; i++) {
-                bufferedWriter.write(OPERATION_TYPES[i] + DELIMITING_SYMBOL
-                        + total[i] + System.lineSeparator());
-            }
-            int result = total[INDEX_OF_TOTAL_SUPPLY] - total[INDEX_OF_TOTAL_BUY];
-            bufferedWriter.write("result" + DELIMITING_SYMBOL + result);
+            bufferedWriter.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file " + toFileName, e);
         }
