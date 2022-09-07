@@ -9,12 +9,10 @@ import java.io.IOException;
 
 public class WorkWithFile {
     private static final String DELIMITING_SYMBOL = ",";
-    private static final int AMOUNT_OF_OPERATIONS_TYPES = 2;
-    private static final int INDEX_OF_OPERATION_TYPE = 0;
-    private static final int INDEX_OF_OPERATION_VOLUE = 1;
-    private static final String[] OPERATION_TYPES = {"supply", "buy"};
-    private static final int INDEX_OF_TOTAL_SUPPLY = 0;
-    private static final int INDEX_OF_TOTAL_BUY = 1;
+    private static final int TYPE_INDEX = 0;
+    private static final int VOLUE_INDEX = 1;
+    private static final String OPARATION_TYPE_SUPPLY = "supply";
+    private static final String OPARATION_TYPE_BUY = "buy";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String dataFromFile = readFromFile(fromFileName);
@@ -39,22 +37,22 @@ public class WorkWithFile {
 
     private String createReport(String inputData) {
         String[] lines = inputData.split(System.lineSeparator());
-        int[] total = new int[AMOUNT_OF_OPERATIONS_TYPES];
+        int supplyTotal = 0;
+        int buyTotal = 0;
         for (String line : lines) {
             String[] lineData = line.split(DELIMITING_SYMBOL);
-            for (int typeIndex = 0; typeIndex < AMOUNT_OF_OPERATIONS_TYPES; typeIndex++) {
-                if (lineData[INDEX_OF_OPERATION_TYPE].equals(OPERATION_TYPES[typeIndex])) {
-                    total[typeIndex] += Integer.parseInt(lineData[INDEX_OF_OPERATION_VOLUE]);
-                }
+            if (lineData[TYPE_INDEX].equals(OPARATION_TYPE_SUPPLY)) {
+                supplyTotal += Integer.parseInt(lineData[VOLUE_INDEX]);
+            } else {
+                buyTotal += Integer.parseInt(lineData[VOLUE_INDEX]);
             }
         }
         StringBuilder report = new StringBuilder();
-        for (int typeIndex = 0; typeIndex < AMOUNT_OF_OPERATIONS_TYPES; typeIndex++) {
-            report.append(OPERATION_TYPES[typeIndex]).append(DELIMITING_SYMBOL)
-                    .append(total[typeIndex]).append(System.lineSeparator());
-        }
-        int result = total[INDEX_OF_TOTAL_SUPPLY] - total[INDEX_OF_TOTAL_BUY];
-        report.append("result").append(DELIMITING_SYMBOL).append(result);
+        report.append(OPARATION_TYPE_SUPPLY).append(DELIMITING_SYMBOL).append(supplyTotal);
+        report.append(System.lineSeparator());
+        report.append(OPARATION_TYPE_BUY).append(DELIMITING_SYMBOL).append(buyTotal);
+        report.append(System.lineSeparator());
+        report.append("result").append(DELIMITING_SYMBOL).append(supplyTotal - buyTotal);
         return report.toString();
     }
 
