@@ -14,7 +14,7 @@ public class WorkWithFile {
     private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String[] report = createReport(extractDataFromFile(fromFileName));
+        String report = createReport(extractDataFromFile(fromFileName));
         write(toFileName,report);
     }
 
@@ -32,7 +32,7 @@ public class WorkWithFile {
         return builder.toString();
     }
 
-    private String[] createReport(String info) {
+    private String createReport(String info) {
         String[] values = info.split(WHITE_SPACE_REGEX);
         int sumOfSupply = 0;
         int sumOfBuy = 0;
@@ -47,21 +47,19 @@ public class WorkWithFile {
         }
         StringBuilder builder = new StringBuilder();
         builder.append("supply").append(CSV_SEPARATOR).append(sumOfSupply)
-                .append(WHITE_SPACE_REGEX).append("buy").append(CSV_SEPARATOR).append(sumOfBuy)
-                .append(WHITE_SPACE_REGEX).append("result").append(CSV_SEPARATOR)
+                .append(System.lineSeparator()).append("buy").append(CSV_SEPARATOR).append(sumOfBuy)
+                .append(System.lineSeparator()).append("result").append(CSV_SEPARATOR)
                 .append(sumOfSupply - sumOfBuy);
-        return builder.toString().split(WHITE_SPACE_REGEX);
+        String report = builder.toString();
+        return report;
     }
 
-    private void write(String fileName, String[] data) {
+    private void write(String fileName, String report) {
         File file = new File(fileName);
-        for (String value : data) {
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
-                writer.write(value);
-                writer.write(System.lineSeparator());
-            } catch (IOException e) {
-                throw new RuntimeException("Can not write data to file", e);
-            }
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
+            writer.write(report);
+        } catch (IOException e) {
+            throw new RuntimeException("Can not write data to file", e);
         }
     }
 }
