@@ -11,7 +11,12 @@ public class WorkWithFile {
     public static final int AMOUNT_POSITION = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String example = "";
+        String dataFromFile = readFromFile(fromFileName);
+        String report = getReport(dataFromFile);
+        writeToFile(report, toFileName);
+    }
+
+    private String readFromFile(String fromFileName) {
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
             StringBuilder dateWithFile = new StringBuilder();
@@ -20,27 +25,18 @@ public class WorkWithFile {
                 dateWithFile.append(value).append(System.lineSeparator());
                 value = bufferedReader.readLine();
             }
-            example = getExample(dateWithFile.toString());
+            return dateWithFile.toString();
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from the file" + fromFileName, e);
         }
-        getWriterWithFile(example, toFileName);
     }
 
-    public void getWriterWithFile(String example, String toFileName) {
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true))) {
-            bufferedWriter.write(example);
-        } catch (IOException e) {
-            throw new RuntimeException("Can't write data from the file" + toFileName, e);
-        }
-    }
-
-    public String getExample(String date) {
+    private String getReport(String dateFromFile) {
         int supply = 0;
         int buy = 0;
         int result = 0;
-        String[] lines = date.split(System.lineSeparator());
-        for (String line: lines) {
+        String[] lines = dateFromFile.split(System.lineSeparator());
+        for (String line : lines) {
             String[] arrayLine = line.split(",");
             if (arrayLine[OPERATION_TYPE_POSITION].equals("supply")) {
                 supply += Integer.valueOf(arrayLine[AMOUNT_POSITION]);
@@ -53,5 +49,13 @@ public class WorkWithFile {
         return "supply," + supply + System.lineSeparator()
                 + "buy," + buy + System.lineSeparator()
                 + "result," + result;
+    }
+
+    private void writeToFile(String example, String toFileName) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true))) {
+            bufferedWriter.write(example);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write data from the file" + toFileName, e);
+        }
     }
 }
