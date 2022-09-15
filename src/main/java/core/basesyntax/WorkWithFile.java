@@ -13,40 +13,55 @@ public class WorkWithFile {
     public static final int COUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        File file = new File(fromFileName);
-        int supplyQuantity = separateData(file, "supply");
-        int buyQuantity = separateData(file, "buy");
-        file = new File(toFileName);
-        fillFile(file, supplyQuantity, buyQuantity);
+
+        String dataFromFile = readFromFile(fromFileName);
+        String report = createReport(dataFromFile);
+        writeToFile(report, toFileName);
+
     }
 
-    private int separateData(File file, String comparisonWord) {
+    private String readFromFile(String fromFileName) {
+        File file = new File(fromFileName);
         String [] line = new String[2];
-        int result = 0;
-
+        int supplyQuantity = 0;
+        int buyQuantity = 0;
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
             String reading = bufferedReader.readLine();
             while (reading != null) {
                 line = reading.split(",");
-                if (line[OPERATION_INDEX].equals(comparisonWord)) {
-                    result += Integer.parseInt(line[COUNT_INDEX]);
+                if (line[OPERATION_INDEX].equals("buy")) {
+                    supplyQuantity += Integer.parseInt(line[COUNT_INDEX]);
+                } else {
+                    buyQuantity += Integer.parseInt(line[COUNT_INDEX]);
                 }
                 reading = bufferedReader.readLine();
             }
         } catch (FileNotFoundException e) {
-            System.out.println("Can`t read file: " + file.getName() + " " + e);
+            System.out.println("Can`t read file: " + fromFileName + " " + e);
         } catch (IOException e) {
-            System.out.println("Can`t read line from file: " + file.getName() + " " + e);
+            System.out.println("Can`t read line from file: " + fromFileName + " " + e);
         }
-        return result;
+        line[0] = supplyQuantity + "," + buyQuantity;
+        return line[0];
     }
 
-    private void fillFile(File file, int addition, int subtraction) {
+    private String createReport(String dataForReport) {
+        int index = dataForReport.indexOf(',');
+        String report = dataForReport.substring(0, index);
+        dataForReport = dataForReport.substring(index + 1);
+
+        report = "supply," + dataForReport + System.lineSeparator()
+                    + "buy," + report + System.lineSeparator()
+                    + "result," + (Integer.parseInt(dataForReport)
+                    - Integer.parseInt(report));
+        return report;
+    }
+
+    private void writeToFile(String data, String fileName) {
+        File file = new File(fileName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, true))) {
-            bufferedWriter.write("supply," + addition + System.lineSeparator()
-                    + "buy," + subtraction + System.lineSeparator()
-                    + "result," + (addition - subtraction));
+            bufferedWriter.write(data);
         } catch (IOException e) {
             System.out.println("Can`t write data in " + file.getName() + ", " + e);
         }
