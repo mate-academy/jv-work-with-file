@@ -1,19 +1,17 @@
 package core.basesyntax;
 
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
-import java.io.IOException;
 import java.io. FileWriter;
+import java.io.IOException;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
-        writeToFileName(toFileName, optimizationTextCSV(getTextFromFile(fromFileName)));
+        writeToFileName(toFileName, optimizationTextCsv(getTextFromFile(fromFileName)));
     }
 
     public String getTextFromFile(String fromFileName) {
-
         StringBuilder readTextBuilder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String readText = bufferedReader.readLine();
@@ -29,7 +27,7 @@ public class WorkWithFile {
         return String.valueOf(readTextBuilder);
     }
 
-    public String optimizationTextCSV(String getTextFromFile) {
+    public String optimizationTextCsv(String getTextFromFile) {
         StringBuilder readTextBuilder = new StringBuilder(getTextFromFile);
         long supply = 0;
         long buy = 0;
