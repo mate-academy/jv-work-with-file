@@ -1,24 +1,49 @@
 package core.basesyntax;
 
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.io. FileWriter;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
-        StringBuilder readTextBuilder = getTextFromFile(fromFileName);
+        writeToFileName(toFileName, optimizationTextCSV(getTextFromFile(fromFileName)));
+    }
+
+    public String getTextFromFile(String fromFileName) {
+
+        StringBuilder readTextBuilder = new StringBuilder();
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
+            String readText = bufferedReader.readLine();
+            while (readText != null) {
+                String newReadText = readText.replace(",", " ");
+                readTextBuilder.append(newReadText).append(System.lineSeparator());
+                readText = bufferedReader.readLine();
+            }
+
+        } catch (IOException e) {
+            throw new RuntimeException("not is good read file", e);
+        }
+        return String.valueOf(readTextBuilder);
+    }
+
+    public String optimizationTextCSV(String getTextFromFile) {
+        StringBuilder readTextBuilder = new StringBuilder(getTextFromFile);
         long supply = 0;
         long buy = 0;
         long result = 0;
+
         String[] optimizationText = String.valueOf(readTextBuilder).split(System.lineSeparator());
         for (String cloud : optimizationText) {
+            final int CutIndexText = 0;
+            final int CutIndexNumber = 1;
             String[] cutText = cloud.split(" ");
-            if (cutText[0].equals("supply")) {
-                supply = supply + Integer.parseInt(cutText[1]);
-            } else if (cutText[0].equals("buy")) {
-                buy = buy + Integer.parseInt(cutText[1]);
+            if (cutText[CutIndexText].equals("supply")) {
+                supply = supply + Integer.parseInt(cutText[CutIndexNumber]);
+            } else if (cutText[CutIndexText].equals("buy")) {
+                buy = buy + Integer.parseInt(cutText[CutIndexNumber]);
             }
         }
         readTextBuilder = new StringBuilder();
@@ -31,23 +56,7 @@ public class WorkWithFile {
                 .append("supply,").append(supply).append(System.lineSeparator())
                 .append("buy,").append(buy).append(System.lineSeparator())
                 .append("result,").append(result);
-        String text = String.valueOf(readTextBuilder);
-        writeToFileName(toFileName, text);
-    }
-
-    public StringBuilder getTextFromFile(String fromFileName) {
-        StringBuilder readTextBuilder = new StringBuilder();
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
-            String readText = bufferedReader.readLine();
-            while (readText != null) {
-                String newReadText = readText.replace(",", " ");
-                readTextBuilder.append(newReadText).append(System.lineSeparator());
-                readText = bufferedReader.readLine();
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("not is good read file", e);
-        }
-        return readTextBuilder;
+        return String.valueOf(readTextBuilder);
     }
 
     public void writeToFileName(String toFileName, String textWriteFile) {
