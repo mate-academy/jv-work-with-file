@@ -7,8 +7,15 @@ import java.io. FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final int INDEX_OPERATION = 0;
+    private static final int AMOUNT_INDEX = 1;
+
     public void getStatistic(String fromFileName, String toFileName) {
-        writeToFileName(toFileName, optimizationTextCsv(getTextFromFile(fromFileName)));
+
+        String readFromFile = getTextFromFile(fromFileName);
+        String dataRepot = createReport(readFromFile);
+        writeToFile(toFileName, dataRepot);
+
     }
 
     public String getTextFromFile(String fromFileName) {
@@ -27,24 +34,21 @@ public class WorkWithFile {
         return String.valueOf(readTextBuilder);
     }
 
-    public String optimizationTextCsv(String getTextFromFile) {
-        StringBuilder readTextBuilder = new StringBuilder(getTextFromFile);
+    public String createReport(String data) {
         long supply = 0;
         long buy = 0;
         long result = 0;
 
-        String[] optimizationText = String.valueOf(readTextBuilder).split(System.lineSeparator());
-        for (String cloud : optimizationText) {
-            final int CutIndexText = 0;
-            final int CutIndexNumber = 1;
+        String[] dataArray = data.split(System.lineSeparator());
+        for (String cloud : dataArray) {
             String[] cutText = cloud.split(" ");
-            if (cutText[CutIndexText].equals("supply")) {
-                supply = supply + Integer.parseInt(cutText[CutIndexNumber]);
-            } else if (cutText[CutIndexText].equals("buy")) {
-                buy = buy + Integer.parseInt(cutText[CutIndexNumber]);
+            if (cutText[INDEX_OPERATION].equals("supply")) {
+                supply = supply + Integer.parseInt(cutText[AMOUNT_INDEX]);
+            } else if (cutText[INDEX_OPERATION].equals("buy")) {
+                buy = buy + Integer.parseInt(cutText[AMOUNT_INDEX]);
             }
         }
-        readTextBuilder = new StringBuilder();
+        StringBuilder readTextBuilder = new StringBuilder();
         if (supply > buy) {
             result = supply - buy;
         } else if (supply < buy) {
@@ -57,9 +61,9 @@ public class WorkWithFile {
         return String.valueOf(readTextBuilder);
     }
 
-    public void writeToFileName(String toFileName, String textWriteFile) {
+    public void writeToFile(String toFileName, String data) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write(String.valueOf(textWriteFile));
+            bufferedWriter.write(String.valueOf(data));
             bufferedWriter.flush();
         } catch (IOException e) {
             throw new RuntimeException("not is good write to file", e);
