@@ -1,10 +1,6 @@
 package core.basesyntax;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io. FileWriter;
-import java.io.IOException;
+import java.io.*;
 
 public class WorkWithFile {
     private static final int INDEX_OPERATION = 0;
@@ -61,12 +57,11 @@ public class WorkWithFile {
         return readTextBuilder.toString();
     }
 
-    public void writeToFile(String toFileName, String data) {
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write(String.valueOf(data));
-            bufferedWriter.flush();
+    public void writeToFile(String fileName, String data) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
+            bufferedWriter.write(data);
         } catch (IOException e) {
-            throw new RuntimeException("not is good write to file", e);
+            throw new RuntimeException("Can not read file: " + fileName, e);
         }
     }
 }
