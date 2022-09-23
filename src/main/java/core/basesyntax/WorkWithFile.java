@@ -31,7 +31,7 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("not is good read file", e);
         }
-        return String.valueOf(readTextBuilder);
+        return readTextBuilder.toString();
     }
 
     public String createReport(String data) {
@@ -58,7 +58,7 @@ public class WorkWithFile {
                 .append("supply,").append(supply).append(System.lineSeparator())
                 .append("buy,").append(buy).append(System.lineSeparator())
                 .append("result,").append(result);
-        return String.valueOf(readTextBuilder);
+        return readTextBuilder.toString();
     }
 
     public void writeToFile(String toFileName, String data) {
