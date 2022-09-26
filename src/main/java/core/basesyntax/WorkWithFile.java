@@ -11,14 +11,14 @@ public class WorkWithFile {
     private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String readFromFile = readFromFiles(fromFileName);
+        String readFromFile = readFromFile(fromFileName);
         String dataRepot = createReport(readFromFile);
         writeToFile(toFileName, dataRepot);
     }
 
-    public String readFromFiles(String fromFileName) {
+    public String readFromFile(String fileName) {
         StringBuilder readTextBuilder = new StringBuilder();
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
             String readText = bufferedReader.readLine();
             while (readText != null) {
                 String newReadText = readText.replace(",", " ");
