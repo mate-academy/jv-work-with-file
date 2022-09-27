@@ -8,40 +8,54 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    public void getStatistic(String fromFileName, String toFileName) {
+    private static final String DATA_SEPARATOR = ",";
+    private static final int OPERATION_TYPE_COLUMN_INDEX = 0;
+    private static final int AMOUNT_COLUMN_INDEX = 1;
+    private static final String SUPPLY_STRING = "supply";
+    private static final String BUE_STRING = "buy";
+    private static final String RESULT_STRING = "result";
+    private static final String LINE_SEPARATOR = System.lineSeparator();
+    private static final String EMPTY_STRING = "";
+    private StringBuilder stringBuilder = new StringBuilder();
+    private int supplyAmount = 0;
+    private int buyAmount = 0;
+
+    private void readDataFromFile(String fromFileName) {
         File file = new File(fromFileName);
-        StringBuilder stringBuilder = new StringBuilder();
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
             String readedLine = bufferedReader.readLine();
-            String lineSeparator = "";
+            String lineSeparator = EMPTY_STRING;
             while (readedLine != null) {
                 stringBuilder.append(lineSeparator).append(readedLine);
                 readedLine = bufferedReader.readLine();
-                lineSeparator = System.lineSeparator();
+                lineSeparator = LINE_SEPARATOR;
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read file", e);
         }
-        String[] readingContent = stringBuilder.toString().split(System.lineSeparator());
-        int supplyAmount = 0;
-        int buyAmount = 0;
+    }
+
+    private void calculateSums() {
+        String[] readingContent = stringBuilder.toString().split(LINE_SEPARATOR);
         for (String row : readingContent) {
-            String[] rowInAray = row.split(",");
-            String operationType = rowInAray[0].trim();
-            int amount = Integer.parseInt(rowInAray[1].trim());
-            if (operationType.equals("supply")) {
+            String[] rowInAray = row.split(DATA_SEPARATOR);
+            String operationType = rowInAray[OPERATION_TYPE_COLUMN_INDEX].trim();
+            int amount = Integer.parseInt(rowInAray[AMOUNT_COLUMN_INDEX].trim());
+            if (operationType.equals(SUPPLY_STRING)) {
                 supplyAmount += amount;
             } else {
                 buyAmount += amount;
             }
         }
+    }
+
+    private void writeDataToFile(String toFileName) {
         BufferedWriter bufferedWriter = null;
         try {
             bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true));
-            bufferedWriter.write("supply," + supplyAmount + System.lineSeparator());
-            bufferedWriter.write("buy," + buyAmount + System.lineSeparator());
-            bufferedWriter.write("result," + (supplyAmount - buyAmount));
+            bufferedWriter.write(SUPPLY_STRING + DATA_SEPARATOR + supplyAmount + LINE_SEPARATOR);
+            bufferedWriter.write(BUE_STRING + DATA_SEPARATOR + buyAmount + LINE_SEPARATOR);
+            bufferedWriter.write(RESULT_STRING + DATA_SEPARATOR + (supplyAmount - buyAmount));
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to file", e);
         } finally {
@@ -53,5 +67,11 @@ public class WorkWithFile {
                 }
             }
         }
+    }
+
+    public void getStatistic(String fromFileName, String toFileName) {
+        readDataFromFile(fromFileName);
+        calculateSums();
+        writeDataToFile(toFileName);
     }
 }
