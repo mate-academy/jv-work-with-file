@@ -25,7 +25,7 @@ public class WorkWithFile {
         ) {
             writer.write(report);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println("Can't write to file: " + toFileName);
         }
     }
 
@@ -65,7 +65,7 @@ public class WorkWithFile {
             }
             return result.toString();
         } catch (IOException e) {
-            System.out.println("Can't read file");
+            System.out.println("Can't read file: " + fromFileName);
             System.exit(ERROR_EXIT_CODE);
         }
         return "";
