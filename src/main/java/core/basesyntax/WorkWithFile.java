@@ -8,12 +8,15 @@ import java.util.List;
 
 public class WorkWithFile {
     private static final String COMMA_SEPARATOR = ",";
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
         try {
             writeDataToFile(calculateData(readDataFromFile(fromFileName)),toFileName);
         } catch (IOException e) {
-            throw new RuntimeException("Error while working with files");
+            throw new RuntimeException("Error while working with files", e);
         }
     }
 
@@ -27,7 +30,7 @@ public class WorkWithFile {
 
         for (String line : listData) {
             String[] strings = line.split(COMMA_SEPARATOR);
-            if (strings[0].equals("buy")) {
+            if (strings[0].equals(BUY)) {
                 totalBuy += Integer.parseInt(strings[1]);
             } else {
                 totalSupply += Integer.parseInt(strings[1]);
@@ -35,9 +38,9 @@ public class WorkWithFile {
         }
 
         List<String> result = new ArrayList<>(3);
-        result.add("supply" + COMMA_SEPARATOR + totalSupply);
-        result.add("buy" + COMMA_SEPARATOR + totalBuy);
-        result.add("result" + COMMA_SEPARATOR + (totalSupply - totalBuy));
+        result.add(SUPPLY + COMMA_SEPARATOR + totalSupply);
+        result.add(BUY + COMMA_SEPARATOR + totalBuy);
+        result.add(RESULT + COMMA_SEPARATOR + (totalSupply - totalBuy));
         return result;
     }
 
