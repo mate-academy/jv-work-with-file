@@ -1,6 +1,10 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class WorkWithFile {
     public static final String CSV_SEPARATOR = ",";
@@ -40,6 +44,7 @@ public class WorkWithFile {
                 case BUY:
                     buy += value;
                     break;
+                default:break;
             }
         }
         return "supply," + supply + System.lineSeparator()
