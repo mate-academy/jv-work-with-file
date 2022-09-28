@@ -1,18 +1,17 @@
 package core.basesyntax;
 
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
-import java.util.List;
 
 public class WorkWithFile {
     private static final String SUPPLY_PRODUCT = "supply";
     private static final String BUY_PRODUCT = "buy";
     private static final String RESULT = "result";
-    private static final int INDEX_VALUE = 1;
+    private static final int START_POINT = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         HashMap<String, Integer> allStatistics = new HashMap<>();
@@ -20,10 +19,12 @@ public class WorkWithFile {
         allStatistics.put(BUY_PRODUCT, 0);
         allStatistics.put(RESULT, 0);
         String[] fileData = readFile(fromFileName).split("\\W+");
-        for (int i = INDEX_VALUE; i < fileData.length; i += 2) {
-            allStatistics.put(fileData[i],
+        for (int i = 0; i < fileData.length; i += 2) {
+            allStatistics.put(
+                    fileData[i],
                     allStatistics.get(fileData[i])
-                            + Integer.parseInt(fileData[i + INDEX_VALUE]));
+                            + Integer.parseInt(fileData[i + START_POINT])
+            );
         }
         allStatistics.put(RESULT, allStatistics.get(SUPPLY_PRODUCT)
                 - allStatistics.get(BUY_PRODUCT));
@@ -43,10 +44,8 @@ public class WorkWithFile {
     }
 
     private String readFile(String fromFileName) {
-        File file = new File(fromFileName);
         try {
-            List<String> list = Files.readAllLines(file.toPath());
-            return list.toString();
+            return Files.readString(Path.of(fromFileName));
         } catch (IOException e) {
             throw new RuntimeException("Can't read file " + fromFileName, e);
         }
