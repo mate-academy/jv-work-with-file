@@ -19,10 +19,7 @@ public class WorkWithFile {
     }
 
     private void writeToFile(String toFileName, String report) {
-        try (
-                FileWriter fileWriter = new FileWriter(toFileName);
-                BufferedWriter writer = new BufferedWriter(fileWriter)
-        ) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write(report);
         } catch (IOException e) {
             System.out.println("Can't write to file: " + toFileName);
