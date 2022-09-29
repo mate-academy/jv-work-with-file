@@ -8,8 +8,8 @@ import java.io.IOException;
 
 public class WorkWithFile {
     public static final String CSV_SEPARATOR = ",";
-    public static final int CSV_OP_TYPE_INDEX = 0;
-    public static final int CSV_VALUE_INDEX = 1;
+    public static final int OPERATION_TYPE_INDEX = 0;
+    public static final int VALUE_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String fileContent = readFromFile(fromFileName);
@@ -40,9 +40,9 @@ public class WorkWithFile {
         int buy = 0;
         for (String line : lines) {
             String[] lineParts = line.split(CSV_SEPARATOR);
-            String opType = lineParts[CSV_OP_TYPE_INDEX];
-            int value = Integer.parseInt(lineParts[CSV_VALUE_INDEX]);
-            switch (OperationType.valueOf(opType.toUpperCase())) {
+            String operationType = lineParts[OPERATION_TYPE_INDEX];
+            int value = Integer.parseInt(lineParts[VALUE_INDEX]);
+            switch (OperationType.valueOf(operationType.toUpperCase())) {
                 case SUPPLY:
                     supply += value;
                     break;
