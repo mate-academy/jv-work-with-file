@@ -47,11 +47,7 @@ public class WorkWithFile {
         File file = new File(toFileName);
         try {
             file.createNewFile();
-            try {
-                Files.write(file.toPath(), data.getBytes(), StandardOpenOption.APPEND);
-            } catch (IOException e) {
-                throw new RuntimeException("Can't write file" + toFileName, e);
-            }
+            Files.write(file.toPath(), data.getBytes(), StandardOpenOption.APPEND);
         } catch (IOException e) {
             throw new RuntimeException("Can't create file" + file, e);
         }
