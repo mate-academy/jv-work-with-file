@@ -9,6 +9,9 @@ import java.io.IOException;
 public class WorkWithFile {
     public static final String CSV_SEPARATOR = ",";
     public static final int OPERATION_TYPE_INDEX = 0;
+    public static final String REPORT_FORMAT = "supply,%d" + System.lineSeparator()
+            + "buy,%d" + System.lineSeparator()
+            + "result,%d";
     public static final int VALUE_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
@@ -52,9 +55,7 @@ public class WorkWithFile {
                 default:break;
             }
         }
-        return "supply," + supply + System.lineSeparator()
-                + "buy," + buy + System.lineSeparator()
-                + "result," + (supply - buy);
+        return String.format(REPORT_FORMAT, supply, buy, supply - buy);
     }
 
     private void writeToFile(String toFileName, String report) {
