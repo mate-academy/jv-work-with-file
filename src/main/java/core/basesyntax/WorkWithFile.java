@@ -59,7 +59,7 @@ public class WorkWithFile {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write(report);
         } catch (IOException e) {
-            System.out.println("Can't write to file: " + toFileName);
+            throw new RuntimeException("Can't write to file: " + toFileName, e);
         }
     }
 }
