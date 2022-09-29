@@ -7,12 +7,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    public static final String CSV_SEPARATOR = ",";
-    public static final int OPERATION_TYPE_INDEX = 0;
-    public static final String REPORT_FORMAT = "supply,%d" + System.lineSeparator()
+    private static final String CSV_SEPARATOR = ",";
+    private static final int OPERATION_TYPE_INDEX = 0;
+    private static final int VALUE_INDEX = 1;
+    private static final String REPORT_FORMAT = "supply,%d" + System.lineSeparator()
             + "buy,%d" + System.lineSeparator()
             + "result,%d";
-    public static final int VALUE_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String fileContent = readFromFile(fromFileName);
