@@ -8,7 +8,6 @@ import java.io.IOException;
 
 public class WorkWithFile {
     public static final String CSV_SEPARATOR = ",";
-    public static final int ERROR_EXIT_CODE = -1;
     public static final int CSV_OP_TYPE_INDEX = 0;
     public static final int CSV_VALUE_INDEX = 1;
 
@@ -62,9 +61,7 @@ public class WorkWithFile {
             }
             return result.toString();
         } catch (IOException e) {
-            System.out.println("Can't read file: " + fromFileName);
-            System.exit(ERROR_EXIT_CODE);
+            throw new RuntimeException("Can't read file: " + fromFileName, e);
         }
-        return "";
     }
 }
