@@ -17,11 +17,20 @@ public class WorkWithFile {
         writeToFile(toFileName, report);
     }
 
-    private void writeToFile(String toFileName, String report) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            writer.write(report);
+    private String readFromFile(String fromFileName) {
+        StringBuilder result = new StringBuilder();
+        try (
+                FileReader fileReader = new FileReader(fromFileName);
+                BufferedReader reader = new BufferedReader(fileReader)
+        ) {
+            String nextLine = reader.readLine();
+            while (nextLine != null) {
+                result.append(nextLine).append(System.lineSeparator());
+                nextLine = reader.readLine();
+            }
+            return result.toString();
         } catch (IOException e) {
-            System.out.println("Can't write to file: " + toFileName);
+            throw new RuntimeException("Can't read file: " + fromFileName, e);
         }
     }
 
@@ -48,20 +57,11 @@ public class WorkWithFile {
                 + "result," + (supply - buy);
     }
 
-    private String readFromFile(String fromFileName) {
-        StringBuilder result = new StringBuilder();
-        try (
-                FileReader fileReader = new FileReader(fromFileName);
-                BufferedReader reader = new BufferedReader(fileReader)
-        ) {
-            String nextLine = reader.readLine();
-            while (nextLine != null) {
-                result.append(nextLine).append(System.lineSeparator());
-                nextLine = reader.readLine();
-            }
-            return result.toString();
+    private void writeToFile(String toFileName, String report) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
+            writer.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file: " + fromFileName, e);
+            System.out.println("Can't write to file: " + toFileName);
         }
     }
 }
