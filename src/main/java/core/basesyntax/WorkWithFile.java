@@ -15,16 +15,17 @@ public class WorkWithFile {
     private static final String SEPARATOR = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        writeToFile(toFileName, resultData(read(fromFileName)));
+        String[] data = readFromFile(fromFileName);
+        String report = createReport(data);
+        writeToFile(toFileName, report);
     }
 
-    private String[] resultData(String readedLine) {
+    private String createReport(String[] readedLine) {
         int supply = 0;
         int buy = 0;
         int result = 0;
 
-        String[] strings = readedLine.split(System.lineSeparator());
-        for (String s : strings) {
+        for (String s : readedLine) {
             String[] tempArray = s.split(",");
             for (int i = 0; i < tempArray.length; i++) {
                 if (tempArray[i].equals("supply")) {
@@ -36,12 +37,12 @@ public class WorkWithFile {
         }
 
         result = supply - buy;
-        return new String[]{SUPPLY + SEPARATOR + supply + System.lineSeparator(),
-                BUY + SEPARATOR + buy + System.lineSeparator(),
-                RESULT + SEPARATOR + result + System.lineSeparator()};
+        return new StringBuilder(SUPPLY + SEPARATOR + supply + System.lineSeparator()
+                + BUY + SEPARATOR + buy + System.lineSeparator()
+                + RESULT + SEPARATOR + result + System.lineSeparator()).toString();
     }
 
-    private void writeToFile(String toFileName, String[] resultedArray) {
+    private void writeToFile(String toFileName, String data) {
         File file = new File(toFileName);
         try {
             file.createNewFile();
@@ -49,16 +50,14 @@ public class WorkWithFile {
             throw new RuntimeException("Can't create file" + file, e);
         }
 
-        for (String s : resultedArray) {
-            try {
-                Files.write(file.toPath(), s.getBytes(), StandardOpenOption.APPEND);
-            } catch (IOException e) {
-                throw new RuntimeException("Can't write file" + toFileName, e);
-            }
+        try {
+            Files.write(file.toPath(), data.getBytes(), StandardOpenOption.APPEND);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write file" + toFileName, e);
         }
     }
 
-    private String read(String fromFileName) {
+    private String[] readFromFile(String fromFileName) {
         StringBuilder tempString = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String value = bufferedReader.readLine();
@@ -69,8 +68,7 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read file! " + fromFileName, e);
         }
-
-        return tempString.toString();
+        String[] data = tempString.toString().split(System.lineSeparator());
+        return data;
     }
 }
-
