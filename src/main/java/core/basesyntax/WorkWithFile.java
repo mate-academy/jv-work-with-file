@@ -14,35 +14,40 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         fileRead = new File(fromFileName);
         fileWrite = new File(toFileName);
-        getRead(fileRead);
-        getWrite(fileWrite);
+        read(fileRead);
+        write(fileWrite);
     }
 
-    public String getRead(File file) {
-        int supply = 0;
-        int buy = 0;
+    public String read(File file) {
+        StringBuilder builder = new StringBuilder();
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
-            StringBuilder builder = new StringBuilder();
             String value = bufferedReader.readLine();
             while (value != null) {
                 builder.append(value).append(System.lineSeparator());
                 value = bufferedReader.readLine();
             }
-            String[] newOne = builder.toString().split("\n");
-            StringBuilder builder1 = new StringBuilder();
-            for (int i = 0; i < newOne.length; i++) {
-                int indexOf = newOne[i].indexOf(",");
-                if (indexOf == 6) {
-                    String a = newOne[i].substring(indexOf + 1);
-                    supply = Integer.valueOf(a.trim()) + supply;
-                } else {
-                    String a = newOne[i].substring(indexOf + 1);
-                    buy = Integer.valueOf(a.trim()) + buy;
-                }
-            }
         } catch (IOException e) {
             throw new RuntimeException("Can't read data file" + file, e);
+        }
+        String readFile = builder.toString();
+        return readFile;
+    }
+
+    public String report(File file) {
+        String readFile = read(fileRead);
+        int supply = 0;
+        int buy = 0;
+        String[] newOne = readFile.split("\n");
+        for (int i = 0; i < newOne.length; i++) {
+            int indexOf = newOne[i].indexOf(",");
+            if (indexOf == 6) {
+                String a = newOne[i].substring(indexOf + 1);
+                supply = Integer.valueOf(a.trim()) + supply;
+            } else {
+                String a = newOne[i].substring(indexOf + 1);
+                buy = Integer.valueOf(a.trim()) + buy;
+            }
         }
         int result = supply - buy;
         String supply1 = "supply," + supply;
@@ -53,10 +58,10 @@ public class WorkWithFile {
         return toWrite;
     }
 
-    public void getWrite(File file) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileWrite,true))) {
+    public void write(File fileWrite) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(this.fileWrite,true))) {
             writer.write(" ");
-            writer.write(getRead(fileRead));
+            writer.write(report(fileRead));
         } catch (IOException e) {
             throw new RuntimeException("Can't write");
         }
