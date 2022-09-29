@@ -7,11 +7,11 @@ import java.nio.file.StandardOpenOption;
 import java.util.List;
 
 public class WorkWithFile {
-    public static final int NAME_INDEX = 0;
-    public static final int SUM_INDEX = 1;
-    public static final String SUPPLY_ITEM = "supply";
-    public static final String BUY_ITEM = "buy";
-    public static final String RESULT_ITEM = "result";
+    private static final int NAME_INDEX = 0;
+    private static final int SUM_INDEX = 1;
+    private static final String SUPPLY_ITEM = "supply";
+    private static final String BUY_ITEM = "buy";
+    private static final String RESULT_ITEM = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
         File toFile = new File(toFileName);
