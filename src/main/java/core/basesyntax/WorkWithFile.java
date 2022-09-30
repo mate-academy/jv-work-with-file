@@ -47,7 +47,7 @@ public class WorkWithFile {
         int supply = 0;
         int buy = 0;
 
-        try (BufferedReader bufferedReader = Files.newBufferedReader(path)){
+        try (BufferedReader bufferedReader = Files.newBufferedReader(path)) {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 System.out.println(line);
