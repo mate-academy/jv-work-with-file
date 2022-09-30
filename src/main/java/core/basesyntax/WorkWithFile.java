@@ -8,10 +8,10 @@ import java.nio.file.Files;
 import java.util.List;
 
 public class WorkWithFile {
-    public static final int SUPPLY_INDEX = 0;
-    public static final int BUY_INDEX = 1;
-    public static final int TEXT_INFO_INDEX = 0;
-    public static final String SEPARATED_VALUES = ",";
+    private static final int SUPPLY_INDEX = 0;
+    private static final int BUY_INDEX = 1;
+    private static final int TEXT_INFO_INDEX = 0;
+    private static final String SEPARATED_VALUES = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         File fromFile = new File(fromFileName);
