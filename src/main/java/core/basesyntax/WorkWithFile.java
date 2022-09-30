@@ -12,56 +12,54 @@ public class WorkWithFile {
     private File fileWrite;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        fileRead = new File(fromFileName);
-        fileWrite = new File(toFileName);
-        read(fileRead);
-        write(fileWrite);
+        String [] dataFromFile = read(fromFileName);
+        String report = createReport(dataFromFile);
+        write(report, toFileName);
     }
 
-    public String read(File file) {
+    public String [] read(String string) {
+        fileRead = new File(string);
         StringBuilder builder = new StringBuilder();
         try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(fileRead));
             String value = bufferedReader.readLine();
             while (value != null) {
                 builder.append(value).append(System.lineSeparator());
                 value = bufferedReader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read data file" + file, e);
+            throw new RuntimeException("Can't read data file" + fileRead, e);
         }
         String readFile = builder.toString();
-        return readFile;
+        String[] data = readFile.split(System.lineSeparator());
+        return data;
     }
 
-    public String report(File file) {
-        String readFile = read(fileRead);
+    public String createReport(String [] data) {
         int supply = 0;
         int buy = 0;
-        String[] newOne = readFile.split("\n");
-        for (int i = 0; i < newOne.length; i++) {
-            int indexOf = newOne[i].indexOf(",");
-            if (indexOf == 6) {
-                String a = newOne[i].substring(indexOf + 1);
-                supply = Integer.valueOf(a.trim()) + supply;
-            } else {
-                String a = newOne[i].substring(indexOf + 1);
-                buy = Integer.valueOf(a.trim()) + buy;
+        for (String record : data) {
+            String[] splittedRecord = record.split(",");
+            if (splittedRecord[0].equals("supply")) {
+                supply = supply + Integer.parseInt(splittedRecord[1]);
+            } else if (splittedRecord[0].equals("buy")) {
+                buy = buy + Integer.parseInt(splittedRecord[1]);
             }
         }
         int result = supply - buy;
         String supply1 = "supply," + supply;
         String buy1 = "buy," + buy;
         String result1 = "result," + result;
-        String toWrite = supply1 + System.lineSeparator() + buy1 + System.lineSeparator()
+        String dataFromFile = supply1 + System.lineSeparator() + buy1 + System.lineSeparator()
                 + result1 + System.lineSeparator();;
-        return toWrite;
+        return dataFromFile;
     }
 
-    public void write(File fileWrite) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(this.fileWrite,true))) {
+    public void write(String report, String fromFile) {
+        fileWrite = new File(fromFile);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileWrite,true))) {
             writer.write(" ");
-            writer.write(report(fileRead));
+            writer.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Can't write");
         }
