@@ -1,13 +1,10 @@
 package core.basesyntax;
 
-public class CountBuysAndSupply {
+public class BuyAndSupplyCounter {
 
-    private final SplitAllSpaces noSpaces = new SplitAllSpaces();
-
-    public int countSupply() {
-        String[] arrayWithoutSpaces = noSpaces.splitSpaces();
+    public int countSupply(String[] supplyAmount) {
         int supp = WorkWithFile.DEFAULT_NUMBER;
-        for (String index : arrayWithoutSpaces) {
+        for (String index : supplyAmount) {
             if (index.contains(WorkWithFile.SUPPLY)) {
                 supp += Integer.parseInt(index.replaceAll("\\D+", ""));
             }
@@ -15,10 +12,9 @@ public class CountBuysAndSupply {
         return supp;
     }
 
-    public int countBuys() {
-        String[] arrayWithoutSpaces = noSpaces.splitSpaces();
+    public int countBuys(String[] buysAmount) {
         int buys = WorkWithFile.DEFAULT_NUMBER;
-        for (String index : arrayWithoutSpaces) {
+        for (String index : buysAmount) {
             if (index.contains(WorkWithFile.BUY)) {
                 buys += Integer.parseInt(index.replaceAll("\\D+", ""));
             }
