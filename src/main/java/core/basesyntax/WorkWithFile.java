@@ -13,13 +13,47 @@ public class WorkWithFile {
     private static final String COMMA = ",";
     private static final int INDEX_OF_OPERATOR = 0;
     private static final int INDEX_OF_NUMBER = 1;
+    private static final String CANT_WRITE = "Can't write to file. ";
+    private static final String CANT_READ = "Can't read from file. ";
 
     public void getStatistic(String fromFileName, String toFileName) {
+        String[] dataFromFile = readFromFile(fromFileName);
+        StringBuilder builder = getReport(dataFromFile);
+        writeToFile(toFileName, builder);
+    }
+
+    private String[] readFromFile(String fileName) {
+        StringBuilder builder = new StringBuilder();
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
+            String line = bufferedReader.readLine();
+            while (line != null) {
+                builder.append(line).append(System.lineSeparator());
+                line = bufferedReader.readLine();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(CANT_READ + e);
+        }
+        return builder.toString().split(System.lineSeparator());
+    }
+
+    private void writeToFile(String fileName, StringBuilder stringBuilder) {
+        String[] arrWithResult = stringBuilder.toString()
+                .split(System.lineSeparator());
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
+            for (String line : arrWithResult) {
+                bufferedWriter.write(line);
+                bufferedWriter.write(System.lineSeparator());
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(CANT_WRITE + e);
+        }
+    }
+
+    private StringBuilder getReport(String[] dataFromFile) {
         StringBuilder stringBuilder = new StringBuilder();
         int sumSupply = 0;
         int sumBuy = 0;
         int result;
-        String[] dataFromFile = readFromFile(fromFileName);
         for (String lineInArr : dataFromFile) {
             String[] arrWithOperatorAndNumber = lineInArr.split(COMMA);
             switch (arrWithOperatorAndNumber[INDEX_OF_OPERATOR]) {
@@ -39,33 +73,6 @@ public class WorkWithFile {
                 .append(BUY_OPERATOR).append(COMMA)
                 .append(sumBuy).append(System.lineSeparator())
                 .append(RESULT).append(COMMA).append(result);
-        writeToFile(toFileName, stringBuilder);
-    }
-
-    private String[] readFromFile(String fileName) {
-        StringBuilder builder = new StringBuilder();
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
-            String line = bufferedReader.readLine();
-            while (line != null) {
-                builder.append(line).append(System.lineSeparator());
-                line = bufferedReader.readLine();
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return builder.toString().split(System.lineSeparator());
-    }
-
-    private void writeToFile(String fileName, StringBuilder stringBuilder) {
-        String[] arrWithResult = stringBuilder.toString()
-                .split(System.lineSeparator());
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
-            for (String line : arrWithResult) {
-                bufferedWriter.write(line);
-                bufferedWriter.write(System.lineSeparator());
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        return stringBuilder;
     }
 }
