@@ -1,11 +1,13 @@
 package core.basesyntax;
 
 public class BuyAndSupplyCounter {
+    private final int numberDefault = 0;
 
     public int countSupply(String[] supplyAmount) {
-        int supp = WorkWithFile.DEFAULT_NUMBER;
+        String supply = "supply";
+        int supp = numberDefault;
         for (String index : supplyAmount) {
-            if (index.contains(WorkWithFile.SUPPLY)) {
+            if (index.contains(supply)) {
                 supp += Integer.parseInt(index.replaceAll("\\D+", ""));
             }
         }
@@ -13,9 +15,10 @@ public class BuyAndSupplyCounter {
     }
 
     public int countBuys(String[] buysAmount) {
-        int buys = WorkWithFile.DEFAULT_NUMBER;
+        String buy = "buy";
+        int buys = numberDefault;
         for (String index : buysAmount) {
-            if (index.contains(WorkWithFile.BUY)) {
+            if (index.contains(buy)) {
                 buys += Integer.parseInt(index.replaceAll("\\D+", ""));
             }
         }

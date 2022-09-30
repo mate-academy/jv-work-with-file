@@ -7,7 +7,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class BufferReadWrite {
-
     public void writeInFile(String writeToFile, String[] report) {
         try (BufferedWriter buffWrite = new BufferedWriter(new FileWriter(writeToFile))) {
             for (String arr : report) {
@@ -19,11 +18,12 @@ public class BufferReadWrite {
     }
 
     public String readFromFile(String readFromFile) {
+        String spaceSymbol = " ";
         StringBuilder sb = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(readFromFile))) {
             String value = bufferedReader.readLine();
             while (value != null) {
-                sb.append(value).append(WorkWithFile.SPACE);
+                sb.append(value).append(spaceSymbol);
                 value = bufferedReader.readLine();
             }
         } catch (IOException e) {
