@@ -33,11 +33,11 @@ public class WorkWithFile {
         int amount;
         for (String line : lines) {
             amount = Integer.parseInt(line.split(COMMA)[SEPARATOR_INDEX]);
-            if (line.contains(WORD_SUPPLY)) {
-                totalSupply += amount;
-            }
             if (line.contains(WORD_BUY)) {
                 totalBuy += amount;
+            }
+            if (line.contains(WORD_SUPPLY)) {
+                totalSupply += amount;
             }
         }
         int result = totalSupply - totalBuy;
