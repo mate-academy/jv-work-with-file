@@ -8,6 +8,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final int OPERATION_INDEX = 0;
+    private static final int AMMOUNT_INDEX = OPERATION_INDEX + 1;
+    private static final String DATA_SEPARATOR = System.lineSeparator();
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] data = readFromFile(fromFileName);
@@ -21,11 +26,11 @@ public class WorkWithFile {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
             String value = bufferedReader.readLine();
             while (value != null) {
-                builder.append(value).append(",");
+                builder.append(value).append(DATA_SEPARATOR);
                 value = bufferedReader.readLine();
             }
             String result = builder.toString();
-            return result.split(",");
+            return result.split(DATA_SEPARATOR);
         } catch (IOException e) {
             System.out.println("Can`t read a file");
         }
@@ -36,12 +41,12 @@ public class WorkWithFile {
         int supplyCount = 0;
         int buyCount = 0;
         StringBuilder builder = new StringBuilder("supply,");
-        for (int i = 0; i < data.length; i++) {
-            if (data[i].equals("supply")) {
-                supplyCount += Integer.parseInt(data[i + 1]);
-            }
-            if (data[i].equals("buy")) {
-                buyCount += Integer.parseInt(data[i + 1]);
+        for (String record: data) {
+            String[] dataByColumns = record.split(DATA_SEPARATOR);
+            if (dataByColumns[OPERATION_INDEX].equalsIgnoreCase(SUPPLY)) {
+                supplyCount += Integer.parseInt(dataByColumns[AMMOUNT_INDEX]);
+            } else if (dataByColumns[OPERATION_INDEX].equalsIgnoreCase(BUY)) {
+                buyCount += Integer.parseInt(dataByColumns[AMMOUNT_INDEX]);
             }
         }
         builder.append(supplyCount).append("\nbuy,").append(buyCount)
