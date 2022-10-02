@@ -11,8 +11,8 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final int OPERATION_INDEX = 0;
-    private static final int AMMOUNT_INDEX = OPERATION_INDEX + 1;
-    private static final String DATA_SEPARATOR = System.lineSeparator();
+    private static final int AMMOUNT_INDEX = 1;
+    private static final String DATA_SEPARATOR = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] data = readFromFile(fromFileName);
@@ -26,11 +26,11 @@ public class WorkWithFile {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
             String value = bufferedReader.readLine();
             while (value != null) {
-                builder.append(value).append(DATA_SEPARATOR);
+                builder.append(value).append(System.lineSeparator());
                 value = bufferedReader.readLine();
             }
             String result = builder.toString();
-            return result.split(DATA_SEPARATOR);
+            return result.split(System.lineSeparator());
         } catch (IOException e) {
             System.out.println("Can`t read a file");
         }
