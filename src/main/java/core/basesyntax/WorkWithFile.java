@@ -8,6 +8,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final int FIRST_INDEX = 0;
+    private static final int LAST_INDEX = 1;
     private File fileRead;
     private File fileWrite;
 
@@ -17,7 +19,7 @@ public class WorkWithFile {
         write(report, toFileName);
     }
 
-    public String [] read(String string) {
+    private String [] read(String string) {
         fileRead = new File(string);
         StringBuilder builder = new StringBuilder();
         try {
@@ -35,15 +37,15 @@ public class WorkWithFile {
         return data;
     }
 
-    public String createReport(String [] data) {
+    private String createReport(String [] data) {
         int supply = 0;
         int buy = 0;
         for (String record : data) {
             String[] splittedRecord = record.split(",");
-            if (splittedRecord[0].equals("supply")) {
-                supply = supply + Integer.parseInt(splittedRecord[1]);
-            } else if (splittedRecord[0].equals("buy")) {
-                buy = buy + Integer.parseInt(splittedRecord[1]);
+            if (splittedRecord[FIRST_INDEX].equals("supply")) {
+                supply = supply + Integer.parseInt(splittedRecord[LAST_INDEX]);
+            } else if (splittedRecord[FIRST_INDEX].equals("buy")) {
+                buy = buy + Integer.parseInt(splittedRecord[LAST_INDEX]);
             }
         }
         int result = supply - buy;
@@ -55,10 +57,9 @@ public class WorkWithFile {
         return dataFromFile;
     }
 
-    public void write(String report, String fromFile) {
+    private void write(String report, String fromFile) {
         fileWrite = new File(fromFile);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileWrite,true))) {
-            writer.write(" ");
             writer.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Can't write");
