@@ -8,10 +8,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final int FIRST_INDEX = 0;
-    private static final int LAST_INDEX = 1;
-    private File fileRead;
-    private File fileWrite;
+    private static final int OPERARION_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String [] dataFromFile = read(fromFileName);
@@ -20,7 +18,7 @@ public class WorkWithFile {
     }
 
     private String [] read(String string) {
-        fileRead = new File(string);
+        File fileRead = new File(string);
         StringBuilder builder = new StringBuilder();
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(fileRead));
@@ -42,23 +40,20 @@ public class WorkWithFile {
         int buy = 0;
         for (String record : data) {
             String[] splittedRecord = record.split(",");
-            if (splittedRecord[FIRST_INDEX].equals("supply")) {
-                supply = supply + Integer.parseInt(splittedRecord[LAST_INDEX]);
-            } else if (splittedRecord[FIRST_INDEX].equals("buy")) {
-                buy = buy + Integer.parseInt(splittedRecord[LAST_INDEX]);
+            if (splittedRecord[OPERARION_INDEX].equals("supply")) {
+                supply = supply + Integer.parseInt(splittedRecord[AMOUNT_INDEX]);
+            } else if (splittedRecord[OPERARION_INDEX].equals("buy")) {
+                buy = buy + Integer.parseInt(splittedRecord[AMOUNT_INDEX]);
             }
         }
         int result = supply - buy;
-        String supply1 = "supply," + supply;
-        String buy1 = "buy," + buy;
-        String result1 = "result," + result;
-        String dataFromFile = supply1 + System.lineSeparator() + buy1 + System.lineSeparator()
-                + result1 + System.lineSeparator();;
-        return dataFromFile;
+        return new StringBuilder().append("supply,").append(supply).append(System.lineSeparator())
+                .append("buy,").append(buy).append(System.lineSeparator())
+                .append("result,").append(result).append(System.lineSeparator()).toString();
     }
 
     private void write(String report, String fromFile) {
-        fileWrite = new File(fromFile);
+        File fileWrite = new File(fromFile);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileWrite,true))) {
             writer.write(report);
         } catch (IOException e) {
