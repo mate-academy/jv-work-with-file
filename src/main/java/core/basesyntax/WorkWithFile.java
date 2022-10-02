@@ -10,8 +10,12 @@ import java.io.IOException;
 public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int supplyCount = 0;
-        int buyCount = 0;
+        String[] data = readFromFile(fromFileName);
+        String report = createReport(data);
+        writeToFile(toFileName, report);
+    }
+
+    public String[] readFromFile(String fromFileName) {
         File file = new File(fromFileName);
         StringBuilder builder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
@@ -21,25 +25,36 @@ public class WorkWithFile {
                 value = bufferedReader.readLine();
             }
             String result = builder.toString();
-            String[] split = result.split(",");
-            File file1 = new File(toFileName);
-            BufferedWriter writer = new BufferedWriter(new FileWriter(file1));
-            StringBuilder builder1 = new StringBuilder("supply,");
-            for (int i = 0; i < split.length; i++) {
-                if (split[i].equals("supply")) {
-                    supplyCount += Integer.parseInt(split[i + 1]);
-                }
-                if (split[i].equals("buy")) {
-                    buyCount += Integer.parseInt(split[i + 1]);
-                }
-            }
-            builder1.append(supplyCount).append("\nbuy,").append(buyCount)
-                    .append("\nresult,").append(supplyCount - buyCount);
-            String report = builder1.toString();
-            writer.write(report);
-            writer.close();
+            return result.split(",");
         } catch (IOException e) {
             System.out.println("Can`t read a file");
+        }
+        return new String[0];
+    }
+
+    public String createReport(String[] data) {
+        int supplyCount = 0;
+        int buyCount = 0;
+        StringBuilder builder = new StringBuilder("supply,");
+        for (int i = 0; i < data.length; i++) {
+            if (data[i].equals("supply")) {
+                supplyCount += Integer.parseInt(data[i + 1]);
+            }
+            if (data[i].equals("buy")) {
+                buyCount += Integer.parseInt(data[i + 1]);
+            }
+        }
+        builder.append(supplyCount).append("\nbuy,").append(buyCount)
+                .append("\nresult,").append(supplyCount - buyCount);
+        return builder.toString();
+    }
+
+    public void writeToFile(String toFileName, String report) {
+        File file = new File(toFileName);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            writer.write(report);
+        } catch (IOException e) {
+            System.out.println("Can`t write to a file");
         }
     }
 }
