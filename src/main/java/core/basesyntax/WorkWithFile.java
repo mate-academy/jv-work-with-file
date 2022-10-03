@@ -21,14 +21,7 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         String information = workWithFile.getInformationFromFile(fromFileName);
         int[] results = workWithFile.getResults(information);
-        String report = "supply,"
-                + results[supplyResultIndex]
-                + lineSeparator
-                + "buy,"
-                + results[buyResultIndex]
-                + lineSeparator
-                + "result,"
-                + (results[supplyResultIndex] - results[buyResultIndex]);
+        String report = workWithFile.createReport(results);
         File file = workWithFile.writeReportToFile(toFileName, report);
     }
 
@@ -71,5 +64,16 @@ public class WorkWithFile {
             }
         }
         return new int[]{supply, buy};
+    }
+
+    private String createReport(int[] results) {
+        return "supply,"
+                + results[supplyResultIndex]
+                + lineSeparator
+                + "buy,"
+                + results[buyResultIndex]
+                + lineSeparator
+                + "result,"
+                + (results[supplyResultIndex] - results[buyResultIndex]);
     }
 }
