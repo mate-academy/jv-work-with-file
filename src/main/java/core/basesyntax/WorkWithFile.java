@@ -22,7 +22,7 @@ public class WorkWithFile {
         String information = workWithFile.getInformationFromFile(fromFileName);
         int[] results = workWithFile.getResults(information);
         String report = workWithFile.createReport(results);
-        File file = workWithFile.writeReportToFile(toFileName, report);
+        workWithFile.writeReportToFile(toFileName, report);
     }
 
     private String getInformationFromFile(String fromFileName) {
@@ -41,14 +41,13 @@ public class WorkWithFile {
         return stringBuilder.toString();
     }
 
-    private File writeReportToFile(String toFileName, String report) {
+    private void writeReportToFile(String toFileName, String report) {
         File file = new File(toFileName);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
             writer.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file", e);
         }
-        return file;
     }
 
     private int[] getResults(String information) {
