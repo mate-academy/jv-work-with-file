@@ -14,13 +14,17 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] readData = readFromFile(fromFileName).split(System.lineSeparator());
-        StringBuilder toWriteData = new StringBuilder();
+        writeToFile(toFileName, generateStatistic(readData));
+    }
+
+    private String generateStatistic(String[] data) {
+        StringBuilder statistic = new StringBuilder();
         int supplyNumber = 0;
         int buyNumber = 0;
 
-        for (int i = 0; i < readData.length; i++) {
-            String operationType = readData[i].split(CSV_SEPARATOR)[0];
-            int number = Integer.parseInt(readData[i].split(CSV_SEPARATOR)[1]);
+        for (String datum : data) {
+            String operationType = datum.split(CSV_SEPARATOR)[0];
+            int number = Integer.parseInt(datum.split(CSV_SEPARATOR)[1]);
 
             if (operationType.equals(SUPPLY_OPERATION_NAME)) {
                 supplyNumber += number;
@@ -29,14 +33,14 @@ public class WorkWithFile {
             }
         }
 
-        toWriteData.append(SUPPLY_OPERATION_NAME).append(CSV_SEPARATOR)
+        statistic.append(SUPPLY_OPERATION_NAME).append(CSV_SEPARATOR)
                 .append(supplyNumber).append(System.lineSeparator())
                 .append(BUY_OPERATION_NAME).append(CSV_SEPARATOR)
                 .append(buyNumber).append(System.lineSeparator())
                 .append(RESULT_NAME).append(CSV_SEPARATOR)
                 .append(supplyNumber - buyNumber);
 
-        writeToFile(toFileName, toWriteData.toString());
+        return statistic.toString();
     }
 
     private String readFromFile(String fileName) {
@@ -47,7 +51,7 @@ public class WorkWithFile {
                 data.append(bufferedReader.readLine()).append(System.lineSeparator());
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can`t read file", e);
+            throw new RuntimeException("Can`t read " + fileName, e);
         }
 
         return data.toString();
@@ -57,7 +61,7 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
             bufferedWriter.write(data);
         } catch (IOException e) {
-            throw new RuntimeException("Can`t write data to file", e);
+            throw new RuntimeException("Can`t write data to " + fileName, e);
         }
     }
 }
