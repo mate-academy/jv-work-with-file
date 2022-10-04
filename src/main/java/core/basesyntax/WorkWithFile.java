@@ -14,6 +14,7 @@ public class WorkWithFile {
     private static final int VALUE_POSITION = 1;
     private static final String SUPPLY_KEY = "supply";
     private static final String BUY_KEY = "buy";
+    private static final String RESULT_STRING = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
         Map<String, Integer> csvContent;
@@ -55,20 +56,13 @@ public class WorkWithFile {
     }
 
     private String generateReport(Map<String, Integer> csvContent) {
-        return String.format(
-                "%s%s%d%s"
-                        + "%s%s%d%s"
-                        + "result%s%d",
-                SUPPLY_KEY,
-                DELIMITER,
-                csvContent.get(SUPPLY_KEY),
-                LINE_SEPARATOR,
-                BUY_KEY,
-                DELIMITER,
-                csvContent.get(BUY_KEY),
-                LINE_SEPARATOR,
-                DELIMITER,
-                csvContent.get(SUPPLY_KEY) - csvContent.get(BUY_KEY)
-        );
+        StringBuilder report = new StringBuilder();
+        return report.append(SUPPLY_KEY).append(DELIMITER).append(csvContent.get(SUPPLY_KEY))
+                .append(LINE_SEPARATOR)
+                .append(BUY_KEY).append(DELIMITER).append(csvContent.get(BUY_KEY))
+                .append(LINE_SEPARATOR)
+                .append(RESULT_STRING).append(DELIMITER)
+                .append(csvContent.get(SUPPLY_KEY) - csvContent.get(BUY_KEY))
+                .toString();
     }
 }
