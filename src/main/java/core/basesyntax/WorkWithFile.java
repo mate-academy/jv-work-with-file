@@ -68,15 +68,15 @@ public class WorkWithFile {
 
     private String createReport(int[] results) {
         return supplyName
-                + ","
+                + csvSeparator
                 + results[supplyResultIndex]
                 + lineSeparator
                 + buyName
-                + ","
+                + csvSeparator
                 + results[buyResultIndex]
                 + lineSeparator
                 + resultName
-                + ","
+                + csvSeparator
                 + (results[supplyResultIndex] - results[buyResultIndex]);
     }
 }
