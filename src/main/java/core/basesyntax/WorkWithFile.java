@@ -8,8 +8,10 @@ import java.nio.file.Path;
 
 public class WorkWithFile {
     private static final String SPLIT_FOR_DATA = ",";
+    private static final String NEW_LINE = System.lineSeparator();
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
+    private static final String RESULT = "result";
     private String[] dataFromFile;
     private int sumOfSupply = 0;
     private int sumOfBuy = 0;
@@ -24,10 +26,9 @@ public class WorkWithFile {
 
     private void getReport() {
         report = new StringBuilder();
-        report.append(SUPPLY).append(SPLIT_FOR_DATA).append(sumOfSupply)
-                .append(System.lineSeparator())
-                .append(BUY).append(SPLIT_FOR_DATA).append(sumOfBuy).append(System.lineSeparator())
-                .append("result").append(SPLIT_FOR_DATA).append(sumOfSupply - sumOfBuy);
+        report.append(SUPPLY).append(SPLIT_FOR_DATA).append(sumOfSupply).append(NEW_LINE)
+                .append(BUY).append(SPLIT_FOR_DATA).append(sumOfBuy).append(NEW_LINE)
+                .append(RESULT).append(SPLIT_FOR_DATA).append(sumOfSupply - sumOfBuy);
     }
 
     private void getData() {
