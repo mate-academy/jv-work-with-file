@@ -12,41 +12,28 @@ public class WorkWithFile {
     private static final String BUY = "buy";
     private static final byte OPERATION_TYPE_INDEX = 0;
     private static final byte AMOUNT_INDEX = 1;
-    private String fromFileName;
-    private String toFileName;
-
-    public String getFromFileName() {
-        return fromFileName;
-    }
-
-    public String getToFileName() {
-        return toFileName;
-    }
 
     public void getStatistic(String fromFileName, String toFileName) {
-        this.fromFileName = fromFileName;
-        this.toFileName = toFileName;
-        writeToFile();
+        writeToFile(toFileName,createReport(readFile(fromFileName)));
     }
 
-    private String readFile() {
-        File fileToRead = new File(getFromFileName());
+    private String readFile(String fileName) {
+        File fileToRead = new File(fileName);
         StringBuilder builderFromFileName = new StringBuilder();
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(fileToRead));
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileToRead))) {
             String value = reader.readLine();
             while (value != null) {
                 builderFromFileName.append(value).append(System.lineSeparator());
                 value = reader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can`t read file " + getFromFileName(), e);
+            throw new RuntimeException("Can`t read file " + fileName, e);
         }
         return builderFromFileName.toString();
     }
 
-    private String createReport() {
-        String[] splitLineSeparator = readFile().split(System.lineSeparator());
+    private String createReport(String data) {
+        String[] splitLineSeparator = data.split(System.lineSeparator());
         int supply = 0;
         int buy = 0;
 
@@ -70,12 +57,12 @@ public class WorkWithFile {
         return recordBuilder.toString();
     }
 
-    private void writeToFile() {
-        File reportFile = new File(getToFileName());
+    private void writeToFile(String fileName, String data) {
+        File reportFile = new File(fileName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(reportFile, true))) {
-            bufferedWriter.write(createReport());
+            bufferedWriter.write(data);
         } catch (IOException e) {
-            throw new RuntimeException("Can`t write data to file " + getToFileName(), e);
+            throw new RuntimeException("Can`t write data to file " + fileName, e);
         }
     }
 }
