@@ -8,14 +8,19 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private File file;
+    private final StringBuilder builder = new StringBuilder();
+    private int buy = 0;
+    private int supply = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        final File file = new File(fromFileName);
-        final StringBuilder builder = new StringBuilder();
-        final String [] array;
-        int buy = 0;
-        int supply = 0;
+        file = new File(fromFileName);
 
+        readFromFile();
+        writeToFile(buy, supply, toFileName);
+    }
+
+    public void readFromFile() {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String value;
             while ((value = reader.readLine()) != null) {
@@ -23,16 +28,18 @@ public class WorkWithFile {
                 builder.append("\n");
             }
         } catch (IOException e) {
-            System.out.println("file read error " + e);
+            throw new RuntimeException("file read error " + e);
         }
-        array = builder.toString().split("\n");
+        String[] array = builder.toString().split("\n");
 
         for (String s : array) {
             String[] data = s.split(",");
-            buy += data[0].equals("buy") ? Integer.parseInt(data[1]) : 0;
-            supply += data[0].equals("supply") ? Integer.parseInt(data[1]) : 0;
+            this.buy += data[0].equals("buy") ? Integer.parseInt(data[1]) : 0;
+            this.supply += data[0].equals("supply") ? Integer.parseInt(data[1]) : 0;
         }
+    }
 
+    public void writeToFile(int buy, int supply, String toFileName) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName, true))) {
             writer.write("supply,");
             writer.write(String.valueOf(supply));
@@ -43,7 +50,7 @@ public class WorkWithFile {
             writer.write("result,");
             writer.write(String.valueOf(supply - buy));
         } catch (IOException e) {
-            System.out.println("file write error " + e);
+            throw new RuntimeException("file write error " + e);
         }
     }
 }
