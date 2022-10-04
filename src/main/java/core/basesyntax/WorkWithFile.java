@@ -35,10 +35,10 @@ public class WorkWithFile {
             String value = bufferedReader.readLine();
             while (value != null) {
                 array = value.split(SPLIT_PATTERN);
-                if (array[0].equals("buy")) {
-                    amount[0] += Integer.parseInt(array[1]);
-                } else if (array[0].equals("supply")) {
-                    amount[1] += Integer.parseInt(array[1]);
+                if (array[ZERO_INDEX].equals("buy")) {
+                    amount[ZERO_INDEX] += Integer.parseInt(array[FIRST_INDEX]);
+                } else if (array[ZERO_INDEX].equals("supply")) {
+                    amount[FIRST_INDEX] += Integer.parseInt(array[FIRST_INDEX]);
                 }
                 value = bufferedReader.readLine();
             }
