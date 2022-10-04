@@ -30,12 +30,11 @@ public class WorkWithFile {
     public String getData(String fromFileName) {
         File inputData = new File(fromFileName);
         StringBuilder stringBuilderInput = new StringBuilder();
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(inputData));
-            int value = reader.read();
-            while (value != -1) {
-                stringBuilderInput.append((char) value);
-                value = reader.read();
+        try (BufferedReader reader = new BufferedReader(new FileReader(inputData))) {
+            String value = reader.readLine();
+            while (value != null) {
+                stringBuilderInput.append(value).append(NEXT_LINE);
+                value = reader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("File not found", e);
