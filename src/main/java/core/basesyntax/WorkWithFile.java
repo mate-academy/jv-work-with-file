@@ -8,6 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static String SYSTEM_LINE_SEPARATOR = System.getProperty("line.separator");
 
     public void getStatistic(String fromFileName, String toFileName) {
         String content = readFileToString(fromFileName);
@@ -72,8 +73,8 @@ public class WorkWithFile {
         }
 
         StringBuilder report = new StringBuilder();
-        report.append("supply,").append(supplyResult).append("\r\n");
-        report.append("buy,").append(buyResult).append("\r\n");
+        report.append("supply,").append(supplyResult).append(SYSTEM_LINE_SEPARATOR);
+        report.append("buy,").append(buyResult).append(SYSTEM_LINE_SEPARATOR);
         report.append("result,").append(supplyResult - buyResult);
         return report.toString();
     }
