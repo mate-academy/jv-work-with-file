@@ -10,11 +10,15 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
+    private static final String RESULT = "result";
+    private static final String COMMA = ",";
     private static final byte OPERATION_TYPE_INDEX = 0;
     private static final byte AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        writeToFile(toFileName,createReport(readFile(fromFileName)));
+        String content = readFile(fromFileName);
+        String report = createReport(content);
+        writeToFile(toFileName, report);
     }
 
     private String readFile(String fileName) {
@@ -38,7 +42,7 @@ public class WorkWithFile {
         int buy = 0;
 
         for (String s : splitLineSeparator) {
-            String[] commaSeparatedData = s.split(",");
+            String[] commaSeparatedData = s.split(COMMA);
             if (commaSeparatedData[OPERATION_TYPE_INDEX].equals(SUPPLY)) {
                 supply = supply + Integer.parseInt(commaSeparatedData[AMOUNT_INDEX]);
             }
@@ -49,17 +53,17 @@ public class WorkWithFile {
         int result = supply - buy;
 
         StringBuilder recordBuilder = new StringBuilder();
-        recordBuilder.append(SUPPLY).append(",").append(supply)
+        recordBuilder.append(SUPPLY).append(COMMA).append(supply)
                 .append(System.lineSeparator())
-                .append(BUY).append(",").append(buy)
+                .append(BUY).append(COMMA).append(buy)
                 .append(System.lineSeparator())
-                .append("result").append(",").append(result);
+                .append(RESULT).append(COMMA).append(result);
         return recordBuilder.toString();
     }
 
     private void writeToFile(String fileName, String data) {
         File reportFile = new File(fileName);
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(reportFile, true))) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(reportFile))) {
             bufferedWriter.write(data);
         } catch (IOException e) {
             throw new RuntimeException("Can`t write data to file " + fileName, e);
