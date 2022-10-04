@@ -12,6 +12,7 @@ public class WorkWithFile {
     private static final String SUPPLY_ITEM = "supply";
     private static final String BUY_ITEM = "buy";
     private static final String RESULT_ITEM = "result";
+    private static final String RESULT_SPLIT = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         File file = new File(toFileName);
@@ -41,7 +42,7 @@ public class WorkWithFile {
         int buy = 0;
         int result;
         for (String items : statistic) {
-            String[] item = items.split(",");
+            String[] item = items.split(RESULT_SPLIT);
             if (item[NAME_INDEX].equals(SUPPLY_ITEM)) {
                 supply += Integer.parseInt(item[SUM_INDEX]);
             } else if (item[NAME_INDEX].equals(BUY_ITEM)) {
@@ -50,9 +51,10 @@ public class WorkWithFile {
         }
         result = supply - buy;
         StringBuilder report = new StringBuilder();
-        report.append(SUPPLY_ITEM).append(",").append(supply).append(System.lineSeparator())
-                .append(BUY_ITEM).append(",").append(buy).append(System.lineSeparator())
-                .append(RESULT_ITEM).append(",").append(result);
+        report.append(SUPPLY_ITEM).append(RESULT_SPLIT).append(supply)
+                .append(System.lineSeparator()).append(BUY_ITEM).append(RESULT_SPLIT)
+                .append(buy).append(System.lineSeparator()).append(RESULT_ITEM)
+                .append(RESULT_SPLIT).append(result);
         return report.toString();
     }
 }
