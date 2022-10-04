@@ -39,7 +39,7 @@ public class WorkWithFile {
     private void writeToFile(String fileName, StringBuilder stringBuilder) {
         String result = stringBuilder.toString();
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
-                bufferedWriter.write(result);
+            bufferedWriter.write(result);
         } catch (IOException e) {
             throw new RuntimeException(CANT_WRITE + e);
         }
