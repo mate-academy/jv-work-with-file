@@ -16,7 +16,6 @@ public class WorkWithFile {
     private static final int SUPPLY_INDEX = 0;
     private static final int BUY_INDEX = 1;
 
-
     public void getStatistic(String fromFileName, String toFileName) {
         writeToFile(createReport(readFromFile(fromFileName)), toFileName);
     }
@@ -34,38 +33,39 @@ public class WorkWithFile {
                 .append(System.lineSeparator());
         return result.toString();
     }
+
     private void writeToFile(String result, String toFileName) {
         File outputFile = new File(toFileName);
-            try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(outputFile));) {
-                bufferedWriter.write(result);
-            } catch (IOException e) {
-                throw new RuntimeException(EXCEPTION_TEXT, e);
-            }
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(outputFile));) {
+            bufferedWriter.write(result);
+        } catch (IOException e) {
+            throw new RuntimeException(EXCEPTION_TEXT, e);
         }
+    }
+
     private String readFromFile(String fromFileName) {
         StringBuilder result = new StringBuilder();
-            File inputFile = new File(fromFileName);
-            int supply = 0;
-            int buy = 0;
-            try (BufferedReader bufferedReader = new BufferedReader(new FileReader(inputFile))) {
-                String fileLine = bufferedReader.readLine();
-                while (fileLine != null) {
-                    String[] wordsFromFileLine = fileLine.split(LINE_SEPARATOR);
-                    for (int i = 0; i < wordsFromFileLine.length; i++) {
-                        if (wordsFromFileLine[i].equals(SUPPLY)) {
-                            supply = supply + Integer.parseInt(wordsFromFileLine[i + 1]);
-                        }
-                        if (wordsFromFileLine[i].equals(BUY)) {
-                            buy = buy + Integer.parseInt(wordsFromFileLine[i + 1]);
-                        }
+        File inputFile = new File(fromFileName);
+        int supply = 0;
+        int buy = 0;
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(inputFile))) {
+            String fileLine = bufferedReader.readLine();
+            while (fileLine != null) {
+                String[] wordsFromFileLine = fileLine.split(LINE_SEPARATOR);
+                for (int i = 0; i < wordsFromFileLine.length; i++) {
+                    if (wordsFromFileLine[i].equals(SUPPLY)) {
+                        supply = supply + Integer.parseInt(wordsFromFileLine[i + 1]);
                     }
-                    fileLine = bufferedReader.readLine();
+                    if (wordsFromFileLine[i].equals(BUY)) {
+                        buy = buy + Integer.parseInt(wordsFromFileLine[i + 1]);
+                    }
                 }
-                result.append(supply).append(LINE_SEPARATOR).append(buy);
-            } catch (IOException e) {
-                throw new RuntimeException(EXCEPTION_TEXT, e);
+                fileLine = bufferedReader.readLine();
             }
-        return result.toString();
+            result.append(supply).append(LINE_SEPARATOR).append(buy);
+        } catch (IOException e) {
+            throw new RuntimeException(EXCEPTION_TEXT, e);
         }
-
+        return result.toString();
+    }
 }
