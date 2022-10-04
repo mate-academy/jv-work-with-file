@@ -37,13 +37,9 @@ public class WorkWithFile {
     }
 
     private void writeToFile(String fileName, StringBuilder stringBuilder) {
-        String[] arrWithResult = stringBuilder.toString()
-                .split(System.lineSeparator());
+        String result = stringBuilder.toString();
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
-            for (String line : arrWithResult) {
-                bufferedWriter.write(line);
-                bufferedWriter.write(System.lineSeparator());
-            }
+                bufferedWriter.write(result);
         } catch (IOException e) {
             throw new RuntimeException(CANT_WRITE + e);
         }
