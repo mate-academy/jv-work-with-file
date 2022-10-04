@@ -17,7 +17,7 @@ public class WorkWithFile {
         file = new File(fromFileName);
 
         readFromFile();
-        writeToFile(buy, supply, toFileName);
+        writeToFile(toFileName);
     }
 
     public void readFromFile() {
@@ -39,7 +39,7 @@ public class WorkWithFile {
         }
     }
 
-    public void writeToFile(int buy, int supply, String toFileName) {
+    public void writeToFile(String toFileName) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName, true))) {
             writer.write("supply,");
             writer.write(String.valueOf(supply));
