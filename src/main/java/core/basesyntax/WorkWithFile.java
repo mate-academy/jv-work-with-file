@@ -10,6 +10,7 @@ import java.util.List;
 public class WorkWithFile {
     private static final String COMMA = ",";
     private static final int SEPARATOR_INDEX = 1;
+    private static final String SEPARATOR = System.lineSeparator();
     private static final String WORD_SUPPLY = "supply";
     private static final String WORD_BUY = "buy";
     private static final String WORD_RESULT = "result";
@@ -47,8 +48,8 @@ public class WorkWithFile {
     private String returnData(int totalBuy, int totalSupply, int result) {
         return new StringBuilder()
                 .append(WORD_SUPPLY).append(COMMA).append(totalSupply)
-                .append(System.lineSeparator())
-                .append(WORD_BUY).append(COMMA).append(totalBuy).append(System.lineSeparator())
+                .append(SEPARATOR)
+                .append(WORD_BUY).append(COMMA).append(totalBuy).append(SEPARATOR)
                 .append(WORD_RESULT).append(COMMA).append(result).toString();
     }
 
