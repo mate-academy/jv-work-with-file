@@ -15,12 +15,15 @@ public class WorkWithFile {
     private static final String LINE_SEPARATOR = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
+        writeToFile(createReport(fromFileName), toFileName);
+    }
+
+    private String createReport(String fromFileName) {
+        StringBuilder result = new StringBuilder();
         File inputFile = new File(fromFileName);
         int supply = 0;
         int buy = 0;
-        StringBuilder result = new StringBuilder();
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(inputFile));
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(inputFile))) {
             String fileLine = bufferedReader.readLine();
             while (fileLine != null) {
                 String[] wordsFromFileLine = fileLine.split(LINE_SEPARATOR);
@@ -40,17 +43,18 @@ public class WorkWithFile {
                     .append(System.lineSeparator());
             result.append(RESULT).append(LINE_SEPARATOR).append(supply - buy)
                     .append(System.lineSeparator());
-            bufferedReader.close();
         } catch (IOException e) {
             throw new RuntimeException(EXCEPTION_TEXT, e);
         }
-        try {
-            File outputFile = new File(toFileName);
-            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(outputFile));
-            bufferedWriter.write(result.toString());
-            bufferedWriter.close();
-        } catch (IOException e) {
-            throw new RuntimeException(EXCEPTION_TEXT, e);
-        }
+        return result.toString();
     }
+    private void writeToFile(String result, String toFileName) {
+        File outputFile = new File(toFileName);
+            try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(outputFile));) {
+                bufferedWriter.write(result);
+            } catch (IOException e) {
+                throw new RuntimeException(EXCEPTION_TEXT, e);
+            }
+        }
+
 }
