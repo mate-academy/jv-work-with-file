@@ -8,40 +8,57 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String NEXT_LINE = System.lineSeparator();
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
+    private static final String COMMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        File inputData = new File(fromFileName);
         File writeData = new File(toFileName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(writeData, true))) {
-            BufferedReader reader = new BufferedReader(new FileReader(inputData));
-            StringBuilder stringBuilderInput = new StringBuilder();
-            int value = reader.read();
-            while (value != -1) {
-                stringBuilderInput.append((char) value);
-                value = reader.read();
-            }
-            String[] separatedInput = stringBuilderInput.toString().split(System.lineSeparator());
-            int supply = 0;
-            int buy = 0;
-            int result = 0;
-            for (String input : separatedInput) {
-                String[] separateValue = input.split(",");
-                if (separateValue[0].equals("supply")) {
-                    supply += Integer.parseInt(separateValue[1]);
-                }
-                if (separateValue[0].equals("buy")) {
-                    buy += Integer.parseInt(separateValue[1]);
-                }
-                result = supply - buy;
-            }
-            String[] dataToWrite = {"supply," + supply + System.lineSeparator(),
-                    "buy," + buy + System.lineSeparator(),
-                    "result," + result + System.lineSeparator()};
-            for (String data : dataToWrite) {
+            String[] separatedInput = getData(fromFileName).split(NEXT_LINE);
+
+            for (String data : formatData(separatedInput)) {
                 bufferedWriter.write(data);
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't get data", e);
         }
+    }
+
+    public String getData(String fromFileName) {
+        File inputData = new File(fromFileName);
+        StringBuilder stringBuilderInput = new StringBuilder();
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(inputData));
+            int value = reader.read();
+            while (value != -1) {
+                stringBuilderInput.append((char) value);
+                value = reader.read();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("File not found", e);
+        }
+        return stringBuilderInput.toString();
+    }
+
+    public String[] formatData(String[] input) {
+        int supply = 0;
+        int buy = 0;
+        int result = 0;
+        for (String i : input) {
+            String[] separateValue = i.split(COMMA);
+            if (separateValue[0].equals(SUPPLY)) {
+                supply += Integer.parseInt(separateValue[1]);
+            }
+            if (separateValue[0].equals(BUY)) {
+                buy += Integer.parseInt(separateValue[1]);
+            }
+            result = supply - buy;
+        }
+        return new String[]{SUPPLY + COMMA + supply + NEXT_LINE,
+                BUY + COMMA + buy + NEXT_LINE,
+                RESULT + COMMA + result + NEXT_LINE};
     }
 }
