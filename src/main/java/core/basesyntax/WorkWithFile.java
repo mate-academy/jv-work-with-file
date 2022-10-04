@@ -8,21 +8,22 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final WorkWithFile workWithFile = new WorkWithFile();
     private static final String separator = " ";
     private static final String lineSeparator = System.lineSeparator();
     private static final String csvSeparator = ",";
     private static final String supplyName = "supply";
+    private static final String buyName = "buy";
+    private static final String resultName = "result";
     private static final int nameIndex = 0;
     private static final int numberIndex = 1;
     private static final int supplyResultIndex = 0;
     private static final int buyResultIndex = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String information = workWithFile.getInformationFromFile(fromFileName);
-        int[] results = workWithFile.getResults(information);
-        String report = workWithFile.createReport(results);
-        workWithFile.writeReportToFile(toFileName, report);
+        String information = getInformationFromFile(fromFileName);
+        int[] results = getResults(information);
+        String report = createReport(results);
+        writeReportToFile(toFileName, report);
     }
 
     private String getInformationFromFile(String fromFileName) {
@@ -66,13 +67,16 @@ public class WorkWithFile {
     }
 
     private String createReport(int[] results) {
-        return "supply,"
+        return supplyName
+                + ","
                 + results[supplyResultIndex]
                 + lineSeparator
-                + "buy,"
+                + buyName
+                + ","
                 + results[buyResultIndex]
                 + lineSeparator
-                + "result,"
+                + resultName
+                + ","
                 + (results[supplyResultIndex] - results[buyResultIndex]);
     }
 }
