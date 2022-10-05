@@ -13,6 +13,7 @@ public class WorkWithFile {
     public static final String RESULT = "result";
     public static final String COMMA = ",";
     public static final String SPLIT_CONST = "\\W+";
+    public static final String LINE_CONST = System.lineSeparator();
     public static final int CONST = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
@@ -49,10 +50,10 @@ public class WorkWithFile {
         StringBuilder builder2 = new StringBuilder();
         builder2.append(SUPPLY_PRODUCT).append(COMMA)
                 .append(sumSupply)
-                .append(System.lineSeparator())
+                .append(LINE_CONST)
                 .append(BUY_PRODUCT).append(COMMA)
                 .append(sumBuy)
-                .append(System.lineSeparator())
+                .append(LINE_CONST)
                 .append(RESULT).append(COMMA)
                 .append(sumSupply - sumBuy);
         return builder2.toString();
