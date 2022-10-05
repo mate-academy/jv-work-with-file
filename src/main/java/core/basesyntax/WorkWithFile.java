@@ -1,11 +1,11 @@
 package core.basesyntax;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.StandardOpenOption;
 
 public class WorkWithFile {
     private static final String SUPPLY = "supply";
@@ -24,17 +24,7 @@ public class WorkWithFile {
                 buyCount += Integer.parseInt(infoFromFile[i + 1]);
             }
         }
-        int resultCount = supplyCount - buyCount;
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder
-                .append(SUPPLY).append(SPECIFIC_SYMBOL).append(supplyCount)
-                .append(System.lineSeparator())
-                .append(BUY).append(SPECIFIC_SYMBOL).append(buyCount)
-                .append(System.lineSeparator())
-                .append(RESULT).append(SPECIFIC_SYMBOL).append(resultCount)
-                .append(System.lineSeparator());
-
-        writeFile(toFileName, stringBuilder.toString());
+        writeFile(toFileName, resultOfData(supplyCount, buyCount));
     }
 
     public String readFile(String fromFileName) {
@@ -47,7 +37,7 @@ public class WorkWithFile {
                 value = reader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read this file", e);
+            throw new RuntimeException("Can't read this " + file, e);
         }
 
         return stringBuilder.toString();
@@ -55,15 +45,24 @@ public class WorkWithFile {
 
     public void writeFile(String toFileName, String dataAfterWorkingDay) {
         File file = new File(toFileName);
-        try {
-            file.createNewFile();
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            writer.write(dataAfterWorkingDay);
+            writer.flush();
         } catch (IOException e) {
-            throw new RuntimeException("Can't create a file", e);
+            throw new RuntimeException("Can't write a data in " + file, e);
         }
-        try {
-            Files.write(file.toPath(), dataAfterWorkingDay.getBytes(), StandardOpenOption.APPEND);
-        } catch (IOException e) {
-            throw new RuntimeException("Can't write a data in file", e);
-        }
+    }
+
+    private String resultOfData(int supplyCount, int buyCount) {
+        int resultCount = supplyCount - buyCount;
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder
+                .append(SUPPLY).append(SPECIFIC_SYMBOL).append(supplyCount)
+                .append(System.lineSeparator())
+                .append(BUY).append(SPECIFIC_SYMBOL).append(buyCount)
+                .append(System.lineSeparator())
+                .append(RESULT).append(SPECIFIC_SYMBOL).append(resultCount)
+                .append(System.lineSeparator());
+        return stringBuilder.toString();
     }
 }
