@@ -13,8 +13,6 @@ public class WorkWithFile {
     private static final String BUY = "buy";
     private static final String RESULT = "result";
     private static final String LINE_SEPARATOR = ",";
-    private static final int SUPPLY_INDEX = 0;
-    private static final int BUY_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         writeToFile(createReport(readFromFile(fromFileName)), toFileName);
