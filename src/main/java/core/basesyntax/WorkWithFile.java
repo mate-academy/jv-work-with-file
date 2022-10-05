@@ -14,32 +14,44 @@ public class WorkWithFile {
     private static final String SEPARATOR = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        writeToFile(toFileName, createReport(readFromFile(fromFileName)));
+        writeToFile(toFileName, createReport(getValues(readFromFile(fromFileName))));
     }
 
-    private int[] readFromFile(String fromFileName) {
-        int[] values = {0,0};
+    private String readFromFile(String fromFileName) {
+        StringBuilder builder = new StringBuilder();
 
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String value = bufferedReader.readLine();
-
             while (value != null) {
-                String[] lineValue = value.split(SEPARATOR);
-                switch (lineValue[OPERATION_TYPE_INDEX]) {
-                    case "buy":
-                        values[BUY_INDEX] += Integer.parseInt(lineValue[AMMOUNT_INDEX]);
-                        break;
-                    case "supply":
-                        values[SUPPLY_INDEX] += Integer.parseInt(lineValue[AMMOUNT_INDEX]);
-                        break;
-                    default:
-                        break;
-                }
+                builder.append(value).append(System.lineSeparator());
                 value = bufferedReader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't create a report for file: " + fromFileName, e);
         }
+
+        return builder.toString();
+    }
+
+    private int[] getValues(String infoFromFile) {
+        int[] values = {0,0};
+        String[] fileValue = infoFromFile.split(System.lineSeparator());
+
+        for (String line : fileValue) {
+            String[] lineValue = line.split(SEPARATOR);
+            switch (lineValue[OPERATION_TYPE_INDEX]) {
+                case "buy":
+                    values[BUY_INDEX] += Integer.parseInt(lineValue[AMMOUNT_INDEX]);
+                    break;
+                case "supply":
+                    values[SUPPLY_INDEX] += Integer.parseInt(lineValue[AMMOUNT_INDEX]);
+                    break;
+                default:
+                    break;
+
+            }
+        }
+
         return values;
     }
 
