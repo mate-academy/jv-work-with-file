@@ -13,21 +13,20 @@ public class WorkWithFile {
     private static final int AMMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        writeStatistic(toFileName, computeStatistic(readStatistic(fromFileName)));
+        writeToCsvFile(toFileName, computeStatistic(readFromCsvFile(fromFileName)));
     }
 
-    public String[][] readStatistic(String fromFileName) {
+    public String[][] readFromCsvFile(String fromFileName) {
         List<String> dataList;
-        File file = new File(fromFileName);
         try {
-            dataList = Files.readAllLines(Path.of(file.getPath()));
+            dataList = Files.readAllLines(Path.of(new File(fromFileName).getPath()));
             String[][] dataTable = new String[dataList.size()][];
             for (int i = 0; i < dataList.size(); i++) {
                 dataTable[i] = dataList.toArray(String[]::new)[i].split(SPLITTER);
             }
             return dataTable;
         } catch (IOException e) {
-            throw new RuntimeException("");
+            throw new RuntimeException("Can't read data from the file " + fromFileName, e);
         }
     }
 
@@ -54,12 +53,13 @@ public class WorkWithFile {
         return statistic.toString();
     }
 
-    public void writeStatistic(String toFileName, String statistic) {
-        File file = new File(toFileName);
+    public void writeToCsvFile(String toFileName, String statistic) {
         try {
-            Files.write(Path.of(file.getPath()), statistic.getBytes(), StandardOpenOption.CREATE);
+            Files.write(Path.of(new File(toFileName).getPath()),
+                    statistic.getBytes(),
+                    StandardOpenOption.CREATE);
         } catch (IOException e) {
-            throw new RuntimeException("");
+            throw new RuntimeException("Can't write data to the file " + toFileName, e);
         }
     }
 }
