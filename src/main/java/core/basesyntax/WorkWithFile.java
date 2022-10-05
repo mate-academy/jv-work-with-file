@@ -1,23 +1,15 @@
 package core.basesyntax;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.util.List;
 
 public class WorkWithFile {
     private ReaderOurCsv reader = new ReaderOurCsv();
     private MakerStatistic makerStatistic = new MakerStatistic();
+    private WriterToCsv writer = new WriterToCsv();
 
     public void getStatistic(String fromFileName, String toFileName) {
-        try (BufferedWriter bufferedWriter =
-                     new BufferedWriter(new FileWriter(new File(toFileName), true))) {
-            for (String record : makerStatistic
-                    .makeStatistic(reader.getArrayRecords(fromFileName))) {
-                bufferedWriter.write(record);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("Can't write info to file", e);
-        }
+        List<String> recordsFromReadingFile = reader.getArrayRecords(fromFileName);
+        String[] recordsForWriting = makerStatistic.makeStatistic(recordsFromReadingFile);
+        writer.writeRecords(toFileName, recordsForWriting);
     }
 }

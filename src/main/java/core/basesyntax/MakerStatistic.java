@@ -7,16 +7,14 @@ public class MakerStatistic {
     private static final int INDEX_SUPPLY = 0;
     private static final int INDEX_BUY = 1;
     private static final int INDEX_RECORD = 2;
-    private static final char SPACER = ',';
-    private static final int INDEX_NAME_IN_RECORD = 0;
-    private static final int INDEX_AMOUNT_IN_RECORD = 1;
-    private StringBuilder stringBuilder = new StringBuilder();
 
     private String makeRecord(int amount, int numberField) {
+        StringBuilder stringBuilder = new StringBuilder();
+        char spacer = ',';
         stringBuilder.append(NAME_FIELDS[numberField])
-                .append(SPACER)
+                .append(spacer)
                 .append(amount);
-        if (numberField != 2) {
+        if (numberField != INDEX_RECORD) {
             stringBuilder.append(System.lineSeparator());
         }
         String record = stringBuilder.toString();
@@ -25,16 +23,17 @@ public class MakerStatistic {
     }
 
     public String[] makeStatistic(List<String> records) {
+        int indexNameInRecord = 0;
+        int indexAmountInRecord = 1;
         String[] statistic = new String[3];
-
         int amountSupplied = 0;
         int amountBought = 0;
         for (String record : records) {
             String[] value = record.split(",");
-            if (value[INDEX_NAME_IN_RECORD].equals(NAME_FIELDS[INDEX_SUPPLY])) {
-                amountSupplied += Integer.valueOf(value[INDEX_AMOUNT_IN_RECORD]);
-            } else if (value[INDEX_NAME_IN_RECORD].equals(NAME_FIELDS[INDEX_BUY])) {
-                amountBought += Integer.valueOf(value[INDEX_AMOUNT_IN_RECORD]);
+            if (value[indexNameInRecord].equals(NAME_FIELDS[INDEX_SUPPLY])) {
+                amountSupplied += Integer.valueOf(value[indexAmountInRecord]);
+            } else if (value[indexNameInRecord].equals(NAME_FIELDS[INDEX_BUY])) {
+                amountBought += Integer.valueOf(value[indexAmountInRecord]);
             }
         }
         statistic[INDEX_SUPPLY] = makeRecord(amountSupplied, INDEX_SUPPLY);

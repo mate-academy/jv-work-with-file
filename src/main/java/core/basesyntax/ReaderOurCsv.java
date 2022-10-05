@@ -6,7 +6,6 @@ import java.nio.file.Files;
 import java.util.List;
 
 public class ReaderOurCsv {
-
     public List<String> getArrayRecords(String fileName) {
         File file = new File(fileName);
         try {
