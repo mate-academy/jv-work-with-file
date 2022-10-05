@@ -7,7 +7,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static String SYSTEM_LINE_SEPARATOR = System.getProperty("line.separator");
     private static String ROW_SEPARATOR = ",";
     private static int CONTENT_DATA_ROW_VALUE_INDEX = 1;
 
@@ -22,7 +21,7 @@ public class WorkWithFile {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
             String value = bufferedReader.readLine();
             while (value != null) {
-                content += value + SYSTEM_LINE_SEPARATOR;
+                content += value + System.lineSeparator();
                 value = bufferedReader.readLine();
             }
         } catch (IOException e) {
@@ -58,8 +57,8 @@ public class WorkWithFile {
         }
 
         StringBuilder report = new StringBuilder();
-        report.append("supply,").append(supplyResult).append(SYSTEM_LINE_SEPARATOR);
-        report.append("buy,").append(buyResult).append(SYSTEM_LINE_SEPARATOR);
+        report.append("supply,").append(supplyResult).append(System.lineSeparator());
+        report.append("buy,").append(buyResult).append(System.lineSeparator());
         report.append("result,").append(supplyResult - buyResult);
         return report.toString();
     }
