@@ -16,40 +16,35 @@ public class WorkWithFile {
         writeToCsvFile(toFileName, computeStatistic(readFromCsvFile(fromFileName)));
     }
 
-    public String[][] readFromCsvFile(String fromFileName) {
-        List<String> dataList;
+    public String[] readFromCsvFile(String fromFileName) {
         try {
-            dataList = Files.readAllLines(Path.of(new File(fromFileName).getPath()));
-            String[][] dataTable = new String[dataList.size()][];
-            for (int i = 0; i < dataList.size(); i++) {
-                dataTable[i] = dataList.toArray(String[]::new)[i].split(SPLITTER);
-            }
-            return dataTable;
+            return Files.readAllLines(Path.of(new File(fromFileName).getPath())).toArray(String[]::new);
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from the file " + fromFileName, e);
         }
     }
 
-    public String computeStatistic(String[][] dataTable) {
+    public String computeStatistic(String[] dataTable) {
         StringBuilder statistic = new StringBuilder();
-        int ammount = 0;
-        int result = 0;
-        for (OperationType operation : OperationType.values()) {
-            if (operation != OperationType.SUPPLY && operation != OperationType.BUY) {
-                continue;
+        int supplyAmount = 0;
+        int buyAmount = 0;
+        for (String singleDataLine : dataTable) {
+            String[] singleData = singleDataLine.split(SPLITTER);
+            if (singleData[OPERATION_NAME_INDEX]
+                    .equals(OperationType.SUPPLY.toString().toLowerCase())) {
+                supplyAmount += Integer.parseInt(singleData[AMMOUNT_INDEX]);
             }
-            for (String[] singleData : dataTable) {
-                if (singleData[OPERATION_NAME_INDEX].equals(operation.toString().toLowerCase())) {
-                    ammount += Integer.parseInt(singleData[AMMOUNT_INDEX]);
-                }
+            if (singleData[OPERATION_NAME_INDEX]
+                    .equals(OperationType.BUY.toString().toLowerCase())) {
+                buyAmount += Integer.parseInt(singleData[AMMOUNT_INDEX]);
             }
-            statistic.append(operation.toString().toLowerCase()).append(SPLITTER)
-                    .append(ammount).append(System.lineSeparator());
-            result = operation.equals(OperationType.SUPPLY) ? result + ammount : result - ammount;
-            ammount = 0;
         }
-        statistic.append(OperationType.RESULT.toString().toLowerCase())
-                .append(SPLITTER).append(result);
+        statistic.append(OperationType.SUPPLY.toString().toLowerCase()).append(SPLITTER)
+                .append(supplyAmount).append(System.lineSeparator())
+                .append(OperationType.BUY.toString().toLowerCase()).append(SPLITTER)
+                .append(buyAmount).append(System.lineSeparator())
+                .append(OperationType.RESULT.toString().toLowerCase()).append(SPLITTER)
+                .append(supplyAmount - buyAmount);
         return statistic.toString();
     }
 
