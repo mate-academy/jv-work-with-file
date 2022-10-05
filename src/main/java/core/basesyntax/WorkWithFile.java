@@ -1,6 +1,11 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class WorkWithFile {
     public static final String SUPPLY_PRODUCT = "supply";
@@ -12,7 +17,6 @@ public class WorkWithFile {
         StringBuilder builder = new StringBuilder();
         File file = new File(fromFileName);
         try {
-
             BufferedReader reader = new BufferedReader(new FileReader(file));
             int value = reader.read();
             while (value != -1) {
@@ -29,8 +33,7 @@ public class WorkWithFile {
         for (int i = 0; i < splitSentense.length; i++) {
             if (SUPPLY_PRODUCT.equals(splitSentense[i])) {
                 sumSupply = sumSupply + Integer.parseInt(splitSentense[i + 1]);
-            }
-            else if (BUY_PRODUCT.equals(splitSentense[i])) {
+            } else if (BUY_PRODUCT.equals(splitSentense[i])) {
                 sumBuy = sumBuy + Integer.parseInt(splitSentense[i + 1]);
             }
         }
