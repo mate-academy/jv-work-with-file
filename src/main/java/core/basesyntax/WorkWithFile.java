@@ -7,12 +7,18 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private String readFromFile(String fromFileName) {
-        StringBuilder stringBuilder = new StringBuilder();
-        int supplyTotal = 0;
-        int buyTotal = 0;
+    private int supplyTotal = 0;
+    private int buyTotal = 0;
 
-        // Read from file and store the info in supplyTotal and buyTotal
+    private String readData() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("supply," + supplyTotal + System.lineSeparator()
+                + "buy," + buyTotal + System.lineSeparator()
+                + "result," + (supplyTotal - buyTotal));
+        return new String(stringBuilder);
+    }
+
+    private void readFromFile(String fromFileName) {
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String value = reader.readLine();
             while (value != null) {
@@ -24,23 +30,21 @@ public class WorkWithFile {
                 }
                 value = reader.readLine();
             }
-            stringBuilder.append("supply," + supplyTotal + System.lineSeparator()
-                    + "buy," + buyTotal + System.lineSeparator()
-                    + "result," + (supplyTotal - buyTotal));
         } catch (IOException e) {
-            throw new RuntimeException("Can't read the file", e);
+            throw new RuntimeException("Can't read the file " + fromFileName, e);
         }
-        return new String(stringBuilder);
+    }
+
+    private void writeToFile(String toFileName) {
+        try (BufferedWriter ButterWriter = new BufferedWriter(new FileWriter(toFileName))) {
+            ButterWriter.write(readData());
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write to a new file " + toFileName, e);
+        }
     }
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String readData = readFromFile(fromFileName);
-
-        // Writing data to a file
-        try (BufferedWriter ButterWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            ButterWriter.write(readData);
-        } catch (IOException e) {
-            throw new RuntimeException("Can't write to a new file", e);
-        }
+        readFromFile(fromFileName);
+        writeToFile(toFileName);
     }
 }
