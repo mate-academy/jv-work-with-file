@@ -8,13 +8,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private int buy = 0;
-    private int supply = 0;
-    private int result = 0;
-    private int[] res = {supply, buy, result};
 
     public void getStatistic(String fromFileName, String toFileName) {
-        writeToFile(calculate(readFile(new File(fromFileName))), toFileName);
+        writeToFile(createReport(readFile(new File(fromFileName))), toFileName);
     }
 
     private StringBuilder readFile(File file) {
@@ -31,7 +27,10 @@ public class WorkWithFile {
         return builder;
     }
 
-    private int[] calculate(StringBuilder builder) {
+    private String createReport(StringBuilder builder) {
+        int buy = 0;
+        int supply = 0;
+        int result = 0;
         int index = 1;
         final int value1 = 2;
         String[] split = builder.toString().replaceAll("\r\n", ",").split(",");
@@ -46,18 +45,16 @@ public class WorkWithFile {
             }
         }
         result = supply - buy;
-        int[] res = {supply, buy, result};
-        return res;
+        String resul = "supply," + supply + System.lineSeparator()
+                + "buy," + buy + System.lineSeparator()
+                + "result," + result + System.lineSeparator();
+        return resul;
     }
 
-    private void writeToFile(int[] res, String toFileName) {
+    private void writeToFile(String statistic, String toFileName) {
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName, true));
-            writer.write("supply," + res[0] + System.lineSeparator());
-            writer.flush();
-            writer.write("buy," + res[1] + System.lineSeparator());
-            writer.flush();
-            writer.write("result," + res[2] + System.lineSeparator());
+            writer.write(statistic);
             writer.flush();
             writer.close();
         } catch (IOException e) {
