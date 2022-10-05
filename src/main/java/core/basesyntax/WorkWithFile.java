@@ -5,28 +5,15 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 
 public class WorkWithFile {
     public static final String[] OPERATION_TYPE = new String[]{"supply", "buy"};
     public static final String DATA_SEPARATOR = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int supplyAmount = 0;
-        int buyAmount = 0;
         String extractedData = extractData(new File(fromFileName));
-        String[] splittedData = extractedData.split(DATA_SEPARATOR);
-        for (int i = 0; i < splittedData.length; i += 2) {
-            if (splittedData[i].equals(OPERATION_TYPE[0])) {
-                supplyAmount += Integer.parseInt(splittedData[i + 1]);
-            } else if (splittedData[i].equals(OPERATION_TYPE[1])) {
-                buyAmount += Integer.parseInt(splittedData[i + 1]);
-            }
-        }
-        String dataToWrite = String.format("%s,%d%n%s,%d%nresult,%d",
-                OPERATION_TYPE[0], supplyAmount,
-                OPERATION_TYPE[1], buyAmount, (supplyAmount - buyAmount));
-        writeData(dataToWrite.getBytes(), new File(toFileName).toPath());
+        String dataToWrite = calculateStatistic(extractedData);
+        writeData(dataToWrite, toFileName);
     }
 
     private String extractData(File file) {
@@ -43,11 +30,28 @@ public class WorkWithFile {
         return strBuilder.toString();
     }
 
-    private void writeData(byte[] bytes, Path file) {
+    private void writeData(String dataToWrite, String file) {
+        byte[] bytes = dataToWrite.getBytes();
         try {
-            Files.write(file, bytes);
+            Files.write(new File(file).toPath(), bytes);
         } catch (IOException e) {
             throw new RuntimeException("Cannot write to file " + file);
         }
+    }
+
+    private String calculateStatistic(String data) {
+        int supplyAmount = 0;
+        int buyAmount = 0;
+        String[] splittedData = data.split(DATA_SEPARATOR);
+        for (int i = 0; i < splittedData.length; i += 2) {
+            if (splittedData[i].equals(OPERATION_TYPE[0])) {
+                supplyAmount += Integer.parseInt(splittedData[i + 1]);
+            } else if (splittedData[i].equals(OPERATION_TYPE[1])) {
+                buyAmount += Integer.parseInt(splittedData[i + 1]);
+            }
+        }
+        return String.format("%s,%d%n%s,%d%nresult,%d",
+                OPERATION_TYPE[0], supplyAmount,
+                OPERATION_TYPE[1], buyAmount, (supplyAmount - buyAmount));
     }
 }
