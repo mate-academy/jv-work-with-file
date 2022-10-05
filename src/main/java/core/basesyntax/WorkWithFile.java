@@ -9,39 +9,21 @@ import java.io.IOException;
 
 public class WorkWithFile {
     private static final String LINE_SEPARATOR = System.lineSeparator();
-    private static final String DATA_SEPARATOR = ", ";
+    private static final String DATA_SEPARATOR = "\\W+";
     private static final String SUPPLY_CONSTANT_FOR_RESULT = "supply,";
     private static final String BUY_CONSTANT_FOR_RESULT = "buy,";
     private static final String RESULT_CONSTANT = "result,";
-    private String dataFromFile;
-    private String report;
-
-    public String getDataFromFile() {
-        return dataFromFile;
-    }
-
-    public void setDataFromFile(String dataFromFile) {
-        this.dataFromFile = dataFromFile;
-    }
-
-    public String getReport() {
-        return report;
-    }
-
-    public void setReport(String report) {
-        this.report = report;
-    }
+    private static final String SPACE = " ";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        readFromFile(fromFileName);
-        creatingReport();
-        writeToFile(toFileName);
+        String readFile = readFromFile(fromFileName);
+        String[] report = creatingReport(readFile);
+        writeToFile(report, toFileName);
     }
 
-    private void readFromFile(String fromFileName) {
-        File file = new File(fromFileName);
+    private String readFromFile(String fromFileName) {
         StringBuilder stringBuilder = new StringBuilder();
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String value = reader.readLine();
             while (value != null) {
                 stringBuilder.append(value).append(LINE_SEPARATOR);
@@ -50,14 +32,14 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can`t read data from file", e);
         }
-        dataFromFile = stringBuilder.toString();
+        return stringBuilder.toString();
     }
 
-    private void creatingReport() {
+    private String[] creatingReport(String dataFromFile) {
         String[] dataArray = dataFromFile.split(DATA_SEPARATOR);
         int buyValues = 0;
         int supplyValues = 0;
-        for (int i = 0; i < dataArray.length; i++) {
+        for (int i = 0; i < dataArray.length; i += 2) {
             if (dataArray[i].equals("buy")) {
                 buyValues += Integer.parseInt(dataArray[i + 1]);
             }
@@ -67,7 +49,7 @@ public class WorkWithFile {
         }
         int result = supplyValues - buyValues;
         StringBuilder reportBuilder = new StringBuilder();
-        report = reportBuilder
+        return reportBuilder
                 .append(SUPPLY_CONSTANT_FOR_RESULT)
                 .append(supplyValues)
                 .append(System.lineSeparator())
@@ -76,15 +58,17 @@ public class WorkWithFile {
                 .append(System.lineSeparator())
                 .append(RESULT_CONSTANT)
                 .append(result)
-                .toString();
+                .toString().split(SPACE);
     }
 
-    private void writeToFile(String toFileName) {
-        File file1 = new File(toFileName);
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file1, true))) {
-            bufferedWriter.write(report);
-        } catch (IOException e) {
-            throw new RuntimeException("Can`t write data to file", e);
+    private void writeToFile(String[] creatingReport, String toFileName) {
+        File file = new File(toFileName);
+        for (String info: creatingReport) {
+            try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
+                bufferedWriter.write(info + LINE_SEPARATOR);
+            } catch (IOException e) {
+                throw new RuntimeException("Can`t write data to file", e);
+            }
         }
     }
 }
