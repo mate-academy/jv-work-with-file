@@ -19,11 +19,7 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         String report = createReport(readAndCount(fromFileName));
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true))) {
-            bufferedWriter.write(report);
-        } catch (IOException e) {
-            throw new RuntimeException("Can’t write to file");
-        }
+        writeToFile(report,toFileName);
     }
 
     private static String createReport(int[] amount) {
@@ -51,5 +47,14 @@ public class WorkWithFile {
             throw new RuntimeException("Can’t read file", e);
         }
         return amount;
+    }
+
+    private static String writeToFile(String report, String toFileName) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true))) {
+            bufferedWriter.write(report);
+        } catch (IOException e) {
+            throw new RuntimeException("Can’t write to file");
+        }
+        return toFileName;
     }
 }
