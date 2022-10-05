@@ -40,7 +40,7 @@ public class WorkWithFile {
     }
 
     private String generatReport(String content) {
-        String[] splitContent = content.split(SYSTEM_LINE_SEPARATOR);
+        String[] splitContent = content.split(System.lineSeparator());
         String[][] contentData = new String[splitContent.length][2];
         for (int i = 0; i < contentData.length; i++) {
             String[] lineData = splitContent[i].split(ROW_SEPARATOR);
