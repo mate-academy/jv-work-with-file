@@ -14,14 +14,7 @@ public class WorkWithFile {
     private static final String SEPARATOR = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String[] value = readFromFile(fromFileName).split(SEPARATOR);
-
-        String builder = "supply," + value[SUPPLY_INDEX] + System.lineSeparator()
-                + "buy," + value[BUY_INDEX] + System.lineSeparator()
-                + "result,"
-                + (Integer.parseInt(value[SUPPLY_INDEX]) - Integer.parseInt(value[BUY_INDEX]));
-
-        writeToFile(toFileName, builder);
+        writeToFile(toFileName, createReport(readFromFile(fromFileName).split(SEPARATOR)));
     }
 
     private String readFromFile(String fromFileName) {
@@ -58,5 +51,12 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file: " + toFileName, e);
         }
+    }
+
+    private String createReport(String[] value) {
+        return "supply," + value[SUPPLY_INDEX] + System.lineSeparator()
+                + "buy," + value[BUY_INDEX] + System.lineSeparator()
+                + "result,"
+                + (Integer.parseInt(value[SUPPLY_INDEX]) - Integer.parseInt(value[BUY_INDEX]));
     }
 }
