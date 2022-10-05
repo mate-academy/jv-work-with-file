@@ -7,44 +7,48 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private int supplyTotal = 0;
-    private int buyTotal = 0;
 
-    private String readData() {
+    private String getReport(int [] supplyAndResult) {
+        int supplySum = supplyAndResult[0];
+        int buySum = supplyAndResult[1];
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("supply," + supplyTotal + System.lineSeparator()
-                + "buy," + buyTotal + System.lineSeparator()
-                + "result," + (supplyTotal - buyTotal));
+        stringBuilder.append("supply," + supplySum + System.lineSeparator()
+                + "buy," + buySum + System.lineSeparator()
+                + "result," + (supplySum - buySum));
         return new String(stringBuilder);
     }
 
-    private void readFromFile(String fromFileName) {
+    private int [] readFromFile(String fromFileName) {
+        int supplySum = 0;
+        int buySum = 0;
+
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String value = reader.readLine();
             while (value != null) {
                 String [] line = value.split(",");
                 if (line[0].equals("supply")) {
-                    supplyTotal += Integer.parseInt(line[1]);
+                    supplySum += Integer.parseInt(line[1]);
                 } else if (line[0].equals("buy")) {
-                    buyTotal += Integer.parseInt(line[1]);
+                    buySum += Integer.parseInt(line[1]);
                 }
                 value = reader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read the file " + fromFileName, e);
         }
+        return new int [] {supplySum, buySum};
     }
 
-    private void writeToFile(String toFileName) {
+    private void writeToFile(String toFileName, String report) {
         try (BufferedWriter ButterWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            ButterWriter.write(readData());
+            ButterWriter.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Can't write to a new file " + toFileName, e);
         }
     }
 
     public void getStatistic(String fromFileName, String toFileName) {
-        readFromFile(fromFileName);
-        writeToFile(toFileName);
+        String reportResult = getReport(readFromFile(fromFileName));
+        writeToFile(toFileName, reportResult);
     }
 }
