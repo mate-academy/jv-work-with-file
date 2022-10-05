@@ -6,8 +6,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    ReaderOurCSV reader = new ReaderOurCSV();
-    MakerStatistic makerStatistic = new MakerStatistic();
+    private ReaderOurCsv reader = new ReaderOurCsv();
+    private MakerStatistic makerStatistic = new MakerStatistic();
 
     public void getStatistic(String fromFileName, String toFileName) {
         try (BufferedWriter bufferedWriter =

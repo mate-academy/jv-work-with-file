@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
 
-public class ReaderOurCSV {
+public class ReaderOurCsv {
 
     public List<String> getArrayRecords(String fileName) {
         File file = new File(fileName);

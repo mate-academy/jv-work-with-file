@@ -12,11 +12,11 @@ public class MakerStatistic {
     private static final int INDEX_AMOUNT_IN_RECORD = 1;
     private StringBuilder stringBuilder = new StringBuilder();
 
-    private String makeRecord(int amount, int number_field) {
-        stringBuilder.append(NAME_FIELDS[number_field])
+    private String makeRecord(int amount, int numberField) {
+        stringBuilder.append(NAME_FIELDS[numberField])
                 .append(SPACER)
                 .append(amount);
-        if (number_field != 2) {
+        if (numberField != 2) {
             stringBuilder.append(System.lineSeparator());
         }
         String record = stringBuilder.toString();
