@@ -1,5 +1,6 @@
 package core.basesyntax;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -7,44 +8,57 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String CARRIAGE_RETURN = "/r";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        char[] array = new char[9999];
+        StringBuilder text = new StringBuilder();
         int supply = 0;
         int buy = 0;
-        try (FileReader input = new FileReader(fromFileName);) {
-            input.read(array);
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));) {
+            String line = bufferedReader.readLine();
+            while (line != null) {
+                text.append(line);
+                line = bufferedReader.readLine();
+                if (line != null) {
+                    text.append("\n");
+                }
+            }
         } catch (FileNotFoundException e) {
             throw new RuntimeException("File not found " + fromFileName, e);
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from the file " + fromFileName, e);
         }
-        String textFromFile = new String(array);
-        String[] strings = textFromFile.split("\n");
+        String[] strings = text.toString().split("\n");
         for (String line: strings) {
             String[] strArr = line.split(",");
             switch (strArr[0]) {
-                case "supply": supply += Integer.parseInt(strArr[1].replaceAll("\r",""));
+                case SUPPLY: supply += Integer.parseInt(strArr[1].replaceAll(CARRIAGE_RETURN,""));
                     break;
-                case "buy": buy += Integer.parseInt(strArr[1].replaceAll("\r",""));
+                case BUY: buy += Integer.parseInt(strArr[1].replaceAll(CARRIAGE_RETURN,""));
                     break;
                 default: ;
             }
+            writeStatistics(toFileName, supply, buy);
         }
+    }
+
+    public void writeStatistics(String toFileName, int totalSupply, int totalBuy) {
         File file = new File(toFileName);
         try {
             file.createNewFile();
         } catch (IOException e) {
-            throw new RuntimeException("Cant create file" + fromFileName, e);
+            throw new RuntimeException("Cant create file", e);
         }
 
         try (FileWriter in = new FileWriter(file)) {
-            in.write("supply," + supply + System.lineSeparator());
-            in.write("buy," + buy + System.lineSeparator());
-            int result = supply - buy;
+            in.write("supply," + totalSupply + System.lineSeparator());
+            in.write("buy," + totalBuy + System.lineSeparator());
+            int result = totalSupply - totalBuy;
             in.write("result," + result);
         } catch (IOException e) {
-            throw new RuntimeException("Cant write from file " + fromFileName, e);
+            throw new RuntimeException("Cant write from file ", e);
         }
     }
 }
