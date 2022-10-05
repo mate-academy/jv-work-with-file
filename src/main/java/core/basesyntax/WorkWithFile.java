@@ -45,9 +45,9 @@ public class WorkWithFile {
         int buyCount = 0;
         for (int i = 0; i < strings.length; i++) {
             if (strings[i].contains(SUPPLY)) {
-                supplyCount = supplyCount + Integer.parseInt(strings[i + 1].split("\r\n")[0]);
+                supplyCount = supplyCount + Integer.parseInt(strings[i + 1].split(System.lineSeparator())[0]);
             } else if (strings[i].contains(BUY)) {
-                buyCount = buyCount + Integer.parseInt(strings[i + 1].split("\r\n")[0]);
+                buyCount = buyCount + Integer.parseInt(strings[i + 1].split(System.lineSeparator())[0]);
             }
         }
         StringBuilder sb = new StringBuilder();
