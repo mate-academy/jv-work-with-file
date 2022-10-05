@@ -13,6 +13,7 @@ public class FileCreator {
         } catch (IOException e) {
             throw new RuntimeException("Can't create file",  e);
         }
+
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
             bufferedWriter.write(result);
         } catch (IOException e) {
