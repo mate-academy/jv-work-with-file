@@ -15,8 +15,8 @@ public class WorkWithFile {
             int supplySum = 0;
             for (String item : list) {
                 String[] datumArr = item.split(",");
-                String operation = datumArr[0];
-                String value = datumArr[1];
+                final String operation = datumArr[0];
+                final String value = datumArr[1];
                 if (operation.equals("buy")) {
                     buySum += Integer.valueOf(value);
                 } else {
