@@ -14,6 +14,7 @@ public class WorkWithFile {
     private static final String BUY = "buy";
     private static final String RESULT = "result";
     private static final String SPLIT_STRING = " ";
+    private static final String SYSTEM_SEPARATOR = System.lineSeparator();
 
     public void getStatistic(String fromFileName, String toFileName) {
         String fileRead = readFromFile(fromFileName);
@@ -27,7 +28,7 @@ public class WorkWithFile {
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String value = reader.readLine();
             while (value != null) {
-                stringBuilder.append(value).append(System.lineSeparator());
+                stringBuilder.append(value).append(SYSTEM_SEPARATOR);
                 value = reader.readLine();
             }
         } catch (IOException e) {
@@ -53,8 +54,8 @@ public class WorkWithFile {
         }
         result = supply - buy;
         StringBuilder report = new StringBuilder();
-        report.append(SUPPLY).append(COMMA).append(supply).append(System.lineSeparator())
-                .append(BUY).append(COMMA).append(buy).append(System.lineSeparator())
+        report.append(SUPPLY).append(COMMA).append(supply).append(SYSTEM_SEPARATOR)
+                .append(BUY).append(COMMA).append(buy).append(SYSTEM_SEPARATOR)
                 .append(RESULT).append(COMMA).append(result);
         return report.toString().split(SPLIT_STRING);
     }
@@ -62,8 +63,8 @@ public class WorkWithFile {
     private void writeToFile(String[] getInfoForReport, String toFileName) {
         File file = new File(toFileName);
         for (String info : getInfoForReport) {
-            try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-                bufferedWriter.write(info + System.lineSeparator());
+            try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
+                bufferedWriter.write(info + SYSTEM_SEPARATOR);
             } catch (IOException e) {
                 throw new RuntimeException("Can't write data to file", e);
             }
