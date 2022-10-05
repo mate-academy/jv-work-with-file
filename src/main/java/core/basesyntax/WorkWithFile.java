@@ -20,11 +20,21 @@ public class WorkWithFile {
         writeToFile(createReport(readFromFile(fromFileName)), toFileName);
     }
 
-    private String createReport(String supplyBuyResult) {
-        String[] supplyBuy = supplyBuyResult.split(LINE_SEPARATOR);
+    private String createReport(String[] fileLines) {
+        int supply = 0;
+        int buy = 0;
         StringBuilder result = new StringBuilder();
-        int supply = Integer.parseInt(supplyBuy[SUPPLY_INDEX]);
-        int buy = Integer.parseInt(supplyBuy[BUY_INDEX]);
+        for (String fileLine : fileLines) {
+            String[] wordsFromFileLine = fileLine.split(LINE_SEPARATOR);
+            for (int i = 0; i < wordsFromFileLine.length; i++) {
+                if (wordsFromFileLine[i].equals(SUPPLY)) {
+                    supply = supply + Integer.parseInt(wordsFromFileLine[i + 1]);
+                }
+                if (wordsFromFileLine[i].equals(BUY)) {
+                    buy = buy + Integer.parseInt(wordsFromFileLine[i + 1]);
+                }
+            }
+        }
         result.append(SUPPLY).append(LINE_SEPARATOR).append(supply)
                 .append(System.lineSeparator());
         result.append(BUY).append(LINE_SEPARATOR).append(buy)
@@ -43,29 +53,18 @@ public class WorkWithFile {
         }
     }
 
-    private String readFromFile(String fromFileName) {
+    private String[] readFromFile(String fromFileName) {
         StringBuilder result = new StringBuilder();
         File inputFile = new File(fromFileName);
-        int supply = 0;
-        int buy = 0;
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(inputFile))) {
             String fileLine = bufferedReader.readLine();
             while (fileLine != null) {
-                String[] wordsFromFileLine = fileLine.split(LINE_SEPARATOR);
-                for (int i = 0; i < wordsFromFileLine.length; i++) {
-                    if (wordsFromFileLine[i].equals(SUPPLY)) {
-                        supply = supply + Integer.parseInt(wordsFromFileLine[i + 1]);
-                    }
-                    if (wordsFromFileLine[i].equals(BUY)) {
-                        buy = buy + Integer.parseInt(wordsFromFileLine[i + 1]);
-                    }
-                }
+                result.append(fileLine).append(System.lineSeparator());
                 fileLine = bufferedReader.readLine();
             }
-            result.append(supply).append(LINE_SEPARATOR).append(buy);
         } catch (IOException e) {
             throw new RuntimeException(EXCEPTION_TEXT, e);
         }
-        return result.toString();
+        return result.toString().split(System.lineSeparator());
     }
 }
