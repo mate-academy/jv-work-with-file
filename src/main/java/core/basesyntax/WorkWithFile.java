@@ -34,22 +34,19 @@ public class WorkWithFile {
             if (singleLine[0].equals("buy")) {
                 buySum += Integer.valueOf(singleLine[1]);
             }
-            if (singleLine[0].equals("return")) {
-                resultSum += Integer.valueOf(singleLine[1]);
-            }
         }
 
+        resultSum = supplySum - buySum;
+        String supply = "supply," + supplySum;
+        String buy = "buy," + buySum;
+        String result = "result," + resultSum;
+
         try (BufferedWriter bufferedWr = new BufferedWriter(new FileWriter(toFileName, true))) {
-            bufferedWr.write("supply,");
-            bufferedWr.write(supplySum);
+            bufferedWr.write(supply);
             bufferedWr.newLine();
-
-            bufferedWr.write("buy,");
-            bufferedWr.write(buySum);
+            bufferedWr.write(buy);
             bufferedWr.newLine();
-
-            bufferedWr.write("result,");
-            bufferedWr.write(resultSum);
+            bufferedWr.write(result);
         } catch (IOException e) {
             throw new RuntimeException("Can't write to the file", e);
         }
