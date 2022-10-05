@@ -14,8 +14,8 @@ public class WorkWithFile {
     private static final String ROW_SEPARATOR = ",";
     private static final int DATA_INDEX_OPERATION_TYPE = 0;
     private static final int DATA_INDEX_AMOUNT = 1;
-    private int supply = 0;
-    private int buy = 0;
+    private int supply;
+    private int buy;
 
     public void getStatistic(String fromFileName, String toFileName) {
         try {
