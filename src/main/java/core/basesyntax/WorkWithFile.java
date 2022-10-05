@@ -39,7 +39,7 @@ public class WorkWithFile {
         }
     }
 
-    private String countStatistic(String operations) {
+    public String countStatistic(String operations) {
         String[] strings = operations.split(",");
         int supplyCount = 0;
         int buyCount = 0;
