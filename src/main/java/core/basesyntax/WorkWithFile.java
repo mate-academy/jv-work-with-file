@@ -20,7 +20,7 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         List<String> listOfPosition = new ArrayList<>();
-        List<String[]> list = getDataFromFile(fromFileName);
+        List<String[]> listOfData = getDataFromFile(fromFileName);
         int supplyResult = 0;
 
         try (BufferedWriter bufferedWriter =
@@ -28,12 +28,7 @@ public class WorkWithFile {
             listOfPosition.add(SUPPLY);
             listOfPosition.add(BUY);
             for (String lst : listOfPosition) {
-                int result = 0;
-                for (String[] str : list) {
-                    if (str[INDEX_TYPE_OF_OPERATION].equals(lst)) {
-                        result += Integer.parseInt(str[INDEX_AMMOUNT]);
-                    }
-                }
+                int result = countTheResult(listOfData, lst);
                 bufferedWriter.write(lst + COMMA + result + ENTER);
                 if (supplyResult == 0) {
                     supplyResult = result;
@@ -62,5 +57,15 @@ public class WorkWithFile {
         }
 
         return list;
+    }
+
+    public static int countTheResult(List<String[]> allData, String position) {
+        int result = 0;
+        for (String[] str : allData) {
+            if (str[INDEX_TYPE_OF_OPERATION].equals(position)) {
+                result += Integer.parseInt(str[INDEX_AMMOUNT]);
+            }
+        }
+        return result;
     }
 }
