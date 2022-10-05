@@ -9,18 +9,22 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final int OPERATION_TYPE_INDEX = 0;
     private static final int AMMOUNT_INDEX = 1;
+    private int supply = 0;
+    private int buy = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        writeToFile(fromFileName,toFileName);
+        readFromFile(fromFileName);
+
+        String builder = "supply," + supply + System.lineSeparator()
+                + "buy," + buy + System.lineSeparator()
+                + "result," + (supply - buy);
+
+        writeToFile(toFileName, builder);
     }
 
-    private String createReport(String fromFileName) {
-        StringBuilder builder = new StringBuilder();
-
+    private void readFromFile(String fromFileName) {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String value = bufferedReader.readLine();
-            int supply = 0;
-            int buy = 0;
 
             while (value != null) {
                 String[] lineValue = value.split(",");
@@ -36,18 +40,14 @@ public class WorkWithFile {
                 }
                 value = bufferedReader.readLine();
             }
-            builder.append("supply,").append(supply).append(System.lineSeparator())
-                    .append("buy,").append(buy).append(System.lineSeparator())
-                    .append("result,").append(supply - buy);
         } catch (IOException e) {
             throw new RuntimeException("Can't create a report for file: " + fromFileName, e);
         }
-        return builder.toString();
     }
 
-    private void writeToFile(String fromFileName, String toFileName) {
+    private void writeToFile(String toFileName, String message) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write(createReport(fromFileName));
+            bufferedWriter.write(message);
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file: " + toFileName, e);
         }
