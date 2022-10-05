@@ -30,7 +30,7 @@ public class WorkWithFile {
                 value = bufferedReader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read this file", e);
+            throw new RuntimeException("Can't read file " + fromFileName, e);
         }
         return stringBuilder;
     }
@@ -54,12 +54,12 @@ public class WorkWithFile {
 
     private void writeReport(String[] report, String toFileName) {
         File file = new File(toFileName);
-        for (String word : report) {
-            try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, true))) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, true))) {
+            for (String word : report) {
                 bufferedWriter.write(word + System.lineSeparator());
-            } catch (IOException e) {
-                throw new RuntimeException("Can't write this report", e);
             }
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write this report", e);
         }
     }
 }
