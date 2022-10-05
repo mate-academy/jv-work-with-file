@@ -9,6 +9,7 @@ import java.io.IOException;
 
 public class WorkWithFile {
     private static final int SIZE_OF_RESULT_ARRAY = 3;
+    private static final String[] RESULT = new String[SIZE_OF_RESULT_ARRAY];
 
     public void getStatistic(String fromFileName, String toFileName) {
         File file = new File(fromFileName);
@@ -26,21 +27,20 @@ public class WorkWithFile {
                 value = bufferedReader.readLine();
             }
             String stringBuilderToString = stringBuilder.toString();
-            String[] result = new String[SIZE_OF_RESULT_ARRAY];
             String[] stringBuilderToStringArray = stringBuilderToString.split("\n");
             for (int i = 0; i < stringBuilderToStringArray.length; i++) {
                 if (stringBuilderToStringArray[i].charAt(0) == 's') {
                     countS++;
                     if (countS == 1) {
                         int index = stringBuilderToStringArray[i].indexOf(",");
-                        result[0] = stringBuilderToStringArray[i].substring(0, index + 1);
+                        RESULT[0] = stringBuilderToStringArray[i].substring(0, index + 1);
                     }
                 }
                 if (stringBuilderToStringArray[i].charAt(0) == 'b') {
                     countB++;
                     if (countB == 1) {
                         int index = stringBuilderToStringArray[i].indexOf(",");
-                        result[1] = stringBuilderToStringArray[i].substring(0, index + 1);
+                        RESULT[1] = stringBuilderToStringArray[i].substring(0, index + 1);
                     }
                 }
             }
@@ -60,11 +60,11 @@ public class WorkWithFile {
                 }
             }
             difference = sumS - sumB;
-            result[0] = result[0] + sumS;
-            result[1] = result[1] + sumB;
-            result[2] = "result," + difference;
+            RESULT[0] = RESULT[0] + sumS;
+            RESULT[1] = RESULT[1] + sumB;
+            RESULT[2] = "result," + difference;
             File toFile = new File(toFileName);
-            for (String res : result) {
+            for (String res : RESULT) {
                 try {
                     BufferedWriter bufferedWriter =
                             new BufferedWriter(new FileWriter(toFile, true));
