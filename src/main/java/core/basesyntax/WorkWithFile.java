@@ -12,6 +12,10 @@ public class WorkWithFile {
     public static final int AMOUNTS_INDEX = 2;
     public static final String SPLIT_PATTERN = "\\W";
     public static final String SEPARATOR = System.lineSeparator();
+    public static final String BUY = "buy";
+    public static final String SUPPLY = "supply";
+    public static final String RESULT = "result,";
+    public static final String COMMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String report = createReport(readAndCount(fromFileName));
@@ -23,9 +27,9 @@ public class WorkWithFile {
     }
 
     private static String createReport(int[] amount) {
-        return "supply," + amount[FIRST_INDEX] + SEPARATOR
-              + "buy," + amount[ZERO_INDEX] + SEPARATOR
-              + "result," + (amount[FIRST_INDEX] - amount[ZERO_INDEX]);
+        return SUPPLY + COMMA + amount[FIRST_INDEX] + SEPARATOR
+              + BUY + COMMA + amount[ZERO_INDEX] + SEPARATOR
+              + RESULT + (amount[FIRST_INDEX] - amount[ZERO_INDEX]);
     }
 
     private static int[] readAndCount(String fromFileName) {
@@ -35,9 +39,9 @@ public class WorkWithFile {
             String value = bufferedReader.readLine();
             while (value != null) {
                 array = value.split(SPLIT_PATTERN);
-                if (array[ZERO_INDEX].equals("buy")) {
+                if (array[ZERO_INDEX].equals(BUY)) {
                     amount[ZERO_INDEX] += Integer.parseInt(array[FIRST_INDEX]);
-                } else if (array[ZERO_INDEX].equals("supply")) {
+                } else if (array[ZERO_INDEX].equals(SUPPLY)) {
                     amount[FIRST_INDEX] += Integer.parseInt(array[FIRST_INDEX]);
                 }
                 value = bufferedReader.readLine();
