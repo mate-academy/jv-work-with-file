@@ -11,7 +11,7 @@ import java.util.List;
 
 public class WorkWithFile {
 
-    private static final String ENTER = "\r\n";
+    private static final String ENTER = System.lineSeparator();
     private static final String COMMA = ",";
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
@@ -29,7 +29,7 @@ public class WorkWithFile {
             listOfPosition.add(BUY);
             for (String lst : listOfPosition) {
                 int result = countTheResult(listOfData, lst);
-                bufferedWriter.write(lst + COMMA + result + System.lineSeparator());
+                bufferedWriter.write(lst + COMMA + result + ENTER);
 
                 if (supplyResult == 0) {
                     supplyResult = result;
