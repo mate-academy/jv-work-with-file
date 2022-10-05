@@ -29,7 +29,8 @@ public class WorkWithFile {
             listOfPosition.add(BUY);
             for (String lst : listOfPosition) {
                 int result = countTheResult(listOfData, lst);
-                bufferedWriter.write(lst + COMMA + result + ENTER);
+                bufferedWriter.write(lst + COMMA + result + System.lineSeparator());
+
                 if (supplyResult == 0) {
                     supplyResult = result;
                 } else {
