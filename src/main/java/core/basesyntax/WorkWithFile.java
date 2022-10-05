@@ -2,63 +2,48 @@ package core.basesyntax;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
     private static String SYSTEM_LINE_SEPARATOR = System.getProperty("line.separator");
+    private static String ROW_SEPARATOR = ",";
+    private static int CONTENT_DATA_ROW_VALUE_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String content = readFileToString(fromFileName);
-        content = process(content);
+        content = generatReport(content);
         writeStringToFile(toFileName, content);
     }
 
     private String readFileToString(String fileName) {
-        BufferedReader bufferedReader = null;
-        try {
-            bufferedReader = new BufferedReader(new FileReader(fileName));
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
         String content = "";
-        try {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
             String value = bufferedReader.readLine();
             while (value != null) {
-                content += value + " ";
+                content += value + SYSTEM_LINE_SEPARATOR;
                 value = bufferedReader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Error of reading the file with name: " + fileName, e);
         }
         return content;
     }
 
     private void writeStringToFile(String toFileName, String content) {
-        BufferedWriter bufferedWriter = null;
-        try {
-            bufferedWriter = new BufferedWriter(new FileWriter(toFileName));
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(content);
         } catch (IOException e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (bufferedWriter != null) {
-                try {
-                    bufferedWriter.close();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
+            throw new RuntimeException("Error of writting the file with name: " + toFileName, e);
         }
     }
 
-    private String process(String content) {
-        String[] splitContent = content.split(" ");
+    private String generatReport(String content) {
+        String[] splitContent = content.split(SYSTEM_LINE_SEPARATOR);
         String[][] contentData = new String[splitContent.length][2];
         for (int i = 0; i < contentData.length; i++) {
-            String[] lineData = splitContent[i].split(",");
+            String[] lineData = splitContent[i].split(ROW_SEPARATOR);
             contentData[i] = lineData;
         }
 
@@ -66,9 +51,9 @@ public class WorkWithFile {
         int buyResult = 0;
         for (int i = 0; i < contentData.length; i++) {
             if (contentData[i][0].equals("supply")) {
-                supplyResult += Integer.parseInt(contentData[i][1]);
+                supplyResult += Integer.parseInt(contentData[i][CONTENT_DATA_ROW_VALUE_INDEX]);
             } else {
-                buyResult += Integer.parseInt(contentData[i][1]);
+                buyResult += Integer.parseInt(contentData[i][CONTENT_DATA_ROW_VALUE_INDEX]);
             }
         }
 
