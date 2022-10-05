@@ -16,12 +16,12 @@ public class WorkWithFile {
     public static final int CONST = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-
+        writeToFile(buildReport(readFile(fromFileName)), toFileName);
     }
 
-    public String readFromFile(File file) {
+    private String readFile(String fromFileName) {
         StringBuilder builder = new StringBuilder();
-
+        File file = new File(fromFileName);
         try {
             BufferedReader reader = new BufferedReader(new FileReader(file));
             int value = reader.read();
@@ -32,19 +32,17 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Cant read file", e);
         }
-        String sentence = builder.toString();
-        return sentence;
+        return builder.toString();
     }
 
-    private String generateStatistic(String[]) {
+    private String buildReport(String inPutParam) {
         int sumSupply = 0;
         int sumBuy = 0;
-        String[] splitSentense = readFromFile().split(SPLIT_CONST);
+        String[] splitSentense = inPutParam.split(SPLIT_CONST);
         for (int i = 0; i < splitSentense.length; i++) {
             if (SUPPLY_PRODUCT.equals(splitSentense[i])) {
                 sumSupply = sumSupply + Integer.parseInt(splitSentense[i + CONST]);
-            }
-            else if (BUY_PRODUCT.equals(splitSentense[i])) {
+            } else if (BUY_PRODUCT.equals(splitSentense[i])) {
                 sumBuy = sumBuy + Integer.parseInt(splitSentense[i + CONST]);
             }
         }
@@ -60,9 +58,9 @@ public class WorkWithFile {
         return builder2.toString();
     }
 
-    private void writeToFile(String toFileName, String statistic) {
+    private void writeToFile(String incomeStatistic, String toFileName) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName, true))) {
-            writer.write(statistic);
+            writer.write(incomeStatistic);
         } catch (IOException e) {
             throw new RuntimeException("Can't write to \\'" + toFileName + "\\' file.", e);
         }
