@@ -8,49 +8,53 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private File file;
-    private final StringBuilder builder = new StringBuilder();
-    private int buy = 0;
-    private int supply = 0;
+    private static final String LINE_SEPARATOR = System.lineSeparator();
+    private static final String SUPPLY = "supply,";
+    private static final String BUY = "buy,";
+    private static final String RESULT = "result,";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        file = new File(fromFileName);
+        File file = new File(fromFileName);
+        int buy = 0;
+        int supply = 0;
 
-        readFromFile();
-        writeToFile(toFileName);
+        for (String s : readFromFile(file)) {
+            String[] data = s.split(",");
+            buy += data[0].equals("buy") ? Integer.parseInt(data[1]) : 0;
+            supply += data[0].equals("supply") ? Integer.parseInt(data[1]) : 0;
+        }
+        writeToFile(toFileName, buy, supply);
     }
 
-    public void readFromFile() {
+    public String [] readFromFile(File file) {
+        StringBuilder builder = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String value;
             while ((value = reader.readLine()) != null) {
                 builder.append(value);
-                builder.append("\n");
+                builder.append(LINE_SEPARATOR);
             }
         } catch (IOException e) {
             throw new RuntimeException("file read error " + e);
         }
-        String[] array = builder.toString().split("\n");
-
-        for (String s : array) {
-            String[] data = s.split(",");
-            this.buy += data[0].equals("buy") ? Integer.parseInt(data[1]) : 0;
-            this.supply += data[0].equals("supply") ? Integer.parseInt(data[1]) : 0;
-        }
+        return builder.toString().split(LINE_SEPARATOR);
     }
 
-    public void writeToFile(String toFileName) {
+    public void writeToFile(String toFileName, int buy, int supply) {
+        StringBuilder builder = new StringBuilder();
+
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName, true))) {
-            writer.write("supply,");
-            writer.write(String.valueOf(supply));
-            writer.write(System.lineSeparator());
-            writer.write("buy,");
-            writer.write(String.valueOf(buy));
-            writer.write(System.lineSeparator());
-            writer.write("result,");
-            writer.write(String.valueOf(supply - buy));
+            builder.append(SUPPLY)
+                    .append(supply)
+                    .append(LINE_SEPARATOR)
+                    .append(BUY)
+                    .append(buy)
+                    .append(LINE_SEPARATOR)
+                    .append(RESULT)
+                    .append(supply - buy);
+            writer.write(builder.toString());
         } catch (IOException e) {
-            throw new RuntimeException("file write error " + e);
+            throw new RuntimeException("Can't write to \\'" + toFileName + "\\' file.", e);
         }
     }
 }
