@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.util.List;
 
 public class WorkWithFile {
     private static final String SPLITTER = ",";
@@ -18,7 +17,8 @@ public class WorkWithFile {
 
     public String[] readFromCsvFile(String fromFileName) {
         try {
-            return Files.readAllLines(Path.of(new File(fromFileName).getPath())).toArray(String[]::new);
+            return Files.readAllLines(Path.of(new File(fromFileName).getPath()))
+                    .toArray(String[]::new);
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from the file " + fromFileName, e);
         }
