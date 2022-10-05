@@ -2,6 +2,7 @@ package core.basesyntax;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -18,25 +19,18 @@ public class WorkWithFile {
     private static final int COUNTER_INIT_VALUE = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String[] arrFromFile;
-        try {
-            arrFromFile = getArrFromFile(fromFileName);
-        } catch (IOException e) {
-            throw new RuntimeException("Can't read the file " + fromFileName);
-        }
+        String[] arrFromFile = getArrFromFile(fromFileName);
         String[] arrWithResult = getArrWithResult(arrFromFile);
-        try {
-            putResultToFile(toFileName, arrWithResult);
-        } catch (IOException e) {
-            throw new RuntimeException("Can't write into the file " + toFileName);
-        }
+        putResultToFile(toFileName, arrWithResult);
     }
 
-    private void putResultToFile(String toFileName, String[] arrWithResult) throws IOException {
+    private void putResultToFile(String toFileName, String[] arrWithResult) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             for (String s : arrWithResult) {
                 bufferedWriter.write(s + LINE_SEPARATOR);
             }
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write data to the file " + toFileName);
         }
     }
 
@@ -56,16 +50,20 @@ public class WorkWithFile {
                 RESULT + COMMA + (sumOfSupply - sumOfBy)};
     }
 
-    private String[] getArrFromFile(String fromFileName) throws IOException {
-        try (FileReader fl = new FileReader(fromFileName)) {
+    private String[] getArrFromFile(String fromFileName) {
+        try (FileReader fileReader = new FileReader(fromFileName)) {
             StringBuilder enteredData = new StringBuilder();
-            BufferedReader reader = new BufferedReader(fl);
-            String str;
-            while ((str = reader.readLine()) != null) {
-                enteredData.append(str).append(WHITE_GAP);
+            BufferedReader reader = new BufferedReader(fileReader);
+            String lineFromFile;
+            while ((lineFromFile = reader.readLine()) != null) {
+                enteredData.append(lineFromFile).append(WHITE_GAP);
             }
             String resData = enteredData.toString().trim();
             return resData.split(WHITE_GAP);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException("Can't find file " + fromFileName);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't read data from file " + fromFileName);
         }
     }
 }
