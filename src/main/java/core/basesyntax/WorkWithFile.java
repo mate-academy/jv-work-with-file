@@ -16,20 +16,18 @@ public class WorkWithFile {
     private static final int DATA_INDEX_AMOUNT = 1;
     private int supply = 0;
     private int buy = 0;
-    private String fromFileName;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        this.fromFileName = fromFileName;
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            countOperationsCost();
+            countOperationsCost(fromFileName);
             writeToFile(bufferedWriter);
         } catch (IOException e) {
             throw new RuntimeException("Cannot perform this operation", e);
         }
     }
 
-    private void countOperationsCost() throws IOException {
-        for (String row : getFileLines()) {
+    private void countOperationsCost(String fromFileName) throws IOException {
+        for (String row : getFileLines(fromFileName)) {
             String[] rowData = row.split(ROW_SEPARATOR);
             int amount = Integer.parseInt(rowData[DATA_INDEX_AMOUNT]);
             if (OPERATION_SUPPLY.equals(rowData[DATA_INDEX_OPERATION_TYPE])) {
@@ -40,7 +38,7 @@ public class WorkWithFile {
         }
     }
 
-    private List<String> getFileLines() throws IOException {
+    private List<String> getFileLines(String fromFileName) throws IOException {
         return Files.readAllLines(new File(fromFileName).toPath());
     }
 
