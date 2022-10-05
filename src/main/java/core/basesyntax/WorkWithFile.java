@@ -12,28 +12,22 @@ public class WorkWithFile {
     private static final String BUY = "buy";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        File file = new File(toFileName);
-        try {
-            file.createNewFile();
-        } catch (IOException e) {
-            throw new RuntimeException("Can not create file", e);
-        }
-        writeToFile(countStatistic(getFromFile(fromFileName)),file.getName());
+        writeToFile(countStatistic(getFromFile(fromFileName)),new File(toFileName).getName());
     }
 
     private String getFromFile(String fromFilename) {
         try {
-            StringBuilder sb;
+            StringBuilder result;
             try (BufferedReader reader = new BufferedReader(new FileReader(fromFilename))) {
-                sb = new StringBuilder();
+                result = new StringBuilder();
                 int data;
                 data = reader.read();
                 while (data != -1) {
-                    sb.append((char) data);
+                    result.append((char) data);
                     data = reader.read();
                 }
             }
-            return sb.toString();
+            return result.toString();
         } catch (IOException e) {
             throw new RuntimeException("Can not read the line from file " + fromFilename, e);
         }
@@ -45,9 +39,11 @@ public class WorkWithFile {
         int buyCount = 0;
         for (int i = 0; i < strings.length; i++) {
             if (strings[i].contains(SUPPLY)) {
-                supplyCount = supplyCount + Integer.parseInt(strings[i + 1].split(System.lineSeparator())[0]);
+                supplyCount = supplyCount
+                        + Integer.parseInt(strings[i + 1].split(System.lineSeparator())[0]);
             } else if (strings[i].contains(BUY)) {
-                buyCount = buyCount + Integer.parseInt(strings[i + 1].split(System.lineSeparator())[0]);
+                buyCount = buyCount
+                        + Integer.parseInt(strings[i + 1].split(System.lineSeparator())[0]);
             }
         }
         StringBuilder sb = new StringBuilder();
@@ -58,7 +54,7 @@ public class WorkWithFile {
     }
 
     private void writeToFile(String toWrite, String toFileName) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName,true))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName, true))) {
             writer.write(toWrite);
         } catch (IOException e) {
             throw new RuntimeException("Can not write to file " + toFileName, e);
