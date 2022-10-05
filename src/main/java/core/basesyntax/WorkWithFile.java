@@ -14,12 +14,11 @@ public class WorkWithFile {
     private static final String SEPARATOR = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        writeToFile(toFileName, createReport(readFromFile(fromFileName).split(SEPARATOR)));
+        writeToFile(toFileName, createReport(readFromFile(fromFileName)));
     }
 
-    private String readFromFile(String fromFileName) {
-        int buy = 0;
-        int supply = 0;
+    private int[] readFromFile(String fromFileName) {
+        int[] values = {0,0};
 
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String value = bufferedReader.readLine();
@@ -28,10 +27,10 @@ public class WorkWithFile {
                 String[] lineValue = value.split(SEPARATOR);
                 switch (lineValue[OPERATION_TYPE_INDEX]) {
                     case "buy":
-                        buy += Integer.parseInt(lineValue[AMMOUNT_INDEX]);
+                        values[BUY_INDEX] += Integer.parseInt(lineValue[AMMOUNT_INDEX]);
                         break;
                     case "supply":
-                        supply += Integer.parseInt(lineValue[AMMOUNT_INDEX]);
+                        values[SUPPLY_INDEX] += Integer.parseInt(lineValue[AMMOUNT_INDEX]);
                         break;
                     default:
                         break;
@@ -41,8 +40,7 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't create a report for file: " + fromFileName, e);
         }
-
-        return buy + SEPARATOR + supply;
+        return values;
     }
 
     private void writeToFile(String toFileName, String message) {
@@ -53,10 +51,9 @@ public class WorkWithFile {
         }
     }
 
-    private String createReport(String[] value) {
-        return "supply," + value[SUPPLY_INDEX] + System.lineSeparator()
-                + "buy," + value[BUY_INDEX] + System.lineSeparator()
-                + "result,"
-                + (Integer.parseInt(value[SUPPLY_INDEX]) - Integer.parseInt(value[BUY_INDEX]));
+    private String createReport(int[] values) {
+        return "supply," + values[SUPPLY_INDEX] + System.lineSeparator()
+                + "buy," + values[BUY_INDEX] + System.lineSeparator()
+                + "result," + (values[SUPPLY_INDEX] - values[BUY_INDEX]);
     }
 }
