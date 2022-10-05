@@ -8,11 +8,11 @@ import java.util.List;
 
 public class WorkWithFile {
 
-    public String resultString(List<String> list) {
+    private String getResultString(List<String> list) {
         StringBuilder builder = new StringBuilder();
         if (list.size() > 0) {
-            Integer buySum = 0;
-            Integer supplySum = 0;
+            int buySum = 0;
+            int supplySum = 0;
             for (String item : list) {
                 String[] datumArr = item.split(",");
                 String operation = datumArr[0];
@@ -40,13 +40,13 @@ public class WorkWithFile {
             List<String> data = Files.readAllLines(Path.of(fromFileName));
             inputData.addAll(data);
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file!");
+            throw new RuntimeException("Can't read file! " + fromFileName, e);
         }
 
         try {
-            Files.write(Path.of(toFileName), resultString(inputData).getBytes());
+            Files.write(Path.of(toFileName), getResultString(inputData).getBytes());
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data to file!");
+            throw new RuntimeException("Can't write data to file! " + toFileName, e);
         }
     }
 
