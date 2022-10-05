@@ -9,11 +9,10 @@ public class ReportCreator {
             String[] arr = string.split(",");
 
             if (arr[0].equals("supply")) {
-                supply +=  Integer.parseInt(arr[1]);
+                supply += Integer.parseInt(arr[1]);
             }
-
             if (arr[0].equals("buy")) {
-                buy +=  Integer.parseInt(arr[1]);
+                buy += Integer.parseInt(arr[1]);
             }
         }
         result = supply - buy;

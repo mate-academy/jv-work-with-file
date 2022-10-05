@@ -11,7 +11,7 @@ public class FileCreator {
         try {
             file.createNewFile();
         } catch (IOException e) {
-            throw new RuntimeException("Can't create file",  e);
+            throw new RuntimeException("Can't create file", e);
         }
 
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
