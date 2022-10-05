@@ -6,6 +6,4 @@ public class ArrGenerator {
     public String[] arrGenerator (String s) {
         return s.split(SPECIFIED_CHARACTER);
     }
-
-
 }
