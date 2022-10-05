@@ -34,7 +34,7 @@ public class WorkWithFile {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
             String line = bufferedReader.readLine();
             while (line != null) {
-                strBuilder.append(line).append(",");
+                strBuilder.append(line).append(DATA_SEPARATOR);
                 line = bufferedReader.readLine();
             }
         } catch (IOException e) {
