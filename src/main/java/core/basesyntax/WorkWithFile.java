@@ -12,6 +12,8 @@ public class WorkWithFile {
     static final String BUY = "buy";
     static final int OPERATION_INDEX = 0;
     static final int AMOUNT_INDEX = 1;
+    private int supplyCount = 0;
+    private int buyCount = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String input = readFile(fromFileName);
@@ -45,14 +47,12 @@ public class WorkWithFile {
 
     public String createReport(String data) {
         String[] dataStrings = data.split(System.lineSeparator());
-        int supplyCount = 0;
-        int buyCount = 0;
         for (String dataString : dataStrings) {
-            String[] operationAmount = dataString.split(",");
-            if (operationAmount[OPERATION_INDEX].equals(SUPPLY)) {
-                supplyCount += Integer.parseInt(operationAmount[AMOUNT_INDEX]);
+            String[] operationAndAmount = dataString.split(",");
+            if (operationAndAmount[OPERATION_INDEX].equals(SUPPLY)) {
+                supplyCount += Integer.parseInt(operationAndAmount[AMOUNT_INDEX]);
             } else {
-                buyCount += Integer.parseInt(operationAmount[AMOUNT_INDEX]);
+                buyCount += Integer.parseInt(operationAndAmount[AMOUNT_INDEX]);
             }
         }
         int result = supplyCount - buyCount;
