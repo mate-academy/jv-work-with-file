@@ -9,7 +9,6 @@ import java.util.Map;
 
 public class WorkWithFile {
     private static final String DELIMITER = ",";
-    private static final String LINE_SEPARATOR = System.lineSeparator();
     private static final int KEY_POSITION = 0;
     private static final int VALUE_POSITION = 1;
     private static final String SUPPLY_KEY = "supply";
@@ -17,52 +16,49 @@ public class WorkWithFile {
     private static final String RESULT_STRING = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        Map<String, Integer> csvContent;
-        String report;
+        writeToCsv(Path.of(toFileName), generateReport(readCsvFile(Path.of(fromFileName))));
+    }
+
+    private List<String> readCsvFile(Path path) {
+        List<String> lines;
         try {
-            csvContent = readCsvFile(Path.of(fromFileName));
-            report = generateReport(csvContent);
-        } catch (IOException | NumberFormatException e) {
+            lines = Files.readAllLines(path);
+        } catch (IOException e) {
             throw new RuntimeException("Unable to read file: " + e);
         }
+        return lines;
+    }
+
+    private void writeToCsv(Path path, String report) {
         try {
-            writeToCsv(Path.of(toFileName), report);
+            Files.write(path, report.getBytes());
         } catch (IOException e) {
             throw new RuntimeException("Unable to write file: " + e);
         }
     }
 
-    private Map<String, Integer> readCsvFile(Path path) throws IOException {
-        List<String> lines = Files.readAllLines(path);
-        Map<String, Integer> csvContent = new HashMap<>();
-        for (String line : lines) {
+    private String generateReport(List<String> csvContent) {
+        Map<String, Integer> summary = new HashMap<>();
+        for (String line : csvContent) {
             String key = line.split(DELIMITER)[KEY_POSITION];
             int value = Integer.parseInt(line.split(DELIMITER)[VALUE_POSITION]);
-            if (csvContent.containsKey(key)) {
-                int newValue = csvContent.get(key) + value;
-                csvContent.put(key, newValue);
+            if (summary.containsKey(key)) {
+                int newValue = summary.get(key) + value;
+                summary.put(key, newValue);
                 continue;
             }
-            csvContent.put(
+            summary.put(
                     line.split(DELIMITER)[KEY_POSITION],
                     Integer.parseInt(line.split(DELIMITER)[VALUE_POSITION])
             );
         }
-        return csvContent;
-    }
-
-    private void writeToCsv(Path path, String report) throws IOException {
-        Files.write(path, report.getBytes());
-    }
-
-    private String generateReport(Map<String, Integer> csvContent) {
         StringBuilder report = new StringBuilder();
-        return report.append(SUPPLY_KEY).append(DELIMITER).append(csvContent.get(SUPPLY_KEY))
-                .append(LINE_SEPARATOR)
-                .append(BUY_KEY).append(DELIMITER).append(csvContent.get(BUY_KEY))
-                .append(LINE_SEPARATOR)
+        return report.append(SUPPLY_KEY).append(DELIMITER).append(summary.get(SUPPLY_KEY))
+                .append(System.lineSeparator())
+                .append(BUY_KEY).append(DELIMITER).append(summary.get(BUY_KEY))
+                .append(System.lineSeparator())
                 .append(RESULT_STRING).append(DELIMITER)
-                .append(csvContent.get(SUPPLY_KEY) - csvContent.get(BUY_KEY))
+                .append(summary.get(SUPPLY_KEY) - summary.get(BUY_KEY))
                 .toString();
     }
 }
