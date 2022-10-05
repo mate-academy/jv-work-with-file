@@ -52,10 +52,10 @@ public class WorkWithFile {
         return reportBuilder
                 .append(SUPPLY_CONSTANT_FOR_RESULT)
                 .append(supplyValues)
-                .append(System.lineSeparator())
+                .append(LINE_SEPARATOR)
                 .append(BUY_CONSTANT_FOR_RESULT)
                 .append(buyValues)
-                .append(System.lineSeparator())
+                .append(LINE_SEPARATOR)
                 .append(RESULT_CONSTANT)
                 .append(result)
                 .toString().split(SPACE);
