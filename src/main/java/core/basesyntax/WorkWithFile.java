@@ -18,11 +18,15 @@ public class WorkWithFile {
     private int buy = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
+        try {
             countOperationsCost(fromFileName);
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot read from \"" + fromFileName + "\" file", e);
+        }
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             writeToFile(bufferedWriter);
         } catch (IOException e) {
-            throw new RuntimeException("Cannot perform this operation", e);
+            throw new RuntimeException("Cannot write to the file. File name: " + toFileName, e);
         }
     }
 
