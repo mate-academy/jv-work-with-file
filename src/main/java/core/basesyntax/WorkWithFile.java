@@ -13,6 +13,13 @@ public class WorkWithFile {
     private static final String COMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
+        String file = readWithFile(fromFileName);
+        String statistic = createReport(file);
+        writeToFile(statistic, toFileName);
+
+    }
+
+    private String readWithFile(String fromFileName) {
         StringBuilder builder = new StringBuilder();
         try (BufferedReader buffered = new BufferedReader((new FileReader(fromFileName)))) {
             String value = buffered.readLine();
@@ -23,7 +30,11 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read file", e);
         }
-        String[] data = builder.toString().split(SEPARATOR);
+        return builder.toString();
+    }
+
+    private String createReport(String file) {
+        String[] data = file.toString().split(SEPARATOR);
         int addSupply = 0;
         int addBuy = 0;
         int result;
@@ -37,13 +48,16 @@ public class WorkWithFile {
             }
         }
         result = addSupply - addBuy;
-        StringBuilder builder1 = new StringBuilder().append(SUPPLY)
+        StringBuilder builderForReport = new StringBuilder().append(SUPPLY)
                 .append(COMA).append(addSupply).append(System.lineSeparator())
                 .append(BUY).append(COMA).append(addBuy).append(System.lineSeparator())
                 .append("result").append(COMA).append(result);
+        return builderForReport.toString();
+    }
 
+    private void writeToFile(String statistic, String toFileName) {
         try (BufferedWriter buffered = new BufferedWriter(new FileWriter(toFileName, true))) {
-            buffered.write(builder1.toString());
+            buffered.write(statistic);
         } catch (IOException e) {
             throw new RuntimeException("Can't write file", e);
         }
