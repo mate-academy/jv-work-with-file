@@ -34,7 +34,7 @@ public class WorkWithFile {
     }
 
     private String createReport(String file) {
-        String[] data = file.toString().split(SEPARATOR);
+        String[] data = file.split(SEPARATOR);
         int addSupply = 0;
         int addBuy = 0;
         int result;
