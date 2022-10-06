@@ -18,19 +18,11 @@ public class WorkWithFile {
     private int buy;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        try {
-            countOperationsCost(fromFileName);
-        } catch (IOException e) {
-            throw new RuntimeException("Cannot read from \"" + fromFileName + "\" file", e);
-        }
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            writeToFile(bufferedWriter);
-        } catch (IOException e) {
-            throw new RuntimeException("Cannot write to the file. File name: " + toFileName, e);
-        }
+        countOperationsCost(fromFileName);
+        writeToFile(toFileName);
     }
 
-    private void countOperationsCost(String fromFileName) throws IOException {
+    private void countOperationsCost(String fromFileName) {
         for (String row : getFileLines(fromFileName)) {
             String[] rowData = row.split(ROW_SEPARATOR);
             int amount = Integer.parseInt(rowData[DATA_INDEX_AMOUNT]);
@@ -42,12 +34,20 @@ public class WorkWithFile {
         }
     }
 
-    private List<String> getFileLines(String fromFileName) throws IOException {
-        return Files.readAllLines(new File(fromFileName).toPath());
+    private List<String> getFileLines(String fromFileName) {
+        try {
+            return Files.readAllLines(new File(fromFileName).toPath());
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot read from \"" + fromFileName + "\" file", e);
+        }
     }
 
-    private void writeToFile(BufferedWriter bufferedWriter) throws IOException {
-        bufferedWriter.write(getLogInfo());
+    private void writeToFile(String toFileName) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
+            bufferedWriter.write(getLogInfo());
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot write to the file. File name: " + toFileName, e);
+        }
     }
 
     private String getLogInfo() {
