@@ -53,6 +53,7 @@ public class WorkWithFile {
                 .append(BUY).append(COMA).append(addBuy).append(System.lineSeparator())
                 .append("result").append(COMA).append(result);
         return builderForReport.toString();
+
     }
 
     private void writeToFile(String statistic, String toFileName) {
