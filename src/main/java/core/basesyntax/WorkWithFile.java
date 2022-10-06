@@ -19,8 +19,38 @@ public class WorkWithFile {
     private static final int INDEX_AMMOUNT = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        List<String> listOfPosition = new ArrayList<>();
         List<String[]> listOfData = getDataFromFile(fromFileName);
+        writeDataToFile(toFileName, listOfData);
+    }
+
+    public static List<String[]> getDataFromFile(String fromFile) {
+        List<String[]> list = new ArrayList<>();
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFile));
+            while (bufferedReader.ready()) {
+                String[] rows = bufferedReader.readLine().split(COMMA);
+                list.add(rows);
+            }
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException("Can't read data from file", e);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public static int countTheResult(List<String[]> allData, String position) {
+        int result = 0;
+        for (String[] str : allData) {
+            if (str[INDEX_TYPE_OF_OPERATION].equals(position)) {
+                result += Integer.parseInt(str[INDEX_AMMOUNT]);
+            }
+        }
+        return result;
+    }
+
+    public static void writeDataToFile(String toFileName, List<String[]> listOfData) {
+        List<String> listOfPosition = new ArrayList<>();
         int supplyResult = 0;
 
         try (BufferedWriter bufferedWriter =
@@ -39,34 +69,7 @@ public class WorkWithFile {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Can't write data to file", e);
         }
-    }
-
-    public static List<String[]> getDataFromFile(String fromFile) {
-        List<String[]> list = new ArrayList<>();
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFile));
-            while (bufferedReader.ready()) {
-                String[] rows = bufferedReader.readLine().split(",");
-                list.add(rows);
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return list;
-    }
-
-    public static int countTheResult(List<String[]> allData, String position) {
-        int result = 0;
-        for (String[] str : allData) {
-            if (str[INDEX_TYPE_OF_OPERATION].equals(position)) {
-                result += Integer.parseInt(str[INDEX_AMMOUNT]);
-            }
-        }
-        return result;
     }
 }
