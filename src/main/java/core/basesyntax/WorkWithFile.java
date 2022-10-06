@@ -8,12 +8,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    public static final String REGEX = "\\W+";
-    public static final String SUPPLY = "supply";
-    public static final String BUY = "buy";
-    public static final String RESULT = "result";
-    public static final String SPACE = " ";
-    public static final String COMMA = ",";
+    private static final String REGEX = "\\W+";
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
+    private static final String SPACE = " ";
+    private static final String COMMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String fileContent = readFromFile(fromFileName);
