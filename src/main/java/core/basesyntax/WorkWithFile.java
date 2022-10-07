@@ -8,40 +8,47 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final String CHARACTER_S = "s";
-    private static final String CHARACTER_B = "b";
-    private static final String SPLIT_REGEX_COMMA = ",";
-    private static final int WORD_INDEX = 0;
-    private static final int AMOUNT_INDEX = 1;
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
+    private static final String REGEX = "\\W+";
+    private static final String COMMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String report = createReport(fromFileName);
+        String content = readFromFile(fromFileName);
+        String report = createReport(content);
         writeToFile(toFileName, report);
     }
 
-    private String createReport(String fileName) {
-        int supply = 0;
-        int buy = 0;
+    private String readFromFile(String fileName) {
         StringBuilder builder = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             String value = reader.readLine();
             while (value != null) {
-                String[] line = value.split(SPLIT_REGEX_COMMA);
-                if (line[WORD_INDEX].startsWith(CHARACTER_S)) {
-                    supply += Integer.parseInt(line[AMOUNT_INDEX]);
-                } else if (line[WORD_INDEX].startsWith(CHARACTER_B)) {
-                    buy += Integer.parseInt(line[AMOUNT_INDEX]);
-                }
+                builder.append(value).append(System.lineSeparator());
                 value = reader.readLine();
             }
-            int result = supply - buy;
-            builder.append("supply,").append(supply).append(System.lineSeparator())
-                    .append("buy,").append(buy).append(System.lineSeparator())
-                    .append("result,").append(result);
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't read file " + fileName, e);
         }
         return builder.toString();
+    }
+
+    private String createReport(String content) {
+        int supply = 0;
+        int buy = 0;
+        String[] lines = content.split(REGEX);
+        for (int i = 0; i < lines.length; i++) {
+            if (lines[i].equals(SUPPLY)) {
+                supply += Integer.parseInt(lines[i + 1]);
+            } else if (lines[i].equals(BUY)) {
+                buy += Integer.parseInt(lines[i + 1]);
+            }
+        }
+        int result = supply - buy;
+        return SUPPLY + COMMA + supply + System.lineSeparator()
+                + BUY + COMMA + buy + System.lineSeparator()
+                + RESULT + COMMA + result;
     }
 
     private void writeToFile(String fileName, String report) {
@@ -49,7 +56,7 @@ public class WorkWithFile {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file,true))) {
             writer.write(report);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can't write to file " + fileName, e);
         }
     }
 }
