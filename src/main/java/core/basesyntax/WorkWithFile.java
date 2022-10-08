@@ -8,6 +8,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String LINE_SEPARATOR = "_";
+    private static final int PRICE_INDEX = 1;
+    private static final int ACTION_INDEX = 0;
+    private static final String CHAR_TO_SPLIT = ",";
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] dataFromFile = getDataArray(fromFileName);
@@ -16,7 +23,6 @@ public class WorkWithFile {
     }
 
     private String[] getDataArray(String fileName) {
-        final String Line_Separator = "_";
         File readFile = new File(fileName);
         StringBuilder builder = new StringBuilder();
 
@@ -25,36 +31,34 @@ public class WorkWithFile {
 
             while (value != null) {
                 builder.append(value)
-                        .append(Line_Separator);
+                        .append(LINE_SEPARATOR);
                 value = reader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from file");
         }
 
-        return builder.toString().split(Line_Separator);
+        return builder.toString().split(LINE_SEPARATOR);
     }
 
     private String[] getUpdateData(String[] dataArray) {
-        final int Price_Index = 1;
-        final int Action_Index = 0;
         int supply = 0;
         int buy = 0;
 
         for (String datum : dataArray) {
-            String[] arr = datum.split(",");
+            String[] arr = datum.split(CHAR_TO_SPLIT);
 
-            if (arr[Action_Index].equals("supply")) {
-                supply += Integer.parseInt(arr[Price_Index]);
+            if (arr[ACTION_INDEX].equals(SUPPLY)) {
+                supply += Integer.parseInt(arr[PRICE_INDEX]);
             } else {
-                buy += Integer.parseInt(arr[Price_Index]);
+                buy += Integer.parseInt(arr[PRICE_INDEX]);
             }
         }
 
         int result = supply - buy;
-        String suppleInfo = "supply," + supply;
-        String buyInfo = "buy," + buy;
-        String resultInfo = "result," + result;
+        String suppleInfo = SUPPLY + "," + supply;
+        String buyInfo = BUY + "," + buy;
+        String resultInfo = RESULT + "," + result;
         return new String[]{suppleInfo, buyInfo, resultInfo};
     }
 
