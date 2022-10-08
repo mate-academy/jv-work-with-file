@@ -10,7 +10,14 @@ import java.io.IOException;
 public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
-        File readFile = new File(fromFileName);
+        String[] dataFromFile = getDataArray(fromFileName);
+        String[] updatedData = getUpdateData(dataFromFile);
+        writeToFile(toFileName, updatedData);
+    }
+
+    private String[] getDataArray(String fileName) {
+        final String Line_Separator = "_";
+        File readFile = new File(fileName);
         StringBuilder builder = new StringBuilder();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(readFile))) {
@@ -18,24 +25,29 @@ public class WorkWithFile {
 
             while (value != null) {
                 builder.append(value)
-                        .append("_");
+                        .append(Line_Separator);
                 value = reader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can't read data from file");
         }
 
-        String[] data = builder.toString().split("_");
+        return builder.toString().split(Line_Separator);
+    }
+
+    private String[] getUpdateData(String[] dataArray) {
+        final int Price_Index = 1;
+        final int Action_Index = 0;
         int supply = 0;
         int buy = 0;
 
-        for (String datum : data) {
+        for (String datum : dataArray) {
             String[] arr = datum.split(",");
 
-            if (arr[0].equals("supply")) {
-                supply += Integer.parseInt(arr[1]);
+            if (arr[Action_Index].equals("supply")) {
+                supply += Integer.parseInt(arr[Price_Index]);
             } else {
-                buy += Integer.parseInt(arr[1]);
+                buy += Integer.parseInt(arr[Price_Index]);
             }
         }
 
@@ -43,15 +55,17 @@ public class WorkWithFile {
         String suppleInfo = "supply," + supply;
         String buyInfo = "buy," + buy;
         String resultInfo = "result," + result;
-        String[] dataToWrite = new String[]{suppleInfo, buyInfo, resultInfo};
+        return new String[]{suppleInfo, buyInfo, resultInfo};
+    }
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName, true))) {
+    private void writeToFile(String fileName, String[] dataToWrite) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, true))) {
             for (String writeDatum : dataToWrite) {
                 writer.write(writeDatum);
                 writer.write(System.lineSeparator());
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can't write data to file");
         }
     }
 }
