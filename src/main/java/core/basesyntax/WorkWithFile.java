@@ -14,7 +14,7 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder = createReport(readingFomCSV(fromFileName));
+        stringBuilder = createReport(readingFomCsv(fromFileName));
         WritingToCsv(stringBuilder.toString(), toFileName);
     }
 
@@ -26,7 +26,7 @@ public class WorkWithFile {
         }
     }
 
-    private String readingFomCSV(String fromFileName) {
+    private String readingFomCsv(String fromFileName) {
         StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String value = reader.readLine();
