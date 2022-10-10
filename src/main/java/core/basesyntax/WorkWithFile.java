@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -16,10 +15,10 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder = createReport(readingFomCSV(fromFileName));
-        StringBuilderWritingToCSV(stringBuilder.toString(), toFileName);
+        WritingToCsv(stringBuilder.toString(), toFileName);
     }
 
-    private void StringBuilderWritingToCSV (String stringData, String toFileName) {
+    private void WritingToCsv(String stringData, String toFileName) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write(stringData);
         } catch (IOException e) {
@@ -27,7 +26,7 @@ public class WorkWithFile {
         }
     }
 
-    private String readingFomCSV (String fromFileName) {
+    private String readingFomCSV(String fromFileName) {
         StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String value = reader.readLine();
@@ -42,23 +41,26 @@ public class WorkWithFile {
         }
     }
 
-    private StringBuilder createReport (String dataString) {
+    private StringBuilder createReport(String dataString) {
         int buy = 0;
         int supply = 0;
         int result = 0;
         StringBuilder stringBuilder = new StringBuilder();
         String[] split = dataString.split(SPLIT_STRING);
-        for (int i=0; i<split.length; i = i + 2) {
+        for (int i = 0; i < split.length; i+=2) {
             if (split[i].equals(STRING_BUY)) {
-                buy = buy + Integer.parseInt(split[i+1]);
+                buy = buy + Integer.parseInt(split[i + 1]);
             }
             if (split[i].equals("supply")) {
-                supply = supply + Integer.parseInt(split[i+1]);
+                supply = supply + Integer.parseInt(split[i + 1]);
             }
         }
-        stringBuilder.append(STRING_SUPPLY).append(SPLIT_STRING).append(supply).append(System.lineSeparator());
-        stringBuilder.append(STRING_BUY).append(SPLIT_STRING).append(buy).append(System.lineSeparator());
-        stringBuilder.append(STRING_RESULT).append(SPLIT_STRING).append(supply-buy).append(System.lineSeparator());
+        stringBuilder.append(STRING_SUPPLY).append(SPLIT_STRING).append(supply)
+                .append(System.lineSeparator());
+        stringBuilder.append(STRING_BUY).append(SPLIT_STRING).append(buy)
+                .append(System.lineSeparator());
+        stringBuilder.append(STRING_RESULT).append(SPLIT_STRING).append(supply - buy)
+                .append(System.lineSeparator());
         return  stringBuilder;
     }
 }
