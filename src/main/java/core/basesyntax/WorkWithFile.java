@@ -1,46 +1,52 @@
 package core.basesyntax;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.List;
+import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 
 public class WorkWithFile {
-    public static final String COMA = "\\,";
-    public static final int INDEX_ONE = 1;
-    public static final int INDEX_ZERO = 0;
-    public static final String SEPARATOR = System.lineSeparator();
+    private static final int OPERATION_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
+    private static final String STRING_SEPARATOR = ",";
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write(getResultOfFile(fromFileName));
-        } catch (IOException e) {
-            throw new RuntimeException("Can`t read file" + e);
-        }
+        Map<String, Integer> map = fileToMap(fromFileName);
+        mapToFile(map, toFileName);
     }
 
-    public String getResultOfFile(String fileName) {
-        File file = new File(fileName);
-        try {
-            List<String> amount = Files.readAllLines(file.toPath());
-            String[] allParth = amount.toArray(new String[0]);
-            int buyNum = 0;
-            int supplyNum = 0;
-            for (String line : allParth) {
-                if (line.split(COMA)[INDEX_ZERO].startsWith("supply")) {
-                    supplyNum += Integer.parseInt(line.split(COMA)[INDEX_ONE]);
-                } else if (line.split(COMA)[INDEX_ZERO].startsWith("buy")) {
-                    buyNum += Integer.parseInt(line.split(COMA)[INDEX_ONE]);
-                }
-            }
-            int result = supplyNum - buyNum;
-            return "supply," + supplyNum + SEPARATOR + "buy," + buyNum
-                    + SEPARATOR + "result," + result;
+    private Map<String, Integer> fileToMap(String fileName) {
+        Map<String, Integer> map = new HashMap<>();
+        try (var reader = Files.lines(Paths.get(fileName))) {
+            reader.forEach(x -> {
+                String[] splitString = x.split(STRING_SEPARATOR);
+                String key = splitString[OPERATION_INDEX];
+                int amount = Integer.parseInt(splitString[AMOUNT_INDEX]);
+                int amountInMap = map.getOrDefault(key, 0);
+                map.put(key, amount + amountInMap);
+            });
         } catch (IOException e) {
-            throw new RuntimeException("Can`t read file" + e);
+            throw new RuntimeException("Something went wrong, when reading from " + fileName, e);
         }
+        return map;
     }
 
+    private void mapToFile(Map<String, Integer> map, String fileName) {
+        try (var writer = Files.newBufferedWriter(Paths.get(fileName))) {
+            int supplyAmount = map.get(SUPPLY);
+            int buyAmount = map.get(BUY);
+            int resultAmount = supplyAmount - buyAmount;
+            writer.write(SUPPLY + STRING_SEPARATOR + supplyAmount);
+            writer.newLine();
+            writer.write(BUY + STRING_SEPARATOR + buyAmount);
+            writer.newLine();
+            writer.write(RESULT + STRING_SEPARATOR + resultAmount);
+        } catch (IOException e) {
+            throw new RuntimeException("Something went wrong, when writing to " + fileName, e);
+        }
+    }
 }
