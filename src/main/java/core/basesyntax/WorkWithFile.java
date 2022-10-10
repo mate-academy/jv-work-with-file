@@ -15,10 +15,10 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder = createReport(readingFomCsv(fromFileName));
-        WritingToCsv(stringBuilder.toString(), toFileName);
+        writingToCsv(stringBuilder.toString(), toFileName);
     }
 
-    private void WritingToCsv(String stringData, String toFileName) {
+    private void writingToCsv(String stringData, String toFileName) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write(stringData);
         } catch (IOException e) {
@@ -47,7 +47,7 @@ public class WorkWithFile {
         int result = 0;
         StringBuilder stringBuilder = new StringBuilder();
         String[] split = dataString.split(SPLIT_STRING);
-        for (int i = 0; i < split.length; i+=2) {
+        for (int i = 0; i < split.length; i = i + 2) {
             if (split[i].equals(STRING_BUY)) {
                 buy = buy + Integer.parseInt(split[i + 1]);
             }
@@ -61,6 +61,6 @@ public class WorkWithFile {
                 .append(System.lineSeparator());
         stringBuilder.append(STRING_RESULT).append(SPLIT_STRING).append(supply - buy)
                 .append(System.lineSeparator());
-        return  stringBuilder;
+        return stringBuilder;
     }
 }
