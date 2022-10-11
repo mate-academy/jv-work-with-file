@@ -8,7 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final String COMA = ",";
+    private static final String COMMA = ",";
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
@@ -45,7 +45,7 @@ public class WorkWithFile {
         int buy = 0;
         int result = 0;
         for (String i : input) {
-            String[] separateValue = i.split(COMA);
+            String[] separateValue = i.split(COMMA);
             if (separateValue[0].equals(SUPPLY)) {
                 supply += Integer.parseInt(separateValue[1]);
             }
@@ -54,7 +54,7 @@ public class WorkWithFile {
             }
             result = supply - buy;
         }
-        return new String[]{SUPPLY + COMA + supply + System.lineSeparator(), BUY + COMA + buy
-                + System.lineSeparator(), RESULT + COMA + result};
+        return new String[]{SUPPLY + COMMA + supply + System.lineSeparator(), BUY + COMMA + buy
+                + System.lineSeparator(), RESULT + COMMA + result};
     }
 }
