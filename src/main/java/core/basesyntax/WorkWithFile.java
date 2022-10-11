@@ -1,6 +1,11 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
 
 public class WorkWithFile {
     private static final int OPERATION_TYPE = 0;
@@ -18,7 +23,7 @@ public class WorkWithFile {
         File fromFile = new File(fromFileName);
         String str;
         String[] strArray;
-        try(BufferedReader reader = new BufferedReader(new FileReader(fromFile))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFile))) {
             str = reader.readLine();
             while (str != null) {
                 strArray = str.split(",");
@@ -31,14 +36,14 @@ public class WorkWithFile {
                 str = reader.readLine();
             }
             result = supply - buy;
-        }catch (IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException("Can't read file", e);
         }
     }
 
     public void writeToFile(String toFileName, String inputData) {
         File toFile = new File(toFileName);
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFile))){
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFile))) {
             writer.write(inputData);
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file", e);
