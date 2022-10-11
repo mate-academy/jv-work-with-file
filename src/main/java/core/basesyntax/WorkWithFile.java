@@ -14,18 +14,22 @@ public class WorkWithFile {
     private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
+        String[] separatedInput = getData(fromFileName).split(System.lineSeparator());
+        writeToFile(toFileName, separatedInput);
+    }
+
+    private void writeToFile(String toFileName, String[] separatedInput) {
         File writeData = new File(toFileName);
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(writeData, true))) {
-            String[] separatedInput = getData(fromFileName).split(System.lineSeparator());
-            for (String data : formatData(separatedInput)) {
-                bufferedWriter.write(data);
+        for (String data : formatData(separatedInput)) {
+            try (BufferedWriter buffWriter = new BufferedWriter(new FileWriter(writeData, true))) {
+                buffWriter.write(data);
+            } catch (IOException e) {
+                throw new RuntimeException("Can't write to file", e);
             }
-        } catch (IOException e) {
-            throw new RuntimeException("Can't get data", e);
         }
     }
 
-    public String getData(String fromFileName) {
+    private String getData(String fromFileName) {
         File inputData = new File(fromFileName);
         StringBuilder stringBuilderInput = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(inputData))) {
@@ -40,7 +44,7 @@ public class WorkWithFile {
         return stringBuilderInput.toString();
     }
 
-    public String[] formatData(String[] input) {
+    private String[] formatData(String[] input) {
         int supply = 0;
         int buy = 0;
         int result = 0;
@@ -58,3 +62,4 @@ public class WorkWithFile {
                 + System.lineSeparator(), RESULT + COMA + result};
     }
 }
+
