@@ -10,43 +10,55 @@ public class WorkWithFile {
     
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
+    private static final int FIRSTELEMENT = 0;
+    private static final int SECONDELEMENT = 1;
+    private int summaSuply = 0;
+    private int summaBuy = 0;
     
     public void getStatistic(String fromFileName, String toFileName) {
-        String line;
-        StringBuilder stringBuilder = new StringBuilder();
-        int summaSuply = 0;
-        int summaBuy = 0;
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
-            while ((line = bufferedReader.readLine()) != null) {
-                String[] string = line.split(",");
-                stringBuilder.append(string[0]).append(" ").append(string[1]).append("\n");
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        String[] newarray = stringBuilder.toString().split("\n");
-        stringBuilder = new StringBuilder();
         
-        for (String s : newarray) {
-            String[] drop = s.split(" ");
-            if ((SUPPLY.equals(drop[0]))) {
-                summaSuply = summaSuply + Integer.parseInt(drop[1]);
+        String[] readToArray = readFile(fromFileName).split("\n");
+        
+        for (String s : readToArray) {
+            String[] dropLine = s.split(" ");
+            if ((SUPPLY.equals(dropLine[FIRSTELEMENT]))) {
+                summaSuply = summaSuply + Integer.parseInt(dropLine[SECONDELEMENT]);
             } else {
-                summaBuy = summaBuy + Integer.parseInt(drop[1]);
+                summaBuy = summaBuy + Integer.parseInt(dropLine[SECONDELEMENT]);
             }
-            
         }
-        rewriterule(stringBuilder.append(SUPPLY).append(",").append(summaSuply)
-                .append("\n").append(BUY).append(",").append(summaBuy).append("\n")
-                .append("result").append(",").append(summaSuply - summaBuy).toString(), toFileName);
+        writeFile(getString(), toFileName);
     }
     
-    private void rewriterule(String goods, String toFileName) {
+    private void writeFile(String goods, String toFileName) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(goods);
         } catch (IOException e) {
             throw new RuntimeException("Can`t write data to file ", e);
         }
+    }
+    
+    private String readFile(String fromFileName) {
+        String readLineFIle;
+        StringBuilder stringBuilder = new StringBuilder();
+        
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
+            while ((readLineFIle = bufferedReader.readLine()) != null) {
+                String[] string = readLineFIle.split(",");
+                stringBuilder.append(string[FIRSTELEMENT]).append(" ")
+                        .append(string[SECONDELEMENT])
+                        .append("\n");
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Can`t read a file", e);
+        }
+        return stringBuilder.toString();
+    }
+    
+    private String getString() {
+        return new StringBuilder().append(SUPPLY).append(",").append(summaSuply)
+                .append("\n").append(BUY).append(",").append(summaBuy).append("\n")
+                .append("result").append(",").append(summaSuply - summaBuy).toString();
     }
 }
 
