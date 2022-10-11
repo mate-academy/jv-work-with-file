@@ -5,6 +5,7 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class WorkWithFile {
     private static final String SPLIT_STRING = ",";
@@ -13,46 +14,37 @@ public class WorkWithFile {
     private static final String STRING_RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder = createReport(readingFomCsv(fromFileName));
-        writingToCsv(stringBuilder.toString(), toFileName);
+        ArrayList<String> data = readFomCsv(fromFileName);
+        String report= createReport(data);
+        writeToCsv(report, toFileName);
     }
 
-    private void writingToCsv(String stringData, String toFileName) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            writer.write(stringData);
-        } catch (IOException e) {
-            throw new RuntimeException("Can't write file: ", e);
-        }
-    }
-
-    private String readingFomCsv(String fromFileName) {
-        StringBuilder stringBuilder = new StringBuilder();
+    private ArrayList<String> readFomCsv(String fromFileName) {
+        ArrayList<String> data = new ArrayList<String>();
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String value = reader.readLine();
-            stringBuilder.append(value);
             while (value != null) {
+                data.add(value);
                 value = reader.readLine();
-                stringBuilder.append(",").append(value);
             }
-            return stringBuilder.toString();
+            return data;
         } catch (IOException e) {
-            throw new RuntimeException("Can't open file: ", e);
+            throw new RuntimeException("Can't open file: " + fromFileName, e);
         }
     }
 
-    private StringBuilder createReport(String dataString) {
+    private String createReport(ArrayList<String> data) {
         int buy = 0;
         int supply = 0;
-        int result = 0;
         StringBuilder stringBuilder = new StringBuilder();
-        String[] split = dataString.split(SPLIT_STRING);
-        for (int i = 0; i < split.length; i = i + 2) {
-            if (split[i].equals(STRING_BUY)) {
-                buy = buy + Integer.parseInt(split[i + 1]);
+        for (String line:data) {
+
+            String[] split = line.split(SPLIT_STRING);
+            if (split[0].equals(STRING_BUY)) {
+                buy = buy + Integer.parseInt(split[1]);
             }
-            if (split[i].equals("supply")) {
-                supply = supply + Integer.parseInt(split[i + 1]);
+            if (split[0].equals(STRING_SUPPLY)) {
+                supply = supply + Integer.parseInt(split[1]);
             }
         }
         stringBuilder.append(STRING_SUPPLY).append(SPLIT_STRING).append(supply)
@@ -61,6 +53,14 @@ public class WorkWithFile {
                 .append(System.lineSeparator());
         stringBuilder.append(STRING_RESULT).append(SPLIT_STRING).append(supply - buy)
                 .append(System.lineSeparator());
-        return stringBuilder;
+        return stringBuilder.toString();
+    }
+
+    private void writeToCsv(String stringData, String toFileName) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
+            writer.write(stringData);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write file: " + toFileName, e);
+        }
     }
 }
