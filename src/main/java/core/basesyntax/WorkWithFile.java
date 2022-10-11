@@ -15,7 +15,7 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         ArrayList<String> data = readFomCsv(fromFileName);
-        String report= createReport(data);
+        String report = createReport(data);
         writeToCsv(report, toFileName);
     }
 
