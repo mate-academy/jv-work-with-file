@@ -10,11 +10,16 @@ import java.util.Scanner;
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
 
-        File file = new File(fromFileName);
-        int buySum = 0;
-        int supplySum = 0;
+        createNewFile(toFileName);
+        int[] readFromFileResult = readFromFile(fromFileName);
+        writeContent(readFromFileResult, toFileName);
 
-        try (Scanner scanner = new Scanner(new FileReader(fromFileName));) {
+    }
+
+    private int[] readFromFile(String fromFileName) {
+        try (Scanner scanner = new Scanner(new FileReader(fromFileName))) {
+            int buySum = 0;
+            int supplySum = 0;
 
             while (scanner.hasNextLine()) {
                 String[] lineContent = scanner.nextLine().split(",");
@@ -34,17 +39,16 @@ public class WorkWithFile {
                 }
 
             }
+            return new int[] {buySum, supplySum};
 
         } catch (Exception e) {
             throw new RuntimeException("Can't read file", e);
         }
+    }
 
-        try {
-            File resultFile = new File(toFileName);
-            resultFile.createNewFile();
-        } catch (IOException e) {
-            throw new RuntimeException("Can't create new file", e);
-        }
+    private void writeContent(int[] readFromFileMethod, String toFileName) {
+        int buySum = readFromFileMethod[0];
+        int supplySum = readFromFileMethod[1];
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName));) {
             writer.write("supply," + supplySum);
@@ -54,6 +58,15 @@ public class WorkWithFile {
             writer.write("result," + (supplySum - buySum));
         } catch (IOException e) {
             throw new RuntimeException("Can't write content to new file", e);
+        }
+    }
+
+    private void createNewFile(String toFileName) {
+        try {
+            File resultFile = new File(toFileName);
+            resultFile.createNewFile();
+        } catch (IOException e) {
+            throw new RuntimeException("Can't create new file", e);
         }
     }
 }
