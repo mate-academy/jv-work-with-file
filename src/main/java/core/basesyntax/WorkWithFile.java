@@ -21,8 +21,8 @@ public class WorkWithFile {
     private void writeToFile(String toFileName, String[] separatedInput) {
         File writeData = new File(toFileName);
         for (String data : formatData(separatedInput)) {
-            try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(writeData, true))) {
-                bufferedWriter.write(data);
+            try (BufferedWriter buffWriter = new BufferedWriter(new FileWriter(writeData, true))) {
+                buffWriter.write(data);
             } catch (IOException e) {
                 throw new RuntimeException("Can't write to file", e);
             }
