@@ -10,8 +10,8 @@ public class WorkWithFile {
     
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
-    private static final int FIRSTELEMENT = 0;
-    private static final int SECONDELEMENT = 1;
+    private static final int FIRST_ELEMENT = 0;
+    private static final int SECOND_ELEMENT = 1;
     private int summaSuply = 0;
     private int summaBuy = 0;
     
@@ -21,10 +21,10 @@ public class WorkWithFile {
         
         for (String s : readToArray) {
             String[] dropLine = s.split(" ");
-            if ((SUPPLY.equals(dropLine[FIRSTELEMENT]))) {
-                summaSuply = summaSuply + Integer.parseInt(dropLine[SECONDELEMENT]);
+            if ((SUPPLY.equals(dropLine[FIRST_ELEMENT]))) {
+                summaSuply = summaSuply + Integer.parseInt(dropLine[SECOND_ELEMENT]);
             } else {
-                summaBuy = summaBuy + Integer.parseInt(dropLine[SECONDELEMENT]);
+                summaBuy = summaBuy + Integer.parseInt(dropLine[SECOND_ELEMENT]);
             }
         }
         writeFile(getString(), toFileName);
@@ -45,8 +45,8 @@ public class WorkWithFile {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             while ((readLineFIle = bufferedReader.readLine()) != null) {
                 String[] string = readLineFIle.split(",");
-                stringBuilder.append(string[FIRSTELEMENT]).append(" ")
-                        .append(string[SECONDELEMENT])
+                stringBuilder.append(string[FIRST_ELEMENT]).append(" ")
+                        .append(string[SECOND_ELEMENT])
                         .append("\n");
             }
         } catch (IOException e) {
