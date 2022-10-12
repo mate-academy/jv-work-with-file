@@ -11,8 +11,6 @@ public class WorkWithFile {
     private static final String SUPPLY_OPERATION = "supply";
     private static final int INDEX_OF_OPERATION = 0;
     private static final int INDEX_OF_AMOUNT = 1;
-    private int amountOfBuy = 0;
-    private int amountOfSupply = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String data = readFromFile(fromFileName);
@@ -34,6 +32,8 @@ public class WorkWithFile {
     }
 
     private String createReport(String data) {
+        int amountOfBuy = 0;
+        int amountOfSupply = 0;
         String[] dataArray = data.split(System.lineSeparator());
         for (String datum : dataArray) {
             String[] splittedData = datum.split(",");
@@ -53,10 +53,8 @@ public class WorkWithFile {
     }
 
     private void writeToFile(String fileName, String report) {
-        try {
-            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName));
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
             bufferedWriter.write(report);
-            bufferedWriter.close();
         } catch (IOException e) {
             throw new RuntimeException("Can't read the file: " + fileName, e);
         }
