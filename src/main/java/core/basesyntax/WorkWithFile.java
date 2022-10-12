@@ -6,26 +6,28 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class WorkWithFile {
     private static final String SPLIT_STRING = ",";
     private static final String STRING_BUY = "buy";
     private static final String STRING_SUPPLY = "supply";
     private static final String STRING_RESULT = "result";
+    private static final Byte OPERATION_INDEX = 0;
+    private static final Byte QUANTITY_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        ArrayList<String> data = readFomCsv(fromFileName);
+        List<String> data = readFomCsv(fromFileName);
         String report = createReport(data);
         writeToCsv(report, toFileName);
     }
 
-    private ArrayList<String> readFomCsv(String fromFileName) {
-        ArrayList<String> data = new ArrayList<String>();
+    private List<String> readFomCsv(String fromFileName) {
+        List<String> data = new ArrayList<String>();
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
-            String value = reader.readLine();
-            while (value != null) {
+            String value;
+            while ((value = reader.readLine()) != null) {
                 data.add(value);
-                value = reader.readLine();
             }
             return data;
         } catch (IOException e) {
@@ -33,18 +35,17 @@ public class WorkWithFile {
         }
     }
 
-    private String createReport(ArrayList<String> data) {
+    private String createReport(List<String> data) {
         int buy = 0;
         int supply = 0;
         StringBuilder stringBuilder = new StringBuilder();
         for (String line:data) {
-
             String[] split = line.split(SPLIT_STRING);
-            if (split[0].equals(STRING_BUY)) {
-                buy = buy + Integer.parseInt(split[1]);
+            if (split[OPERATION_INDEX].equals(STRING_BUY)) {
+                buy = buy + Integer.parseInt(split[QUANTITY_INDEX]);
             }
-            if (split[0].equals(STRING_SUPPLY)) {
-                supply = supply + Integer.parseInt(split[1]);
+            if (split[OPERATION_INDEX].equals(STRING_SUPPLY)) {
+                supply = supply + Integer.parseInt(split[QUANTITY_INDEX]);
             }
         }
         stringBuilder.append(STRING_SUPPLY).append(SPLIT_STRING).append(supply)
