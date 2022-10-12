@@ -47,7 +47,6 @@ public class WorkWithFile {
     public String createReport(String dataFromFile) {
         int supply = 0;
         int buy = 0;
-        int result;
         String[] arrayOfData;
         arrayOfData = dataFromFile.split(",");
         for (int i = 0; i < arrayOfData.length; i++) {
@@ -58,19 +57,16 @@ public class WorkWithFile {
                 buy += Integer.parseInt(arrayOfData[i + 1]);
             }
         }
-        result = supply - buy;
-        StringBuilder builder = new StringBuilder();
-        builder.append(SUPPLY);
-        builder.append(",");
-        builder.append(supply);
-        builder.append(System.lineSeparator());
-        builder.append(BUY);
-        builder.append(",");
-        builder.append(buy);
-        builder.append(System.lineSeparator());
-        builder.append(RESULT);
-        builder.append(",");
-        builder.append(result);
-        return builder.toString();
+        return SUPPLY
+                + ","
+                + supply
+                + System.lineSeparator()
+                + BUY
+                + ","
+                + buy
+                + System.lineSeparator()
+                + RESULT
+                + ","
+                + (supply - buy);
     }
 }
