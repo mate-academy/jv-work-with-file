@@ -10,6 +10,9 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final int OPERATION_TYPE = 0;
     private static final int AMMOUNT = 1;
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
     private int supply;
     private int buy;
     private int result;
@@ -21,23 +24,23 @@ public class WorkWithFile {
 
     public void readFromFile(String fromFileName) {
         File fromFile = new File(fromFileName);
-        String str;
-        String[] strArray;
+        String stringFromFile;
+        String[] arrayOfData;
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFile))) {
-            str = reader.readLine();
-            while (str != null) {
-                strArray = str.split(",");
-                if (strArray[OPERATION_TYPE].equals("supply")) {
-                    supply += Integer.parseInt(strArray[AMMOUNT]);
+            stringFromFile = reader.readLine();
+            while (stringFromFile != null) {
+                arrayOfData = stringFromFile.split(",");
+                if (arrayOfData[OPERATION_TYPE].equals(SUPPLY)) {
+                    supply += Integer.parseInt(arrayOfData[AMMOUNT]);
                 }
-                if (strArray[OPERATION_TYPE].equals("buy")) {
-                    buy += Integer.parseInt(strArray[AMMOUNT]);
+                if (arrayOfData[OPERATION_TYPE].equals(BUY)) {
+                    buy += Integer.parseInt(arrayOfData[AMMOUNT]);
                 }
-                str = reader.readLine();
+                stringFromFile = reader.readLine();
             }
             result = supply - buy;
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't read file " + fromFileName, e);
         }
     }
 
@@ -46,21 +49,21 @@ public class WorkWithFile {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFile))) {
             writer.write(inputData);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write to file", e);
+            throw new RuntimeException("Can't write to file " + toFileName, e);
         }
     }
 
     public String stringBuilder(int suplly, int buy, int result) {
         StringBuilder builder = new StringBuilder();
-        builder.append("supply");
+        builder.append(SUPPLY);
         builder.append(",");
         builder.append(supply);
         builder.append(System.lineSeparator());
-        builder.append("buy");
+        builder.append(BUY);
         builder.append(",");
         builder.append(buy);
         builder.append(System.lineSeparator());
-        builder.append("result");
+        builder.append(RESULT);
         builder.append(",");
         builder.append(result);
         return builder.toString();
