@@ -14,18 +14,7 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         WorkWithFile workWithFile = new WorkWithFile();
         String firstResultString = workWithFile.read(fromFileName);
-        String[] allArray = firstResultString.split(",");
-        for (int i = 0; i < allArray.length; i = i + 2) {
-            if (allArray[i].equals("buy")) {
-                buy = buy + Integer.parseInt(allArray[i + 1]);
-            }
-            if (allArray[i].equals("supply")) {
-                supply = supply + Integer.parseInt(allArray[i + 1]);
-            }
-        }
-        int result = supply - buy;
-        String resultString = "supply," + supply + System.lineSeparator() + "buy," + buy
-                + System.lineSeparator() + "result," + result;
+        String resultString = workWithFile.createReport(firstResultString);
         workWithFile.write(resultString, toFileName);
     }
 
@@ -43,6 +32,21 @@ public class WorkWithFile {
             throw new RuntimeException("Can't read data from the file " + fromFileName, e);
         }
         return stringBuilder.toString();
+    }
+
+    public String createReport(String dataFromFile) {
+        String[] allArray = dataFromFile.split(",");
+        for (int i = 0; i < allArray.length; i = i + 2) {
+            if (allArray[i].equals("buy")) {
+                buy = buy + Integer.parseInt(allArray[i + 1]);
+            }
+            if (allArray[i].equals("supply")) {
+                supply = supply + Integer.parseInt(allArray[i + 1]);
+            }
+        }
+        int result = supply - buy;
+        return "supply," + supply + System.lineSeparator() + "buy," + buy
+                + System.lineSeparator() + "result," + result;
     }
 
     public void write(String resultString, String toFileName) {
