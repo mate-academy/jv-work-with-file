@@ -45,7 +45,6 @@ public class WorkWithFile {
     }
 
     public String createReport(String dataFromFile) {
-        StringBuilder builder = new StringBuilder();
         int supply = 0;
         int buy = 0;
         int result;
@@ -60,6 +59,7 @@ public class WorkWithFile {
             }
         }
         result = supply - buy;
+        StringBuilder builder = new StringBuilder();
         builder.append(SUPPLY);
         builder.append(",");
         builder.append(supply);
