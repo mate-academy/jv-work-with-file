@@ -8,40 +8,31 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final int OPERATION_TYPE = 0;
-    private static final int AMMOUNT = 1;
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
-    private int supply;
-    private int buy;
-    private int result;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        readFromFile(fromFileName);
-        writeToFile(toFileName, stringBuilder(supply, buy, result));
+        String dataFromFile = readFromFile(fromFileName);
+        String dataToFile = createReport(dataFromFile);
+        writeToFile(toFileName, dataToFile);
     }
 
-    public void readFromFile(String fromFileName) {
+    public String readFromFile(String fromFileName) {
+        StringBuilder builder = new StringBuilder();
         File fromFile = new File(fromFileName);
         String stringFromFile;
-        String[] arrayOfData;
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFile))) {
             stringFromFile = reader.readLine();
             while (stringFromFile != null) {
-                arrayOfData = stringFromFile.split(",");
-                if (arrayOfData[OPERATION_TYPE].equals(SUPPLY)) {
-                    supply += Integer.parseInt(arrayOfData[AMMOUNT]);
-                }
-                if (arrayOfData[OPERATION_TYPE].equals(BUY)) {
-                    buy += Integer.parseInt(arrayOfData[AMMOUNT]);
-                }
+                builder.append(stringFromFile);
+                builder.append(",");
                 stringFromFile = reader.readLine();
             }
-            result = supply - buy;
         } catch (IOException e) {
             throw new RuntimeException("Can't read file " + fromFileName, e);
         }
+        return builder.toString();
     }
 
     public void writeToFile(String toFileName, String inputData) {
@@ -53,8 +44,22 @@ public class WorkWithFile {
         }
     }
 
-    public String stringBuilder(int suplly, int buy, int result) {
+    public String createReport(String dataFromFile) {
         StringBuilder builder = new StringBuilder();
+        int supply = 0;
+        int buy = 0;
+        int result;
+        String[] arrayOfData;
+        arrayOfData = dataFromFile.split(",");
+        for (int i = 0; i < arrayOfData.length; i++) {
+            if (arrayOfData[i].equals(SUPPLY)) {
+                supply += Integer.parseInt(arrayOfData[i + 1]);
+            }
+            if (arrayOfData[i].equals(BUY)) {
+                buy += Integer.parseInt(arrayOfData[i + 1]);
+            }
+        }
+        result = supply - buy;
         builder.append(SUPPLY);
         builder.append(",");
         builder.append(supply);
