@@ -9,6 +9,8 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final String BUY_OPERATION = "buy";
     private static final String SUPPLY_OPERATION = "supply";
+    private static final int INDEX_OF_OPERATION = 0;
+    private static final int INDEX_OF_AMOUNT = 1;
     private int amountOfBuy = 0;
     private int amountOfSupply = 0;
 
@@ -27,7 +29,6 @@ public class WorkWithFile {
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't write to the file: " + fileName, e);
-
         }
         return builder.toString();
     }
@@ -36,13 +37,11 @@ public class WorkWithFile {
         String[] dataArray = data.split(System.lineSeparator());
         for (String datum : dataArray) {
             String[] splittedData = datum.split(",");
-            int indexOfOperation = 0;
-            int indexOfAmount = 1;
-            if (splittedData[indexOfOperation].equals(BUY_OPERATION)) {
-                amountOfBuy += Integer.parseInt(splittedData[indexOfAmount]);
+            if (splittedData[INDEX_OF_OPERATION].equals(BUY_OPERATION)) {
+                amountOfBuy += Integer.parseInt(splittedData[INDEX_OF_AMOUNT]);
             }
-            if (splittedData[indexOfOperation].equals(SUPPLY_OPERATION)) {
-                amountOfSupply += Integer.parseInt(splittedData[indexOfAmount]);
+            if (splittedData[INDEX_OF_OPERATION].equals(SUPPLY_OPERATION)) {
+                amountOfSupply += Integer.parseInt(splittedData[INDEX_OF_AMOUNT]);
             }
         }
         return SUPPLY_OPERATION + ","
@@ -54,7 +53,6 @@ public class WorkWithFile {
     }
 
     private void writeToFile(String fileName, String report) {
-
         try {
             BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName));
             bufferedWriter.write(report);
