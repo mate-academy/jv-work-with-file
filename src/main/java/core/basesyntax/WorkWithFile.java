@@ -13,7 +13,7 @@ public class WorkWithFile {
     private static final String BUY = "buy";
     private static final String RESULT = "result";
 
-    private void getStatistic(String fromFileName, String toFileName) {
+    public void getStatistic(String fromFileName, String toFileName) {
         String[] separatedInput = getData(fromFileName).split(System.lineSeparator());
         writeToFile(toFileName, separatedInput);
     }
