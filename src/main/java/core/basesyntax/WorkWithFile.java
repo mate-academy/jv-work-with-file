@@ -13,7 +13,6 @@ public class WorkWithFile {
     private static final int AMOUT_INDEX = 1;
     
     public void getStatistic(String fromFileName, String toFileName) {
-        
         String[] dataFromFile = readFile(fromFileName).split("\n");
         String report = createReport(dataFromFile);
         writeFile(report, toFileName);
