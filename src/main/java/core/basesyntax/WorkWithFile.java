@@ -8,39 +8,45 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private int buy = 0;
+    private int supply = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
+        WorkWithFile workWithFile = new WorkWithFile();
+        String firstResultString = workWithFile.read(fromFileName);
+        String[] allArray = firstResultString.split(",");
+        for (int i = 0; i < allArray.length; i = i + 2) {
+            if (allArray[i].equals("buy")) {
+                buy = buy + Integer.parseInt(allArray[i + 1]);
+            }
+            if (allArray[i].equals("supply")) {
+                supply = supply + Integer.parseInt(allArray[i + 1]);
+            }
+        }
+        int result = supply - buy;
+        String resultString = "supply," + supply + System.lineSeparator() + "buy," + buy
+                + System.lineSeparator() + "result," + result;
+        workWithFile.write(resultString, toFileName);
+    }
+
+    public String read(String fromFileName) {
         File fromFile = new File(fromFileName);
-        File toFile = new File(toFileName);
-        int buy = 0;
-        int supply = 0;
+        StringBuilder stringBuilder = new StringBuilder();
         try {
-            StringBuilder stringBuilder = new StringBuilder();
             BufferedReader reader = new BufferedReader(new FileReader(fromFile));
             String value = reader.readLine();
             while (value != null) {
                 stringBuilder.append(value).append(",");
                 value = reader.readLine();
             }
-            String resultString = stringBuilder.toString();
-            String[] allArray = resultString.split(",");
-            for (int i = 0; i < allArray.length; i = i + 2) {
-                if (allArray[i].equals("buy")) {
-                    buy = buy + Integer.parseInt(allArray[i + 1]);
-                }
-                if (allArray[i].equals("supply")) {
-                    supply = supply + Integer.parseInt(allArray[i + 1]);
-                }
-            }
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from the file " + fromFileName, e);
         }
-        int result = supply - buy;
-        StringBuilder resultStringBuilder = new StringBuilder("supply,")
-                .append(supply).append(System.lineSeparator())
-                .append("buy,").append(buy).append(System.lineSeparator())
-                .append("result,").append(result);
-        String resultString = resultStringBuilder.toString();
+        return stringBuilder.toString();
+    }
+
+    public void write(String resultString, String toFileName) {
+        File toFile = new File(toFileName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFile))) {
             bufferedWriter.write(resultString);
         } catch (IOException e) {
