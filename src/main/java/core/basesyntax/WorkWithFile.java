@@ -8,10 +8,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    public static final int NAME_INDEX = 0;
-    public static final int VALUE_INDEX = 1;
+    private static final int NAME_INDEX = 0;
+    private static final int VALUE_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
+        writeToFile(toFileName, createReport(fromFileName));
+    }
+
+    private String createReport(String fromFileName) {
         String resultOfRead = readFile(fromFileName);
         int supply = 0;
         int buy = 0;
@@ -28,8 +32,7 @@ public class WorkWithFile {
         resultBuilder.append("supply,").append(supply).append(System.lineSeparator())
                 .append("buy,").append(buy).append(System.lineSeparator())
                 .append("result,").append(supply - buy);
-        String resultOfCalculate = resultBuilder.toString();
-        writeToFile(toFileName, resultOfCalculate);
+        return resultBuilder.toString();
     }
 
     private String readFile(String fromFileName) {
