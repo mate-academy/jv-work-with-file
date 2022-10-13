@@ -12,14 +12,15 @@ public class WorkWithFile {
     private static final int VALUE_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        writeToFile(toFileName, createReport(fromFileName));
+        String report = createReport(fromFileName);
+        writeToFile(toFileName, report);
     }
 
     private String createReport(String fromFileName) {
-        String resultOfRead = readFile(fromFileName);
+        String dataFromFile = readFile(fromFileName);
         int supply = 0;
         int buy = 0;
-        String[] splitByLineSeparator = resultOfRead.split(System.lineSeparator());
+        String[] splitByLineSeparator = dataFromFile.split(System.lineSeparator());
         for (String each : splitByLineSeparator) {
             String[] commaArray = each.split(",");
             if (commaArray[NAME_INDEX].equals("supply")) {
@@ -37,8 +38,7 @@ public class WorkWithFile {
 
     private String readFile(String fromFileName) {
         File file = new File(fromFileName);
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
             StringBuilder builder = new StringBuilder();
             String value = bufferedReader.readLine();
             while (value != null) {
