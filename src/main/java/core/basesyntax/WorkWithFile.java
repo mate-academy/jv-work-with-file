@@ -9,8 +9,6 @@ import java.io.IOException;
 
 public class WorkWithFile {
     private static final String COMA = ",";
-    private int buy = 0;
-    private int supply = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String data = readFile(fromFileName);
@@ -21,8 +19,7 @@ public class WorkWithFile {
     public String readFile(String fromFileName) {
         File fromFile = new File(fromFileName);
         StringBuilder stringBuilder = new StringBuilder();
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(fromFile));
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFile))) {
             String value = reader.readLine();
             while (value != null) {
                 stringBuilder.append(value).append(COMA);
@@ -36,6 +33,8 @@ public class WorkWithFile {
 
     public String createReport(String dataFromFile) {
         String[] allArray = dataFromFile.split(COMA);
+        int buy = 0;
+        int supply = 0;
         for (int i = 0; i < allArray.length; i = i + 2) {
             if (allArray[i].equals("buy")) {
                 buy = buy + Integer.parseInt(allArray[i + 1]);
