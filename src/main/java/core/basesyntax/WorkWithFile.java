@@ -28,15 +28,11 @@ public class WorkWithFile {
             StringBuilder supplyBuilder = new StringBuilder();
             StringBuilder buyBuilder = new StringBuilder();
 
-            for (int i = 0; i < supplyAndBuy.length; i++) {
-                switch (supplyAndBuy[i].charAt(0)) {
-                    case 's':
-                        supplyBuilder.append(supplyAndBuy[i]).append(" ");
-                        break;
-                    default:
-                        buyBuilder.append(supplyAndBuy[i]).append(" ");
-                        break;
-
+            for (String s : supplyAndBuy) {
+                if (s.charAt(0) == 's') {
+                    supplyBuilder.append(s).append(" ");
+                } else {
+                    buyBuilder.append(s).append(" ");
                 }
             }
             String stringSupply = supplyBuilder.toString();
@@ -58,21 +54,18 @@ public class WorkWithFile {
             int sumBuy = 0;
             int result = 0;
 
-            for (int i = 0; i < supplyNumbers.length; i++) {
-                sumSupply += supplyNumbers[i];
+            for (int supplyNumber : supplyNumbers) {
+                sumSupply += supplyNumber;
             }
-            for (int i = 0; i < buyNumbers.length; i++) {
-                sumBuy += buyNumbers[i];
+            for (int buyNumber : buyNumbers) {
+                sumBuy += buyNumber;
             }
 
             result = sumSupply - sumBuy;
 
-            StringBuilder data = new StringBuilder();
-            data.append("supply,").append(sumSupply).append(System.lineSeparator())
-                    .append("buy,").append(sumBuy).append(System.lineSeparator())
-                    .append("result,").append(result);
-
-            String completedTextFromFileWriter = data.toString();
+            String completedTextFromFileWriter = "supply," + sumSupply + System.lineSeparator()
+                    + "buy," + sumBuy + System.lineSeparator()
+                    + "result," + result;
 
             File finalFile = new File(toFileName);
 
