@@ -52,7 +52,7 @@ public class WorkWithFile {
 
             int sumSupply = 0;
             int sumBuy = 0;
-            int result = 0;
+            int result;
 
             for (int supplyNumber : supplyNumbers) {
                 sumSupply += supplyNumber;
