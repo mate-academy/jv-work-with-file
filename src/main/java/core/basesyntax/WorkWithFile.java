@@ -1,40 +1,50 @@
 package core.basesyntax;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.List;
 
 public class WorkWithFile {
-
     public void getStatistic(String fromFileName, String toFileName) {
-        List<String> stringList = dataFromFile(fromFileName);
+        String information = readFromFile(fromFileName);
+        String report = createReport(information);
+        writeToFile(toFileName, report);
+    }
+
+    public void writeToFile(String toFileName, String report) {
         try (FileWriter fileWriter = new FileWriter(toFileName)) {
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-            bufferedWriter.write(calculateData(stringList));
+            bufferedWriter.write(report);
             bufferedWriter.flush();
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't write to file", e);
         }
     }
 
-    private List<String> dataFromFile(String fromFileName) {
-        List<String> stringList;
-        try {
-            stringList = Files.readAllLines(Path.of(fromFileName));
+    private String readFromFile(String fromFileName) {
+        File file = new File(fromFileName);
+        StringBuilder info = new StringBuilder();
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
+            String value = bufferedReader.readLine();
+            while (value != null) {
+                info.append(value).append(" ");
+                value = bufferedReader.readLine();
+            }
         } catch (IOException e) {
             throw new RuntimeException("Can't read file", e);
         }
-        return stringList;
+        return info.toString();
     }
 
-    private String calculateData(List<String> data) {
+    private String createReport(String data) {
         int supply = 0;
         int buy = 0;
         int result;
-        for (String operation : data) {
+        String[] array = data.split(" ");
+        for (String operation : array) {
             if (operation.split(",")[0].equals("supply")) {
                 supply += Integer.parseInt(operation.split(",")[1]);
             } else if (operation.split(",")[0].equals("buy")) {
