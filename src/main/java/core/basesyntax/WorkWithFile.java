@@ -19,60 +19,63 @@ public class WorkWithFile {
     private static String NEW_LINE = System.lineSeparator();
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int count = 0;
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
-            String value = reader.readLine();
-            while (value != null) {
-                if (value.length() > 0) {
-                    count++;
-                }
-                value = reader.readLine();
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(ERROR_READER, e);
-        }
-        if (count == 0) {
+        String data = readFromFile(fromFileName);
+        if (data.length() == 0) {
             File file = new File(toFileName);
             return;
         }
-        String[] arLines = new String[count];
-        int i = 0;
+        String report = getReport(data);
+        writeToFile(report, toFileName);
+    }
+
+    public String readFromFile(String fromFileName) {
+        StringBuilder stringBuilder = new StringBuilder();
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
-            String value = reader.readLine();
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
+            String value = bufferedReader.readLine();
             while (value != null) {
                 if (value.length() > 0) {
-                    arLines[i] = value;
-                    i++;
+                    stringBuilder.append(value).append(NEW_LINE);
                 }
-                value = reader.readLine();
+                value = bufferedReader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException(ERROR_READER, e);
         }
+        return stringBuilder.toString();
+    }
+
+    public String getReport(String strData) {
+        String[] arLines = strData.split(NEW_LINE, 0);
         Arrays.sort(arLines, Comparator.naturalOrder());
         int sumBuy = 0;
         int sumSupply = 0;
         for (String line : arLines) {
-            String[] arLine = line.split(WORD_DELI, 0);
-            int sumWord = Integer.parseInt(arLine[1]);
-            if (arLine[0].equals(WORD_BUY)) {
+            String[] arWords = line.split(WORD_DELI, 0);
+            int sumWord = Integer.parseInt(arWords[1]);
+            if (arWords[0].equals(WORD_BUY)) {
                 sumBuy += sumWord;
             } else {
                 sumSupply += sumWord;
             }
         }
-        String result = WORD_SUPPLY + "," + sumSupply + NEW_LINE
-                + WORD_BUY + "," + sumBuy + NEW_LINE
-                + WORD_RESULT + (sumSupply - sumBuy);
+        String result = "";
+        if (sumSupply != 0) {
+            result += WORD_SUPPLY + "," + sumSupply + NEW_LINE;
+        }
+        if (sumBuy != 0) {
+            result += WORD_BUY + "," + sumBuy + NEW_LINE;
+        }
+        result += WORD_RESULT + (sumSupply - sumBuy);
+        return result;
+    }
+
+    public void writeToFile(String strReport, String toFileName) {
         File fileTo = new File(toFileName);
-        try {
-            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileTo, true));
-            bufferedWriter.write(result);
-            bufferedWriter.close();
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileTo, true))) {
+            bufferedWriter.write(strReport);
         } catch (IOException e) {
-            throw new RuntimeException(ERROR_WRITE, e);
+            throw new RuntimeException(ERROR_WRITE);
         }
     }
 }
