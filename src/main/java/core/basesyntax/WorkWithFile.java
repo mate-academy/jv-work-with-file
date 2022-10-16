@@ -10,6 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WorkWithFile {
+    static final int COMPARISON_INDEX = 0;
+    static final int INDEX_WITH_A_NUMBER = 1;
+
     public void getStatistic(String fromFileName, String toFileName) {
         writeFile(toFileName, createReport(readFile(fromFileName)));
     }
@@ -34,32 +37,33 @@ public class WorkWithFile {
     private String createReport(List<String> data) {
         int sumSupply = 0;
         int sumBuy = 0;
-        final int Result_Numbers;
-        final int Comparison_Index = 0;
-        final int Index_With_A_Number = 1;
+        int resultNumbers;
+        StringBuilder returnData = new StringBuilder();
 
         for (String datum : data) {
-            if (datum.charAt(Comparison_Index) == 's') {
+            if (datum.charAt(COMPARISON_INDEX) == 's') {
                 String[] local1 = datum.split("\\D+");
                 if (local1.length == 0) {
                     continue;
                 }
-                int local = Integer.parseInt(local1[Index_With_A_Number]);
+                int local = Integer.parseInt(local1[INDEX_WITH_A_NUMBER]);
                 sumSupply += local;
             } else {
                 String[] local1 = datum.split("\\D+");
                 if (local1.length == 0) {
                     continue;
                 }
-                int local = Integer.parseInt(local1[Index_With_A_Number]);
+                int local = Integer.parseInt(local1[INDEX_WITH_A_NUMBER]);
                 sumBuy += local;
             }
         }
-        Result_Numbers = sumSupply - sumBuy;
+        resultNumbers = sumSupply - sumBuy;
 
-        return "supply," + sumSupply + System.lineSeparator()
-                + "buy," + sumBuy + System.lineSeparator()
-                + "result," + Result_Numbers;
+        returnData.append("supply,").append(sumSupply).append(System.lineSeparator())
+                .append("buy,").append(sumBuy).append(System.lineSeparator())
+                .append("result,").append(resultNumbers);
+
+        return returnData.toString();
     }
 
     private void writeFile(String toFileName, String text) {
