@@ -33,17 +33,17 @@ public class WorkWithFile {
 
     private String readFromFile(String fromFileName) {
         File file = new File(fromFileName);
-        StringBuilder info = new StringBuilder();
+        StringBuilder dataBuilder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
             String value = bufferedReader.readLine();
             while (value != null) {
-                info.append(value).append(WHITE_SPACE);
+                dataBuilder.append(value).append(WHITE_SPACE);
                 value = bufferedReader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read file " + fromFileName, e);
         }
-        return info.toString();
+        return dataBuilder.toString();
     }
 
     private String createReport(String data) {
@@ -59,8 +59,9 @@ public class WorkWithFile {
             }
         }
         result = supply - buy;
-        return (SUPPLY + COMMA + supply + LINE_SEPARATOR
-                + BUY + COMMA + buy + LINE_SEPARATOR
-                + RESULT + COMMA + result);
+        return new StringBuilder().append(SUPPLY).append(COMMA).append(supply)
+                .append(LINE_SEPARATOR).append(BUY).append(COMMA).append(buy)
+                .append(LINE_SEPARATOR).append(RESULT).append(COMMA)
+                .append(result).toString();
     }
 }
