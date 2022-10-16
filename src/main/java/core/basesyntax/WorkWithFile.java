@@ -46,7 +46,7 @@ public class WorkWithFile {
         int sumBuy = 0;
         int sumSupply = 0;
         for (String line : lines) {
-            String[] splitedLine = line.split(WORD_DELI, 0);
+            String[] splitedLine = line.split(WORD_DELI);
             int sumWord = Integer.parseInt(splitedLine[AMOUNT_INDEX]);
             if (splitedLine[OPERATION_INDEX].equals(WORD_BUY)) {
                 sumBuy += sumWord;
