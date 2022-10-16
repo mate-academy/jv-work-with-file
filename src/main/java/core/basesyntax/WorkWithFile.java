@@ -6,8 +6,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Comparator;
 
 public class WorkWithFile {
     private static String ERROR_READER = "Can't read file";
@@ -17,13 +15,11 @@ public class WorkWithFile {
     private static String WORD_RESULT = "result,";
     private static String ERROR_WRITE = "Can't write data to file";
     private static String NEW_LINE = System.lineSeparator();
+    private static int OPERATION_INDEX = 0;
+    private static int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String data = readFromFile(fromFileName);
-        if (data.length() == 0) {
-            File file = new File(toFileName);
-            return;
-        }
         String report = getReport(data);
         writeToFile(report, toFileName);
     }
@@ -45,29 +41,28 @@ public class WorkWithFile {
         return stringBuilder.toString();
     }
 
-    public String getReport(String strData) {
-        String[] arLines = strData.split(NEW_LINE, 0);
-        Arrays.sort(arLines, Comparator.naturalOrder());
+    public String getReport(String data) {
+        String[] lines = data.split(NEW_LINE, 0);
         int sumBuy = 0;
         int sumSupply = 0;
-        for (String line : arLines) {
-            String[] arWords = line.split(WORD_DELI, 0);
-            int sumWord = Integer.parseInt(arWords[1]);
-            if (arWords[0].equals(WORD_BUY)) {
+        for (String line : lines) {
+            String[] splitedLine = line.split(WORD_DELI, 0);
+            int sumWord = Integer.parseInt(splitedLine[AMOUNT_INDEX]);
+            if (splitedLine[OPERATION_INDEX].equals(WORD_BUY)) {
                 sumBuy += sumWord;
             } else {
                 sumSupply += sumWord;
             }
         }
-        String result = "";
+        StringBuilder builder = new StringBuilder();
         if (sumSupply != 0) {
-            result += WORD_SUPPLY + "," + sumSupply + NEW_LINE;
+            builder.append(WORD_SUPPLY).append(WORD_DELI).append(sumSupply).append(NEW_LINE);
         }
         if (sumBuy != 0) {
-            result += WORD_BUY + "," + sumBuy + NEW_LINE;
+            builder.append(WORD_BUY).append(WORD_DELI).append(sumBuy).append(NEW_LINE);
         }
-        result += WORD_RESULT + (sumSupply - sumBuy);
-        return result;
+        builder.append(WORD_RESULT).append((sumSupply - sumBuy));
+        return builder.toString();
     }
 
     public void writeToFile(String strReport, String toFileName) {
