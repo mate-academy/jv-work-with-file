@@ -35,40 +35,26 @@ public class WorkWithFile {
         int sumSupply = 0;
         int sumBuy = 0;
         final int Result_Numbers;
-        //
-        StringBuilder supplyBuilder = new StringBuilder();
-        StringBuilder buyBuilder = new StringBuilder();
+        final int Comparison_Index = 0;
+        final int Index_With_A_Number = 1;
 
         for (String datum : data) {
-            if (datum.charAt(0) == 's') {
-                supplyBuilder.append(datum).append(" ");
+            if (datum.charAt(Comparison_Index) == 's') {
+                String[] local1 = datum.split("\\D+");
+                if (local1.length == 0) {
+                    continue;
+                }
+                int local = Integer.parseInt(local1[Index_With_A_Number]);
+                sumSupply += local;
             } else {
-                buyBuilder.append(datum).append(" ");
+                String[] local1 = datum.split("\\D+");
+                if (local1.length == 0) {
+                    continue;
+                }
+                int local = Integer.parseInt(local1[Index_With_A_Number]);
+                sumBuy += local;
             }
         }
-        String stringSupply = supplyBuilder.toString();
-        String stringBuy = buyBuilder.toString();
-
-        String[] arraySupply = stringSupply.split("\\D+");
-        String[] arrayBuy = stringBuy.split("\\D+");
-        int[] supplyNumbers = new int[arraySupply.length - 1];
-        int[] buyNumbers = new int[arrayBuy.length - 1];
-        for (int i = 1; i < arraySupply.length; i++) {
-            int local = Integer.parseInt(arraySupply[i]);
-            supplyNumbers[i - 1] += local;
-        }
-        for (int i = 1; i < arrayBuy.length; i++) {
-            int local = Integer.parseInt(arrayBuy[i]);
-            buyNumbers[i - 1] += local;
-        }
-
-        for (int supplyNumber : supplyNumbers) {
-            sumSupply += supplyNumber;
-        }
-        for (int buyNumber : buyNumbers) {
-            sumBuy += buyNumber;
-        }
-
         Result_Numbers = sumSupply - sumBuy;
 
         return "supply," + sumSupply + System.lineSeparator()
@@ -79,10 +65,9 @@ public class WorkWithFile {
     private void writeFile(String toFileName, String text) {
         File finalFile = new File(toFileName);
 
-        try {
-            BufferedWriter writerToFinalFile = new BufferedWriter(new FileWriter(finalFile, true));
+        try (BufferedWriter writerToFinalFile = new BufferedWriter(
+                new FileWriter(finalFile, true))) {
             writerToFinalFile.write(text);
-            writerToFinalFile.close();
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to file: " + toFileName, e);
         }
