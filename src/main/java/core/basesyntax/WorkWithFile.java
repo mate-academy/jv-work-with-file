@@ -42,19 +42,19 @@ public class WorkWithFile {
 
         for (String datum : data) {
             if (datum.charAt(COMPARISON_INDEX) == 's') {
-                String[] local1 = datum.split("\\D+");
-                if (local1.length == 0) {
+                String[] numberSeparationArray = datum.split("\\D+");
+                if (numberSeparationArray.length == 0) {
                     continue;
                 }
-                int local = Integer.parseInt(local1[INDEX_WITH_A_NUMBER]);
-                sumSupply += local;
+                int numberForSum = Integer.parseInt(numberSeparationArray[INDEX_WITH_A_NUMBER]);
+                sumSupply += numberForSum;
             } else {
-                String[] local1 = datum.split("\\D+");
-                if (local1.length == 0) {
+                String[] numberSeparationArray = datum.split("\\D+");
+                if (numberSeparationArray.length == 0) {
                     continue;
                 }
-                int local = Integer.parseInt(local1[INDEX_WITH_A_NUMBER]);
-                sumBuy += local;
+                int numberForSum = Integer.parseInt(numberSeparationArray[INDEX_WITH_A_NUMBER]);
+                sumBuy += numberForSum;
             }
         }
         resultNumbers = sumSupply - sumBuy;
