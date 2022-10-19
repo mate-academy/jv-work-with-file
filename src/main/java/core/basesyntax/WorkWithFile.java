@@ -10,20 +10,23 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final int NAME_INDEX = 0;
     private static final int VALUE_INDEX = 1;
+    private static final String COMMA = ",";
+    private static final String SUPPLY = "supply";
+    private static final String LINE_SEPARATOR = System.lineSeparator();
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String report = createReport(fromFileName);
+        String dataFromFile = readFile(fromFileName);
+        String report = createReport(dataFromFile);
         writeToFile(toFileName, report);
     }
 
-    private String createReport(String fromFileName) {
-        String dataFromFile = readFile(fromFileName);
+    private String createReport(String data) {
         int supply = 0;
         int buy = 0;
-        String[] splitByLineSeparator = dataFromFile.split(System.lineSeparator());
+        String[] splitByLineSeparator = data.split(LINE_SEPARATOR);
         for (String each : splitByLineSeparator) {
-            String[] commaArray = each.split(",");
-            if (commaArray[NAME_INDEX].equals("supply")) {
+            String[] commaArray = each.split(COMMA);
+            if (commaArray[NAME_INDEX].equals(SUPPLY)) {
                 supply += Integer.parseInt(commaArray[VALUE_INDEX]);
             } else {
                 buy += Integer.parseInt(commaArray[VALUE_INDEX]);
@@ -47,15 +50,15 @@ public class WorkWithFile {
             }
             return builder.toString();
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't read file from " + fromFileName, e);
         }
     }
 
-    private void writeToFile(String toFileName, String resultOfCalculate) {
+    private void writeToFile(String toFileName, String data) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            writer.write(resultOfCalculate);
+            writer.write(data);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write to file", e);
+            throw new RuntimeException("Can't write to file " + toFileName, e);
         }
     }
 }
