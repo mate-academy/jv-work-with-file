@@ -28,7 +28,7 @@ public class WorkWithFile {
         try {
             Files.writeString(Paths.get(toFileName), report);
         } catch (IOException e) {
-            throw new RuntimeException("Somethin gone wrong to write to the file");
+            throw new RuntimeException("Something gone wrong to write to the file");
         }
     }
 
@@ -40,9 +40,9 @@ public class WorkWithFile {
             int amount = Integer.parseInt(split[1]);
             String operationType = split[0];
             if (map.containsKey(operationType)) {
-                map.put(operationType, map.get(operationType) + amount);
+                map.replace(operationType, map.get(operationType)+amount);
             }
-            map.put(operationType, amount);
+            map.putIfAbsent(operationType, amount);
         }
         for (String key : map.keySet()) {
             builder.append(key)
