@@ -47,7 +47,8 @@ public class WorkWithFile {
         for (String key : map.keySet()) {
             builder.append(key)
                     .append(",")
-                    .append(map.get(key));
+                    .append(map.get(key))
+                    .append(System.lineSeparator());
         }
         return builder.toString();
     }
