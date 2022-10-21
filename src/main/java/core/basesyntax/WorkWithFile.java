@@ -40,7 +40,7 @@ public class WorkWithFile {
             int amount = Integer.parseInt(split[1]);
             String operationType = split[0];
             if (map.containsKey(operationType)) {
-                map.replace(operationType, map.get(operationType)+amount);
+                map.replace(operationType, map.get(operationType) + amount);
             }
             map.putIfAbsent(operationType, amount);
         }
