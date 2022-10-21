@@ -11,18 +11,18 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
+    private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        getResult(fromFileName, toFileName);
         File file = new File(toFileName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, true));) {
-            bufferedWriter.write(getResult(fromFileName, toFileName));
+            bufferedWriter.write(getReport(fromFileName));
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file " + toFileName, e);
         }
     }
 
-    private StringBuilder redFromFile(String fromFileName, String toFileName) {
+    private StringBuilder redFromFile(String fromFileName) {
         StringBuilder stringBuilder;
         BufferedReader bufferedReader = null;
         try {
@@ -39,19 +39,19 @@ public class WorkWithFile {
         return stringBuilder;
     }
 
-    private String getResult(String fromFileName, String toFileName) {
+    private String getReport(String fromFileName) {
         int supply = 0;
         int buy = 0;
         int result;
-        String[] lines = redFromFile(fromFileName,toFileName).toString().split(" ");
+        String[] lines = redFromFile(fromFileName).toString().split(" ");
         String[][] data = new String[lines.length][2];
         for (int i = 0; i < lines.length; i++) {
             data[i] = lines[i].split(",");
             if (data[i][0].equals(SUPPLY)) {
-                supply += Integer.parseInt(data[i][1]);
+                supply += Integer.parseInt(data[i][AMOUNT_INDEX]);
             }
             if (data[i][0].equals(BUY)) {
-                buy += Integer.parseInt(data[i][1]);
+                buy += Integer.parseInt(data[i][AMOUNT_INDEX]);
             }
         }
         result = supply - buy;
