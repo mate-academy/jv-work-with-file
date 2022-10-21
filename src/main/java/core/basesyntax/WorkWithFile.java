@@ -24,17 +24,17 @@ public class WorkWithFile {
                 stringBuilder.append(bufferedReader.readLine()).append(System.lineSeparator());
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't read file" + fileName, e);
         }
         return stringBuilder.toString();
     }
 
-    private String reportCreation(String fileData) {
+    private String reportCreation(String data) {
         int buyCounter = 0;
         int supplyCounter = 0;
         final String stringBuy = "buy";
         final String separator = ",";
-        String[] fileDataArray = fileData.split(System.lineSeparator());
+        String[] fileDataArray = data.split(System.lineSeparator());
         for (String datum : fileDataArray) {
             String[] datumArray = datum.split(separator);
             if (datumArray[DATA_TYPE_INDEX].contains(stringBuy)) {
@@ -43,21 +43,21 @@ public class WorkWithFile {
                 supplyCounter += Integer.parseInt(datumArray[DATA_VALUE_INDEX]);
             }
         }
-        return dataBuilding(buyCounter, supplyCounter);
+        return buildReport(buyCounter, supplyCounter);
     }
 
-    private String dataBuilding(int buyCounter, int supplyCounter) {
+    private String buildReport(int bought, int supplied) {
         StringBuilder fileDataBuilder = new StringBuilder();
         final String stringBuy = "buy";
         final String stringSupply = "supply";
         final String stringResult = "result";
         final String separator = ",";
         return fileDataBuilder
-                .append(stringSupply).append(separator).append(supplyCounter)
+                .append(stringSupply).append(separator).append(supplied)
                 .append(System.lineSeparator())
-                .append(stringBuy).append(separator).append(buyCounter)
+                .append(stringBuy).append(separator).append(bought)
                 .append(System.lineSeparator())
-                .append(stringResult).append(separator).append((supplyCounter - buyCounter))
+                .append(stringResult).append(separator).append((supplied - bought))
                 .toString();
     }
 
@@ -65,7 +65,7 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
             bufferedWriter.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write to file", e);
+            throw new RuntimeException("Can't write to file" + fileName, e);
         }
     }
 }
