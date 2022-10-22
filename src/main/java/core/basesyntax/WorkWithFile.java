@@ -11,10 +11,6 @@ public class WorkWithFile {
     private static final String DATA_FIELD_SEPARATOR = ",";
     private static final int OPERATION_TYPE_INDEX = 0;
     private static final int AMOUNT_INDEX = 1;
-    private static final String SUPPLY_FIELD_NAME = "supply";
-    private static final String BUY_FIELD_NAME = "buy";
-    private static final String RESULT_FIELD_NAME = "result";
-    private final StringBuilder stringBuilder = new StringBuilder();
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] dataFromMarket = getDataFromFile(fromFileName);
@@ -23,6 +19,7 @@ public class WorkWithFile {
     }
 
     private String[] getDataFromFile(String fileName) {
+        final StringBuilder stringBuilder = new StringBuilder();
         try {
             BufferedReader reader = new BufferedReader(new FileReader(fileName));
             String value = reader.readLine();
@@ -33,30 +30,30 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read file " + fileName, e);
         }
-        String[] outputData = stringBuilder.toString().split(System.lineSeparator());
-        stringBuilder.setLength(0);
-        return outputData;
+        return stringBuilder.toString().split(System.lineSeparator());
     }
 
     private String createReport(String[] data) {
+        final String supplyFieldName = "supply";
+        final String buyFieldName = "buy";
+        final String resultFieldName = "result";
         int totalSupply = 0;
         int totalBuy = 0;
+        final StringBuilder stringBuilder = new StringBuilder();
         for (String record : data) {
             String[] parsedRecord = record.split(DATA_FIELD_SEPARATOR);
-            if (parsedRecord[OPERATION_TYPE_INDEX].equals(SUPPLY_FIELD_NAME)) {
+            if (parsedRecord[OPERATION_TYPE_INDEX].equals(supplyFieldName)) {
                 totalSupply += Integer.parseInt(parsedRecord[AMOUNT_INDEX]);
-            } else if (parsedRecord[OPERATION_TYPE_INDEX].equals(BUY_FIELD_NAME)) {
+            } else if (parsedRecord[OPERATION_TYPE_INDEX].equals(buyFieldName)) {
                 totalBuy += Integer.parseInt(parsedRecord[AMOUNT_INDEX]);
             }
         }
         int result = totalSupply - totalBuy;
-        String outputString = stringBuilder.append(SUPPLY_FIELD_NAME).append(DATA_FIELD_SEPARATOR)
+        return stringBuilder.append(supplyFieldName).append(DATA_FIELD_SEPARATOR)
                 .append(totalSupply).append(System.lineSeparator())
-                .append(BUY_FIELD_NAME).append(DATA_FIELD_SEPARATOR)
+                .append(buyFieldName).append(DATA_FIELD_SEPARATOR)
                 .append(totalBuy).append(System.lineSeparator())
-                .append(RESULT_FIELD_NAME).append(DATA_FIELD_SEPARATOR).append(result).toString();
-        stringBuilder.setLength(0);
-        return outputString;
+                .append(resultFieldName).append(DATA_FIELD_SEPARATOR).append(result).toString();
     }
 
     private void writeDataToFile(String data, String fileName) {
