@@ -3,9 +3,10 @@ package core.basesyntax;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.HashMap;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class WorkWithFile {
 
@@ -33,7 +34,7 @@ public class WorkWithFile {
     }
 
     public String createReport(List<String> data) {
-        Map<String, Integer> map = new HashMap<>();
+        Map<String, Integer> map = new TreeMap<>(Comparator.reverseOrder());
         StringBuilder builder = new StringBuilder();
         for (String row : data) {
             String[] split = row.split(",");
@@ -44,12 +45,15 @@ public class WorkWithFile {
             }
             map.putIfAbsent(operationType, amount);
         }
+        int result = map.get("supply") - map.get("buy");
         for (String key : map.keySet()) {
             builder.append(key)
                     .append(",")
                     .append(map.get(key))
                     .append(System.lineSeparator());
+
         }
+        builder.append("result,").append(result);
         return builder.toString();
     }
 }
