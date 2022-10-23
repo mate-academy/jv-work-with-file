@@ -10,6 +10,8 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class WorkWithFile {
+    private static final Map<String, Integer> MAP = new TreeMap<>(Comparator.reverseOrder());
+    private static final StringBuilder BUILDER = new StringBuilder();
 
     public void getStatistic(String fromFileName, String toFileName) {
         List<String> data = readFromFile(fromFileName);
@@ -36,28 +38,26 @@ public class WorkWithFile {
     }
 
     public String createReport(List<String> data) {
-        Map<String, Integer> map = new TreeMap<>(Comparator.reverseOrder());
-        StringBuilder builder = new StringBuilder();
         for (String row : data) {
             String[] split = row.split(",");
 
             int amount = Integer.parseInt(split[1]);
             String operationType = split[0];
-            if (map.containsKey(operationType)) {
-                map.replace(operationType, map.get(operationType) + amount);
+            if (MAP.containsKey(operationType)) {
+                MAP.replace(operationType, MAP.get(operationType) + amount);
             }
-            map.putIfAbsent(operationType, amount);
+            MAP.putIfAbsent(operationType, amount);
         }
-        int supplyAmount = map.get("supply");
-        int buyAmount = map.get("buy");
+        int supplyAmount = MAP.get("supply");
+        int buyAmount = MAP.get("buy");
         int resultAmount = supplyAmount - buyAmount;
-        for (String key : map.keySet()) {
-            builder.append(key)
+        for (String operation : MAP.keySet()) {
+            BUILDER.append(operation)
                     .append(",")
-                    .append(map.get(key))
+                    .append(MAP.get(operation))
                     .append(System.lineSeparator());
         }
-        builder.append("result,").append(resultAmount);
-        return builder.toString();
+        BUILDER.append("result,").append(resultAmount);
+        return BUILDER.toString();
     }
 }
