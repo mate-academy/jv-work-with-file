@@ -22,7 +22,7 @@ public class WorkWithFile {
         try {
             return Files.readAllLines(filePath);
         } catch (IOException a) {
-            throw new RuntimeException("Something gone wrong to read the file");
+            throw new RuntimeException("Something gone wrong to read the file: " + fromFileName);
         }
     }
 
@@ -31,7 +31,7 @@ public class WorkWithFile {
         try {
             Files.writeString(filePath, report);
         } catch (IOException e) {
-            throw new RuntimeException("Something gone wrong to write to the file");
+            throw new RuntimeException("Something gone wrong to write to the file: " + toFileName);
         }
     }
 
@@ -40,6 +40,7 @@ public class WorkWithFile {
         StringBuilder builder = new StringBuilder();
         for (String row : data) {
             String[] split = row.split(",");
+
             int amount = Integer.parseInt(split[1]);
             String operationType = split[0];
             if (map.containsKey(operationType)) {
@@ -47,14 +48,16 @@ public class WorkWithFile {
             }
             map.putIfAbsent(operationType, amount);
         }
-        int result = map.get("supply") - map.get("buy");
+        int supplyAmount = map.get("supply");
+        int buyAmount = map.get("buy");
+        int resultAmount = supplyAmount - buyAmount;
         for (String key : map.keySet()) {
             builder.append(key)
                     .append(",")
                     .append(map.get(key))
                     .append(System.lineSeparator());
         }
-        builder.append("result,").append(result);
+        builder.append("result,").append(resultAmount);
         return builder.toString();
     }
 }
