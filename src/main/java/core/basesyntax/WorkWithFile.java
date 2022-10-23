@@ -35,28 +35,28 @@ public class WorkWithFile {
     }
 
     public String createReport(List<String> data) {
-        Map<String, Integer> MAP = new TreeMap<>(Comparator.reverseOrder());
-        StringBuilder BUILDER = new StringBuilder();
+        Map<String, Integer> map = new TreeMap<>(Comparator.reverseOrder());
+        StringBuilder builder = new StringBuilder();
         for (String row : data) {
             String[] split = row.split(",");
 
             int amount = Integer.parseInt(split[1]);
             String operationType = split[0];
-            if (MAP.containsKey(operationType)) {
-                MAP.replace(operationType, MAP.get(operationType) + amount);
+            if (map.containsKey(operationType)) {
+                map.replace(operationType, map.get(operationType) + amount);
             }
-            MAP.putIfAbsent(operationType, amount);
+            map.putIfAbsent(operationType, amount);
         }
-        int supplyAmount = MAP.get("supply");
-        int buyAmount = MAP.get("buy");
+        int supplyAmount = map.get("supply");
+        int buyAmount = map.get("buy");
         int resultAmount = supplyAmount - buyAmount;
-        for (String operation : MAP.keySet()) {
-            BUILDER.append(operation)
+        for (String operation : map.keySet()) {
+            builder.append(operation)
                     .append(",")
-                    .append(MAP.get(operation))
+                    .append(map.get(operation))
                     .append(System.lineSeparator());
         }
-        BUILDER.append("result,").append(resultAmount);
-        return BUILDER.toString();
+        builder.append("result,").append(resultAmount);
+        return builder.toString();
     }
 }
