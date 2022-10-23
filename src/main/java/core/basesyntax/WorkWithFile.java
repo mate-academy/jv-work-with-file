@@ -10,9 +10,6 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class WorkWithFile {
-    private static final Map<String, Integer> MAP = new TreeMap<>(Comparator.reverseOrder());
-    private static final StringBuilder BUILDER = new StringBuilder();
-
     public void getStatistic(String fromFileName, String toFileName) {
         List<String> data = readFromFile(fromFileName);
         String report = createReport(data);
@@ -38,6 +35,8 @@ public class WorkWithFile {
     }
 
     public String createReport(List<String> data) {
+        Map<String, Integer> MAP = new TreeMap<>(Comparator.reverseOrder());
+        StringBuilder BUILDER = new StringBuilder();
         for (String row : data) {
             String[] split = row.split(",");
 
