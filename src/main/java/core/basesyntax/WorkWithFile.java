@@ -45,7 +45,7 @@ public class WorkWithFile {
 
     private String[] readFromFile(String fromFileName) {
         File fin = new File(fromFileName);
-        StringBuilder stringBuilder = new StringBuilder(4096);
+        StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fin))) {
             String tmpStr = bufferedReader.readLine();
             while (tmpStr != null) {
