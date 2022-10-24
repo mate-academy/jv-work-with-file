@@ -13,8 +13,6 @@ public class WorkWithFile {
     private static final String BUY = "buy";
     private static final String SUPPLY = "supply";
     private static final String RESULT = "result";
-    private static final int ACTION_INDEX = 0;
-    private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] arrStr = readFromFile(fromFileName);
@@ -22,22 +20,29 @@ public class WorkWithFile {
     }
 
     private String makeCounts(String[] arrStr) {
+        final int actionIndex = 0;
+        final int amountIndex = 1;
+
         String[] tmpArrStr;
         int buy = 0;
         int supply = 0;
         for (String s : arrStr) {
             tmpArrStr = s.split(",");
-            switch (tmpArrStr[ACTION_INDEX]) {
+            switch (tmpArrStr[actionIndex]) {
                 case BUY:
-                    buy += Integer.parseInt(tmpArrStr[AMOUNT_INDEX]);
+                    buy += Integer.parseInt(tmpArrStr[amountIndex]);
                     break;
                 case SUPPLY:
-                    supply += Integer.parseInt(tmpArrStr[AMOUNT_INDEX]);
+                    supply += Integer.parseInt(tmpArrStr[amountIndex]);
                     break;
                 default:
-                    System.out.println("ОСЬ ТОБІ ДУЛЯ ..!..");
+                    break;
             }
         }
+        return generateReport(supply, buy);
+    }
+
+    private String generateReport(int supply, int buy) {
         return SUPPLY + COMA + supply + System.lineSeparator()
                 + BUY + COMA + buy + System.lineSeparator()
                 + RESULT + COMA + (supply - buy);
