@@ -18,8 +18,7 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] arrStr = readFromFile(fromFileName);
-        String tmp = makeCounts(arrStr);
-        writeToFile(toFileName, tmp);
+        writeToFile(toFileName, makeCounts(arrStr));
     }
 
     private String makeCounts(String[] arrStr) {
