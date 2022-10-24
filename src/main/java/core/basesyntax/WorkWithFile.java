@@ -1,6 +1,11 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class WorkWithFile {
     private static final String SEPARATOR = "::";
@@ -8,10 +13,9 @@ public class WorkWithFile {
     private static final String BUY = "buy";
     private static final String SUPPLY = "supply";
     private static final String RESULT = "result";
-    private enum INDEX {
-        ACTION_INDEX,
-        AMOUNT_INDEX
-    }
+    private static final int ACTION_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
+
     public void getStatistic(String fromFileName, String toFileName) {
         String[] arrStr = readFromFile(fromFileName);
         String tmp = makeCounts(arrStr);
@@ -24,21 +28,22 @@ public class WorkWithFile {
         int supply = 0;
         for (String s : arrStr) {
             tmpArrStr = s.split(",");
-            switch (tmpArrStr[INDEX.ACTION_INDEX.ordinal()]) {
+            switch (tmpArrStr[ACTION_INDEX]) {
                 case BUY:
-                    buy += Integer.parseInt(tmpArrStr[INDEX.AMOUNT_INDEX.ordinal()]);
+                    buy += Integer.parseInt(tmpArrStr[AMOUNT_INDEX]);
                     break;
                 case SUPPLY:
-                    supply += Integer.parseInt(tmpArrStr[INDEX.AMOUNT_INDEX.ordinal()]);
+                    supply += Integer.parseInt(tmpArrStr[AMOUNT_INDEX]);
                     break;
+                default:
+                    System.out.println("ОСЬ ТОБІ ДУЛЯ ..!..");
             }
         }
-        StringBuilder stringBuilder = new StringBuilder(1024);
-        stringBuilder.append(SUPPLY).append(COMA).append(supply).append(System.lineSeparator())
-                .append(BUY).append(COMA).append(buy).append(System.lineSeparator())
-                .append(RESULT).append(COMA).append(supply - buy);
-        return stringBuilder.toString();
+        return SUPPLY + COMA + supply + System.lineSeparator()
+                + BUY + COMA + buy + System.lineSeparator()
+                + RESULT + COMA + (supply - buy);
     }
+
     private String[] readFromFile(String fromFileName) {
         File fin = new File(fromFileName);
         StringBuilder stringBuilder = new StringBuilder(4096);
