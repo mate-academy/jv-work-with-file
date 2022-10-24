@@ -4,6 +4,7 @@ import java.io.*;
 
 public class WorkWithFile {
     private static final String SEPARATOR = "::";
+    private static final String COMA = ",";
     private static final String BUY = "buy";
     private static final String SUPPLY = "supply";
     private static final String RESULT = "result";
@@ -13,7 +14,8 @@ public class WorkWithFile {
     }
     public void getStatistic(String fromFileName, String toFileName) {
         String[] arrStr = readFromFile(fromFileName);
-        writeToFile(toFileName, makeCounts(arrStr));
+        String tmp = makeCounts(arrStr);
+        writeToFile(toFileName, tmp);
     }
 
     private String makeCounts(String[] arrStr) {
@@ -21,18 +23,21 @@ public class WorkWithFile {
         int buy = 0;
         int supply = 0;
         for (String s : arrStr) {
-            tmpArrStr = s.split(" ");
+            tmpArrStr = s.split(",");
             switch (tmpArrStr[INDEX.ACTION_INDEX.ordinal()]) {
                 case BUY:
-                    buy += Integer.getInteger(tmpArrStr[INDEX.AMOUNT_INDEX.ordinal()]);
+                    buy += Integer.parseInt(tmpArrStr[INDEX.AMOUNT_INDEX.ordinal()]);
                     break;
                 case SUPPLY:
-                    supply += Integer.getInteger(tmpArrStr[INDEX.AMOUNT_INDEX.ordinal()]);
+                    supply += Integer.parseInt(tmpArrStr[INDEX.AMOUNT_INDEX.ordinal()]);
                     break;
             }
         }
-        return System.out.printf("%s,%d%n%s,%d%n%s,%d"
-                , BUY, buy, SUPPLY, supply, RESULT, buy + supply).toString();
+        StringBuilder stringBuilder = new StringBuilder(1024);
+        stringBuilder.append(SUPPLY).append(COMA).append(supply).append(System.lineSeparator())
+                .append(BUY).append(COMA).append(buy).append(System.lineSeparator())
+                .append(RESULT).append(COMA).append(supply - buy);
+        return stringBuilder.toString();
     }
     private String[] readFromFile(String fromFileName) {
         File fin = new File(fromFileName);
