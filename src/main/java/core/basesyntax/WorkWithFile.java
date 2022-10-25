@@ -64,8 +64,7 @@ public class WorkWithFile {
     }
 
     private void writeToFile(String toFileName, String toOut) {
-        File fout = new File(toFileName);
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fout))) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(toOut);
         } catch (IOException e) {
             throw new RuntimeException(e);
