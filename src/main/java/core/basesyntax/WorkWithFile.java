@@ -13,7 +13,6 @@ public class WorkWithFile {
     private static final String NEW_LINE = System.lineSeparator();
     private static final int AMOUNT_INDEX = 1;
     private static final int OPERATION_TYPE_INDEX = 0;
-    private static final StringBuilder STRING_BUILDER = new StringBuilder();
 
     public void getStatistic(String fromFileName, String toFileName) {
         List<String> data = readFromFile(fromFileName);
@@ -41,6 +40,7 @@ public class WorkWithFile {
 
     public String createReport(List<String> data) {
         Map<String, Integer> map = new TreeMap<>(Comparator.reverseOrder());
+        StringBuilder stringBuilder = new StringBuilder();
         for (String row : data) {
             String[] split = row.split(",");
             int amount = Integer.parseInt(split[AMOUNT_INDEX]);
@@ -54,13 +54,13 @@ public class WorkWithFile {
         int buyAmount = map.get("buy");
         int resultAmount = supplyAmount - buyAmount;
         for (String operation : map.keySet()) {
-            STRING_BUILDER.append(operation)
+            stringBuilder.append(operation)
                     .append(",")
                     .append(map.get(operation))
                     .append(NEW_LINE);
         }
-        STRING_BUILDER.append("result,").append(resultAmount);
-        return STRING_BUILDER.toString();
+        stringBuilder.append("result,").append(resultAmount);
+        return stringBuilder.toString();
     }
 
     @Override
