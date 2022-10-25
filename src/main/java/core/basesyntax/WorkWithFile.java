@@ -49,9 +49,9 @@ public class WorkWithFile {
     }
 
     private String[] readFromFile(String fromFileName) {
-        File fin = new File(fromFileName);
+
         StringBuilder stringBuilder = new StringBuilder();
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fin))) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String tmpStr = bufferedReader.readLine();
             while (tmpStr != null) {
                 stringBuilder.append(tmpStr).append(SEPARATOR);
