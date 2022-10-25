@@ -39,10 +39,6 @@ public class WorkWithFile {
                     break;
             }
         }
-        return generateReport(supply, buy);
-    }
-
-    private String generateReport(int supply, int buy) {
         return SUPPLY + COMA + supply + System.lineSeparator()
                 + BUY + COMA + buy + System.lineSeparator()
                 + RESULT + COMA + (supply - buy);
