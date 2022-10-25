@@ -39,10 +39,10 @@ public class WorkWithFile {
         StringBuilder builder = new StringBuilder();
         for (String row : data) {
             String[] split = row.split(",");
-            final int AMOUNT_INDEX = 1;
-            final int OPERATION_TYPE_INDEX = 0;
-            int amount = Integer.parseInt(split[AMOUNT_INDEX]);
-            String operationType = split[OPERATION_TYPE_INDEX];
+            final int amountIndex = 1;
+            final int operationTypeIndex = 0;
+            int amount = Integer.parseInt(split[amountIndex]);
+            String operationType = split[operationTypeIndex];
             if (map.containsKey(operationType)) {
                 map.replace(operationType, map.get(operationType) + amount);
             }
