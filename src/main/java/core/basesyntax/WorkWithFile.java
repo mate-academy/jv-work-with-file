@@ -37,9 +37,11 @@ public class WorkWithFile {
                     break;
             }
         }
-        return SUPPLY + COMA + supply + System.lineSeparator()
-                + BUY + COMA + buy + System.lineSeparator()
-                + RESULT + COMA + (supply - buy);
+        StringBuilder stringBuilder = new StringBuilder(128);
+        stringBuilder.append(SUPPLY).append(COMA).append(supply).append(System.lineSeparator())
+                .append(BUY).append(COMA).append(buy).append(System.lineSeparator())
+                .append(RESULT).append(COMA).append(supply - buy);
+        return stringBuilder.toString();
     }
 
     private String[] readFromFile(String fromFileName) {
