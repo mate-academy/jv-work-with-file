@@ -19,7 +19,7 @@ public class WorkWithFile {
         writeToFile(toFileName, makeCounts(arrStr));
     }
 
-    private String makeCounts(String[] arrStr) {
+    private String generateReport(String[] data) {
         final int actionIndex = 0;
         final int amountIndex = 1;
 
