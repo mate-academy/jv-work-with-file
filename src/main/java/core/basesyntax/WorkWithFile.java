@@ -15,7 +15,7 @@ public class WorkWithFile {
     private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String[] arrStr = readFromFile(fromFileName);
+        String[] data = readFromFile(fromFileName);
         writeToFile(toFileName, makeCounts(arrStr));
     }
 
