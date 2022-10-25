@@ -39,9 +39,10 @@ public class WorkWithFile {
         StringBuilder builder = new StringBuilder();
         for (String row : data) {
             String[] split = row.split(",");
-
-            int amount = Integer.parseInt(split[1]);
-            String operationType = split[0];
+            final int AMOUNT_INDEX = 1;
+            final int OPERATION_TYPE_INDEX = 0;
+            int amount = Integer.parseInt(split[AMOUNT_INDEX]);
+            String operationType = split[OPERATION_TYPE_INDEX];
             if (map.containsKey(operationType)) {
                 map.replace(operationType, map.get(operationType) + amount);
             }
@@ -58,5 +59,15 @@ public class WorkWithFile {
         }
         builder.append("result,").append(resultAmount);
         return builder.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
     }
 }
