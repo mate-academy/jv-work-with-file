@@ -8,22 +8,30 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final String specifiedCharacter = ",";
+
+    private static final String SPECIFIED_CHARACTER = ",";
+    private static final String SUPPLY_OPERATION_NAME = "supply";
+    private static final String BUY_OPERATION_NAME = "buy";
+    private static final String REPORT_MESSAGE_FORMAT = "supply,%d%sbuy,%d%sresult,%d";
+    private static final int OPERATION_NAME = 0;
+    private static final int OPERATION_AMOUNT = 1;
+    private static final int SUPPLY_TOTAL_AMOUNT_INDEX = 0;
+    private static final int BUY_TOTAL_AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
 
         File fileFrom = new File(fromFileName);
 
-        Report reportObject = processFile(fileFrom);
+        int[] reportArray = processFile(fileFrom);
 
         String report = createReport(
-                reportObject.getTotalSupplyAmount(), reportObject.getTotalBuyAmount());
+                reportArray[SUPPLY_TOTAL_AMOUNT_INDEX], reportArray[BUY_TOTAL_AMOUNT_INDEX]);
 
         writeToFile(toFileName, report);
 
     }
 
-    private Report processFile(File fileFrom) {
+    private int[] processFile(File fileFrom) {
         int totalSupply = 0;
         int totalBuy = 0;
 
@@ -34,28 +42,26 @@ public class WorkWithFile {
 
             while (dataLine != null) {
 
-                separatorLine = dataLine.split(specifiedCharacter);
+                separatorLine = dataLine.split(SPECIFIED_CHARACTER);
 
-                totalSupply = handleOperation(totalSupply, separatorLine, "supply");
+                totalSupply = handleOperation(totalSupply, separatorLine, SUPPLY_OPERATION_NAME);
 
-                totalBuy = handleOperation(totalBuy, separatorLine, "buy");
+                totalBuy = handleOperation(totalBuy, separatorLine, BUY_OPERATION_NAME);
 
                 dataLine = bufferedReader.readLine();
 
             }
 
         } catch (IOException e) {
-            throw new RuntimeException("Can't read data from file", e);
+            throw new RuntimeException("Can't read data from file: " + fileFrom, e);
         }
-
-        return new Report(totalBuy, totalSupply);
-
+        return new int[]{ totalBuy, totalSupply};
     }
 
     private int handleOperation(int amount, String[] operationItem, String operation) {
 
-        if (operation.equals(operationItem[0])) {
-            amount += Integer.parseInt(operationItem[1]);
+        if (operation.equals(operationItem[OPERATION_NAME])) {
+            amount += Integer.parseInt(operationItem[OPERATION_AMOUNT]);
         }
 
         return amount;
@@ -63,12 +69,10 @@ public class WorkWithFile {
 
     private String createReport(int supply, int buy) {
 
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("supply,").append(supply).append(System.lineSeparator());
-        stringBuilder.append("buy,").append(buy).append(System.lineSeparator());
-        stringBuilder.append("result,").append(supply - buy).append(System.lineSeparator());
-
-        return stringBuilder.toString();
+        return String.format(REPORT_MESSAGE_FORMAT,
+                buy, System.lineSeparator(),
+                supply, System.lineSeparator(),
+                buy - supply);
 
     }
 
@@ -80,27 +84,7 @@ public class WorkWithFile {
             bufferedWriter.write(report);
 
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data to file", e);
-        }
-
-    }
-
-    private static final class Report {
-
-        private final int totalBuyAmount;
-        private final int totalSupplyAmount;
-
-        public Report(int totalBuyAmount, int totalSupplyAmount) {
-            this.totalBuyAmount = totalBuyAmount;
-            this.totalSupplyAmount = totalSupplyAmount;
-        }
-
-        public int getTotalBuyAmount() {
-            return totalBuyAmount;
-        }
-
-        public int getTotalSupplyAmount() {
-            return totalSupplyAmount;
+            throw new RuntimeException("Can't write data to file: " + toFileName, e);
         }
 
     }
