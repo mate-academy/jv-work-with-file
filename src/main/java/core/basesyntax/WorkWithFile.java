@@ -9,19 +9,14 @@ import java.io.IOException;
 
 public class WorkWithFile {
     private static final String REGEX = "[^A-Za-z0-9 ]+";
-    private String tempString;
-    private int supply = 0;
-    private int buy = 0;
-    private String result;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        WorkWithFile workWithFile = new WorkWithFile();
-        workWithFile.read(fromFileName);
-        workWithFile.calculate();
-        workWithFile.write(toFileName);
+        String dataFromFile = readFromFile(fromFileName);
+        String report = createReport(dataFromFile);
+        writeToFile(toFileName, report);
     }
 
-    public void read(String fromFileName) {
+    public String readFromFile(String fromFileName) {
         File fileFrom = new File(fromFileName);
         try {
             BufferedReader reader = new BufferedReader(new FileReader(fileFrom));
@@ -31,13 +26,17 @@ public class WorkWithFile {
                 builder.append(value).append(System.lineSeparator());
                 value = reader.readLine();
             }
-            tempString = builder.toString();
+            return builder.toString();
         } catch (IOException e) {
             throw new RuntimeException("Can't read from file",e);
         }
     }
 
-    public void calculate() {
+    public String createReport(String dataFromFile) {
+        String tempString = dataFromFile;
+        StringBuilder report = new StringBuilder();
+        int supply = 0;
+        int buy = 0;
         String[] tempStringArray = tempString.split(REGEX);
         for (int i = 0; i < tempStringArray.length; i = i + 2) {
             tempString = tempStringArray[i];
@@ -47,15 +46,16 @@ public class WorkWithFile {
                 buy = buy + Integer.parseInt(String.valueOf(tempStringArray[i + 1]));
             }
         }
-        result = "supply," + supply + System.lineSeparator()
-                + "buy," + buy + System.lineSeparator() + "result," + (supply - buy);
+        return report.append("supply,").append(supply).append(System.lineSeparator())
+                .append("buy,").append(buy).append(System.lineSeparator()).append("result,")
+                .append((supply - buy)).toString();
     }
 
-    public void write(String toFileName) {
+    public void writeToFile(String toFileName, String report) {
         BufferedWriter writer;
         try {
             writer = new BufferedWriter(new FileWriter(toFileName));
-            writer.write(result);
+            writer.write(report);
             writer.close();
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file", e);
