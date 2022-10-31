@@ -11,11 +11,17 @@ public class WorkWithFile {
     private static final String BUY = "buy";
     private static final String RESULT = "result";
     private static final int AMOUNT_INDEX = 1;
+    private static final int OPERATION_INDEX = 0;
     private String data;
+    private String report;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String data = reedFromFile(fromFileName);
-        String report = getReport(data);
+        reedFromFile(fromFileName);
+        getReport(data);
+        writeToFile(report, toFileName);
+    }
+
+    private void writeToFile(String report, String toFileName) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName));) {
             bufferedWriter.write(report);
         } catch (IOException e) {
@@ -23,7 +29,7 @@ public class WorkWithFile {
         }
     }
 
-    private String reedFromFile(String fromFileName) {
+    private void reedFromFile(String fromFileName) {
         StringBuilder stringBuilder;
         BufferedReader bufferedReader = null;
         try {
@@ -38,10 +44,9 @@ public class WorkWithFile {
             throw new RuntimeException("Can't read file " + fromFileName, e);
         }
         data = stringBuilder.toString();
-        return data;
     }
 
-    private String getReport(String data) {
+    private void getReport(String data) {
         int supply = 0;
         int buy = 0;
         int result;
@@ -49,15 +54,15 @@ public class WorkWithFile {
         String[][] strings = new String[lines.length][2];
         for (int i = 0; i < lines.length; i++) {
             strings[i] = lines[i].split(",");
-            if (strings[i][0].equals(SUPPLY)) {
+            if (strings[i][OPERATION_INDEX].equals(SUPPLY)) {
                 supply += Integer.parseInt(strings[i][AMOUNT_INDEX]);
             }
-            if (strings[i][0].equals(BUY)) {
+            if (strings[i][OPERATION_INDEX].equals(BUY)) {
                 buy += Integer.parseInt(strings[i][AMOUNT_INDEX]);
             }
         }
         result = supply - buy;
-        return SUPPLY + "," + supply + System.lineSeparator()
+        report = SUPPLY + "," + supply + System.lineSeparator()
                 + BUY + "," + buy + System.lineSeparator()
                 + RESULT + "," + result;
     }
