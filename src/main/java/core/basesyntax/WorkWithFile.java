@@ -40,7 +40,7 @@ public class WorkWithFile {
     }
 
     private StringBuilder sumData(String data) {
-        String[] dataSeparate = data.split("\r\n");
+        String[] dataSeparate = data.split(System.lineSeparator());
         String supply = "supply";
         int supplySum = 0;
         String buy = "buy";
