@@ -34,7 +34,7 @@ public class WorkWithFile {
         try {
             stringFromFile = new String(Files.readAllBytes(Paths.get(fromFileName)));
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't read files", e);
         }
         return stringFromFile;
     }
