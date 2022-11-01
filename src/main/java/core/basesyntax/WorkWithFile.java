@@ -7,50 +7,53 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private final String separatorItem = ",";
-    private final String firstItem = "supply";
-    private final String secondItem = "buy";
-    private int totalSupply = 0;
-    private int totalBuy = 0;
-    private int result = 0;
-    private String[] dataArray;
+    private static final String SEPARATOR = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        readFileMethod(fromFileName);
-        writeDataToFileMethod(toFileName);
+        //String data = ;
+        String report = getReport(readFileMethod(fromFileName));
+        writeDataToFileMethod(report, toFileName);
     }
 
-    private void readFileMethod(String fileName) {
-        String line;
-        try (BufferedReader read = new BufferedReader(new FileReader(fileName))) {
-            while ((line = read.readLine()) != null) {
-                dataArray = line.split(separatorItem);
-                countData(dataArray);
+    private String readFileMethod(String fileName) {
+        StringBuilder builder = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            String line = reader.readLine();
+            while (line != null) {
+                builder.append(line).append(SEPARATOR);
+                line = reader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Error ",e);
+            throw new RuntimeException("Error ", e);
         }
+        return builder.toString();
     }
 
-    private void countData(String[] arr) {
-        for (String data : arr) {
-            int value = Integer.parseInt(dataArray[1]);
-            if (data.equals(firstItem)) {
-                totalSupply += value;
+    private String getReport(String file) {
+        String firstItem = "supply";
+        String secondItem = "buy";
+        int totalSupply = 0;
+        int totalBuy = 0;
+        int result = 0;
+        String[] dataFromFile = file.split(SEPARATOR);
+        for (int i = 0; i < dataFromFile.length; i++) {
+            if (dataFromFile[i].equals(firstItem)) {
+                totalSupply += Integer.parseInt(dataFromFile[i + 1]);
             }
-            if (data.equals(secondItem)) {
-                totalBuy += value;
+            if (dataFromFile[i].equals(secondItem)) {
+                totalBuy += Integer.parseInt(dataFromFile[i + 1]);
             }
+            result = totalSupply - totalBuy;
         }
-        result = totalSupply - totalBuy;
+
+        return firstItem + SEPARATOR + totalSupply + System.lineSeparator()
+                + secondItem + SEPARATOR + totalBuy + System.lineSeparator()
+                + "result" + SEPARATOR + result;
     }
 
-    private void writeDataToFileMethod(String fileName) {
+    private void writeDataToFileMethod(String reports, String fileName) {
         try (BufferedWriter writeFile = new BufferedWriter(new FileWriter(fileName, true))) {
-            String build = firstItem + separatorItem + totalSupply + System.lineSeparator()
-                    + secondItem + separatorItem + totalBuy + System.lineSeparator()
-                    + "result" + separatorItem + result;
-            writeFile.write(build);
+            writeFile.write(reports);
         } catch (IOException e) {
             throw new RuntimeException(" Error ", e);
         }
