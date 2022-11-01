@@ -6,9 +6,26 @@ import java.io.FileReader;
 import java.io.FileWriter;
 
 public class WorkWithFile {
-
     private static final int OPERATION_TYPE_INDEX = 0;
-    private static final int AMMOUNT_INDEX = 1;
+    private static final int AMOUNT_INDEX = 1;
+
+    public String createReport(int supplySum, int buySum) {
+        StringBuilder reportBuilder = new StringBuilder();
+        return String.valueOf(reportBuilder.append("supply,").append(supplySum)
+                .append(System.lineSeparator())
+                .append("buy,").append(buySum).append(System.lineSeparator())
+                .append("result,").append(supplySum - buySum));
+    }
+
+    public void writeToFile(String toFileName, String data) {
+        try {
+            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true));
+            bufferedWriter.write(data);
+            bufferedWriter.close();
+        } catch (Exception e) {
+            throw new RuntimeException("Can't write data", e);
+        }
+    }
 
     public void getStatistic(String fromFileName, String toFileName) {
         int supplySum = 0;
@@ -16,26 +33,20 @@ public class WorkWithFile {
 
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
-            StringBuilder reportBuilder = new StringBuilder();
             String value = bufferedReader.readLine();
             while (value != null) {
-                String[] splited = value.split(",");
-                if (splited[OPERATION_TYPE_INDEX].equals("supply")) {
-                    supplySum = supplySum + Integer.parseInt(splited[AMMOUNT_INDEX]);
-                } else if (splited[OPERATION_TYPE_INDEX].equals("buy")) {
-                    buySum = buySum + Integer.parseInt(splited[AMMOUNT_INDEX]);
+                String[] split = value.split(",");
+                if (split[OPERATION_TYPE_INDEX].equals("supply")) {
+                    supplySum = supplySum + Integer.parseInt(split[AMOUNT_INDEX]);
+                } else if (split[OPERATION_TYPE_INDEX].equals("buy")) {
+                    buySum = buySum + Integer.parseInt(split[AMOUNT_INDEX]);
                 }
                 value = bufferedReader.readLine();
             }
-            String result = String.valueOf(reportBuilder.append("supply,").append(supplySum)
-                    .append(System.lineSeparator())
-                    .append("buy,").append(buySum).append(System.lineSeparator())
-                    .append("result,").append(supplySum - buySum));
-            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName,true));
-            bufferedWriter.write(result);
-            bufferedWriter.close();
+            String result = createReport(supplySum, buySum);
+            writeToFile(toFileName, result);
         } catch (Exception e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Cant read file", e);
         }
     }
 }
