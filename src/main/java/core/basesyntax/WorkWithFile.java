@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class WorkWithFile {
+    private static final int INDEX_OF_NUMBER = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         writeReport(fromFileName,toFileName);
@@ -14,10 +15,10 @@ public class WorkWithFile {
 
     public void writeReport(String fromFileName, String toFileName) {
         String dataRead = readFromFile(fromFileName);
-        StringBuilder sumData = sumData(dataRead);
+        StringBuilder createReport = sumData(dataRead);
         File file = new File(toFileName);
         try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(toFileName))) {
-            writer.write(String.valueOf(sumData));
+            writer.write(String.valueOf(createReport));
             writer.flush();
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to file", e);
@@ -44,10 +45,12 @@ public class WorkWithFile {
         String result = "result";
         for (int i = 0; i < dataSeparate.length; i++) {
             if (dataSeparate[i].contains("supply")) {
-                supplySum = supplySum + Integer.parseInt(dataSeparate[i].split(",")[1]);
+                supplySum = supplySum + Integer.parseInt(dataSeparate[i]
+                        .split(",")[INDEX_OF_NUMBER]);
             }
             if (dataSeparate[i].contains("buy")) {
-                buySum = buySum + Integer.parseInt(dataSeparate[i].split(",")[1]);
+                buySum = buySum + Integer.parseInt(dataSeparate[i]
+                        .split(",")[INDEX_OF_NUMBER]);
             }
         }
         int resultTotal = supplySum - buySum;
