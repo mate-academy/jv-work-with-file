@@ -9,6 +9,10 @@ import java.nio.file.Paths;
 public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
+        writeReport(fromFileName,toFileName);
+    }
+
+    public void writeReport(String fromFileName, String toFileName) {
         String dataRead = readFromFile(fromFileName);
         StringBuilder sumData = sumData(dataRead);
         File file = new File(toFileName);
