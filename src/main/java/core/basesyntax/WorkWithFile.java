@@ -2,7 +2,6 @@ package core.basesyntax;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -13,19 +12,12 @@ public class WorkWithFile {
         String dataRead = readFromFile(fromFileName);
         StringBuilder sumData = sumData(dataRead);
         File file = new File(toFileName);
-        BufferedWriter writer = null;
-        try {
-            writer = new BufferedWriter(new FileWriter(file, true));
+        try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(toFileName))) {
             writer.write(String.valueOf(sumData));
             writer.flush();
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to file", e);
-        } finally {
-            try {
-                writer.close();
-            } catch (IOException e) {
-                throw new RuntimeException("Can't write file");
-            }
+
         }
     }
 
