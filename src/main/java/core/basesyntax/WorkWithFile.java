@@ -10,8 +10,8 @@ public class WorkWithFile {
     private static final String SEPARATOR = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        //String data = ;
-        String report = getReport(readFileMethod(fromFileName));
+        String data = readFileMethod(fromFileName);
+        String report = getReport(data);
         writeDataToFileMethod(report, toFileName);
     }
 
@@ -24,7 +24,7 @@ public class WorkWithFile {
                 line = reader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Error ", e);
+            throw new RuntimeException("Can not read from file: " + fileName, e);
         }
         return builder.toString();
     }
@@ -52,10 +52,10 @@ public class WorkWithFile {
     }
 
     private void writeDataToFileMethod(String reports, String fileName) {
-        try (BufferedWriter writeFile = new BufferedWriter(new FileWriter(fileName, true))) {
+        try (BufferedWriter writeFile = new BufferedWriter(new FileWriter(fileName))) {
             writeFile.write(reports);
         } catch (IOException e) {
-            throw new RuntimeException(" Error ", e);
+            throw new RuntimeException("Can not write to file: " + fileName, e);
         }
     }
 }
