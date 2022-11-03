@@ -35,7 +35,7 @@ public class WorkWithFile {
     public StringBuilder createReport(StringBuilder builderFrom) {
         int sumSupply = 0;
         int sumBuy = 0;
-        String[] arrayLines = builderFrom.toString().split("\r\n");
+        String[] arrayLines = builderFrom.toString().split(System.lineSeparator());
         for (int i = 0; i < arrayLines.length; i++) {
             String[] valueSeparated = arrayLines[i].split(",");
             int value = 0;
