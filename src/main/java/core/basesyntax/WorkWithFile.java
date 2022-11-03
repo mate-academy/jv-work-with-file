@@ -38,10 +38,16 @@ public class WorkWithFile {
         String[] arrayLines = builderFrom.toString().split("\r\n");
         for (int i = 0; i < arrayLines.length; i++) {
             String[] valueSeparated = arrayLines[i].split(",");
+            int value = 0;
+            try {
+                value = Integer.parseInt(valueSeparated[INDEX_VALUE]);
+            }catch (NumberFormatException ex) {
+                throw new RuntimeException("Can't parse int for value " + valueSeparated[INDEX_VALUE], ex);
+            }
             if (valueSeparated[0].equals("buy")) {
-                sumBuy = sumBuy + Integer.parseInt(valueSeparated[INDEX_VALUE]);
+                sumBuy = sumBuy + value;
             } else {
-                sumSupply = sumSupply + Integer.parseInt(valueSeparated[INDEX_VALUE]);
+                sumSupply = sumSupply + value;
             }
         }
         int result = sumSupply - sumBuy;
