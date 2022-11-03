@@ -41,8 +41,8 @@ public class WorkWithFile {
             int value = 0;
             try {
                 value = Integer.parseInt(valueSeparated[INDEX_VALUE]);
-            }catch (NumberFormatException ex) {
-                throw new RuntimeException("Can't parse int for value " + valueSeparated[INDEX_VALUE], ex);
+            } catch (NumberFormatException ex) {
+                throw new RuntimeException("Can't parse value " + valueSeparated[INDEX_VALUE], ex);
             }
             if (valueSeparated[0].equals("buy")) {
                 sumBuy = sumBuy + value;
