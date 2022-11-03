@@ -14,7 +14,7 @@ public class WorkWithFile {
     private static final String REGEX = ",";
 
     private int supplySum;
-    private  int buySum;
+    private int buySum;
 
     public void readFromFile(String fileName) {
         try {
