@@ -10,20 +10,9 @@ public class WorkWithFile {
     private static final int INDEX_OF_NUMBER = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        writeReport(fromFileName,toFileName);
-    }
-
-    public void writeReport(String fromFileName, String toFileName) {
         String dataRead = readFromFile(fromFileName);
-        StringBuilder createReport = sumData(dataRead);
-        File file = new File(toFileName);
-        try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(toFileName))) {
-            writer.write(String.valueOf(createReport));
-            writer.flush();
-        } catch (IOException e) {
-            throw new RuntimeException("Can't write data to file", e);
-
-        }
+        StringBuilder report = createReport(dataRead);
+        writeReport(report, toFileName);
     }
 
     private String readFromFile(String fromFileName) {
@@ -36,7 +25,7 @@ public class WorkWithFile {
         return stringFromFile;
     }
 
-    private StringBuilder sumData(String data) {
+    private StringBuilder createReport(String data) {
         String[] dataSeparate = data.split(System.lineSeparator());
         String supply = "supply";
         int supplySum = 0;
@@ -59,5 +48,17 @@ public class WorkWithFile {
                 .append(System.lineSeparator())
                 .append(buy).append(",").append(buySum).append(System.lineSeparator())
                 .append(result).append(",").append(resultTotal);
+    }
+
+    public void writeReport(StringBuilder data, String toFileName) {
+        File file = new File(toFileName);
+        try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(toFileName))) {
+            writer.write(String.valueOf(data));
+            writer.flush();
+
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write data to file", e);
+
+        }
     }
 }
