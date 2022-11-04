@@ -8,15 +8,16 @@ import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 
 public class WorkWithFile {
-    private static final int INDEX_VALUE = 1;
+    private static final int VALUE_INDEX = 1;
+    private static final int OPERATION_INDEX = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        StringBuilder builderFrom = readToFile(fromFileName);
-        StringBuilder builderTo = createReport(builderFrom);
+        String builderFrom = readToFile(fromFileName);
+        String builderTo = createReport(builderFrom);
         writeToFile(toFileName, builderTo);
     }
 
-    public StringBuilder readToFile(String fromFileName) {
+    private String readToFile(String fromFileName) {
         File file = new File(fromFileName);
         StringBuilder builderFrom = new StringBuilder();
         try {
@@ -29,22 +30,22 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from the file " + fromFileName, e);
         }
-        return builderFrom;
+        return builderFrom.toString();
     }
 
-    public StringBuilder createReport(StringBuilder builderFrom) {
+    private String createReport(String builderFrom) {
         int sumSupply = 0;
         int sumBuy = 0;
-        String[] arrayLines = builderFrom.toString().split(System.lineSeparator());
+        String[] arrayLines = builderFrom.split(System.lineSeparator());
         for (int i = 0; i < arrayLines.length; i++) {
             String[] valueSeparated = arrayLines[i].split(",");
             int value = 0;
             try {
-                value = Integer.parseInt(valueSeparated[INDEX_VALUE]);
+                value = Integer.parseInt(valueSeparated[VALUE_INDEX]);
             } catch (NumberFormatException ex) {
-                throw new RuntimeException("Can't parse value " + valueSeparated[INDEX_VALUE], ex);
+                throw new RuntimeException("Can't parse value " + valueSeparated[VALUE_INDEX], ex);
             }
-            if (valueSeparated[0].equals("buy")) {
+            if (valueSeparated[OPERATION_INDEX].equals("buy")) {
                 sumBuy = sumBuy + value;
             } else {
                 sumSupply = sumSupply + value;
@@ -55,20 +56,20 @@ public class WorkWithFile {
         builderTo.append(sumSupply).append(System.lineSeparator())
                 .append("buy,").append(sumBuy).append(System.lineSeparator())
                 .append("result,").append(result);
-        return builderTo;
+        return builderTo.toString();
     }
 
-    public void writeToFile(String toFileName, StringBuilder builderTo) {
+    private void writeToFile(String toFileName, String builderTo) {
         File file = new File(toFileName);
         try {
             file.createNewFile();
+            Files.write(file.toPath(), builderTo.getBytes(), StandardOpenOption.APPEND);
         } catch (IOException e) {
-            throw new RuntimeException("Can't create new file", e);
-        }
-        try {
-            Files.write(file.toPath(), builderTo.toString().getBytes(), StandardOpenOption.APPEND);
-        } catch (IOException e) {
-            throw new RuntimeException("Can't write data to file " + toFileName, e);
+            if (file.isFile()) {
+                throw new RuntimeException("Can't write data to file " + toFileName, e);
+            } else {
+                throw new RuntimeException("Can't create file " + toFileName, e);
+            }
         }
     }
 }
