@@ -2,7 +2,6 @@ package core.basesyntax;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -13,19 +12,15 @@ public class WorkWithFile {
 
     public static final String SUPPLY_IDENTIFIER = "supply";
     public static final String BUY_IDENTIFIER = "buy";
-    public static final String RESULT_IDENTIFIER = "result";
-    private final List<String> stringList = new ArrayList<>();
-    private int supply = 0;
-    private int buy = 0;
-    private int result = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        readFromFile(fromFileName);
-        calculateData();
-        writeToFile(toFileName);
+        List<String> fileData = readFromFile(fromFileName);
+        String report = createReport(fileData);
+        writeToFile(toFileName, report);
     }
 
-    public void readFromFile(String fileName) {
+    public List<String> readFromFile(String fileName) {
+        List<String> stringList = new ArrayList<>();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
             String value = bufferedReader.readLine();
             while (value != null) {
@@ -35,39 +30,34 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("File not found", e);
         }
+        return stringList;
     }
 
-    public void calculateData() {
+    public String createReport(List<String> fileData) {
         String[] strArr;
-        for (String value : stringList) {
+        int supply = 0;
+        int buy = 0;
+        int result;
+        for (String value : fileData) {
             strArr = value.split("\\W+");
-            for (String s : strArr) {
-                if (s.equals(SUPPLY_IDENTIFIER)) {
+            for (String stringValue : strArr) {
+                if (stringValue.equals(SUPPLY_IDENTIFIER)) {
                     supply += Integer.parseInt(strArr[strArr.length - 1]);
                     break;
-                } else if (s.equals(BUY_IDENTIFIER)) {
+                } else if (stringValue.equals(BUY_IDENTIFIER)) {
                     buy += Integer.parseInt(strArr[strArr.length - 1]);
                     break;
                 }
             }
         }
         result = supply - buy;
+        return "supply," + supply + System.lineSeparator() + "buy," + buy
+                + System.lineSeparator() + "result," + result;
     }
 
-    public void writeToFile(String s) {
-        File file = new File(s);
-        try {
-            boolean value = file.createNewFile();
-            if (value) {
-                System.out.println("File was created.");
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("The file is already exist.", e);
-        }
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
-            bufferedWriter.write(SUPPLY_IDENTIFIER + "," + supply + System.lineSeparator());
-            bufferedWriter.write(BUY_IDENTIFIER + "," + buy + System.lineSeparator());
-            bufferedWriter.write(RESULT_IDENTIFIER + "," + result);
+    public void writeToFile(String fileName, String report) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
+            bufferedWriter.write(report);
         } catch (IOException e) {
             throw new RuntimeException("File not found", e);
         }
