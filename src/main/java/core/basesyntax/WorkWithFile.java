@@ -65,11 +65,8 @@ public class WorkWithFile {
             file.createNewFile();
             Files.write(file.toPath(), builderTo.getBytes(), StandardOpenOption.APPEND);
         } catch (IOException e) {
-            if (file.isFile()) {
-                throw new RuntimeException("Can't write data to file " + toFileName, e);
-            } else {
-                throw new RuntimeException("Can't create file " + toFileName, e);
-            }
+            String message = file.isFile() ? ("Can't write data to file") : ("Can't create file");
+            throw new RuntimeException(message, e);
         }
     }
 }
