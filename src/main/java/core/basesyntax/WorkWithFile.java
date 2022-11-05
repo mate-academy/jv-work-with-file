@@ -1,12 +1,16 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 
 public class WorkWithFile {
     private static final String SUPPLY = "Supply";
     private static final String BUY = "Buy";
     private static final String RESULT = "Result";
-
+    private static final int SEARCH_BY_INDEX = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
 
@@ -28,10 +32,10 @@ public class WorkWithFile {
         while (value != null) {
             String[] listFromFile = value.split(",");
             for (int i = 0; i < listFromFile.length; i++) {
-                if (listFromFile[0].equals(SUPPLY)) {
+                if (listFromFile[SEARCH_BY_INDEX].equals(SUPPLY)) {
                     supplyCount = supplyCount + Integer.parseInt(listFromFile[1]);
                 }
-                if (listFromFile[0].equals(BUY)) {
+                if (listFromFile[SEARCH_BY_INDEX].equals(BUY)) {
                     buyCount += Integer.parseInt(listFromFile[1]);
                 }
             }
