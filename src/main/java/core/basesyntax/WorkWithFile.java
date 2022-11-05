@@ -8,6 +8,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final int FIRST_INDEX_IN_ARRAY = 0;
+    private static final int SECOND_INDEX_IN_ARRAY = 1;
     private static final int OPERATION = 0;
     private static final int AMOUNT = 1;
     private static final String REGEX = ",";
@@ -16,12 +18,12 @@ public class WorkWithFile {
     private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        StringBuilder stringBuilder = readTheFile(fromFileName);
-        String resultData = createReport(stringBuilder);
+        String readText = readTheFile(fromFileName);
+        String resultData = createReport(readText);
         writeTheFile(toFileName, resultData);
     }
 
-    private StringBuilder readTheFile(String fromFileName) {
+    private String readTheFile(String fromFileName) {
         File file = new File(fromFileName);
         StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
@@ -33,7 +35,7 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("can`t read the file" + fromFileName, e);
         }
-        return stringBuilder;
+        return stringBuilder.toString();
     }
 
     private void writeTheFile(String toFileName, String resultData) {
@@ -46,21 +48,21 @@ public class WorkWithFile {
         }
     }
 
-    private String createReport(StringBuilder stringBuilder) {
-        int[] count = countSum(stringBuilder);
-        int sumSupply = count[0];
-        int sumBuy = count[1];
+    private String createReport(String readText) {
+        int[] count = countSum(readText);
+        int sumSupply = count[FIRST_INDEX_IN_ARRAY];
+        int sumBuy = count[SECOND_INDEX_IN_ARRAY];
         StringBuilder resultData = new StringBuilder().append(SUPPLY).append(REGEX)
                 .append(sumSupply).append(System.lineSeparator()).append(BUY)
                 .append(REGEX).append(sumBuy).append(System.lineSeparator())
-                .append(RESULT).append(REGEX).append(Integer.valueOf(sumSupply - sumBuy));
+                .append(RESULT).append(REGEX).append(sumSupply - sumBuy);
         return resultData.toString();
     }
 
-    private int[] countSum(StringBuilder stringBuilder) {
+    private int[] countSum(String readText) {
         int sumSupply = 0;
         int sumBuy = 0;
-        String[] splitArray = stringBuilder.toString().split(System.lineSeparator());
+        String[] splitArray = readText.split(System.lineSeparator());
         for (String operationTypeAndValue : splitArray) {
             String[] insideOperation = operationTypeAndValue.split(REGEX);
             switch (insideOperation[OPERATION]) {
