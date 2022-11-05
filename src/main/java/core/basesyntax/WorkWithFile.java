@@ -47,7 +47,7 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true))) {
             bufferedWriter.write(report);
         } catch (Exception e) {
-            throw new RuntimeException("Can't write data", e);
+            throw new RuntimeException("Can't write data to file: " + toFileName, e);
         }
     }
 
