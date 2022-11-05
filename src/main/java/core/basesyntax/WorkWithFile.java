@@ -1,12 +1,12 @@
 package core.basesyntax;
 
-import java.io.BufferedWriter;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.util.Map;
-import java.util.HashMap;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
