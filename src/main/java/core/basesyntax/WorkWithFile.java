@@ -13,19 +13,17 @@ public class WorkWithFile {
     private static final String RESULT_PATTERN = "result";
     private static final int INDEX_OF_OPERATION = 0;
     private static final int INDEX_OF_VALUE = 1;
-    private int supplyCounter = 0;
-    private int buyCounter = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String fileDataString = readFile(fromFileName);
-        countOperationsValue(fileDataString);
-        int result = supplyCounter - buyCounter;
-        writeFile(toFileName, new String[]{SUPPLY_PATTERN + "," + supplyCounter,
-                BUY_PATTERN + "," + buyCounter, RESULT_PATTERN + "," + result});
+        String resultData = countOperationsValue(fileDataString);
+        writeFile(toFileName, resultData);
     }
 
-    private void countOperationsValue(String fileDataString) {
-        String[] fileData = fileDataString.split(System.lineSeparator());
+    private String countOperationsValue(String data) {
+        int supplyCounter = 0;
+        int buyCounter = 0;
+        String[] fileData = data.split(System.lineSeparator());
         for (String line : fileData) {
             String[] split = line.split(",");
             if (split[INDEX_OF_OPERATION].equals(SUPPLY_PATTERN)) {
@@ -34,6 +32,10 @@ public class WorkWithFile {
                 buyCounter += Integer.parseInt(split[INDEX_OF_VALUE]);
             }
         }
+        int result = supplyCounter - buyCounter;
+        return SUPPLY_PATTERN + "," + supplyCounter + System.lineSeparator()
+                + BUY_PATTERN + "," + buyCounter + System.lineSeparator()
+                + RESULT_PATTERN + "," + result;
     }
 
     private String readFile(String fileName) {
@@ -45,19 +47,16 @@ public class WorkWithFile {
                 value = reader.read();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Could not read file " + fileName);
+            throw new RuntimeException("Could not read file " + fileName, e);
         }
         return stringBuilder.toString();
     }
 
-    private void writeFile(String toFile, String[] lines) {
+    private void writeFile(String toFile, String data) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(new File(toFile)))) {
-            for (String line : lines) {
-                bufferedWriter.write(line + System.lineSeparator());
-            }
+            bufferedWriter.write(data);
         } catch (IOException e) {
-            throw new RuntimeException("Could not write file " + toFile);
+            throw new RuntimeException("Could not write file " + toFile, e);
         }
-
     }
 }
