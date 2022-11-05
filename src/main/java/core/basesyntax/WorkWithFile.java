@@ -39,9 +39,10 @@ public class WorkWithFile {
     private static void writeResultToFile(String toFileName, Map<String, Integer> map) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             int result = map.get("supply") - map.get("buy");
-            bufferedWriter.write("supply" + "," + map.get("supply") + "\n");
-            bufferedWriter.write("buy" + "," + map.get("buy") + "\n");
+            bufferedWriter.write("supply" + "," + map.get("supply") + System.lineSeparator());
+            bufferedWriter.write("buy" + "," + map.get("buy") + System.lineSeparator());
             bufferedWriter.write("result" + "," + result);
+            bufferedWriter.flush();
         } catch (IOException e) {
             throw new RuntimeException("Can't write the file " + toFileName, e);
         }
