@@ -11,26 +11,32 @@ public class WorkWithFile {
     private static final String SUPPLY_PATTERN = "supply";
     private static final String BUY_PATTERN = "buy";
     private static final String RESULT_PATTERN = "result";
+    private static final int INDEX_OF_OPERATION = 0;
+    private static final int INDEX_OF_VALUE = 1;
+    private int supplyCounter = 0;
+    private int buyCounter = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int supplyCounter = 0;
-        int buyCounter = 0;
-        StringBuilder readFile = readFile(fromFileName);
-        String[] lines = readFile.toString().split(System.lineSeparator());
-        for (String line : lines) {
-            String[] split = line.split(",");
-            if (split[0].equals(SUPPLY_PATTERN)) {
-                supplyCounter += Integer.parseInt(split[1]);
-            } else {
-                buyCounter += Integer.parseInt(split[1]);
-            }
-        }
+        String fileDataString = readFile(fromFileName);
+        countOperationsValue(fileDataString);
         int result = supplyCounter - buyCounter;
         writeFile(toFileName, new String[]{SUPPLY_PATTERN + "," + supplyCounter,
                 BUY_PATTERN + "," + buyCounter, RESULT_PATTERN + "," + result});
     }
 
-    private StringBuilder readFile(String fileName) {
+    private void countOperationsValue(String fileDataString) {
+        String[] fileData = fileDataString.split(System.lineSeparator());
+        for (String line : fileData) {
+            String[] split = line.split(",");
+            if (split[INDEX_OF_OPERATION].equals(SUPPLY_PATTERN)) {
+                supplyCounter += Integer.parseInt(split[INDEX_OF_VALUE]);
+            } else {
+                buyCounter += Integer.parseInt(split[INDEX_OF_VALUE]);
+            }
+        }
+    }
+
+    private String readFile(String fileName) {
         StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(new File(fileName)))) {
             int value = reader.read();
@@ -39,9 +45,9 @@ public class WorkWithFile {
                 value = reader.read();
             }
         } catch (IOException e) {
-            throw new RuntimeException("File not found with name " + fileName);
+            throw new RuntimeException("Could not read file " + fileName);
         }
-        return stringBuilder;
+        return stringBuilder.toString();
     }
 
     private void writeFile(String toFile, String[] lines) {
@@ -50,7 +56,7 @@ public class WorkWithFile {
                 bufferedWriter.write(line + System.lineSeparator());
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Could not write file " + toFile);
         }
 
     }
