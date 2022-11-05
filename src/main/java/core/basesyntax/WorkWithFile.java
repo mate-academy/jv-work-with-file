@@ -13,7 +13,6 @@ public class WorkWithFile {
     private static final int SEARCH_BY_INDEX = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
-
         File file = new File(fromFileName);
         try {
             prepareCountResult(file, toFileName);
@@ -33,7 +32,7 @@ public class WorkWithFile {
             String[] listFromFile = value.split(",");
             for (int i = 0; i < listFromFile.length; i++) {
                 if (listFromFile[SEARCH_BY_INDEX].equals(SUPPLY)) {
-                    supplyCount = supplyCount + Integer.parseInt(listFromFile[1]);
+                    supplyCount += Integer.parseInt(listFromFile[1]);
                 }
                 if (listFromFile[SEARCH_BY_INDEX].equals(BUY)) {
                     buyCount += Integer.parseInt(listFromFile[1]);
