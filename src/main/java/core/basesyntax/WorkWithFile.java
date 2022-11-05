@@ -33,7 +33,6 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
         return map;
     }
 
@@ -42,7 +41,7 @@ public class WorkWithFile {
             int result = map.get("supply") - map.get("buy");
             bufferedWriter.write("supply" + "," + map.get("supply") + "\r\n");
             bufferedWriter.write("buy" + "," + map.get("buy") + "\r\n");
-            bufferedWriter.write("result" + "," + result + "\r\n");
+            bufferedWriter.write("result" + "," + result);
         } catch (IOException e) {
             throw new RuntimeException("Can't write the file " + toFileName, e);
         }
