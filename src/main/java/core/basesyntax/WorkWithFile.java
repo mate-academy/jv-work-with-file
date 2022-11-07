@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+
 public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
@@ -18,9 +19,9 @@ public class WorkWithFile {
     private String readFromFile(String fromFileName) {
         StringBuilder inputString = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
-            int character;
-            while ((character = bufferedReader.read()) != -1) {
-                inputString.append((char) character);
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                inputString.append(line).append("\n");
             }
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
@@ -31,14 +32,16 @@ public class WorkWithFile {
     }
 
     private String createReport(String data) {
+        final String BU = "buy";
+        final String SU = "supply";
         int buy = 0;
         int supply = 0;
         String[] stringsFirst = data.split("\n");
         for (String s : stringsFirst) {
             String[] stringsSecond = s.split(",");
-            if (stringsSecond[0].equals("buy")) {
+            if (stringsSecond[0].equals(BU)) {
                 buy += Integer.parseInt(stringsSecond[1]);
-            } else {
+            } else if (stringsSecond[0].equals(SU)) {
                 supply += Integer.parseInt(stringsSecond[1]);
             }
         }
