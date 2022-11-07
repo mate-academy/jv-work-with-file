@@ -7,14 +7,15 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-
 public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
-        createFileAndWriteToFile(dataResult(readFromFile(fromFileName)), toFileName);
+        String data = readFromFile(fromFileName);
+        String report = createReport(data);
+        writeDataToFile(report, toFileName);
     }
 
-    public String readFromFile(String fromFileName) {
+    private String readFromFile(String fromFileName) {
         StringBuilder inputString = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             int character;
@@ -29,7 +30,7 @@ public class WorkWithFile {
         return inputString.toString();
     }
 
-    public String dataResult(String data) {
+    private String createReport(String data) {
         int buy = 0;
         int supply = 0;
         String[] stringsFirst = data.split("\n");
@@ -45,7 +46,7 @@ public class WorkWithFile {
         return String.format("supply,%s\nbuy,%s\nresult,%s", supply, buy, result);
     }
 
-    public void createFileAndWriteToFile(String dataResult, String toFileName) {
+    private void writeDataToFile(String dataResult, String toFileName) {
         File fileName = new File(toFileName);
         try {
             fileName.createNewFile();
