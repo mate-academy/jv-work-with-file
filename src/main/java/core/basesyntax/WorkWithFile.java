@@ -8,13 +8,11 @@ import java.io.IOException;
 
 public class WorkWithFile {
     private static final int INDEX_OF_NUMBER = 1;
-    private static final int SUPPLY_POSITION = 0;
-    private static final int BUY_POSITION = 1;
-    private static final int RESULT_POSITION = 2;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        WorkWithFile worker = new WorkWithFile();
-        worker.writeData(worker.createReport(worker.readFromFile(fromFileName)), toFileName);
+        String readData = readFromFile(fromFileName);
+        String report = createReport(readData);
+        writeData(report, toFileName);
     }
 
     public String readFromFile(String fromFileName) {
@@ -32,7 +30,7 @@ public class WorkWithFile {
         return builder.toString();
     }
 
-    public int[] createReport(String string) {
+    public String createReport(String string) {
         int buy = 0;
         int supply = 0;
         int result;
@@ -47,17 +45,14 @@ public class WorkWithFile {
             }
         }
         result = supply - buy;
-        int []resultData = new int[]{supply, buy, result};
-        return resultData;
+        String data = "supply," + supply + System.lineSeparator()
+                + "buy," + buy + System.lineSeparator() + "result," + result;
+        return data;
     }
 
-    public void writeData(int[] array, String toFileName) {
-        try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName, true));
-            writer.write("supply," + array[SUPPLY_POSITION] + System.lineSeparator()
-                    + "buy," + array[BUY_POSITION] + System.lineSeparator()
-                    + "result," + array[RESULT_POSITION]);
-            writer.close();
+    public void writeData(String data, String toFileName) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName, true))) {
+            writer.write(data);
         } catch (IOException e) {
             throw new RuntimeException("Can`t write data to the file", e);
         }
