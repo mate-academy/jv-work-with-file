@@ -3,7 +3,6 @@ package core.basesyntax;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -32,17 +31,17 @@ public class WorkWithFile {
     private String createReport(String data) {
         final String BU = "buy";
         final String SU = "supply";
-        final int ZERO = 0;
-        final int ONE = 1;
+        final int ZE = 0;
+        final int ON = 1;
         int buy = 0;
         int supply = 0;
         String[] stringsFirst = data.split("\n");
         for (String s : stringsFirst) {
             String[] stringsSecond = s.split(",");
-            if (stringsSecond[ZERO].equals(BU)) {
+            if (stringsSecond[ZE].equals(BU)) {
                 buy += Integer.parseInt(stringsSecond[1]);
-            } else if (stringsSecond[ZERO].equals(SU)) {
-                supply += Integer.parseInt(stringsSecond[ONE]);
+            } else if (stringsSecond[ZE].equals(SU)) {
+                supply += Integer.parseInt(stringsSecond[ON]);
             }
         }
         int result = supply - buy;
