@@ -23,10 +23,8 @@ public class WorkWithFile {
             while ((line = bufferedReader.readLine()) != null) {
                 inputString.append(line).append("\n");
             }
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can't read from file", e);
         }
         return inputString.toString();
     }
@@ -34,15 +32,17 @@ public class WorkWithFile {
     private String createReport(String data) {
         final String BU = "buy";
         final String SU = "supply";
+        final int ZERO = 0;
+        final int ONE = 1;
         int buy = 0;
         int supply = 0;
         String[] stringsFirst = data.split("\n");
         for (String s : stringsFirst) {
             String[] stringsSecond = s.split(",");
-            if (stringsSecond[0].equals(BU)) {
+            if (stringsSecond[ZERO].equals(BU)) {
                 buy += Integer.parseInt(stringsSecond[1]);
-            } else if (stringsSecond[0].equals(SU)) {
-                supply += Integer.parseInt(stringsSecond[1]);
+            } else if (stringsSecond[ZERO].equals(SU)) {
+                supply += Integer.parseInt(stringsSecond[ONE]);
             }
         }
         int result = supply - buy;
@@ -50,17 +50,9 @@ public class WorkWithFile {
     }
 
     private void writeDataToFile(String dataResult, String toFileName) {
-        File fileName = new File(toFileName);
-        try {
-            fileName.createNewFile();
-        } catch (IOException e) {
-            throw new RuntimeException("Can't create file", e);
-        }
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            for (int i = 0; i < dataResult.length(); i++) {
-                bufferedWriter.write(dataResult.charAt(i));
-                bufferedWriter.flush();
-            }
+        File file = new File(toFileName);
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
+            bufferedWriter.write(dataResult);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
