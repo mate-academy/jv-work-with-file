@@ -9,20 +9,13 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final String SUPPLY_OPERATION_TYPE = "supply";
     private static final String BUY_OPERATION_TYPE = "buy";
-    private static final String RESULT_OPERATION_TYPE = "result";
-    private static final String[] OPERATION_TYPE_FIELDS =
-            {SUPPLY_OPERATION_TYPE, BUY_OPERATION_TYPE, RESULT_OPERATION_TYPE};
-    private static final int SUPPLY_AMOUNT_TYPE_INDEX = 0;
-    private static final int BUY_AMOUNT_TYPE_INDEX = 1;
-    private static final int RESULT_AMOUNT_TYPE_INDEX = 2;
+    private static final String RESULT = "result";
     private static final int FIELD_INDEX = 0;
     private static final int VALUE_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String dataFromFile = readFile(fromFileName);
-        int[] amountTypeFields = new int[OPERATION_TYPE_FIELDS.length];
-        calculateValuesForAmountTypeFields(amountTypeFields, dataFromFile);
-        String report = createReport(amountTypeFields);
+        String report = createReport(dataFromFile);
         writeFile(toFileName, report);
     }
 
@@ -40,32 +33,31 @@ public class WorkWithFile {
         return stringBuilder.toString();
     }
 
-    private void calculateValuesForAmountTypeFields(int[] amountTypeFields, String dataFromFile) {
+    private String createReport(String dataFromFile) {
+        int totalAmountOfSupplyOperation = 0;
+        int totalAmountOfBuyOperation = 0;
         String[] linesFromFile = dataFromFile.split(System.lineSeparator());
         for (String lineFromFile : linesFromFile) {
             String[] dataFieldElements = lineFromFile.split(",");
             int valueOfField = Integer.parseInt(dataFieldElements[VALUE_INDEX]);
             switch (dataFieldElements[FIELD_INDEX]) {
                 case SUPPLY_OPERATION_TYPE:
-                    amountTypeFields[SUPPLY_AMOUNT_TYPE_INDEX] += valueOfField;
+                    totalAmountOfSupplyOperation += valueOfField;
                     break;
                 case BUY_OPERATION_TYPE:
-                    amountTypeFields[BUY_AMOUNT_TYPE_INDEX] += valueOfField;
+                    totalAmountOfBuyOperation += valueOfField;
                     break;
                 default:
                     break;
             }
         }
-        amountTypeFields[RESULT_AMOUNT_TYPE_INDEX] = amountTypeFields[SUPPLY_AMOUNT_TYPE_INDEX]
-                - amountTypeFields[BUY_AMOUNT_TYPE_INDEX];
-    }
-
-    private String createReport(int[] amountTypeFields) {
+        int result = totalAmountOfSupplyOperation - totalAmountOfBuyOperation;
         StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < OPERATION_TYPE_FIELDS.length; i++) {
-            stringBuilder.append(OPERATION_TYPE_FIELDS[i]).append(",")
-                    .append(amountTypeFields[i]).append(System.lineSeparator());
-        }
+        stringBuilder.append(SUPPLY_OPERATION_TYPE).append(",")
+                .append(totalAmountOfSupplyOperation).append(System.lineSeparator())
+                .append(BUY_OPERATION_TYPE).append(",").append(totalAmountOfBuyOperation)
+                .append(System.lineSeparator()).append(RESULT).append(",")
+                .append(result);
         return stringBuilder.toString();
     }
 
