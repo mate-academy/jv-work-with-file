@@ -8,8 +8,8 @@ import java.nio.file.Files;
 import java.util.List;
 
 public class WorkWithFile {
-    public static final int OPERATION_INDEX = 0;
-    public final int VALUE_INDEX = 1;
+    private static final int OPERATION_INDEX = 0;
+    private static final int VALUE_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         List<String> stringFromFile = readData(fromFileName);
