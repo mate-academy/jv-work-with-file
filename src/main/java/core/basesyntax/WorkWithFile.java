@@ -2,7 +2,6 @@ package core.basesyntax;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -13,50 +12,50 @@ public class WorkWithFile {
     private static final String COMMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        File file = new File(fromFileName);
-        File fileToWrite = new File(toFileName);
-        String[] dataFromFile = readFromFile(file);
+        //File file = new File(fromFileName);
+        //File fileToWrite = new File(toFileName);
+        String[] dataFromFile = readFromFile(fromFileName);
         String report = createReport(dataFromFile);
-        writeToFile(report,fileToWrite);
+        writeToFile(report,toFileName);
     }
 
-    private String[] readFromFile(File file) {
+    private String[] readFromFile(String fromFileName) {
         StringBuilder stringBuilder = new StringBuilder();
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             int value = reader.read();
             while (value != -1) {
                 stringBuilder.append((char) value);
                 value = reader.read();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't read file fromFileName", e);
         }
         return stringBuilder.toString().split("\\W");
     }
 
     private String createReport(String[] dataFromFile) {
-        int sumSupply = 0;
-        int sumBuy = 0;
+        int supply = 0;
+        int buy = 0;
         for (int i = 0; i < dataFromFile.length; i++) {
             if (dataFromFile[i].equals(SUPPLY)) {
-                sumSupply += Integer.parseInt(dataFromFile[i + 1]);
+                supply += Integer.parseInt(dataFromFile[i + 1]);
             } else if (dataFromFile[i].equals(BUY)) {
-                sumBuy += Integer.parseInt(dataFromFile[i + 1]);
+                buy += Integer.parseInt(dataFromFile[i + 1]);
             }
         }
-        int sumResult = sumSupply - sumBuy;
-        StringBuilder writebuilder = new StringBuilder();
-        return writebuilder.append(SUPPLY).append(COMMA)
-                .append(sumSupply).append(System.lineSeparator())
-                .append(BUY).append(COMMA).append(sumBuy).append(System.lineSeparator())
-                .append("result").append(COMMA).append(sumResult).toString();
+        int result = supply - buy;
+        StringBuilder builder = new StringBuilder();
+        return builder.append(SUPPLY).append(COMMA)
+                .append(supply).append(System.lineSeparator())
+                .append(BUY).append(COMMA).append(buy).append(System.lineSeparator())
+                .append("result").append(COMMA).append(result).toString();
     }
 
-    private void writeToFile(String report, File fileToWrite) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileToWrite))) {
+    private void writeToFile(String report, String toFileName) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write(report);
         } catch (IOException ex) {
-            throw new RuntimeException("Can't write file", ex);
+            throw new RuntimeException("Can't write file toFileName", ex);
         }
     }
 }
