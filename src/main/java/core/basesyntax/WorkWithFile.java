@@ -1,8 +1,8 @@
 package core.basesyntax;
 
-import java.io.File;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -57,7 +57,7 @@ class WorkWithFile {
             writer.write(report);
             writer.write(System.lineSeparator());
         } catch (IOException e) {
-            throw new RuntimeException("Can't write file",  e);
+            throw new RuntimeException("Can't write file", e);
         }
     }
 }
