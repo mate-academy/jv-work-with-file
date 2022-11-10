@@ -1,13 +1,13 @@
 package core.basesyntax;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 
- class WorkWithFile {
+class WorkWithFile {
     private static final int NAME_INDEX = 0;
     private static final int COUNT_POSITION = 1;
 
