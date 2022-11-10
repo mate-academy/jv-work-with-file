@@ -57,7 +57,7 @@ import java.io.FileWriter;
             writer.write(report);
             writer.write(System.lineSeparator());
         } catch (IOException e) {
-            throw new RuntimeException("Can't write file", e);
+            throw new RuntimeException("Can't write file",  e);
         }
     }
 }
