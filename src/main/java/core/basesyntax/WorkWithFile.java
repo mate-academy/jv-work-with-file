@@ -8,6 +8,8 @@ import java.nio.file.Files;
 import java.util.List;
 
 public class WorkWithFile {
+    public static final int OPERATION_INDEX = 0;
+    public final int VALUE_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         List<String> stringFromFile = readData(fromFileName);
@@ -25,24 +27,28 @@ public class WorkWithFile {
     }
 
     private String[] createReport(List<String> dataList) {
-        String[] report = {"supply,", "buy,", "result,"};
         int supplyValue = 0;
         int buyValue = 0;
         int resultValue = 0;
 
         for (String string : dataList) {
             String[] split = string.split(",");
-            if (split[0].equals("supply")) {
-                supplyValue = supplyValue + Integer.parseInt(split[1]);
+            if (split[OPERATION_INDEX].equals("supply")) {
+                supplyValue = supplyValue + Integer.parseInt(split[VALUE_INDEX]);
             }
-            if (split[0].equals("buy")) {
-                buyValue = buyValue + Integer.parseInt(split[1]);
+            if (split[OPERATION_INDEX].equals("buy")) {
+                buyValue = buyValue + Integer.parseInt(split[VALUE_INDEX]);
             }
         }
         resultValue = supplyValue - buyValue;
-        report[0] = report[0] + supplyValue;
-        report[1] = report[1] + buyValue;
-        report[2] = report[2] + resultValue;
+
+        String[] report = {"supply,", "buy,", "result,"};
+        StringBuilder strBuild = new StringBuilder();
+        report[0] = strBuild.append(report[0]).append(supplyValue).toString();
+        strBuild.setLength(0);
+        report[1] = strBuild.append(report[1]).append(buyValue).toString();
+        strBuild.setLength(0);
+        report[2] = strBuild.append(report[2]).append(resultValue).toString();
         return report;
     }
 
