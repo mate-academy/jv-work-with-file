@@ -6,83 +6,65 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
-    private final List<String> strlist = new ArrayList<>();
+    private static final String COMA = ",";
+    private static final int ZERO_INDEX = 0;
+    private static final int ONE_INDEX = 1;
     private int supply = 0;
     private int buy = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        readFromFile(fromFileName);
-        writeResult(toFileName);
+        String report = calculateData(readFile(fromFileName));
+        writeResult(toFileName, report);
+
     }
 
-    public void readFromFile(String fromFileName) {
+    public String readFile(String fromFileName) {
+        StringBuilder builder = new StringBuilder();
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
             String value = bufferedReader.readLine();
             while (value != null) {
-                strlist.add(value);
+                builder.append(value).append(" ");
                 value = bufferedReader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("File not found. ", e);
+            throw new RuntimeException("File not found ", e);
         }
+        return builder.toString();
     }
 
-    public int getBuy() {
-        String[] array;
-        for (int i = 0; i < strlist.size(); i++) {
-            array = strlist.get(i).split("\\w+");
-            for (String s : array) {
-                if (s.equals(BUY)) {
-                    buy += Integer.parseInt(array[array.length - 1]);
-                    break;
-                }
+    public String calculateData(String data) {
+        String [] array = data.split(" ");
+        for (String arr : array) {
+            String[] split = arr.split(",");
+            if (split[ZERO_INDEX].equals(SUPPLY)) {
+                supply += Integer.parseInt(split[ONE_INDEX]);
+            }
+            if (split[ZERO_INDEX].equals(BUY)) {
+                buy += Integer.parseInt(split[ONE_INDEX]);
             }
         }
-        return buy;
+        int result = supply - buy;
+        StringBuilder builder = new StringBuilder();
+        builder.append(SUPPLY).append(COMA).append(supply).append(System.lineSeparator())
+                .append(BUY).append(COMA).append(buy).append(System.lineSeparator())
+                .append(RESULT).append(COMA).append(result);
+        return builder.toString();
     }
 
-    public int getSupply() {
-        String[] arr;
-        for (int i = 0; i < strlist.size(); i++) {
-            arr = strlist.get(i).split("\\w+");
-            for (String c : arr) {
-                if (c.equals(SUPPLY)) {
-                    supply += Integer.parseInt(arr[arr.length - 1]);
-                    break;
-                }
-            }
-        }
-        return supply;
-    }
-
-    public int getResult() {
-        return getSupply() - getBuy();
-    }
-
-    public void writeResult(String toFileName) {
+    public void writeResult(String toFileName, String report) {
         File file = new File(toFileName);
-        try {
-            boolean value = file.createNewFile();
-            if (value) {
-                System.out.println("File is created.");
-            }
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, true))) {
+            bufferedWriter.write(report);
+            bufferedWriter.write(System.lineSeparator());
         } catch (IOException e) {
-            throw new RuntimeException("This file is created", e);
-        }
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
-            bufferedWriter.write(SUPPLY + "," + getSupply() + System.lineSeparator());
-            bufferedWriter.write(BUY + "," + getBuy() + System.lineSeparator());
-            bufferedWriter.write(RESULT + "," + getResult());
-        } catch (IOException e) {
-            throw new RuntimeException("File not found", e);
+            throw new RuntimeException("Somethigs was wrong.", e);
         }
     }
 }
+
