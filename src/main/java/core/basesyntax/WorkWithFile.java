@@ -9,11 +9,10 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
+    private static final String RESULT = "result";
     private static final String COMMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        //File file = new File(fromFileName);
-        //File fileToWrite = new File(toFileName);
         String[] dataFromFile = readFromFile(fromFileName);
         String report = createReport(dataFromFile);
         writeToFile(report,toFileName);
@@ -28,7 +27,7 @@ public class WorkWithFile {
                 value = reader.read();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file fromFileName", e);
+            throw new RuntimeException("Can't read file" + fromFileName, e);
         }
         return stringBuilder.toString().split("\\W");
     }
@@ -48,14 +47,14 @@ public class WorkWithFile {
         return builder.append(SUPPLY).append(COMMA)
                 .append(supply).append(System.lineSeparator())
                 .append(BUY).append(COMMA).append(buy).append(System.lineSeparator())
-                .append("result").append(COMMA).append(result).toString();
+                .append(RESULT).append(COMMA).append(result).toString();
     }
 
     private void writeToFile(String report, String toFileName) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write(report);
         } catch (IOException ex) {
-            throw new RuntimeException("Can't write file toFileName", ex);
+            throw new RuntimeException("Can't write file" + toFileName, ex);
         }
     }
 }
