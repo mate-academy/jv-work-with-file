@@ -14,31 +14,29 @@ public class WorkWithFile {
     private static final String COMA = ",";
     private static final int ZERO_INDEX = 0;
     private static final int ONE_INDEX = 1;
-    private int supply = 0;
-    private int buy = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String report = calculateData(readFile(fromFileName));
+        String report = createReport(readFile(fromFileName));
         writeResult(toFileName, report);
-
     }
 
-    public String readFile(String fromFileName) {
+    private String readFile(String fromFileName) {
         StringBuilder builder = new StringBuilder();
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String value = bufferedReader.readLine();
             while (value != null) {
                 builder.append(value).append(" ");
                 value = bufferedReader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("File not found ", e);
+            throw new RuntimeException("Can't read data from the file " + fromFileName, e);
         }
         return builder.toString();
     }
 
-    public String calculateData(String data) {
+    private String createReport(String data) {
+        int buy = 0;
+        int supply = 0;
         String [] array = data.split(" ");
         for (String arr : array) {
             String[] split = arr.split(",");
@@ -57,14 +55,13 @@ public class WorkWithFile {
         return builder.toString();
     }
 
-    public void writeResult(String toFileName, String report) {
+    private void writeResult(String toFileName, String report) {
         File file = new File(toFileName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, true))) {
             bufferedWriter.write(report);
             bufferedWriter.write(System.lineSeparator());
         } catch (IOException e) {
-            throw new RuntimeException("Somethigs was wrong.", e);
+            throw new RuntimeException("Can't write data to file: " + toFileName, e);
         }
     }
 }
-
