@@ -14,7 +14,7 @@ public class WorkWithFile {
         writeResultToFile(toFileName, fileData);
     }
 
-    private static Map<String, Integer> getDataFromFile(String fromFileName) {
+    private Map<String, Integer> getDataFromFile(String fromFileName) {
         String value;
         Map<String, Integer> map = new HashMap<>();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
