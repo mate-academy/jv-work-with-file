@@ -11,6 +11,7 @@ public class WorkWithFile {
     private static final String BUY = "Buy";
     private static final String RESULT = "Result";
     private static final int SEARCH_BY_INDEX = 0;
+    private static final int COUNT_BY_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         File file = new File(fromFileName);
@@ -32,10 +33,10 @@ public class WorkWithFile {
             String[] listFromFile = value.split(",");
             for (int i = 0; i < listFromFile.length; i++) {
                 if (listFromFile[SEARCH_BY_INDEX].equals(SUPPLY)) {
-                    supplyCount += Integer.parseInt(listFromFile[1]);
+                    supplyCount += Integer.parseInt(listFromFile[COUNT_BY_INDEX]);
                 }
                 if (listFromFile[SEARCH_BY_INDEX].equals(BUY)) {
-                    buyCount += Integer.parseInt(listFromFile[1]);
+                    buyCount += Integer.parseInt(listFromFile[COUNT_BY_INDEX]);
                 }
             }
             value = bufferedReader.readLine();
