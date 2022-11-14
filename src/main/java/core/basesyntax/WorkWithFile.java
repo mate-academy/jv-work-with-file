@@ -8,18 +8,19 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final String OPERATION_SUPPLY = "supply";
-    private static final String OPERATION_BUY = "buy";
+    private static final int SUPPLY_INDEX = 0;
+    private static final int BUY_INDEX = 1;
     private static final String RESULT = "result";
+    private static final String[] OPERATION_TYPES = {"supply", "buy"};
 
     public void getStatistic(String fromFileName, String toFileName) {
         File reportFile = new File(toFileName);
-        String[] data = getDataFromFile(fromFileName);
+        String[] data = readFromFile(fromFileName);
         String report = createReport(data);
         writeDataToFile(reportFile, report);
     }
 
-    private String[] getDataFromFile(String fileName) {
+    private String[] readFromFile(String fileName) {
         File file = new File(fileName);
         StringBuilder stringBuilder;
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
@@ -35,11 +36,13 @@ public class WorkWithFile {
         return stringBuilder.toString().split("\\W+");
     }
 
-    private int getAmount(String operation, String[] data) {
-        int amount = 0;
+    private int[] getAmount(String[] data) {
+        int[] amount = new int[OPERATION_TYPES.length];
         for (int i = 0; i < data.length; i += 2) {
-            if (data[i].equals(operation)) {
-                amount += Integer.parseInt(data[i + 1]);
+            if (data[i].equals(OPERATION_TYPES[SUPPLY_INDEX])) {
+                amount[SUPPLY_INDEX] += Integer.parseInt(data[i + 1]);
+            } else {
+                amount[BUY_INDEX] += Integer.parseInt(data[i + 1]);
             }
         }
         return amount;
@@ -47,14 +50,13 @@ public class WorkWithFile {
 
     private String createReport(String[] data) {
         StringBuilder report = new StringBuilder();
-        int amountSupply = getAmount(OPERATION_SUPPLY, data);
-        int amountBuy = getAmount(OPERATION_BUY, data);
-        report.append(OPERATION_SUPPLY).append(',')
-                .append(amountSupply).append(System.lineSeparator())
-                .append(OPERATION_BUY).append(',')
-                .append(amountBuy).append(System.lineSeparator())
+        int[] amount = getAmount(data);
+        report.append(OPERATION_TYPES[SUPPLY_INDEX]).append(',')
+                .append(amount[SUPPLY_INDEX]).append(System.lineSeparator())
+                .append(OPERATION_TYPES[BUY_INDEX]).append(',')
+                .append(amount[BUY_INDEX]).append(System.lineSeparator())
                 .append(RESULT).append(',')
-                .append(amountSupply - amountBuy);
+                .append(amount[SUPPLY_INDEX] - amount[BUY_INDEX]);
         return report.toString();
     }
 
