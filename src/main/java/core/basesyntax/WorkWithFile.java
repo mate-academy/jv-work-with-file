@@ -53,7 +53,6 @@ public class WorkWithFile {
             bufferedWriter.write("supply" + "," + map.get("supply") + System.lineSeparator());
             bufferedWriter.write("buy" + "," + map.get("buy") + System.lineSeparator());
             bufferedWriter.write("result" + "," + result);
-            bufferedWriter.flush();
         } catch (IOException e) {
             throw new RuntimeException("Can't write the file " + toFileName, e);
         }
