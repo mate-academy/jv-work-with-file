@@ -39,12 +39,12 @@ public class WorkWithFile {
         List<String> fileRows = new ArrayList<>();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             while ((value = bufferedReader.readLine()) != null) {
-                fileRowsValue.add(value);
+                fileRows.add(value);
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can't read the file " + fromFileName, e);
         }
-        return fileRowsValue;
+        return fileRows;
     }
 
     private static void writeReportToFile(String toFileName, Map<String, Integer> map) {
