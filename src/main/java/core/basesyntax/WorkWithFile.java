@@ -13,7 +13,7 @@ import java.util.Map;
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         List<String> fileData = readFromFile(fromFileName);
-        Map reportResult = createReport(fileData);
+        Map<String, Integer> reportResult = createReport(fileData);
         writeReportToFile(toFileName, reportResult);
     }
 
