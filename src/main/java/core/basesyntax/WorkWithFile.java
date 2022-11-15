@@ -36,7 +36,7 @@ public class WorkWithFile {
 
     private List<String> readFromFile(String fromFileName) {
         String value;
-        List<String> fileRowsValue = new ArrayList<>();
+        List<String> fileRows = new ArrayList<>();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             while ((value = bufferedReader.readLine()) != null) {
                 fileRowsValue.add(value);
