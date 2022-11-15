@@ -14,10 +14,9 @@ public class WorkWithFile {
     private static final String[] OPERATION_TYPES = {"supply", "buy"};
 
     public void getStatistic(String fromFileName, String toFileName) {
-        File reportFile = new File(toFileName);
         String[] data = readFromFile(fromFileName);
         String report = createReport(data);
-        writeDataToFile(reportFile, report);
+        writeDataToFile(toFileName, report);
     }
 
     private String[] readFromFile(String fileName) {
@@ -31,21 +30,9 @@ public class WorkWithFile {
                 line = reader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't read file" + fileName, e);
         }
         return stringBuilder.toString().split("\\W+");
-    }
-
-    private int[] getAmount(String[] data) {
-        int[] amount = new int[OPERATION_TYPES.length];
-        for (int i = 0; i < data.length; i += 2) {
-            if (data[i].equals(OPERATION_TYPES[SUPPLY_INDEX])) {
-                amount[SUPPLY_INDEX] += Integer.parseInt(data[i + 1]);
-            } else {
-                amount[BUY_INDEX] += Integer.parseInt(data[i + 1]);
-            }
-        }
-        return amount;
     }
 
     private String createReport(String[] data) {
@@ -60,11 +47,23 @@ public class WorkWithFile {
         return report.toString();
     }
 
-    private void writeDataToFile(File file, String data) {
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
+    private int[] getAmount(String[] data) {
+        int[] amount = new int[OPERATION_TYPES.length];
+        for (int i = 0; i < data.length; i += 2) {
+            if (data[i].equals(OPERATION_TYPES[SUPPLY_INDEX])) {
+                amount[SUPPLY_INDEX] += Integer.parseInt(data[i + 1]);
+            } else {
+                amount[BUY_INDEX] += Integer.parseInt(data[i + 1]);
+            }
+        }
+        return amount;
+    }
+
+    private void writeDataToFile(String fileName, String data) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
             bufferedWriter.write(data);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data to file", e);
+            throw new RuntimeException("Can't write data to file" + fileName, e);
         }
     }
 }
