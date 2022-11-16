@@ -9,9 +9,9 @@ import java.nio.file.Files;
 public class WorkWithFile {
     private static final int OPERATION_TYPE_INDEX = 0;
     private static final int AMOUNT_INDEX = 1;
-    private String[] splitInformationFromFile;
 
     public void getStatistic(String fromFileName, String toFileName) {
+        String[] splitInformationFromFile;
         StringBuilder builder = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String value = reader.readLine();
