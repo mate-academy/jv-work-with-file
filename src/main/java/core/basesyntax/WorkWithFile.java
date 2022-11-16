@@ -6,3 +6,12 @@ public class WorkWithFile {
 
     }
 }
+
+
+//   | operation type | ammount  |
+//   | :------------: | :-------:|
+//   | supply         | 30       |
+//   | buy            | 10       |
+//   | buy            | 13       |
+//   | supply         | 17       |
+//   | buy            | 10       |
