@@ -8,9 +8,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    /* Is it this class has a next logic? One of the class fields must be File entity. Because in work situation
-    in eighteen's line of code we need to pass File entity in constructor. After that we are going to call writeToFile()
-    method. WorkWithFile class is kind of utility class..
+    /* Is it this class has a next logic? One of the class fields must be File entity.
+    Because in work situation in eighteen's line of code we need to pass File entity in constructor.
+    After that we are going to call writeToFile() method. WorkWithFile class is kind of
+    utility class.
     */
     private static final int OPERATION_TYPE_INDEX = 0;
     private static final int AMOUNT_INDEX = 1;
