@@ -7,40 +7,38 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 public class WorkWithFile {
-    private int supply;
-    private int buy;
-    private String[] split;
+    private static final int OPERATION_TYPE_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
+    private String[] splitInformationFromFile;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String value;
         StringBuilder builder = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
-            value = reader.readLine();
+            String value = reader.readLine();
             while (value != null) {
-                builder.append(value).append(",");
-                System.out.println(value);
+                builder.append(value).append(System.lineSeparator());
                 value = reader.readLine();
             }
-            split = builder.toString().split(",");
+            splitInformationFromFile = builder.toString().split(System.lineSeparator());
         } catch (IOException e) {
             throw new RuntimeException("Can't read a file " + fromFileName, e);
         }
-        String report = createReport(split);
-        File resultReport = writeToFile(new File(toFileName), report);
-        try {
-            resultReport.createNewFile();
-        } catch (IOException e) {
-            throw new RuntimeException("Can't  create a file " + resultReport, e);
-        }
+        String report = createReport(splitInformationFromFile);
+        File newFile = new File(toFileName);
+        WorkWithFile file = new WorkWithFile();
+        file.writeToFile(newFile, report);
     }
 
     private String createReport(String[] array) {
+        int supply = 0;
+        int buy = 0;
         StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < array.length; i += 2) {
-            if (array[i].equals("supply")) {
-                supply += Integer.parseInt(array[i + 1]);
-            } else if (array[i].equals("buy")) {
-                buy += Integer.parseInt(array[i + 1]);
+        for (String arrayInfo : array) {
+            String[] arraySplit = arrayInfo.split(",");
+            if (arraySplit[OPERATION_TYPE_INDEX].equals("supply")) {
+                supply += Integer.parseInt(arraySplit[AMOUNT_INDEX]);
+            } else if (arraySplit[OPERATION_TYPE_INDEX].equals("buy")) {
+                buy += Integer.parseInt(arraySplit[AMOUNT_INDEX]);
             }
         }
 
@@ -55,12 +53,11 @@ public class WorkWithFile {
                 .append(supply - buy).toString();
     }
 
-    public File writeToFile(File file, String string) {
+    private void writeToFile(File file, String string) {
         try {
             Files.write(file.toPath(), string.getBytes());
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to file " + file, e);
         }
-        return file;
     }
 }
