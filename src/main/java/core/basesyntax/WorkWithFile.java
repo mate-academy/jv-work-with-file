@@ -43,10 +43,10 @@ public class WorkWithFile {
             }
         }
         summaResult = summaSupply - summaBuy;
-        String mainString = operationSupply +
-                "," + summaSupply +
-                "\n" + operationBuy + "," + summaBuy +
-                "\n" + "result" + "," + summaResult;
+        String mainString = operationSupply
+                + "," + summaSupply
+                + "\n" + operationBuy + "," + summaBuy
+                + "\n" + "result" + "," + summaResult;
 
         File file2 = new File(toFileName);
         BufferedWriter bufferedWriter = null;
