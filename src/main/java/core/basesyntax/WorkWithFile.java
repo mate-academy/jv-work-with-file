@@ -1,13 +1,12 @@
 package core.basesyntax;
 
+import static java.lang.Integer.parseInt;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-
-import static java.lang.Integer.parseInt;
 
 public class WorkWithFile {
 
