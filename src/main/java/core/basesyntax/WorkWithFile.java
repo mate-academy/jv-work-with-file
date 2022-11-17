@@ -1,6 +1,7 @@
 package core.basesyntax;
 
 import static java.lang.Integer.parseInt;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
