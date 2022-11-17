@@ -1,17 +1,62 @@
 package core.basesyntax;
 
+import java.io.*;
+
+import static java.lang.Integer.parseInt;
+
 public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
 
+        File file1 = new File(fromFileName);
+        StringBuilder stringBuilder = new StringBuilder();
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(file1));
+
+            int value = bufferedReader.read();
+            while (value != -1) {
+                stringBuilder.append((char) value);
+                value = bufferedReader.read();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Can't read file", e);
+        }
+        //-----------------------------------------------/
+        String fileString = stringBuilder.toString();
+        String operationSupply = "supply";
+        String operationBuy = "buy";
+        int summaSupply = 0;
+        int summaBuy = 0;
+        int summaResult = 0;
+
+        String[] arrayFromFileName = fileString.split("\n");
+        for (int i = 0; i < arrayFromFileName.length; i++) {
+            if (arrayFromFileName[i].contains(operationSupply)) {
+                summaSupply += parseInt(arrayFromFileName[i].split(",")[1]);
+            } else {
+                summaBuy += parseInt(arrayFromFileName[i].split(",")[1]);
+            }
+        }
+        summaResult = summaSupply - summaBuy;
+        String mainString = operationSupply + "," + summaSupply + "\n" + operationBuy + "," + summaBuy + "\n" + "result" + "," + summaResult;
+        //-----------------------------------------------/
+
+        File file2 = new File(toFileName);
+        BufferedWriter bufferedWriter = null;
+        try {
+            bufferedWriter = new BufferedWriter(new FileWriter(file2, true));
+            bufferedWriter.write(mainString);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't create file ", e);
+        } finally {
+            if (bufferedWriter != null) {
+                try {
+                    bufferedWriter.close();
+                } catch (IOException e) {
+                    throw new RuntimeException("Can't close BufferedWriter", e);
+                }
+            }
+        }
     }
 }
 
-
-//   | operation type | ammount  |
-//   | :------------: | :-------:|
-//   | supply         | 30       |
-//   | buy            | 10       |
-//   | buy            | 13       |
-//   | supply         | 17       |
-//   | buy            | 10       |
