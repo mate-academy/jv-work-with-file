@@ -13,29 +13,52 @@ public class WorkWithFile {
     private static final String BUY = "buy";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int buy = 0;
-        int supply = 0;
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
-            String value;
+        String dataFromFile = readDataFromFile(fromFileName);
+        String report = createReport(dataFromFile);
+        writeToFile(report, toFileName);
+    }
+
+    private String readDataFromFile(String fileName) {
+        StringBuilder stringBuilder = new StringBuilder();
+        String value;
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
             while ((value = bufferedReader.readLine()) != null) {
-                String[] split = value.split(SPLIT);
-                if ((split[ACTION]).equals(BUY)) {
-                    buy += Integer.parseInt(split[DATA]);
-                } else {
-                    supply += Integer.parseInt(split[DATA]);
-                }
+                stringBuilder.append(value).append(System.lineSeparator());
             }
         } catch (IOException e) {
-            System.out.printf("Can't read to file " + fromFileName);
+            System.out.printf("Can't read from file " + fileName);
         }
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true))) {
-            bufferedWriter.write("supply," + supply);
-            bufferedWriter.newLine();
-            bufferedWriter.write("buy," + buy);
-            bufferedWriter.newLine();
-            bufferedWriter.write("result," + (supply - buy));
+        return stringBuilder.toString();
+    }
+
+    private String createReport(String dataFromFile) {
+        StringBuilder stringBuilder = new StringBuilder();
+        int buy = 0;
+        int supply = 0;
+        String[] lines = dataFromFile.split(System.lineSeparator());
+        for (String string : lines) {
+            String[] split = string.split(SPLIT);
+            if ((split[ACTION]).equals(BUY)) {
+                buy += Integer.parseInt(split[DATA]);
+            } else {
+                supply += Integer.parseInt(split[DATA]);
+            }
+        }
+        stringBuilder.append("supply,").append(supply).append(System.lineSeparator())
+                .append("buy,").append(buy).append(System.lineSeparator())
+                .append("result,").append(supply - buy);
+        return stringBuilder.toString();
+    }
+
+    private void writeToFile(String report, String fileName) {
+        String[] lines = report.split(System.lineSeparator());
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName, true))) {
+            for (String string : lines) {
+                bufferedWriter.write(string);
+                bufferedWriter.newLine();
+            }
         } catch (IOException e) {
-            System.out.printf("Can't write to file " + toFileName);
+            System.out.printf("Can't write to file " + fileName);
         }
     }
 }
