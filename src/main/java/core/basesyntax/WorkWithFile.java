@@ -13,11 +13,32 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
 
-        File file1 = new File(fromFileName);
+        File file2 = new File(toFileName);
+        BufferedWriter bufferedWriter = null;
+        try {
+            bufferedWriter = new BufferedWriter(new FileWriter(file2, true));
+            bufferedWriter.write(createReport(fromFileName));
+        } catch (IOException e) {
+            throw new RuntimeException("Can't create file ", e);
+        } finally {
+            if (bufferedWriter != null) {
+                try {
+                    bufferedWriter.close();
+                } catch (IOException e) {
+                    throw new RuntimeException("Can't close BufferedWriter", e);
+                }
+            }
+        }
+        //-------/
+    }
+
+    //------------------------------------------------------------readFromFile/
+    public String readFromFile(String fromFileName) {
+        File file = new File(fromFileName);
         StringBuilder stringBuilder = new StringBuilder();
 
         try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(file1));
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
             int value = bufferedReader.read();
             while (value != -1) {
                 stringBuilder.append((char) value);
@@ -26,8 +47,16 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read file1", e);
         }
+        return stringBuilder.toString();
+    }
 
-        String fileString = stringBuilder.toString();
+    //------------------------------------------------------------readFromFile/
+
+
+
+    //------------------------------------------------------------createReport/
+    public String createReport(String fromFileName) {
+        String fileString = readFromFile(fromFileName);
         String operationSupply = "supply";
         String operationBuy = "buy";
         int summaSupply = 0;
@@ -35,24 +64,36 @@ public class WorkWithFile {
         int summaResult;
 
         String[] arrayFromFileName = fileString.split("\n");
-        for (String s : arrayFromFileName) {
-            if (s.contains(operationSupply)) {
-                summaSupply += parseInt(s.split(",")[1]);
+        for (String record : arrayFromFileName) {
+            if (record.contains(operationSupply)) {
+                summaSupply += parseInt(record.split(",")[1]);
             } else {
-                summaBuy += parseInt(s.split(",")[1]);
+                summaBuy += parseInt(record.split(",")[1]);
             }
         }
-        summaResult = summaSupply - summaBuy;
-        String mainString = operationSupply
-                + "," + summaSupply
-                + "\n" + operationBuy + "," + summaBuy
-                + "\n" + "result" + "," + summaResult;
 
+        StringBuilder mainString = new StringBuilder();
+        String comma = ",";
+        String divide = "\n";
+        summaResult = summaSupply - summaBuy;
+        mainString.append(operationSupply)
+                .append(comma).append(summaSupply)
+                .append(divide).append(operationBuy)
+                .append(comma).append(summaBuy)
+                .append(divide).append("result")
+                .append(comma).append(summaResult);
+
+        return mainString.toString();
+    }
+    //------------------------------------------------------------createReport/
+
+    //------------------------------------------------------------writeToFile/
+    public void writeToFile(String toFileName, String fromFileName) {
         File file2 = new File(toFileName);
         BufferedWriter bufferedWriter = null;
         try {
             bufferedWriter = new BufferedWriter(new FileWriter(file2, true));
-            bufferedWriter.write(mainString);
+            bufferedWriter.write(createReport(fromFileName));
         } catch (IOException e) {
             throw new RuntimeException("Can't create file ", e);
         } finally {
@@ -65,5 +106,7 @@ public class WorkWithFile {
             }
         }
     }
+    //------------------------------------------------------------writeToFile/
+
 }
 
