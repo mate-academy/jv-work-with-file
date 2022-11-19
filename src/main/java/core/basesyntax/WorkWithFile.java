@@ -2,7 +2,6 @@ package core.basesyntax;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -11,20 +10,12 @@ public class WorkWithFile {
     public static final int LABEL_COLUMN_INDEX = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        try {
-            String dataFromFile = readFile(fromFileName);
-            String report = report(dataFromFile);
-            try {
-                writeToFile(report, toFileName);
-            } catch (IOException e) {
-                throw new RuntimeException("Can't write file", e);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("Can't read file " + fromFileName, e);
-        }
+        String dataFromFile = readFile(fromFileName);
+        String report = report(dataFromFile);
+        writeToFile(report, toFileName);
     }
 
-    private String readFile(String fromFileName) throws FileNotFoundException {
+    private String readFile(String fromFileName) {
         File file = new File(fromFileName);
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
             StringBuilder stringBuilder = new StringBuilder();
@@ -57,10 +48,10 @@ public class WorkWithFile {
         return stringBuilder.toString();
     }
 
-    private void writeToFile(String report, String toFileName) throws IOException {
+    private void writeToFile(String report, String toFileName) {
         try (PrintWriter out = new PrintWriter(toFileName)) {
             out.println(report);
-        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
             throw new RuntimeException("Can't write file " + toFileName, e);
         }
     }
