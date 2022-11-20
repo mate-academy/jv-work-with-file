@@ -25,10 +25,10 @@ public class WorkWithFile {
     }
 
     private void prepareCountResult(File file, String toFileName) throws IOException {
-        BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
-        String value = bufferedReader.readLine();
         int supplyCount = 0;
         int buyCount = 0;
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+        String value = bufferedReader.readLine();
         while (value != null) {
             String[] listFromFile = value.split(",");
             for (int i = 0; i < listFromFile.length; i++) {
@@ -45,7 +45,17 @@ public class WorkWithFile {
     }
 
     private void resultFile(String toFileName, int supplyCount, int buyCount) {
+        StringBuilder builder = new StringBuilder();
         File file = new File(toFileName);
         int resultCount = supplyCount - buyCount;
+        builder.append(SUPPLY)
+                .append(",").append(supplyCount)
+                .append(System.lineSeparator())
+                .append(BUY)
+                .append(",")
+                .append(buyCount)
+                .append(System.lineSeparator())
+                .append(RESULT).append(",")
+                .append(resultCount);
     }
 }
