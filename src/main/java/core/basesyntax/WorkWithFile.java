@@ -45,9 +45,9 @@ public class WorkWithFile {
             }
         }
         int result = amountSupply - amountBuy;
-        String reportString = "supply," + amountSupply + System.lineSeparator() +
-                "buy," + amountBuy + System.lineSeparator() +
-                "result," + result;
+        String reportString = "supply," + amountSupply + System.lineSeparator()
+                + "buy," + amountBuy + System.lineSeparator()
+                + "result," + result;
         return reportString;
     }
 
