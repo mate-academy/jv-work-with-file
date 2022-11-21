@@ -9,11 +9,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class WorkWithFile {
+    private static final String SUPPLY_STR = "supply";
+    private static final String BUY_STR = "buy";
+    private static final int OPERATION_INDEX = 0;
+    private static final int NUMBER_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         Map<String, Integer> map = getPositionsFromFile(fromFileName);
-        int supply = map.get("supply");
-        int buy = map.get("buy");
+        int supply = map.get(SUPPLY_STR);
+        int buy = map.get(BUY_STR);
         int result = supply - buy;
         writeToFile(supply, buy, result, toFileName);
     }
@@ -27,11 +31,13 @@ public class WorkWithFile {
             
             while (line != null) {
                 dividedLine = line.split(",");
-                int number = Integer.parseInt(dividedLine[1]);
-                if (map.containsKey(dividedLine[0])) {
-                    map.replace(dividedLine[0], map.get(dividedLine[0]) + number);
+                String operationType = dividedLine[OPERATION_INDEX];
+                int number = Integer.parseInt(dividedLine[NUMBER_INDEX]);
+
+                if (map.containsKey(operationType)) {
+                    map.replace(operationType, map.get(operationType) + number);
                 } else {
-                    map.put(dividedLine[0], number);
+                    map.put(operationType, number);
                 }
                 line = reader.readLine();
             }
@@ -44,10 +50,12 @@ public class WorkWithFile {
     }
 
     private void writeToFile(int supply, int buy, int result, String toFileName) {
+        StringBuilder builder = new StringBuilder();
+        
+        builder.append("supply,").append(supply).append(System.lineSeparator()).append("buy,")
+                .append(buy).append(System.lineSeparator()).append("result,").append(result);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            writer.write("supply," + supply + System.lineSeparator()
-                    + "buy," + buy + System.lineSeparator()
-                    + "result," + result);
+            writer.write(builder.toString());
         } catch (IOException e) {
             throw new RuntimeException("Cannot write to the file", e);
         }
