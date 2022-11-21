@@ -8,9 +8,10 @@ import java.io.IOException;
 
 public class WorkWithFile {
     private static final String SPLIT = ",";
-    private static final int ACTION = 0;
-    private static final int DATA = 1;
+    private static final int ACTION_INDEX = 0;
+    private static final int DATA_INDEX = 1;
     private static final String BUY = "buy";
+    private static final String SUPPLY = "supply";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String dataFromFile = readDataFromFile(fromFileName);
@@ -38,10 +39,11 @@ public class WorkWithFile {
         String[] lines = dataFromFile.split(System.lineSeparator());
         for (String string : lines) {
             String[] split = string.split(SPLIT);
-            if ((split[ACTION]).equals(BUY)) {
-                buy += Integer.parseInt(split[DATA]);
-            } else {
-                supply += Integer.parseInt(split[DATA]);
+            if ((split[ACTION_INDEX]).equals(BUY)) {
+                buy += Integer.parseInt(split[DATA_INDEX]);
+            }
+            if ((split[ACTION_INDEX]).equals(SUPPLY)) {
+                supply += Integer.parseInt(split[DATA_INDEX]);
             }
         }
         stringBuilder.append("supply,").append(supply).append(System.lineSeparator())
@@ -51,12 +53,8 @@ public class WorkWithFile {
     }
 
     private void writeToFile(String report, String fileName) {
-        String[] lines = report.split(System.lineSeparator());
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName, true))) {
-            for (String string : lines) {
-                bufferedWriter.write(string);
-                bufferedWriter.newLine();
-            }
+            bufferedWriter.write(report);
         } catch (IOException e) {
             System.out.printf("Can't write to file " + fileName);
         }
