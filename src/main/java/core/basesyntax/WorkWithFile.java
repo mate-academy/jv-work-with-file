@@ -13,26 +13,12 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
 
-        File file2 = new File(toFileName);
-        BufferedWriter bufferedWriter = null;
-        try {
-            bufferedWriter = new BufferedWriter(new FileWriter(file2, true));
-            bufferedWriter.write(createReport(fromFileName));
-        } catch (IOException e) {
-            throw new RuntimeException("Can't create file ", e);
-        } finally {
-            if (bufferedWriter != null) {
-                try {
-                    bufferedWriter.close();
-                } catch (IOException e) {
-                    throw new RuntimeException("Can't close BufferedWriter", e);
-                }
-            }
-        }
-        //-------/
+        String createReportFull = readFromFile(fromFileName);
+        String createReport = createReport(createReportFull);
+
+        writeToFile(toFileName, createReport);
     }
 
-    //------------------------------------------------------------readFromFile/
     public String readFromFile(String fromFileName) {
         File file = new File(fromFileName);
         StringBuilder stringBuilder = new StringBuilder();
@@ -49,21 +35,17 @@ public class WorkWithFile {
         }
         return stringBuilder.toString();
     }
+    //-------------------------------------------------/
+    // createReport //
+    public String createReport(String createReportFull) {
 
-    //------------------------------------------------------------readFromFile/
-
-
-
-    //------------------------------------------------------------createReport/
-    public String createReport(String fromFileName) {
-        String fileString = readFromFile(fromFileName);
         String operationSupply = "supply";
         String operationBuy = "buy";
         int summaSupply = 0;
         int summaBuy = 0;
         int summaResult;
 
-        String[] arrayFromFileName = fileString.split("\n");
+        String[] arrayFromFileName = createReportFull.split("\n");
         for (String record : arrayFromFileName) {
             if (record.contains(operationSupply)) {
                 summaSupply += parseInt(record.split(",")[1]);
@@ -85,15 +67,15 @@ public class WorkWithFile {
 
         return mainString.toString();
     }
-    //------------------------------------------------------------createReport/
+    //-------------------------------------------------/
+    // writeToFile //
 
-    //------------------------------------------------------------writeToFile/
-    public void writeToFile(String toFileName, String fromFileName) {
-        File file2 = new File(toFileName);
+    public void writeToFile(String toFileName, String createReport) {
+        File file = new File(toFileName);
         BufferedWriter bufferedWriter = null;
         try {
-            bufferedWriter = new BufferedWriter(new FileWriter(file2, true));
-            bufferedWriter.write(createReport(fromFileName));
+            bufferedWriter = new BufferedWriter(new FileWriter(file, true));
+            bufferedWriter.write(createReport);
         } catch (IOException e) {
             throw new RuntimeException("Can't create file ", e);
         } finally {
@@ -106,7 +88,5 @@ public class WorkWithFile {
             }
         }
     }
-    //------------------------------------------------------------writeToFile/
-
 }
 
