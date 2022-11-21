@@ -45,9 +45,10 @@ public class WorkWithFile {
 
         String[] arrayFromFileName = createReportFull.split("\n");
         for (String record : arrayFromFileName) {
-            if (record.contains(operationSupply)) {
+            if (record.split(",")[0].equals(operationSupply)) {
                 summaSupply += parseInt(record.split(",")[1]);
-            } else {
+            }
+            if (record.split(",")[0].equals(operationBuy)) {
                 summaBuy += parseInt(record.split(",")[1]);
             }
         }
@@ -85,4 +86,3 @@ public class WorkWithFile {
         }
     }
 }
-
