@@ -15,7 +15,6 @@ public class WorkWithFile {
 
         String createReportFull = readFromFile(fromFileName);
         String createReport = createReport(createReportFull);
-
         writeToFile(toFileName, createReport);
     }
 
@@ -35,8 +34,7 @@ public class WorkWithFile {
         }
         return stringBuilder.toString();
     }
-    //-------------------------------------------------/
-    // createReport //
+
     public String createReport(String createReportFull) {
 
         String operationSupply = "supply";
@@ -67,8 +65,6 @@ public class WorkWithFile {
 
         return mainString.toString();
     }
-    //-------------------------------------------------/
-    // writeToFile //
 
     public void writeToFile(String toFileName, String createReport) {
         File file = new File(toFileName);
