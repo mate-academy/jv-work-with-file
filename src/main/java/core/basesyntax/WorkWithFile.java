@@ -1,6 +1,10 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class WorkWithFile {
     private static final String COMA_REGEX = ",";
@@ -9,65 +13,48 @@ public class WorkWithFile {
     private static final String STRING_RESULT = "result";
     private static final int BUY_SUPPLY_INDEX = 0;
     private static final int VALUE_INDEX = 1;
+    private int supplySum;
+    private int buySum;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String dataFromFile = readFromFile(fromFileName);
-        String report = createReport(dataFromFile);
+        readFromFile(fromFileName);
+        String report = createReport();
         writeIntoNewFile(report, toFileName);
     }
 
-    private int createUpdatedSupplySum(int value) {
-        int supplySum = 0;
-        return supplySum + value;
-    }
-
-    private int createUpdatedBuySum(int value) {
-        int buySum = 0;
-        return buySum + value;
-    }
-
-    private String readFromFile(String fromFileName) {
-        StringBuilder stringBuilder = new StringBuilder();
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                stringBuilder.append(line).append("\n");
-            }
-            return stringBuilder.toString();
-        } catch (IOException e) {
-            throw new RuntimeException("Can't read the file!", e);
-        }
-    }
-
-    public String createReport(String dataFromFile) {
-        StringBuilder stringBuilder = new StringBuilder();
-        int updatedBuySum = 0;
-        int updatedSupplySum = 0;
-        try (BufferedReader bufferedReader = new BufferedReader(new StringReader(dataFromFile))) {
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                String[] temporaryValue = line.split(COMA_REGEX);
-                if (temporaryValue[BUY_SUPPLY_INDEX].equals(STRING_BUY)) {
-                    updatedBuySum += createUpdatedBuySum(Integer.parseInt(temporaryValue[VALUE_INDEX]));
-                } else {
-                    updatedSupplySum += createUpdatedSupplySum(Integer.parseInt(temporaryValue[VALUE_INDEX]));
-                }
+    private void readFromFile(String fromFileName) {
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
+            String value = reader.readLine();
+            while (value != null) {
+                fillUpdatedInfo(value);
+                value = reader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read the file!", e);
         }
-        return stringBuilder
-                .append(STRING_SUPPLY).append(COMA_REGEX).append(updatedSupplySum)
-                .append(System.lineSeparator())
-                .append(STRING_BUY).append(COMA_REGEX).append(updatedBuySum)
-                .append(System.lineSeparator())
-                .append(STRING_RESULT).append(COMA_REGEX).append(updatedSupplySum - updatedBuySum)
-                .toString();
+    }
+
+    private void fillUpdatedInfo(String value) {
+        String[] temporaryValue = value.split(COMA_REGEX);
+        if (temporaryValue[BUY_SUPPLY_INDEX].equals(STRING_BUY)) {
+            buySum += Integer.parseInt(temporaryValue[VALUE_INDEX]);
+        } else {
+            supplySum += Integer.parseInt(temporaryValue[VALUE_INDEX]);
+        }
+    }
+
+    public String createReport() {
+        return STRING_SUPPLY + COMA_REGEX + supplySum
+                + System.lineSeparator() + STRING_BUY + COMA_REGEX + buySum
+                + System.lineSeparator() + STRING_RESULT + COMA_REGEX + (supplySum - buySum);
     }
 
     private void writeIntoNewFile(String report, String toFileName) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName, true))) {
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName, true));
             writer.write(report);
+            writer.close();
         } catch (IOException e) {
             throw new RuntimeException("Can't read the file!", e);
         }
