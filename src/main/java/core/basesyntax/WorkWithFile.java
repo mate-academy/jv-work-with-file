@@ -1,6 +1,11 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.StringReader;
 
 public class WorkWithFile {
     private static final String COMA_REGEX = ",";
@@ -43,14 +48,17 @@ public class WorkWithFile {
         StringBuilder stringBuilder = new StringBuilder();
         int updatedBuySum = 0;
         int updatedSupplySum = 0;
-        try (BufferedReader bufferedReader = new BufferedReader(new StringReader(dataFromFile))) {
+        try (BufferedReader bufferedReader
+                     = new BufferedReader(new StringReader(dataFromFile))) {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 String[] temporaryValue = line.split(COMA_REGEX);
                 if (temporaryValue[BUY_SUPPLY_INDEX].equals(STRING_BUY)) {
-                    updatedBuySum += createUpdatedBuySum(Integer.parseInt(temporaryValue[VALUE_INDEX]));
+                    updatedBuySum +=
+                            createUpdatedBuySum(Integer.parseInt(temporaryValue[VALUE_INDEX]));
                 } else {
-                    updatedSupplySum += createUpdatedSupplySum(Integer.parseInt(temporaryValue[VALUE_INDEX]));
+                    updatedSupplySum +=
+                            createUpdatedSupplySum(Integer.parseInt(temporaryValue[VALUE_INDEX]));
                 }
             }
         } catch (IOException e) {
@@ -66,7 +74,8 @@ public class WorkWithFile {
     }
 
     private void writeIntoNewFile(String report, String toFileName) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName, true))) {
+        try (BufferedWriter writer
+                     = new BufferedWriter(new FileWriter(toFileName, true))) {
             writer.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Can't read the file!", e);
