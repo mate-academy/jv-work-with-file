@@ -9,6 +9,9 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final int INDEX_OPERATION_TYPE = 0;
     private static final int INDEX_OPERATION_AMOUNT = 1;
+    private static final String BUY = "buy";
+    private static final String SUPPLY = "supply";
+    private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String dataFromFile = readFromFile(fromFileName);
@@ -24,8 +27,7 @@ public class WorkWithFile {
                 stringBuilder.append(value).append(System.lineSeparator());
                 value = reader.readLine();
             }
-            String data = stringBuilder.toString();
-            return data;
+            return stringBuilder.toString();
         } catch (IOException e) {
             throw new RuntimeException("Can't read file" + fromFileName, e);
         }
@@ -37,7 +39,7 @@ public class WorkWithFile {
         int amountBuy = 0;
         for (String text : dataFromFile) {
             String[] dataFromFileNew = text.split(",");
-            if (dataFromFileNew[INDEX_OPERATION_TYPE].equals("supply")) {
+            if (dataFromFileNew[INDEX_OPERATION_TYPE].equals(SUPPLY)) {
                 amountSupply = amountSupply
                         + Integer.parseInt(dataFromFileNew[INDEX_OPERATION_AMOUNT]);
             } else {
@@ -45,10 +47,9 @@ public class WorkWithFile {
             }
         }
         int result = amountSupply - amountBuy;
-        String reportString = "supply," + amountSupply + System.lineSeparator()
-                + "buy," + amountBuy + System.lineSeparator()
-                + "result," + result;
-        return reportString;
+        return SUPPLY + "," + amountSupply + System.lineSeparator()
+                + BUY + "," + amountBuy + System.lineSeparator()
+                + RESULT + "," + result;
     }
 
     private void writeToFile(String reportString, String toFileName) {
