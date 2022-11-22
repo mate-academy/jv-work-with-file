@@ -19,8 +19,7 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         String[] splitInformationFromFile = readFromFile(fromFileName);
         String report = createReport(splitInformationFromFile);
-        WorkWithFile file = new WorkWithFile();
-        file.writeToFile(toFileName, report);
+        writeToFile(toFileName, report);
     }
 
     private String[] readFromFile(String input) {
