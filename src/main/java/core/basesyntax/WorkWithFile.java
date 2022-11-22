@@ -18,8 +18,7 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         readFromFile(fromFileName);
-        String report = createReport();
-        writeIntoNewFile(report, toFileName);
+        writeIntoNewFile(toFileName);
     }
 
     private void readFromFile(String fromFileName) {
@@ -27,7 +26,12 @@ public class WorkWithFile {
             BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
             String value = reader.readLine();
             while (value != null) {
-                fillUpdatedInfo(value);
+                String[] temporaryValue = value.split(COMA_REGEX);
+                if (temporaryValue[BUY_SUPPLY_INDEX].equals(STRING_BUY)) {
+                    buySum += Integer.parseInt(temporaryValue[VALUE_INDEX]);
+                } else {
+                    supplySum += Integer.parseInt(temporaryValue[VALUE_INDEX]);
+                }
                 value = reader.readLine();
             }
         } catch (IOException e) {
@@ -35,25 +39,14 @@ public class WorkWithFile {
         }
     }
 
-    private void fillUpdatedInfo(String value) {
-        String[] temporaryValue = value.split(COMA_REGEX);
-        if (temporaryValue[BUY_SUPPLY_INDEX].equals(STRING_BUY)) {
-            buySum += Integer.parseInt(temporaryValue[VALUE_INDEX]);
-        } else {
-            supplySum += Integer.parseInt(temporaryValue[VALUE_INDEX]);
-        }
-    }
-
-    public String createReport() {
-        return STRING_SUPPLY + COMA_REGEX + supplySum
-                + System.lineSeparator() + STRING_BUY + COMA_REGEX + buySum
-                + System.lineSeparator() + STRING_RESULT + COMA_REGEX + (supplySum - buySum);
-    }
-
-    private void writeIntoNewFile(String report, String toFileName) {
+    private void writeIntoNewFile(String toFileName) {
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName, true));
-            writer.write(report);
+            writer.write(STRING_SUPPLY + COMA_REGEX + supplySum);
+            writer.newLine();
+            writer.write(STRING_BUY + COMA_REGEX + buySum);
+            writer.newLine();
+            writer.write(STRING_RESULT + COMA_REGEX + (supplySum - buySum));
             writer.close();
         } catch (IOException e) {
             throw new RuntimeException("Can't read the file!", e);
