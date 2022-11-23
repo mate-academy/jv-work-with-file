@@ -64,11 +64,11 @@ public class WorkWithFile {
         String divide = "\n";
         summaResult = summaSupply - summaBuy;
         mainString.append(operationSupply).
-                append(comma).append(summaSupply).
-                append(divide).append(operationBuy).
-                append(comma).append(summaBuy).
-                append(divide).append("result").
-                append(comma).append(summaResult);
+                append(comma).append(summaSupply)
+                .append(divide).append(operationBuy)
+                .append(comma).append(summaBuy)
+                .append(divide).append("result")
+                .append(comma).append(summaResult);
 
         return mainString.toString();
     }
