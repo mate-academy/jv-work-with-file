@@ -22,15 +22,14 @@ public class WorkWithFile {
         File file = new File(fromFileName);
         StringBuilder stringBuilder = new StringBuilder();
 
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
             int value = bufferedReader.read();
             while (value != -1) {
                 stringBuilder.append((char) value);
                 value = bufferedReader.read();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file1", e);
+            throw new RuntimeException("Can't read file", e);
         }
         return stringBuilder.toString();
     }
@@ -42,14 +41,21 @@ public class WorkWithFile {
         int summaSupply = 0;
         int summaBuy = 0;
         int summaResult;
+        int operationIndex = 0;
+        int amountIndex = 1;
+        String operation;
+        int parseInt;
 
         String[] arrayFromFileName = createReportFull.split("\n");
         for (String record : arrayFromFileName) {
-            if (record.split(",")[0].equals(operationSupply)) {
-                summaSupply += parseInt(record.split(",")[1]);
+            operation = record.split(",")[operationIndex];
+            parseInt = parseInt(record.split(",")[amountIndex]);
+
+            if (operation.equals(operationSupply)) {
+                summaSupply += parseInt;
             }
-            if (record.split(",")[0].equals(operationBuy)) {
-                summaBuy += parseInt(record.split(",")[1]);
+            if (operation.equals(operationBuy)) {
+                summaBuy += parseInt;
             }
         }
 
@@ -57,12 +63,7 @@ public class WorkWithFile {
         String comma = ",";
         String divide = "\n";
         summaResult = summaSupply - summaBuy;
-        mainString.append(operationSupply)
-                .append(comma).append(summaSupply)
-                .append(divide).append(operationBuy)
-                .append(comma).append(summaBuy)
-                .append(divide).append("result")
-                .append(comma).append(summaResult);
+        mainString.append(operationSupply).append(comma).append(summaSupply).append(divide).append(operationBuy).append(comma).append(summaBuy).append(divide).append("result").append(comma).append(summaResult);
 
         return mainString.toString();
     }
