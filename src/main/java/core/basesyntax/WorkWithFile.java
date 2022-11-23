@@ -16,7 +16,7 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         File file = new File(fromFileName);
         try {
-            prepareCountResult(file, toFileName);
+            readingFile(file);
         } catch (FileNotFoundException e) {
             throw new RuntimeException("Can't find file", e);
         } catch (IOException e) {
@@ -24,30 +24,32 @@ public class WorkWithFile {
         }
     }
 
-    private void prepareCountResult(File file, String toFileName) throws IOException {
-        int supplyCount = 0;
-        int buyCount = 0;
+    private void readingFile(File file) throws IOException {
         BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
         String value = bufferedReader.readLine();
         while (value != null) {
-            String[] listFromFile = value.split(",");
-            for (int i = 0; i < listFromFile.length; i++) {
-                if (listFromFile[SEARCH_BY_INDEX].equals(SUPPLY)) {
-                    supplyCount += Integer.parseInt(listFromFile[COUNT_BY_INDEX]);
-                }
-                if (listFromFile[SEARCH_BY_INDEX].equals(BUY)) {
-                    buyCount += Integer.parseInt(listFromFile[COUNT_BY_INDEX]);
-                }
-            }
-            value = bufferedReader.readLine();
         }
-        resultFile(toFileName, supplyCount, buyCount);
+        value = bufferedReader.readLine();
+        preparingResult(value);
     }
 
-    private void resultFile(String toFileName, int supplyCount, int buyCount) {
+    private void preparingResult(String value) {
+        int supplyCount = 0;
+        int buyCount = 0;
+        String[] listFromFile = value.split(",");
+        for (int i = 0; i < listFromFile.length; i++) {
+            if (listFromFile[SEARCH_BY_INDEX].equals(SUPPLY)) {
+                supplyCount = supplyCount + Integer.parseInt(String.valueOf(COUNT_BY_INDEX));
+            }
+            if (listFromFile[SEARCH_BY_INDEX].equals(BUY)) {
+                buyCount = buyCount + Integer.parseInt(String.valueOf(COUNT_BY_INDEX));
+            }
+        }
+        resultFile(supplyCount, buyCount);
+    }
+    private void resultFile(int supplyCount, int buyCount) {
         StringBuilder builder = new StringBuilder();
-        File file = new File(toFileName);
-        int resultCount = supplyCount - buyCount;
+        int result = supplyCount - buyCount;
         builder.append(SUPPLY)
                 .append(",").append(supplyCount)
                 .append(System.lineSeparator())
@@ -56,6 +58,6 @@ public class WorkWithFile {
                 .append(buyCount)
                 .append(System.lineSeparator())
                 .append(RESULT).append(",")
-                .append(resultCount);
+                .append(result);
     }
 }
