@@ -1,5 +1,7 @@
 package core.basesyntax;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -26,17 +28,20 @@ public class WorkWithFile {
 
     private void readingFile(File file) throws IOException {
         BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+        StringBuilder builder = new StringBuilder();
         String value = bufferedReader.readLine();
         while (value != null) {
+            builder.append(value).append(System.lineSeparator());
+            value = bufferedReader.readLine();
         }
-        value = bufferedReader.readLine();
-        preparingResult(value);
+        String readInfo = builder.toString();
+        preparingResult(readInfo);
     }
 
-    private void preparingResult(String value) {
+    private void preparingResult(String readInfo) {
         int supplyCount = 0;
         int buyCount = 0;
-        String[] listFromFile = value.split(",");
+        String[] listFromFile = readInfo.split(",");
         for (int i = 0; i < listFromFile.length; i++) {
             if (listFromFile[SEARCH_BY_INDEX].equals(SUPPLY)) {
                 supplyCount = supplyCount + Integer.parseInt(String.valueOf(COUNT_BY_INDEX));
@@ -47,6 +52,7 @@ public class WorkWithFile {
         }
         resultFile(supplyCount, buyCount);
     }
+
     private void resultFile(int supplyCount, int buyCount) {
         StringBuilder builder = new StringBuilder();
         int result = supplyCount - buyCount;
