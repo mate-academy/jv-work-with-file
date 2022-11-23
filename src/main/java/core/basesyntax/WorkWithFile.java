@@ -13,9 +13,9 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
 
-        String createReportFull = readFromFile(fromFileName);
-        String createReport = createReport(createReportFull);
-        writeToFile(toFileName, createReport);
+        String dataFromFile = readFromFile(fromFileName);
+        String report = createReport(dataFromFile);
+        writeToFile(toFileName, report);
     }
 
     public String readFromFile(String fromFileName) {
@@ -23,13 +23,13 @@ public class WorkWithFile {
         StringBuilder stringBuilder = new StringBuilder();
 
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
-            int value = bufferedReader.read();
-            while (value != -1) {
-                stringBuilder.append((char) value);
-                value = bufferedReader.read();
+            String value = bufferedReader.readLine();
+            while (value != null) {
+                stringBuilder.append(value).append(System.lineSeparator());
+                value = bufferedReader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't read data from the file " + "fileName:", e);
         }
         return stringBuilder.toString();
     }
@@ -75,20 +75,11 @@ public class WorkWithFile {
 
     public void writeToFile(String toFileName, String createReport) {
         File file = new File(toFileName);
-        BufferedWriter bufferedWriter = null;
-        try {
-            bufferedWriter = new BufferedWriter(new FileWriter(file, true));
+
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, true))) {
             bufferedWriter.write(createReport);
         } catch (IOException e) {
-            throw new RuntimeException("Can't create file ", e);
-        } finally {
-            if (bufferedWriter != null) {
-                try {
-                    bufferedWriter.close();
-                } catch (IOException e) {
-                    throw new RuntimeException("Can't close BufferedWriter", e);
-                }
-            }
+            throw new RuntimeException("Can't create the file ", e);
         }
     }
 }
