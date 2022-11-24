@@ -7,55 +7,46 @@ import java.util.List;
 public class WorkWithFile {
     private static final String SUPPLY_WORD = "supply";
     private static final String BUY_WORD = "buy";
+    private static final String RESULT_WORD = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        //code?????
-
+        String text = readFromFileName(fromFileName);
+        writeToFileName(text, toFileName);
     }
 
-
-    public void readFromFileName() {
+    public String readFromFileName(String fromFileName) {
         int resultSupply = 0;
         int resultBuy = 0;
-
-        File file = new File(fromFileName);
         try {
-            List<String> strings = Files.readAllLines(file.toPath());
-            String[] lines = strings.toArray(new String[strings.size()]);
+            File file = new File(fromFileName);
+            List<String> input = Files.readAllLines(file.toPath());
+            String[] lines = input.toArray(new String[input.size()]);
             for (String line : lines) {
                 String[] everyLine = line.split(",");
-                if (everyLine[0].equals("supply")) {
-                    resultSupply = resultSupply + Integer.parseInt(everyLine[1]);
+                if (everyLine[0].equals(SUPPLY_WORD)) {
+                    resultSupply += Integer.parseInt(everyLine[1]);
                 } else {
-                    resultBuy = resultBuy + Integer.parseInt(everyLine[1]);
+                    resultBuy += Integer.parseInt(everyLine[1]);
                 }
             }
-
             StringBuilder builder = new StringBuilder();
-            builder.append("supply").append(",").append(resultSupply).append(System.lineSeparator());
-            builder.append("buy").append(",").append(resultBuy).append(System.lineSeparator());
-            builder.append("result").append(",").append(resultSupply - resultBuy);
+            builder.append(SUPPLY_WORD).append(",").append(resultSupply).append(System.lineSeparator());
+            builder.append(BUY_WORD).append(",").append(resultBuy).append(System.lineSeparator());
+            builder.append(RESULT_WORD).append(",").append(resultSupply - resultBuy);
             System.out.println(builder);
-            String text = builder.toString();
-
+            return builder.toString();
         } catch (IOException e) {
-            throw new RuntimeException("Can't read data from the file ", e);
+            throw new RuntimeException("Can't read data from the file " + fromFileName, e);
+        }
         }
 
-        }
-
-
-
-    }
-
-    public void writeToFileName() {
+    public void writeToFileName(String result, String toFileName) {
         try {
-            FileWriter output = new FileWriter(toFileName); // (File fileObj)
-            output.write(text);
+            FileWriter output = new FileWriter(toFileName);
+            output.write(result);
             output.close();
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to the file " + toFileName, e);
         }
     }
-
 }
