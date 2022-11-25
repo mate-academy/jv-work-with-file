@@ -29,12 +29,11 @@ public class WorkWithFile {
                 value = bufferedReader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read data from the file " + "fileName:", e);
+            throw new RuntimeException("Can't read data from the file " + "fromFileName:", e);
         }
         return stringBuilder.toString();
     }
-
-    public String createReport(String createReportFull) {
+    public String createReport(String data) {
 
         String operationSupply = "supply";
         String operationBuy = "buy";
@@ -46,7 +45,7 @@ public class WorkWithFile {
         String operation;
         int parseInt;
 
-        String[] arrayFromFileName = createReportFull.split("\n");
+        String[] arrayFromFileName = data.split("\n");
         for (String record : arrayFromFileName) {
             operation = record.split(",")[operationIndex];
             parseInt = parseInt(record.split(",")[amountIndex]);
