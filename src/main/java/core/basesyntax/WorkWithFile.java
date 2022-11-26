@@ -30,15 +30,15 @@ public class WorkWithFile {
                 }
             }
             StringBuilder builder = new StringBuilder();
-            builder.append(SUPPLY_WORD).append(",").append(resultSupply).append(System.lineSeparator());
+            builder.append(SUPPLY_WORD).append(",").append(resultSupply);
+            builder.append(System.lineSeparator());
             builder.append(BUY_WORD).append(",").append(resultBuy).append(System.lineSeparator());
             builder.append(RESULT_WORD).append(",").append(resultSupply - resultBuy);
-            System.out.println(builder);
             return builder.toString();
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from the file " + fromFileName, e);
         }
-        }
+    }
 
     public void writeToFileName(String result, String toFileName) {
         try {
