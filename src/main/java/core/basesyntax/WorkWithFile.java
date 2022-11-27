@@ -16,28 +16,26 @@ public class WorkWithFile {
     private static final String COM_SPRT = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String s = readFromFile(fromFileName);
-        String report = createReport(s);
+        String dataFromFile = readFromFile(fromFileName);
+        String report = createReport(dataFromFile);
         writeToFile(report,toFileName);
     }
 
-    private static String readFromFile(String inputFileName) {
-        File file = new File(inputFileName);
+    private String readFromFile(String inputFileName) {
         StringBuilder stringBuilder = new StringBuilder();
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(file));
+        try (BufferedReader reader = new BufferedReader(new FileReader(inputFileName))) {
             String value = reader.readLine();
             while (value != null) {
                 stringBuilder.append(value).append(" ");
                 value = reader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't read data from the file" + inputFileName, e);
         }
         return stringBuilder.toString();
     }
 
-    private static String createReport(String dataFromFile) {
+    private String createReport(String dataFromFile) {
         int sumSupply = 0;
         int sumBuy = 0;
         String[] strings = dataFromFile.split(" ");
@@ -64,7 +62,7 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file1))) {
             bufferedWriter.write(outputData);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data to file", e);
+            throw new RuntimeException("Can't write data to file" + outputFileName, e);
         }
     }
 }
