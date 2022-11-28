@@ -20,9 +20,10 @@ public class WorkWithFile {
 
     public String readFromFile(String fromFileName) {
         File file = new File(fromFileName);
-        StringBuilder stringBuilder = new StringBuilder();
 
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
+        StringBuilder stringBuilder = new StringBuilder();
+        try (BufferedReader bufferedReader = new BufferedReader(new
+                FileReader(file))) {
             String value = bufferedReader.readLine();
             while (value != null) {
                 stringBuilder.append(value).append(System.lineSeparator());
@@ -40,29 +41,26 @@ public class WorkWithFile {
         String operationBuy = "buy";
         int summaSupply = 0;
         int summaBuy = 0;
-        int summaResult;
-        int operationIndex = 0;
-        int amountIndex = 1;
-        String operation;
-        int parseInt;
+        final int operationIndex = 0;
+        final int amountIndex = 1;
 
         String[] arrayFromFileName = data.split("\n");
         for (String record : arrayFromFileName) {
-            operation = record.split(",")[operationIndex];
-            parseInt = parseInt(record.split(",")[amountIndex]);
+            String operation = record.split(",")[operationIndex];
+            int amount = parseInt(record.split(",")[amountIndex]);
 
             if (operation.equals(operationSupply)) {
-                summaSupply += parseInt;
+                summaSupply += amount;
             }
             if (operation.equals(operationBuy)) {
-                summaBuy += parseInt;
+                summaBuy += amount;
             }
         }
 
         StringBuilder mainString = new StringBuilder();
         String comma = ",";
         String divide = "\n";
-        summaResult = summaSupply - summaBuy;
+        int summaResult = summaSupply - summaBuy;
         mainString.append(operationSupply)
                 .append(comma).append(summaSupply)
                 .append(divide).append(operationBuy)
@@ -76,10 +74,11 @@ public class WorkWithFile {
     public void writeToFile(String toFileName, String createReport) {
         File file = new File(toFileName);
 
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, true))) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new
+                FileWriter(file, true))) {
             bufferedWriter.write(createReport);
         } catch (IOException e) {
-            throw new RuntimeException("Can't create the file ", e);
+            throw new RuntimeException("Can't create the file " + toFileName, e);
         }
     }
 }
