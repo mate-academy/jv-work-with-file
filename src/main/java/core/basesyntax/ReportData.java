@@ -6,11 +6,11 @@ public class ReportData {
     private int buy = 0;
 
     public void addBuy(int buyAmount) {
-        buy+= buyAmount;
+        buy += buyAmount;
     }
 
     public void addSupply(int supplyAmount) {
-        supply+= supplyAmount;
+        supply += supplyAmount;
     }
 
     public int getResult() {
