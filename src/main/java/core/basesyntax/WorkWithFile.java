@@ -1,6 +1,12 @@
 package core.basesyntax;
 
-import java.io.*;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.FileReader;
+import java.io.IOException;
 
 public class WorkWithFile {
     private static final String SUPPLY_NAME = "supply";
@@ -17,7 +23,7 @@ public class WorkWithFile {
             int value = reader.read();
             while (value != -1) {
                 builder.append((char) value);
-                value= reader.read();
+                value = reader.read();
             }
         } catch (IOException e) {
             throw new RuntimeException("read error!" + e);
