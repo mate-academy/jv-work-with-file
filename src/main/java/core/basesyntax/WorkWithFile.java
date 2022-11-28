@@ -1,5 +1,6 @@
 package core.basesyntax;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -10,6 +11,8 @@ public class WorkWithFile {
     private static final String SUPPLY_WORD = "supply";
     private static final String BUY_WORD = "buy";
     private static final String RESULT_WORD = "result";
+    private static final int ZERO_INDEX = 0;
+    private static final int ONE_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String text = readFromFileName(fromFileName);
@@ -25,10 +28,10 @@ public class WorkWithFile {
             String[] lines = input.toArray(new String[input.size()]);
             for (String line : lines) {
                 String[] everyLine = line.split(",");
-                if (everyLine[0].equals(SUPPLY_WORD)) {
-                    resultSupply += Integer.parseInt(everyLine[1]);
+                if (everyLine[ZERO_INDEX].equals(SUPPLY_WORD)) {
+                    resultSupply += Integer.parseInt(everyLine[ONE_INDEX]);
                 } else {
-                    resultBuy += Integer.parseInt(everyLine[1]);
+                    resultBuy += Integer.parseInt(everyLine[ONE_INDEX]);
                 }
             }
             StringBuilder builder = new StringBuilder();
@@ -43,10 +46,10 @@ public class WorkWithFile {
     }
 
     public void writeToFileName(String result, String toFileName) {
-        try {
-            FileWriter output = new FileWriter(toFileName);
-            output.write(result);
-            output.close();
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true))) {
+            //FileWriter output = new FileWriter(toFileName);
+            bufferedWriter.write(result);
+            //bufferedWriter.close();
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to the file " + toFileName, e);
         }
