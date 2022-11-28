@@ -12,11 +12,17 @@ public class WorkWithFile {
     private static final String RESULT = "result,";
     private static final int INDEX_REPORT_INFO = 0;
     private static final int INDEX_REPORT_AMOUNT = 1;
+    private StringBuilder stringBuilder = new StringBuilder();
 
     public void getStatistic(String fromFileName, String toFileName) {
-        StringBuilder stringBuilder = new StringBuilder();
+        String data = readFromFile(fromFileName);
+        String report = createReport(data);
+        writeReportToFile(toFileName, report);
+    }
+
+    private String readFromFile(String fileName) {
         String value;
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
             value = bufferedReader.readLine();
             while (value != null) {
                 stringBuilder.append(value).append(" ");
@@ -26,11 +32,15 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("File can't be read", e);
         }
-        String[] reportData = value.split(" ");
+        return value;
+    }
+
+    private String createReport(String data) {
+        String[] reportData = data.split(" ");
         int supply = 0;
         int buy = 0;
-        for (String data : reportData) {
-            String[] info = data.split(",");
+        for (String datum : reportData) {
+            String[] info = datum.split(",");
             if (info[INDEX_REPORT_INFO].equals(SUPPLY)) {
                 supply += Integer.parseInt(info[INDEX_REPORT_AMOUNT]);
             } else {
@@ -48,9 +58,12 @@ public class WorkWithFile {
                 .append(System.lineSeparator())
                 .append(RESULT)
                 .append(result);
-        String output = stringBuilder.toString();
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write(output);
+        return stringBuilder.toString();
+    }
+
+    private void writeReportToFile(String fileName, String report) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
+            bufferedWriter.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to file", e);
         }
