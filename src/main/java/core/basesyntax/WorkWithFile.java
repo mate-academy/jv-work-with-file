@@ -12,30 +12,28 @@ public class WorkWithFile {
     private static final String BUY = "buy";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        StringBuilder stringBuilder = new StringBuilder();
-        readFromFile(fromFileName, stringBuilder);
-        String report = createReport(stringBuilder).toString();
+        String dataFromFile = readFromFile(fromFileName);
+        String report = createReport(dataFromFile);
         writeToFile(toFileName, report);
     }
 
-    private StringBuilder readFromFile(String fromFileName, StringBuilder stringBuilder) {
-
+    private String readFromFile(String fromFileName) {
         try {
-            File fileForRead = new File(fromFileName);
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(fileForRead));
+            StringBuilder stringBuilder = new StringBuilder();
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
             String value = bufferedReader.readLine();
             while (value != null) {
                 stringBuilder.append(value).append(",");
                 value = bufferedReader.readLine();
             }
-            return stringBuilder;
+            return stringBuilder.toString();
         } catch (IOException e) {
             throw new RuntimeException(e + " Can't read a file: " + fromFileName);
         }
     }
 
-    private StringBuilder createReport(StringBuilder stringBuilder) {
-        String[] statistic = stringBuilder.toString().split(",");
+    private String createReport(String dataFromFile) {
+        String[] statistic = dataFromFile.split(",");
         int supplySum = 0;
         int buySum = 0;
         for (int i = 0; i < statistic.length; i++) {
@@ -45,12 +43,12 @@ public class WorkWithFile {
                 buySum += Integer.valueOf(statistic[i + 1]);
             }
         }
+        StringBuilder stringBuilder = new StringBuilder();
         int result = supplySum - buySum;
-        stringBuilder.setLength(0);
         stringBuilder.append(SUPPLY).append(",").append(supplySum)
         .append(System.lineSeparator()).append(BUY).append(",").append(buySum)
         .append(System.lineSeparator()).append("result").append(",").append(result);
-        return stringBuilder;
+        return stringBuilder.toString();
     }
 
     public void writeToFile(String toFileName, String report) {
