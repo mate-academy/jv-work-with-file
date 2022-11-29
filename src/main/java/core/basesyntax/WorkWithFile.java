@@ -8,13 +8,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private int supply = 0;
-    private int buy = 0;
     private static final String SUPPLY_NAME = "supply";
     private static final String BUY_NAME = "buy";
     private static final String RESULT_NAME = "result";
     private static final int OPERATION_INDEX = 0;
     private static final int AMOUNT_INDEX = 1;
+
+    private int supply = 0;
+    private int buy = 0;
 
     public void addBuy(int buyAmount) {
         buy += buyAmount;
@@ -43,7 +44,6 @@ public class WorkWithFile {
     public void setBuy(int buy) {
         this.buy = buy;
     }
-
 
     public void getStatistic(String fromFileName, String toFileName) {
         File fromFile = new File(fromFileName);
