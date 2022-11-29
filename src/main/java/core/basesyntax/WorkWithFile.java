@@ -12,7 +12,6 @@ public class WorkWithFile {
     private static final String RESULT = "result,";
     private static final int INDEX_REPORT_INFO = 0;
     private static final int INDEX_REPORT_AMOUNT = 1;
-    private StringBuilder stringBuilder = new StringBuilder();
 
     public void getStatistic(String fromFileName, String toFileName) {
         String data = readFromFile(fromFileName);
@@ -21,21 +20,21 @@ public class WorkWithFile {
     }
 
     private String readFromFile(String fileName) {
-        String value;
+        StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
-            value = bufferedReader.readLine();
-            while (value != null) {
-                stringBuilder.append(value).append(" ");
-                value = bufferedReader.readLine();
+            String line = bufferedReader.readLine();
+            while (line != null) {
+                stringBuilder.append(line).append(" ");
+                line = bufferedReader.readLine();
             }
-            value = stringBuilder.toString();
+            return stringBuilder.toString();
         } catch (IOException e) {
-            throw new RuntimeException("File can't be read", e);
+            throw new RuntimeException("Can't read data from the file" + fileName, e);
         }
-        return value;
     }
 
     private String createReport(String data) {
+        StringBuilder stringBuilder;
         String[] reportData = data.split(" ");
         int supply = 0;
         int buy = 0;
@@ -65,7 +64,7 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
             bufferedWriter.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data to file", e);
+            throw new RuntimeException("Can't write data to file" + fileName, e);
         }
     }
 }
