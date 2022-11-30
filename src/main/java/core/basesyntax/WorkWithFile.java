@@ -14,41 +14,15 @@ public class WorkWithFile {
     private static final int OPERATION_INDEX = 0;
     private static final int AMOUNT_INDEX = 1;
 
-    private int supply = 0;
-    private int buy = 0;
-
-    public void addBuy(int buyAmount) {
-        buy += buyAmount;
-    }
-
-    public void addSupply(int supplyAmount) {
-        supply += supplyAmount;
-    }
-
-    public int getResult() {
-        return supply - buy;
-    }
-
-    public int getSupply() {
-        return supply;
-    }
-
-    public void setSupply(int supply) {
-        this.supply = supply;
-    }
-
-    public int getBuy() {
-        return buy;
-    }
-
-    public void setBuy(int buy) {
-        this.buy = buy;
-    }
-
     public void getStatistic(String fromFileName, String toFileName) {
-        File fromFile = new File(fromFileName);
-        File toFile = new File(toFileName);
+        String dataFromFile = readFromFile(fromFileName);
+        String report = createReport(dataFromFile);
+        writeToFile(toFileName, report);
+    }
+
+    private String readFromFile(String fromFileName) {
         StringBuilder builder = new StringBuilder();
+        File fromFile = new File(fromFileName);
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFile))) {
             int value = reader.read();
             while (value != -1) {
@@ -58,25 +32,37 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("read error!" + e);
         }
-        String[] infoReport = builder.toString().split("\r?\n|\r");
+        return builder.toString();
+    }
+
+    private String createReport(String dataFromFile) {
+        String[] infoReport = dataFromFile.split("\r?\n|\r");
         String[] infoCell = new String[2];
+        int supply = 0;
+        int buy = 0;
         for (String infoElement: infoReport) {
             infoCell = infoElement.split(",");
             if (infoCell[OPERATION_INDEX ].equals(SUPPLY_NAME)) {
-                addSupply(Integer.parseInt(infoCell[AMOUNT_INDEX]));
+                supply += Integer.parseInt(infoCell[AMOUNT_INDEX]);
             } else if (infoCell[OPERATION_INDEX ].equals(BUY_NAME)) {
-                addBuy(Integer.parseInt(infoCell[AMOUNT_INDEX]));
+                buy += Integer.parseInt(infoCell[AMOUNT_INDEX]);
             }
         }
+        int result = supply - buy;
         StringBuilder finalBuilder = new StringBuilder();
         finalBuilder.append(SUPPLY_NAME + ","
-                + getSupply() + System.lineSeparator()
+                + supply + System.lineSeparator()
                 + BUY_NAME + ","
-                + getBuy() + System.lineSeparator()
+                + buy + System.lineSeparator()
                 + RESULT_NAME + ","
-                + getResult() + System.lineSeparator());
+                + result + System.lineSeparator());
+        return  finalBuilder.toString();
+    }
+
+    private void writeToFile(String toFileName, String report) {
+        File toFile = new File(toFileName);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFile))) {
-            writer.write(finalBuilder.toString());
+            writer.write(report);
         } catch (IOException e) {
             throw new RuntimeException("write error!" + e);
         }
