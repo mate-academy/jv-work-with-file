@@ -1,16 +1,23 @@
 package core.basesyntax;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class WorkWithFile {
+    private static final String FROM_FILE = "banana.csv";
+    private static final String RESULT_FILE = "test1.csv";
+    private static final int SIMBOLS_ARRAY = 9;
+    private static final int REST = 3;
+
     public static void main(String[] args) {
         WorkWithFile workWithFile = new WorkWithFile();
-        workWithFile.getStatistic("banana.csv", "test1.csv");
+        try {
+            Files.deleteIfExists(Path.of(RESULT_FILE));
+        } catch (IOException e) {
+            throw new RuntimeException("Can't correctly clear result files after test ", e);
+        }
+        workWithFile.getStatistic(FROM_FILE, RESULT_FILE);
     }
 
     public void getStatistic(String fromFileName, String toFileName) {
@@ -28,7 +35,7 @@ public class WorkWithFile {
             for (String word : array) {
                 i++;
                 bufferedWriter.write(word);
-                if (i % 3 == 0 && i != 9) {
+                if (i % REST == 0 && i != SIMBOLS_ARRAY) {
                     bufferedWriter.write("\r\n");
                 }
                 bufferedWriter.flush();
@@ -64,8 +71,8 @@ public class WorkWithFile {
         int buy = 0;
         int result;
         for (String word : split) {
-            int index = word.indexOf(",");
-            int value = Integer.parseInt(word.substring(index + 1));
+            String[] arrayValues = word.split(",");
+            int value = Integer.parseInt(arrayValues[1]);
             if (word.startsWith("s")) {
                 supply += value;
             } else if (word.startsWith("b")) {
@@ -73,7 +80,7 @@ public class WorkWithFile {
             }
         }
         result = supply - buy;
-        String[] array = new String[9];
+        String[] array = new String[SIMBOLS_ARRAY];
         array[0] = "supply";
         array[1] = ",";
         array[2] = String.valueOf(supply);
