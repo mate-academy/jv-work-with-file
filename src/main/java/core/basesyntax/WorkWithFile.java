@@ -56,7 +56,7 @@ public class WorkWithFile {
                 + buy + System.lineSeparator()
                 + RESULT_NAME + ","
                 + result + System.lineSeparator());
-        return  finalBuilder.toString();
+        return finalBuilder.toString();
     }
 
     private void writeToFile(String toFileName, String report) {
