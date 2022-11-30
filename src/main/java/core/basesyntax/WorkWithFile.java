@@ -41,7 +41,7 @@ public class WorkWithFile {
                 i++;
                 bufferedWriter.write(word);
                 if (i % REST == 0 && i != SIMBOLS_ARRAY) {
-                    bufferedWriter.write("\r\n");
+                    bufferedWriter.write(System.lineSeparator());
                 }
                 bufferedWriter.flush();
             }
