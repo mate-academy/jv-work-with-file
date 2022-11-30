@@ -70,3 +70,4 @@ public class WorkWithFile {
         return Integer.parseInt(data);
     }
 }
+
