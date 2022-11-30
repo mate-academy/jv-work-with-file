@@ -77,7 +77,8 @@ public class WorkWithFile {
         int result;
         for (String word : split) {
             String[] arrayValues = word.split(",");
-            int value = Integer.parseInt(arrayValues[1]);
+            String stringValue = arrayValues[1];
+            int value = Integer.parseInt(stringValue);
             if (word.startsWith("s")) {
                 supply += value;
             } else if (word.startsWith("b")) {
