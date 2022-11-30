@@ -1,11 +1,6 @@
 package core.basesyntax;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 
 public class WorkWithFile {
     public static void main(String[] args) {
@@ -62,9 +57,10 @@ public class WorkWithFile {
         String[] split = stringBuilder.toString().split("\r\n"); //\\W+
         int supply = 0;
         int buy = 0;
-        int result = 0;
+        int result;
         for (String word : split) {
-            int value = Integer.parseInt(word.substring(word.indexOf(",") + 1));
+            int index = word.indexOf(",");
+            int value = Integer.parseInt(word.substring(index + 1));
             if (word.startsWith("s")) {
                 supply += value;
             } else if (word.startsWith("b")) {
