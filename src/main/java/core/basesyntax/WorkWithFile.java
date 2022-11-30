@@ -66,7 +66,7 @@ public class WorkWithFile {
     }
 
     private int convertStringDataToInteger(String stringInteger) {
-        String data = stringInteger.substring(0, stringInteger.length() - 1);
+        String data = stringInteger.substring(0, stringInteger.length());
         return Integer.parseInt(data);
     }
 }
