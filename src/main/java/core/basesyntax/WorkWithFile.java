@@ -54,7 +54,7 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("No such file");
         }
-        String[] split = stringBuilder.toString().split("\r\n"); //\\W+
+        String[] split = stringBuilder.toString().split("\r\n");
         int supply = 0;
         int buy = 0;
         int result;
