@@ -9,6 +9,11 @@ import java.io.IOException;
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         String[] dataFromFile = readFromFile(fromFileName);
+        String report = createReport(dataFromFile);
+        writeToFile(toFileName, report);
+    }
+
+    private String createReport(String[] dataFromFile) {
         int buyAmount = 0;
         int supplyAmount = 0;
         for (int i = 0; i < dataFromFile.length; i += 2) {
@@ -19,11 +24,10 @@ public class WorkWithFile {
             }
         }
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder
+        return stringBuilder
                 .append("supply,").append(supplyAmount).append(System.lineSeparator())
                 .append("buy,").append(buyAmount).append(System.lineSeparator())
-                .append("result,").append(supplyAmount - buyAmount);
-        writeToFile(toFileName, stringBuilder);
+                .append("result,").append(supplyAmount - buyAmount).toString();
     }
 
     private String[] readFromFile(String fromFileName) {
@@ -41,9 +45,9 @@ public class WorkWithFile {
         return stringBuilder.toString().split(",");
     }
 
-    private void writeToFile(String toFileName, StringBuilder stringBuilder) {
+    private void writeToFile(String toFileName, String report) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write(stringBuilder.toString());
+            bufferedWriter.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Can`t write to file", e);
         }
