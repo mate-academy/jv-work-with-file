@@ -1,17 +1,12 @@
 package core.basesyntax;
 
-import org.jetbrains.annotations.NotNull;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 
 public class WorkWithFile {
-    private static final String SUPPLY = "Supply";
-    private static final String BUY = "Buy";
-    private static final String RESULT = "Result";
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
     private static final int SEARCH_BY_INDEX = 0;
     private static final int COUNT_BY_INDEX = 1;
 
@@ -27,27 +22,29 @@ public class WorkWithFile {
     }
 
     private void readingFile(File file) throws IOException {
-        BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+        BufferedReader reader = new BufferedReader(new FileReader(file));
         StringBuilder builder = new StringBuilder();
-        String value = bufferedReader.readLine();
+        String value = reader.readLine();
         while (value != null) {
             builder.append(value).append(System.lineSeparator());
-            value = bufferedReader.readLine();
+            value = reader.readLine();
         }
-        String readInfo = builder.toString();
+        String[] readInfo = builder.toString().split(System.lineSeparator());
         preparingResult(readInfo);
     }
 
-    private void preparingResult(String readInfo) {
+    private void preparingResult(String[] readInfo) {
         int supplyCount = 0;
         int buyCount = 0;
-        String[] listFromFile = readInfo.split(",");
-        for (int i = 0; i < listFromFile.length; i++) {
-            if (listFromFile[SEARCH_BY_INDEX].equals(SUPPLY)) {
-                supplyCount = supplyCount + Integer.parseInt(String.valueOf(COUNT_BY_INDEX));
-            }
-            if (listFromFile[SEARCH_BY_INDEX].equals(BUY)) {
-                buyCount = buyCount + Integer.parseInt(String.valueOf(COUNT_BY_INDEX));
+        for (String infoFromFile : readInfo) {
+            String[] listFromFile = infoFromFile.split(",");
+            for (int i = 0; i < listFromFile.length; i++) {
+                if (listFromFile[SEARCH_BY_INDEX].equals(SUPPLY)) {
+                    supplyCount += Integer.parseInt(listFromFile[COUNT_BY_INDEX]);
+                }
+                if (listFromFile[SEARCH_BY_INDEX].equals(BUY)) {
+                    buyCount += Integer.parseInt(listFromFile[COUNT_BY_INDEX]);
+                }
             }
         }
         resultFile(supplyCount, buyCount);
@@ -65,5 +62,8 @@ public class WorkWithFile {
                 .append(System.lineSeparator())
                 .append(RESULT).append(",")
                 .append(result);
+        String writeInfo = builder.toString();
     }
+
 }
+
