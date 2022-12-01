@@ -26,7 +26,7 @@ public class WorkWithFile {
         writeToFile(toFileName, stringBuilder);
     }
 
-    private String[] readFromFile (String fromFileName) {
+    private String[] readFromFile(String fromFileName) {
         StringBuilder stringBuilder = new StringBuilder();
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
@@ -41,7 +41,7 @@ public class WorkWithFile {
         return stringBuilder.toString().split(",");
     }
 
-    private void writeToFile (String toFileName, StringBuilder stringBuilder) {
+    private void writeToFile(String toFileName, StringBuilder stringBuilder) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(stringBuilder.toString());
         } catch (IOException e) {
