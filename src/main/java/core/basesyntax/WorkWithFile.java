@@ -8,13 +8,13 @@ import java.util.List;
 public class WorkWithFile {
     private static final int INDEX_ACTION = 0;
     private static final int INDEX_AMOUNT = 1;
-    private List<String> listFromFile;
     private int buy = 0;
     private int supply = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
         File fromFile = new File(fromFileName);
-        String[] str;
+        List<String> listFromFile;
+        String[] dividedString;
 
         try {
             listFromFile = Files.readAllLines(fromFile.toPath());
@@ -22,11 +22,11 @@ public class WorkWithFile {
             throw new RuntimeException("Can't read fromFile", e);
         }
         for (String s : listFromFile) {
-            str = s.split(",");
-            if (str[INDEX_ACTION].equals("buy")) {
-                buy += Integer.parseInt(str[INDEX_AMOUNT]);
+            dividedString = s.split(",");
+            if (dividedString[INDEX_ACTION].equals("buy")) {
+                buy += Integer.parseInt(dividedString[INDEX_AMOUNT]);
             } else {
-                supply += Integer.parseInt(str[INDEX_AMOUNT]);
+                supply += Integer.parseInt(dividedString[INDEX_AMOUNT]);
             }
         }
         writeToFile(toFileName);
