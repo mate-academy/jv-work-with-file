@@ -12,6 +12,7 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         File file = new File(fromFileName);
+        writingFile(toFileName);
         try {
             readingFile(file);
         } catch (FileNotFoundException e) {
@@ -33,7 +34,7 @@ public class WorkWithFile {
         preparingResult(readInfo);
     }
 
-    private void preparingResult(String[] readInfo) {
+    private void preparingResult(String[] readInfo) throws IOException {
         int supplyCount = 0;
         int buyCount = 0;
         for (String infoFromFile : readInfo) {
@@ -50,7 +51,7 @@ public class WorkWithFile {
         resultFile(supplyCount, buyCount);
     }
 
-    private void resultFile(int supplyCount, int buyCount) {
+    private void resultFile(int supplyCount, int buyCount) throws IOException {
         StringBuilder builder = new StringBuilder();
         int result = supplyCount - buyCount;
         builder.append(SUPPLY)
@@ -63,7 +64,12 @@ public class WorkWithFile {
                 .append(RESULT).append(",")
                 .append(result);
         String writeInfo = builder.toString();
+        writingFile(writeInfo);
     }
 
+    private void writingFile(String writeInfo) throws IOException {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(writeInfo, true))) {
+            writer.write(writeInfo);
+        }
+    }
 }
-
