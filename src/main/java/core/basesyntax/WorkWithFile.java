@@ -9,13 +9,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-private static final String SUPPLY_WORD = "supply";
-private static final String BUY_WORD = "buy";
-private static final String RESULT_WORD = "result";
-private static final int WORD_POSITION_IN_ARRAY = 0;
-private static final int NUMBER_POSITION_IN_ARRAY = 1;
-private static final int SUPPLY_NUMBER = 0;
-private static final int BUY_NUMBER = 1;
+    private static final String SUPPLY_WORD = "supply";
+    private static final String BUY_WORD = "buy";
+    private static final String RESULT_WORD = "result";
+    private static final int WORD_POSITION_IN_ARRAY = 0;
+    private static final int NUMBER_POSITION_IN_ARRAY = 1;
+    private static final int SUPPLY_NUMBER = 0;
+    private static final int BUY_NUMBER = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         int[] numberData = makeReport(fromFileName, toFileName);
@@ -64,9 +64,8 @@ private static final int BUY_NUMBER = 1;
                 if (splittedData[WORD_POSITION_IN_ARRAY].equals(SUPPLY_WORD)) {
                     supplyCounter = supplyCounter
                             + Integer.valueOf(splittedData[NUMBER_POSITION_IN_ARRAY]);
-                }
-                else {
-                   buyCounter = buyCounter
+                } else {
+                    buyCounter = buyCounter
                            + Integer.valueOf(splittedData[NUMBER_POSITION_IN_ARRAY]);
                 }
             }
@@ -76,7 +75,7 @@ private static final int BUY_NUMBER = 1;
 
     private void writeToFile(String input, String toFileName) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-           bufferedWriter.write(input);
+            bufferedWriter.write(input);
         } catch (IOException e) {
             throw new RuntimeException("Can't write to this file", e);
         }
