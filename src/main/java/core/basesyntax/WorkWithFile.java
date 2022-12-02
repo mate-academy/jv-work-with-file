@@ -32,15 +32,14 @@ public class WorkWithFile {
 
     private String[] readFromFile(String fromFileName) {
         StringBuilder stringBuilder = new StringBuilder();
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String value = bufferedReader.readLine();
             while (value != null) {
                 stringBuilder.append(value).append(",");
                 value = bufferedReader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can`t find the file", e);
+            throw new RuntimeException("Can`t find the file" + fromFileName, e);
         }
         return stringBuilder.toString().split(",");
     }
@@ -49,7 +48,7 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Can`t write to file", e);
+            throw new RuntimeException("Can`t write to file" + toFileName, e);
         }
     }
 }
