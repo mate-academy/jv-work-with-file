@@ -31,6 +31,7 @@ public class WorkWithFile {
         String[] strings = stringBuilder.toString().split(System.lineSeparator());
         for (String string : strings) {
             String[] strings1 = string.split(String.valueOf(COMMA));
+            //  Created enum "Category"
             if (strings1[0].equals(Category.values()[0].toString())) {
                 buySum += Integer.parseInt(strings1[1]);
             } else {
