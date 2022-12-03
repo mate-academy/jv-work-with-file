@@ -17,35 +17,48 @@ public class WorkWithFile {
     private static final byte AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        File fileReadFrom = new File(fromFileName);
-        File fileWriteTo = new File(toFileName);
-        int totalSupply = 0;
-        int totalBuy = 0;
+        writeToFile(toFileName, createReport(readFromFile(fromFileName)));
+    }
+
+    private static String readFromFile(String file) {
+        File fileReadFrom = new File(file);
+        StringBuilder stringBuilder = new StringBuilder();
+        String csvLine;
 
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileReadFrom))) {
-            String csvLine;
-            String[] values;
             while ((csvLine = bufferedReader.readLine()) != null) {
-                values = csvLine.split(CSV_SEPARATOR);
-                if (values[OP_TYPE_INDEX].equals(SUPPLY)) {
-                    totalSupply += Integer.parseInt(values[AMOUNT_INDEX]);
-                    continue;
-                }
-                totalBuy += Integer.parseInt(values[AMOUNT_INDEX]);
+                stringBuilder.append(csvLine).append(LINE_SEPARATOR);
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read data from the file" + fromFileName, e);
+            throw new RuntimeException("Can't read from the file: " + file, e);
         }
+        return stringBuilder.toString();
+    }
 
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileWriteTo))) {
-            bufferedWriter.write(getReport(totalSupply, totalBuy));
+    private static void writeToFile(String fileName, String stringData) {
+        File file = new File(fileName);
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
+            bufferedWriter.write(stringData);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data to file" + toFileName, e);
+            throw new RuntimeException("Can't write to the file: " + fileName, e);
         }
     }
 
-    private static String getReport(int totalSupply, int totalBuy) {
-        StringBuilder stringBuilder = new StringBuilder()
+    private static String createReport(String string) {
+        StringBuilder stringBuilder = new StringBuilder();
+        String[] dataArray = string.split(LINE_SEPARATOR);
+        String[] csvRowData;
+        int totalSupply = 0;
+        int totalBuy = 0;
+        for (String data : dataArray) {
+            csvRowData = data.split(CSV_SEPARATOR);
+            if (csvRowData[OP_TYPE_INDEX].equals(SUPPLY)) {
+                totalSupply += Integer.parseInt(csvRowData[AMOUNT_INDEX]);
+                continue;
+            }
+            totalBuy += Integer.parseInt(csvRowData[AMOUNT_INDEX]);
+        }
+        stringBuilder
                 .append(SUPPLY).append(CSV_SEPARATOR).append(totalSupply).append(LINE_SEPARATOR)
                 .append(BUY).append(CSV_SEPARATOR).append(totalBuy).append(LINE_SEPARATOR)
                 .append(RESULT).append(CSV_SEPARATOR).append(totalSupply - totalBuy);
