@@ -37,26 +37,26 @@ public class WorkWithFile {
 
     private String createReport(String dataFromFile) {
         StringBuilder stringBuilder = new StringBuilder();
-        int Buysum = 0;
-        int Supplysum = 0;
+        int newBuySum = 0;
+        int newSupplySum = 0;
         try (BufferedReader bufferedReader = new BufferedReader(new StringReader(dataFromFile))) {
             String value;
             while ((value = bufferedReader.readLine()) != null) {
                 String [] arrayFile = value.split(SEPARATOR);
                 if (arrayFile[VALUE_INDEX].equals(BUY)) {
-                    Buysum += Integer.parseInt(arrayFile[BUY_INDEX]);
+                    newBuySum += Integer.parseInt(arrayFile[BUY_INDEX]);
                 } else {
-                    Supplysum += Integer.parseInt(arrayFile[BUY_INDEX]);
+                    newSupplySum += Integer.parseInt(arrayFile[BUY_INDEX]);
                 }
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't create file" + dataFromFile, e);
         }
-        return stringBuilder.append(SUPPLY).append(SEPARATOR).append(Supplysum)
+        return stringBuilder.append(SUPPLY).append(SEPARATOR).append(newSupplySum)
                 .append(System.lineSeparator())
-                .append(BUY).append(SEPARATOR).append(Buysum)
+                .append(BUY).append(SEPARATOR).append(newBuySum)
                 .append(System.lineSeparator())
-                .append(RESULT).append(SEPARATOR).append(Supplysum - Buysum)
+                .append(RESULT).append(SEPARATOR).append(newSupplySum - newBuySum)
                 .toString();
     }
 
