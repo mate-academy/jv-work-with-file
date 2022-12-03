@@ -32,8 +32,8 @@ public class WorkWithFile {
         }
         result = supply - buy;
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("supply").append(",").append(supply).
-                append(System.lineSeparator()).append("buy").append(",")
+        stringBuilder.append("supply").append(",").append(supply)
+                .append(System.lineSeparator()).append("buy").append(",")
                 .append(buy).append(System.lineSeparator()).append("result")
                 .append(",").append(result);
         return stringBuilder.toString();
