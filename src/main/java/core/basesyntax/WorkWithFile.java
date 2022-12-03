@@ -9,50 +9,32 @@ import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 
 public class WorkWithFile {
+    private static final int FIRST_INDEX = 0;
+    private static final int SECOND_INDEX = 1;
+    private static final String SUPPLY_PATTERN = "supply";
+    private static final String BUY_PATTERN = "buy";
+    private static final String SPLIT_PATTERN = ",";
+
     public void getStatistic(String fromFileName, String toFileName) {
-        int[] supplyBuy = calculateStatistic(fromFileName);
-        writeFile(toFileName, createReport(supplyBuy[0], supplyBuy[1]));
-    }
-
-    private int[] calculateStatistic(String fromFileName) {
-        int supply = 0;
-        int buy = 0;
-        String[] stringFile = readFile(fromFileName);
-        for (int i = 0; i < stringFile.length; i++) {
-            String[] splitData = stringFile[i].split(",");
-            if (splitData[0].equals("supply")) {
-                supply += convertStringDataToInteger(splitData[1]);
-            }
-            if (splitData[0].equals("buy")) {
-                buy += convertStringDataToInteger(splitData[1]);
-            }
-        }
-        return new int[]{supply, buy};
-    }
-
-    private String createReport(int supply, int buy) {
-        int result = supply - buy;
-        return "supply," + supply + System.lineSeparator()
-                + "buy," + buy + System.lineSeparator()
-                + "result," + result;
+        String[] dataFromFile = readFile(fromFileName);
+        writeFile(toFileName, createReport(dataFromFile));
     }
 
     private String[] readFile(String fromFileName) {
         File file = new File(fromFileName);
         StringBuilder stringBuilder = new StringBuilder();
-        String[] split = null;
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+        String[] context = null;
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
             int value = bufferedReader.read();
             while (value != -1) {
                 stringBuilder.append((char) value);
                 value = bufferedReader.read();
             }
-            split = stringBuilder.toString().split("\n");
+            context = stringBuilder.toString().split(System.lineSeparator());
         } catch (IOException e) {
             throw new RuntimeException("File can't read", e);
         }
-        return split;
+        return context;
     }
 
     private void writeFile(String nameFile, String result) {
@@ -65,9 +47,21 @@ public class WorkWithFile {
         }
     }
 
-    private int convertStringDataToInteger(String stringInteger) {
-        String data = stringInteger.substring(0, stringInteger.length());
-        return Integer.parseInt(data);
+    private String createReport(String[] dataFromFile) {
+        int supply = 0;
+        int buy = 0;
+        for (int i = 0; i < dataFromFile.length; i++) {
+            String[] splitData = dataFromFile[i].split(SPLIT_PATTERN);
+            if (splitData[FIRST_INDEX].equals(SUPPLY_PATTERN)) {
+                supply += Integer.parseInt(splitData[SECOND_INDEX]);
+            }
+            if (splitData[FIRST_INDEX].equals(BUY_PATTERN)) {
+                buy += Integer.parseInt(splitData[SECOND_INDEX]);
+            }
+        }
+        int result = supply - buy;
+        return "supply," + supply + System.lineSeparator()
+                + "buy," + buy + System.lineSeparator()
+                + "result," + result;
     }
 }
-
