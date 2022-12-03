@@ -12,16 +12,25 @@ public class WorkWithFile {
     private int supply = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
+        List<String> dataFromFile = readFromFile(fromFileName);
+        createReport(dataFromFile);
+        writeToFile(toFileName);
+    }
+
+    public List<String> readFromFile(String fromFileName) {
         File fromFile = new File(fromFileName);
         List<String> listFromFile;
-        String[] dividedString;
-
         try {
             listFromFile = Files.readAllLines(fromFile.toPath());
         } catch (IOException e) {
             throw new RuntimeException("Can't read fromFile", e);
         }
-        for (String s : listFromFile) {
+        return listFromFile;
+    }
+
+    public void createReport(List<String> dataFromFile) {
+        String[] dividedString;
+        for (String s : dataFromFile) {
             dividedString = s.split(",");
             if (dividedString[INDEX_ACTION].equals("buy")) {
                 buy += Integer.parseInt(dividedString[INDEX_AMOUNT]);
@@ -29,7 +38,6 @@ public class WorkWithFile {
                 supply += Integer.parseInt(dividedString[INDEX_AMOUNT]);
             }
         }
-        writeToFile(toFileName);
     }
 
     public void writeToFile(String toFileName) {
