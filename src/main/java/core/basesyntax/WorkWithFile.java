@@ -1,6 +1,11 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.StringReader;
 
 public class WorkWithFile {
     private static final int VALUE_INDEX = 0;
@@ -9,7 +14,6 @@ public class WorkWithFile {
     private static final String BUY = "buy";
     private static final String RESULT = "result";
     private static final String SEPARATOR = ",";
-
 
     public void getStatistic(String fromFileName, String toFileName) {
         String dataFromFile = readFromFile(fromFileName);
@@ -33,26 +37,26 @@ public class WorkWithFile {
 
     private String createReport(String dataFromFile) {
         StringBuilder stringBuilder = new StringBuilder();
-        int BuySum = 0;
-        int SupplySum = 0;
+        int Buysum = 0;
+        int Supplysum = 0;
         try (BufferedReader bufferedReader = new BufferedReader(new StringReader(dataFromFile))) {
             String value;
             while ((value = bufferedReader.readLine()) != null) {
                 String [] arrayFile = value.split(SEPARATOR);
                 if (arrayFile[VALUE_INDEX].equals(BUY)) {
-                    BuySum += Integer.parseInt(arrayFile[BUY_INDEX]);
+                    Buysum += Integer.parseInt(arrayFile[BUY_INDEX]);
                 } else {
-                    SupplySum += Integer.parseInt(arrayFile[BUY_INDEX]);
+                    Supplysum += Integer.parseInt(arrayFile[BUY_INDEX]);
                 }
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't create file" + dataFromFile, e);
         }
-        return stringBuilder.append(SUPPLY).append(SEPARATOR).append(SupplySum)
+        return stringBuilder.append(SUPPLY).append(SEPARATOR).append(Supplysum)
                 .append(System.lineSeparator())
-                .append(BUY).append(SEPARATOR).append(BuySum)
+                .append(BUY).append(SEPARATOR).append(Buysum)
                 .append(System.lineSeparator())
-                .append(RESULT).append(SEPARATOR).append(SupplySum - BuySum)
+                .append(RESULT).append(SEPARATOR).append(Supplysum - Buysum)
                 .toString();
     }
 
