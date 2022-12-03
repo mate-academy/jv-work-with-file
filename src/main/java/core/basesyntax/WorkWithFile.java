@@ -13,18 +13,17 @@ public class WorkWithFile {
     private static final String RESULT = "result";
     private static final String CSV_SEPARATOR = ",";
     private static final String LINE_SEPARATOR = System.lineSeparator();
-    private static final byte OP_TYPE_INDEX = 0;
+    private static final byte OPERATION_TYPE_INDEX = 0;
     private static final byte AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         writeToFile(toFileName, createReport(readFromFile(fromFileName)));
     }
 
-    private static String readFromFile(String file) {
+    private String readFromFile(String file) {
         File fileReadFrom = new File(file);
         StringBuilder stringBuilder = new StringBuilder();
         String csvLine;
-
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileReadFrom))) {
             while ((csvLine = bufferedReader.readLine()) != null) {
                 stringBuilder.append(csvLine).append(LINE_SEPARATOR);
@@ -35,7 +34,7 @@ public class WorkWithFile {
         return stringBuilder.toString();
     }
 
-    private static void writeToFile(String fileName, String stringData) {
+    private void writeToFile(String fileName, String stringData) {
         File file = new File(fileName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
             bufferedWriter.write(stringData);
@@ -44,7 +43,7 @@ public class WorkWithFile {
         }
     }
 
-    private static String createReport(String string) {
+    private String createReport(String string) {
         StringBuilder stringBuilder = new StringBuilder();
         String[] dataArray = string.split(LINE_SEPARATOR);
         String[] csvRowData;
@@ -52,7 +51,7 @@ public class WorkWithFile {
         int totalBuy = 0;
         for (String data : dataArray) {
             csvRowData = data.split(CSV_SEPARATOR);
-            if (csvRowData[OP_TYPE_INDEX].equals(SUPPLY)) {
+            if (csvRowData[OPERATION_TYPE_INDEX].equals(SUPPLY)) {
                 totalSupply += Integer.parseInt(csvRowData[AMOUNT_INDEX]);
                 continue;
             }
