@@ -14,7 +14,7 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         String dataFromFile = readFromFile(fromFileName);
         String report = createReport(dataFromFile);
-        writeToFile(toFileName, report);
+        writeDataToFile(toFileName, report);
     }
 
     private String readFromFile(String fromFileName) {
@@ -27,7 +27,7 @@ public class WorkWithFile {
             }
             return stringBuilder.toString();
         } catch (IOException e) {
-            throw new RuntimeException(e + " Can't read a file: " + fromFileName);
+            throw new RuntimeException("Can't read a file: " + fromFileName, e);
         }
     }
 
@@ -50,27 +50,12 @@ public class WorkWithFile {
         return stringBuilder.toString();
     }
 
-    public void writeToFile(String toFileName, String report) {
-        File fileForWrite = new File(toFileName);
-        try {
-            fileForWrite.createNewFile();
-            BufferedWriter bufferedWriter = null;
-            try {
-                bufferedWriter = new BufferedWriter(new FileWriter(fileForWrite));
-                bufferedWriter.write(report);
-            } catch (IOException e) {
-                throw new RuntimeException(e + " Can't write to a file: " + fileForWrite);
-            } finally {
-                if (bufferedWriter != null) {
-                    try {
-                        bufferedWriter.close();
-                    } catch (IOException e) {
-                        throw new RuntimeException(e + " Cant close a file " + fileForWrite);
-                    }
-                }
-            }
+
+    private void writeDataToFile(String toFileName, String report) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
+            writer.write(report);
         } catch (IOException e) {
-            throw new RuntimeException(e + " Can't create a file: " + fileForWrite);
+            throw new RuntimeException("Can't write to file " + toFileName, e);
         }
     }
 }
