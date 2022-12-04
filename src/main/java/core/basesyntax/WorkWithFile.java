@@ -2,7 +2,6 @@ package core.basesyntax;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -49,7 +48,6 @@ public class WorkWithFile {
         .append(System.lineSeparator()).append("result").append(",").append(result);
         return stringBuilder.toString();
     }
-
 
     private void writeDataToFile(String toFileName, String report) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
