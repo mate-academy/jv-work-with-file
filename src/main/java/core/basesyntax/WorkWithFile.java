@@ -18,18 +18,17 @@ public class WorkWithFile {
     }
 
     private String readFromFile(String fromFileName) {
-        StringBuilder stringBuilder = new StringBuilder();
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
+            StringBuilder stringBuilder = new StringBuilder();
             String value = bufferedReader.readLine();
             while (value != null) {
                 stringBuilder.append(value).append(",");
                 value = bufferedReader.readLine();
             }
+            return stringBuilder.toString();
         } catch (IOException e) {
             throw new RuntimeException(e + " Can't read a file: " + fromFileName);
         }
-        return stringBuilder.toString();
     }
 
     private String createReport(String dataFromFile) {
