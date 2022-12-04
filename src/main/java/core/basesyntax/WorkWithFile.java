@@ -67,7 +67,8 @@ public class WorkWithFile {
             throw new RuntimeException("Can't create file", e);
         }
         try {
-            Files.write(file.toPath(), calculatedData.toString().getBytes(), StandardOpenOption.APPEND);
+            Files.write(file.toPath(), calculatedData.toString().getBytes(),
+                    StandardOpenOption.APPEND);
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to file", e);
         }
