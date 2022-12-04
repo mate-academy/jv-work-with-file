@@ -11,6 +11,8 @@ public class WorkWithFile {
     private static String SUPPLY = "supply";
     private static String BUY = "buy";
     private static String RESULT = "result";
+    private static int OPERATION_TYPE_INDEX = 0;
+    private static int AMMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String dataFromFile = readLinesFromFile(fromFileName);
@@ -40,10 +42,10 @@ public class WorkWithFile {
         String[] linesArray = linesFromFile.split(" ");
         for (int i = 0; i < linesArray.length; i++) {
             oneString = linesArray[i].split(",");
-            if (oneString[0].equals(SUPPLY)) {
-                supply += Integer.parseInt(oneString[1]);
+            if (oneString[OPERATION_TYPE_INDEX].equals(SUPPLY)) {
+                supply += Integer.parseInt(oneString[AMMOUNT_INDEX]);
             } else {
-                buy += Integer.parseInt(oneString[1]);
+                buy += Integer.parseInt(oneString[AMMOUNT_INDEX]);
             }
         }
         StringBuilder resultStringBuilder = new StringBuilder();
