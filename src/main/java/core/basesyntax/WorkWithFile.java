@@ -2,7 +2,6 @@ package core.basesyntax;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -21,9 +20,8 @@ public class WorkWithFile {
     }
 
     private String readLinesFromFile(String fromFileName) {
-        File fileFrom = new File(fromFileName);
         StringBuilder stringBuilder = new StringBuilder();
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileFrom))) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String value = bufferedReader.readLine();
             while (value != null) {
                 stringBuilder.append(value).append(" ");
@@ -56,11 +54,10 @@ public class WorkWithFile {
     }
 
     private void writeToFile(String toFileName, String result) {
-        File toFile = new File(toFileName);
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFile))) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(result);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data to file" + toFile, e);
+            throw new RuntimeException("Can't write data to file" + toFileName, e);
         }
     }
 }
