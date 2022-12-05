@@ -1,11 +1,10 @@
 package core.basesyntax;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.StandardOpenOption;
+import java.nio.file.Path;
 
 public class WorkWithFile {
     public static final String DATA_LINE_SEPARATOR = ",";
@@ -14,30 +13,31 @@ public class WorkWithFile {
     public static final int AMOUNT_POSITION = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        File file = new File(fromFileName);
-        readFromFile(file, toFileName);
+        String dataFromFile = readFromFile(fromFileName);
+        String report = createReport(dataFromFile);
+        writeFile(report, toFileName);
     }
 
-    private void readFromFile(File file, String toFileName) {
+    private String readFromFile(String fromFileName) {
         try {
             StringBuilder builder = new StringBuilder();
-            BufferedReader reader = new BufferedReader(new FileReader(file));
+            BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
             String value = reader.readLine();
             while (value != null) {
                 builder.append(value)
                         .append(" ");
                 value = reader.readLine();
             }
-            writeToFile(calculateData(builder), toFileName);
+            return builder.toString();
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't read data from file " + fromFileName, e);
         }
     }
 
-    private StringBuilder calculateData(StringBuilder builder) {
+    private String createReport(String dataFromFile) {
         int supply = 0;
         int buy = 0;
-        String[] array = builder.toString().split(DATA_BUILDER_SEPARATOR);
+        String[] array = dataFromFile.split(DATA_BUILDER_SEPARATOR);
         for (String line : array) {
             String[] splitLine = line.split(DATA_LINE_SEPARATOR);
             if (splitLine[OPERATION_POSITION].equals("supply")) {
@@ -47,30 +47,18 @@ public class WorkWithFile {
                 buy += Integer.parseInt(splitLine[AMOUNT_POSITION]);
             }
         }
-        builder.setLength(0);
-        builder.append("supply,")
-                .append(supply)
-                .append(System.lineSeparator())
-                .append("buy,")
-                .append(buy)
-                .append(System.lineSeparator())
-                .append("result,")
-                .append(supply - buy);
-        return builder;
+        return "supply," + supply
+                + System.lineSeparator()
+                + "buy," + buy
+                + System.lineSeparator()
+                + "result," + (supply - buy);
     }
 
-    private void writeToFile(StringBuilder calculatedData, String toFileName) {
-        File file = new File(toFileName);
+    private void writeFile(String report, String toFileName) {
         try {
-            file.createNewFile();
+            Files.write(Path.of(toFileName), report.getBytes());
         } catch (IOException e) {
-            throw new RuntimeException("Can't create file", e);
-        }
-        try {
-            Files.write(file.toPath(), calculatedData.toString().getBytes(),
-                    StandardOpenOption.APPEND);
-        } catch (IOException e) {
-            throw new RuntimeException("Can't write data to file", e);
+            throw new RuntimeException("Can't write data to file " + toFileName, e);
         }
     }
 }
