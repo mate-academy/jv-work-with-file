@@ -8,22 +8,28 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final int OPERATION_TYPE_POSITION = 0;
+    private static final int AMOUNT_POSITION = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
+        String reportData = createReportFromFile(fromFileName);
+        writeToFile(reportData, toFileName);
+    }
+
+    private String createReportFromFile(String fromFileName) {
         File fromFile = new File(fromFileName);
+        StringBuilder stringBuilder = new StringBuilder();
         int supply = 0;
         int buy = 0;
-        int result = 0;
 
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(fromFile));
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFile))) {
             String line = reader.readLine();
             while (line != null) {
                 String[] split = line.split(",");
-                if (split[0].equals("supply")) {
-                    supply += Integer.parseInt(split[1]);
+                if (split[OPERATION_TYPE_POSITION].equals("supply")) {
+                    supply += Integer.parseInt(split[AMOUNT_POSITION]);
                 } else {
-                    buy += Integer.parseInt(split[1]);
+                    buy += Integer.parseInt(split[AMOUNT_POSITION]);
                 }
                 line = reader.readLine();
             }
@@ -31,16 +37,17 @@ public class WorkWithFile {
             throw new RuntimeException("Can't read the file " + fromFileName, e);
         }
 
+        stringBuilder.append("supply,").append(supply).append(System.lineSeparator())
+                .append("buy,").append(buy).append(System.lineSeparator())
+                .append("result,").append(supply - buy);
+
+        return stringBuilder.toString();
+    }
+
+    private void writeToFile(String reportData, String toFileName) {
         File toFile = new File(toFileName);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFile))) {
-            String supplyString = "supply" + "," + supply;
-            String buyString = "buy" + "," + buy;
-            String resultString = "result" + "," + (supply - buy);
-            writer.write(supplyString);
-            writer.newLine();
-            writer.write(buyString);
-            writer.newLine();
-            writer.write(resultString);
+            writer.write(reportData);
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file " + toFileName, e);
         }
