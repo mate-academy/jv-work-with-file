@@ -8,12 +8,14 @@ import java.io.IOException;
 
 public class WorkWithFile {
     private static final char COMMA = ',';
+    private static final String BUY = "buy";
+    private static final String SUPPLY = "supply";
+    private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
         StringBuilder stringBuilder = readFile(fromFileName);
         String calculatedData = calculateData(stringBuilder);
         writeCalculatedData(calculatedData, toFileName);
-
     }
 
     private void writeCalculatedData(String calculatedData, String toFileName) {
@@ -31,8 +33,7 @@ public class WorkWithFile {
         String[] strings = stringBuilder.toString().split(System.lineSeparator());
         for (String string : strings) {
             String[] strings1 = string.split(String.valueOf(COMMA));
-            //  Created enum "Category"
-            if (strings1[0].equals(Category.values()[0].toString())) {
+            if (strings1[0].equals(BUY)) {
                 buySum += Integer.parseInt(strings1[1]);
             } else {
                 supplySum += Integer.parseInt(strings1[1]);
@@ -41,12 +42,9 @@ public class WorkWithFile {
         result = supplySum - buySum;
         stringBuilder = new StringBuilder();
         return stringBuilder
-                .append(Category.values()[2].toString()).append(COMMA).append(supplySum)
-                .append(System.lineSeparator())
-                .append(Category.values()[0].toString()).append(COMMA).append(buySum)
-                .append(System.lineSeparator())
-                .append(Category.values()[1].toString()).append(COMMA).append(result).toString();
-
+                .append(SUPPLY).append(COMMA).append(supplySum).append(System.lineSeparator())
+                .append(BUY).append(COMMA).append(buySum).append(System.lineSeparator())
+                .append(RESULT).append(COMMA).append(result).toString();
     }
 
     private StringBuilder readFile(String fromFileName) {
