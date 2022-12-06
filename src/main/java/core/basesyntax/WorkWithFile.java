@@ -38,26 +38,26 @@ public class WorkWithFile {
 
     private String createReport(String dataFromFile) {
         StringBuilder stringBuilder = new StringBuilder();
-        int Buysum = 0;
-        int Supplysum = 0;
+        int buySum = 0;
+        int supplySum = 0;
         try (BufferedReader bufferedReader = new BufferedReader(new StringReader(dataFromFile))) {
             String value;
             while ((value = bufferedReader.readLine()) != null) {
                 String [] arrayFile = value.split(SEPARATOR_CHAR);
                 if (arrayFile[VALUE_INDEX].equals(BUY_WORD)) {
-                    Buysum += Integer.parseInt(arrayFile[NUMBER_INDEX]);
+                    buySum += Integer.parseInt(arrayFile[NUMBER_INDEX]);
                 } else {
-                    Supplysum += Integer.parseInt(arrayFile[NUMBER_INDEX]);
+                    supplySum += Integer.parseInt(arrayFile[NUMBER_INDEX]);
                 }
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't create file" + dataFromFile, e);
         }
-        return stringBuilder.append(SUPPLY_WORD).append(SEPARATOR_CHAR).append(Supplysum)
+        return stringBuilder.append(SUPPLY_WORD).append(SEPARATOR_CHAR).append(supplySum)
                 .append(System.lineSeparator())
-                .append(BUY_WORD).append(SEPARATOR_CHAR).append(Buysum)
+                .append(BUY_WORD).append(SEPARATOR_CHAR).append(buySum)
                 .append(System.lineSeparator())
-                .append(RESULT_WORD).append(SEPARATOR_CHAR).append(Supplysum - Buysum)
+                .append(RESULT_WORD).append(SEPARATOR_CHAR).append(supplySum - buySum)
                 .toString();
     }
 
