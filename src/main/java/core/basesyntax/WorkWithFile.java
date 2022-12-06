@@ -9,26 +9,23 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class WorkWithFile {
-
-    private static final String COMMA_DELIMITER = ",";
-    private static final String SPACE_DELIMITER = " ";
+    public static final int OPERATION_TYPE_COLOMN = 0;
+    public static final int AMMOUNT_COLOMN = 1;
 
     public void getStatistic(String fromFileName,
                              String toFileName) {
-        String lines = getString(fromFileName);
-
+        String lines = readFromFile(fromFileName);
         String report = getReport(lines);
-
         writeReport(toFileName, report);
     }
 
-    private static String getString(String fromFileName) {
+    private static String readFromFile(String fromFileName) {
         String lines;
-        StringBuilder stringBuilder = new StringBuilder();
+        StringBuilder linesBuilder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));) {
             lines = bufferedReader.readLine();
             while (lines != null) {
-                stringBuilder.append(lines).append(" ");
+                linesBuilder.append(lines).append(" ");
                 lines = bufferedReader.readLine();
             }
         } catch (FileNotFoundException e) {
@@ -36,30 +33,23 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from the file " + fromFileName, e);
         }
-        lines = stringBuilder.toString();
-        return lines;
+        return linesBuilder.toString();
     }
 
     private static String getReport(String lines) {
         StringBuilder reportBuilder = new StringBuilder();
-        String[] values = lines.split(SPACE_DELIMITER);
+        String[] values = lines.split(" ");
         int sumSupply = 0;
         int sumBuy = 0;
         for (String value : values) {
-            String[] line = value.split(COMMA_DELIMITER);
-            if (line[0].equals("supply")) {
-                sumSupply += Integer.parseInt(line[1]);
+            String[] line = value.split(",");
+            if (line[OPERATION_TYPE_COLOMN].equals("supply")) {
+                sumSupply += Integer.parseInt(line[AMMOUNT_COLOMN]);
             } else {
-                sumBuy += Integer.parseInt(line[1]);
+                sumBuy += Integer.parseInt(line[AMMOUNT_COLOMN]);
             }
         }
         int result = sumSupply - sumBuy;
-        String report = createReport(reportBuilder, sumSupply, sumBuy, result);
-        return report;
-    }
-
-    private static String createReport(StringBuilder reportBuilder,
-                                       int sumSupply, int sumBuy, int result) {
         reportBuilder.append("supply")
                 .append(",")
                 .append(sumSupply);
@@ -71,8 +61,7 @@ public class WorkWithFile {
                 .append("result")
                 .append(",")
                 .append(result);
-        String report = reportBuilder.toString();
-        return report;
+        return reportBuilder.toString();
     }
 
     private static void writeReport(String toFileName, String report) {
