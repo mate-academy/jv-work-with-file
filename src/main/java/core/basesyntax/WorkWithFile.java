@@ -22,18 +22,17 @@ public class WorkWithFile {
     }
 
     private String readFile(String fromFileName) {
-        StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
-            String value = reader.readLine();
-            while (value != null) {
-                value = reader.readLine();
+            StringBuilder stringBuilder = new StringBuilder();
+            String value;
+            while ((value = reader.readLine()) != null) {
                 stringBuilder.append(value)
                         .append(System.lineSeparator());
             }
+            return stringBuilder.toString();
         } catch (IOException e) {
             throw new RuntimeException("Can't read from file", e);
         }
-        return stringBuilder.toString();
     }
 
     private String createReport(String dataFromFile) {
@@ -62,7 +61,7 @@ public class WorkWithFile {
     }
 
     private void writeToFile(String input, String toFileName) {
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true))) {
             bufferedWriter.write(input);
         } catch (IOException e) {
             throw new RuntimeException("Can't write to this file", e);
