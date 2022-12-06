@@ -5,7 +5,6 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.StringReader;
 
 public class WorkWithFile {
     private static final String SUPPLY_WORD = "supply";
@@ -16,9 +15,7 @@ public class WorkWithFile {
     private static final int NUMBER_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String dataFromFile = readFile(fromFileName);
-        String report = createReport(dataFromFile);
-        writeToFile(report, toFileName);
+        writeToFile(createReport(fromFileName), toFileName);
     }
 
     private String readFile(String fromFileName) {
@@ -31,26 +28,23 @@ public class WorkWithFile {
             }
             return stringBuilder.toString();
         } catch (IOException e) {
-            throw new RuntimeException("Can't read from file", e);
+            throw new RuntimeException("Can't read this file" + fromFileName, e);
         }
     }
 
-    private String createReport(String dataFromFile) {
+    private String createReport(String fromFileName) {
         StringBuilder stringBuilder = new StringBuilder();
         int buySum = 0;
         int supplySum = 0;
-        try (BufferedReader bufferedReader = new BufferedReader(new StringReader(dataFromFile))) {
-            String value;
-            while ((value = bufferedReader.readLine()) != null) {
-                String [] arrayFile = value.split(SEPARATOR_CHAR);
-                if (arrayFile[VALUE_INDEX].equals(BUY_WORD)) {
-                    buySum += Integer.parseInt(arrayFile[NUMBER_INDEX]);
-                } else {
-                    supplySum += Integer.parseInt(arrayFile[NUMBER_INDEX]);
-                }
+        String [] data = readFile(fromFileName).split(System.lineSeparator());
+        for (String line :
+                data) {
+            String[] lineArray = line.split(SEPARATOR_CHAR);
+            if (lineArray[VALUE_INDEX].equals(SUPPLY_WORD)) {
+                supplySum += Integer.parseInt(lineArray[NUMBER_INDEX]);
+            } else {
+                buySum += Integer.parseInt(lineArray[NUMBER_INDEX]);
             }
-        } catch (IOException e) {
-            throw new RuntimeException("Can't create file" + dataFromFile, e);
         }
         return stringBuilder.append(SUPPLY_WORD).append(SEPARATOR_CHAR).append(supplySum)
                 .append(System.lineSeparator())
@@ -64,7 +58,7 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true))) {
             bufferedWriter.write(input);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write to this file", e);
+            throw new RuntimeException("Can't write to this file" + toFileName, e);
         }
     }
 }
