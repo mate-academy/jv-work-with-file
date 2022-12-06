@@ -19,9 +19,8 @@ public class WorkWithFile {
     }
 
     private String readFromFile(String fromFileName) {
-        try {
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             StringBuilder builder = new StringBuilder();
-            BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
             String value = reader.readLine();
             while (value != null) {
                 builder.append(value)
