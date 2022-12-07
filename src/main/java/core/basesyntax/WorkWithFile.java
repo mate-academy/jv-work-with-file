@@ -34,18 +34,18 @@ public class WorkWithFile {
     }
 
     private static String getReport(String lines) {
-        final int OPERATION_TYPE_INDEX = 0;
-        final int AMOUNT_INDEX = 1;
+        final int operationTypeIndex = 0;
+        final int amountIndex = 1;
         StringBuilder reportBuilder = new StringBuilder();
         String[] splitLines = lines.split(" ");
         int sumSupply = 0;
         int sumBuy = 0;
         for (String line : splitLines) {
             String[] splitLine = line.split(",");
-            if (splitLine[OPERATION_TYPE_INDEX].equals("supply")) {
-                sumSupply += Integer.parseInt(splitLine[AMOUNT_INDEX]);
+            if (splitLine[operationTypeIndex].equals("supply")) {
+                sumSupply += Integer.parseInt(splitLine[amountIndex]);
             } else {
-                sumBuy += Integer.parseInt(splitLine[AMOUNT_INDEX]);
+                sumBuy += Integer.parseInt(splitLine[amountIndex]);
             }
         }
         int result = sumSupply - sumBuy;
