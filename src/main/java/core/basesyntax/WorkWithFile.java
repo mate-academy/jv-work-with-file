@@ -1,7 +1,13 @@
 package core.basesyntax;
 
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class WorkWithFile {
     private static final String SUPPLY = "supply";
@@ -11,33 +17,33 @@ public class WorkWithFile {
     private static final int COUNT_BY_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        File file = new File(fromFileName);
-        writingFile(toFileName);
+        File readFile = new File(fromFileName);
+        File writeFile = new File(toFileName);
         try {
-            readingFile(file);
+            readingFile(readFile, writeFile);
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("Can't find file", e);
+            throw new RuntimeException("Can't read data from file", e);
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't write data to file", e);
         }
     }
 
-    private void readingFile(File file) throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader(file));
+    private void readingFile(File readFile, File writeFile) throws IOException {
+        BufferedReader reader = new BufferedReader(new FileReader(readFile));
         StringBuilder builder = new StringBuilder();
         String value = reader.readLine();
         while (value != null) {
             builder.append(value).append(System.lineSeparator());
             value = reader.readLine();
         }
-        String[] readInfo = builder.toString().split(System.lineSeparator());
-        preparingResult(readInfo);
+        String[] informationRead = builder.toString().split(System.lineSeparator());
+        preparingResult(informationRead, writeFile);
     }
 
-    private void preparingResult(String[] readInfo) throws IOException {
+    private void preparingResult(String[] informationRead, File writeFile) throws IOException {
         int supplyCount = 0;
         int buyCount = 0;
-        for (String infoFromFile : readInfo) {
+        for (String infoFromFile : informationRead) {
             String[] listFromFile = infoFromFile.split(",");
             for (int i = 0; i < listFromFile.length; i++) {
                 if (listFromFile[SEARCH_BY_INDEX].equals(SUPPLY)) {
@@ -48,28 +54,26 @@ public class WorkWithFile {
                 }
             }
         }
-        resultFile(supplyCount, buyCount);
+        resultFile(supplyCount, buyCount, writeFile);
     }
 
-    private void resultFile(int supplyCount, int buyCount) throws IOException {
-        StringBuilder builder = new StringBuilder();
+    private void resultFile(int supplyCount, int buyCount, File writeFile) throws IOException {
         int result = supplyCount - buyCount;
-        builder.append(SUPPLY)
-                .append(",").append(supplyCount)
-                .append(System.lineSeparator())
-                .append(BUY)
-                .append(",")
-                .append(buyCount)
-                .append(System.lineSeparator())
-                .append(RESULT).append(",")
-                .append(result);
-        String writeInfo = builder.toString();
-        writingFile(writeInfo);
+        String readInfo = SUPPLY +
+                "," + supplyCount +
+                System.lineSeparator() +
+                BUY +
+                "," +
+                buyCount +
+                System.lineSeparator() +
+                RESULT + "," +
+                result;
+        writingFile(readInfo, writeFile);
     }
 
-    private void writingFile(String writeInfo) throws IOException {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(writeInfo, true))) {
-            writer.write(writeInfo);
+    private void writingFile(String readInfo, File writeFile) throws IOException {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(writeFile, true))) {
+            writer.write(readInfo);
         }
     }
 }
