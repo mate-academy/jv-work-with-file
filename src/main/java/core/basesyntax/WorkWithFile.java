@@ -13,19 +13,9 @@ public class WorkWithFile {
     private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int supplySum = 0;
-        int buySum = 0;
-        String[] fileData = readFile(fromFileName).split(System.lineSeparator());
-        for (String line : fileData) {
-            String[] splitLine = line.split(DATA_SEPARATOR);
-            if (splitLine[OPERATION_INDEX].equals(SUPPLY_OPERATION)) {
-                supplySum += Integer.parseInt(splitLine[AMOUNT_INDEX]);
-            } else if (splitLine[OPERATION_INDEX].equals(BUY_OPERATION)) {
-                buySum += Integer.parseInt(splitLine[AMOUNT_INDEX]);
-            }
-        }
-        String report = buildReport(supplySum, buySum);
-        writeFile(toFileName, report);
+        String fileData = readFile(fromFileName);
+        String report = buildReport(fileData);
+        writeToFile(toFileName, report);
     }
 
     private String readFile(String fromFileName) {
@@ -39,7 +29,7 @@ public class WorkWithFile {
         return fileData;
     }
 
-    private void writeFile(String toFileName, String report) {
+    private void writeToFile(String toFileName, String report) {
         File file = new File(toFileName);
         try {
             Files.writeString(file.toPath(), report);
@@ -48,7 +38,18 @@ public class WorkWithFile {
         }
     }
 
-    private String buildReport(int supplySum, int buySum) {
+    private String buildReport(String fileData) {
+        String[] dataLines = fileData.split(System.lineSeparator());
+        int supplySum = 0;
+        int buySum = 0;
+        for (String line : dataLines) {
+            String[] splittedLine = line.split(DATA_SEPARATOR);
+            if (splittedLine[OPERATION_INDEX].equals(SUPPLY_OPERATION)) {
+                supplySum += Integer.parseInt(splittedLine[AMOUNT_INDEX]);
+            } else if (splittedLine[OPERATION_INDEX].equals(BUY_OPERATION)) {
+                buySum += Integer.parseInt(splittedLine[AMOUNT_INDEX]);
+            }
+        }
         StringBuilder reportBuilder = new StringBuilder();
         reportBuilder.append(SUPPLY_OPERATION).append(DATA_SEPARATOR).append(supplySum)
                 .append(System.lineSeparator())
