@@ -7,45 +7,52 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    public static final int OPERATION_TYPE_INDEX = 0;
+    public static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
+        String[] data = readerFile(fromFileName).split(" ");
+        String[] linesForReport = creatorReport(data);
+        writerFile(linesForReport, toFileName);
+    }
+
+    private String readerFile(String fileWithData) {
         StringBuilder stringBuilder = new StringBuilder();
-        BufferedReader bufferedReader = null;
-        try {
-            bufferedReader = new BufferedReader(new FileReader(fromFileName));
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileWithData))) {
             String value = bufferedReader.readLine();
             while (value != null) {
                 stringBuilder.append(value).append(' ');
                 value = bufferedReader.readLine();
             }
-            bufferedReader.close();
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't read file" + fileWithData, e);
         }
-        String[]data = stringBuilder.toString().split(" ");
+        return stringBuilder.toString();
+    }
+
+    private String[] creatorReport(String[] dataForReport) {
         int sumSupply = 0;
         int sumBuy = 0;
-        for (String partData : data) {
-            String[] element = partData.split(",");
-            if (element[0].equals("supply")) {
-                sumSupply += Integer.parseInt(element[1]);
+        for (String line : dataForReport) {
+            String[] element = line.split(",");
+            if (element[OPERATION_TYPE_INDEX].equals("supply")) {
+                sumSupply += Integer.parseInt(element[AMOUNT_INDEX]);
             } else {
-                sumBuy += Integer.parseInt(element[1]);
+                sumBuy += Integer.parseInt(element[AMOUNT_INDEX]);
             }
         }
-        String[] report = {("supply," + sumSupply), ("buy," + sumBuy),
+        return new String[] {("supply," + sumSupply), ("buy," + sumBuy),
                 ("result," + (sumSupply - sumBuy))};
-        BufferedWriter bufferedWriter = null;
-        try {
-            bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true));
-            for (String line : report) {
+    }
+
+    private void writerFile(String[] linesForReport, String report) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(report, true))) {
+            for (String line : linesForReport) {
                 bufferedWriter.write(line);
                 bufferedWriter.write(System.lineSeparator());
             }
-            bufferedWriter.close();
         } catch (IOException e) {
-            throw new RuntimeException("Can't write file", e);
+            throw new RuntimeException("Can't write file" + report, e);
         }
-
     }
 }
