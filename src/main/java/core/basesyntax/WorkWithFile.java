@@ -9,6 +9,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class WorkWithFile {
+    private static final int OPERATION_TYPE_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
+
     public void getStatistic(String fromFileName,
                              String toFileName) {
         String lines = readFromFile(fromFileName);
@@ -34,18 +37,16 @@ public class WorkWithFile {
     }
 
     private static String getReport(String lines) {
-        final int operationTypeIndex = 0;
-        final int amountIndex = 1;
         StringBuilder reportBuilder = new StringBuilder();
         String[] splittedLines = lines.split(" ");
         int sumSupply = 0;
         int sumBuy = 0;
         for (String line : splittedLines) {
             String[] splittedLine = line.split(",");
-            if (splittedLine[operationTypeIndex].equals("supply")) {
-                sumSupply += Integer.parseInt(splittedLine[amountIndex]);
+            if (splittedLine[OPERATION_TYPE_INDEX].equals("supply")) {
+                sumSupply += Integer.parseInt(splittedLine[AMOUNT_INDEX]);
             } else {
-                sumBuy += Integer.parseInt(splittedLine[amountIndex]);
+                sumBuy += Integer.parseInt(splittedLine[AMOUNT_INDEX]);
             }
         }
         int result = sumSupply - sumBuy;
