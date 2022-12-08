@@ -37,15 +37,15 @@ public class WorkWithFile {
         final int operationTypeIndex = 0;
         final int amountIndex = 1;
         StringBuilder reportBuilder = new StringBuilder();
-        String[] splitLines = lines.split(" ");
+        String[] splittedLines = lines.split(" ");
         int sumSupply = 0;
         int sumBuy = 0;
-        for (String line : splitLines) {
-            String[] splitLine = line.split(",");
-            if (splitLine[operationTypeIndex].equals("supply")) {
-                sumSupply += Integer.parseInt(splitLine[amountIndex]);
+        for (String line : splittedLines) {
+            String[] splittedLine = line.split(",");
+            if (splittedLine[operationTypeIndex].equals("supply")) {
+                sumSupply += Integer.parseInt(splittedLine[amountIndex]);
             } else {
-                sumBuy += Integer.parseInt(splitLine[amountIndex]);
+                sumBuy += Integer.parseInt(splittedLine[amountIndex]);
             }
         }
         int result = sumSupply - sumBuy;
