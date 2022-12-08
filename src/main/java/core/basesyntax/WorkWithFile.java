@@ -47,8 +47,7 @@ public class WorkWithFile {
             for (int i = 1; i < listFromFile.length; i++) {
                 if (listFromFile[SEARCH_BY_INDEX].equals(SUPPLY)) {
                     supplyCount += Integer.parseInt(listFromFile[COUNT_BY_INDEX]);
-                }
-                if (listFromFile[SEARCH_BY_INDEX].equals(BUY)) {
+                } else {
                     buyCount += Integer.parseInt(listFromFile[COUNT_BY_INDEX]);
                 }
             }
