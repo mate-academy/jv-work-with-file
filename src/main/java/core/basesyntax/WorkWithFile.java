@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -45,7 +44,7 @@ public class WorkWithFile {
         int buyCount = 0;
         for (String infoFromFile : informationRead) {
             String[] listFromFile = infoFromFile.split(",");
-            for (int i = 0; i < listFromFile.length; i++) {
+            for (int i = 1; i < listFromFile.length; i++) {
                 if (listFromFile[SEARCH_BY_INDEX].equals(SUPPLY)) {
                     supplyCount += Integer.parseInt(listFromFile[COUNT_BY_INDEX]);
                 }
@@ -59,15 +58,14 @@ public class WorkWithFile {
 
     private void resultFile(int supplyCount, int buyCount, File writeFile) throws IOException {
         int result = supplyCount - buyCount;
-        String readInfo = SUPPLY +
-                "," + supplyCount +
-                System.lineSeparator() +
-                BUY +
-                "," +
-                buyCount +
-                System.lineSeparator() +
-                RESULT + "," +
-                result;
+        String readInfo = SUPPLY
+                + "," + supplyCount
+                + System.lineSeparator()
+                + BUY + ","
+                + buyCount
+                + System.lineSeparator()
+                + RESULT + ","
+                + result;
         writingFile(readInfo, writeFile);
     }
 
