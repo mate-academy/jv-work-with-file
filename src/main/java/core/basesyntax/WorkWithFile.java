@@ -7,13 +7,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private final String SUPPL_YOPERATION = "supply";
-    private final String BUY_OPERATION = "buy";
-    private final String DATA_SEPARATOR = " ";
-    private final String CSV_SEPARATOR = ",";
-    private final String RESULT = "result";
-    private final int COLLUMN_INDEX_0 = 0;
-    private final int COLLUMN_INDEX_1 = 1;
+    public static final String SUPPL_YOPERATION = "supply";
+    public static final String BUY_OPERATION = "buy";
+    public static final String DATA_SEPARATOR = " ";
+    public static final String CSV_SEPARATOR = ",";
+    public static final String RESULT = "result";
+    public static final int COLLUMN_INDEX_0 = 0;
+    public static final int COLLUMN_INDEX_1 = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         writeToFile(report(readFile(fromFileName)), toFileName);
@@ -33,7 +33,7 @@ public class WorkWithFile {
         return stringBuilder.toString();
     }
 
-    public String report (String resultReport) {
+    public String report(String resultReport) {
         int supplySum = 0;
         int buySum = 0;
         String[] dataFromFileArray = resultReport.split(DATA_SEPARATOR);
