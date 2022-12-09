@@ -29,4 +29,9 @@ public class StatisticData {
     public int getValue() {
         return value;
     }
+
+    @Override
+    public String toString() {
+        return "type: " + operationType + "; value: " + value;
+    }
 }

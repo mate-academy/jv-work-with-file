@@ -12,21 +12,21 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
 
-        StatisticData[] operationData = new StatisticData[countLines(fromFileName)];
+        int linesNumber = countLines(fromFileName);
+        StatisticData[] operationData = new StatisticData[linesNumber];
         operationData = readFromFile(fromFileName);
 
         int supply = 0;
         int buy = 0;
         int result;
 
-        for (int i = 0; i < countLines(fromFileName); i++) {
+        for (int i = 0; i < linesNumber; i++) {
             if (operationData[i].getOperationType().equals("supply")) {
                 supply += operationData[i].getValue();
             } else {
                 buy += operationData[i].getValue();
             }
         }
-
 
         result = supply - buy;
 
@@ -37,21 +37,21 @@ public class WorkWithFile {
     private static StatisticData[] readFromFile(String fileName) {
 
         final int columnsNumber = 2;
+        final int linesNumber = countLines(fileName);
 
         File file = new File(fileName);
-        StatisticData[] data = new StatisticData[countLines(fileName)];
-
-        int dataCounter = 0;
+        StatisticData[] data = new StatisticData[linesNumber];
 
         try {
             BufferedReader buffReader = new BufferedReader(new FileReader(file));
             String value = buffReader.readLine();
             String[] lines = new String[columnsNumber];
+            int dataCounter = 0;
+            lines = value.split(",");
 
             while (value != null) {
                 lines = value.split(",");
-                data[dataCounter].setOperationType(lines[0]);
-                data[dataCounter].setValue(Integer.parseInt(lines[1]));
+                data[dataCounter] = new StatisticData(lines[0], Integer.parseInt(lines[1]));
                 dataCounter++;
                 value = buffReader.readLine();
             }
@@ -70,7 +70,7 @@ public class WorkWithFile {
         StringBuilder report = new StringBuilder();
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
             report.append("supply,").append(supply).append(System.lineSeparator()).append("buy,")
-                    .append(buy).append(System.lineSeparator()).append("result,");
+                    .append(buy).append(System.lineSeparator()).append("result,").append(result);
             writer.write(report.toString());
         } catch (IOException e) {
             throw new RuntimeException(e);
