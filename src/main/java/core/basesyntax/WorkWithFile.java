@@ -7,57 +7,56 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final char COMMA = ',';
     private static final String BUY = "buy";
     private static final String SUPPLY = "supply";
     private static final String RESULT = "result";
+    private static final int OPERATION_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         StringBuilder stringBuilder = readFile(fromFileName);
         String calculatedData = calculateData(stringBuilder);
-        writeCalculatedData(calculatedData, toFileName);
+        writeToFile(calculatedData, toFileName);
     }
 
-    private void writeCalculatedData(String calculatedData, String toFileName) {
+    private void writeToFile(String report, String toFileName) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true))) {
-            bufferedWriter.write(calculatedData);
+            bufferedWriter.write(report);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can`t write data to file ", e);
         }
     }
 
-    private String calculateData(StringBuilder stringBuilder) {
+    private String calculateData(StringBuilder reportBuilder) {
         int supplySum = 0;
         int buySum = 0;
-        int result = 0;
-        String[] strings = stringBuilder.toString().split(System.lineSeparator());
-        for (String string : strings) {
-            String[] strings1 = string.split(String.valueOf(COMMA));
-            if (strings1[0].equals(BUY)) {
-                buySum += Integer.parseInt(strings1[1]);
+        String[] lines = reportBuilder.toString().split(" ");
+        for (String line : lines) {
+            String[] splittedLine = line.split(String.valueOf(","));
+            if (splittedLine[OPERATION_INDEX].equals(BUY)) {
+                buySum += Integer.parseInt(splittedLine[AMOUNT_INDEX]);
             } else {
-                supplySum += Integer.parseInt(strings1[1]);
+                supplySum += Integer.parseInt(splittedLine[AMOUNT_INDEX]);
             }
         }
-        result = supplySum - buySum;
-        stringBuilder = new StringBuilder();
-        return stringBuilder
-                .append(SUPPLY).append(COMMA).append(supplySum).append(System.lineSeparator())
-                .append(BUY).append(COMMA).append(buySum).append(System.lineSeparator())
-                .append(RESULT).append(COMMA).append(result).toString();
+        reportBuilder = new StringBuilder();
+        return reportBuilder
+                .append(SUPPLY).append(",").append(supplySum).append(System.lineSeparator())
+                .append(BUY).append(",").append(buySum).append(System.lineSeparator())
+                .append(RESULT).append(",").append(supplySum - buySum).toString();
     }
 
     private StringBuilder readFile(String fromFileName) {
-        StringBuilder stringBuilder = new StringBuilder();
+        StringBuilder readDataBuilder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
-            int value = bufferedReader.read();
-            while (value != -1) {
-                stringBuilder.append((char) value);
-                value = bufferedReader.read();
+            String line = bufferedReader.readLine();
+            while (line != null) {
+                readDataBuilder.append(line).append(" ");
+                line = bufferedReader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return stringBuilder;
+        return readDataBuilder;
     }
 }
