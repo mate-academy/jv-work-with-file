@@ -12,7 +12,8 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
 
-        int linesNumber = countLines(fromFileName);
+        final int linesNumber = countLines(fromFileName);
+
         StatisticData[] operationData = new StatisticData[linesNumber];
         operationData = readFromFile(fromFileName);
 
@@ -31,7 +32,6 @@ public class WorkWithFile {
         result = supply - buy;
 
         writeToFile(supply, buy, result, toFileName);
-
     }
 
     private static StatisticData[] readFromFile(String fileName) {
@@ -42,12 +42,12 @@ public class WorkWithFile {
         File file = new File(fileName);
         StatisticData[] data = new StatisticData[linesNumber];
 
+        String[] lines = new String[columnsNumber];
+        int dataCounter = 0;
+
         try {
             BufferedReader buffReader = new BufferedReader(new FileReader(file));
             String value = buffReader.readLine();
-            String[] lines = new String[columnsNumber];
-            int dataCounter = 0;
-            lines = value.split(",");
 
             while (value != null) {
                 lines = value.split(",");
@@ -58,9 +58,9 @@ public class WorkWithFile {
         } catch (FileNotFoundException e) {
             throw new RuntimeException("Cannot open file", e);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("IO exception", e);
         } catch (NullPointerException e) {
-            System.out.println("Null pointer exception");
+            throw new RuntimeException("Null pointer exception");
         }
         return data;
     }
@@ -68,12 +68,13 @@ public class WorkWithFile {
     private void writeToFile(int supply, int buy, int result, String fileName) {
         File file = new File(fileName);
         StringBuilder report = new StringBuilder();
+
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
             report.append("supply,").append(supply).append(System.lineSeparator()).append("buy,")
                     .append(buy).append(System.lineSeparator()).append("result,").append(result);
             writer.write(report.toString());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("IO exception", e);
         }
     }
 

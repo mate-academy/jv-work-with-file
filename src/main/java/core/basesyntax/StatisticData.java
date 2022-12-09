@@ -10,10 +10,6 @@ public class StatisticData {
         this.value = value;
     }
 
-    public StatisticData() {
-
-    }
-
     public void setOperationType(String type) {
         this.operationType = type;
     }
@@ -28,10 +24,5 @@ public class StatisticData {
 
     public int getValue() {
         return value;
-    }
-
-    @Override
-    public String toString() {
-        return "type: " + operationType + "; value: " + value;
     }
 }
