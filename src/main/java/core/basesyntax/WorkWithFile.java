@@ -3,9 +3,9 @@ package core.basesyntax;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+import java.io.IOException;
 
 public class WorkWithFile {
     private final String supplyName = "supply";
