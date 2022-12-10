@@ -7,7 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    public static final String SUPPL_YOPERATION = "supply";
+    public static final String SUPPLY_OPERATION = "supply";
     public static final String BUY_OPERATION = "buy";
     public static final String DATA_SEPARATOR = " ";
     public static final String CSV_SEPARATOR = ",";
@@ -16,7 +16,7 @@ public class WorkWithFile {
     public static final int COLLUMN_INDEX_1 = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        writeToFile(report(readFile(fromFileName)), toFileName);
+        writeToFile(createReport(readFile(fromFileName)), toFileName);
     }
 
     private String readFile(String fromFileName) {
@@ -28,24 +28,24 @@ public class WorkWithFile {
                 line = bufferedReader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read this file...", e);
+            throw new RuntimeException("Can't read this file..." + fromFileName, e);
         }
         return stringBuilder.toString();
     }
 
-    public String report(String resultReport) {
+    public String createReport(String resultReport) {
         int supplySum = 0;
         int buySum = 0;
         String[] dataFromFileArray = resultReport.split(DATA_SEPARATOR);
         for (String s : dataFromFileArray) {
             String[] values = s.split(CSV_SEPARATOR);
-            if (values[COLLUMN_INDEX_0].equals(SUPPL_YOPERATION)) {
+            if (values[COLLUMN_INDEX_0].equals(SUPPLY_OPERATION)) {
                 supplySum += Integer.parseInt(values[COLLUMN_INDEX_1]);
             } else {
                 buySum += Integer.parseInt(values[COLLUMN_INDEX_1]);
             }
         }
-        return new StringBuilder().append(SUPPL_YOPERATION).append(CSV_SEPARATOR).append(supplySum)
+        return new StringBuilder().append(SUPPLY_OPERATION).append(CSV_SEPARATOR).append(supplySum)
                 .append(System.lineSeparator())
                 .append(BUY_OPERATION).append(CSV_SEPARATOR).append(buySum)
                 .append(System.lineSeparator())
@@ -57,7 +57,7 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(data);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write this data...", e);
+            throw new RuntimeException("Can't write this data..." + toFileName, e);
         }
     }
 }
