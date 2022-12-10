@@ -10,11 +10,13 @@ import java.io.IOException;
 
 public class WorkWithFile {
 
+    private static final int columnsNumber = 2;
+
     public void getStatistic(String fromFileName, String toFileName) {
 
         final int linesNumber = countLines(fromFileName);
 
-        StatisticData[] operationData = new StatisticData[linesNumber];
+        String[][] operationData = new String[linesNumber][columnsNumber];
         operationData = readFromFile(fromFileName);
 
         int supply = 0;
@@ -22,10 +24,10 @@ public class WorkWithFile {
         int result;
 
         for (int i = 0; i < linesNumber; i++) {
-            if (operationData[i].getOperationType().equals("supply")) {
-                supply += operationData[i].getValue();
+            if (operationData[i][0].equals("supply")) {
+                supply += Integer.parseInt(operationData[i][1]);
             } else {
-                buy += operationData[i].getValue();
+                buy += Integer.parseInt(operationData[i][1]);
             }
         }
 
@@ -34,26 +36,24 @@ public class WorkWithFile {
         writeToFile(supply, buy, result, toFileName);
     }
 
-    private static StatisticData[] readFromFile(String fileName) {
+    private static String[][] readFromFile(String fileName) {
 
-        final int columnsNumber = 2;
         final int linesNumber = countLines(fileName);
 
         File file = new File(fileName);
-        StatisticData[] data = new StatisticData[linesNumber];
+        String[][] data = new String[linesNumber][columnsNumber];
 
         String[] lines = new String[columnsNumber];
         int dataCounter = 0;
 
-        try {
-            BufferedReader buffReader = new BufferedReader(new FileReader(file));
-            String value = buffReader.readLine();
-
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String value = reader.readLine();
             while (value != null) {
                 lines = value.split(",");
-                data[dataCounter] = new StatisticData(lines[0], Integer.parseInt(lines[1]));
+                data[dataCounter][0] = lines[0];
+                data[dataCounter][1] = lines[1];
                 dataCounter++;
-                value = buffReader.readLine();
+                value = reader.readLine();
             }
         } catch (FileNotFoundException e) {
             throw new RuntimeException("Cannot open file", e);
@@ -89,5 +89,4 @@ public class WorkWithFile {
         }
         return lines;
     }
-
 }
