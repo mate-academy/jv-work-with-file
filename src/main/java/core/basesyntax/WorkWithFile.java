@@ -20,15 +20,15 @@ public class WorkWithFile {
         writeFile(toFileName, createReport(dataFromFile));
     }
 
-    private String[] readFile(String fromFileName) {
+    public String[] readFile(String fromFileName) {
         File file = new File(fromFileName);
         StringBuilder stringBuilder = new StringBuilder();
         String[] context = null;
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
-            int value = bufferedReader.read();
-            while (value != -1) {
-                stringBuilder.append((char) value);
-                value = bufferedReader.read();
+            String value = bufferedReader.readLine();
+            while (value != null) {
+                stringBuilder.append(value).append(System.lineSeparator());
+                value = bufferedReader.readLine();
             }
             context = stringBuilder.toString().split(System.lineSeparator());
         } catch (IOException e) {
