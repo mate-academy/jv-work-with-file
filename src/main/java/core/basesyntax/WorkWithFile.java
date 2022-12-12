@@ -2,7 +2,6 @@ package core.basesyntax;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -13,14 +12,16 @@ public class WorkWithFile {
     static final int INDEX_OF_NUMBER = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        writeToFile(fromFileName, toFileName);
+        ArrayList<String[]> lines = getListFromFile(fromFileName);
+        String report = getCalculatedResult(lines);
+        writeToFile(report, toFileName);
     }
 
-    public ArrayList<String[]> getListFromFile(File file) {
+    public ArrayList<String[]> getListFromFile(String froFileName) {
         String line;
         ArrayList<String[]> lines = new ArrayList<>();
         try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(froFileName));
             while ((line = bufferedReader.readLine()) != null) {
                 lines.add(line.split(","));
             }
@@ -36,10 +37,10 @@ public class WorkWithFile {
         StringBuilder stringBuilder = new StringBuilder();
         for (String[] list: lines) {
             if (list[INDEX_OF_WORD].equals("supply")) {
-                supply += Integer.parseInt(list[INDEX_OF_NUMBER].trim());
+                supply += Integer.parseInt(list[INDEX_OF_NUMBER]);
             }
             if (list[INDEX_OF_WORD].equals("buy")) {
-                buy += Integer.parseInt(list[INDEX_OF_NUMBER].trim());
+                buy += Integer.parseInt(list[INDEX_OF_NUMBER]);
             }
         }
         stringBuilder.append("supply,").append(supply).append(System.lineSeparator())
@@ -48,13 +49,10 @@ public class WorkWithFile {
         return stringBuilder.toString();
     }
 
-    public void writeToFile(String from, String to) {
-        File file = new File(from);
-        ArrayList<String[]> lines = getListFromFile(file);
-        String stringList = getCalculatedResult(lines);
+    public void writeToFile(String report, String toFileName) {
         try {
-            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(to));
-            bufferedWriter.write(stringList);
+            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName));
+            bufferedWriter.write(report);
             bufferedWriter.close();
         } catch (IOException e) {
             throw new RuntimeException("Exception 2", e);
