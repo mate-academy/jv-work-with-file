@@ -30,11 +30,11 @@ public class WorkWithFile {
         }
     }
 
-    public String getCalculatedResult(ArrayList<String[]> arrayList) {
+    public String getCalculatedResult(ArrayList<String[]> lines) {
         int supply = 0;
         int buy = 0;
         StringBuilder stringBuilder = new StringBuilder();
-        for (String[] list: arrayList) {
+        for (String[] list: lines) {
             if (list[INDEX_OF_WORD].equals("supply")) {
                 supply += Integer.parseInt(list[INDEX_OF_NUMBER].trim());
             }
@@ -49,7 +49,9 @@ public class WorkWithFile {
     }
 
     public void writeToFile(String from, String to) {
-        String stringList = getCalculatedResult(getListFromFile(new File(from)));
+        File file = new File(from);
+        ArrayList<String[]> lines = getListFromFile(file);
+        String stringList = getCalculatedResult(lines);
         try {
             BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(to));
             bufferedWriter.write(stringList);
