@@ -14,13 +14,18 @@ public class WorkWithFile {
     public static final String RESULT = "result";
     public static final int INDEX_OF_ACTION = 0;
     public static final int INDEX_OF_QUANTITY = 1;
-    private String[] stringsArray;
 
     public void getStatistic(String fromFileName, String toFileName) {
+        String dataFromFile = parseDataFromFile(fromFileName);
+        String reportString = createReport(dataFromFile);
+        writeReportToFile(toFileName, reportString);
+    }
+
+    private String createReport(String dataFromFile) {
         int supply = 0;
         int buy = 0;
         int result;
-        parseDataFromFile(fromFileName);
+        String[] stringsArray = dataFromFile.split(WHITESPACE);
         for (String value : stringsArray) {
             String[] temporaryArray = value.split(COMMA);
             if (temporaryArray[INDEX_OF_ACTION].equals(BUY)) {
@@ -30,14 +35,12 @@ public class WorkWithFile {
             }
         }
         result = supply - buy;
-        String reportString = SUPPLY + COMMA + supply + System.lineSeparator()
+        return SUPPLY + COMMA + supply + System.lineSeparator()
                 + BUY + COMMA + buy + System.lineSeparator()
                 + RESULT + COMMA + result;
-        String[] reportArray = reportString.split(WHITESPACE);
-        writeReportToFile(toFileName, reportArray);
     }
 
-    private void parseDataFromFile(String fromFileName) {
+    private String parseDataFromFile(String fromFileName) {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             StringBuilder stringBuilder = new StringBuilder();
             String value = bufferedReader.readLine();
@@ -45,20 +48,20 @@ public class WorkWithFile {
                 stringBuilder.append(value).append(WHITESPACE);
                 value = bufferedReader.readLine();
             }
-            stringsArray = stringBuilder.toString().split(WHITESPACE);
+            return stringBuilder.toString();
         } catch (IOException ioException) {
-            throw new RuntimeException("Can't read data from the file", ioException);
+            throw new RuntimeException("Can't read data from the file: "
+                    + fromFileName, ioException);
         }
     }
 
-    private static void writeReportToFile(String toFileName, String[] reportArray) {
-        for (String value : reportArray) {
-            try (BufferedWriter bufferedWriter = new BufferedWriter(
-                    new FileWriter(toFileName, true))) {
-                bufferedWriter.write(value);
-            } catch (IOException ioException) {
-                throw new RuntimeException("Can't write to the file", ioException);
-            }
+    private void writeReportToFile(String toFileName, String reportString) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(
+                new FileWriter(toFileName, true))) {
+            bufferedWriter.write(reportString);
+        } catch (IOException ioException) {
+            throw new RuntimeException("Can't write to the file"
+                    + toFileName, ioException);
         }
     }
 }
