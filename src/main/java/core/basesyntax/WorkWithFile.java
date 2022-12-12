@@ -25,7 +25,6 @@ public class WorkWithFile {
         int supply = 0;
         int buy = 0;
         int result;
-
         String[] stringsArray = dataFromFile.split(WHITESPACE);
         for (String value : stringsArray) {
             String[] temporaryArray = value.split(COMMA);
