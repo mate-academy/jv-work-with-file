@@ -46,7 +46,7 @@ public class WorkWithFile {
                 .append(RESULT_OF_THE_DAY)
                 .append(",")
                 .append(countOfSupply - countOfBuy);
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true))) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(resultOfDay.toString());
         } catch (IOException e) {
             throw new RuntimeException("Cannot write to the file" + e);
