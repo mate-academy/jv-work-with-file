@@ -68,5 +68,4 @@ public class WorkWithFile {
         result[2] = "result," + (sumSupply - sumBuy);
         return result;
     }
-
 }
