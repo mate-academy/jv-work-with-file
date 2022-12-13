@@ -42,8 +42,8 @@ public class WorkWithFile {
     private void writeToFile(String[] data, File fileName) {
         for (String str : data) {
             try {
-                Files.write(fileName.toPath(),
-                        (str + System.lineSeparator()).getBytes(), StandardOpenOption.APPEND);
+                Files.write(fileName.toPath(), (str + System.lineSeparator()).getBytes(),
+                        StandardOpenOption.APPEND);
             } catch (IOException e) {
                 throw new RuntimeException();
             }
