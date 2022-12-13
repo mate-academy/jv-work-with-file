@@ -9,7 +9,7 @@ import java.nio.file.StandardOpenOption;
 public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
-    private static final int INDEX_NAME = 0;
+    private static final int INDEX_NAMES = 0;
     private static final int INDEX_PRICE = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
@@ -56,10 +56,10 @@ public class WorkWithFile {
         int sumBuy = 0;
         for (String s : array) {
             String[] data = s.split(",");
-            if (data[INDEX_NAME].equals(SUPPLY)) {
+            if (data[INDEX_NAMES].equals(SUPPLY)) {
                 sumSupply += Integer.parseInt(data[INDEX_PRICE]);
             }
-            if (data[INDEX_NAME].equals(BUY)) {
+            if (data[INDEX_NAMES].equals(BUY)) {
                 sumBuy += Integer.parseInt(data[INDEX_PRICE]);
             }
         }
