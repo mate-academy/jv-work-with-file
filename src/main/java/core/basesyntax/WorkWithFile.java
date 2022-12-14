@@ -31,8 +31,8 @@ public class WorkWithFile {
 
     private String generateStat(List<String> readData) {
         int[] readStats = new int[3];
-        for (String readDatum : readData) {
-            String[] info = readDatum.split("\\W+");
+        for (String foundInfo : readData) {
+            String[] info = foundInfo.split("\\W+");
             if (info[DATA_TYPE_INDEX].equals("supply")) {
                 readStats[SUM_SUPPLY_INDEX] += Integer.parseInt(info[DATA_VALUE_INDEX]);
             } else {
