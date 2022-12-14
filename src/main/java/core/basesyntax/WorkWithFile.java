@@ -12,14 +12,14 @@ public class WorkWithFile {
     private static final int SUM_SUPPLY_INDEX = 0;
     private static final int SUM_BUY_INDEX = 1;
     private static final int SUM_RESULT_INDEX = 2;
-    
+    private int[] sum = new int[3];
+    private final StringBuilder builder = new StringBuilder();
+
     public void getStatistic(String fromFileName, String toFileName) {
-        int[] sum = new int[3];
 
         try {
             File file = new File(fromFileName);
             BufferedReader reader = new BufferedReader(new FileReader(file));
-            StringBuilder builder = new StringBuilder();
             String value = reader.readLine();
             while (value != null) {
                 String[] info = value.split(",");
@@ -30,15 +30,32 @@ public class WorkWithFile {
                 }
                 value = reader.readLine();
             }
-            sum[SUM_RESULT_INDEX] = sum[SUM_SUPPLY_INDEX] - sum[SUM_BUY_INDEX];
-            builder.append("supply,").append(sum[SUM_SUPPLY_INDEX]).append(System.lineSeparator())
-                    .append("buy,").append(sum[SUM_BUY_INDEX]).append(System.lineSeparator())
-                    .append("result,").append(sum[SUM_RESULT_INDEX]);
             file = new File(toFileName);
-            Files.write(file.toPath(), builder.toString().getBytes());
+            writeFile(file);
+
         } catch (IOException e) {
             throw new RuntimeException("Cannot create file", e);
         }
 
+    }
+
+    private void writeFile(File fileToWrite) {
+
+        try {
+            Files.write(fileToWrite.toPath(),generateStat(sum).getBytes());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        sum = new int[3];
+    }
+
+    private String generateStat(int[] incoming) {
+        incoming[SUM_RESULT_INDEX] = incoming[SUM_SUPPLY_INDEX] - incoming[SUM_BUY_INDEX];
+        builder.append("supply,").append(incoming[SUM_SUPPLY_INDEX]).append(System.lineSeparator())
+                .append("buy,").append(incoming[SUM_BUY_INDEX]).append(System.lineSeparator())
+                .append("result,").append(incoming[SUM_RESULT_INDEX]);
+        String result = builder.toString();
+        builder.setLength(0);
+        return result;
     }
 }
