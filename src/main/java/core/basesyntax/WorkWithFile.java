@@ -3,7 +3,6 @@ package core.basesyntax;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.StandardOpenOption;
 import java.util.List;
 
 public class WorkWithFile {
@@ -33,17 +32,13 @@ public class WorkWithFile {
     }
 
     private void writeToFile(String[] data, File fileName) {
-        if (fileName.exists()) {
-            fileName.delete();
-        }
-        for (String str : data) {
-            try {
-                fileName.createNewFile();
-                Files.write(fileName.toPath(), (str + System.lineSeparator()).getBytes(),
-                        StandardOpenOption.APPEND);
-            } catch (IOException e) {
-                throw new RuntimeException("Can't write file " + fileName + e);
-            }
+        try {
+            Files.writeString(
+                    fileName.toPath(),
+                    String.join(System.lineSeparator(), data)
+            );
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write file " + fileName + e);
         }
     }
 
