@@ -16,20 +16,9 @@ public class WorkWithFile {
     private final StringBuilder builder = new StringBuilder();
 
     public void getStatistic(String fromFileName, String toFileName) {
-
         try {
             File file = new File(fromFileName);
-            BufferedReader reader = new BufferedReader(new FileReader(file));
-            String value = reader.readLine();
-            while (value != null) {
-                String[] info = value.split(",");
-                if (info[DATA_TYPE_INDEX].equals("supply")) {
-                    sum[SUM_SUPPLY_INDEX] += Integer.parseInt(info[DATA_VALUE_INDEX]);
-                } else {
-                    sum[SUM_BUY_INDEX] += Integer.parseInt(info[DATA_VALUE_INDEX]);
-                }
-                value = reader.readLine();
-            }
+            readFile(file);
             file = new File(toFileName);
             writeFile(file);
 
@@ -39,14 +28,21 @@ public class WorkWithFile {
 
     }
 
-    private void writeFile(File fileToWrite) {
-
-        try {
-            Files.write(fileToWrite.toPath(),generateStat(sum).getBytes());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+    private int[] readFile(File file) throws IOException {
+        BufferedReader reader = new BufferedReader(new FileReader(file));
+        String value = reader.readLine();
+        int[] readStats = new int[sum.length];
+        while (value != null) {
+            String[] info = value.split(",");
+            if (info[DATA_TYPE_INDEX].equals("supply")) {
+                readStats[SUM_SUPPLY_INDEX] += Integer.parseInt(info[DATA_VALUE_INDEX]);
+            } else {
+                readStats[SUM_BUY_INDEX] += Integer.parseInt(info[DATA_VALUE_INDEX]);
+            }
+            value = reader.readLine();
         }
-        sum = new int[3];
+        sum = readStats;
+        return sum;
     }
 
     private String generateStat(int[] incoming) {
@@ -57,5 +53,15 @@ public class WorkWithFile {
         String result = builder.toString();
         builder.setLength(0);
         return result;
+    }
+
+    private int[] writeFile(File fileToWrite) {
+        try {
+            Files.write(fileToWrite.toPath(),generateStat(sum).getBytes());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        sum = new int[3];
+        return sum;
     }
 }
