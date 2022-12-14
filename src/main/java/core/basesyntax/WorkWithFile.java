@@ -1,27 +1,15 @@
 package core.basesyntax;
 
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static WorkWithFile workWithFile = new WorkWithFile();
+    private static ReadData readData = new ReadData();
+
     public void getStatistic(String fromFileName, String toFileName) {
-        WorkWithFile workWithFile = new WorkWithFile();
-        try {
-            File file = new File(toFileName);
-            file.createNewFile();
-        } catch (IOException e) {
-            throw new RuntimeException("Error");
-        }
-        ReadData readData = new ReadData();
-        String dataFromFile = readData.readFile(fromFileName);
-        String report = workWithFile.createReport(dataFromFile);
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            writer.write(report);
-        } catch (IOException e) {
-            throw new RuntimeException("Can`t write to file");
-        }
+        workWithFile.writeData(fromFileName, toFileName);
     }
 
     public String createReport(String data) {
@@ -43,5 +31,13 @@ public class WorkWithFile {
                 .append("buy").append(",").append(buy).append(System.lineSeparator())
                 .append("result").append(",").append(result);
         return builder.toString();
+    }
+
+    private void writeData(String fromFileName, String toFileName) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
+            writer.write(workWithFile.createReport(readData.readFile(fromFileName)));
+        } catch (IOException e) {
+            throw new RuntimeException("Can`t write to file");
+        }
     }
 }
