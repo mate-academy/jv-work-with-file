@@ -11,13 +11,23 @@ public class WorkWithFile {
     private static final String NAME_SUPPLY = "supply";
     private static final String NAME_BUY = "buy";
     private static final String NAME_RESULT = "result";
+    private static final int DATA_NUMBER = 1;
+    public int supplyData = 0;
+    public int buyData = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
+        getReport(fromFileName, toFileName);
+    }
+
+    public void getReport(String fromFileName, String toFileName) {
         File file = new File(toFileName);
-        if (file.exists()) {
-            return;
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            writer.write("");
+            writer.flush();
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write changes", e);
         }
-        for (String row : getReport(fromFileName)) {
+        for (String row : getReportData(fromFileName)) {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName, true))) {
                 writer.write(row + System.lineSeparator());
             } catch (IOException e) {
@@ -26,50 +36,32 @@ public class WorkWithFile {
         }
     }
 
-    public int getSupplyData(String fromFileName) {
+    public void getSupplyData(String fromFileName) {
         File file = new File(fromFileName);
-        int supplyData = 0;
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String rowFromFile = reader.readLine();
-            String[] separateData = new String[2];
+            String[] separateData;
             while (rowFromFile != null) {
                 if (rowFromFile.contains(NAME_SUPPLY)) {
                     separateData = rowFromFile.split(",");
-                    supplyData += Integer.parseInt(separateData[1]);
-                }
-                rowFromFile = reader.readLine();
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("Can't read file" + file, e);
-        }
-        return supplyData;
-    }
-
-    public int getBuyData(String fromFileName) {
-        File file = new File(fromFileName);
-        int buy = 0;
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            String rowFromFile = reader.readLine();
-            String[] separateData = new String[2];
-            while (rowFromFile != null) {
-                if (rowFromFile.contains(NAME_BUY)) {
+                    supplyData += Integer.parseInt(separateData[DATA_NUMBER]);
+                } else if (rowFromFile.contains(NAME_BUY)) {
                     separateData = rowFromFile.split(",");
-                    buy += Integer.parseInt(separateData[1]);
+                    buyData += Integer.parseInt(separateData[DATA_NUMBER]);
                 }
                 rowFromFile = reader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read file" + file, e);
         }
-        return buy;
     }
 
-    public String[] getReport(String fromFileName) {
+    public String[] getReportData(String fromFileName) {
+        String result = String.valueOf(supplyData - buyData);
         String[] report = new String[3];
-        report[0] = NAME_SUPPLY + "," + String.valueOf(getSupplyData(fromFileName));
-        report[1] = NAME_BUY + "," + String.valueOf(getBuyData(fromFileName));
-        report[2] = NAME_RESULT + "," + String.valueOf(getSupplyData(fromFileName)
-                - getBuyData(fromFileName));
+        report[0] = NAME_SUPPLY + "," + String.valueOf(supplyData);
+        report[1] = NAME_BUY + "," + String.valueOf(buyData);
+        report[2] = NAME_RESULT + "," + result;
         return report;
     }
 }
