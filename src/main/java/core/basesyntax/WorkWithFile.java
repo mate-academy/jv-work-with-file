@@ -14,6 +14,12 @@ public class WorkWithFile {
     private static final String RESULT_OF_THE_DAY = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
+        String readData = readReport(fromFileName);
+        String report = getReport(readData);
+        writeReport(toFileName, report);
+    }
+
+    private String readReport(String fromFileName) {
         StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String value = bufferedReader.readLine();
@@ -24,7 +30,11 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("File is empty" + e);
         }
-        String[] listFromDay = stringBuilder.toString().split(" ");
+        return stringBuilder.toString();
+    }
+
+    private String getReport(String readData) {
+        String[] listFromDay = readData.split(" ");
         StringBuilder resultOfDay = new StringBuilder();
         int countOfBuy = 0;
         int countOfSupply = 0;
@@ -46,8 +56,12 @@ public class WorkWithFile {
                 .append(RESULT_OF_THE_DAY)
                 .append(",")
                 .append(countOfSupply - countOfBuy);
+        return resultOfDay.toString();
+    }
+
+    private void writeReport(String toFileName, String report) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write(resultOfDay.toString());
+            bufferedWriter.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Cannot write to the file" + e);
         }
