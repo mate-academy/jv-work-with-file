@@ -11,7 +11,7 @@ public class WorkWithFile {
     private static final int SUM_SUPPLY_INDEX = 0;
     private static final int SUM_BUY_INDEX = 1;
     private static final int SUM_RESULT_INDEX = 2;
-    private final StringBuilder builder = new StringBuilder();
+    private static final int DATA_AMOUNT = 3;
 
     public void getStatistic(String fromFileName, String toFileName) {
         List<String> readData = readFile(new File(fromFileName));
@@ -20,17 +20,15 @@ public class WorkWithFile {
     }
 
     private List<String> readFile(File file) {
-        List<String> strings;
         try {
-            strings = Files.readAllLines(file.toPath());
+            return Files.readAllLines(file.toPath());
         } catch (IOException e) {
             throw new RuntimeException("Cannot read file", e);
         }
-        return strings;
     }
 
     private String generateStat(List<String> readData) {
-        int[] readStats = new int[3];
+        int[] readStats = new int[DATA_AMOUNT];
         for (String foundInfo : readData) {
             String[] info = foundInfo.split("\\W+");
             if (info[DATA_TYPE_INDEX].equals("supply")) {
@@ -39,6 +37,7 @@ public class WorkWithFile {
                 readStats[SUM_BUY_INDEX] += Integer.parseInt(info[DATA_VALUE_INDEX]);
             }
         }
+        StringBuilder builder = new StringBuilder();
         readStats[SUM_RESULT_INDEX] = readStats[SUM_SUPPLY_INDEX] - readStats[SUM_BUY_INDEX];
         builder.append("supply,").append(readStats[SUM_SUPPLY_INDEX]).append(System.lineSeparator())
                 .append("buy,").append(readStats[SUM_BUY_INDEX]).append(System.lineSeparator())
@@ -50,7 +49,7 @@ public class WorkWithFile {
 
     private void writeFile(String statistics, File fileToWrite) {
         try {
-            Files.write(fileToWrite.toPath(),statistics.getBytes());
+            Files.write(fileToWrite.toPath(), statistics.getBytes());
         } catch (IOException e) {
             throw new RuntimeException("Cannot create file", e);
         }
