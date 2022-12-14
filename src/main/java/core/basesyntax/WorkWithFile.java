@@ -15,7 +15,7 @@ public class WorkWithFile {
         File files = new File(toFileName);
         int[] results = new int[3];
         if (files.exists()) {
-            return;
+            files.delete();
         }
         readFile(fromFileName, results);
         results[2] = results[0] - results[1];
