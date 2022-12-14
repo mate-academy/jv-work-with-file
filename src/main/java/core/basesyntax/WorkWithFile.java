@@ -7,9 +7,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final String FIRST_PARAMETR = "supply";
-    private static final String SECOND_PARAMETR = "buy";
-    private static final String THIRD_PARAMETR = "result";
+    private static final String FIRST_PARAMETER = "supply";
+    private static final String SECOND_PARAMETER = "buy";
+    private static final String THIRD_PARAMETER = "result";
     private static final String SEPARATOR = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
@@ -36,20 +36,20 @@ public class WorkWithFile {
 
     private String createReport(String readFromFile) {
         StringBuilder stringBuilder = new StringBuilder();
-        String[] splitted = readFromFile.split(";");
+        String[] splitter = readFromFile.split(";");
         int supplySum = 0;
         int buySum = 0;
-        for (String element : splitted) {
-            supplySum += element.charAt(0) == FIRST_PARAMETR.charAt(0) ? Integer.parseInt(element
-                    .substring(FIRST_PARAMETR.length() + 1)) : 0;
-            buySum += element.charAt(0) == SECOND_PARAMETR.charAt(0) ? Integer.parseInt(element
-                    .substring(SECOND_PARAMETR.length() + 1)) : 0;
+        for (String element : splitter) {
+            supplySum += element.charAt(0) == FIRST_PARAMETER.charAt(0) ? Integer.parseInt(element
+                    .substring(FIRST_PARAMETER.length() + 1)) : 0;
+            buySum += element.charAt(0) == SECOND_PARAMETER.charAt(0) ? Integer.parseInt(element
+                    .substring(SECOND_PARAMETER.length() + 1)) : 0;
         }
-        return stringBuilder.append(FIRST_PARAMETR).append(SEPARATOR).append(supplySum)
+        return stringBuilder.append(FIRST_PARAMETER).append(SEPARATOR).append(supplySum)
                 .append(System.lineSeparator())
-                .append(SECOND_PARAMETR).append(SEPARATOR).append(buySum)
+                .append(SECOND_PARAMETER).append(SEPARATOR).append(buySum)
                 .append(System.lineSeparator())
-                .append(THIRD_PARAMETR).append(SEPARATOR).append(supplySum - buySum).toString();
+                .append(THIRD_PARAMETER).append(SEPARATOR).append(supplySum - buySum).toString();
     }
 
     private void writeReport(String report, String fileName) {
