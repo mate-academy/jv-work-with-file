@@ -16,7 +16,9 @@ public class WorkWithFile {
     private static final String DIFFERENCE_BETWEEN_SUPPLY_AND_BUY = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        writeFile(toFileName, fromFileName);
+        String data = readFile(fromFileName);
+        String report = reportBuild(data);
+        writeFile(toFileName, report);
     }
 
     private String readFile(String fromFileName) {
@@ -35,37 +37,32 @@ public class WorkWithFile {
         return builder.toString();
     }
 
-    private int [] calculateBuyAndSupply(String fromFileName) {
-        int sumOffSupply = 0;
-        int sumOffBuy = 0;
-        String[] data = readFile(fromFileName).split(System.lineSeparator());
-        for (String reportLine : data) {
-            String [] lines = reportLine.split(",");
-            if (lines[BUY_INDEX].equals("buy")) {
-                sumOffBuy += Integer.parseInt(lines[SUPPLY_INDEX]);
-            } else if (lines[BUY_INDEX].equals("supply")) {
-                sumOffSupply += Integer.parseInt(lines[SUPPLY_INDEX]);
-            }
-        }
-        return new int[]{sumOffSupply, sumOffBuy};
-    }
-
-    private void writeFile(String toFileName, String fromFileName) {
+    private void writeFile(String toFileName, String dataWithReport) {
         File file = new File(toFileName);
         try {
-            Files.writeString(file.toPath(),
-                    reportBuild(calculateBuyAndSupply(fromFileName)));
+            Files.writeString(file.toPath(), dataWithReport);
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file", e);
         }
     }
 
-    private String reportBuild(int [] array) {
-        return SUPPLY_LINE + SEPARATOR + array[0]
+    private String reportBuild(String readData) {
+        int sumOffSupply = 0;
+        int sumOffBuy = 0;
+        String[] data = readData.split(System.lineSeparator());
+        for (String reportLine : data) {
+            String[] lines = reportLine.split(SEPARATOR);
+            if (lines[BUY_INDEX].equals(BUY_LINE)) {
+                sumOffBuy += Integer.parseInt(lines[SUPPLY_INDEX]);
+            } else if (lines[BUY_INDEX].equals(SUPPLY_LINE)) {
+                sumOffSupply += Integer.parseInt(lines[SUPPLY_INDEX]);
+            }
+        }
+        return SUPPLY_LINE + SEPARATOR + sumOffSupply
                 + System.lineSeparator()
-                + BUY_LINE + SEPARATOR + array[1]
+                + BUY_LINE + SEPARATOR + sumOffBuy
                 + System.lineSeparator()
                 + DIFFERENCE_BETWEEN_SUPPLY_AND_BUY + SEPARATOR
-                + (array[0] - array[1]);
+                + (sumOffSupply - sumOffBuy);
     }
 }
