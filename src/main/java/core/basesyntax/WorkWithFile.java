@@ -20,9 +20,8 @@ public class WorkWithFile {
     }
 
     private Object[] readDataFromFile(String fromFileName) {
-        File file = new File(fromFileName);
         try {
-            return Files.readAllLines(file.toPath()).toArray();
+            return Files.readAllLines(new File(fromFileName).toPath()).toArray();
         } catch (IOException e) {
             throw new RuntimeException("Can't read the file");
         }
