@@ -15,11 +15,8 @@ public class WorkWithFile {
     public int supplyData = 0;
     public int buyData = 0;
 
-    public void getStatistic(String fromFileName, String toFileName) {
-        getReport(fromFileName, toFileName);
-    }
 
-    public void getReport(String fromFileName, String toFileName) {
+    public void getStatistic(String fromFileName, String toFileName) {
         File file = new File(toFileName);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             writer.write("");
@@ -27,7 +24,8 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't write changes", e);
         }
-        for (String row : getReportData(fromFileName)) {
+        getSupplyData(fromFileName);
+        for (String row : getReportData()) {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName, true))) {
                 writer.write(row + System.lineSeparator());
             } catch (IOException e) {
@@ -56,12 +54,14 @@ public class WorkWithFile {
         }
     }
 
-    public String[] getReportData(String fromFileName) {
-        String result = String.valueOf(supplyData - buyData);
+    public String[] getReportData() {
+        String result = String.valueOf((supplyData - buyData));
         String[] report = new String[3];
         report[0] = NAME_SUPPLY + "," + String.valueOf(supplyData);
         report[1] = NAME_BUY + "," + String.valueOf(buyData);
         report[2] = NAME_RESULT + "," + result;
+        supplyData = 0;
+        buyData = 0;
         return report;
     }
 }
