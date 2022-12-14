@@ -17,6 +17,33 @@ public class WorkWithFile {
         if (files.exists()) {
             return;
         }
+        readFile(fromFileName, results);
+        results[2] = results[0] - results[1];
+        createFile(files);
+        writeFile(files, results);
+
+    }
+
+    private static void createFile(File files) {
+        try {
+            files.createNewFile();
+        } catch (IOException e) {
+            throw new RuntimeException("Can't create a new file", e);
+        }
+    }
+
+    private static void writeFile(File files, int[] results) {
+        for (int i = 0; i < NAMES.length; i++) {
+            try {
+                Files.write(files.toPath(), (NAMES[i] + "," + results[i] + System.lineSeparator())
+                        .getBytes(), StandardOpenOption.APPEND);
+            } catch (IOException e) {
+                throw new RuntimeException("Can't write to file", e);
+            }
+        }
+    }
+
+    private static void readFile(String fromFileName, int[] results) {
         try {
             String data = Files.readAllLines(Path.of(fromFileName)).toString();
             String newData = data.replaceAll("[\\[\\]]", "");
@@ -31,20 +58,5 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read a file");
         }
-        results[2] = results[0] - results[1];
-        try {
-            files.createNewFile();
-        } catch (IOException e) {
-            throw new RuntimeException("Can't create a new file", e);
-        }
-        for (int i = 0; i < NAMES.length; i++) {
-            try {
-                Files.write(files.toPath(), (NAMES[i] + "," + results[i] + System.lineSeparator())
-                        .getBytes(), StandardOpenOption.APPEND);
-            } catch (IOException e) {
-                throw new RuntimeException("Can't write to file", e);
-            }
-        }
-
     }
 }
