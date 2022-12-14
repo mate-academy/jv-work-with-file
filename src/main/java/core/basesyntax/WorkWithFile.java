@@ -26,7 +26,7 @@ public class WorkWithFile {
 
     private List<String> getStringFile(File file) {
         try {
-            return (Files.readAllLines(file.toPath()));
+            return Files.readAllLines(file.toPath());
         } catch (IOException e) {
             throw new RuntimeException("Can't read file " + file + e);
         }
