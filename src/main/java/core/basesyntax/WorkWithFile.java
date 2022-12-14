@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 public class WorkWithFile {
+    private static final int STRING_INDEX = 0;
+    private static final int NUMBER_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         int buy = 0;
@@ -16,10 +18,10 @@ public class WorkWithFile {
             String line = bufferedReader.readLine();
             while (line != null) {
                 String[] data = line.split(",");
-                if ("buy".equals(data[0])) {
-                    buy += Integer.parseInt(data[1]);
-                } else if ("supply".equals(data[0])) {
-                    supply += Integer.parseInt(data[1]);
+                if ("buy".equals(data[STRING_INDEX])) {
+                    buy += Integer.parseInt(data[NUMBER_INDEX]);
+                } else if ("supply".equals(data[STRING_INDEX])) {
+                    supply += Integer.parseInt(data[NUMBER_INDEX]);
                 }
                 line = bufferedReader.readLine();
             }
