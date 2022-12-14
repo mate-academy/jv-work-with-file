@@ -6,7 +6,6 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class ReadData {
-
     public String readFile(String fromFileName) {
         File file = new File(fromFileName);
         StringBuilder builder = new StringBuilder();

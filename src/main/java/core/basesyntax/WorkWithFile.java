@@ -6,7 +6,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-
     public void getStatistic(String fromFileName, String toFileName) {
         WorkWithFile workWithFile = new WorkWithFile();
         try {
@@ -15,7 +14,9 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Error");
         }
-        String report = workWithFile.createReport(fromFileName);
+        ReadData readData = new ReadData();
+        String dataFromFile = readData.readFile(fromFileName);
+        String report = workWithFile.createReport(dataFromFile);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write(report);
         } catch (IOException e) {
@@ -23,10 +24,8 @@ public class WorkWithFile {
         }
     }
 
-    public String createReport(String fromFile) {
-        ReadData readData = new ReadData();
-        String readFile = readData.readFile(fromFile);
-        String[] array = readFile.split(System.lineSeparator());
+    public String createReport(String data) {
+        String[] array = data.split(System.lineSeparator());
         int supply = 0;
         int buy = 0;
         for (int i = 0; i < array.length; i++) {
