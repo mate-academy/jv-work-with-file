@@ -9,35 +9,41 @@ import java.nio.file.Files;
 public class WorkWithFile {
     private static final int STRING_INDEX = 0;
     private static final int NUMBER_INDEX = 1;
+    private static final String BUY = "buy";
+    private static final String SUPPLY = "supply";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int buy = 0;
-        int supply = 0;
-        StringBuilder reportBuilder = new StringBuilder();
+        int buy = readData(fromFileName, BUY);
+        int supply = readData(fromFileName, SUPPLY);
+        int result = supply - buy;
+        String report = getReport(supply, buy, result);
+        writeData(report, toFileName);
+    }
+
+    public int readData(String fromFileName, String info) {
+        int result = 0;
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String line = bufferedReader.readLine();
             while (line != null) {
                 String[] data = line.split(",");
-                if ("buy".equals(data[STRING_INDEX])) {
-                    buy += Integer.parseInt(data[NUMBER_INDEX]);
-                } else if ("supply".equals(data[STRING_INDEX])) {
-                    supply += Integer.parseInt(data[NUMBER_INDEX]);
+                if (info.equals(data[STRING_INDEX])) {
+                    result += Integer.parseInt(data[NUMBER_INDEX]);
                 }
                 line = bufferedReader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("Couldn't read file.", e);
         }
-        int result = supply - buy;
-        reportBuilder.append("supply,")
-                .append(supply)
-                .append(System.lineSeparator())
-                .append("buy,")
-                .append(buy)
-                .append(System.lineSeparator())
-                .append("result,")
-                .append(result);
-        String report = reportBuilder.toString();
+        return result;
+    }
+
+    public String getReport(int supply, int buy, int result) {
+        return "supply," + supply + System.lineSeparator()
+                + "buy," + buy + System.lineSeparator()
+                + "result," + result;
+    }
+
+    public void writeData(String report, String toFileName) {
         File resultFile = new File(toFileName);
         try {
             Files.write(resultFile.toPath(), report.getBytes());
