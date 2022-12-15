@@ -8,9 +8,7 @@ import java.io.IOException;
 public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
-        readFile(fromFileName);
-        getSupply(fromFileName);
-        writer(fromFileName, toFileName);
+        writerToFile(fromFileName, toFileName);
     }
 
     public String[] readFile(String fileName) {
@@ -55,7 +53,15 @@ public class WorkWithFile {
         return getSupply(fileName) - getBuy(fileName);
     }
 
-    public void writer(String fileName, String toFileName) {
+    public void writerToFile(String fileName, String toFileName) {
+        try (FileWriter writer = new FileWriter(toFileName)) {
+            writer.write(textFormatting(fileName));
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write file", e);
+        }
+    }
+
+    public String textFormatting(String fileName) {
         StringBuilder stringBuilder = new StringBuilder("supply,")
                 .append(getSupply(fileName))
                 .append(System.lineSeparator())
@@ -64,10 +70,6 @@ public class WorkWithFile {
                 .append(System.lineSeparator())
                 .append("result,")
                 .append(getResult(fileName));
-        try (FileWriter writer = new FileWriter(toFileName)) {
-            writer.write(stringBuilder.toString());
-        } catch (IOException e) {
-            throw new RuntimeException("Can't write file", e);
-        }
+        return stringBuilder.toString();
     }
 }
