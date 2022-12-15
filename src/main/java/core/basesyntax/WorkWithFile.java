@@ -1,61 +1,56 @@
 package core.basesyntax;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.List;
 
 public class WorkWithFile {
     public static final int OPERATION_TYPE_INDEX = 0;
     public static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String[] data = readFile(fromFileName).split(" ");
+        String data = readFile(fromFileName).replaceAll("[\\[|\\]]","");
         String report = createReport(data);
         writeData(report, toFileName);
     }
 
     private String readFile(String fromFileName) {
-        StringBuilder dataBuilder = new StringBuilder();
-        String value;
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
-            value = bufferedReader.readLine();
-            while (value != null) {
-                dataBuilder.append(value).append(" ");
-                value = bufferedReader.readLine();
-            }
+        File file = new File(fromFileName);
+        List<String> strings;
+        try {
+            strings = Files.readAllLines(file.toPath());
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file:" + fromFileName, e);
+            throw new RuntimeException("Can`t read it!", e);
         }
-        return dataBuilder.toString();
+        String arraylist = strings.toString();
+        return arraylist;
     }
 
-    private String createReport(String[] data) {
+    private static String createReport(String data) {
         int sumSupply = 0;
         int sumBuy = 0;
-        for (String line : data) {
-            String[] splitterLine = line.split(",");
-            if (splitterLine[OPERATION_TYPE_INDEX].equals("supply")) {
-                sumSupply += Integer.parseInt(splitterLine[AMOUNT_INDEX]);
+        String[] splittedLines = data.split(" ");
+        for (String line : splittedLines) {
+            splittedLines = line.split(",");
+            if (splittedLines[OPERATION_TYPE_INDEX].equals("supply")) {
+                sumSupply += Integer.parseInt(splittedLines[AMOUNT_INDEX]);
             } else {
-                sumBuy += Integer.parseInt(splitterLine[AMOUNT_INDEX]);
+                sumBuy += Integer.parseInt(splittedLines[AMOUNT_INDEX]);
             }
         }
-        int result = sumSupply - sumBuy;
-        StringBuilder reportBuilder = new StringBuilder();
-        return reportBuilder.append("supply,").append(sumSupply)
-                .append(System.lineSeparator())
-                .append("buy,").append(sumBuy).append(System.lineSeparator())
-                .append("result,").append(result).toString();
+        return "supply," + sumSupply
+                + System.lineSeparator()
+                + "buy," + sumBuy + System.lineSeparator()
+               + "result," + (sumSupply - sumBuy);
     }
 
-    public void writeData(String report, String toFileName) {
-        File resultFile = new File(toFileName);
+    private void writeData(String report, String toFileName) {
+        File file = new File(toFileName);
         try {
-            Files.write(resultFile.toPath(), report.getBytes());
+            Files.writeString(file.toPath(), report);
         } catch (IOException e) {
-            throw new RuntimeException("Couldn't write file.", e);
+            throw new RuntimeException("Can't write to file " + toFileName, e);
         }
     }
 }
