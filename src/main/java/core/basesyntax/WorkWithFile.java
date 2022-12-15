@@ -16,13 +16,13 @@ public class WorkWithFile {
 
     private String readData(String file) {
         StringBuilder stringBuilder = new StringBuilder();
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(file));
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String value = reader.readLine();
             while (value != null) {
                 stringBuilder.append(value).append(System.lineSeparator());
                 value = reader.readLine();
             }
+            reader.close();
         } catch (IOException e) {
             throw new RuntimeException("Can't read file", e);
         }
@@ -36,8 +36,7 @@ public class WorkWithFile {
         for (int i = 0; i < infoFromFile.length; i++) {
             if (infoFromFile[i].equals("buy")) {
                 buy += Integer.parseInt(infoFromFile[i + 1]);
-            }
-            if (infoFromFile[i].equals("supply")) {
+            } else if (infoFromFile[i].equals("supply")) {
                 supply += Integer.parseInt(infoFromFile[i + 1]);
             }
         }
@@ -50,18 +49,10 @@ public class WorkWithFile {
     }
 
     private void writeData(String toFile, String[] data) {
-        BufferedWriter bufferedWriter = null;
-        try {
-            bufferedWriter = new BufferedWriter(new FileWriter(toFile, false));
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFile, false))) {
             bufferedWriter.write(generateStatistic(data));
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to file", e);
-        } finally {
-            try {
-                bufferedWriter.close();
-            } catch (IOException e) {
-                throw new RuntimeException("Can't close BufferedWriter", e);
-            }
         }
     }
 }
