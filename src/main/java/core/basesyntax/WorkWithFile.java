@@ -5,56 +5,54 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
+import java.util.List;
 
 public class WorkWithFile {
-
     private static final int TYPE_INDEX = 0;
     private static final int VALUE_INDEX = 1;
     private static final String RESULT_RECORD = "result";
     private static final String SUPPLY_TYPE = "supply";
     private static final String COMMA_SEPARATOR = ",";
     private static final String BUY_TYPE = "buy";
-    private static final String EMPTY_STRING = "";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String[] records = readFromFile(fromFileName);
+        List<String> records = readFromFile(fromFileName);
         String[] convertedRecords = recordsConverter(records);
         File report = createOrReplace(toFileName);
         writeRecordsToFile(convertedRecords, report);
     }
 
-    public String[] readFromFile(String fileName) {
-        String dataFromFile = EMPTY_STRING;
-        StringBuilder readerStringBuilder;
+    public List<String> readFromFile(String fileName) {
+        String dataFromFile;
+        List<String> fileContent = new ArrayList<>();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
-            readerStringBuilder = new StringBuilder();
             dataFromFile = bufferedReader.readLine();
             while (dataFromFile != null) {
-                readerStringBuilder.append(dataFromFile).append(System.lineSeparator());
+                fileContent.add(dataFromFile);
                 dataFromFile = bufferedReader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read the file", e);
+            throw new RuntimeException("Can't read the file " + fileName, e);
         }
-        return readerStringBuilder.toString().split(System.lineSeparator());
+        return fileContent;
     }
 
     private File createOrReplace(String fileName) {
         File report = new File(fileName);
-        if (report.exists()) {
-            report.delete();
-        }
         try {
+            Files.deleteIfExists(Path.of(fileName));
             report.createNewFile();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Can't create or replace the file " + fileName, e);
         }
         return report;
 
     }
 
-    private String[] recordsConverter(String[] records) {
+    private String[] recordsConverter(List<String> records) {
         int supply = 0;
         int buy = 0;
         int result = 0;
