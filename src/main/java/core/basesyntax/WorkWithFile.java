@@ -40,10 +40,9 @@ public class WorkWithFile {
             }
         }
         int result = supply - buy;
-        String reportBuilder = SUPPLY + DELIMETER + supply + System.lineSeparator()
+        return SUPPLY + DELIMETER + supply + System.lineSeparator()
                 + BUY + DELIMETER + buy + System.lineSeparator()
                 + RESULT + DELIMETER + result;
-        return reportBuilder;
     }
 
     private void writeToFile(String report, String toFileName) {
