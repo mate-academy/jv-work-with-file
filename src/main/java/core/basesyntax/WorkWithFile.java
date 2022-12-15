@@ -6,6 +6,13 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class WorkWithFile {
+    private String inputData1 = "buy";
+    private String inputData2 = "supply";
+    private final int dataIndex = 0;
+    private final int countIndex = 1;
+    private int inputData1Count = 0;
+    private int inputData2Count = 0;
+
     private String [] readFile(String fileName) {
         String[] inputArray;
         try {
@@ -14,6 +21,21 @@ public class WorkWithFile {
             throw new RuntimeException("Can't read file", e);
         }
         return inputArray;
+    }
+
+    private String countStatistic(String [] strings) {
+        for (int i = 0; i < strings.length; i++) {
+            String [] temp = strings[i].split(",");
+            int tempInt = Integer.parseInt(temp[countIndex].replaceAll("[^\\d]", ""));
+            if (temp[dataIndex].contains(inputData1)) {
+                inputData1Count += tempInt;
+            } else {
+                inputData2Count += tempInt;
+            }
+        }
+        return (inputData2 + "," + inputData2Count + System.lineSeparator()
+                + inputData1 + "," + inputData1Count + System.lineSeparator() + "result,"
+                + (inputData2Count - inputData1Count));
     }
 
     private void writeToFile(String inputData, String toFileName) {
@@ -26,28 +48,10 @@ public class WorkWithFile {
         }
     }
 
-    private String getStatistic(String [] strings, String inputData1, String inputData2) {
-        final int Data_Index = 0;
-        final int Count_Index = 1;
-        int inputData1Count = 0;
-        int inputData2Count = 0;
-
-        for (int i = 0; i < strings.length; i++) {
-            String [] temp = strings[i].split(",");
-            int tempInt = Integer.parseInt(temp[Count_Index].replaceAll("[^\\d]", ""));
-            if (temp[Data_Index].contains(inputData1)) {
-                inputData1Count += tempInt;
-            } else {
-                inputData2Count += tempInt;
-            }
-        }
-        return (inputData2 + "," + inputData2Count + System.lineSeparator()
-                + inputData1 + "," + inputData1Count + System.lineSeparator() + "result,"
-                + (inputData2Count - inputData1Count));
-    }
-
     public void getStatistic(String fromFileName, String toFileName) {
         WorkWithFile workWithFile = new WorkWithFile();
-        writeToFile(getStatistic(workWithFile.readFile(fromFileName), "buy", "supply"), toFileName);
+        String [] inputArray = workWithFile.readFile(fromFileName);
+        String resultString = workWithFile.countStatistic(inputArray);
+        writeToFile((resultString), toFileName);
     }
 }
