@@ -11,9 +11,6 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         String result = generateResultStatistic(readDataFromFile(fromFileName));
         File file = new File(toFileName);
-        if (file.exists()) {
-            file.delete();
-        }
         writeDataToFile(file, result);
     }
 
