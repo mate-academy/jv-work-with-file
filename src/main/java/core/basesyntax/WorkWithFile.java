@@ -40,11 +40,10 @@ public class WorkWithFile {
                 supply += Integer.parseInt(infoFromFile[i + 1]);
             }
         }
-        result = supply - buy;
         StringBuilder builder = new StringBuilder();
         builder.append("supply,").append(supply).append(System.lineSeparator())
                 .append("buy,").append(buy).append(System.lineSeparator())
-                .append("result,").append(result).append(System.lineSeparator());
+                .append("result,").append(supply - buy).append(System.lineSeparator());
         return builder.toString();
     }
 
