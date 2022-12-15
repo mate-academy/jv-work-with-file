@@ -10,6 +10,7 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final int INDEX_OF_SUPPLY_LENGTH = 7;
     private static final int INDEX_OF_BUY_LENGTH = 4;
+    private static final String LINE_SEPARATOR = System.lineSeparator();
 
     public void getStatistic(String fromFileName, String toFileName) {
         File fileForRead = new File(fromFileName);
@@ -21,7 +22,7 @@ public class WorkWithFile {
                 value = bufferedReader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't reaad this file", e);
+            throw new RuntimeException("Can't read this file", e);
         }
         int countSupply = 0;
         int countBuy = 0;
@@ -30,42 +31,20 @@ public class WorkWithFile {
             if (amount.contains("supply")) {
                 countSupply += Integer.parseInt(amount.substring(INDEX_OF_SUPPLY_LENGTH,
                         amount.length()));
-            }
-            if (amount.contains("buy")) {
+            } else {
                 countBuy += Integer.parseInt(amount.substring(INDEX_OF_BUY_LENGTH,
                         amount.length()));
             }
         }
-        String writeSupply = "supply," + countSupply;
-        String writeBuy = "buy," + countBuy;
-        int countResult = countSupply - countBuy;
-        String writeResult = "result," + countResult;
-        String [] arrayResults = new String[] {writeSupply, writeBuy, writeResult};
+        String forWright = "supply," + countSupply + LINE_SEPARATOR
+                + "buy," + countBuy + LINE_SEPARATOR
+                + "result," + (countSupply - countBuy) + LINE_SEPARATOR;
         File fileForWright = new File(toFileName);
-        BufferedWriter bufferedWriter = null;
-        try (BufferedWriter writer = bufferedWriter =
-                new BufferedWriter(new FileWriter(fileForWright))) {
-            writer.write("");
-        } catch (IOException e1) {
-            throw new RuntimeException("Can't right this file", e1);
-        }
-        try {
-            bufferedWriter = new BufferedWriter(new FileWriter(fileForWright, true));
-            for (String arrayResult : arrayResults) {
-                bufferedWriter.write(arrayResult);
-                bufferedWriter.write(System.lineSeparator());
-                bufferedWriter.flush();
-            }
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileForWright))) {
+            bufferedWriter.write(forWright);
+            bufferedWriter.flush();
         } catch (IOException e) {
-            throw new RuntimeException("Can't right this file", e);
-        } finally {
-            if (bufferedWriter != null) {
-                try {
-                    bufferedWriter.close();
-                } catch (IOException e) {
-                    throw new RuntimeException("Can't close bufferedWriter", e);
-                }
-            }
+            throw new RuntimeException("We can't write this file", e);
         }
     }
 }
