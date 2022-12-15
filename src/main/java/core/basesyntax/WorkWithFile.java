@@ -46,9 +46,9 @@ public class WorkWithFile {
     public void writeData(String report, String toFileName) {
         File resultFile = new File(toFileName);
         try {
-            Files.write(resultFile.toPath(), report.getBytes());
+            Files.writeString(resultFile.toPath(), report);
         } catch (IOException e) {
-            throw new RuntimeException("Couldn't write file.", e);
+            throw new RuntimeException("Can't read from file" + toFileName, e);
         }
     }
 }
