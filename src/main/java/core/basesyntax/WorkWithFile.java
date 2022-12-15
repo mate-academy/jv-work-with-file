@@ -29,7 +29,7 @@ public class WorkWithFile {
         return stringBuilder.toString().replace(System.lineSeparator(), ",");
     }
 
-    private String generateStatistic (String[] infoFromFile) {
+    private String generateStatistic(String[] infoFromFile) {
         int supply = 0;
         int buy = 0;
         int result = 0;
@@ -49,7 +49,7 @@ public class WorkWithFile {
         return builder.toString();
     }
 
-    private void writeData (String toFile, String[] data) {
+    private void writeData(String toFile, String[] data) {
         BufferedWriter bufferedWriter = null;
         try {
             bufferedWriter = new BufferedWriter(new FileWriter(toFile, false));
