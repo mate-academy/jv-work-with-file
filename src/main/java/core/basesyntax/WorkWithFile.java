@@ -5,23 +5,23 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.Arrays;
 
 public class WorkWithFile {
     private static final String[] NAMES = {"supply", "buy", "result"};
     private static final int INDEX_NAME = 0;
     private static final int INDEX_AMOUNT_MONEY = 1;
+    private static final int INDEX_SUPPLY = 0;
+    private static final int INDEX_BUY = 1;
+    private static final int INDEX_RESULT = 2;
 
     public void getStatistic(String fromFileName, String toFileName) {
         File files = new File(toFileName);
-        int[] results = new int[3];
         if (files.exists()) {
             files.delete();
         }
-        readFile(fromFileName, results);
-        results[2] = results[0] - results[1];
         createFile(files);
-        writeFile(files, results);
-
+        writeFile(files, readFile(fromFileName));
     }
 
     private static void createFile(File files) {
@@ -43,7 +43,8 @@ public class WorkWithFile {
         }
     }
 
-    private static void readFile(String fromFileName, int[] results) {
+    private static int[] readFile(String fromFileName) {
+        int[] results = new int[3];
         try {
             String data = Files.readAllLines(Path.of(fromFileName)).toString();
             String newData = data.replaceAll("[\\[\\]]", "");
@@ -55,8 +56,10 @@ public class WorkWithFile {
                     results[1] += Integer.parseInt(element.split(",")[INDEX_AMOUNT_MONEY]);
                 }
             }
+            results[INDEX_RESULT] = results[INDEX_SUPPLY] - results[INDEX_BUY];
         } catch (IOException e) {
-            throw new RuntimeException("Can't read a file");
+            throw new RuntimeException("Can't read a file", e);
         }
+        return results;
     }
 }
