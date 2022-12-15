@@ -17,10 +17,6 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         File files = new File(toFileName);
-        if (files.exists()) {
-            files.delete();
-        }
-        createFile(files);
         writeFile(files, readFile(fromFileName));
     }
 
@@ -33,6 +29,12 @@ public class WorkWithFile {
     }
 
     private static void writeFile(File files, int[] results) {
+        try {
+            Files.deleteIfExists(files.toPath());
+        } catch (IOException e) {
+            throw new RuntimeException("Can't delete a file", e);
+        }
+        createFile(files);
         for (int i = 0; i < NAMES.length; i++) {
             try {
                 Files.write(files.toPath(), (NAMES[i] + "," + results[i] + System.lineSeparator())
