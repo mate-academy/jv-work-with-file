@@ -9,11 +9,9 @@ public class WorkWithFile {
     private static ReadData readData = new ReadData();
 
     public void getStatistic(String fromFileName, String toFileName) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            writer.write(workWithFile.createReport(readData.readFile(fromFileName)));
-        } catch (IOException e) {
-            throw new RuntimeException("Can`t write to file");
-        }
+        String data = readData.readFile(fromFileName);
+        String report = workWithFile.createReport(data);
+        workWithFile.writeData(toFileName, report);
     }
 
     public String createReport(String data) {
@@ -35,5 +33,13 @@ public class WorkWithFile {
                 .append("buy").append(",").append(buy).append(System.lineSeparator())
                 .append("result").append(",").append(result);
         return builder.toString();
+    }
+
+    private void writeData(String toFileName, String content) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
+            bufferedWriter.write(content);
+        } catch (IOException e) {
+            throw new RuntimeException("Can`t write to file");
+        }
     }
 }
