@@ -1,13 +1,11 @@
 package core.basesyntax;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
 public class ReadData {
     public String readFile(String fromFileName) {
-        File file = new File(fromFileName);
         StringBuilder builder = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String data = reader.readLine();
