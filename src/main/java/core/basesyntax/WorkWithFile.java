@@ -2,7 +2,6 @@ package core.basesyntax;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -10,15 +9,12 @@ import java.io.IOException;
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         String inputString = new String();
-
-        File fromFile = new File(fromFileName);
-        File toFile = new File(toFileName);
-        String [] strArray = readData(fromFile)
+        String [] strArray = readData(fromFileName)
                 .split(",");
-       // generateStatistic(strArray);
         writeData(toFileName, strArray);
     }
-    private String readData(File file) {
+
+    private String readData(String file) {
         StringBuilder stringBuilder = new StringBuilder();
         try {
             BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -36,6 +32,7 @@ public class WorkWithFile {
     private String generateStatistic (String[] infoFromFile) {
         int supply = 0;
         int buy = 0;
+        int result = 0;
         for (int i = 0; i < infoFromFile.length; i++) {
             if (infoFromFile[i].equals("buy")) {
                 buy += Integer.parseInt(infoFromFile[i + 1]);
@@ -44,7 +41,6 @@ public class WorkWithFile {
                 supply += Integer.parseInt(infoFromFile[i + 1]);
             }
         }
-        int result = 0;
         result = supply - buy;
         StringBuilder builder = new StringBuilder();
         builder.append("supply,").append(supply).append(System.lineSeparator())
