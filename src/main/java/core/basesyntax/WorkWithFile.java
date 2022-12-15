@@ -13,11 +13,12 @@ public class WorkWithFile {
     private static final String LINE_SEPARATOR = System.lineSeparator();
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String setStatistic = readFile(fromFileName);
-        String getStat = setStatistic(setStatistic);
-        writeStatistic(toFileName, forWright);
+        String dataFromFile = readFile(fromFileName);
+        String statistic = setStatistic(dataFromFile);
+        writeToFile(toFileName, statistic);
     }
-    private static String readFile (String fromFileName) {
+
+    private static String readFile(String fromFileName) {
         StringBuilder firstBuilder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String value = bufferedReader.readLine();
@@ -31,17 +32,16 @@ public class WorkWithFile {
         return firstBuilder.toString();
     }
 
-    private  static String setStatistic (String value) {
+    private static String setStatistic(String value) {
         int countSupply = 0;
         int countBuy = 0;
         String[] amounts = value.split(" ");
         for (String amount : amounts) {
-            if (amount.contains("supply")) {
-                countSupply += Integer.parseInt(amount.substring(INDEX_OF_SUPPLY_LENGTH,
-                        amount.length()));
+            String[] splitterLine = amount.split(",");
+            if (splitterLine[0].equals("supply")) {
+                countSupply += Integer.parseInt(splitterLine[1]);
             } else {
-                countBuy += Integer.parseInt(amount.substring(INDEX_OF_BUY_LENGTH,
-                        amount.length()));
+                countBuy += Integer.parseInt(splitterLine[1]);
             }
         }
         String forWright = "supply," + countSupply + LINE_SEPARATOR
@@ -50,7 +50,7 @@ public class WorkWithFile {
         return forWright;
     }
 
-    private static void writeStatistic (String toFileName, String forWright) {
+    private static void writeToFile(String toFileName, String forWright) {
         File fileForWright = new File(toFileName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileForWright))) {
             bufferedWriter.write(forWright);
