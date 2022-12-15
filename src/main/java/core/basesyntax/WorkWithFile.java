@@ -19,7 +19,7 @@ public class WorkWithFile {
         writeFile(files, readFile(fromFileName));
     }
 
-    private static void createFile(File files) {
+    private void createFile(File files) {
         try {
             files.createNewFile();
         } catch (IOException e) {
@@ -27,7 +27,7 @@ public class WorkWithFile {
         }
     }
 
-    private static void writeFile(File files, int[] results) {
+    private void writeFile(File files, int[] results) {
         try {
             Files.deleteIfExists(files.toPath());
         } catch (IOException e) {
@@ -44,7 +44,7 @@ public class WorkWithFile {
         }
     }
 
-    private static int[] readFile(String fromFileName) {
+    private int[] readFile(String fromFileName) {
         int[] results = new int[3];
         try {
             String data = Files.readAllLines(Path.of(fromFileName)).toString();
