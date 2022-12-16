@@ -7,54 +7,52 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.List;
 
 public class WorkWithFile {
     private static final String NAME_SUPPLY = "supply";
     private static final String NAME_BUY = "buy";
     private static final String NAME_RESULT = "result";
-    private static final int DATA_NUMBER = 1;
+    private static final int DATA_INDEX = 1;
+    private static final int NAME_INDEX = 0;
+    private static final int NUMBER_OF_VALUES = 3;
 
     public void getStatistic(String fromFileName, String toFileName) {
+        String result = getReportData(readData(fromFileName));
         File file = new File(toFileName);
-        getDataWritten(fromFileName, toFileName);
+        getDataWritten(file, result);
     }
 
-    public String[] getReportData(String fromFileName) {
+    private String readData(String fromFileName) {
+        try {
+            return Files.readString(new File(fromFileName).toPath());
+        } catch (IOException e) {
+            throw new RuntimeException("Can't read from file", e);
+        }
+    }
+
+    public String getReportData(String dataFromFile) {
         int supplyData = 0;
         int buyData = 0;
-        File file = new File(fromFileName);
-        try {
-            List<String> strings = Files.readAllLines(file.toPath());
-            String rowFromFile = reader.readLine();
-            String[] separateData;
-            while (rowFromFile != null) {
-                separateData = rowFromFile.split(",");
-                if (rowFromFile.contains(NAME_SUPPLY)) {
-                    supplyData += Integer.parseInt(separateData[DATA_NUMBER]);
-                } else if (rowFromFile.contains(NAME_BUY)) {
-                    buyData += Integer.parseInt(separateData[DATA_NUMBER]);
-                }
-                rowFromFile = reader.readLine();
+        String[] separatedData = dataFromFile.split("\n");
+        for (int i = 0; i < separatedData.length; i++) {
+            String[] line = separatedData[i].split(",");
+            if (line[NAME_INDEX].equals(NAME_SUPPLY)) {
+                supplyData += Integer.parseInt(line[DATA_INDEX]);
+            } else if (line[NAME_INDEX].equals(NAME_BUY)) {
+                buyData += Integer.parseInt(line[DATA_INDEX]);
             }
-        } catch (IOException e) {
-            throw new RuntimeException("Can't read file" + file, e);
         }
-        String result = String.valueOf((supplyData - buyData));
-        String[] report = new String[3];
-        report[0] = NAME_SUPPLY + "," + String.valueOf(supplyData);
-        report[1] = NAME_BUY + "," + String.valueOf(buyData);
-        report[2] = NAME_RESULT + "," + result;
-        return report;
+        String reportResult = new String();
+        reportResult = String.format("supply,%s%sbuy,%s%sresult,%s", supplyData, System.lineSeparator(),
+                buyData, System.lineSeparator(), (supplyData - buyData));
+        return reportResult;
     }
 
-    private void getDataWritten(String fromFileName, String toFileName) {
-        for (String row : getReportData(fromFileName)) {
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName, true))) {
-                writer.write(row + System.lineSeparator());
-            } catch (IOException e) {
-                throw new RuntimeException("Can't write data to file", e);
-            }
+    private void getDataWritten(File file, String result) {
+        try {
+            Files.writeString(file.toPath(), result);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write to file", e);
         }
     }
 }
