@@ -1,20 +1,14 @@
 package core.basesyntax;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 
 public class WorkWithFile {
     private static final String NAME_SUPPLY = "supply";
     private static final String NAME_BUY = "buy";
-    private static final String NAME_RESULT = "result";
     private static final int DATA_INDEX = 1;
     private static final int NAME_INDEX = 0;
-    private static final int NUMBER_OF_VALUES = 3;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String result = getReportData(readData(fromFileName));
@@ -42,8 +36,9 @@ public class WorkWithFile {
                 buyData += Integer.parseInt(line[DATA_INDEX]);
             }
         }
-        String reportResult = new String();
-        reportResult = String.format("supply,%s%sbuy,%s%sresult,%s", supplyData, System.lineSeparator(),
+        String reportResult;
+        reportResult = String.format("supply,%s%sbuy,%s%sresult,%s",
+                supplyData, System.lineSeparator(),
                 buyData, System.lineSeparator(), (supplyData - buyData));
         return reportResult;
     }
