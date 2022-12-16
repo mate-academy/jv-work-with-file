@@ -13,6 +13,7 @@ public class WorkWithFile {
     private static final String BUY = "buy";
     private static final int OPERATIONS_INDEX = 0;
     private static final int OPERATIONS_INDEX_VALUE = 1;
+    private static final String PUNCTUATION_SYMBOL_COMMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String readData = readFromFile(fromFileName);
@@ -32,7 +33,7 @@ public class WorkWithFile {
                 value = bufferedReader.read();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file" + e);
+            throw new RuntimeException("Can't read file" + e + fromFileName);
         }
         return stringBuilder.toString();
     }
@@ -41,7 +42,6 @@ public class WorkWithFile {
         File toFile = new File(toFileName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFile))) {
             bufferedWriter.write(resultReport);
-            bufferedWriter.flush();
         } catch (IOException e) {
             throw new RuntimeException("Can't write file" + e);
         }
@@ -53,7 +53,7 @@ public class WorkWithFile {
         int buyCounter = 0;
         int supplyCounter = 0;
         for (int i = 0; i < lines.length; i++) {
-            String[] operations = lines[i].split(",");
+            String[] operations = lines[i].split(PUNCTUATION_SYMBOL_COMMA);
             if (operations[OPERATIONS_INDEX].equals(SUPPLY)) {
                 supplyCounter += Integer.parseInt(operations[OPERATIONS_INDEX_VALUE]);
             }
