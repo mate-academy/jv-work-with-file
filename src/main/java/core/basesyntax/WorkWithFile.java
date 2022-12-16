@@ -13,14 +13,14 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         String result = getReportData(readData(fromFileName));
         File file = new File(toFileName);
-        getDataWritten(file, result);
+        writeDataToFile(file, result);
     }
 
     private String readData(String fromFileName) {
         try {
             return Files.readString(new File(fromFileName).toPath());
         } catch (IOException e) {
-            throw new RuntimeException("Can't read from file", e);
+            throw new RuntimeException("Can't read from file" + fromFileName, e);
         }
     }
 
@@ -36,18 +36,16 @@ public class WorkWithFile {
                 buyData += Integer.parseInt(line[DATA_INDEX]);
             }
         }
-        String reportResult;
-        reportResult = String.format("supply,%s%sbuy,%s%sresult,%s",
+        return String.format("supply,%s%sbuy,%s%sresult,%s",
                 supplyData, System.lineSeparator(),
                 buyData, System.lineSeparator(), (supplyData - buyData));
-        return reportResult;
     }
 
-    private void getDataWritten(File file, String result) {
+    private void writeDataToFile(File file, String result) {
         try {
             Files.writeString(file.toPath(), result);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write to file", e);
+            throw new RuntimeException("Can't write to file" + file.getName(), e);
         }
     }
 }
