@@ -28,8 +28,8 @@ public class WorkWithFile {
         int supplyData = 0;
         int buyData = 0;
         String[] separatedData = dataFromFile.split("\n");
-        for (int i = 0; i < separatedData.length; i++) {
-            String[] line = separatedData[i].split(",");
+        for (String separatedDatum : separatedData) {
+            String[] line = separatedDatum.split(",");
             if (line[NAME_INDEX].equals(NAME_SUPPLY)) {
                 supplyData += Integer.parseInt(line[DATA_INDEX]);
             } else if (line[NAME_INDEX].equals(NAME_BUY)) {
