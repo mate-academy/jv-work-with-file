@@ -62,11 +62,11 @@ public class WorkWithFile {
             }
         }
         int result = supplyCounter - buyCounter;
-        return resultString.append(SUPPLY).append(",").append(supplyCounter)
+        return resultString.append(SUPPLY).append(PUNCTUATION_SYMBOL_COMMA).append(supplyCounter)
                 .append(System.lineSeparator())
-                .append(BUY).append(",")
+                .append(BUY).append(PUNCTUATION_SYMBOL_COMMA)
                 .append(buyCounter)
                 .append(System.lineSeparator())
-                .append(RESULT).append(",").append(result).toString();
+                .append(RESULT).append(PUNCTUATION_SYMBOL_COMMA).append(result).toString();
     }
 }
