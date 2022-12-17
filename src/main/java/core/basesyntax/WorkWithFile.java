@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class WorkWithFile {
     private static final String BUY = "buy";
@@ -16,15 +18,15 @@ public class WorkWithFile {
         writerToFile(newReport, toFileName);
     }
 
-    public int readFile(String fileName, String values) {
-        int result = 0;
+    private Map<String, Integer> readFile(String fileName) {
+        Map <String, Integer> result = new HashMap<String, Integer>();
+        result.put(SUPPLY, 0);
+        result.put(BUY, 0);
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             String elementsInFile = reader.readLine();
             while (elementsInFile != null) {
                 String[] data = elementsInFile.split("\\W+");
-                if (values.equals(data[OPERATION_INDEX])) {
-                    result += Integer.parseInt(data[AMOUNT_INDEX]);
-                }
+                result.put(data[OPERATION_INDEX], result.get(data[OPERATION_INDEX]) + Integer.parseInt(data[AMOUNT_INDEX]));
                 elementsInFile = reader.readLine();
             }
             return result;
@@ -34,8 +36,9 @@ public class WorkWithFile {
     }
 
     public String getReport(String fromFileName) {
-        int supply = readFile(fromFileName, SUPPLY);
-        int buy = readFile(fromFileName, BUY);
+        Map <String, Integer> map = readFile(fromFileName);
+        int supply = map.get(SUPPLY);;
+        int buy = map.get(BUY);
         int result = supply - buy;
         StringBuilder report = new StringBuilder("supply,")
                 .append(supply)
@@ -48,7 +51,7 @@ public class WorkWithFile {
         return report.toString();
     }
 
-    public void writerToFile(String result, String toFileName) {
+    private void writerToFile(String result, String toFileName) {
         try (FileWriter writer = new FileWriter(toFileName)) {
             writer.write(result);
         } catch (IOException e) {
