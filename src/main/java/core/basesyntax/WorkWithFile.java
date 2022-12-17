@@ -6,17 +6,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-
     private static final String BUY = "buy";
     private static final String SUPPLY = "supply";
-    private static final int STRING_INDEX = 0;
-    private static final int INT_INDEX = 1;
+    private static final int OPERATION_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int supply = readFile(fromFileName, SUPPLY);
-        int buy = readFile(fromFileName, BUY);
-        int result = supply - buy;
-        String newReport = getReport(supply, buy, result);
+        String newReport = getReport(fromFileName);
         writerToFile(newReport, toFileName);
     }
 
@@ -26,8 +22,8 @@ public class WorkWithFile {
             String elementsInFile = reader.readLine();
             while (elementsInFile != null) {
                 String[] data = elementsInFile.split("\\W+");
-                if (values.equals(data[STRING_INDEX])) {
-                    result += Integer.parseInt(data[INT_INDEX]);
+                if (values.equals(data[OPERATION_INDEX])) {
+                    result += Integer.parseInt(data[AMOUNT_INDEX]);
                 }
                 elementsInFile = reader.readLine();
             }
@@ -37,7 +33,10 @@ public class WorkWithFile {
         }
     }
 
-    public String getReport(int supply, int buy, int result) {
+    public String getReport(String fromFileName) {
+        int supply = readFile(fromFileName, SUPPLY);
+        int buy = readFile(fromFileName, BUY);
+        int result = supply - buy;
         StringBuilder report = new StringBuilder("supply,")
                 .append(supply)
                 .append(System.lineSeparator())
