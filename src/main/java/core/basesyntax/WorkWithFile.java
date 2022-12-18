@@ -14,38 +14,49 @@ public class WorkWithFile {
     private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String newReport = getReport(fromFileName);
-        writerToFile(newReport, toFileName);
+        writerToFile(getReport(dataProcessing(readFile(fromFileName))), toFileName);
     }
 
-    private Map<String, Integer> readFile(String fileName) {
-        Map<String, Integer> result = new HashMap<String, Integer>();
-        result.put(SUPPLY, 0);
-        result.put(BUY, 0);
+    private String readFile(String fileName) {
+        StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             String elementsInFile = reader.readLine();
             while (elementsInFile != null) {
-                String[] data = elementsInFile.split("\\W+");
-                result.put(data[OPERATION_INDEX],
-                        result.get(data[OPERATION_INDEX]) + Integer.parseInt(data[AMOUNT_INDEX]));
+                stringBuilder.append(elementsInFile).append(System.lineSeparator());
                 elementsInFile = reader.readLine();
             }
-            return result;
+            return stringBuilder.toString();
         } catch (IOException e) {
             throw new RuntimeException("Can't read from file", e);
         }
     }
 
-    public String getReport(String fromFileName) {
-        Map<String, Integer> map = readFile(fromFileName);
-        int supply = map.get(SUPPLY);
-        int buy = map.get(BUY);
-        int result = supply - buy;
+    public Map<String, Integer> dataProcessing(String data) {
+        Map<String, Integer> result = new HashMap<String, Integer>();
+        result.put(SUPPLY, 0);
+        result.put(BUY, 0);
+        String[] operationData = data.split(System.lineSeparator());
+        for (String str : operationData) {
+            String[] values = str.split("\\W+");
+            if (values[OPERATION_INDEX].equals(SUPPLY)) {
+                result.put(values[OPERATION_INDEX],
+                        result.get(values[OPERATION_INDEX]) + Integer.parseInt(values[AMOUNT_INDEX]));
+            } else if (values[OPERATION_INDEX].equals(BUY)) {
+                result.put(values[OPERATION_INDEX],
+                        result.get(values[OPERATION_INDEX]) + Integer.parseInt(values[AMOUNT_INDEX]));
+            }
+        }
+
+        return result;
+    }
+
+    public String getReport(Map<String, Integer> data) {
+        int result = data.get(SUPPLY) - data.get(BUY);
         StringBuilder report = new StringBuilder("supply,")
-                .append(supply)
+                .append(data.get(SUPPLY))
                 .append(System.lineSeparator())
                 .append("buy,")
-                .append(buy)
+                .append(data.get(BUY))
                 .append(System.lineSeparator())
                 .append("result,")
                 .append(result);
