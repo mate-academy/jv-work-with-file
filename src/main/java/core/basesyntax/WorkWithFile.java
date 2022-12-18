@@ -40,13 +40,14 @@ public class WorkWithFile {
             String[] values = str.split("\\W+");
             if (values[OPERATION_INDEX].equals(SUPPLY)) {
                 result.put(values[OPERATION_INDEX],
-                        result.get(values[OPERATION_INDEX]) + Integer.parseInt(values[AMOUNT_INDEX]));
+                        result.get(values[OPERATION_INDEX])
+                                + Integer.parseInt(values[AMOUNT_INDEX]));
             } else if (values[OPERATION_INDEX].equals(BUY)) {
                 result.put(values[OPERATION_INDEX],
-                        result.get(values[OPERATION_INDEX]) + Integer.parseInt(values[AMOUNT_INDEX]));
+                        result.get(values[OPERATION_INDEX])
+                                + Integer.parseInt(values[AMOUNT_INDEX]));
             }
         }
-
         return result;
     }
 
