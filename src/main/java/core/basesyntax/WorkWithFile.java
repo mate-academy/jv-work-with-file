@@ -4,8 +4,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 public class WorkWithFile {
     private static final String BUY = "buy";
@@ -14,7 +12,9 @@ public class WorkWithFile {
     private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        writerToFile(getReport(dataProcessing(readFile(fromFileName))), toFileName);
+        String data = readFile(fromFileName);
+        String report = getReport(data);
+        writerToFile(report, toFileName);
     }
 
     private String readFile(String fileName) {
@@ -27,37 +27,28 @@ public class WorkWithFile {
             }
             return stringBuilder.toString();
         } catch (IOException e) {
-            throw new RuntimeException("Can't read from file", e);
+            throw new RuntimeException("Can't read from file " + fileName, e);
         }
     }
 
-    public Map<String, Integer> dataProcessing(String data) {
-        Map<String, Integer> result = new HashMap<String, Integer>();
-        result.put(SUPPLY, 0);
-        result.put(BUY, 0);
+    private String getReport(String data) {
+        int supply = 0;
+        int buy = 0;
         String[] operationData = data.split(System.lineSeparator());
         for (String str : operationData) {
             String[] values = str.split("\\W+");
             if (values[OPERATION_INDEX].equals(SUPPLY)) {
-                result.put(values[OPERATION_INDEX],
-                        result.get(values[OPERATION_INDEX])
-                                + Integer.parseInt(values[AMOUNT_INDEX]));
+                supply += Integer.parseInt(values[AMOUNT_INDEX]);
             } else if (values[OPERATION_INDEX].equals(BUY)) {
-                result.put(values[OPERATION_INDEX],
-                        result.get(values[OPERATION_INDEX])
-                                + Integer.parseInt(values[AMOUNT_INDEX]));
+                buy += Integer.parseInt(values[AMOUNT_INDEX]);
             }
         }
-        return result;
-    }
-
-    public String getReport(Map<String, Integer> data) {
-        int result = data.get(SUPPLY) - data.get(BUY);
+        int result = supply - buy;
         StringBuilder report = new StringBuilder("supply,")
-                .append(data.get(SUPPLY))
+                .append(supply)
                 .append(System.lineSeparator())
                 .append("buy,")
-                .append(data.get(BUY))
+                .append(buy)
                 .append(System.lineSeparator())
                 .append("result,")
                 .append(result);
@@ -68,7 +59,7 @@ public class WorkWithFile {
         try (FileWriter writer = new FileWriter(toFileName)) {
             writer.write(result);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write file", e);
+            throw new RuntimeException("Can't write file " + toFileName, e);
         }
     }
 }
