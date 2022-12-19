@@ -1,20 +1,16 @@
 package core.basesyntax;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Collections;
 import java.util.List;
 
 public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
-
     private static final String SEPARATOR = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
@@ -22,31 +18,12 @@ public class WorkWithFile {
     }
 
     private List<String> readFromFile(String fromMyFileName) {
-        File fromMyFile = new File(fromMyFileName);
-        FileReader fileReader = null;
+        Path path = Paths.get(fromMyFileName);
         try {
-            fileReader = new FileReader(fromMyFile);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-        BufferedReader bufferedReader = new BufferedReader(fileReader);
-        String value = null;
-
-        try {
-            value = bufferedReader.readLine();
+            return Files.readAllLines(path);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can't read file " + fromMyFileName + ".", e);
         }
-        List<String> list = new ArrayList<>();
-        while (value != null) {
-            list.add(value);
-            try {
-                value = bufferedReader.readLine();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        return list;
     }
 
     private String createReport(List<String> readFromFile) {
@@ -76,21 +53,11 @@ public class WorkWithFile {
     }
 
     private void writeToFile(String report, String toFileName) {
-        File toMyFile = new File(toFileName);
-        FileWriter fileWriter = null;
+        Path path = Paths.get(toFileName);
         try {
-            fileWriter = new FileWriter(toMyFile);
+            Files.write(path, Collections.singleton(report));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can`t write to file" + toFileName + "." + e);
         }
-        BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-        try (bufferedWriter) {
-
-            bufferedWriter.write(report);
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
     }
 }
