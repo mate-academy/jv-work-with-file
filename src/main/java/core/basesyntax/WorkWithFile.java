@@ -45,6 +45,7 @@ public class WorkWithFile {
             writer.write(stringBuilder.toString());
         } catch (IOException e) {
             throw new RuntimeException("Can't read file", e);
+
         }
     }
 }
