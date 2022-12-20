@@ -14,7 +14,6 @@ public class WorkWithFile {
         int buy = 0;
         int result = 0;
         File file = new File(fromFileName);
-
         StringBuilder builder = new StringBuilder();
         try {
             BufferedReader reader = new BufferedReader(new FileReader(file));
