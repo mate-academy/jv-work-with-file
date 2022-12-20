@@ -19,13 +19,13 @@ public class WorkWithFile {
     }
 
     private static String readFromFile(String fromFileName) {
-        String lines;
+        String line;
         StringBuilder linesBuilder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));) {
             line = bufferedReader.readLine();
-            while (lines != null) {
-                linesBuilder.append(lines).append(" ");
-                lines = bufferedReader.readLine();
+            while (line != null) {
+                linesBuilder.append(line).append(" ");
+                line = bufferedReader.readLine();
             }
         } catch (FileNotFoundException e) {
             throw new RuntimeException("Can't find this file: " + fromFileName, e);
