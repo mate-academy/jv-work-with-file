@@ -28,25 +28,25 @@ public class WorkWithFile {
                 value = bufferedReader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("File is empty" + e);
+            throw new RuntimeException("File is empty: " + fromFileName + e);
         }
         return stringBuilder.toString();
     }
 
     private String getReport(String readData) {
-        String[] listFromDay = readData.split(" ");
-        StringBuilder resultOfDay = new StringBuilder();
+        String[] lines = readData.split(" ");
+        StringBuilder reportBuilder = new StringBuilder();
         int countOfBuy = 0;
         int countOfSupply = 0;
-        for (String s : listFromDay) {
-            String[] oneLine = s.split(",");
-            if (oneLine[ACTION_INDEX].equals(DELIVERY_FIELD)) {
-                countOfSupply += Integer.parseInt(oneLine[AMOUNT_INDEX]);
+        for (String line : lines) {
+            String[] splittedLine = line.split(",");
+            if (splittedLine[ACTION_INDEX].equals(DELIVERY_FIELD)) {
+                countOfSupply += Integer.parseInt(splittedLine[AMOUNT_INDEX]);
             } else {
-                countOfBuy += Integer.parseInt(oneLine[AMOUNT_INDEX]);
+                countOfBuy += Integer.parseInt(splittedLine[AMOUNT_INDEX]);
             }
         }
-        resultOfDay.append(DELIVERY_FIELD)
+        reportBuilder.append(DELIVERY_FIELD)
                 .append(",")
                 .append(countOfSupply)
                 .append(System.lineSeparator())
@@ -56,14 +56,14 @@ public class WorkWithFile {
                 .append(RESULT_OF_THE_DAY)
                 .append(",")
                 .append(countOfSupply - countOfBuy);
-        return resultOfDay.toString();
+        return reportBuilder.toString();
     }
 
     private void writeReport(String toFileName, String report) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Cannot write to the file" + e);
+            throw new RuntimeException("Cannot write to the file: " + toFileName + e);
         }
     }
 }
