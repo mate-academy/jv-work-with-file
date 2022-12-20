@@ -4,8 +4,8 @@ import java.io.File;
 import java.util.List;
 
 public class WorkWithFile {
-    private static final int FIRST_INDEX = 0;
-    private static final int SECOND_INDEX = 1;
+    private static final int TYPE_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
     private static final String RESULT = "result";
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
@@ -23,10 +23,10 @@ public class WorkWithFile {
         int buy = 0;
         for (String line : lines) {
             String[] splitterLine = line.split(",");
-            if (splitterLine[FIRST_INDEX].equals(SUPPLY)) {
-                supply += Integer.parseInt(splitterLine[SECOND_INDEX]);
-            } else if (splitterLine[FIRST_INDEX].equals(BUY)) {
-                buy += Integer.parseInt(splitterLine[SECOND_INDEX]);
+            if (splitterLine[TYPE_INDEX].equals(SUPPLY)) {
+                supply += Integer.parseInt(splitterLine[AMOUNT_INDEX]);
+            } else if (splitterLine[TYPE_INDEX].equals(BUY)) {
+                buy += Integer.parseInt(splitterLine[AMOUNT_INDEX]);
             }
         }
         int result = supply - buy;
