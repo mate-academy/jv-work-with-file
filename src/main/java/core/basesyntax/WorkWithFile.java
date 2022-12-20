@@ -13,6 +13,7 @@ public class WorkWithFile {
         int supply = 0;
         int buy = 0;
         int result = 0;
+
         File file = new File(fromFileName);
         StringBuilder builder = new StringBuilder();
         try {
@@ -45,7 +46,6 @@ public class WorkWithFile {
             writer.write(stringBuilder.toString());
         } catch (IOException e) {
             throw new RuntimeException("Can't read file", e);
-
         }
     }
 }
