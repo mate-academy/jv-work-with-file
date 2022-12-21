@@ -25,7 +25,7 @@ public class WorkWithFile {
             File file = new File(fromFileName);
             return Files.readAllLines(file.toPath());
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file" + fromFileName, e);
+            throw new RuntimeException("Can't read file " + fromFileName, e);
         }
     }
 
@@ -58,7 +58,7 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data to file" + toFileName, e);
+            throw new RuntimeException("Can't write data to file " + toFileName, e);
         }
     }
 }
