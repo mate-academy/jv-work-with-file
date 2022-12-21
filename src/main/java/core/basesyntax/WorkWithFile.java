@@ -9,6 +9,41 @@ import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 
 public class WorkWithFile {
+
+    public void writeToFile(File resultFile, int supplySum, int buySum) {
+        try {
+            Files.write(resultFile.toPath(), "supply,".getBytes(),
+                    StandardOpenOption.APPEND);
+            Files.write(resultFile.toPath(), Integer.toString(supplySum).getBytes(),
+                    StandardOpenOption.APPEND);
+            Files.write(resultFile.toPath(), (System.lineSeparator() + "buy,").getBytes(),
+                    StandardOpenOption.APPEND);
+            Files.write(resultFile.toPath(), Integer.toString(buySum).getBytes(),
+                    StandardOpenOption.APPEND);
+            Files.write(resultFile.toPath(), (System.lineSeparator() + "result,").getBytes(),
+                    StandardOpenOption.APPEND);
+            Files.write(resultFile.toPath(), Integer.toString(supplySum - buySum).getBytes(),
+                    StandardOpenOption.APPEND);
+
+        } catch (IOException e) {
+            throw new RuntimeException("Can not write to this file");
+        }
+    }
+
+    public void readFromFile(StringBuilder startStringBuilder, File startFile) {
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(startFile));
+            int value = bufferedReader.read();
+
+            while (value != -1) {
+                startStringBuilder.append((char) value);
+                value = bufferedReader.read();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Can not read from this file");
+        }
+    }
+
     public void getStatistic(String fromFileName, String toFileName) {
         File startFile = new File(fromFileName);
         File resultFile = new File(toFileName);
@@ -24,13 +59,7 @@ public class WorkWithFile {
         }
 
         try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(startFile));
-            int value = bufferedReader.read();
-
-            while (value != -1) {
-                startStringBuilder.append((char) value);
-                value = bufferedReader.read();
-            }
+            readFromFile(startStringBuilder, startFile);
 
             tmpArray = new String[startStringBuilder.length()];
             tmpArray = startStringBuilder.toString().split(",|\\n");
@@ -49,23 +78,7 @@ public class WorkWithFile {
             writer.print("");
             writer.close();
 
-            try {
-                Files.write(resultFile.toPath(), "supply,".getBytes(),
-                        StandardOpenOption.APPEND);
-                Files.write(resultFile.toPath(), Integer.toString(supplySum).getBytes(),
-                        StandardOpenOption.APPEND);
-                Files.write(resultFile.toPath(), (System.lineSeparator() + "buy,").getBytes(),
-                        StandardOpenOption.APPEND);
-                Files.write(resultFile.toPath(), Integer.toString(buySum).getBytes(),
-                        StandardOpenOption.APPEND);
-                Files.write(resultFile.toPath(), (System.lineSeparator() + "result,").getBytes(),
-                        StandardOpenOption.APPEND);
-                Files.write(resultFile.toPath(), Integer.toString(supplySum - buySum).getBytes(),
-                        StandardOpenOption.APPEND);
-
-            } catch (IOException e) {
-                throw new RuntimeException("Can not write to this file");
-            }
+            writeToFile(resultFile, supplySum, buySum);
         } catch (IOException e) {
             throw new RuntimeException("Can not work with these files", e);
         }
