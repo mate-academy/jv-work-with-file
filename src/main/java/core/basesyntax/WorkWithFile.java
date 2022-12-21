@@ -8,6 +8,12 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 
 public class WorkWithFile {
+    public void getStatistic(String fromFileName, String toFileName) {
+        String dataFromFile = readFromFile(fromFileName);
+        String report = createReport(dataFromFile);
+        writeToFile(report, toFileName);
+    }
+
     private void writeToFile(String reportString, String toFileName) {
         try {
             PrintWriter writer = new PrintWriter(toFileName);
@@ -17,7 +23,7 @@ public class WorkWithFile {
             new File(toFileName).createNewFile();
             Files.write(new File(toFileName).toPath(), reportString.getBytes());
         } catch (IOException e) {
-            throw new RuntimeException("Can not write to this file");
+            throw new RuntimeException("Can not write to file 'toFileName'");
         }
     }
 
@@ -34,7 +40,7 @@ public class WorkWithFile {
             }
             return startStringBuilder.toString();
         } catch (IOException e) {
-            throw new RuntimeException("Can not read from this file");
+            throw new RuntimeException("Can not read from file 'fromFileName'");
         }
     }
     
@@ -63,11 +69,5 @@ public class WorkWithFile {
                 + "result," + (supplySum - buySum);
 
         return reportString;
-    }
-
-    public void getStatistic(String fromFileName, String toFileName) {
-        String dataFromFile = readFromFile(fromFileName);
-        String report = createReport(dataFromFile);
-        writeToFile(report, toFileName);
     }
 }
