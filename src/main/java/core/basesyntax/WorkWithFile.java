@@ -8,12 +8,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static String RESULT = "result";
+    private static final String RESULT = "result";
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
-    private static final int OPERATIONS_INDEX = 0;
-    private static final int OPERATIONS_INDEX_VALUE = 1;
-    private static final String PUNCTUATION_SYMBOL_COMMA = ",";
+    private static final int INDEX_OF_OPERATION = 0;
+    private static final int INDEX_OF_QUANTITY = 1;
+    private static final String SEPARATOR = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String readData = readFromFile(fromFileName);
@@ -33,7 +33,7 @@ public class WorkWithFile {
                 value = bufferedReader.read();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file" + e + fromFileName);
+            throw new RuntimeException("Can't read file: " + fromFileName, e);
         }
         return stringBuilder.toString();
     }
@@ -53,20 +53,20 @@ public class WorkWithFile {
         int buyCounter = 0;
         int supplyCounter = 0;
         for (int i = 0; i < lines.length; i++) {
-            String[] operations = lines[i].split(PUNCTUATION_SYMBOL_COMMA);
-            if (operations[OPERATIONS_INDEX].equals(SUPPLY)) {
-                supplyCounter += Integer.parseInt(operations[OPERATIONS_INDEX_VALUE]);
+            String[] operations = lines[i].split(SEPARATOR);
+            if (operations[INDEX_OF_OPERATION].equals(SUPPLY)) {
+                supplyCounter += Integer.parseInt(operations[INDEX_OF_QUANTITY]);
             }
-            if (operations[OPERATIONS_INDEX].equals(BUY)) {
-                buyCounter += Integer.parseInt(operations[OPERATIONS_INDEX_VALUE]);
+            if (operations[INDEX_OF_OPERATION].equals(BUY)) {
+                buyCounter += Integer.parseInt(operations[INDEX_OF_QUANTITY]);
             }
         }
         int result = supplyCounter - buyCounter;
-        return resultString.append(SUPPLY).append(PUNCTUATION_SYMBOL_COMMA).append(supplyCounter)
+        return resultString.append(SUPPLY).append(SEPARATOR).append(supplyCounter)
                 .append(System.lineSeparator())
-                .append(BUY).append(PUNCTUATION_SYMBOL_COMMA)
+                .append(BUY).append(SEPARATOR)
                 .append(buyCounter)
                 .append(System.lineSeparator())
-                .append(RESULT).append(PUNCTUATION_SYMBOL_COMMA).append(result).toString();
+                .append(RESULT).append(SEPARATOR).append(result).toString();
     }
 }
