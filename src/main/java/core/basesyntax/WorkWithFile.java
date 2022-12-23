@@ -1,7 +1,11 @@
 package core.basesyntax;
 
-import java.io.*;
-import java.nio.charset.StandardCharsets;
+import java.io.IOException;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.BufferedReader;
+import java.io.FileWriter;
+import java.io.FileReader;
 
 public class WorkWithFile {
     private static final int OPERATION_TYPE_INDEX = 0;
