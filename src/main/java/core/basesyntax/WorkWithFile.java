@@ -48,7 +48,7 @@ public class WorkWithFile {
                 sumBuy += Integer.parseInt(splittedLine[AMOUNT_INDEX]);
             }
         }
-        StringBuilder builder = new StringBuilder();
+        StringBuilder reportBuilder = new StringBuilder();
         builder.append("supply,").append(sumSupply).append(System.lineSeparator())
                 .append("buy,").append(sumBuy).append(System.lineSeparator())
                 .append("result,").append(sumSupply - sumBuy).append(System.lineSeparator());
