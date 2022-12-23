@@ -34,6 +34,7 @@ public class WorkWithFile {
         }
         return linesBuilder.toString();
     }
+
     private static String getReport(String lines) {
         String[] splittedLines = lines.split(" ");
         int sumSupply = 0;
