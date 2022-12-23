@@ -60,9 +60,9 @@ public class WorkWithFile {
         return operationsResult.toString();
     }
 
-    private void writeReport(String toFileName, String report) {
+    private void writeReport(String toFileName, String text) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write(report);
+            bufferedWriter.write(text);
         } catch (IOException e) {
             throw new RuntimeException("I can`t write this data" + toFileName, e);
         }
