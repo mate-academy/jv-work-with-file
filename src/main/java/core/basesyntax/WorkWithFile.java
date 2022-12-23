@@ -48,10 +48,11 @@ public class WorkWithFile {
                 sumBuy += Integer.parseInt(splitLine[AMOUNT_INDEX]);
             }
         }
-        int result = sumSupply - sumBuy;
-        String answer = "supply" + "," + sumSupply + System.lineSeparator() + "buy" + ","
-                + sumBuy + System.lineSeparator() + "result" + "," + result;
-        return answer;
+        StringBuilder builder = new StringBuilder();
+        builder.append("supply,").append(sumSupply).append(System.lineSeparator())
+                .append("buy,").append(sumBuy).append(System.lineSeparator())
+                .append("result,").append(sumSupply - sumBuy).append(System.lineSeparator());
+        return builder.toString();
     }
 
     private static void writeReport(String toFileName, String report) {
