@@ -37,11 +37,11 @@ public class WorkWithFile {
 
     private static String getReport(String lines) {
         StringBuilder reportBuilder = new StringBuilder();
-        String[] split = lines.split(" ");
+        String[] splittedLines = lines.split(" ");
         int sumSupply = 0;
         int sumBuy = 0;
-        for (String line : split) {
-            String[] splitLine = line.split(",");
+        for (String line : splittedLines) {
+            String[] splittedLine = line.split(",");
             if (splitLine[OPERATION_TYPE_INDEX].equals("supply")) {
                 sumSupply += Integer.parseInt(splitLine[AMOUNT_INDEX]);
             } else {
