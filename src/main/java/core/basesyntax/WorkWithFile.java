@@ -1,13 +1,11 @@
 package core.basesyntax;
 
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-
-
 
 public class WorkWithFile {
     private static final int OPERATION_TYPE_INDEX = 0;
