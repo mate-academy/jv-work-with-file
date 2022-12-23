@@ -48,10 +48,10 @@ public class WorkWithFile {
             }
         }
         StringBuilder reportBuilder = new StringBuilder();
-        builder.append("supply,").append(sumSupply).append(System.lineSeparator())
+        reportBuilder.append("supply,").append(sumSupply).append(System.lineSeparator())
                 .append("buy,").append(sumBuy).append(System.lineSeparator())
                 .append("result,").append(sumSupply - sumBuy).append(System.lineSeparator());
-        return builder.toString();
+        return reportBuilder.toString();
     }
 
     private static void writeReport(String toFileName, String report) {
