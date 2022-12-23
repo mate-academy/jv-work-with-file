@@ -7,19 +7,19 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final int STRING_INDEX = 0;
-    private static final int RESULT_INDEX = 1;
+    private static final int OPERATION_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
     private static final String SUPPLY_FIELD = "supply";
     private static final String BUY_FIELD = "buy";
     private static final String RESULT_FIELD = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String readData = readReport(fromFileName);
-        String report = getReport(readData);
+        String data = readFile(fromFileName);
+        String report = getReport(data);
         writeReport(toFileName, report);
     }
 
-    private String readReport(String fromFileName) {
+    private String readFile(String fromFileName) {
         StringBuilder builder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String value = bufferedReader.readLine();
@@ -28,25 +28,25 @@ public class WorkWithFile {
                 value = bufferedReader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("I can`t read this file", e);
+            throw new RuntimeException("I can`t read this file" + fromFileName, e);
         }
         return builder.toString();
     }
 
-    private String getReport(String readData) {
-        String[] reportPerDay = readData.split(" ");
-        StringBuilder resultPerDay = new StringBuilder();
+    private String getReport(String operationsData) {
+        String[] operationsReport = operationsData.split(" ");
+        StringBuilder operationsResult = new StringBuilder();
         int buy = 0;
         int supply = 0;
-        for (String reports : reportPerDay) {
-            String[] str = reports.split(",");
-            if (str[STRING_INDEX].equals(SUPPLY_FIELD)) {
-                supply += Integer.parseInt(str[RESULT_INDEX]);
+        for (String reports : operationsReport) {
+            String[] oneOperation = reports.split(",");
+            if (oneOperation[OPERATION_INDEX].equals(SUPPLY_FIELD)) {
+                supply += Integer.parseInt(oneOperation[AMOUNT_INDEX]);
             } else {
-                buy += Integer.parseInt(str[RESULT_INDEX]);
+                buy += Integer.parseInt(oneOperation[AMOUNT_INDEX]);
             }
         }
-        resultPerDay.append(SUPPLY_FIELD)
+        operationsResult.append(SUPPLY_FIELD)
                 .append(",")
                 .append(supply)
                 .append(System.lineSeparator())
@@ -57,14 +57,14 @@ public class WorkWithFile {
                 .append(RESULT_FIELD)
                 .append(",")
                 .append(supply - buy);
-        return resultPerDay.toString();
+        return operationsResult.toString();
     }
 
     private void writeReport(String toFileName, String report) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("I can`t write this data", e);
+            throw new RuntimeException("I can`t write this data" + toFileName, e);
         }
     }
 }
