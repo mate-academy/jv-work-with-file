@@ -42,10 +42,10 @@ public class WorkWithFile {
         int sumBuy = 0;
         for (String line : splittedLines) {
             String[] splittedLine = line.split(",");
-            if (splitLine[OPERATION_TYPE_INDEX].equals("supply")) {
-                sumSupply += Integer.parseInt(splitLine[AMOUNT_INDEX]);
+            if (splittedLine[OPERATION_TYPE_INDEX].equals("supply")) {
+                sumSupply += Integer.parseInt(splittedLine[AMOUNT_INDEX]);
             } else {
-                sumBuy += Integer.parseInt(splitLine[AMOUNT_INDEX]);
+                sumBuy += Integer.parseInt(splittedLine[AMOUNT_INDEX]);
             }
         }
         StringBuilder builder = new StringBuilder();
