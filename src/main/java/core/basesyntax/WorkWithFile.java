@@ -14,7 +14,7 @@ public class WorkWithFile {
         int result = 0;
         String report = null;
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
-             BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
+                BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             String value = reader.readLine();
             while (value != null) {
                 stringBuilderReader.append(value).append(",");
