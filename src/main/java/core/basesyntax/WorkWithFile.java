@@ -7,35 +7,52 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String BUY = "buy";
+    private static final String SUPPLY = "supply";
+    private static final String RESULT = "result";
+
     public void getStatistic(String fromFileName, String toFileName) {
+        String [] data = readFromFile(fromFileName);
+        String report = countStatistic(data);
+        writeToFile(report, toFileName);
+    }
+
+    private String [] readFromFile(String fromFileName) {
         StringBuilder stringBuilderReader = new StringBuilder();
-        int supply = 0;
-        int buy = 0;
-        int result = 0;
-        String report = null;
-        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
-                BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String value = reader.readLine();
             while (value != null) {
                 stringBuilderReader.append(value).append(",");
                 value = reader.readLine();
             }
-            String [] fromStringBuilderReader = stringBuilderReader.toString().split(",");
-            for (int i = 0; i < fromStringBuilderReader.length; i++) {
-                if (fromStringBuilderReader[i].equals("supply")) {
-                    supply += Integer.parseInt(fromStringBuilderReader[i + 1]);
-                }
-                if (fromStringBuilderReader[i].equals("buy")) {
-                    buy += Integer.parseInt(fromStringBuilderReader[i + 1]);
-                }
-            }
-            result = supply - buy;
-            report = "supply," + supply + System.lineSeparator()
-                    + "buy," + buy + System.lineSeparator()
-                    + "result," + result;
-            writer.write(report);
+            String[] fromStringBuilderReader = stringBuilderReader.toString().split(",");
+            return fromStringBuilderReader;
         } catch (IOException e) {
-            throw new RuntimeException("Cannot find the file", e);
+            throw new RuntimeException("Cannot read the file", e);
+        }
+    }
+
+    private String countStatistic(String [] data) {
+        int supply = 0;
+        int buy = 0;
+        for (int i = 0; i < data.length; i++) {
+            if (data[i].equals(SUPPLY)) {
+                supply += Integer.parseInt(data[++i]);
+            }
+            if (data[i].equals(BUY)) {
+                buy += Integer.parseInt(data[++i]);
+            }
+        }
+        return SUPPLY + "," + supply + System.lineSeparator()
+                + BUY + "," + buy + System.lineSeparator()
+                + RESULT + "," + (supply - buy);
+    }
+
+    private void writeToFile(String statistic, String toFileName) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
+            writer.write(statistic);
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot write the file", e);
         }
     }
 }
