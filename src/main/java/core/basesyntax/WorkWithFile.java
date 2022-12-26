@@ -4,50 +4,53 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class WorkWithFile {
-    //final String Splitter_Symbol = ",";
-    public void getStatistic(String fromFileName, String toFileName) {
-        String[][] result = {{"supply", ""},{"buy", ""},{"result", ""}};
-        List<List<String>> records = new ArrayList<>();
+    private final String[] result = {"supply", "buy", "result"};
 
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
+    public void getStatistic(String fromFileName, String toFileName) {
+
+        writeDataToFile(createReport(parseDataFromFile(fromFileName)), toFileName);
+    }
+
+    public int[] parseDataFromFile(String fileName) {
+        String[] records;
+        int supplySum = 0;
+        int buySum = 0;
+
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
-                String[] values = line.split(",");
-                records.add(Arrays.asList(values));
+                records = line.split(",");
+                if (records[0].equals(result[0])) {
+                    supplySum += Integer.parseInt(records[1]);
+                } else if (records[0].equals(result[1])) {
+                    buySum += Integer.parseInt(records[1]);
+                }
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read file", e);
         }
 
-        int supplySum = 0;
-        int buySum = 0;
+        return new int[]{supplySum, buySum};
+    }
 
-        for (List<String> s : records) {
-            if (s.get(0).equals(result[0][0])) {
-                supplySum += Integer.parseInt(s.get(1));
-            } else if (s.get(0).equals(result[1][0])) {
-                buySum += Integer.parseInt(s.get(1));
-            }
-        }
+    public String createReport(int[] parseResult) {
+        String tempStr = "";
+        tempStr += result[0] + "," + parseResult[0] + System.lineSeparator();
+        tempStr += result[1] + "," + parseResult[1] + System.lineSeparator();
+        tempStr += result[2] + "," + (parseResult[0] - parseResult[1]) + System.lineSeparator();
+        return tempStr;
+    }
 
-        result[0][1] = Integer.toString(supplySum);
-        result[1][1] = Integer.toString(buySum);
-        result[2][1] = Integer.toString(supplySum - buySum);
-
+    public void writeDataToFile(String report, String fileName) {
+        FileWriter fileWriter;
         try {
-            FileWriter fileWriter = new FileWriter(toFileName, false);
-            for (String[] s : result) {
-                String tempStr = new String(s[0] + "," + s[1] + System.lineSeparator());
-                fileWriter.append(tempStr);
-            }
+            fileWriter = new FileWriter(fileName, false);
+            fileWriter.append(report);
             fileWriter.close();
-        } catch (IOException e) {
-            throw new RuntimeException("Can`t create file", e);
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
         }
     }
 }
