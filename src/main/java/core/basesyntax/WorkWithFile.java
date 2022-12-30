@@ -2,7 +2,6 @@ package core.basesyntax;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -13,14 +12,10 @@ public class WorkWithFile {
     static final String COMMA_SEPARATOR = ",";
     static final int OPERATION_TYPE = 0;
     static final int AMOUNT = 1;
-    static final String SUPPLY = "supply";
-    static final String BUY = "buy";
-    static final String RESULT = "result";
-    static final int ZERO = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
         List<String> stringList = readFile(fromFileName);
-        StringBuilder report = createReport(stringList, toFileName);
+        String report = (createReport(stringList));
         writeToFile(report, toFileName);
     }
 
@@ -38,40 +33,37 @@ public class WorkWithFile {
         return fromFileToList;
     }
 
-    private StringBuilder createReport(List<String> fromFileToList, String toFileName) {
-        int amountOfSupplies = ZERO;
-        int amountOfPurchases = ZERO;
-        StringBuilder stringBuilder = new StringBuilder();
+    private String createReport(List<String> fromFileToList) {
+        int amountOfSupplies = 0;
+        int amountOfPurchases = 0;
+        StringBuilder reportBuilder = new StringBuilder();
         for (String value : fromFileToList) {
             String[] split = value.split(COMMA_SEPARATOR);
             int amount = Integer.parseInt(split[AMOUNT]);
-            if (split[OPERATION_TYPE].equals(SUPPLY)) {
+            if (split[OPERATION_TYPE].equals("supply")) {
                 amountOfSupplies += amount;
             } else {
                 amountOfPurchases += amount;
             }
         }
-        File file = new File(toFileName);
-        if (file.length() == ZERO) {
-            stringBuilder.append(SUPPLY)
+        reportBuilder.append("supply")
                     .append(COMMA_SEPARATOR)
                     .append(amountOfSupplies)
                     .append(System.lineSeparator())
-                    .append(BUY)
+                    .append("buy")
                     .append(COMMA_SEPARATOR)
                     .append(amountOfPurchases)
                     .append(System.lineSeparator())
-                    .append(RESULT)
+                    .append("result")
                     .append(COMMA_SEPARATOR)
                     .append(amountOfSupplies - amountOfPurchases);
-        }
-        return stringBuilder;
+        return reportBuilder.toString();
     }
 
-    private void writeToFile(StringBuilder stringBuilder, String toFileName)
+    private void writeToFile(String data, String toFileName)
             throws RuntimeException {
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true))) {
-            bufferedWriter.write(stringBuilder.toString());
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
+            bufferedWriter.write(data);
         } catch (IOException e) {
             throw new RuntimeException("Can not write data to file", e);
         }
