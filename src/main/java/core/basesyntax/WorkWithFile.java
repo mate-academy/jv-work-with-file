@@ -1,11 +1,10 @@
 package core.basesyntax;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
+        //let's read
         StringBuilder sb = new StringBuilder();
         int supply = 0;
         int buy = 0;
@@ -42,8 +41,14 @@ public class WorkWithFile {
             throw new RuntimeException("Check your file", e);
         }
         int result = supply - buy;
-        System.out.println(supply);
-        System.out.println(buy);
-        System.out.println(result);
+
+        //let's write
+        String text = "supply," + supply + System.lineSeparator() + "buy," + buy + System.lineSeparator() + "result," + result;
+        File file = new File(fromFileName);
+        try (FileWriter fileWriter = new FileWriter(toFileName)) {
+            fileWriter.write(text);
+        } catch (IOException e) {
+            throw new RuntimeException("Unable to write", e);
+        }
     }
 }
