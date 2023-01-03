@@ -1,6 +1,9 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
@@ -43,8 +46,9 @@ public class WorkWithFile {
         int result = supply - buy;
 
         //let's write
-        String text = "supply," + supply + System.lineSeparator() + "buy," + buy + System.lineSeparator() + "result," + result;
-        File file = new File(fromFileName);
+        String text = "supply," + supply + System.lineSeparator()
+                + "buy," + buy + System.lineSeparator()
+                + "result," + result;
         try (FileWriter fileWriter = new FileWriter(toFileName)) {
             fileWriter.write(text);
         } catch (IOException e) {
