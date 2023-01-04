@@ -8,6 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+
     private static final int ACTION = 0;
     private static final int AMOUNT = 1;
     private static final String BUY = "buy";
@@ -45,7 +46,6 @@ public class WorkWithFile {
     }
 
     private void writeReportToCsvFile(String fileName) {
-        File file = new File(fileName);
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(SUPPLY).append(",").append(supply).append(System.lineSeparator());
         stringBuilder.append(BUY).append(",").append(buy).append(System.lineSeparator());
