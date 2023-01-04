@@ -16,29 +16,16 @@ public class WorkWithFile {
         writeFile(report, toFileName);
     }
 
-    private List readFile(String fromFileName) {
+    private List<String> readFile(String fromFileName) {
         List<String> list = new ArrayList<>();
-        BufferedReader bufferedReader = null;
-        try {
-            bufferedReader = new BufferedReader(new FileReader(fromFileName));
-            String str = bufferedReader.readLine();
-            if (str == null || str.length() == 0) {
-                return list;
-            }
-            while (str != null) {
-                list.add(str);
-                str = bufferedReader.readLine();
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
+            String value = bufferedReader.readLine();
+            while (value != null) {
+                list.add(value);
+                value = bufferedReader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read file", e);
-        } finally {
-            try {
-                if (bufferedReader != null) {
-                    bufferedReader.close();
-                }
-            } catch (Exception ex) {
-                System.out.println("Error in closing the BufferedWriter" + ex);
-            }
         }
         return list;
     }
