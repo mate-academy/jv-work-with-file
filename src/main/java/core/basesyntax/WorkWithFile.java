@@ -16,6 +16,11 @@ public class WorkWithFile {
     private int supply;
     private int buy;
 
+    public void getStatistic(String fromFileName, String toFileName) {
+        readDataFromCsvFile(fromFileName);
+        writeReportToCsvFile(toFileName);
+    }
+
     private void readDataFromCsvFile(String fileName) {
         File file = new File(fileName);
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
@@ -50,10 +55,5 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to file", e);
         }
-    }
-
-    public void getStatistic(String fromFileName, String toFileName) {
-        readDataFromCsvFile(fromFileName);
-        writeReportToCsvFile(toFileName);
     }
 }
