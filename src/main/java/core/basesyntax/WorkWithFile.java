@@ -8,6 +8,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    public void getStatistic(String fromFileName, String toFileName) {
+        readDataFromCsvFile(fromFileName);
+        writeReportToCsvFile(toFileName);
+    }
+
     private static final int ACTION = 0;
     private static final int AMOUNT = 1;
     private static final String BUY = "buy";
@@ -15,11 +20,6 @@ public class WorkWithFile {
     private static final String RESULT = "result";
     private int supply;
     private int buy;
-
-    public void getStatistic(String fromFileName, String toFileName) {
-        readDataFromCsvFile(fromFileName);
-        writeReportToCsvFile(toFileName);
-    }
 
     private void readDataFromCsvFile(String fileName) {
         File file = new File(fileName);
