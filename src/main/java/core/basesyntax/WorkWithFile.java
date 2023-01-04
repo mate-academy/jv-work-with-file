@@ -26,6 +26,8 @@ public class WorkWithFile {
         File file = new File(fileName);
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line = reader.readLine();
+            buy = 0;
+            supply = 0;
             while (line != null) {
                 String[] value = line.split(",");
                 switch (value[ACTION]) {
