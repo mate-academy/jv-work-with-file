@@ -11,7 +11,7 @@ import java.util.List;
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
 
-        List dataFromFile = readFile(fromFileName);
+        List<String> dataFromFile = readFile(fromFileName);
         String report = createReport(dataFromFile);
         writeFile(report, toFileName);
     }
@@ -30,7 +30,7 @@ public class WorkWithFile {
         return list;
     }
 
-    private String createReport(List dataFromFile) {
+    private String createReport(List<String> dataFromFile) {
         final StringBuilder builder = new StringBuilder();
         if (dataFromFile == null || dataFromFile.size() == 0) {
             return "";
@@ -38,8 +38,8 @@ public class WorkWithFile {
         int sumBuy = 0;
         int sumSupply = 0;
         int result;
-        for (Object str : dataFromFile) {
-            String[] strSplit = ((String) str).split(",");
+        for (String str : dataFromFile) {
+            String[] strSplit = str.split(",");
             if (strSplit[0].length() > 0) {
                 if (strSplit[0].equals("supply")) {
                     sumSupply += Integer.parseInt(strSplit[1]);
