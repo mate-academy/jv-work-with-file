@@ -12,6 +12,9 @@ public class WorkWithFile {
     public static final String CSV_SEPARATOR = ",";
     public static final int OPERATION_INDEX = 0;
     public static final int VALUE_INDEX = 1;
+    public static final String BUY_NANE = "buy";
+    public static final String SUPPLY_NANE = "supply";
+    public static final String RESULT_NANE = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
         writeStatisticToFile(readStatisticFromFile(fromFileName), toFileName);
@@ -26,10 +29,10 @@ public class WorkWithFile {
 
             while (record != null) {
                 String[] splitRecord = record.split(CSV_SEPARATOR);
-                if (splitRecord[OPERATION_INDEX].equals(StatisticField.supply.name())) {
+                if (splitRecord[OPERATION_INDEX].equals(SUPPLY_NANE)) {
                     statistic.addSupply(Integer.parseInt(splitRecord[VALUE_INDEX]));
                 }
-                if (splitRecord[OPERATION_INDEX].equals(StatisticField.buy.name())) {
+                if (splitRecord[OPERATION_INDEX].equals(BUY_NANE)) {
                     statistic.addBuy(Integer.parseInt(splitRecord[VALUE_INDEX]));
                 }
                 record = BufferedReader.readLine();
@@ -37,7 +40,7 @@ public class WorkWithFile {
         } catch (FileNotFoundException e) {
             throw new RuntimeException("File for reading: " + fromFileName + "does not found.", e);
         } catch (IOException e) {
-            throw new RuntimeException("IOException", e);
+            throw new RuntimeException("IOException when work with " + fromFileName, e);
         }
 
         return statistic;
@@ -48,22 +51,22 @@ public class WorkWithFile {
                         new FileWriter(new File(toFileName))
         )) {
             String content = new StringBuilder()
-                          .append(StatisticField.supply.name())
+                          .append(SUPPLY_NANE)
                           .append(CSV_SEPARATOR)
                           .append(statistic.getSupply())
                           .append(System.lineSeparator())
-                          .append(StatisticField.buy.name())
+                          .append(BUY_NANE)
                           .append(CSV_SEPARATOR)
                           .append(statistic.getBuy())
                           .append(System.lineSeparator())
-                          .append(StatisticField.result.name())
+                          .append(RESULT_NANE)
                           .append(CSV_SEPARATOR)
                           .append(statistic.getResult())
                           .toString();
 
             bufferedWriter.write(content);
         } catch (IOException e) {
-            throw new RuntimeException("IOException", e);
+            throw new RuntimeException("IOException when write to " + toFileName, e);
         }
     }
 }

@@ -4,11 +4,6 @@ public class Statistic {
     private int buy;
     private int supply;
 
-    public Statistic() {
-        buy = 0;
-        supply = 0;
-    }
-
     public int getBuy() {
         return buy;
     }
