@@ -24,13 +24,13 @@ public class WorkWithFile {
     private String readFromFile(String fromFileName) {
         File fromFile = new File(fromFileName);
         StringBuilder stringBuilder;
-        int value;
+        String value;
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFile))) {
             stringBuilder = new StringBuilder();
-            value = bufferedReader.read();
-            while (value != -1) {
-                stringBuilder.append((char) value);
-                value = bufferedReader.read();
+            value = bufferedReader.readLine();
+            while (value != null) {
+                stringBuilder.append(value).append(System.lineSeparator());
+                value = bufferedReader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read file: " + fromFileName, e);
@@ -43,26 +43,26 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFile))) {
             bufferedWriter.write(resultReport);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write file" + e);
+            throw new RuntimeException("Can't write to file: " + toFileName, e);
         }
     }
 
-    private String createReport(String fromFileName) {
-        StringBuilder resultString = new StringBuilder();
-        String[] lines = fromFileName.split(System.lineSeparator());
+    private String createReport(String data) {
+        StringBuilder reportBuilder = new StringBuilder();
         int buyCounter = 0;
         int supplyCounter = 0;
-        for (int i = 0; i < lines.length; i++) {
-            String[] operations = lines[i].split(SEPARATOR);
-            if (operations[INDEX_OF_OPERATION].equals(SUPPLY)) {
-                supplyCounter += Integer.parseInt(operations[INDEX_OF_QUANTITY]);
+        String[] lines = data.split(System.lineSeparator());
+        for (String line : lines) {
+            String[] splittedLine = line.split(SEPARATOR);
+            if (splittedLine[INDEX_OF_OPERATION].equals(SUPPLY)) {
+                supplyCounter += Integer.parseInt(splittedLine[INDEX_OF_QUANTITY]);
             }
-            if (operations[INDEX_OF_OPERATION].equals(BUY)) {
-                buyCounter += Integer.parseInt(operations[INDEX_OF_QUANTITY]);
+            if (splittedLine[INDEX_OF_OPERATION].equals(BUY)) {
+                buyCounter += Integer.parseInt(splittedLine[INDEX_OF_QUANTITY]);
             }
         }
         int result = supplyCounter - buyCounter;
-        return resultString.append(SUPPLY).append(SEPARATOR).append(supplyCounter)
+        return reportBuilder.append(SUPPLY).append(SEPARATOR).append(supplyCounter)
                 .append(System.lineSeparator())
                 .append(BUY).append(SEPARATOR)
                 .append(buyCounter)
