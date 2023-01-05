@@ -32,6 +32,8 @@ public class WorkWithFile {
 
     private String createReport(List<String> dataFromFile) {
         final StringBuilder builder = new StringBuilder();
+        final int IndexOfName = 0;
+        final int IndexOfMoney = 1;
         if (dataFromFile == null || dataFromFile.size() == 0) {
             return "";
         }
@@ -40,11 +42,11 @@ public class WorkWithFile {
         int result;
         for (String str : dataFromFile) {
             String[] strSplit = str.split(",");
-            if (strSplit[0].length() > 0) {
-                if (strSplit[0].equals("supply")) {
-                    sumSupply += Integer.parseInt(strSplit[1]);
+            if (strSplit[IndexOfName].length() > 0) {
+                if (strSplit[IndexOfName].equals("supply")) {
+                    sumSupply += Integer.parseInt(strSplit[IndexOfMoney]);
                 } else {
-                    sumBuy += Integer.parseInt(strSplit[1]);
+                    sumBuy += Integer.parseInt(strSplit[IndexOfMoney]);
                 }
             }
         }
