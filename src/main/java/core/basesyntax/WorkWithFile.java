@@ -39,7 +39,6 @@ public class WorkWithFile {
         }
         int sumBuy = 0;
         int sumSupply = 0;
-        int result;
         for (String str : dataFromFile) {
             String[] strSplit = str.split(",");
             if (strSplit[IndexOfName].length() > 0) {
@@ -50,10 +49,15 @@ public class WorkWithFile {
                 }
             }
         }
-        result = sumSupply - sumBuy;
-        builder.append("supply,").append(sumSupply).append(System.lineSeparator());
-        builder.append("buy,").append(sumBuy).append(System.lineSeparator());
-        builder.append("result,").append(result);
+        int result = sumSupply - sumBuy;
+        builder.append("supply,")
+                .append(sumSupply)
+                .append(System.lineSeparator());
+        builder.append("buy,")
+                .append(sumBuy)
+                .append(System.lineSeparator());
+        builder.append("result,")
+                .append(result);
         return builder.toString();
     }
 
