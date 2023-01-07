@@ -7,9 +7,9 @@ import java.io.IOException;
 
 public class WorkWithFile {
     private final String[] result = {"supply", "buy", "result"};
+    private final String mySeparetor = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-
         writeDataToFile(createReport(parseDataFromFile(fromFileName)), toFileName);
     }
 
@@ -21,7 +21,7 @@ public class WorkWithFile {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
-                records = line.split(",");
+                records = line.split(mySeparetor);
                 if (records[0].equals(result[0])) {
                     supplySum += Integer.parseInt(records[1]);
                 } else if (records[0].equals(result[1])) {
@@ -37,18 +37,16 @@ public class WorkWithFile {
 
     public String createReport(int[] parseResult) {
         String tempStr = "";
-        tempStr += result[0] + "," + parseResult[0] + System.lineSeparator();
-        tempStr += result[1] + "," + parseResult[1] + System.lineSeparator();
-        tempStr += result[2] + "," + (parseResult[0] - parseResult[1]) + System.lineSeparator();
+        tempStr += result[0] + mySeparetor + parseResult[0] + System.lineSeparator();
+        tempStr += result[1] + mySeparetor + parseResult[1] + System.lineSeparator();
+        tempStr += result[2] + mySeparetor + (parseResult[0] - parseResult[1])
+                + System.lineSeparator();
         return tempStr;
     }
 
     public void writeDataToFile(String report, String fileName) {
-        FileWriter fileWriter;
-        try {
-            fileWriter = new FileWriter(fileName, false);
+        try (FileWriter fileWriter = new FileWriter(fileName, false)) {
             fileWriter.append(report);
-            fileWriter.close();
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
