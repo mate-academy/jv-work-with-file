@@ -8,12 +8,12 @@ import java.io.IOException;
 public class WorkWithFile {
     static final int ZERO_INDEX = 0;
     static final int FIRST_INDEX = 1;
-    static final int SECOND_INDEX = 2;
-    private final String[] optionList = {"supply", "buy", "result"};
-    private final String mySeparetor = ",";
+    static final String CSV_SEPARATOR = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        writeToFile(createReport(readFromFile(fromFileName)), toFileName);
+        String readString = readFromFile(fromFileName);
+        String reportString = createReport(readString);
+        writeToFile(reportString, toFileName);
     }
 
     public String readFromFile(String fileName) {
@@ -24,34 +24,35 @@ public class WorkWithFile {
                 stringBuilder.append(line).append(System.lineSeparator());
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't read file " + fileName, e);
         }
         return stringBuilder.toString();
     }
 
     public String createReport(String inputString) {
         String[] records = inputString.split(System.lineSeparator());
-        String[] result;
         int supplySum = 0;
         int buySum = 0;
-        String tempStr = "";
-        for (String s : records) {
-            result = s.split(mySeparetor);
-            if (result[ZERO_INDEX].equals(optionList[ZERO_INDEX])) {
-                supplySum += Integer.parseInt(result[FIRST_INDEX]);
-            } else if (result[ZERO_INDEX].equals(optionList[FIRST_INDEX])) {
-                buySum += Integer.parseInt(result[FIRST_INDEX]);
+        for (String record : records) {
+            String[] splitted = record.split(CSV_SEPARATOR);
+            if ("supply".equals(splitted[ZERO_INDEX])) {
+                supplySum += Integer.parseInt(splitted[FIRST_INDEX]);
+            } else if ("buy".equals(splitted[ZERO_INDEX])) {
+                buySum += Integer.parseInt(splitted[FIRST_INDEX]);
             }
         }
-        tempStr += optionList[ZERO_INDEX] + mySeparetor + supplySum + System.lineSeparator();
-        tempStr += optionList[FIRST_INDEX] + mySeparetor + buySum + System.lineSeparator();
-        tempStr += optionList[SECOND_INDEX] + mySeparetor + (supplySum - buySum)
-                + System.lineSeparator();
-        return tempStr;
+        StringBuilder tempStr = new StringBuilder();
+        tempStr.append("supply").append(CSV_SEPARATOR).append(supplySum).append(System
+                .lineSeparator());
+        tempStr.append("buy").append(CSV_SEPARATOR).append(buySum).append(System
+                .lineSeparator());
+        tempStr.append("result").append(CSV_SEPARATOR).append(supplySum - buySum)
+                        .append(System.lineSeparator());
+        return tempStr.toString();
     }
 
     public void writeToFile(String report, String fileName) {
-        try (FileWriter fileWriter = new FileWriter(fileName, false)) {
+        try (FileWriter fileWriter = new FileWriter(fileName)) {
             fileWriter.append(report);
         } catch (IOException ex) {
             throw new RuntimeException(ex);
