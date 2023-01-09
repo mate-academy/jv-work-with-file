@@ -6,14 +6,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    static final int ZERO_INDEX = 0;
-    static final int FIRST_INDEX = 1;
-    static final String CSV_SEPARATOR = ",";
+    private static final int OPERATION_INDEX = 0;
+    private static final int QUANTITY_INDEX = 1;
+    private static final String CSV_SEPARATOR = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String readString = readFromFile(fromFileName);
-        String reportString = createReport(readString);
-        writeToFile(reportString, toFileName);
+        String dataFromFile = readFromFile(fromFileName);
+        String report = createReport(dataFromFile);
+        writeToFile(report, toFileName);
     }
 
     public String readFromFile(String fileName) {
@@ -35,20 +35,20 @@ public class WorkWithFile {
         int buySum = 0;
         for (String record : records) {
             String[] splitted = record.split(CSV_SEPARATOR);
-            if ("supply".equals(splitted[ZERO_INDEX])) {
-                supplySum += Integer.parseInt(splitted[FIRST_INDEX]);
-            } else if ("buy".equals(splitted[ZERO_INDEX])) {
-                buySum += Integer.parseInt(splitted[FIRST_INDEX]);
+            if ("supply".equals(splitted[OPERATION_INDEX])) {
+                supplySum += Integer.parseInt(splitted[QUANTITY_INDEX]);
+            } else if ("buy".equals(splitted[OPERATION_INDEX])) {
+                buySum += Integer.parseInt(splitted[QUANTITY_INDEX]);
             }
         }
-        StringBuilder tempStr = new StringBuilder();
-        tempStr.append("supply").append(CSV_SEPARATOR).append(supplySum).append(System
+        StringBuilder report = new StringBuilder();
+        report.append("supply").append(CSV_SEPARATOR).append(supplySum).append(System
                 .lineSeparator());
-        tempStr.append("buy").append(CSV_SEPARATOR).append(buySum).append(System
+        report.append("buy").append(CSV_SEPARATOR).append(buySum).append(System
                 .lineSeparator());
-        tempStr.append("result").append(CSV_SEPARATOR).append(supplySum - buySum)
+        report.append("result").append(CSV_SEPARATOR).append(supplySum - buySum)
                         .append(System.lineSeparator());
-        return tempStr.toString();
+        return report.toString();
     }
 
     public void writeToFile(String report, String fileName) {
