@@ -7,8 +7,8 @@ import java.util.List;
 
 public class WorkWithFile {
     private static final int SUPPLY_INDEX = 0;
-    private static final String SUPPLY = "supply";
     private static final int VALUE_INDEX = 1;
+    private static final String SUPPLY = "supply";
 
     public void getStatistic(String fromFileName, String toFileName) {
         List<String> strings = readFile(new File(fromFileName));
@@ -20,7 +20,7 @@ public class WorkWithFile {
         try {
             return Files.readAllLines(file.toPath());
         } catch (IOException e) {
-            throw new RuntimeException("Can't read this file", e);
+            throw new RuntimeException("Can't read " + file, e);
         }
     }
 
@@ -52,7 +52,7 @@ public class WorkWithFile {
         try {
             Files.write(fileToWrite.toPath(),createdReport.getBytes());
         } catch (IOException e) {
-            throw new RuntimeException("Can't create a file", e);
+            throw new RuntimeException("Can't create " + fileToWrite, e);
         }
     }
 }
