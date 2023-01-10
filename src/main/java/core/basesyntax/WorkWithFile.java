@@ -2,7 +2,6 @@ package core.basesyntax;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -16,32 +15,32 @@ public class WorkWithFile {
     private static final int COUNT_BY_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        File readFile = new File(fromFileName);
-        File writeFile = new File(toFileName);
+        String fileData = readFromFile(fromFileName);
+        String report = createReport(fileData);
+        writeToFile(toFileName, report);
+    }
+
+    private String readFromFile(String readFile) {
+        StringBuilder builder = new StringBuilder();
         try {
-            readingFile(readFile, writeFile);
+            BufferedReader reader = new BufferedReader(new FileReader(readFile));
+            String value = reader.readLine();
+            while (value != null) {
+                builder.append(value).append(System.lineSeparator());
+                value = reader.readLine();
+            }
         } catch (FileNotFoundException e) {
             throw new RuntimeException("Can't read data from file", e);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data to file", e);
+            throw new RuntimeException("Can't read data to file", e);
         }
+        return builder.toString();
     }
 
-    private void readingFile(File readFile, File writeFile) throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader(readFile));
-        StringBuilder builder = new StringBuilder();
-        String value = reader.readLine();
-        while (value != null) {
-            builder.append(value).append(System.lineSeparator());
-            value = reader.readLine();
-        }
-        String[] informationRead = builder.toString().split(System.lineSeparator());
-        preparingResult(informationRead, writeFile);
-    }
-
-    private void preparingResult(String[] informationRead, File writeFile) throws IOException {
+    private String createReport(String readString) {
         int supplyCount = 0;
         int buyCount = 0;
+        String[] informationRead = readString.split(System.lineSeparator());
         for (String infoFromFile : informationRead) {
             String[] listFromFile = infoFromFile.split(",");
             for (int i = 1; i < listFromFile.length; i++) {
@@ -52,12 +51,12 @@ public class WorkWithFile {
                 }
             }
         }
-        resultFile(supplyCount, buyCount, writeFile);
+        int result = supplyCount - buyCount;
+        return report(supplyCount, buyCount, result);
     }
 
-    private void resultFile(int supplyCount, int buyCount, File writeFile) throws IOException {
-        int result = supplyCount - buyCount;
-        String readInfo = SUPPLY
+    private String report(int supplyCount, int buyCount, int result) {
+        return SUPPLY
                 + "," + supplyCount
                 + System.lineSeparator()
                 + BUY + ","
@@ -65,12 +64,13 @@ public class WorkWithFile {
                 + System.lineSeparator()
                 + RESULT + ","
                 + result;
-        writingFile(readInfo, writeFile);
     }
 
-    private void writingFile(String readInfo, File writeFile) throws IOException {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(writeFile, true))) {
-            writer.write(readInfo);
+    private void writeToFile(String toFileName, String report) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName, true))) {
+            writer.write(report);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write data to file", e);
         }
     }
 }
