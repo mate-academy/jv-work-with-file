@@ -3,7 +3,6 @@ package core.basesyntax;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -28,9 +27,10 @@ public class WorkWithFile {
         File file = new File(toFileName);
         try {
             file.createNewFile();
-            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));
-            bufferedWriter.write(report.toString());
-            bufferedWriter.close();
+            try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
+                file.createNewFile();
+                bufferedWriter.write(report);
+            }
         } catch (IOException e) {
             throw new RuntimeException("Can't write to the file " + toFileName, e);
         }
@@ -60,8 +60,6 @@ public class WorkWithFile {
                 result.put(key,result.get(key) + Integer.valueOf(values[VALUE_INDEX]));
                 line = bufferedReader.readLine();
             }
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException("Can't find file " + fromFileName, e);
         } catch (IOException e) {
             throw new RuntimeException("Can't read file " + fromFileName, e);
         }
