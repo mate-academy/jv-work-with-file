@@ -7,6 +7,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final int OPERATION_TYPE_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String stringFromFile = readFile(fromFileName);
@@ -15,16 +17,15 @@ public class WorkWithFile {
     }
 
     private String generateReport(String data) {
-        final int numberAmount = 1;
         int buySum = 0;
         int supplySum = 0;
         String[] lines = data.split(System.lineSeparator());
         for (String line: lines) {
             String[] dataFromLine = line.split(",");
-            if (dataFromLine[0].equals("buy")) {
-                buySum += Integer.parseInt(dataFromLine[numberAmount]);
+            if (dataFromLine[OPERATION_TYPE_INDEX].equals("buy")) {
+                buySum += Integer.parseInt(dataFromLine[AMOUNT_INDEX]);
             } else {
-                supplySum += Integer.parseInt(dataFromLine[numberAmount]);
+                supplySum += Integer.parseInt(dataFromLine[AMOUNT_INDEX]);
             }
         }
         int result = supplySum - buySum;
