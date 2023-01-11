@@ -52,7 +52,7 @@ public class WorkWithFile {
 
     private String readDataFromFile(String fromFileName) {
         File file = new File(fromFileName);
-        StringBuilder stringBuilder = new StringBuilder("");
+        StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
             String line = bufferedReader.readLine();
             while (line != null) {
