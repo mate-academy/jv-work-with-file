@@ -16,10 +16,12 @@ public class WorkWithFile {
     public static final int NAME_INDEX = 0;
     public static final int VALUE_INDEX = 1;
     public static final String DELIMITER = ",";
+    public static final String LINE_SEPARATOR = System.lineSeparator();
 
     public void getStatistic(String fromFileName, String toFileName) {
-        Map<String, Integer> data = readDataFromFile(fromFileName);
-        String report = createReport(data);
+        String data = readDataFromFile(fromFileName);
+        Map<String, Integer> parsedData = parseData(data);
+        String report = createReport(parsedData);
         writeReportToFile(report, toFileName);
     }
 
@@ -27,12 +29,13 @@ public class WorkWithFile {
         File file = new File(toFileName);
         try {
             file.createNewFile();
-            try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
-                file.createNewFile();
-                bufferedWriter.write(report);
-            }
         } catch (IOException e) {
-            throw new RuntimeException("Can't write to the file " + toFileName, e);
+            throw new RuntimeException("Can't create the file " + toFileName, e);
+        }
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
+            bufferedWriter.write(report);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write to  the file " + toFileName, e);
         }
     }
 
@@ -47,21 +50,30 @@ public class WorkWithFile {
         return stringBuilder.toString();
     }
 
-    private Map<String, Integer> readDataFromFile(String fromFileName) {
-        Map<String, Integer> result = new HashMap<>();
-        result.put(SUPPLY_FIELD, 0);
-        result.put(BUY_FIELD, 0);
+    private String readDataFromFile(String fromFileName) {
         File file = new File(fromFileName);
+        StringBuilder stringBuilder = new StringBuilder("");
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
             String line = bufferedReader.readLine();
             while (line != null) {
-                String[] values = line.split(DELIMITER);
-                String key = values[NAME_INDEX];
-                result.put(key,result.get(key) + Integer.valueOf(values[VALUE_INDEX]));
+                stringBuilder.append(line).append(LINE_SEPARATOR);
                 line = bufferedReader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read file " + fromFileName, e);
+        }
+        return stringBuilder.toString().replaceAll(LINE_SEPARATOR + "$","");
+    }
+
+    private Map<String, Integer> parseData(String stringData) {
+        Map<String, Integer> result = new HashMap<>();
+        result.put(SUPPLY_FIELD, 0);
+        result.put(BUY_FIELD, 0);
+        String[] data = stringData.split(LINE_SEPARATOR);
+        for (String line: data) {
+            String[] values = line.split(DELIMITER);
+            String key = values[NAME_INDEX];
+            result.put(key,result.get(key) + Integer.valueOf(values[VALUE_INDEX]));
         }
         return result;
     }
