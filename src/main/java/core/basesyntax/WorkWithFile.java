@@ -13,26 +13,30 @@ public class WorkWithFile {
     private static final String DELIMITER = ",";
     private static final int OPERATION_INDEX = 0;
     private static final int VALUE_INDEX = 1;
-    private static final String SUPPLY_ALIAS = "supply";
-    private static final String BUY_ALIAS = "buy";
-    private static final String RESULT_ALIAS = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        File file = new File(fromFileName);
-
-        try {
-            List<String> fileInfo = Files.readAllLines(file.toPath());
-            Map<String, Integer> result = validateFileInfo(fileInfo);
-            writeResultToFile(result, toFileName);
-        } catch (IOException e) {
-            throw new RuntimeException("Can't read file " + fromFileName, e);
-        }
+        List<String> data = readFile(fromFileName);
+        String report = generateReport(data);
+        writeToFile(report, toFileName);
     }
 
-    private Map<String, Integer> validateFileInfo(List<String> fileInfo) {
+    private List<String> readFile(String fileName) {
+        List<String> data;
+        File file = new File(fileName);
+
+        try {
+            data = Files.readAllLines(file.toPath());
+        } catch (IOException e) {
+            throw new RuntimeException("Can't read file " + fileName, e);
+        }
+
+        return data;
+    }
+
+    private String generateReport(List<String> data) {
         Map<String, Integer> result = new LinkedHashMap<>();
 
-        for (String fileInfoItem : fileInfo) {
+        for (String fileInfoItem : data) {
             String[] splitFileInfoItem = fileInfoItem.toLowerCase().split(DELIMITER);
             String operation = splitFileInfoItem[OPERATION_INDEX];
             int value = Integer.parseInt(splitFileInfoItem[VALUE_INDEX]);
@@ -44,22 +48,23 @@ public class WorkWithFile {
             }
         }
 
-        int total = result.get(SUPPLY_ALIAS) - result.get(BUY_ALIAS);
-        result.put(RESULT_ALIAS, total);
+        int total = result.get("supply") - result.get("buy");
+        result.put("result", total);
 
-        return result;
+        StringBuilder report = new StringBuilder();
+        report.append("supply").append(DELIMITER);
+        report.append(result.get("supply")).append(System.lineSeparator());
+        report.append("buy").append(DELIMITER);
+        report.append(result.get("buy")).append(System.lineSeparator());
+        report.append("result").append(DELIMITER);
+        report.append(result.get("result")).append(System.lineSeparator());
+
+        return report.toString();
     }
 
-    private void writeResultToFile(Map<String, Integer> result, String fileName) {
+    private void writeToFile(String report, String fileName) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File(fileName)))) {
-            StringBuilder resultToWrite = new StringBuilder();
-            resultToWrite.append(SUPPLY_ALIAS).append(DELIMITER);
-            resultToWrite.append(result.get(SUPPLY_ALIAS)).append(System.lineSeparator());
-            resultToWrite.append(BUY_ALIAS).append(DELIMITER);
-            resultToWrite.append(result.get(BUY_ALIAS)).append(System.lineSeparator());
-            resultToWrite.append(RESULT_ALIAS).append(DELIMITER);
-            resultToWrite.append(result.get(RESULT_ALIAS)).append(System.lineSeparator());
-            writer.write(resultToWrite.toString());
+            writer.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to file " + fileName, e);
         }
