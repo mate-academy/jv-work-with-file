@@ -62,7 +62,7 @@ public class WorkWithFile {
             bufferedWriter.write(result);
             bufferedWriter.close();
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("Cant open  toFile!");
+            throw new RuntimeException("Cant open toFile!");
         } catch (IOException e) {
             throw new RuntimeException("Can`t write file");
         }
