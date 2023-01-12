@@ -37,7 +37,7 @@ public class WorkWithFile {
         return stringBuilder.toString();
     }
 
-    public String resultBuilder(String stringFromFile) {
+    public String createReport(String stringFromFile) {
         int supplySum = 0;
         int buySum = 0;
         String[] values = stringFromFile.split(COMA);
