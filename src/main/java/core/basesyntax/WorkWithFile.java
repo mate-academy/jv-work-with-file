@@ -18,7 +18,7 @@ public class WorkWithFile {
         writeToFile(toFileName, resultBuilder(getStringFromFile(fromFileName)));
     }
 
-    public String getStringFromFile(String fromFileName) {
+    public String readFromFile(String fromFileName) {
         File fromFile = new File(fromFileName);
         StringBuilder stringBuilder = new StringBuilder();
         try {
