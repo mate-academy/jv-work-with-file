@@ -20,7 +20,6 @@ public class WorkWithFile {
     }
 
     public String readFromFile(String fromFileName) {
-        File fromFile = new File(fromFileName);
         StringBuilder stringBuilder = new StringBuilder();
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFile));
