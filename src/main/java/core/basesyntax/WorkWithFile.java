@@ -3,7 +3,6 @@ package core.basesyntax;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -15,7 +14,9 @@ public class WorkWithFile {
     private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        writeToFile(toFileName, resultBuilder(getStringFromFile(fromFileName)));
+        String read = readFromFile(fromFileName);
+        String report = createReport(read);
+        writeToFile(toFileName, report);
     }
 
     public String readFromFile(String fromFileName) {
@@ -29,10 +30,8 @@ public class WorkWithFile {
                 line = bufferedReader.readLine();
             } while (line != null);
             bufferedReader.close();
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException("Cant read file!");
         } catch (IOException e) {
-            throw new RuntimeException("Cant read string!");
+            throw new RuntimeException("Cant read file!");
         }
         return stringBuilder.toString();
     }
@@ -61,8 +60,6 @@ public class WorkWithFile {
             BufferedWriter bufferedWriter = new BufferedWriter(toFile);
             bufferedWriter.write(result);
             bufferedWriter.close();
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException("Cant open toFile!");
         } catch (IOException e) {
             throw new RuntimeException("Can`t write file");
         }
