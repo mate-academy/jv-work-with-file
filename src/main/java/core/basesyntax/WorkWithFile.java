@@ -19,7 +19,6 @@ public class WorkWithFile {
 
         writeToFile(createReport(readFile(fromFileName)), toFileName);
     }
-
     private String readFile(String fromFileName) {
             StringBuilder stringBuilder = new StringBuilder();
             try (BufferedReader bufferedReader =
