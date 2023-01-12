@@ -22,7 +22,7 @@ public class WorkWithFile {
     public String readFromFile(String fromFileName) {
         StringBuilder stringBuilder = new StringBuilder();
         try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFile));
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
             String line = bufferedReader.readLine();
             do {
                 stringBuilder.append(line).append(COMA);
