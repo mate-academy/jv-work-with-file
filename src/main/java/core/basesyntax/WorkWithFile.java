@@ -1,4 +1,3 @@
-
 package core.basesyntax;
 
 import java.io.BufferedWriter;
