@@ -2,7 +2,6 @@ package core.basesyntax;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -14,23 +13,21 @@ public class WorkWithFile {
     private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String read = readFromFile(fromFileName);
-        String report = createReport(read);
+        String data = readFromFile(fromFileName);
+        String report = createReport(data);
         writeToFile(toFileName, report);
     }
 
     public String readFromFile(String fromFileName) {
         StringBuilder stringBuilder = new StringBuilder();
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));) {
             String line = bufferedReader.readLine();
             do {
                 stringBuilder.append(line).append(COMA);
                 line = bufferedReader.readLine();
             } while (line != null);
-            bufferedReader.close();
         } catch (IOException e) {
-            throw new RuntimeException("Cant read file!");
+            throw new RuntimeException("Cant read file " + fromFileName, e);
         }
         return stringBuilder.toString();
     }
@@ -54,13 +51,11 @@ public class WorkWithFile {
     }
 
     public void writeToFile(String toFileName, String result) {
-        try {
-            FileWriter toFile = new FileWriter(toFileName);
-            BufferedWriter bufferedWriter = new BufferedWriter(toFile);
+        try (FileWriter toFile = new FileWriter(toFileName);
+                BufferedWriter bufferedWriter = new BufferedWriter(toFile);) {
             bufferedWriter.write(result);
-            bufferedWriter.close();
         } catch (IOException e) {
-            throw new RuntimeException("Can`t write file");
+            throw new RuntimeException("Can`t write result to file " + toFileName, e);
         }
     }
 }
