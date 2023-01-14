@@ -11,36 +11,38 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
+    private static final int TYPE_INDEX = 0;
+    private static final int VALUE_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String data = readFromFile(fromFileName);
+        String[] data = readFromFile(fromFileName);
         String report = createReport(data);
         writeToFile(toFileName, report);
     }
 
-    public String readFromFile(String fromFileName) {
+    private String[] readFromFile(String fromFileName) {
         StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));) {
             String line = bufferedReader.readLine();
             do {
-                stringBuilder.append(line).append(COMA);
+                stringBuilder.append(line).append(System.lineSeparator());
                 line = bufferedReader.readLine();
             } while (line != null);
         } catch (IOException e) {
             throw new RuntimeException("Cant read file " + fromFileName, e);
         }
-        return stringBuilder.toString();
+        return stringBuilder.toString().split(System.lineSeparator());
     }
 
-    public String createReport(String stringFromFile) {
+    private String createReport(String[] stringFromFile) {
         int supplySum = 0;
         int buySum = 0;
-        String[] values = stringFromFile.split(COMA);
-        for (int i = 0; i < values.length; i += 2) {
-            if (values[i].equals(SUPPLY)) {
-                supplySum += Integer.parseInt(values[i + 1]);
+        for (int i = 0; i < stringFromFile.length; i++) {
+            String[] valuesRow = stringFromFile[i].split(COMA);
+            if (valuesRow[TYPE_INDEX].equals(SUPPLY)) {
+                supplySum += Integer.parseInt(valuesRow[VALUE_INDEX]);
             } else {
-                buySum += Integer.parseInt(values[i + 1]);
+                buySum += Integer.parseInt(valuesRow[VALUE_INDEX]);
             }
         }
         StringBuilder result = new StringBuilder();
@@ -50,7 +52,7 @@ public class WorkWithFile {
         return result.toString();
     }
 
-    public void writeToFile(String toFileName, String result) {
+    private void writeToFile(String toFileName, String result) {
         try (FileWriter toFile = new FileWriter(toFileName);
                 BufferedWriter bufferedWriter = new BufferedWriter(toFile);) {
             bufferedWriter.write(result);
@@ -59,4 +61,3 @@ public class WorkWithFile {
         }
     }
 }
-
