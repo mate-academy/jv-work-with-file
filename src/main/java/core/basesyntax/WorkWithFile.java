@@ -36,6 +36,8 @@ public class WorkWithFile {
                     buy += Integer.parseInt(data[OPERATION_AMOUNT]);
                     break;
                 }
+                default:
+                    break;
             }
         }
 
