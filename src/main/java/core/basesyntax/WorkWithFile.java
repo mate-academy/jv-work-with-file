@@ -15,17 +15,36 @@ public class WorkWithFile {
     private static final int OPERATION_AMOUNT = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        List<String> inLines;
+        List<String> inLines = readFromFile(fromFileName);
+        String report = createReport(inLines);
+        writeToFile(toFileName, report);
+    }
+
+    private List<String> readFromFile(String fileName) {
+        List<String> lines;
+
+        try {
+            lines = Files.readAllLines(Path.of(fileName));
+        } catch (IOException e) {
+            throw new RuntimeException("Can't read from file: " + fileName, e);
+        }
+        return lines;
+    }
+
+    private void writeToFile(String fileName, String report) {
+        try (BufferedWriter reportWriter = Files.newBufferedWriter(Path.of(fileName))) {
+            reportWriter.write(report);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write to file: " + fileName, e);
+        }
+    }
+
+    private String createReport(List<String> dataLines) {
+        StringBuilder reportBuilder = new StringBuilder();
         int supply = 0;
         int buy = 0;
 
-        try {
-            inLines = Files.readAllLines(Path.of(fromFileName));
-        } catch (IOException e) {
-            throw new RuntimeException("Can't read from file: " + fromFileName, e);
-        }
-
-        for (String line : inLines) {
+        for (String line : dataLines) {
             String[] data = line.split(CSV_DATA_DELIMITER);
             switch (data[OPERATION_ID]) {
                 case INCOME_INVOICE_STRING: {
@@ -40,16 +59,12 @@ public class WorkWithFile {
                     break;
             }
         }
-
-        try (BufferedWriter reportWriter = Files.newBufferedWriter(Path.of(toFileName))) {
-            reportWriter.write(INCOME_INVOICE_STRING + CSV_DATA_DELIMITER + supply);
-            reportWriter.newLine();
-            reportWriter.write(OUTCOME_INVOICE_STRING + CSV_DATA_DELIMITER + buy);
-            reportWriter.newLine();
-            reportWriter.write(TOTAL_SUPPLY_STRING + CSV_DATA_DELIMITER + (supply - buy));
-            reportWriter.newLine();
-        } catch (IOException e) {
-            throw new RuntimeException("Can't write to file: " + fromFileName, e);
-        }
+        reportBuilder.append(INCOME_INVOICE_STRING + CSV_DATA_DELIMITER + supply)
+                .append(System.lineSeparator())
+                .append((OUTCOME_INVOICE_STRING + CSV_DATA_DELIMITER + buy))
+                .append(System.lineSeparator())
+                .append(TOTAL_SUPPLY_STRING + CSV_DATA_DELIMITER + (supply - buy))
+                .append(System.lineSeparator());
+        return reportBuilder.toString();
     }
 }
