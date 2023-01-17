@@ -46,6 +46,7 @@ public class WorkWithFile {
                         buySum += Integer.parseInt(values[COLUMN_INDEX_1]);
                     }
                 }
+
                 return new StringBuilder().append(SUPPLY_OPERATION).append(CSV_SEPARATOR)
                         .append(supplySum).append(System.lineSeparator())
                         .append(BUY_OPERATION).append(CSV_SEPARATOR).append(buySum)
