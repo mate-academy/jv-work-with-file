@@ -2,8 +2,8 @@ package core.basesyntax;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
@@ -34,33 +34,34 @@ public class WorkWithFile {
         }
         return stringBuilder.toString();
     }
+
     public String createReport(String resultReport) {
         int supplySum = 0;
         int buySum = 0;
         String[] dataFromFileArray = resultReport.split(DATA_SEPARATOR);
-                for (String s : dataFromFileArray) {
-                    String[] values = s.split(CSV_SEPARATOR);
-                    if (values[COLUMN_INDEX_0].equals(SUPPLY_OPERATION)) {
-                        supplySum += Integer.parseInt(values[COLUMN_INDEX_1]);
-                    } else {
-                        buySum += Integer.parseInt(values[COLUMN_INDEX_1]);
-                    }
-                }
+        for (String s : dataFromFileArray) {
+            String[] values = s.split(CSV_SEPARATOR);
+            if (values[COLUMN_INDEX_0].equals(SUPPLY_OPERATION)) {
+                supplySum += Integer.parseInt(values[COLUMN_INDEX_1]);
+            } else {
+                buySum += Integer.parseInt(values[COLUMN_INDEX_1]);
+            }
+        }
 
-                return new StringBuilder().append(SUPPLY_OPERATION).append(CSV_SEPARATOR)
+        return new StringBuilder().append(SUPPLY_OPERATION).append(CSV_SEPARATOR)
                         .append(supplySum).append(System.lineSeparator())
                         .append(BUY_OPERATION).append(CSV_SEPARATOR).append(buySum)
                         .append(System.lineSeparator())
                         .append(RESULT).append(CSV_SEPARATOR).append(supplySum - buySum)
                         .toString();
-        }
+    }
 
-            private void writeToFile(String data, String toFileName) {
-            try (BufferedWriter bufferedWriter =
+    private void writeToFile(String data, String toFileName) {
+        try (BufferedWriter bufferedWriter =
                          new BufferedWriter(new FileWriter(toFileName))) {
-                bufferedWriter.write(data);
-            } catch (IOException e) {
-                throw new RuntimeException("Can't write data" + toFileName, e);
-            }
-     }
+            bufferedWriter.write(data);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write data" + toFileName, e);
+        }
+    }
 }
