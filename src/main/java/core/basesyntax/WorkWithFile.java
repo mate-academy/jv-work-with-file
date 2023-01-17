@@ -22,19 +22,19 @@ public class WorkWithFile {
 
     private String readFromFile(String fromFileName) {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
-            StringBuilder builder = new StringBuilder();
+            StringBuilder inputData = new StringBuilder();
             String inputLine;
             while ((inputLine = bufferedReader.readLine()) != null) {
-                builder.append(inputLine).append(System.lineSeparator());
+                inputData.append(inputLine).append(System.lineSeparator());
             }
-            return builder.toString();
+            return inputData.toString();
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from the file " + fromFileName, e);
         }
     }
 
     private String calculateData(String dataFromFile) {
-        StringBuilder builder = new StringBuilder();
+        StringBuilder report = new StringBuilder();
         String[] splitData = dataFromFile.split(System.lineSeparator());
         int result;
         int supply = 0;
@@ -54,12 +54,12 @@ public class WorkWithFile {
             }
         }
         result = supply - buy;
-        builder.append(SUPPLY).append(SEPARATOR).append(supply)
+        report.append(SUPPLY).append(SEPARATOR).append(supply)
                 .append(System.lineSeparator())
                 .append(BUY).append(SEPARATOR).append(buy)
                 .append(System.lineSeparator())
                 .append(RESULT).append(SEPARATOR).append(result);
-        return builder.toString();
+        return report.toString();
     }
 
     private void writeToFile(String report, String toFileName) {
