@@ -33,7 +33,6 @@ public class WorkWithFile {
         }
         return stringBuilder.toString();
     }
-
     public String createReport(String resultReport) {
         int supplySum = 0;
         int buySum = 0;
