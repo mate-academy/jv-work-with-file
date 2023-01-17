@@ -1,7 +1,7 @@
 package core.basesyntax;
 
-import java.io.BufferedWriter;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.FileReader;
 import java.io.IOException;
@@ -16,28 +16,28 @@ public class WorkWithFile {
     public static final int COLUMN_INDEX_1 = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-
         writeToFile(createReport(readFile(fromFileName)), toFileName);
     }
-    private String readFile(String fromFileName) {
-            StringBuilder stringBuilder = new StringBuilder();
-            try (BufferedReader bufferedReader =
-                         new BufferedReader(new FileReader(fromFileName))) {
-                String line = bufferedReader.readLine();
-                while (line != null) {
-                    stringBuilder.append(line).append(" ");
-                    line = bufferedReader.readLine();
-                }
-            } catch (IOException e) {
-                throw new RuntimeException("Can't read file" + fromFileName, e);
-            }
-            return stringBuilder.toString();
-        }
 
-        public String createReport(String resultReport) {
-                int supplySum = 0;
-                int buySum = 0;
-                String[] dataFromFileArray = resultReport.split(DATA_SEPARATOR);
+    private String readFile(String fromFileName) {
+        StringBuilder stringBuilder = new StringBuilder();
+        try (BufferedReader bufferedReader =
+                         new BufferedReader(new FileReader(fromFileName))) {
+            String line = bufferedReader.readLine();
+            while (line != null) {
+                stringBuilder.append(line).append(" ");
+                line = bufferedReader.readLine();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Can't read file" + fromFileName, e);
+        }
+        return stringBuilder.toString();
+    }
+
+    public String createReport(String resultReport) {
+        int supplySum = 0;
+        int buySum = 0;
+        String[] dataFromFileArray = resultReport.split(DATA_SEPARATOR);
                 for (String s : dataFromFileArray) {
                     String[] values = s.split(CSV_SEPARATOR);
                     if (values[COLUMN_INDEX_0].equals(SUPPLY_OPERATION)) {
