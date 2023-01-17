@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class WorkWithFile {
+
     public static final String SUPPLY_OPERATION = "supply";
     public static final String BUY_OPERATION = "buy";
     public static final String RESULT = "result";
@@ -14,6 +15,8 @@ public class WorkWithFile {
     public static final String CSV_SEPARATOR = ",";
     public static final int COLUMN_INDEX_0 = 0;
     public static final int COLUMN_INDEX_1 = 1;
+
+=======
 
     public void getStatistic(String fromFileName, String toFileName) {
         writeToFile(createReport(readFile(fromFileName)), toFileName);
