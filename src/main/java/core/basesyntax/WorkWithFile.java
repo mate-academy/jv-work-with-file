@@ -16,8 +16,6 @@ public class WorkWithFile {
     public static final int COLUMN_INDEX_0 = 0;
     public static final int COLUMN_INDEX_1 = 1;
 
-=======
-
     public void getStatistic(String fromFileName, String toFileName) {
         writeToFile(createReport(readFile(fromFileName)), toFileName);
     }
