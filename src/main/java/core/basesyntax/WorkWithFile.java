@@ -8,6 +8,10 @@ import java.io.IOException;
 
 public class WorkWithFile {
 
+    private static final String[] OPERATION_NAME = {"supply", "buy"};
+    private static final String DELIMITER = ",";
+    private static final String RESULT_NAME = "result";
+
     public void getStatistic(String fromFileName, String toFileName) {
         StringBuilder report = createReport(fromFileName);
         writeToFile(report, toFileName);
@@ -28,25 +32,25 @@ public class WorkWithFile {
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String line;
             String value;
-            while (true) {
-                line = reader.readLine();
-                if (line == null) {
-                    break;
-                } else if (line.contains("supply")) {
-                    value = line.split(",")[1];
+            line = reader.readLine();
+            while (line != null) {
+                if (line.contains(OPERATION_NAME[0])) {
+                    value = line.split(DELIMITER)[1];
                     supplyTotal += Integer.parseInt(value);
                 } else {
-                    value = line.split(",")[1];
+                    value = line.split(DELIMITER)[1];
                     buyTotal += Integer.parseInt(value);
                 }
+                line = reader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read the file" + e);
         }
-        return report.append("supply,").append(supplyTotal)
-                .append(System.lineSeparator())
-                .append("buy,").append(buyTotal)
-                .append(System.lineSeparator())
-                .append("result,").append(supplyTotal - buyTotal);
+        return report.append(OPERATION_NAME[0]).append(DELIMITER)
+                .append(supplyTotal).append(System.lineSeparator())
+                .append(OPERATION_NAME[1]).append(DELIMITER)
+                .append(buyTotal).append(System.lineSeparator())
+                .append(RESULT_NAME).append(DELIMITER)
+                .append(supplyTotal - buyTotal);
     }
 }
