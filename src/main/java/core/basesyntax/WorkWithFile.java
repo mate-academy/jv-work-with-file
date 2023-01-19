@@ -7,61 +7,58 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-
-    private static final String[] OPERATION_NAME = {"supply", "buy"};
+    private static final String SUPPLY_LINE_NAME = "supply";
+    private static final String BUY_LINE_NAME = "buy";
+    private static final String RESULT_LINE_NAME = "result";
     private static final String DELIMITER = ",";
-    private static final String RESULT_NAME = "result";
-    private StringBuilder report;
-    private int firstTotal;
-    private int secondTotal;
+    private int supplyTotal;
+    private int buyTotal;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        report = new StringBuilder();
-        firstTotal = 0;
-        secondTotal = 0;
+        supplyTotal = 0;
+        buyTotal = 0;
         readFile(fromFileName);
-        createReport();
-        writeToFile(toFileName);
+        writeToFile(createReport(), toFileName);
     }
 
     private void readFile(String fromFileName) {
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
-            String line;
-            line = reader.readLine();
+            String line = reader.readLine();
             while (line != null) {
                 calculateTotal(line);
                 line = reader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read the file" + e);
+            throw new RuntimeException("Can't read the file" + fromFileName, e);
         }
     }
 
     private void calculateTotal(String line) {
         String amount;
-        if (line.contains(OPERATION_NAME[0])) {
+        if (line.contains(SUPPLY_LINE_NAME)) {
             amount = line.split(DELIMITER)[1];
-            firstTotal += Integer.parseInt(amount);
+            supplyTotal += Integer.parseInt(amount);
         } else {
             amount = line.split(DELIMITER)[1];
-            secondTotal += Integer.parseInt(amount);
+            buyTotal += Integer.parseInt(amount);
         }
     }
 
-    private void createReport() {
-        report.append(OPERATION_NAME[0]).append(DELIMITER)
-                .append(firstTotal).append(System.lineSeparator())
-                .append(OPERATION_NAME[1]).append(DELIMITER)
-                .append(secondTotal).append(System.lineSeparator())
-                .append(RESULT_NAME).append(DELIMITER)
-                .append(firstTotal - secondTotal);
+    private String createReport() {
+        StringBuilder report = new StringBuilder();
+        return report.append(SUPPLY_LINE_NAME).append(DELIMITER)
+                .append(supplyTotal).append(System.lineSeparator())
+                .append(BUY_LINE_NAME).append(DELIMITER)
+                .append(buyTotal).append(System.lineSeparator())
+                .append(RESULT_LINE_NAME).append(DELIMITER)
+                .append(supplyTotal - buyTotal).toString();
     }
 
-    private void writeToFile(String toFileName) {
+    private void writeToFile(String report, String toFileName) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            writer.write(report.toString());
+            writer.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write to file" + toFileName + e);
+            throw new RuntimeException("Can't write to the file" + toFileName, e);
         }
     }
 }
