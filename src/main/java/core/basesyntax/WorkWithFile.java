@@ -1,21 +1,24 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class WorkWithFile {
-    private final String SPLIT_BY = ",";
-    private final String SUPPLY = "supply";
-    private final String BUY = "buy";
-    private final String RESULT = "result";
+    private static final String SPLIT_BY = ",";
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
     private String line = "";
+
     public void getStatistic(String fromFileName, String toFileName) {
         int supplyCount = 0;
         int buyCount = 0;
-        try
-        {
+        try {
             BufferedReader br = new BufferedReader(new FileReader(fromFileName));
-            while ((line = br.readLine()) != null)
-            {
+            while ((line = br.readLine()) != null) {
                 String[] data = line.split(SPLIT_BY);
                 if (data[0].equals(SUPPLY)) {
                     supplyCount += Integer.parseInt(data[1]);
@@ -24,19 +27,17 @@ public class WorkWithFile {
                 }
             }
             br.close();
-            File csvFile = new File(toFileName);
-            FileWriter fileWriter = new FileWriter(csvFile);
             StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append(SUPPLY).append(SPLIT_BY).append(supplyCount).append("\n");
-            stringBuilder.append(BUY).append(SPLIT_BY).append(buyCount).append("\n");
+            stringBuilder.append(SUPPLY).append(SPLIT_BY).append(supplyCount)
+                    .append(System.lineSeparator());
+            stringBuilder.append(BUY).append(SPLIT_BY).append(buyCount)
+                    .append(System.lineSeparator());
             stringBuilder.append(RESULT).append(SPLIT_BY).append(supplyCount - buyCount);
+            FileWriter fileWriter = new FileWriter(new File(toFileName));
             fileWriter.write(stringBuilder.toString());
             fileWriter.close();
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             throw new RuntimeException("Can't read data from the file " + fromFileName, e);
         }
-
     }
 }
