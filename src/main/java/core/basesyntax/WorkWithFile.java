@@ -1,11 +1,10 @@
 package core.basesyntax;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 
 public class WorkWithFile {
     private static final String SUPPLY_WORD = "supply";
@@ -17,10 +16,41 @@ public class WorkWithFile {
     private static final String GET_SUM_BUY = "getBuy";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        getArrayFile(fromFileName);
+        writeToFile(fromFileName, toFileName);
+    }
 
-        int sumSupply = getSum(GET_SUM_SUPPLY, fromFileName);
-        int sumBuy = getSum(GET_SUM_BUY, fromFileName);
+    private String[] readFile(String fileName) {
+        File file = new File(fileName);
+        String[] stringFileArr;
+        try {
+            stringFileArr = Files.readAllLines(file.toPath()).toArray(new String[0]);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't read file" + file, e);
+        }
+        return stringFileArr;
+    }
+
+    private int generateReport(String getSum, String fileName) {
+        String[] stringFileArr = readFile(fileName);
+        int sumSupply = 0;
+        int sumBuy = 0;
+
+        for (int i = 0; i < stringFileArr.length; i++) {
+            String[] stringValue = stringFileArr[i].split(",");
+            sumSupply += stringValue[NAME_INDEX].equals(SUPPLY_WORD)
+                    ? Integer.parseInt(stringValue[NUMBER_INDEX]) : 0;
+            sumBuy += stringValue[NAME_INDEX].equals(BUY_WORD)
+                    ? Integer.parseInt(stringValue[NUMBER_INDEX]) : 0;
+        }
+        if (getSum.equals(GET_SUM_SUPPLY)) {
+            return sumSupply;
+        }
+        return sumBuy;
+    }
+
+    private void writeToFile(String fromFileName, String toFileName) {
+        int sumSupply = generateReport(GET_SUM_SUPPLY, fromFileName);
+        int sumBuy = generateReport(GET_SUM_BUY, fromFileName);
         int sumResult = sumSupply - sumBuy;
         StringBuilder builder = new StringBuilder();
         builder.append(SUPPLY_WORD).append(",").append(sumSupply).append(" ")
@@ -36,38 +66,5 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file" + fromFileName, e);
         }
-    }
-
-    private String[] getArrayFile(String fileName) {
-        StringBuilder builder = new StringBuilder();
-        File file = new File(fileName);
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            String value = reader.readLine();
-            while (value != null) {
-                builder.append(value).append(" ");
-                value = reader.readLine();
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("Can't read file " + file, e);
-        }
-        String[] stringFileArr = builder.toString().split(" ");
-        return stringFileArr;
-    }
-
-    private int getSum(String getSum, String fileName) {
-        String[] stringFileArr = getArrayFile(fileName);
-        int sumSupply = 0;
-        int sumBuy = 0;
-
-        for (int i = 0; i < stringFileArr.length; i++) {
-            String[] stringValue = stringFileArr[i].split(",");
-            String name = stringValue[NAME_INDEX];
-            sumSupply += name.equals(SUPPLY_WORD) ? Integer.parseInt(stringValue[NUMBER_INDEX]) : 0;
-            sumBuy += name.equals(BUY_WORD) ? Integer.parseInt(stringValue[NUMBER_INDEX]) : 0;
-        }
-        if (getSum.equals(GET_SUM_SUPPLY)) {
-            return sumSupply;
-        }
-        return sumBuy;
     }
 }
