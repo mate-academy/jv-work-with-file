@@ -69,6 +69,6 @@ public class WorkWithFile {
                 .append(RESULT_WORD).append(COMMA).append(sumResult);
         String[] arrayReport = giveReport.toString().split(SPACE);
 
-        return  arrayReport;
+        return arrayReport;
     }
 }
