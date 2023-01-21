@@ -36,7 +36,7 @@ public class WorkWithFile {
                     .append("result").append(',').append(supply - buy);
             bufferedWriter.write(builder.toString());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can not write data to the " + toFileName, e);
         }
     }
 }
