@@ -16,7 +16,10 @@ public class WorkWithFile {
     private static final String SPACE = " ";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        writeToFile(generateReport(SUPPLY_WORD, BUY_WORD, readFile(fromFileName)), toFileName);
+        int sumSupply = calculateSumBy(SUPPLY_WORD, readFile(fromFileName));
+        int sumBuy = calculateSumBy(BUY_WORD, readFile(fromFileName));
+
+        writeToFile(generateReport(sumSupply, sumBuy), toFileName);
     }
 
     private String[] readFile(String fromFileName) {
@@ -41,18 +44,13 @@ public class WorkWithFile {
         return sumAction;
     }
 
-    private String[] generateReport(String nameActionSupply,
-                                    String nameActionBuy,
-                                    String[] arrayFromFile) {
-        int sumSupply = calculateSumBy(nameActionSupply, arrayFromFile);
-        int sumBuy = calculateSumBy(nameActionBuy, arrayFromFile);
+    private String[] generateReport(int sumSupply, int sumBuy) {
         StringBuilder giveReport = new StringBuilder();
         giveReport.append(SUPPLY_WORD).append(COMMA).append(sumSupply).append(SPACE)
                 .append(BUY_WORD).append(COMMA).append(sumBuy).append(SPACE)
                 .append(RESULT_WORD).append(COMMA).append(sumSupply - sumBuy);
-        String[] arrayReport = giveReport.toString().split(SPACE);
 
-        return arrayReport;
+        return giveReport.toString().split(SPACE);
     }
 
     private void writeToFile(String[] reportData, String toFileName) {
