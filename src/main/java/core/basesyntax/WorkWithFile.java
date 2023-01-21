@@ -41,7 +41,9 @@ public class WorkWithFile {
         return sumAction;
     }
 
-    private String[] generateReport(String nameActionSupply, String nameActionBuy, String[] arrayFromFile) {
+    private String[] generateReport(String nameActionSupply,
+                                    String nameActionBuy,
+                                    String[] arrayFromFile) {
         int sumSupply = calculateSumBy(nameActionSupply, arrayFromFile);
         int sumBuy = calculateSumBy(nameActionBuy, arrayFromFile);
         StringBuilder giveReport = new StringBuilder();
