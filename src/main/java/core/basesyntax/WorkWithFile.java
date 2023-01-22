@@ -23,12 +23,12 @@ public class WorkWithFile {
             }
         }
         StringBuilder reportBuilder = new StringBuilder();
-        reportBuilder.append(CSV_ITEM_SUPPLY).append(CSV_COMMON_REGEX).append(totalSupply)
-                .append(System.lineSeparator());
-        reportBuilder.append(CSV_ITEM_BUY).append(CSV_COMMON_REGEX).append(totalBuy)
-                .append(System.lineSeparator());
-        reportBuilder.append(CSV_ITEM_RESULT).append(CSV_COMMON_REGEX).append(totalSupply - totalBuy)
-                .append(System.lineSeparator());
+        reportBuilder.append(CSV_ITEM_SUPPLY).append(CSV_COMMON_REGEX)
+                .append(totalSupply).append(System.lineSeparator());
+        reportBuilder.append(CSV_ITEM_BUY).append(CSV_COMMON_REGEX)
+                .append(totalBuy).append(System.lineSeparator());
+        reportBuilder.append(CSV_ITEM_RESULT).append(CSV_COMMON_REGEX)
+                .append(totalSupply - totalBuy).append(System.lineSeparator());
         return reportBuilder.toString();
     }
 
@@ -39,9 +39,9 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can`t read from input file." + fromFileName, e);
         }
-        String Report = createReport(inputData);
+        String report = createReport(inputData);
         try {
-            Files.write(Paths.get(toFileName), Report.getBytes());
+            Files.write(Paths.get(toFileName), report.getBytes());
         } catch (IOException e) {
             throw new RuntimeException("Can`t write output file " + toFileName, e);
         }
