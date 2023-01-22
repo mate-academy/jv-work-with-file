@@ -13,8 +13,8 @@ public class WorkWithFile {
     public static final String RESULT = "result";
     public static final String DATA_SEPARATOR = " ";
     public static final String CSV_SEPARATOR = ",";
-    public static final int COLUMN_INDEX_0 = 0;
-    public static final int COLUMN_INDEX_1 = 1;
+    public static final int OPERATION_INDEX_0 = 0;
+    public static final int AMOUNT_INDEX_1 = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         writeToFile(createReport(readFile(fromFileName)), toFileName);
@@ -26,11 +26,11 @@ public class WorkWithFile {
                          new BufferedReader(new FileReader(fromFileName))) {
             String line = bufferedReader.readLine();
             while (line != null) {
-                stringBuilder.append(line).append(" ");
+                stringBuilder.append(line).append(DATA_SEPARATOR);
                 line = bufferedReader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file" + fromFileName, e);
+            throw new RuntimeException("Can't read file " + fromFileName, e);
         }
         return stringBuilder.toString();
     }
@@ -39,12 +39,12 @@ public class WorkWithFile {
         int supplySum = 0;
         int buySum = 0;
         String[] dataFromFileArray = resultReport.split(DATA_SEPARATOR);
-        for (String s : dataFromFileArray) {
-            String[] values = s.split(CSV_SEPARATOR);
-            if (values[COLUMN_INDEX_0].equals(SUPPLY_OPERATION)) {
-                supplySum += Integer.parseInt(values[COLUMN_INDEX_1]);
+        for (String var : dataFromFileArray) {
+            String[] values = var.split(CSV_SEPARATOR);
+            if (values[OPERATION_INDEX_0].equals(SUPPLY_OPERATION)) {
+                supplySum += Integer.parseInt(values[AMOUNT_INDEX_1]);
             } else {
-                buySum += Integer.parseInt(values[COLUMN_INDEX_1]);
+                buySum += Integer.parseInt(values[AMOUNT_INDEX_1]);
             }
         }
 
@@ -61,7 +61,7 @@ public class WorkWithFile {
                          new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(data);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data" + toFileName, e);
+            throw new RuntimeException("Can't write data to file: " + toFileName, e);
         }
     }
 }
