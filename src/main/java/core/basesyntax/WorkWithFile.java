@@ -28,17 +28,17 @@ public class WorkWithFile {
     }
 
     private String createReport(List<String> dataFromFile) {
-        String[] array;
+        String[] arraySplit;
         int supply = 0;
         int buy = 0;
         StringBuilder builder = new StringBuilder();
         for (String action : dataFromFile) {
-            array = action.split(",");
-            if (array[ACTION_INDEX].equals(ACTION_SUPPLY)) {
-                supply += Integer.parseInt(array[VALUE_INDEX]);
+            arraySplit = action.split(",");
+            if (ACTION_SUPPLY.equals(arraySplit[ACTION_INDEX])) {
+                supply += Integer.parseInt(arraySplit[VALUE_INDEX]);
             }
-            if (array[ACTION_INDEX].equals(ACTION_BUY)) {
-                buy += Integer.parseInt(array[VALUE_INDEX]);
+            if (ACTION_BUY.equals(arraySplit[ACTION_INDEX])) {
+                buy += Integer.parseInt(arraySplit[VALUE_INDEX]);
             }
         }
         builder.append(ACTION_SUPPLY).append(",").append(supply).append(System.lineSeparator())
@@ -52,7 +52,7 @@ public class WorkWithFile {
         try {
             Files.write(file.toPath(),report.getBytes());
         } catch (IOException e) {
-            throw new RuntimeException("Can not write to filee" + toFileName,e);
+            throw new RuntimeException("Can not write to file" + toFileName,e);
         }
     }
 }
