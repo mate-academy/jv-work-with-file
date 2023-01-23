@@ -52,7 +52,7 @@ public class WorkWithFile {
         try {
             Files.write(file.toPath(),report.getBytes());
         } catch (IOException e) {
-            throw new RuntimeException("Can not write to file" + toFileName,e);
+            throw new RuntimeException("Can not write to filee" + toFileName,e);
         }
     }
 }
