@@ -27,7 +27,7 @@ public class WorkWithFile {
             }
             return stringBuilder.toString().split(System.lineSeparator());
         } catch (IOException e) {
-            throw new RuntimeException("Can`t close fromFileName.", e);
+            throw new RuntimeException("Can`t read from file: " + fromFileName, e);
         }
     }
 
@@ -35,7 +35,7 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Can`t close toFileName.", e);
+            throw new RuntimeException("Can`t write to file: " + toFileName, e);
         }
     }
 
@@ -43,12 +43,12 @@ public class WorkWithFile {
         int supplySum = 0;
         int buySum = 0;
         for (String record : data) {
-            int value = Integer.parseInt(record.substring(record.indexOf(SEPARATOR) + 1));
-            if (record.startsWith(SUPPLY)) {
-                supplySum += value;
+            String [] values = record.split(SEPARATOR);
+            if (values[0].equals(SUPPLY)) {
+                supplySum += Integer.parseInt(values[1]);
             }
-            if (record.startsWith(BUY)) {
-                buySum += value;
+            if (values[0].equals(BUY)) {
+                buySum += Integer.parseInt(values[1]);
             }
         }
         return new StringBuilder().append(SUPPLY).append(SEPARATOR).append(supplySum)
