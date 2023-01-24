@@ -2,7 +2,6 @@ package core.basesyntax;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -11,7 +10,7 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
-    private static final String SEPARATE_SYMBOL = ",";
+    private static final String SEPARATOR = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String [] data = readFromFile(fromFileName);
@@ -27,10 +26,8 @@ public class WorkWithFile {
                 value = bufferedReader.readLine();
             }
             return stringBuilder.toString().split(System.lineSeparator());
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException("Can`t open file to read.", e);
         } catch (IOException e) {
-            throw new RuntimeException("Can`t close file to read.", e);
+            throw new RuntimeException("Can`t close fromFileName.", e);
         }
     }
 
@@ -38,15 +35,15 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(report);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can`t close toFileName.", e);
         }
     }
 
     private String getReport(String [] data) {
         int supplySum = 0;
         int buySum = 0;
-        for (String record: data) {
-            int value = Integer.parseInt(record.substring(record.indexOf(SEPARATE_SYMBOL) + 1));
+        for (String record : data) {
+            int value = Integer.parseInt(record.substring(record.indexOf(SEPARATOR) + 1));
             if (record.startsWith(SUPPLY)) {
                 supplySum += value;
             }
@@ -54,11 +51,10 @@ public class WorkWithFile {
                 buySum += value;
             }
         }
-        StringBuilder stringBuilder = new StringBuilder();
-        return stringBuilder.append(SUPPLY).append(SEPARATE_SYMBOL).append(supplySum)
+        return new StringBuilder().append(SUPPLY).append(SEPARATOR).append(supplySum)
                 .append(System.lineSeparator())
-                .append(BUY).append(SEPARATE_SYMBOL).append(buySum)
+                .append(BUY).append(SEPARATOR).append(buySum)
                 .append(System.lineSeparator())
-                .append(RESULT).append(SEPARATE_SYMBOL).append(supplySum - buySum).toString();
+                .append(RESULT).append(SEPARATOR).append(supplySum - buySum).toString();
     }
 }
