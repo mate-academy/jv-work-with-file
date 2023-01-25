@@ -11,13 +11,15 @@ public class WorkWithFile {
     private static final String BUY = "buy";
     private static final String RESULT = "result";
     private static final String SEPARATOR = ",";
+    private static final int TYPE = 0;
+    private static final int AMOUNT = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String [] data = readFromFile(fromFileName);
+        String[] data = readFromFile(fromFileName);
         writeToFile(getReport(data), toFileName);
     }
 
-    private String [] readFromFile(String fromFileName) {
+    private String[] readFromFile(String fromFileName) {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             StringBuilder stringBuilder = new StringBuilder();
             String value = bufferedReader.readLine();
@@ -39,16 +41,16 @@ public class WorkWithFile {
         }
     }
 
-    private String getReport(String [] data) {
+    private String getReport(String[] data) {
         int supplySum = 0;
         int buySum = 0;
         for (String record : data) {
-            String [] values = record.split(SEPARATOR);
-            if (values[0].equals(SUPPLY)) {
-                supplySum += Integer.parseInt(values[1]);
+            String[] values = record.split(SEPARATOR);
+            if (values[TYPE].equals(SUPPLY)) {
+                supplySum += Integer.parseInt(values[AMOUNT]);
             }
-            if (values[0].equals(BUY)) {
-                buySum += Integer.parseInt(values[1]);
+            if (values[TYPE].equals(BUY)) {
+                buySum += Integer.parseInt(values[AMOUNT]);
             }
         }
         return new StringBuilder().append(SUPPLY).append(SEPARATOR).append(supplySum)
