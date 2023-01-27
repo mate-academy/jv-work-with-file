@@ -9,9 +9,9 @@ public class WorkWithFile {
     private int buy = 0;
     private int supply = 0;
 
-    private void writeToFile( String toFileName) {
+    private void writeToFile(String toFileName) {
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))){
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write(createResultString(supply,buy));
 
         } catch (IOException e) {
@@ -22,7 +22,7 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         String information;
 
-        try ( BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))){
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
 
             while ((information = bufferedReader.readLine()) != null) {
                 String[] str = information.split(SPLIT);
@@ -30,7 +30,6 @@ public class WorkWithFile {
                     supply += Integer.parseInt(str[AMOUNT_INDEX]);
                 } else {
                     buy += Integer.parseInt(str[AMOUNT_INDEX]);
-
                 }
             }
             bufferedReader.close();
@@ -46,7 +45,6 @@ public class WorkWithFile {
         stringBuilder.append("supply," + supply + System.lineSeparator())
                 .append("buy," + buy + System.lineSeparator())
                 .append("result," + result + System.lineSeparator());
-
         return stringBuilder.toString();
     }
 }
