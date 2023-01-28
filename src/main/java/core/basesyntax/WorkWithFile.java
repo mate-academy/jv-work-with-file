@@ -7,7 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final String COMA = ",";
+    private static final String DELIMITER = ",";
     private static final String BUY = "buy";
     private static final String SUPPLY = "supply";
     private static final String RESULT = "result";
@@ -38,17 +38,17 @@ public class WorkWithFile {
         String[] contentArray;
         int buy = 0;
         int supply = 0;
-        for (String s : data) {
-            contentArray = s.split(COMA);
+        for (String info : data) {
+            contentArray = info.split(DELIMITER);
             if (contentArray[NAME_INDEX].equals(BUY)) {
                 buy += Integer.parseInt(contentArray[MONEY_INDEX]);
             } else if (contentArray[NAME_INDEX].equals(SUPPLY)) {
                 supply += Integer.parseInt(contentArray[MONEY_INDEX]);
             }
         }
-        builder.append(SUPPLY).append(COMA).append(supply).append(System.lineSeparator())
-                .append(BUY).append(COMA).append(buy).append(System.lineSeparator())
-                .append(RESULT).append(COMA).append(supply - buy);
+        builder.append(SUPPLY).append(DELIMITER).append(supply).append(System.lineSeparator())
+                .append(BUY).append(DELIMITER).append(buy).append(System.lineSeparator())
+                .append(RESULT).append(DELIMITER).append(supply - buy);
         return builder.toString();
     }
 
@@ -56,7 +56,7 @@ public class WorkWithFile {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Can`t write to file" + toFileName, e);
+            throw new RuntimeException("Can`t write to file: " + toFileName, e);
         }
     }
 }
