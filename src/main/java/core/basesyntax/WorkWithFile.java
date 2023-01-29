@@ -10,7 +10,6 @@ public class WorkWithFile {
     private static final String SPLIT = ",";
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
-    private static final String RESULT = "result";
     private static final int ACTION_INDEX = 0;
     private static final int AMOUNT_INDEX = 1;
     private StringBuilder builder = new StringBuilder();
@@ -20,7 +19,7 @@ public class WorkWithFile {
     }
 
     private String[] readFromFile(String fromFileName) {
-        builder.delete(0, builder.length());
+        builder = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName));) {
             String data = reader.readLine();
             while (data != null) {
@@ -29,8 +28,7 @@ public class WorkWithFile {
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read from file "
-                    + fromFileName
-                    + System.lineSeparator() + e);
+                    + fromFileName, e);
         }
         return builder.toString().split(System.lineSeparator());
     }
@@ -39,7 +37,7 @@ public class WorkWithFile {
         int supply = 0;
         int buy = 0;
         int result = 0;
-        builder.delete(0, builder.length());
+        builder = new StringBuilder();
         for (String information : report) {
             String[] str = information.split(SPLIT);
             if (str[ACTION_INDEX].equals(BUY)) {
@@ -53,7 +51,7 @@ public class WorkWithFile {
 
         return builder.append(SUPPLY + SPLIT + supply + System.lineSeparator())
                 .append(BUY + SPLIT + buy + System.lineSeparator())
-                .append(RESULT + SPLIT + result + System.lineSeparator()).toString();
+                .append("result" + SPLIT + result + System.lineSeparator()).toString();
     }
 
     private void writeToFile(String data, String toFileName) {
@@ -61,15 +59,7 @@ public class WorkWithFile {
             writer.write(data);
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file "
-                    + toFileName
-                    + System.lineSeparator() + e);
+                    + toFileName, e);
         }
     }
 }
-
-
-
-
-
-
-
