@@ -8,8 +8,8 @@ import java.nio.file.Files;
 import java.util.List;
 
 public class WorkWithFile {
-    private final static int INDEX_OF_NAME_OF_PRODUCT = 0;
-    private final static int INDEX_OF_COST_OF_PRODUCT = 1;
+    private static final int INDEX_OF_NAME_OF_PRODUCT = 0;
+    private static final int INDEX_OF_COST_OF_PRODUCT = 1;
 
     public static void getStatistic(String fromFileName, String toFileName) {
         File fileForWrite = new File(toFileName);
