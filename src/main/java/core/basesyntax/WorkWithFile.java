@@ -9,8 +9,7 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final int ACTION_INDEX = 0;
     private static final int AMOUNT_INDEX = 1;
-    private static final String LINE_SEPARATOR = System.lineSeparator();
-    private static final String WHITE_SPACE = " ";
+    private static final String DATA_SEPARATOR = " ";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String dataFromFile = getReadFromFile(fromFileName);
@@ -23,18 +22,18 @@ public class WorkWithFile {
             StringBuilder builder = new StringBuilder();
             String value = bufferedReader.readLine();
             while (value != null) {
-                builder.append(value).append(WHITE_SPACE);
+                builder.append(value).append(DATA_SEPARATOR);
                 value = bufferedReader.readLine();
             }
             return builder.toString();
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file" + fromFileName, e);
+            throw new RuntimeException("Can't read from file:" + fromFileName, e);
         }
     }
 
     private String generateReport(String data) {
         StringBuilder stringBuilder = new StringBuilder();
-        String[] dataSplit = data.split(WHITE_SPACE);
+        String[] dataSplit = data.split(DATA_SEPARATOR);
         int supply = 0;
         int buy = 0;
         int result = 0;
@@ -49,8 +48,8 @@ public class WorkWithFile {
             result = supply - buy;
         }
         return stringBuilder.append("supply,").append(supply)
-                .append(LINE_SEPARATOR).append("buy,").append(buy)
-                .append(LINE_SEPARATOR).append("result,")
+                .append(System.lineSeparator()).append("buy,").append(buy)
+                .append(System.lineSeparator()).append("result,")
                 .append(result).toString();
     }
 
@@ -59,7 +58,7 @@ public class WorkWithFile {
             writer.write(getReportToFile);
             writer.flush();
         } catch (IOException e) {
-            throw new RuntimeException("Can't write file" + toFileName, e);
+            throw new RuntimeException("Can't write to file:" + toFileName, e);
 
         }
     }
