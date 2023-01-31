@@ -1,19 +1,20 @@
 package core.basesyntax;
 
-import java.io.BufferedWriter;
 import java.io.BufferedReader;
-import java.io.IOException;
+import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.File;
+import java.io.IOException;
+
 
 public class WorkWithFile {
-    private int supply = 0;
-    private int buy = 0;
-    StringBuilder builder = new StringBuilder();
+    private StringBuilder builder = new StringBuilder();
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] dataFromFile = readDataFile(fromFileName);
+        int supply = 0;
+        int buy = 0;
         for (String lineInFile : dataFromFile) {
             if (lineInFile.contains("supply")) {
                 supply += getAmount(lineInFile);
