@@ -1,12 +1,11 @@
 package core.basesyntax;
 
+import java.io.File;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.File;
 import java.io.IOException;
-
 
 public class WorkWithFile {
     private StringBuilder builder = new StringBuilder();
