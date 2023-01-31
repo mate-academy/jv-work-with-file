@@ -23,7 +23,7 @@ public class WorkWithFile {
         }
         builder.setLength(0);
         builder.append("supply,").append(supply).append(System.lineSeparator())
-                .append("buy").append(buy).append(System.lineSeparator())
+                .append("buy,").append(buy).append(System.lineSeparator())
                 .append("result,").append(supply - buy);
         writeDataToFile(toFileName, builder.toString());
     }
@@ -34,7 +34,7 @@ public class WorkWithFile {
     }
 
     public String[] readDataFile(String fromFileName) {
-        String lineInFile = null;
+        String lineInFile = "";
         try (BufferedReader reader = new BufferedReader(new FileReader(
                 new File(fromFileName)))) {
             lineInFile = reader.readLine();
