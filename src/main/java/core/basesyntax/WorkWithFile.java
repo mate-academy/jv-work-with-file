@@ -44,7 +44,7 @@ public class WorkWithFile {
                 lineInFile = reader.readLine();
             }
         } catch (IOException exception) {
-            throw new RuntimeException("File don't read", exception);
+            throw new RuntimeException("File couldn't be read: " + fromFileName, exception);
         }
         return builder.toString().split(System.lineSeparator());
     }
@@ -54,7 +54,7 @@ public class WorkWithFile {
                 new FileWriter(new File(toFileName)))) {
             writer.write(result);
         } catch (IOException exception) {
-            throw new RuntimeException("File don't write", exception);
+            throw new RuntimeException("Couldn't write the file: " + toFileName, exception);
         }
     }
 }
