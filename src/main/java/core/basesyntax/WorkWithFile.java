@@ -9,33 +9,21 @@ import java.io.IOException;
 
 public class WorkWithFile {
     private static final String LINE_SEPARATOR = System.lineSeparator();
-    private StringBuilder builder = new StringBuilder();
+    private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] dataFromFile = readDataFile(fromFileName);
-        int supply = 0;
-        int buy = 0;
-        for (String lineInFile : dataFromFile) {
-            if (lineInFile.contains("supply")) {
-                supply += getAmount(lineInFile);
-            } else {
-                buy += getAmount(lineInFile);
-            }
-        }
-        builder.setLength(0);
-        builder.append("supply,").append(supply).append(LINE_SEPARATOR)
-                .append("buy,").append(buy).append(LINE_SEPARATOR)
-                .append("result,").append(supply - buy);
-        writeDataToFile(toFileName, builder.toString());
-        builder.setLength(0);
+        String report = createReport(dataFromFile);
+        writeDataToFile(toFileName, report);
     }
 
     private int getAmount(String line) {
         String[] amount = line.split(",");
-        return Integer.parseInt(amount[1]);
+        return Integer.parseInt(amount[AMOUNT_INDEX]);
     }
 
     private String[] readDataFile(String fromFileName) {
+        StringBuilder builder = new StringBuilder();
         String lineInFile = "";
         try (BufferedReader reader = new BufferedReader(new FileReader(
                 new File(fromFileName)))) {
@@ -57,6 +45,23 @@ public class WorkWithFile {
         } catch (IOException exception) {
             throw new RuntimeException("Couldn't write the file: " + toFileName, exception);
         }
+    }
+
+    private String createReport(String[] data) {
+        StringBuilder builder = new StringBuilder();
+        int supply = 0;
+        int buy = 0;
+        for (String lineInFile : data) {
+            if (lineInFile.contains("supply")) {
+                supply += getAmount(lineInFile);
+            } else {
+                buy += getAmount(lineInFile);
+            }
+        }
+        builder.append("supply,").append(supply).append(LINE_SEPARATOR)
+                .append("buy,").append(buy).append(LINE_SEPARATOR)
+                .append("result,").append(supply - buy);
+        return builder.toString();
     }
 }
 
