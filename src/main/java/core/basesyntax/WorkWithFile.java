@@ -24,13 +24,13 @@ public class WorkWithFile {
 
     private String[] readDataFile(String fromFileName) {
         StringBuilder builder = new StringBuilder();
-        String lineInFile = "";
+        String line = "";
         try (BufferedReader reader = new BufferedReader(new FileReader(
                 new File(fromFileName)))) {
-            lineInFile = reader.readLine();
-            while (lineInFile != null) {
-                builder.append(lineInFile).append(LINE_SEPARATOR);
-                lineInFile = reader.readLine();
+            line = reader.readLine();
+            while (line != null) {
+                builder.append(line).append(LINE_SEPARATOR);
+                line = reader.readLine();
             }
         } catch (IOException exception) {
             throw new RuntimeException("File couldn't be read: " + fromFileName, exception);
@@ -51,11 +51,11 @@ public class WorkWithFile {
         StringBuilder builder = new StringBuilder();
         int supply = 0;
         int buy = 0;
-        for (String lineInFile : data) {
-            if (lineInFile.contains("supply")) {
-                supply += getAmount(lineInFile);
+        for (String line : data) {
+            if (line.contains("supply")) {
+                supply += getAmount(line);
             } else {
-                buy += getAmount(lineInFile);
+                buy += getAmount(line);
             }
         }
         builder.append("supply,").append(supply).append(LINE_SEPARATOR)
