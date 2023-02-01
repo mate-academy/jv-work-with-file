@@ -26,6 +26,7 @@ public class WorkWithFile {
                 .append("buy,").append(buy).append(System.lineSeparator())
                 .append("result,").append(supply - buy);
         writeDataToFile(toFileName, builder.toString());
+        builder.setLength(0);
     }
 
     private int getAmount(String line) {
