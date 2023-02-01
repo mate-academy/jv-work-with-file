@@ -16,8 +16,12 @@ public class WorkWithFile {
     private static int supply = 0;
     private static int result;
 
-    public static List<String> readFile(String fromFileName1) {
-        File fileForRead = new File(fromFileName1);
+    public static void getStatistic(String fromFileName, String toFileName) {
+        generateReport(fromFileName, toFileName);
+    }
+
+    private static List<String> readFile(String fromFileName) {
+        File fileForRead = new File(fromFileName);
         List<String> listWithInfoAboutProducts;
         try {
             listWithInfoAboutProducts = Files.readAllLines(fileForRead.toPath());
@@ -27,8 +31,8 @@ public class WorkWithFile {
         return listWithInfoAboutProducts;
     }
 
-    public static void writeToFile(String toFileName1) {
-        File fileForWrite = new File(toFileName1);
+    private static void writeToFile(String toFileName) {
+        File fileForWrite = new File(toFileName);
         try {
             fileForWrite.createNewFile();
         } catch (IOException e) {
@@ -41,9 +45,10 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to the file " + fileForWrite, e);
         }
+
     }
 
-    public static void getStatistic(String fromFileName, String toFileName) {
+    private static void generateReport(String fromFileName, String toFileName) {
         List<String> listWithInfoAboutProducts = readFile(fromFileName);
         for (String string : listWithInfoAboutProducts) {
             String[] arrayWithInfoAboutProduct = string.split(CSV_DIVIDER);
