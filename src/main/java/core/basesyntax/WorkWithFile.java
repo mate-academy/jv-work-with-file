@@ -28,12 +28,12 @@ public class WorkWithFile {
         writeDataToFile(toFileName, builder.toString());
     }
 
-    public int getAmount(String line) {
+    private int getAmount(String line) {
         String[] amount = line.split(",");
         return Integer.parseInt(amount[1]);
     }
 
-    public String[] readDataFile(String fromFileName) {
+    private String[] readDataFile(String fromFileName) {
         String lineInFile = "";
         try (BufferedReader reader = new BufferedReader(new FileReader(
                 new File(fromFileName)))) {
@@ -48,7 +48,7 @@ public class WorkWithFile {
         return builder.toString().split(System.lineSeparator());
     }
 
-    public void writeDataToFile(String toFileName, String result) {
+    private void writeDataToFile(String toFileName, String result) {
         try (BufferedWriter writer = new BufferedWriter(
                 new FileWriter(new File(toFileName)))) {
             writer.write(result);
