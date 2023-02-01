@@ -8,6 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String LINE_SEPARATOR = System.lineSeparator();
     private StringBuilder builder = new StringBuilder();
 
     public void getStatistic(String fromFileName, String toFileName) {
@@ -22,8 +23,8 @@ public class WorkWithFile {
             }
         }
         builder.setLength(0);
-        builder.append("supply,").append(supply).append(System.lineSeparator())
-                .append("buy,").append(buy).append(System.lineSeparator())
+        builder.append("supply,").append(supply).append(LINE_SEPARATOR)
+                .append("buy,").append(buy).append(LINE_SEPARATOR)
                 .append("result,").append(supply - buy);
         writeDataToFile(toFileName, builder.toString());
         builder.setLength(0);
@@ -40,13 +41,13 @@ public class WorkWithFile {
                 new File(fromFileName)))) {
             lineInFile = reader.readLine();
             while (lineInFile != null) {
-                builder.append(lineInFile).append(System.lineSeparator());
+                builder.append(lineInFile).append(LINE_SEPARATOR);
                 lineInFile = reader.readLine();
             }
         } catch (IOException exception) {
             throw new RuntimeException("File couldn't be read: " + fromFileName, exception);
         }
-        return builder.toString().split(System.lineSeparator());
+        return builder.toString().split(LINE_SEPARATOR);
     }
 
     private void writeDataToFile(String toFileName, String result) {
