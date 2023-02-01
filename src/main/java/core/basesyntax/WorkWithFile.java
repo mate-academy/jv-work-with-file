@@ -10,33 +10,30 @@ import java.util.List;
 public class WorkWithFile {
     private static final int INDEX_OF_NAME_OF_PRODUCT = 0;
     private static final int INDEX_OF_COST_OF_PRODUCT = 1;
+    private static final String CSV_DIVIDER = ",";
+    private static final String BUY_ITEM = "buy";
+    private static int buy = 0;
+    private static int supply = 0;
+    private static int result;
 
-    public static void getStatistic(String fromFileName, String toFileName) {
-        File fileForWrite = new File(toFileName);
-        File fileForRead = new File(fromFileName);
-        List<String> strings;
+    public static List<String> readFile(String fromFileName1) {
+        File fileForRead = new File(fromFileName1);
+        List<String> listWithInfoAboutProducts;
         try {
-            strings = Files.readAllLines(fileForRead.toPath());
+            listWithInfoAboutProducts = Files.readAllLines(fileForRead.toPath());
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from the file " + fileForRead, e);
         }
+        return listWithInfoAboutProducts;
+    }
+
+    public static void writeToFile(String toFileName1) {
+        File fileForWrite = new File(toFileName1);
         try {
             fileForWrite.createNewFile();
         } catch (IOException e) {
             throw new RuntimeException("Can't create new file" + fileForWrite, e);
         }
-        int buy = 0;
-        int supply = 0;
-        int result;
-        for (String string : strings) {
-            String[] arrayWithInfoAboutProduct = string.split(",");
-            if (arrayWithInfoAboutProduct[INDEX_OF_NAME_OF_PRODUCT].equals("buy")) {
-                buy += Integer.parseInt(arrayWithInfoAboutProduct[INDEX_OF_COST_OF_PRODUCT]);
-            } else {
-                supply += Integer.parseInt(arrayWithInfoAboutProduct[INDEX_OF_COST_OF_PRODUCT]);
-            }
-        }
-        result = supply - buy;
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileForWrite))) {
             bufferedWriter.write("supply," + supply + System.lineSeparator());
             bufferedWriter.write("buy," + buy + System.lineSeparator());
@@ -44,5 +41,21 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to the file " + fileForWrite, e);
         }
+    }
+
+    public static void getStatistic(String fromFileName, String toFileName) {
+        List<String> listWithInfoAboutProducts = readFile(fromFileName);
+        for (String string : listWithInfoAboutProducts) {
+            String[] arrayWithInfoAboutProduct = string.split(CSV_DIVIDER);
+            if (arrayWithInfoAboutProduct[INDEX_OF_NAME_OF_PRODUCT].equals(BUY_ITEM)) {
+                buy += Integer.parseInt(arrayWithInfoAboutProduct[INDEX_OF_COST_OF_PRODUCT]);
+            } else {
+                supply += Integer.parseInt(arrayWithInfoAboutProduct[INDEX_OF_COST_OF_PRODUCT]);
+            }
+        }
+        result = supply - buy;
+        writeToFile(toFileName);
+        buy = 0;
+        supply = 0;
     }
 }
