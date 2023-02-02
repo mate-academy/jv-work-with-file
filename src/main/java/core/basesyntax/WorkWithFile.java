@@ -10,6 +10,8 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final String LINE_SEPARATOR = System.lineSeparator();
     private static final int AMOUNT_INDEX = 1;
+    private static final String REGEX_COMA = ",";
+    private static final String SUPPLY = "supply";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] dataFromFile = readDataFile(fromFileName);
@@ -18,7 +20,7 @@ public class WorkWithFile {
     }
 
     private int getAmount(String line) {
-        String[] amount = line.split(",");
+        String[] amount = line.split(REGEX_COMA);
         return Integer.parseInt(amount[AMOUNT_INDEX]);
     }
 
@@ -52,13 +54,13 @@ public class WorkWithFile {
         int supply = 0;
         int buy = 0;
         for (String line : data) {
-            if (line.contains("supply")) {
+            if (line.contains(SUPPLY)) {
                 supply += getAmount(line);
             } else {
                 buy += getAmount(line);
             }
         }
-        builder.append("supply,").append(supply).append(LINE_SEPARATOR)
+        builder.append(SUPPLY).append(REGEX_COMA).append(supply).append(LINE_SEPARATOR)
                 .append("buy,").append(buy).append(LINE_SEPARATOR)
                 .append("result,").append(supply - buy);
         return builder.toString();
