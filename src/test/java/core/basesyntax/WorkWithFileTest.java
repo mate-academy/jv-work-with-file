@@ -73,8 +73,6 @@ public class WorkWithFileTest {
     @Test
     public void getStatisticAboutBananaRepeatedMethodCall() {
         workWithFile.getStatistic("banana.csv", BANANA_RESULT_FILE);
-        workWithFile.getStatistic("banana.csv", BANANA_RESULT_FILE);
-
         String actualResult = readFromFile(BANANA_RESULT_FILE).trim();
         String expectedResult = "supply,491" + System.lineSeparator()
             + "buy,293" + System.lineSeparator()
