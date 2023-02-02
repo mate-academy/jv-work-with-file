@@ -27,8 +27,9 @@ public class WorkWithFile {
             if (!st.isEmpty()) {
                 int dif = 0;
                 int i = 0;
+                String tmp = "";
                 for (String key : st.keySet()) {
-                    bro.write(String.format("%s,%d\n", key, st.get(key)));
+                    tmp = String.format("%s,%d\n", key, st.get(key)) + tmp;
                     if (i == 0) {
                         dif = st.get(key);
                     } else {
@@ -36,6 +37,7 @@ public class WorkWithFile {
                     }
                     i++;
                 }
+                bro.write(tmp);
                 bro.write(String.format("result,%d\n", Math.abs(dif)));
             }
         } catch (IOException | NumberFormatException e) {
