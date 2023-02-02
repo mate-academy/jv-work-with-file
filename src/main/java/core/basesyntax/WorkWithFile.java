@@ -22,8 +22,7 @@ public class WorkWithFile {
 
     private String readFromFile(String readFile) {
         StringBuilder builder = new StringBuilder();
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(readFile));
+        try (BufferedReader reader = new BufferedReader(new FileReader(readFile))) {
             String value = reader.readLine();
             while (value != null) {
                 builder.append(value).append(System.lineSeparator());
