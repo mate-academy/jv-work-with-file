@@ -11,6 +11,7 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         int supplySum = 0;
         int buySum = 0;
+
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String line = reader.readLine();
             while (line != null) {
