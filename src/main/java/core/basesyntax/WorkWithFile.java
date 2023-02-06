@@ -7,21 +7,26 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    public void getStatistic(String fromFileName, String toFileName) {
-        StringBuilder text = new StringBuilder();
+    private static final String[] actions = { "supply", "buy" };
+    private final StringBuilder text = new StringBuilder();
 
+    public void readFromFile(String fromFileName) {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
-            String readByLine = bufferedReader.readLine();
+            if (text.length() == 0) {
+                String readByLine = bufferedReader.readLine();
 
-            while (readByLine != null) {
-                text.append(readByLine).append(",");
-                readByLine = bufferedReader.readLine();
+                while (readByLine != null) {
+                    text.append(readByLine).append(",");
+                    readByLine = bufferedReader.readLine();
+                }
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read the file", e);
         }
+    }
+
+    public void writeToTheFile(String toFileName) {
         String[] split = text.toString().split(",");
-        String[] actions = { "supply", "buy" };
         int[] amount = new int[actions.length];
 
         for (int i = 0; i < split.length; i++) {
@@ -34,10 +39,15 @@ public class WorkWithFile {
 
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(actions[0] + "," + amount[0] + System.lineSeparator()
-                    + actions[1] + "," + amount[1] + System.lineSeparator()
-                    + "result" + "," + (amount[0] - amount[1]));
+                        + actions[1] + "," + amount[1] + System.lineSeparator()
+                        + "result" + "," + (amount[0] - amount[1]));
         } catch (IOException e) {
-            throw new RuntimeException("Can't read the file", e);
+            throw new RuntimeException("Can't write to the file", e);
         }
+    }
+
+    public void getStatistic(String fromFileName, String toFileName) {
+        readFromFile(fromFileName);
+        writeToTheFile(toFileName);
     }
 }
