@@ -11,19 +11,27 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         String line;
         HashMap<String, Integer> st = new HashMap<>();
-        try (BufferedReader bri = new BufferedReader(new FileReader(fromFileName));
-                BufferedWriter bro = new BufferedWriter(new FileWriter(toFileName))) {
+        try (BufferedReader bri = new BufferedReader(new FileReader(fromFileName))) {
             while ((line = bri.readLine()) != null) {
                 String[] em = line.split(",");
                 if (em.length == 2) {
-                    if (st.containsKey(em[0].trim())) {
-                        st.replace(em[0].trim(), st.get(em[0].trim()) + Integer.parseInt(em[1]
-                                .trim()));
+                    var tmp1 = em[0].trim();
+                    var tmp2 = em[1].trim();
+                    if (st.containsKey(tmp1)) {
+                        st.replace(tmp1, st.get(tmp1) + Integer.parseInt(tmp2));
                     } else {
-                        st.put(em[0].trim(), Integer.parseInt(em[1].trim()));
+                        st.put(tmp1, Integer.parseInt(tmp2));
                     }
                 }
             }
+        } catch (IOException | NumberFormatException e) {
+            if (e instanceof IOException) {
+                throw new RuntimeException(e.getMessage() + "Problem with input file");
+            } else {
+                throw new RuntimeException(e.getMessage());
+            }
+        }
+        try (BufferedWriter bro = new BufferedWriter(new FileWriter(toFileName))) {
             if (!st.isEmpty()) {
                 int dif = 0;
                 int i = 0;
@@ -41,7 +49,11 @@ public class WorkWithFile {
                 bro.write(String.format("result,%d\n", Math.abs(dif)));
             }
         } catch (IOException | NumberFormatException e) {
-            e.printStackTrace();
+            if (e instanceof IOException) {
+                throw new RuntimeException(e.getMessage() + "Problem with output file");
+            } else {
+                throw new RuntimeException(e.getMessage());
+            }
         }
     }
 }
