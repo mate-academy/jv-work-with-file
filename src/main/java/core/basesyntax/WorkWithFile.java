@@ -8,6 +8,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final int DATA_LENGTH = 2;
+    private static final int INDEX_OPERATION_TYPE = 0;
+    private static final int INDEX_AMOUNT = 1;
+
     public void getStatistic(String fromFileName, String toFileName) {
         int supplySum = 0;
         int buySum = 0;
@@ -16,14 +22,19 @@ public class WorkWithFile {
             String line = reader.readLine();
             while (line != null) {
                 String [] data = line.split(",");
-                switch (data[0]) {
-                    case "supply":
-                        supplySum += Integer.parseInt(data[1]);
+                if (data.length != DATA_LENGTH) {
+                    throw new RuntimeException("Invalid format line - [" + line + "]");
+                }
+                switch (data[INDEX_OPERATION_TYPE]) {
+                    case SUPPLY:
+                        supplySum += Integer.parseInt(data[INDEX_AMOUNT]);
                         break;
-                    case "buy":
-                        buySum += Integer.parseInt(data[1]);
+                    case BUY:
+                        buySum += Integer.parseInt(data[INDEX_AMOUNT]);
                         break;
                     default:
+                        throw new RuntimeException("Unknown type operation - ["
+                                + data[INDEX_OPERATION_TYPE] + "]");
                 }
                 line = reader.readLine();
             }
@@ -32,13 +43,16 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read file", e);
         }
+        saveResultToFile(toFileName, supplySum, buySum);
+    }
 
-        try (BufferedWriter reader = new BufferedWriter(new FileWriter(toFileName))) {
-            reader.write("supply," + supplySum + System.lineSeparator());
-            reader.write("buy," + buySum + System.lineSeparator());
+    private void saveResultToFile(String fileName, int supplySum, int buySum) {
+        try (BufferedWriter reader = new BufferedWriter(new FileWriter(fileName))) {
+            reader.write(SUPPLY + "," + supplySum + System.lineSeparator());
+            reader.write(BUY + "," + buySum + System.lineSeparator());
             reader.write("result," + (supplySum - buySum) + System.lineSeparator());
         } catch (IOException e) {
-            throw new RuntimeException("Can't write to file", e);
+            throw new RuntimeException("Can't write to file - [" + fileName + "]", e);
         }
     }
 }
