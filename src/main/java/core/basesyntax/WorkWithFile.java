@@ -12,9 +12,6 @@ public class WorkWithFile {
     private static final int INDEX_OF_COST_OF_PRODUCT = 1;
     private static final String CSV_DIVIDER = ",";
     private static final String BUY_ITEM = "buy";
-    private static int buy = 0;
-    private static int supply = 0;
-    private static int result;
 
     public static void getStatistic(String fromFileName, String toFileName) {
         generateReport(fromFileName, toFileName);
@@ -31,24 +28,16 @@ public class WorkWithFile {
         return listWithInfoAboutProducts;
     }
 
-    private static void writeToFile(String toFileName) {
+    private static void writeToFile(String fromFileName, String toFileName) {
         File fileForWrite = new File(toFileName);
         try {
             fileForWrite.createNewFile();
         } catch (IOException e) {
             throw new RuntimeException("Can't create new file" + fileForWrite, e);
         }
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileForWrite))) {
-            bufferedWriter.write("supply," + supply + System.lineSeparator());
-            bufferedWriter.write("buy," + buy + System.lineSeparator());
-            bufferedWriter.write("result," + result);
-        } catch (IOException e) {
-            throw new RuntimeException("Can't write data to the file " + fileForWrite, e);
-        }
-
-    }
-
-    private static void generateReport(String fromFileName, String toFileName) {
+        int buy = 0;
+        int supply = 0;
+        int result;
         List<String> listWithInfoAboutProducts = readFile(fromFileName);
         for (String string : listWithInfoAboutProducts) {
             String[] arrayWithInfoAboutProduct = string.split(CSV_DIVIDER);
@@ -59,8 +48,16 @@ public class WorkWithFile {
             }
         }
         result = supply - buy;
-        writeToFile(toFileName);
-        buy = 0;
-        supply = 0;
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileForWrite))) {
+            bufferedWriter.write("supply," + supply + System.lineSeparator());
+            bufferedWriter.write("buy," + buy + System.lineSeparator());
+            bufferedWriter.write("result," + result);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write data to the file " + fileForWrite, e);
+        }
+    }
+
+    private static void generateReport(String fromFileName, String toFileName) {
+        writeToFile(fromFileName, toFileName);
     }
 }
