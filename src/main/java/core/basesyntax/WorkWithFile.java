@@ -9,31 +9,34 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final String SPACE_SEPARATOR = " ";
     private static final String COMMA_SEPARATOR = ",";
-    private static final int OPERATION_TYPE_NAME = 0;
-    private static final int OPERATION_AMOUNT = 1;
+    private static final int OPERATION_TYPE_INDEX = 0;
+    private static final int OPERATION_AMOUNT_INDEX = 1;
+    private static final String SUPPLY_NAME = "supply";
+    private static final String BUY_NAME = "buy";
+    private static final String RESULT_NAME = "result";
+    private static final String COMMA_SYMBOL = ",";
+    private static final String CAN_NOT_READ_FILE_INFO = "Can't read data from the file ";
+    private static final String CAN_NOT_WRITE_FILE_INFO = "Can't write data from the file ";
+    private static final String LINE_SEPARATOR = System.lineSeparator();
 
     public void getStatistic(String fromFileName, String toFileName) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            writer.write(getData(fromFileName));
-        } catch (IOException e) {
-            throw new RuntimeException("Can't write data from the file " + toFileName, e);
-        }
+        writeToFile(fromFileName, toFileName);
     }
 
     private String[] readFromFile(String fromFileName) {
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
-            StringBuilder builder = new StringBuilder();
+            StringBuilder textBuilder = new StringBuilder();
             String text = reader.readLine();
 
             while (text != null) {
-                builder.append(text).append(SPACE_SEPARATOR);
+                textBuilder.append(text).append(SPACE_SEPARATOR);
                 text = reader.readLine();
             }
             String[] textToStringArray
-                    = builder.toString().split(SPACE_SEPARATOR);
+                    = textBuilder.toString().split(SPACE_SEPARATOR);
             return textToStringArray;
         } catch (IOException e) {
-            throw new RuntimeException("Can't read data from the file " + fromFileName, e);
+            throw new RuntimeException(CAN_NOT_READ_FILE_INFO + fromFileName, e);
         }
     }
 
@@ -43,17 +46,25 @@ public class WorkWithFile {
 
         for (int i = 0; i < readFromFile(fromFileName).length; i++) {
             String[] textSplitByComma = readFromFile(fromFileName)[i].split(COMMA_SEPARATOR);
-            int amount = Integer.valueOf(textSplitByComma[OPERATION_AMOUNT]);
-            supply = textSplitByComma[OPERATION_TYPE_NAME].equals("supply")
+            int amount = Integer.valueOf(textSplitByComma[OPERATION_AMOUNT_INDEX]);
+            supply = textSplitByComma[OPERATION_TYPE_INDEX].equals(SUPPLY_NAME)
                     ? supply += amount : supply;
-            buy = textSplitByComma[OPERATION_TYPE_NAME].equals("buy")
+            buy = textSplitByComma[OPERATION_TYPE_INDEX].equals(BUY_NAME)
                     ? buy += amount : buy;
         }
         int result = supply - buy;
-        StringBuilder builder = new StringBuilder()
-                .append("supply,").append(supply).append(System.lineSeparator())
-                .append("buy,").append(buy).append(System.lineSeparator())
-                .append("result,").append(result).append(System.lineSeparator());
-        return builder.toString();
+        StringBuilder dataBuilder = new StringBuilder()
+                .append(SUPPLY_NAME).append(COMMA_SYMBOL).append(supply).append(LINE_SEPARATOR)
+                .append(BUY_NAME).append(COMMA_SYMBOL).append(buy).append(LINE_SEPARATOR)
+                .append(RESULT_NAME).append(COMMA_SYMBOL).append(result).append(LINE_SEPARATOR);
+        return dataBuilder.toString();
+    }
+
+    private void writeToFile(String fromFileName, String toFileName) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
+            writer.write(getData(fromFileName));
+        } catch (IOException e) {
+            throw new RuntimeException(CAN_NOT_WRITE_FILE_INFO + toFileName, e);
+        }
     }
 }
