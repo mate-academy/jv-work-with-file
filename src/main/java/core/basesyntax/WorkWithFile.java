@@ -20,10 +20,13 @@ public class WorkWithFile {
     private static final String LINE_SEPARATOR = System.lineSeparator();
 
     public void getStatistic(String fromFileName, String toFileName) {
-        writeToFile(fromFileName, toFileName);
+        String dataFromFile = readFromFile(fromFileName);
+        String report = getReport(dataFromFile);
+        writeToFile(toFileName, report);
     }
 
-    private String[] readFromFile(String fromFileName) {
+    private String readFromFile(String fromFileName) {
+
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             StringBuilder textBuilder = new StringBuilder();
             String text = reader.readLine();
@@ -32,37 +35,36 @@ public class WorkWithFile {
                 textBuilder.append(text).append(SPACE_SEPARATOR);
                 text = reader.readLine();
             }
-            String[] textToStringArray
-                    = textBuilder.toString().split(SPACE_SEPARATOR);
-            return textToStringArray;
+            return textBuilder.toString();
         } catch (IOException e) {
             throw new RuntimeException(CAN_NOT_READ_FILE_INFO + fromFileName, e);
         }
     }
 
-    private String getData(String fromFileName) {
+    private String getReport(String dataFromFile) {
         int supply = 0;
         int buy = 0;
-
-        for (int i = 0; i < readFromFile(fromFileName).length; i++) {
-            String[] textSplitByComma = readFromFile(fromFileName)[i].split(COMMA_SEPARATOR);
+        String[] textToStringArray = dataFromFile.split(SPACE_SEPARATOR);
+        for (int i = 0; i < textToStringArray.length; i++) {
+            String[] textSplitByComma = textToStringArray[i].split(COMMA_SEPARATOR);
             int amount = Integer.valueOf(textSplitByComma[OPERATION_AMOUNT_INDEX]);
-            supply = textSplitByComma[OPERATION_TYPE_INDEX].equals(SUPPLY_NAME)
-                    ? supply += amount : supply;
-            buy = textSplitByComma[OPERATION_TYPE_INDEX].equals(BUY_NAME)
-                    ? buy += amount : buy;
+            if (textSplitByComma[OPERATION_TYPE_INDEX].equals(SUPPLY_NAME)) {
+                supply += amount;
+            } else if (textSplitByComma[OPERATION_TYPE_INDEX].equals(BUY_NAME)) {
+                buy += amount;
+            }
         }
         int result = supply - buy;
-        StringBuilder dataBuilder = new StringBuilder()
+        return new StringBuilder()
                 .append(SUPPLY_NAME).append(COMMA_SYMBOL).append(supply).append(LINE_SEPARATOR)
                 .append(BUY_NAME).append(COMMA_SYMBOL).append(buy).append(LINE_SEPARATOR)
-                .append(RESULT_NAME).append(COMMA_SYMBOL).append(result).append(LINE_SEPARATOR);
-        return dataBuilder.toString();
+                .append(RESULT_NAME).append(COMMA_SYMBOL).append(result).append(LINE_SEPARATOR)
+                .toString();
     }
 
-    private void writeToFile(String fromFileName, String toFileName) {
+    private void writeToFile(String toFileName, String report) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            writer.write(getData(fromFileName));
+            writer.write(report);
         } catch (IOException e) {
             throw new RuntimeException(CAN_NOT_WRITE_FILE_INFO + toFileName, e);
         }
