@@ -13,12 +13,13 @@ public class WorkWithFile {
     public static final int ARRAY_COUNT = 1;
     public static final String SUPPLY = "supply";
     public static final String BUY = "buy";
-    public static final String TOTAL = "result";
+    public static final String RESULT = "result";
     public static final String DELIMITER = "\\W+";
+    public static final String COMMA = ",";
     public static final String SEPARATOR = System.lineSeparator();
 
     public void getStatistic(String fromFileName, String toFileName) {
-        writeList(fileWork(readList(fromFileName)),toFileName);
+        writeList(createReport(readList(fromFileName)),toFileName);
     }
 
     private String readList(String fromFileName) {
@@ -35,7 +36,7 @@ public class WorkWithFile {
         return stringBuilder.toString();
     }
 
-    private StringBuilder fileWork(String list) {
+    private String createReport(String list) {
         String[] all = list.split(DELIMITER);
         int[] operationSum = new int[INDEX_SUM_ARRAY_LENGTH];
         for (int j = 0; j < all.length; j += 2) {
@@ -45,17 +46,16 @@ public class WorkWithFile {
                 operationSum[INDEX_BUY] += Integer.parseInt(all[j + ARRAY_COUNT]);
             }
         }
-        int result = operationSum[INDEX_SUPPLY] - operationSum[INDEX_BUY];
-        StringBuilder writer = new StringBuilder().append(SUPPLY).append(",");
-        writer.append(operationSum[INDEX_SUPPLY]).append(SEPARATOR).append(BUY).append(",");
-        writer.append(operationSum[INDEX_BUY]).append(SEPARATOR).append(TOTAL).append(",");
-        writer.append(result);
-        return writer;
+        return SUPPLY + COMMA + operationSum[INDEX_SUPPLY] + SEPARATOR
+                +
+                BUY + COMMA + operationSum[INDEX_BUY] + SEPARATOR
+                +
+                RESULT + COMMA + (operationSum[INDEX_SUPPLY] - operationSum[INDEX_BUY]);
     }
 
-    private void writeList(StringBuilder writer, String toFileName) {
+    private void writeList(String report, String toFileName) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write(String.valueOf(writer));
+            bufferedWriter.write(report);
             bufferedWriter.flush();
         } catch (IOException e) {
             throw new RuntimeException("Can't write: " + toFileName);
