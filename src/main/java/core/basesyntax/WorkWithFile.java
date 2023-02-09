@@ -9,10 +9,14 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         lifeHackCalculus.getCalculations(fromFileName);
 
-        //let's write
         String text = "supply," + lifeHackCalculus.getSupply() + System.lineSeparator()
                 + "buy," + lifeHackCalculus.getBuy() + System.lineSeparator()
                 + "result," + lifeHackCalculus.getResult();
+
+        writeInFile(text, toFileName);
+    }
+
+    private void writeInFile(String text, String toFileName) {
         try (FileWriter fileWriter = new FileWriter(toFileName)) {
             fileWriter.write(text);
         } catch (IOException e) {
