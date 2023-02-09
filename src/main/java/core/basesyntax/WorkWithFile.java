@@ -25,10 +25,9 @@ public class WorkWithFile {
     private String readList(String fromFileName) {
         StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
-            int value = reader.read();
-            while (value != -1) {
-                stringBuilder.append((char) value);
-                value = reader.read();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                stringBuilder.append(line).append(COMMA);
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read: " + fromFileName);
@@ -47,16 +46,13 @@ public class WorkWithFile {
             }
         }
         return SUPPLY + COMMA + operationSum[INDEX_SUPPLY] + SEPARATOR
-                +
-                BUY + COMMA + operationSum[INDEX_BUY] + SEPARATOR
-                +
-                RESULT + COMMA + (operationSum[INDEX_SUPPLY] - operationSum[INDEX_BUY]);
+                + BUY + COMMA + operationSum[INDEX_BUY] + SEPARATOR
+                + RESULT + COMMA + (operationSum[INDEX_SUPPLY] - operationSum[INDEX_BUY]);
     }
 
     private void writeList(String report, String toFileName) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(report);
-            bufferedWriter.flush();
         } catch (IOException e) {
             throw new RuntimeException("Can't write: " + toFileName);
         }
