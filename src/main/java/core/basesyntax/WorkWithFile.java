@@ -14,7 +14,7 @@ public class WorkWithFile {
     private static final String BUY_ITEM = "buy";
 
     public static void getStatistic(String fromFileName, String toFileName) {
-        generateReport(fromFileName, toFileName);
+        writeToFile(fromFileName, toFileName);
     }
 
     private static List<String> readFile(String fromFileName) {
@@ -28,17 +28,21 @@ public class WorkWithFile {
         return listWithInfoAboutProducts;
     }
 
-    private static void writeToFile(String fromFileName, String toFileName) {
-        File fileForWrite = new File(toFileName);
-        try {
-            fileForWrite.createNewFile();
+    private static void writeToFile(String report, String toFileName) {
+        String string = generateReport(report);
+        generateReport(report);
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
+            bufferedWriter.write(string);
         } catch (IOException e) {
-            throw new RuntimeException("Can't create new file" + fileForWrite, e);
+            throw new RuntimeException("Can't write data to the file " + toFileName, e);
         }
+    }
+
+    private static String generateReport(String report) {
         int buy = 0;
         int supply = 0;
         int result;
-        List<String> listWithInfoAboutProducts = readFile(fromFileName);
+        List<String> listWithInfoAboutProducts = readFile(report);
         for (String string : listWithInfoAboutProducts) {
             String[] arrayWithInfoAboutProduct = string.split(CSV_DIVIDER);
             if (arrayWithInfoAboutProduct[INDEX_OF_NAME_OF_PRODUCT].equals(BUY_ITEM)) {
@@ -48,16 +52,10 @@ public class WorkWithFile {
             }
         }
         result = supply - buy;
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileForWrite))) {
-            bufferedWriter.write("supply," + supply + System.lineSeparator());
-            bufferedWriter.write("buy," + buy + System.lineSeparator());
-            bufferedWriter.write("result," + result);
-        } catch (IOException e) {
-            throw new RuntimeException("Can't write data to the file " + fileForWrite, e);
-        }
-    }
-
-    private static void generateReport(String fromFileName, String toFileName) {
-        writeToFile(fromFileName, toFileName);
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("supply,").append(supply).append(System.lineSeparator());
+        stringBuilder.append("buy,").append(buy).append(System.lineSeparator());
+        stringBuilder.append("result,").append(result);
+        return stringBuilder.toString();
     }
 }
