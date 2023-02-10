@@ -29,15 +29,9 @@ public class WorkWithFile {
             }
         }
         result[2] = result[0] - result[1];
-        //check existing and clean file if it exists
+        //clean file if it exists
         File fileWrite = new File(toFileName);
-        if (fileWrite.exists()) {
-            try (FileWriter clearFile = new FileWriter(fileWrite)) {
-                clearFile.write("");
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
+        clearFile(toFileName);
         //write file and then clear result to use method again
         for (int i = 0; i < WORDS.length; i++) {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileWrite, true))) {
@@ -47,5 +41,19 @@ public class WorkWithFile {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    private void clearFile(String path) {
+        try (FileWriter clearFile = new FileWriter(path)) {
+            clearFile.write("");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void main(String[] args) {
+        WorkWithFile workWithFile = new WorkWithFile();
+        workWithFile.getStatistic("apple.csv", "apple11.csv");
+        workWithFile.getStatistic("apple.csv", "apple11.csv");
     }
 }
