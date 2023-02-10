@@ -73,7 +73,7 @@ public class WorkWithFile {
 
             for (int i = 0; i < text.length; i++) {
                 bufferedWriter.write(text[i]);
-                bufferedWriter.write("\r\n");
+                bufferedWriter.write("\n");
             }
             /*bufferedWriter.close();*/
         } catch (IOException e) {
