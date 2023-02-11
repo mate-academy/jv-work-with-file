@@ -14,7 +14,9 @@ public class WorkWithFile {
     private static final String BUY_ITEM = "buy";
 
     public static void getStatistic(String fromFileName, String toFileName) {
-        writeToFile(fromFileName, toFileName);
+        List<String> lines = readFile(fromFileName);
+        String report = generateReport(lines);
+        writeToFile(report, toFileName);
     }
 
     private static List<String> readFile(String fromFileName) {
@@ -29,21 +31,18 @@ public class WorkWithFile {
     }
 
     private static void writeToFile(String report, String toFileName) {
-        String string = generateReport(report);
-        generateReport(report);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write(string);
+            bufferedWriter.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to the file " + toFileName, e);
         }
     }
 
-    private static String generateReport(String report) {
+    private static String generateReport(List<String> lines) {
         int buy = 0;
         int supply = 0;
         int result;
-        List<String> listWithInfoAboutProducts = readFile(report);
-        for (String string : listWithInfoAboutProducts) {
+        for (String string : lines) {
             String[] arrayWithInfoAboutProduct = string.split(CSV_DIVIDER);
             if (arrayWithInfoAboutProduct[INDEX_OF_NAME_OF_PRODUCT].equals(BUY_ITEM)) {
                 buy += Integer.parseInt(arrayWithInfoAboutProduct[INDEX_OF_COST_OF_PRODUCT]);
