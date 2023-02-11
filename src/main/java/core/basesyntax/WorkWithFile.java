@@ -20,7 +20,7 @@ public class WorkWithFile {
         try (FileWriter fileWriter = new FileWriter(toFileName)) {
             fileWriter.write(text);
         } catch (IOException e) {
-            throw new RuntimeException("Unable to write", e);
+            throw new RuntimeException("Unable to write " + toFileName, e);
         }
     }
 }

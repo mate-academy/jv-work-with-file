@@ -8,13 +8,15 @@ public class LifeHackCalculus {
     private static final int LINE_SEPARATOR_VALUE = 10;
     private static final int SMALL_B_VALUE = 98;
     private static final int SMALL_S_VALUE = 115;
+    private static final int SKIP_IF_S = 6;
+    private static final int SKIP_IF_B = 3;
 
     private int supply;
     private int buy;
     private int result;
+    private final StringBuilder stringBuilder = new StringBuilder();
 
     public void getCalculations(String fromFileName) {
-        StringBuilder sb = new StringBuilder();
         int supply = 0;
         int buy = 0;
         boolean flag = true;
@@ -23,30 +25,30 @@ public class LifeHackCalculus {
             int value = br.read();
             while (value != -1) {
                 if (value == SMALL_S_VALUE) {
-                    br.skip(6);
+                    br.skip(SKIP_IF_S);
                     value = br.read();
                     flag = true;
                 }
                 if (value == SMALL_B_VALUE) {
-                    br.skip(3);
+                    br.skip(SKIP_IF_B);
                     value = br.read();
                     flag = false;
                 }
                 if (value != LINE_SEPARATOR_VALUE) {
-                    sb.append((char) value);
+                    stringBuilder.append((char) value);
                     value = br.read();
                 } else if (flag) {
-                    supply += Integer.parseInt(sb.toString());
-                    sb.setLength(0);
+                    supply += Integer.parseInt(stringBuilder.toString());
+                    stringBuilder.setLength(0);
                     value = br.read();
                 } else {
-                    buy += Integer.parseInt(sb.toString());
-                    sb.setLength(0);
+                    buy += Integer.parseInt(stringBuilder.toString());
+                    stringBuilder.setLength(0);
                     value = br.read();
                 }
             }
         } catch (IOException e) {
-            throw new RuntimeException("Check your file", e);
+            throw new RuntimeException("Check your file " + fromFileName, e);
         }
         this.supply = supply;
         this.buy = buy;
