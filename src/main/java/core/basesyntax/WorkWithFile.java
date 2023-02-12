@@ -4,16 +4,23 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private final LifeHackCalculus lifeHackCalculus = new LifeHackCalculus();
+    private final StatisticCalculator statisticCalculator = new StatisticCalculator();
 
     public void getStatistic(String fromFileName, String toFileName) {
-        lifeHackCalculus.getCalculations(fromFileName);
+        statisticCalculator.getCalculations(fromFileName);
 
-        String text = "supply," + lifeHackCalculus.getSupply() + System.lineSeparator()
-                + "buy," + lifeHackCalculus.getBuy() + System.lineSeparator()
-                + "result," + lifeHackCalculus.getResult();
+        String text = generateString(statisticCalculator.getSupply(), statisticCalculator.getBuy());
 
         writeInFile(text, toFileName);
+
+        statisticCalculator.setBuy(0);
+        statisticCalculator.setSupply(0);
+    }
+
+    private String generateString(int supply, int buy) {
+        return "supply," + supply + System.lineSeparator()
+                + "buy," + buy + System.lineSeparator()
+                + "result," + (supply - buy);
     }
 
     private void writeInFile(String text, String toFileName) {
