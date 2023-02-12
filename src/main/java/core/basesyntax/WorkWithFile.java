@@ -12,6 +12,9 @@ public class WorkWithFile {
     private static final int INDEX_OF_COST_OF_PRODUCT = 1;
     private static final String CSV_DIVIDER = ",";
     private static final String BUY_ITEM = "buy";
+    private static final String BYE_WORD = "buy,";
+    private static final String SUPPLY_WORD = "supply,";
+    private static final String RESULT_WORD = "result,";
 
     public static void getStatistic(String fromFileName, String toFileName) {
         List<String> lines = readFile(fromFileName);
@@ -51,10 +54,10 @@ public class WorkWithFile {
             }
         }
         result = supply - buy;
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("supply,").append(supply).append(System.lineSeparator());
-        stringBuilder.append("buy,").append(buy).append(System.lineSeparator());
-        stringBuilder.append("result,").append(result);
-        return stringBuilder.toString();
+        StringBuilder report = new StringBuilder();
+        report.append(SUPPLY_WORD).append(supply).append(System.lineSeparator());
+        report.append(BYE_WORD).append(buy).append(System.lineSeparator());
+        report.append(RESULT_WORD).append(result);
+        return report.toString();
     }
 }
