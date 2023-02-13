@@ -14,7 +14,7 @@ public class WorkWithFile {
     
     public void getStatistic(String fromFileName, String toFileName) {
         try {
-            stat  = new HashMap<>();
+            stat = new HashMap<>();
             readFromCsv(fromFileName);
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage() + "Problem with input from CSV file");
