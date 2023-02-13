@@ -1,15 +1,21 @@
 package core.basesyntax;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final int ITEM_INDEX = 0;
+    private static final int COST_INDEX = 1;
+    private static final String COMMA_SEPARATOR = ",";
+
     public void getStatistic(String fromFileName, String toFileName) {
         String data = readFromFile(fromFileName);
-
+        writeToFile(toFileName, makeReport(data));
     }
 
     private String readFromFile(String fromFileName) {
@@ -29,15 +35,33 @@ public class WorkWithFile {
         return builder.toString();
     }
 
-    private void writeToFile() {
-
+    private void writeToFile(String toFileName, String report) {
+        File file = new File(toFileName);
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
+            bufferedWriter.write(report);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write to file: " + file.getName(), e);
+        }
     }
 
-    private String makeReport() {
-return "";
+    private String makeReport(String data) {
+        StringBuilder builder = new StringBuilder();
+        int amountSupply = calculateTotalAmount("supply", data);
+        int amountBuy = calculateTotalAmount("buy", data);
+        return builder.append("supply,").append(amountSupply).append(System.lineSeparator())
+                .append("buy,").append(amountBuy).append(System.lineSeparator())
+                .append("result,").append(amountSupply - amountBuy).toString();
     }
 
-    public static void main(String[] args) {
-        //String data = new WorkWithFile().getStatistic("apple.csv", "test");
+    private int calculateTotalAmount(String value, String data) {
+        String[] splitData = data.split(System.lineSeparator());
+        int totalAmount = 0;
+        for (String item : splitData) {
+            String[] itemInfo = item.split(COMMA_SEPARATOR);
+            if (itemInfo[ITEM_INDEX].equals(value)) {
+                totalAmount += Integer.parseInt(itemInfo[COST_INDEX]);
+            }
+        }
+        return totalAmount;
     }
 }
