@@ -13,9 +13,15 @@ public class WorkWithFile {
     public static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
+        String dataFromFile = readFromFile(fromFileName);
+        String report = createReport(dataFromFile);
+        printToFile(toFileName, report);
+    }
+
+    private String createReport(String dataFromFile) {
         int supplyTotalAmount = 0;
         int buyTotalAmount = 0;
-        for (String line : readFromFile(fromFileName).split(System.lineSeparator())) {
+        for (String line : dataFromFile.split(System.lineSeparator())) {
             String[] row = line.split(DELIMITER);
             if (row[OPERATION_INDEX].equals("supply")) {
                 supplyTotalAmount += Integer.valueOf(row[AMOUNT_INDEX]);
@@ -27,7 +33,7 @@ public class WorkWithFile {
         result.append("supply,").append(supplyTotalAmount).append(System.lineSeparator())
                 .append("buy,").append(buyTotalAmount).append(System.lineSeparator())
                 .append("result,").append((supplyTotalAmount - buyTotalAmount));
-        printToFile(toFileName, result.toString());
+        return result.toString();
     }
 
     private String readFromFile(String fromFileName) {
