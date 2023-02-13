@@ -8,21 +8,26 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+
+    public static final String DELIMITER = ",";
+    public static final int OPERATION_INDEX = 0;
+    public static final int AMOUNT_INDEX = 1;
+
     public void getStatistic(String fromFileName, String toFileName) {
         int supplyTotalAmount = 0;
         int buyTotalAmount = 0;
-        for (String line: readFromFile(fromFileName).split("\\r?\\n")) {
-            String[] row = line.split(",");
-            if (row[0].equals("supply")) {
-                supplyTotalAmount += Integer.valueOf(row[1]);
+        for (String line: readFromFile(fromFileName).split(System.lineSeparator())) {
+            String[] row = line.split(DELIMITER);
+            if (row[OPERATION_INDEX].equals("supply")) {
+                supplyTotalAmount += Integer.valueOf(row[AMOUNT_INDEX]);
             } else {
-                buyTotalAmount += Integer.valueOf(row[1]);
+                buyTotalAmount += Integer.valueOf(row[AMOUNT_INDEX]);
             }
         }
         StringBuilder result = new StringBuilder();
-        result.append("supply," + supplyTotalAmount + System.lineSeparator());
-        result.append("buy," + buyTotalAmount + System.lineSeparator());
-        result.append("result," + (supplyTotalAmount - buyTotalAmount));
+        result.append("supply,").append(supplyTotalAmount).append(System.lineSeparator())
+            .append("buy,").append(buyTotalAmount).append(System.lineSeparator())
+            .append("result,").append((supplyTotalAmount - buyTotalAmount));
         printToFile(toFileName, result.toString());
     }
 
@@ -30,13 +35,13 @@ public class WorkWithFile {
         File file = new File(fromFileName);
         StringBuilder result = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
-            int value = bufferedReader.read();
-            while (value != -1) {
-                result.append((char) value);
-                value = bufferedReader.read();
+            String value = bufferedReader.readLine();
+            while (value != null) {
+                result.append(value + System.lineSeparator());
+                value = bufferedReader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Cannot read file" + fromFileName, e);
+            throw new RuntimeException("Cannot read file " + fromFileName, e);
         }
         return result.toString();
     }
@@ -46,7 +51,7 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
             bufferedWriter.write(text);
         } catch (IOException e) {
-            throw new RuntimeException("Cannot write to file" + toFileName, e);
+            throw new RuntimeException("Cannot write to file " + toFileName, e);
         }
     }
 }
