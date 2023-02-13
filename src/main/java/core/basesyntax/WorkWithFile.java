@@ -55,7 +55,7 @@ public class WorkWithFile {
 
     private void writeToCsv(String toFileName) throws IOException {
         BufferedWriter bro = new BufferedWriter(new FileWriter(toFileName));
-        if (!stat.isEmpty()) {
+        if (pos == FIELDS) {
             int dif = 0;
             boolean first = true;
             StringBuilder tmp = new StringBuilder();
