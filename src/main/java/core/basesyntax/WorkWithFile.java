@@ -59,7 +59,7 @@ public class WorkWithFile {
             boolean first = true;
             StringBuilder tmp = new StringBuilder();
             for (int i = 0; i < key.length; i++) {
-                tmp.insert(0, String.format("%s,%d\n", key[i], value[i]));
+                tmp.append(String.format("%s,%d\n", key[i], value[i]));
                 if (first) {
                     dif = value[i];
                     first = false;
