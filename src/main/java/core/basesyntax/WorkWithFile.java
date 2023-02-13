@@ -10,10 +10,11 @@ import java.util.HashMap;
 public class WorkWithFile {
     private static final String DELIMITER = ",";
     private static final int FIELDS = 2;
-    private final HashMap<String, Integer> stat = new HashMap<>();
-
+    private HashMap<String, Integer> stat;
+    
     public void getStatistic(String fromFileName, String toFileName) {
         try {
+            stat  = new HashMap<>();
             readFromCsv(fromFileName);
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage() + "Problem with input from CSV file");
