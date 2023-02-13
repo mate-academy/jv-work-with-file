@@ -10,11 +10,12 @@ import java.util.HashMap;
 public class WorkWithFile {
     private static final String DELIMITER = ",";
     private static final int FIELDS = 2;
-    private HashMap<String, Integer> stat;
+    private String[] key = new String[FIELDS];
+    private Integer[] value = new Integer[FIELDS];
+    private int pos = 0;
     
     public void getStatistic(String fromFileName, String toFileName) {
         try {
-            stat = new HashMap<>();
             readFromCsv(fromFileName);
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage() + "Problem with input from CSV file");
@@ -39,10 +40,13 @@ public class WorkWithFile {
             if (em.length == FIELDS) {
                 var tmp1 = em[0].trim();
                 var tmp2 = em[1].trim();
-                if (stat.containsKey(tmp1)) {
-                    stat.replace(tmp1, stat.get(tmp1) + Integer.parseInt(tmp2));
+                var ind = containsKey(tmp1);
+                if (ind == -1) {
+                    key[pos] = tmp1;
+                    value[pos] = Integer.parseInt(tmp2);
+                    pos ++;
                 } else {
-                    stat.put(tmp1, Integer.parseInt(tmp2));
+                    value[ind] += Integer.parseInt(tmp2);
                 }
             }
         }
@@ -53,20 +57,29 @@ public class WorkWithFile {
         BufferedWriter bro = new BufferedWriter(new FileWriter(toFileName));
         if (!stat.isEmpty()) {
             int dif = 0;
-            int i = 0;
+            boolean first = true;
             StringBuilder tmp = new StringBuilder();
-            for (String key : stat.keySet()) {
-                tmp.insert(0, String.format("%s,%d\n", key, stat.get(key)));
-                if (i == 0) {
-                    dif = stat.get(key);
-                    i++;
+            for (int i = 0; i < key.length; i++) {
+                tmp.insert(0, String.format("%s,%d\n", key[i], value[i]);
+                if (first) {
+                    dif = value[i];
+                    first = false;
                 } else {
-                    dif -= stat.get(key);
+                    dif -= value[i];
                 }
             }
             bro.write(tmp.toString());
             bro.write(String.format("result,%d\n", Math.abs(dif)));
             bro.close();
         }
+    }
+    
+    private int containsKey(String fkey) {
+        for(int i = 0; i < key.length; i++) {
+            if(key[i] != null && key[i].equals(fkey) == true) {
+                return i;
+            }
+        }
+        return -1;
     }
 }
