@@ -50,7 +50,6 @@ public class WorkWithFile {
             }
         }
         bri.close();
-        clear();
     }
 
     private void writeToCsv(String toFileName) throws IOException {
@@ -72,6 +71,7 @@ public class WorkWithFile {
             bro.write(tmp.toString());
             bro.write(String.format("result,%d\n", Math.abs(dif)));
             bro.close();
+            clear();
         }
     }
     
