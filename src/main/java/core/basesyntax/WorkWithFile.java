@@ -5,7 +5,6 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashMap;
 
 public class WorkWithFile {
     private static final String DELIMITER = ",";
@@ -44,7 +43,7 @@ public class WorkWithFile {
                 if (ind == -1) {
                     key[pos] = tmp1;
                     value[pos] = Integer.parseInt(tmp2);
-                    pos ++;
+                    pos++;
                 } else {
                     value[ind] += Integer.parseInt(tmp2);
                 }
@@ -75,8 +74,8 @@ public class WorkWithFile {
     }
     
     private int containsKey(String fkey) {
-        for(int i = 0; i < key.length; i++) {
-            if(key[i] != null && key[i].equals(fkey) == true) {
+        for (int i = 0; i < key.length; i++) {
+            if (key[i] != null && key[i].equals(fkey) == true) {
                 return i;
             }
         }
