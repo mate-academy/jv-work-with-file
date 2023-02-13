@@ -1,6 +1,7 @@
 package core.basesyntax;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -44,9 +45,9 @@ public class WorkWithFile {
         return allLines;
     }
 
-    private void write(String text, Path path) {
-
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(path.toString()))) {
+    private void write(String text, Path path){
+        File file = path.toFile();
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
             bufferedWriter.write(text);
         } catch (IOException e) {
             throw new RuntimeException("Can't write ", e);
