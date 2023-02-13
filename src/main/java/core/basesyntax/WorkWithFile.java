@@ -54,7 +54,8 @@ public class WorkWithFile {
 
     private void writeToCsv(String toFileName) throws IOException {
         BufferedWriter bro = new BufferedWriter(new FileWriter(toFileName));
-        if (pos == FIELDS) {
+        if (pos == FIELDS) {        
+            sort();
             int dif = 0;
             boolean first = true;
             StringBuilder tmp = new StringBuilder();
@@ -80,5 +81,16 @@ public class WorkWithFile {
             }
         }
         return -1;
+    }
+    
+    private void sort() {
+        if (key[0].hashCode() > key[1].hashCode()) {
+            var k = key[0];
+            var v = value[0];
+            key[0] = key[1];
+            value[0] = value[1];
+            key[1] = k;
+            value[1] = v;
+        }
     }
 }
