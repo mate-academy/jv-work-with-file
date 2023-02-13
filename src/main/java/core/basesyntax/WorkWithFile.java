@@ -50,6 +50,7 @@ public class WorkWithFile {
             }
         }
         bri.close();
+        clear();
     }
 
     private void writeToCsv(String toFileName) throws IOException {
@@ -84,13 +85,21 @@ public class WorkWithFile {
     }
     
     private void sort() {
-        if (key[0].hashCode() > key[1].hashCode()) {
-            var k = key[0];
-            key[0] = key[1];
-            key[1] = k;
-            var v = value[0];
-            value[0] = value[1];
-            value[1] = v;
+        for (int i = 0; i < FIELDS - 1; i++) {
+            if (key[i].hashCode() > key[i + 1].hashCode()) {
+                var k = key[i];
+                key[i] = key[i + 1];
+                key[i + 1] = k;
+                var v = value[i];
+                value[i] = value[i + 1];
+                value[i + 1] = v;
+            }
         }
+    }
+
+    private void clear() {
+        key = new String[FIELDS];
+        value = new Integer[FIELDS];
+        pos = 0;
     }
 }
