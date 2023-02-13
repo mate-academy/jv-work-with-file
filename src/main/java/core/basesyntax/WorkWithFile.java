@@ -86,10 +86,10 @@ public class WorkWithFile {
     private void sort() {
         if (key[0].hashCode() > key[1].hashCode()) {
             var k = key[0];
-            var v = value[0];
             key[0] = key[1];
-            value[0] = value[1];
             key[1] = k;
+            var v = value[0];
+            value[0] = value[1];
             value[1] = v;
         }
     }
