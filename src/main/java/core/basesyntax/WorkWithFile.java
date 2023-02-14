@@ -8,39 +8,13 @@ import java.nio.file.Files;
 import java.util.List;
 
 public class WorkWithFile {
-    private static final String[] WORDS = {"supply", "buy", "result"};
-    private final int[] result = new int[3];
+    private final int[] result = new int[ReportColumn.values().length];
 
     public void getStatistic(String fromFileName, String toFileName) {
-        // read file
-        File fileRead = new File(fromFileName);
-        List<String> listOfLines;
-        try {
-            listOfLines = Files.readAllLines(fileRead.toPath());
-        } catch (IOException e) {
-            throw new RuntimeException("Can't read the file ", e);
-        }
-        //count results
-        for (String line : listOfLines) {
-            if (line.startsWith("supply")) {
-                result[0] += Integer.parseInt(line.substring(7));
-            } else {
-                result[1] += Integer.parseInt(line.substring(4));
-            }
-        }
-        result[2] = result[0] - result[1];
-        //clean file if it exists
+        calculation(read(fromFileName));
         File fileWrite = new File(toFileName);
         clearFile(toFileName);
-        //write file and then clear result to use method again
-        for (int i = 0; i < WORDS.length; i++) {
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileWrite, true))) {
-                writer.write(WORDS[i] + "," + result[i] + System.lineSeparator());
-                result[i] = 0;
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
+        write(fileWrite);
     }
 
     private void clearFile(String path) {
@@ -51,9 +25,39 @@ public class WorkWithFile {
         }
     }
 
-    public static void main(String[] args) {
-        WorkWithFile workWithFile = new WorkWithFile();
-        workWithFile.getStatistic("apple.csv", "apple11.csv");
-        workWithFile.getStatistic("apple.csv", "apple11.csv");
+    private void calculation(List<String> list) {
+        for (String line : list) {
+            String[] operation = line.split(",");
+            if (operation[0].equals("supply")) {
+                result[ReportColumn.SUPPLY.ordinal()] += Integer.parseInt(line.substring(7));
+            } else {
+                result[ReportColumn.BUY.ordinal()] += Integer.parseInt(line.substring(4));
+            }
+        }
+        result[ReportColumn.RESULT.ordinal()] =
+                result[ReportColumn.SUPPLY.ordinal()] - result[ReportColumn.BUY.ordinal()];
+    }
+
+    private void write(File file) {
+        for (int i = 0; i < ReportColumn.values().length; i++) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
+                writer.write(ReportColumn.values()[i].name().toLowerCase() + ","
+                        + result[i] + System.lineSeparator());
+                result[i] = 0;
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    private List<String> read(String fromFileName) {
+        File fileRead = new File(fromFileName);
+        List<String> listOfLines;
+        try {
+            listOfLines = Files.readAllLines(fileRead.toPath());
+        } catch (IOException e) {
+            throw new RuntimeException("Can't read the file ", e);
+        }
+        return listOfLines;
     }
 }
