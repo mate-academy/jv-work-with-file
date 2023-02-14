@@ -13,35 +13,46 @@ public class WorkWithFile {
     private static final String RESULT = "result";
     private static final String CHAR_SEPARATOR = ",";
 
-    private File myFile = null;
-
     public void getStatistic(String fromFileName, String toFileName) {
-        myFile = new File(fromFileName);
+        String mgsFromFile = readFromFile(fromFileName);
+        int supplySum = 0;
+        int buySum = 0;
+        String[] lines = mgsFromFile.split(System.lineSeparator());
+        String[] tempStr;
+        for (int i = 0; i < lines.length; i++) {
+            tempStr = lines[i].split(CHAR_SEPARATOR);
+            if (tempStr[0].equals(SUPPLY)) {
+                supplySum += Integer.parseInt(tempStr[1]);
+            } else if (tempStr[0].equals(BUY)) {
+                buySum += Integer.parseInt(tempStr[1]);
+            } else {
+                throw new RuntimeException("Error in csv file");
+            }
+        }
+        String reportMassage = createReport(supplySum, buySum);
+        writeStatistic(toFileName, reportMassage);
+    }
+
+    public String readFromFile(String fromFileName) {
+        File myFile = new File(fromFileName);
+        StringBuilder stringBuilder = new StringBuilder();
         try (FileReader fileReader = new FileReader(myFile);
                 BufferedReader bufferedReader = new BufferedReader(fileReader)) {
             String value = bufferedReader.readLine();
             if (value == null) {
                 throw new RuntimeException("File is empty");
             }
-            int supplySum = 0;
-            int buySum = 0;
-            String[] tempStr;
+            stringBuilder.append(value).append(System.lineSeparator());
             while (value != null) {
-                tempStr = value.split(CHAR_SEPARATOR);
-                if (tempStr[0].equals(SUPPLY)) {
-                    supplySum += Integer.parseInt(tempStr[1]);
-                } else if (tempStr[0].equals(BUY)) {
-                    buySum += Integer.parseInt(tempStr[1]);
-                } else {
-                    throw new RuntimeException("Error in csv file");
-                }
                 value = bufferedReader.readLine();
+                if (value != null) {
+                    stringBuilder.append(value).append(System.lineSeparator());
+                }
             }
-            String reportMassage = createReport(supplySum, buySum);
-            writeStatistic(toFileName, reportMassage);
         } catch (IOException e) {
             throw new RuntimeException("File does not exist", e);
         }
+        return stringBuilder.toString();
     }
 
     public String createReport(int supplySum, int buySum) {
@@ -55,7 +66,7 @@ public class WorkWithFile {
     }
 
     public void writeStatistic(String toFileName, String massage) {
-        myFile = new File(toFileName);
+        File myFile = new File(toFileName);
         try (FileWriter fileWriter = new FileWriter(myFile);
                 BufferedWriter bufferedReader = new BufferedWriter(fileWriter)) {
             bufferedReader.write(massage);
