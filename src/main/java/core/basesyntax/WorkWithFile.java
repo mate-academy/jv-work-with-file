@@ -17,7 +17,7 @@ public class WorkWithFile {
     private static final String BUY = "buy";
     private static final String RESULT_VALUE = "result";
 
-    public void getStatistic(String fromFileName, String toFileName) {
+    public void getResultText(String fromFileName, String toFileName) {
         File toFile = new File(toFileName);
         File fromFile = new File(fromFileName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFile));
