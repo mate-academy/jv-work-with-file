@@ -17,19 +17,19 @@ public class WorkWithFile {
     private static final String BUY = "buy";
     private static final String RESULT_VALUE = "result";
 
-    public void getResultText(String fromFileName, String toFileName) {
+    public void getStatistic(String fromFileName, String toFileName) {
         File toFile = new File(toFileName);
         File fromFile = new File(fromFileName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFile));
                 BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFile))) {
-            String resultList = makeDataList(bufferedReader);
+            String resultList = getResultText(bufferedReader);
             bufferedWriter.write(resultList);
         } catch (IOException e) {
             throw new RuntimeException("wrong file path");
         }
     }
 
-    private String makeDataList(BufferedReader bufferedReader) throws IOException {
+    private String getResultText(BufferedReader bufferedReader) throws IOException {
         StringBuilder list = new StringBuilder();
         String[][] information = getMapInformation(bufferedReader);
         for (int i = 0; i < information.length; i++) {
