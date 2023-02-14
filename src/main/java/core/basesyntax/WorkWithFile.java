@@ -45,7 +45,7 @@ public class WorkWithFile {
         return allLines;
     }
 
-    private void write(String text, Path path){
+    private void write(String text, Path path) {
         File file = path.toFile();
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
             bufferedWriter.write(text);
@@ -62,10 +62,12 @@ public class WorkWithFile {
             if (line != null) {
                 switch (line.getName()) {
                     case ADDITION_LINE_NAME:
-                        result[NAME_COLUMN_ID].setValue(result[NAME_COLUMN_ID].getValue() + line.getValue());
+                        result[NAME_COLUMN_ID].setValue(result[NAME_COLUMN_ID].getValue()
+                                + line.getValue());
                         break;
                     case SUBTRACTION_LINE_NAME:
-                        result[VALUE_COLUMN_ID].setValue(result[VALUE_COLUMN_ID].getValue() + line.getValue());
+                        result[VALUE_COLUMN_ID].setValue(result[VALUE_COLUMN_ID].getValue()
+                                + line.getValue());
                         break;
                     default:
                         throw new LineNameIsWrongException("Line names are designated incorrectly");
