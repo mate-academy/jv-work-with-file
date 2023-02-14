@@ -19,21 +19,8 @@ public class WorkWithFile {
     private static final int BUY_INDEX_IN_ARRAY = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        File file = new File(toFileName);
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
-            int[] totalData = getTotalDataFromFile(fromFileName);
-            int supplySum = totalData[SUPPLY_INDEX_IN_ARRAY];
-            int buySum = totalData[BUY_INDEX_IN_ARRAY];
-            int result = supplySum - buySum;
-            StringBuilder report = new StringBuilder();
-            report.append(SUPPLY_ACTION).append(',').append(supplySum)
-                    .append(System.lineSeparator());
-            report.append(BUY_ACTION).append(',').append(buySum).append(System.lineSeparator());
-            report.append(RESULT_ACTION).append(',').append(result);
-            bufferedWriter.write(report.toString());
-        } catch (IOException e) {
-            throw new RuntimeException("Can't write data to " + toFileName, e);
-        }
+        int[] totalData = getTotalDataFromFile(fromFileName);
+        writeDataToFile(totalData, toFileName);
     }
 
     private int[] getTotalDataFromFile(String fromFileName) {
@@ -84,6 +71,23 @@ public class WorkWithFile {
             throw new RuntimeException("File " + fromFileName + " not found", e);
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from " + fromFileName, e);
+        }
+    }
+
+    private void writeDataToFile(int[] totalData, String toFileName) {
+        File file = new File(toFileName);
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
+            int supplySum = totalData[SUPPLY_INDEX_IN_ARRAY];
+            int buySum = totalData[BUY_INDEX_IN_ARRAY];
+            int result = supplySum - buySum;
+            StringBuilder report = new StringBuilder();
+            report.append(SUPPLY_ACTION).append(',').append(supplySum)
+                .append(System.lineSeparator());
+            report.append(BUY_ACTION).append(',').append(buySum).append(System.lineSeparator());
+            report.append(RESULT_ACTION).append(',').append(result);
+            bufferedWriter.write(report.toString());
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write data to " + toFileName, e);
         }
     }
 }
