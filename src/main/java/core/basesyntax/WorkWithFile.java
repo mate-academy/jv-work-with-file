@@ -28,7 +28,7 @@ public class WorkWithFile {
                 value = bufferedReader.readLine();
             }
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("File has not found", e);
+            throw new RuntimeException("File has not found" + file.getName(), e);
         } catch (IOException e) {
             throw new RuntimeException("Can't read from file " + file.getName(), e);
         }
@@ -46,22 +46,29 @@ public class WorkWithFile {
 
     private String makeReport(String data) {
         StringBuilder builder = new StringBuilder();
-        int amountSupply = calculateTotalAmount("supply", data);
-        int amountBuy = calculateTotalAmount("buy", data);
-        return builder.append("supply,").append(amountSupply).append(System.lineSeparator())
-                .append("buy,").append(amountBuy).append(System.lineSeparator())
-                .append("result,").append(amountSupply - amountBuy).toString();
+        int[] totalAmount = calculateTotalAmount(data);
+        final int indexSupply = 0;
+        final int indexBuy = 1;
+        return builder.append("supply,").append(totalAmount[indexSupply])
+                .append(System.lineSeparator())
+                .append("buy,").append(totalAmount[indexBuy])
+                .append(System.lineSeparator())
+                .append("result,").append(totalAmount[indexSupply] - totalAmount[indexBuy])
+                .toString();
     }
 
-    private int calculateTotalAmount(String value, String data) {
+    private int[] calculateTotalAmount(String data) {
         String[] splitData = data.split(System.lineSeparator());
-        int totalAmount = 0;
+        int supplySum = 0;
+        int buySum = 0;
         for (String item : splitData) {
             String[] itemInfo = item.split(COMMA_SEPARATOR);
-            if (itemInfo[ITEM_INDEX].equals(value)) {
-                totalAmount += Integer.parseInt(itemInfo[COST_INDEX]);
+            if (itemInfo[ITEM_INDEX].equals("supply")) {
+                supplySum += Integer.parseInt(itemInfo[COST_INDEX]);
+                continue;
             }
+            buySum += Integer.parseInt(itemInfo[COST_INDEX]);
         }
-        return totalAmount;
+        return new int[]{supplySum, buySum};
     }
 }
