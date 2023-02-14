@@ -14,51 +14,48 @@ public class WorkWithFile {
     private int pos = 0;
     
     public void getStatistic(String fromFileName, String toFileName) {
-        try {
-            readFromCsv(fromFileName);
+        try(BufferedReader bri = new BufferedReader(new FileReader(fromFileName))) {
+            while (bri.ready()) {
+                String line = bri.readLine();
+                applyInput(line);
+            }
+            bri.close();
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage() + "Problem with input from CSV file");
         } catch (NumberFormatException e) {
             throw new RuntimeException(e.getMessage() + "Numeric parse exception");
         }
-        try {
-            writeToCsv(toFileName);
+        try(BufferedWriter bro = new BufferedWriter(new FileWriter(toFileName))) {
+            String result = applyOutput();
+            bro.write(result);
+            bro.close();
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage() + "Problem with output to CSV file");
         }
     }
 
-    private void readFromCsv(String fromFileName) throws IOException, NumberFormatException {
-        BufferedReader bri = new BufferedReader(new FileReader(fromFileName));
-        while (true) {
-            String line = bri.readLine();
-            if (line == null) {
-                break;
-            }
-            String[] em = line.split(DELIMITER);
-            if (em.length == FIELDS) {
-                var tmp1 = em[0].trim();
-                var tmp2 = em[1].trim();
-                var ind = containsKey(tmp1);
-                if (ind == -1) {
-                    key[pos] = tmp1;
-                    value[pos] = Integer.parseInt(tmp2);
-                    pos++;
-                } else {
-                    value[ind] += Integer.parseInt(tmp2);
-                }
+    private void applyInput(String line) {
+        String[] em = line.split(DELIMITER);
+        if (em.length == FIELDS) {
+            var tmp1 = em[0].trim();
+            var tmp2 = em[1].trim();
+            var ind = containsKey(tmp1);
+            if (ind == -1) {
+                key[pos] = tmp1;
+                value[pos] = Integer.parseInt(tmp2);
+                pos++;
+            } else {
+                value[ind] += Integer.parseInt(tmp2);
             }
         }
-        bri.close();
     }
 
-    private void writeToCsv(String toFileName) throws IOException {
-        BufferedWriter bro = new BufferedWriter(new FileWriter(toFileName));
+    private String applyOutput() {
+        StringBuilder tmp = new StringBuilder();
         if (pos == FIELDS) {        
             sort();
             int dif = 0;
             boolean first = true;
-            StringBuilder tmp = new StringBuilder();
             for (int i = 0; i < key.length; i++) {
                 tmp.append(String.format("%s,%d\n", key[i], value[i]));
                 if (first) {
@@ -68,10 +65,9 @@ public class WorkWithFile {
                     dif -= value[i];
                 }
             }
-            bro.write(tmp.toString());
-            bro.write(String.format("result,%d\n", Math.abs(dif)));
-            bro.close();
+            tmp.append(String.format("result,%d\n", Math.abs(dif)));
             clear();
+            return tmp.toString();
         }
     }
     
