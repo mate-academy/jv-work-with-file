@@ -8,9 +8,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final String SUPPLY = "supply";
-    private static final String BUY = "buy";
-    private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String data = readData(fromFileName);
@@ -36,8 +33,7 @@ public class WorkWithFile {
     }
 
     public void writeData(String data, String toFileName) {
-        try {
-            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName));
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(data);
         } catch (FileNotFoundException e) {
             throw new RuntimeException("File doesn't exist", e);
@@ -53,16 +49,16 @@ public class WorkWithFile {
         String[] lines = data.split(" ");
         for (String line : lines) {
             String[] spliter = line.split(",");
-            if (spliter[0].equals(SUPPLY)) {
+            if (spliter[0].equals("supply")) {
                 countSupply += Integer.parseInt(spliter[1]);
-            } else if (spliter[0].equals(BUY)) {
+            } else if (spliter[0].equals("buy")) {
                 countBuy += Integer.parseInt(spliter[1]);
             }
         }
         int countedResult = countSupply - countBuy;
-        result.append(SUPPLY).append(",").append(countSupply).append(System.lineSeparator());
-        result.append(BUY).append(",").append(countBuy).append(System.lineSeparator());
-        result.append(RESULT).append(",").append(countedResult).append(System.lineSeparator());
+        result.append("supply").append(",").append(countSupply).append(System.lineSeparator());
+        result.append("buy").append(",").append(countBuy).append(System.lineSeparator());
+        result.append("result").append(",").append(countedResult);
         return result.toString();
     }
 }
