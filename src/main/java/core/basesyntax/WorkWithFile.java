@@ -1,8 +1,9 @@
 package core.basesyntax;
 
-import static java.lang.Integer.parseInt;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 
 public class WorkWithFile {
     public static final String REGEX = " ";

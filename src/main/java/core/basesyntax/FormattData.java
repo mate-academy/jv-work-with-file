@@ -18,8 +18,10 @@ public class FormattData extends WorkWithFile {
             }
         }
         result = totalSupply - totalBuy;
-        builder.append(SUPPLY).append(RESULT_REGEX).append(totalSupply).append(System.lineSeparator())
-                .append(BUY).append(RESULT_REGEX).append(totalBuy).append(System.lineSeparator())
+        builder.append(SUPPLY).append(RESULT_REGEX)
+                .append(totalSupply).append(System.lineSeparator())
+                .append(BUY).append(RESULT_REGEX).append(totalBuy)
+                .append(System.lineSeparator())
                 .append(RESULT_NAME).append(RESULT_REGEX).append(result);
         return builder.toString();
     }
