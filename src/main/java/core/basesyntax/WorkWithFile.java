@@ -12,9 +12,6 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final int NAME_INDEX = 0;
     private static final int NUMBER_INDEX = 1;
-    private static final int ARRAY_INDEX_0 = 0;
-    private static final int ARRAY_INDEX_1 = 1;
-    private static final int ARRAY_INDEX_2 = 2;
 
     public void getStatistic(String fromFileName, String toFileName) {
         File toFile = new File(toFileName);
@@ -43,9 +40,8 @@ public class WorkWithFile {
 
     private void writeFile(int[] arrayNumbers, File toFile) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFile))) {
-            bufferedWriter.write(createResultText(arrayNumbers[ARRAY_INDEX_0],
-                    arrayNumbers[WorkWithFile.ARRAY_INDEX_1],
-                    arrayNumbers[WorkWithFile.ARRAY_INDEX_2]).toString());
+            bufferedWriter.write(createResultText(arrayNumbers[0], arrayNumbers[1],
+                    arrayNumbers[2]).toString());
         } catch (IOException e) {
             throw new RuntimeException("Cannot write to file " + toFile, e);
         }
