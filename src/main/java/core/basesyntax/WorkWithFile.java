@@ -14,7 +14,7 @@ public class WorkWithFile {
     private int pos = 0;
     
     public void getStatistic(String fromFileName, String toFileName) {
-        try(BufferedReader bri = new BufferedReader(new FileReader(fromFileName))) {
+        try (BufferedReader bri = new BufferedReader(new FileReader(fromFileName))) {
             while (bri.ready()) {
                 String line = bri.readLine();
                 applyInput(line);
@@ -25,7 +25,7 @@ public class WorkWithFile {
         } catch (NumberFormatException e) {
             throw new RuntimeException(e.getMessage() + "Numeric parse exception");
         }
-        try(BufferedWriter bro = new BufferedWriter(new FileWriter(toFileName))) {
+        try (BufferedWriter bro = new BufferedWriter(new FileWriter(toFileName))) {
             String result = applyOutput();
             bro.write(result);
             bro.close();
