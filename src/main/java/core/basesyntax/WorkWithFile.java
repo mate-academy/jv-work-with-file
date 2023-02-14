@@ -16,7 +16,7 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         int buySum = 0;
         int supplySum = 0;
-        for (String line: readFile(fromFileName).split(System.lineSeparator())) {
+        for (String line : readFile(fromFileName).split(System.lineSeparator())) {
             String[] row = line.split(REGEX);
             if (row[NAME_INDEX].equals("buy")) {
                 buySum += Integer.parseInt(row[NUMBER_INDEX]);
@@ -24,12 +24,8 @@ public class WorkWithFile {
                 supplySum += Integer.parseInt(row[NUMBER_INDEX]);
             }
         }
-        int result = supplySum - buySum;
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(SUPPLY).append(REGEX).append(supplySum).append(System.lineSeparator())
-                .append(BUY).append(REGEX).append(buySum).append(System.lineSeparator())
-                .append("result").append(REGEX).append(result);
-        printFile(toFileName, stringBuilder.toString());
+        String report = createReport(supplySum, buySum);
+        printFile(toFileName, report);
     }
 
     private String readFile(String fromFileName) {
@@ -44,6 +40,14 @@ public class WorkWithFile {
             throw new RuntimeException("Can't read file ", e);
         }
         return builder.toString();
+    }
+
+    private String createReport(int supplySum, int buySum) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(SUPPLY).append(REGEX).append(supplySum).append(System.lineSeparator())
+                .append(BUY).append(REGEX).append(buySum).append(System.lineSeparator())
+                .append("result").append(REGEX).append(supplySum - buySum);
+        return stringBuilder.toString();
     }
 
     private void printFile(String toFileName, String info) {
