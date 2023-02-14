@@ -14,40 +14,53 @@ public class WorkWithFile {
     public static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int supply = 0;
-        int buy = 0;
-        supply = readAndCalculateFile(supply, buy, fromFileName)[0];
-        buy = readAndCalculateFile(supply, buy, fromFileName)[1];
-        writeToFile(supply, buy, toFileName);
-
+        String readingFromFile = readFromFile(fromFileName);
+        String creatingReport = createReport(readingFromFile);
+        writeToFile(creatingReport, toFileName);
     }
 
-    public int[] readAndCalculateFile(int supply, int buy, String fromFileName) {
+    public String readFromFile(String fromFileName) {
+        StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
-            String value = reader.readLine();
-            while (value != null) {
-                if (value.contains(BUY)) {
-                    buy += Integer.parseInt(value.split(COMMA)[1]);
-                }
-                if (value.contains(SUPPLY)) {
-                    supply += Integer.parseInt(value.split(COMMA)[1]);
-                }
-                value = reader.readLine();
+            while (reader.ready()) {
+                stringBuilder.append(reader.readLine()).append(System.lineSeparator());
             }
+            return stringBuilder.toString();
         } catch (IOException e) {
             throw new RuntimeException("Can't read file", e);
         }
-        return new int[]{supply, buy};
     }
 
-    public void writeToFile(int supply, int buy, String toFileName) {
+    public String createReport(String value) {
+        int buy = 0;
+        int supply = 0;
+        StringBuilder stringBuilder = new StringBuilder();
+        String[] parse = value.split(System.lineSeparator());
+        for (int i = 0; i < parse.length; i++) {
+            if (parse[i].contains(BUY)) {
+                buy += Integer.parseInt(parse[i].split(COMMA)[1]);
+            }
+            if (parse[i].contains(SUPPLY)) {
+                supply += Integer.parseInt(parse[i].split(COMMA)[1]);
+            }
+        }
+        return stringBuilder
+                    .append(SUPPLY + COMMA)
+                    .append(supply)
+                    .append(System.lineSeparator())
+                    .append(BUY)
+                    .append(COMMA)
+                    .append(buy)
+                    .append(System.lineSeparator())
+                    .append(RESULT)
+                    .append(COMMA)
+                    .append(supply - buy).toString();
+    }
+
+    public void writeToFile(String reportValue, String toFileName) {
         File toFile = new File(toFileName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFile))) {
-            bufferedWriter.write(SUPPLY + COMMA + supply
-                    + System.lineSeparator()
-                    + BUY + COMMA + buy
-                    + System.lineSeparator()
-                    + RESULT + COMMA + (supply - buy));
+            bufferedWriter.write(reportValue);
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file", e);
         }
