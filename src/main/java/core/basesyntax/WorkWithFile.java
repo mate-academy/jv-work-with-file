@@ -4,6 +4,9 @@ import java.io.*;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
+        String data = readData(fromFileName);
+        String report = createReport(data);
+        writeData(report, toFileName);
 
     }
 
