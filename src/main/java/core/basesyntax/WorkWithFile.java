@@ -1,9 +1,6 @@
 package core.basesyntax;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
@@ -27,5 +24,13 @@ public class WorkWithFile {
         }
     }
 
-
+    public void writeData(String data, String toFileName) {
+        try {
+            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName));
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException("File doesn't exist", e);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write data to file", e);
+        }
+    }
 }
