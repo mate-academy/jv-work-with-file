@@ -67,8 +67,8 @@ public class WorkWithFile {
             }
             tmp.append(String.format("result,%d\n", Math.abs(dif)));
             clear();
-            return tmp.toString();
         }
+        return tmp.toString();
     }
     
     private int containsKey(String fkey) {
