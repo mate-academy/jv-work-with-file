@@ -9,6 +9,7 @@ import java.nio.file.Path;
 public class WorkWithFile {
     private static final String OPERATION_TYPE_SUPPLY = "supply";
     private static final String OPERATION_TYPE_BUY = "buy";
+    private static final String OPERATION_TYPES_RESULT = "result";
     private static final String COMMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
@@ -17,18 +18,18 @@ public class WorkWithFile {
         String[] data = readFromFile(fromFileName).split(System.lineSeparator());
         StringBuilder resultBuilder = new StringBuilder();
         for (String datum : data) {
-            String[] result = datum.split(COMMA);
-            if (datum.startsWith(OPERATION_TYPE_SUPPLY)) {
-                supplyAmount += Integer.parseInt(result[1]);
+            String[] datumInfo = datum.split(COMMA);
+            if (datumInfo[0].equals(OPERATION_TYPE_SUPPLY)) {
+                supplyAmount += Integer.parseInt(datumInfo[1]);
             } else {
-                buyAmount += Integer.parseInt(result[1]);
+                buyAmount += Integer.parseInt(datumInfo[1]);
             }
         }
         resultBuilder.append(OPERATION_TYPE_SUPPLY).append(COMMA)
                 .append(supplyAmount).append(System.lineSeparator())
                 .append(OPERATION_TYPE_BUY).append(COMMA)
                 .append(buyAmount).append(System.lineSeparator())
-                .append("result").append(COMMA)
+                .append(OPERATION_TYPES_RESULT).append(COMMA)
                 .append(supplyAmount - buyAmount);
         printToFile(toFileName, resultBuilder.toString());
     }
