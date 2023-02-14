@@ -48,11 +48,7 @@ public class WorkWithFile {
         String line = bufferedReader.readLine();
         while (line != null) {
             String[] splitLine = line.split(",");
-            try {
-                setInformation(statistic, splitLine[WORD_INDEX], splitLine[VALUE_INDEX]);
-            } catch (IndexOutOfBoundsException e) {
-                throw new RuntimeException("wrong file structure");
-            }
+            setInformation(statistic, splitLine[WORD_INDEX], splitLine[VALUE_INDEX]);
             line = bufferedReader.readLine();
         }
         setInformation(statistic, RESULT_VALUE, "0");
