@@ -28,7 +28,7 @@ public class WorkWithFile {
             }
             return data.toString();
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("There is no such file", e);
+            throw new RuntimeException("There is no such file " + fileName, e);
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from the file " + fileName, e);
         }
@@ -47,8 +47,8 @@ public class WorkWithFile {
         int totalSupply = 0;
         int totalBuy = 0;
         String[] info = data.split(" ");
-        for (int i = 0; i < info.length; i++) {
-            String[] array = info[i].split(",");
+        for (String line : info) {
+            String[] array = line.split(",");
             if (array[0].equals(SUPPLY)) {
                 totalSupply += Integer.parseInt(array[1]);
             } else if (array[0].equals(BUY)) {
