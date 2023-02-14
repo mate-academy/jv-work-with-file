@@ -31,7 +31,7 @@ public class WorkWithFile {
                 }
             }
         } catch (IOException e) {
-            throw new RuntimeException("Unable to read file", e);
+            throw new RuntimeException("Unable to read file: " + fromFileName, e);
         }
         return sum;
     }
@@ -42,7 +42,7 @@ public class WorkWithFile {
                 BufferedWriter bufWriter = new BufferedWriter(writer)) {
             bufWriter.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Unable to write to file", e);
+            throw new RuntimeException("Unable to write to file: " + toFileName, e);
         }
     }
 
@@ -51,5 +51,4 @@ public class WorkWithFile {
                 + "buy," + buySum + System.lineSeparator()
                 + "result," + (supplySum - buySum);
     }
-
 }
