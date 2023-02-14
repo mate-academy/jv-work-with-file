@@ -8,44 +8,48 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private Integer buySum;
-    private Integer supplySum;
+    public static final int EVENT_POSITION = 0;
+    public static final int NUMBER_POSITION = 1;
+    public static final String DELIMITER = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        File inputFile = new File(fromFileName);
-        File outputFile = new File(toFileName);
-        getBuySupplySums(inputFile);
-        writeReport(outputFile);
+        int buySum = getEventSum(fromFileName, "buy");
+        int supplySum = getEventSum(fromFileName, "supply");
+        String report = createReport(buySum, supplySum);
+        writeReportToFile(toFileName, report);
     }
 
-    private void getBuySupplySums(File file) {
-        buySum = 0;
-        supplySum = 0;
+    private int getEventSum(String fromFileName, String event) {
+        int sum = 0;
+        File file = new File(fromFileName);
         try (FileReader reader = new FileReader(file);
                 BufferedReader bufReader = new BufferedReader(reader)) {
             while (bufReader.ready()) {
-                String[] values = bufReader.readLine().split(",");
-                if (values[0].equals("buy")) {
-                    buySum += Integer.parseInt(values[1]);
-                }
-                if (values[0].equals("supply")) {
-                    supplySum += Integer.parseInt(values[1]);
+                String[] values = bufReader.readLine().split(DELIMITER);
+                if (values[EVENT_POSITION].equals(event)) {
+                    sum += Integer.parseInt(values[NUMBER_POSITION]);
                 }
             }
         } catch (IOException e) {
             throw new RuntimeException("Unable to read file", e);
         }
+        return sum;
     }
 
-    private void writeReport(File file) {
+    private void writeReportToFile(String toFileName, String report) {
+        File file = new File(toFileName);
         try (FileWriter writer = new FileWriter(file);
                 BufferedWriter bufWriter = new BufferedWriter(writer)) {
-            bufWriter.write("supply," + supplySum + System.lineSeparator());
-            bufWriter.write("buy," + buySum + System.lineSeparator());
-            bufWriter.write("result," + (supplySum - buySum));
+            bufWriter.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Unable to write to file", e);
         }
+    }
+
+    private String createReport(int buySum, int supplySum) {
+        return "supply," + supplySum + System.lineSeparator()
+                + "buy," + buySum + System.lineSeparator()
+                + "result," + (supplySum - buySum);
     }
 
 }
