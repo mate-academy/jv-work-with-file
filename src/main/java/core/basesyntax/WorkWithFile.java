@@ -8,6 +8,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
+
     public void getStatistic(String fromFileName, String toFileName) {
         String data = readData(fromFileName);
         String report = createReport(data);
@@ -49,16 +53,16 @@ public class WorkWithFile {
         String[] lines = data.split(" ");
         for (String line : lines) {
             String[] spliter = line.split(",");
-            if (spliter[0].equals("supply")) {
+            if (spliter[0].equals(SUPPLY)) {
                 countSupply += Integer.parseInt(spliter[1]);
-            } else if (spliter[0].equals("buy")) {
+            } else if (spliter[0].equals(BUY)) {
                 countBuy += Integer.parseInt(spliter[1]);
             }
         }
         int countedResult = countSupply - countBuy;
-        result.append("supply").append(",").append(countSupply).append(System.lineSeparator());
-        result.append("buy").append(",").append(countBuy).append(System.lineSeparator());
-        result.append("result").append(",").append(countedResult).append(System.lineSeparator());
+        result.append(SUPPLY).append(",").append(countSupply).append(System.lineSeparator());
+        result.append(BUY).append(",").append(countBuy).append(System.lineSeparator());
+        result.append(RESULT).append(",").append(countedResult).append(System.lineSeparator());
         return result.toString();
     }
 }
