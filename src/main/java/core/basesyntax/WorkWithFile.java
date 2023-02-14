@@ -17,11 +17,13 @@ public class WorkWithFile {
     public static final String RESULT_NAME = "result";
 
     public static void getStatistic(String fromFileName, String toFileName) {
-        String fileName = toFileName;
+        readDataFromFile(fromFileName, toFileName);
+    }
+
+    private static void readDataFromFile(String fromFileName, String toFileName) {
         File readFile = new File(fromFileName);
 
         StringBuilder builder = new StringBuilder();
-        String value;
         try (BufferedReader reader = new BufferedReader(new FileReader(readFile))) {
             while (reader.ready()) {
                 builder.append(reader.readLine()).append(REGEX);
