@@ -47,14 +47,11 @@ public class WorkWithFile {
     private String makeReport(String data) {
         StringBuilder builder = new StringBuilder();
         int[] totalAmount = calculateTotalAmount(data);
-        final int indexSupply = 0;
-        final int indexBuy = 1;
-        return builder.append("supply,").append(totalAmount[indexSupply])
-                .append(System.lineSeparator())
-                .append("buy,").append(totalAmount[indexBuy])
-                .append(System.lineSeparator())
-                .append("result,").append(totalAmount[indexSupply] - totalAmount[indexBuy])
-                .toString();
+        int supplySum = totalAmount[0];
+        int buySum = totalAmount[1];
+        return builder.append("supply,").append(supplySum).append(System.lineSeparator())
+                .append("buy,").append(buySum).append(System.lineSeparator())
+                .append("result,").append(supplySum - buySum).toString();
     }
 
     private int[] calculateTotalAmount(String data) {
@@ -65,9 +62,9 @@ public class WorkWithFile {
             String[] itemInfo = item.split(COMMA_SEPARATOR);
             if (itemInfo[ITEM_INDEX].equals("supply")) {
                 supplySum += Integer.parseInt(itemInfo[COST_INDEX]);
-                continue;
+            } else {
+                buySum += Integer.parseInt(itemInfo[COST_INDEX]);
             }
-            buySum += Integer.parseInt(itemInfo[COST_INDEX]);
         }
         return new int[]{supplySum, buySum};
     }
