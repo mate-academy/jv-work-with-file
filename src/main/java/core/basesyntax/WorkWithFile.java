@@ -12,7 +12,6 @@ public class WorkWithFile {
         String data = readData(fromFileName);
         String report = createReport(data);
         writeData(report, toFileName);
-
     }
 
     public String readData(String fromFileName) {
@@ -20,8 +19,8 @@ public class WorkWithFile {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
             StringBuilder data = new StringBuilder();
             String line = bufferedReader.readLine();
-            while (line != null) {
-                data.append(line);
+            while (line != null && !line.isEmpty()) {
+                data.append(line).append(" ");
                 line = bufferedReader.readLine();
             }
             return data.toString();
@@ -35,6 +34,7 @@ public class WorkWithFile {
     public void writeData(String data, String toFileName) {
         try {
             BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName));
+            bufferedWriter.write(data);
         } catch (FileNotFoundException e) {
             throw new RuntimeException("File doesn't exist", e);
         } catch (IOException e) {
@@ -51,8 +51,7 @@ public class WorkWithFile {
             String[] spliter = line.split(",");
             if (spliter[0].equals("supply")) {
                 countSupply += Integer.parseInt(spliter[1]);
-            }
-            if (spliter[0].equals("buy")) {
+            } else if (spliter[0].equals("buy")) {
                 countBuy += Integer.parseInt(spliter[1]);
             }
         }
