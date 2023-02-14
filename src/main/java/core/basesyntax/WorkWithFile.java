@@ -12,15 +12,12 @@ public class WorkWithFile {
     private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-
         int supplySum = 0;
         int buySum = 0;
-
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String line = reader.readLine();
             while (line != null) {
                 String[] data = line.split(",");
-
                 if (data[OPERATION_INDEX].equals("buy")) {
                     buySum += Integer.parseInt(data[AMOUNT_INDEX]);
                 } else if (data[OPERATION_INDEX].equals("supply")) {
@@ -31,20 +28,26 @@ public class WorkWithFile {
                 line = reader.readLine();
             }
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("File not found", e);
+            throw new RuntimeException("File not found:" + fromFileName, e);
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't read file:" + fromFileName, e);
         }
-        writeResultToFile(toFileName, supplySum, buySum);
+        writeResultToFile(toFileName, createReport(supplySum, buySum));
     }
 
-    private void writeResultToFile(String fileName, int supplySum, int buySum) {
+    private void writeResultToFile(String fileName, String result) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
-            bufferedWriter.write("supply," + supplySum + System.lineSeparator());
-            bufferedWriter.write("buy," + buySum + System.lineSeparator());
-            bufferedWriter.write("result," + (supplySum - buySum) + System.lineSeparator());
+            bufferedWriter.write(result);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write into file", e);
+            throw new RuntimeException("Can't write into file :" + fileName, e);
         }
+    }
+
+    private String createReport(int supplySum, int buySum) {
+        StringBuilder builder = new StringBuilder();
+        String result = builder.append("supply,").append(supplySum).append(System.lineSeparator())
+                .append("buy,").append(buySum).append(System.lineSeparator())
+                .append("result,").append(supplySum - buySum).toString();
+        return result;
     }
 }
