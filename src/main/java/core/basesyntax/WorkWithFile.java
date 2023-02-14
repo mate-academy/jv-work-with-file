@@ -15,103 +15,75 @@ public class WorkWithFile {
     private static final int INDEX_DATA_OPERATION_TYPE = 0;
     private static final int INDEX_AMOUNT = 1;
     private static final int DATA_LENGTH = 2;
+    private static final int SUPPLY_INDEX_IN_ARRAY = 0;
+    private static final int BUY_INDEX_IN_ARRAY = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         File file = new File(toFileName);
-        try {
-            file.createNewFile();
-        } catch (IOException e) {
-            throw new RuntimeException("Can't create new file", e);
-        }
-
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
-            int[] supplies = getSuppliesFromFile(fromFileName);
-            int[] buyies = getBuyiesFromFile(fromFileName);
-            int suppliesSum = 0;
-            int buyiesSum = 0;
-            for (int supply: supplies) {
-                suppliesSum += supply;
-            }
-            for (int buy: buyies) {
-                buyiesSum += buy;
-            }
-            int result = suppliesSum - buyiesSum;
-            bufferedWriter.write(SUPPLY_ACTION + "," + suppliesSum + System.lineSeparator());
-            bufferedWriter.write(BUY_ACTION + "," + buyiesSum + System.lineSeparator());
-            bufferedWriter.write(RESULT_ACTION + "," + result);
+            int[] totalData = getTotalDataFromFile(fromFileName);
+            int supplySum = totalData[SUPPLY_INDEX_IN_ARRAY];
+            int buySum = totalData[BUY_INDEX_IN_ARRAY];
+            int result = supplySum - buySum;
+            StringBuilder report = new StringBuilder();
+            report.append(SUPPLY_ACTION).append(',').append(supplySum)
+                    .append(System.lineSeparator());
+            report.append(BUY_ACTION).append(',').append(buySum).append(System.lineSeparator());
+            report.append(RESULT_ACTION).append(',').append(result);
+            bufferedWriter.write(report.toString());
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data to file", e);
+            throw new RuntimeException("Can't write data to " + toFileName, e);
         }
     }
 
-    private int[] getSuppliesFromFile(String fromFileName) {
+    private int[] getTotalDataFromFile(String fromFileName) {
         File file = new File(fromFileName);
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
-            int supplyCount = 0;
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
+            int supplyActionsTotal = 0;
+            int buyActionsTotal = 0;
             String data = bufferedReader.readLine();
             while (data != null) {
                 String[] dataArray = data.split(",");
                 if (dataArray.length != DATA_LENGTH) {
                     throw new RuntimeException("Invalid data format");
                 } else if (dataArray[INDEX_DATA_OPERATION_TYPE].equals(SUPPLY_ACTION)) {
-                    supplyCount++;
+                    supplyActionsTotal++;
+                } else if (dataArray[INDEX_DATA_OPERATION_TYPE].equals(BUY_ACTION)) {
+                    buyActionsTotal++;
                 }
                 data = bufferedReader.readLine();
             }
-            int[] supplies = new int[supplyCount];
-            int supplyQuantCount = 0;
-            bufferedReader = new BufferedReader(new FileReader(file));
-            data = bufferedReader.readLine();
+            BufferedReader bufferedReader1 = new BufferedReader(new FileReader(file));
+            int[] supplyArray = new int[supplyActionsTotal];
+            int[] buyArray = new int[buyActionsTotal];
+            int supplyCount = 0;
+            int buyCount = 0;
+            data = bufferedReader1.readLine();
             while (data != null) {
                 String[] dataArray = data.split(",");
                 if (dataArray[INDEX_DATA_OPERATION_TYPE].equals(SUPPLY_ACTION)) {
-                    supplies[supplyQuantCount] = Integer.parseInt(dataArray[INDEX_AMOUNT]);
-                    supplyQuantCount++;
-                }
-                data = bufferedReader.readLine();
-            }
-            return supplies;
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException("File not found", e);
-        } catch (IOException e) {
-            throw new RuntimeException("Can't read the file", e);
-        }
-    }
-
-    private int[] getBuyiesFromFile(String fromFileName) {
-        File file = new File(fromFileName);
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
-            int buyCount = 0;
-            String data = bufferedReader.readLine();
-            while (data != null) {
-                String[] dataArray = data.split(",");
-                if (dataArray.length != DATA_LENGTH) {
-                    throw new RuntimeException("Invalid data format");
-                }
-                if (dataArray[INDEX_DATA_OPERATION_TYPE].equals(BUY_ACTION)) {
+                    supplyArray[supplyCount] = Integer.parseInt(dataArray[INDEX_AMOUNT]);
+                    supplyCount++;
+                } else if (dataArray[INDEX_DATA_OPERATION_TYPE].equals(BUY_ACTION)) {
+                    buyArray[buyCount] = Integer.parseInt(dataArray[INDEX_AMOUNT]);
                     buyCount++;
                 }
-                data = bufferedReader.readLine();
+                data = bufferedReader1.readLine();
             }
-            int[] buyies = new int[buyCount];
-            int buyQuantCount = 0;
-            bufferedReader = new BufferedReader(new FileReader(file));
-            data = bufferedReader.readLine();
-            while (data != null) {
-                String[] dataArray = data.split(",");
-                if (dataArray[INDEX_DATA_OPERATION_TYPE].equals(BUY_ACTION)) {
-                    buyies[buyQuantCount] = Integer.parseInt(dataArray[INDEX_AMOUNT]);
-                    buyQuantCount++;
-                }
-                data = bufferedReader.readLine();
+            int supplyTotal = 0;
+            int buyTotal = 0;
+            for (int buy: buyArray) {
+                buyTotal += buy;
             }
-            return buyies;
+            for (int supply: supplyArray) {
+                supplyTotal += supply;
+            }
+            int[] result = {supplyTotal, buyTotal};
+            return result;
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("File not found", e);
+            throw new RuntimeException("File " + fromFileName + " not found", e);
         } catch (IOException e) {
-            throw new RuntimeException("Can't read the file", e);
+            throw new RuntimeException("Can't read data from " + fromFileName, e);
         }
     }
 }
