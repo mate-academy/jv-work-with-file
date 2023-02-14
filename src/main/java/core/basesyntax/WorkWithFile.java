@@ -28,7 +28,7 @@ public class WorkWithFile {
     private void calculation(List<String> list) {
         for (String line : list) {
             String[] operation = line.split(",");
-            if (operation[0].equals("supply")) {
+            if (operation[0].equals(ReportColumn.values()[0].name().toLowerCase())) {
                 result[ReportColumn.SUPPLY.ordinal()] += Integer.parseInt(line.substring(7));
             } else {
                 result[ReportColumn.BUY.ordinal()] += Integer.parseInt(line.substring(4));
