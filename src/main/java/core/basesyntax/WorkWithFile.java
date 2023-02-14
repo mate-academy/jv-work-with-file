@@ -8,14 +8,18 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String DELIMITER = "///";
+    private static final int INDEX_0 = 0;
+    private static final int INDEX_1 = 1;
+
     public void getStatistic(String fromFileName, String toFileName) {
-        String[] text = openFile(fromFileName);
-        int[] data = calcutData(text);
-        String[] dataForPrint = printData(data);
+        String[] text = readFile(fromFileName);
+        int[] data = calculateDataForReport(text);
+        String dataForPrint = createReport(data);
         putDataToFile(dataForPrint,toFileName);
     }
 
-    private String[] openFile(String fileName) {
+    private String[] readFile(String fileName) {
         StringBuilder string = new StringBuilder();
         try {
             File file = new File(fileName);
@@ -23,61 +27,46 @@ public class WorkWithFile {
             BufferedReader bufferedReader = new BufferedReader(fileReader);
             String text = bufferedReader.readLine();
             while (text != null) {
-                string.append(text).append("///");
+                string.append(text).append(DELIMITER);
                 text = bufferedReader.readLine();
             }
             bufferedReader.close();
         } catch (IOException e) {
-            throw new RuntimeException("Can`t open file!", e);
+            throw new RuntimeException("Can`t open file!" + fileName, e);
         }
         if (string.toString().isEmpty()) {
             String[] empty = {};
             return empty;
-        } else {
-            return string.toString().split("///");
         }
+        return string.toString().split(DELIMITER);
     }
 
-    private int[] calcutData(String[] str) {
-        int[] result = new int[]{0,0};
+    private int[] calculateDataForReport(String[] str) {
+        int[] result = new int[]{0, 0};
         for (int i = 0; i < str.length; i++) {
             String[] strings = str[i].split(",");
-            if (strings[0].equals("supply")) {
-                result[0] += Integer.parseInt(strings[1]);
-            } else if (strings[0].equals("buy")) {
-                result[1] += Integer.parseInt(strings[1]);
+            if (strings[INDEX_0].equals("supply")) {
+                result[INDEX_0] += Integer.parseInt(strings[INDEX_1]);
+            } else if (strings[INDEX_0].equals("buy")) {
+                result[INDEX_1] += Integer.parseInt(strings[INDEX_1]);
             }
         }
         return result;
     }
 
-    private String[] printData(int[] arr) {
-        String[] text = new String[3];
+    private String createReport(int[] data) {
         StringBuilder result = new StringBuilder();
-        result.append("supply,").append(arr[0]);
-        text[0] = result.toString();
-        result.setLength(0);
-        result.append("buy,").append(arr[1]);
-        text[1] = result.toString();
-        result.setLength(0);
-        result.append("result,").append(arr[0] - arr[1]);
-        text[2] = result.toString();
-        return text;
+        result.append("supply,").append(data[0]).append("\n");
+        result.append("buy,").append(data[1]).append("\n");
+        result.append("result,").append(data[0] - data[1]).append("\n");
+        return result.toString();
     }
 
-    private void putDataToFile(String[] text, String putFile) {
+    private void putDataToFile(String text, String putFile) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(putFile))) {
-            /*File file = new File(putFile);
-            FileWriter fileWriter = new FileWriter(file, true);
-            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);*/
-
-            for (int i = 0; i < text.length; i++) {
-                bufferedWriter.write(text[i]);
-                bufferedWriter.write("\n");
-            }
-            /*bufferedWriter.close();*/
+            bufferedWriter.write(text);
         } catch (IOException e) {
-            throw new RuntimeException("Can`t put data to file!",e);
+            throw new RuntimeException("Can`t put data to file!" + putFile,e);
         }
     }
 }
