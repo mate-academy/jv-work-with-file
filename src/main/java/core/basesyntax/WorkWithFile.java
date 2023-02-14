@@ -77,15 +77,15 @@ public class WorkWithFile {
 
     private void writeDataToFile(int[] totalData, String toFileName) {
         File file = new File(toFileName);
+        int supplySum = totalData[SUPPLY_INDEX_IN_ARRAY];
+        int buySum = totalData[BUY_INDEX_IN_ARRAY];
+        int result = supplySum - buySum;
+        StringBuilder report = new StringBuilder();
+        report.append(SUPPLY_ACTION).append(',').append(supplySum)
+            .append(System.lineSeparator());
+        report.append(BUY_ACTION).append(',').append(buySum).append(System.lineSeparator());
+        report.append(RESULT_ACTION).append(',').append(result);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
-            int supplySum = totalData[SUPPLY_INDEX_IN_ARRAY];
-            int buySum = totalData[BUY_INDEX_IN_ARRAY];
-            int result = supplySum - buySum;
-            StringBuilder report = new StringBuilder();
-            report.append(SUPPLY_ACTION).append(',').append(supplySum)
-                .append(System.lineSeparator());
-            report.append(BUY_ACTION).append(',').append(buySum).append(System.lineSeparator());
-            report.append(RESULT_ACTION).append(',').append(result);
             bufferedWriter.write(report.toString());
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to " + toFileName, e);
