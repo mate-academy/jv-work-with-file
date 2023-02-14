@@ -40,33 +40,34 @@ public class WorkWithFile {
                 }
                 data = bufferedReader.readLine();
             }
-            BufferedReader bufferedReader1 = new BufferedReader(new FileReader(file));
-            int[] supplyArray = new int[supplyActionsTotal];
-            int[] buyArray = new int[buyActionsTotal];
-            int supplyCount = 0;
-            int buyCount = 0;
-            data = bufferedReader1.readLine();
-            while (data != null) {
-                String[] dataArray = data.split(",");
-                if (dataArray[INDEX_DATA_OPERATION_TYPE].equals(SUPPLY_ACTION)) {
-                    supplyArray[supplyCount] = Integer.parseInt(dataArray[INDEX_AMOUNT]);
-                    supplyCount++;
-                } else if (dataArray[INDEX_DATA_OPERATION_TYPE].equals(BUY_ACTION)) {
-                    buyArray[buyCount] = Integer.parseInt(dataArray[INDEX_AMOUNT]);
-                    buyCount++;
-                }
+            try (BufferedReader bufferedReader1 = new BufferedReader(new FileReader(file))) {
+                int[] supplyArray = new int[supplyActionsTotal];
+                int[] buyArray = new int[buyActionsTotal];
+                int supplyCount = 0;
+                int buyCount = 0;
                 data = bufferedReader1.readLine();
+                while (data != null) {
+                    String[] dataArray = data.split(",");
+                    if (dataArray[INDEX_DATA_OPERATION_TYPE].equals(SUPPLY_ACTION)) {
+                        supplyArray[supplyCount] = Integer.parseInt(dataArray[INDEX_AMOUNT]);
+                        supplyCount++;
+                    } else if (dataArray[INDEX_DATA_OPERATION_TYPE].equals(BUY_ACTION)) {
+                        buyArray[buyCount] = Integer.parseInt(dataArray[INDEX_AMOUNT]);
+                        buyCount++;
+                    }
+                    data = bufferedReader1.readLine();
+                }
+                int supplyTotal = 0;
+                int buyTotal = 0;
+                for (int buy: buyArray) {
+                    buyTotal += buy;
+                }
+                for (int supply: supplyArray) {
+                    supplyTotal += supply;
+                }
+                int[] result = {supplyTotal, buyTotal};
+                return result;
             }
-            int supplyTotal = 0;
-            int buyTotal = 0;
-            for (int buy: buyArray) {
-                buyTotal += buy;
-            }
-            for (int supply: supplyArray) {
-                supplyTotal += supply;
-            }
-            int[] result = {supplyTotal, buyTotal};
-            return result;
         } catch (FileNotFoundException e) {
             throw new RuntimeException("File " + fromFileName + " not found", e);
         } catch (IOException e) {
