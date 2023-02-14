@@ -27,7 +27,7 @@ public class WorkWithFile {
         try {
             readList = Files.readAllLines(file.toPath());
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't read from file " + dataFile, e);
         }
         return readList;
     }
@@ -36,15 +36,15 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(resultFile))) {
             bufferedWriter.write(data);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write file", e);
+            throw new RuntimeException("Can't write in file " + resultFile, e);
         }
     }
 
     private String countOperationsAmount(List<String> linesFromFile) {
         int supplyCounter = 0;
         int buyCounter = 0;
-        for (int i = 0; i < linesFromFile.size(); i++) {
-            String[] operations = linesFromFile.get(i).split(DELIMITER);
+        for (String line : linesFromFile) {
+            String[] operations = line.split(DELIMITER);
             if (operations[OPERATION_INDEX].equals(SUPPLY)) {
                 supplyCounter += Integer.parseInt(operations[AMOUNT_INDEX]);
             } else if (operations[OPERATION_INDEX].equals(BUY)) {
