@@ -8,52 +8,53 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final int NAME_POS = 0;
-    private static final int NUM_POS = 1;
-    private int buySum;
-    private int supplySum;
-    private int result;
+    private static final String REGEX = ",";
+    private static final String SUPPLY = "supply";
+    private static final int NAME_INDEX = 0;
+    private static final int NUMBER_INDEX = 1;
+    private static final int ARRAY_INDEX_0 = 0;
+    private static final int ARRAY_INDEX_1 = 1;
+    private static final int ARRAY_INDEX_2 = 2;
 
     public void getStatistic(String fromFileName, String toFileName) {
         File toFile = new File(toFileName);
-        readFile(fromFileName);
-        writeFile(buySum, supplySum, result, toFile);
+        writeFile(readFile(fromFileName), toFile);
     }
 
-    private void readFile(String fromFileName) {
+    private int[] readFile(String fromFileName) {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
-            String value = bufferedReader.readLine();
-            while (value != null) {
-                String[] lineArray = value.split(",");
-                if (lineArray[NAME_POS].equals("supply")) {
-                    supplySum += Integer.parseInt(lineArray[NUM_POS]);
+            int buySum = 0;
+            int supplySum = 0;
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                String[] lineArray = line.split(REGEX);
+                if (lineArray[NAME_INDEX].equals(SUPPLY)) {
+                    supplySum += Integer.parseInt(lineArray[NUMBER_INDEX]);
                 } else {
-                    buySum += Integer.parseInt(lineArray[NUM_POS]);
+                    buySum += Integer.parseInt(lineArray[NUMBER_INDEX]);
                 }
-                value = bufferedReader.readLine();
             }
-            result = supplySum - buySum;
+            int result = supplySum - buySum;
+            return new int[]{buySum, supplySum, result};
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Cannot read file " + fromFileName, e);
         }
     }
 
-    private void writeFile(int buySum, int supplySum, int result, File toFile) {
-
+    private void writeFile(int[] arrayNumbers, File toFile) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFile))) {
-
-            StringBuilder stringBuilder = new StringBuilder();
-
-            stringBuilder.append("supply,").append(supplySum).append(System.lineSeparator())
-                    .append("buy,").append(buySum).append(System.lineSeparator())
-                    .append("result,").append(result);
-            bufferedWriter.write(stringBuilder.toString());
-
+            bufferedWriter.write(createResultText(arrayNumbers[ARRAY_INDEX_0],
+                    arrayNumbers[WorkWithFile.ARRAY_INDEX_1],
+                    arrayNumbers[WorkWithFile.ARRAY_INDEX_2]).toString());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Cannot write to file " + toFile, e);
         }
-        this.buySum = 0;
-        this.supplySum = 0;
-        this.result = 0;
+    }
+
+    private StringBuilder createResultText(int buySum, int supplySum, int result) {
+        StringBuilder stringBuilder = new StringBuilder();
+        return stringBuilder.append("supply,").append(supplySum).append(System.lineSeparator())
+                .append("buy,").append(buySum).append(System.lineSeparator())
+                .append("result,").append(result);
     }
 }
