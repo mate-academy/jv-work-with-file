@@ -2,7 +2,6 @@ package core.basesyntax;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -16,14 +15,24 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT_VALUE = "result";
+    private static final String ZERO_VAR = "0";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        File toFile = new File(toFileName);
-        File fromFile = new File(fromFileName);
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFile));
-                BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFile))) {
-            String resultList = getResultText(bufferedReader);
-            bufferedWriter.write(resultList);
+        String statistic = readText(fromFileName);
+        writeText(toFileName, statistic);
+    }
+
+    private void writeText(String toFileName, String statistic) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
+            bufferedWriter.write(statistic);
+        } catch (IOException e) {
+            throw new RuntimeException("can't write to file");
+        }
+    }
+
+    private String readText(String fromFileName) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
+            return getResultText(bufferedReader);
         } catch (IOException e) {
             throw new RuntimeException("wrong file path");
         }
@@ -44,14 +53,15 @@ public class WorkWithFile {
 
     private String[][] getMapInformation(BufferedReader bufferedReader)
             throws IOException {
-        String[][] statistic = new String[][]{{SUPPLY, "0"}, {BUY, "0"}, {RESULT_VALUE, "0"}};
+        String[][] statistic = new String[][]{{SUPPLY, ZERO_VAR}, {BUY, ZERO_VAR},
+                {RESULT_VALUE, ZERO_VAR}};
         String line = bufferedReader.readLine();
         while (line != null) {
             String[] splitLine = line.split(",");
             setInformation(statistic, splitLine[WORD_INDEX], splitLine[VALUE_INDEX]);
             line = bufferedReader.readLine();
         }
-        setInformation(statistic, RESULT_VALUE, "0");
+        setInformation(statistic, RESULT_VALUE, ZERO_VAR);
         return statistic;
     }
 
