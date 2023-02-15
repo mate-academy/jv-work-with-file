@@ -11,25 +11,11 @@ import java.util.List;
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         File file = new File(toFileName);
-        try {
-            if (file.exists()) {
-                file.delete();
-            }
-            file.createNewFile();
-        } catch (IOException e) {
-            throw new RuntimeException("Can`t create new file ", e);
+        if (file.exists()) {
+            file.delete();
         }
         String[] result = countResult(readFromFile(fromFileName));
-        for (int i = 0;i < result.length;i++) {
-            try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, true))) {
-                bufferedWriter.write(result[i]);
-                if (i < result.length - 1) {
-                    bufferedWriter.write(System.lineSeparator());
-                }
-            } catch (IOException e) {
-                throw new RuntimeException("Can`t write to file ", e);
-            }
-        }
+        writeToFile(file,result);
     }
 
     public String[] readFromFile(String fileName) {
@@ -67,5 +53,19 @@ public class WorkWithFile {
         finalArray[1] = "buy" + "," + buy;
         finalArray[2] = "result" + "," + result;
         return finalArray;
+    }
+
+    private void writeToFile(File fileName, String[] array) {
+        for (int i = 0;i < array.length;i++) {
+            try (BufferedWriter bufferedWriter =
+                         new BufferedWriter(new FileWriter(fileName, true))) {
+                bufferedWriter.write(array[i]);
+                if (i < array.length - 1) {
+                    bufferedWriter.write(System.lineSeparator());
+                }
+            } catch (IOException e) {
+                throw new RuntimeException("Can`t write to file ", e);
+            }
+        }
     }
 }
