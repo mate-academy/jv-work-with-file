@@ -15,17 +15,24 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String RESULT = "result";
     public void getStatistic(String fromFileName, String toFileName) {
+        SetReportToFile(fromFileName,toFileName);
+    }
+
+    private List<String> getValueFromFile(String fromFileName) {
         File fileFrom = new File(fromFileName);
         List<String> linetFromFile;
         try {
-            linetFromFile =  Files.readAllLines(fileFrom.toPath());
+            linetFromFile = Files.readAllLines(fileFrom.toPath());
         } catch (IOException e) {
             throw new RuntimeException("Can`t read file");
         }
+        return linetFromFile;
+    }
 
+    private String getRepor(String fromFileName) {
         int summSuplie = 0;
         int summBye = 0;
-        for (String line : linetFromFile) {
+        for (String line : getValueFromFile(fromFileName)) {
             String[] lineArray = line.split(SEPARATOR);
             if (lineArray[LINE_NAME].equals("supply")) {
                 summSuplie += Integer.parseInt(lineArray[LINE_VALUE]);
@@ -38,16 +45,16 @@ public class WorkWithFile {
                 append(BUY).append(SEPARATOR).append(summBye).
                 append(System.lineSeparator()).
                 append(RESULT).append(SEPARATOR).append(summSuplie - summBye);
-        report.toString();
-
+        return  report.toString();
+    }
+    private void SetReportToFile(String fromFileName, String toFileName) {
         File fileTo = new File(toFileName);
-        try(BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileTo))) {
-            bufferedWriter.write(report);
+        try(BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
+            bufferedWriter.write(getRepor(fromFileName));
         } catch (IOException e) {
             throw new RuntimeException("Can`t write data");
         }
-
-
-
     }
+
+
 }
