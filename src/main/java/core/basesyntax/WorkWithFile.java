@@ -67,7 +67,8 @@ public class WorkWithFile {
             int dif = 0;
             boolean first = true;
             for (int i = 0; i < key.length; i++) {
-                tmp.append(key[i]).append(DELIMITER).append(value[i]).append(System.lineSeparator());
+                tmp.append(key[i]).append(DELIMITER).append(value[i])
+                    .append(System.lineSeparator());
                 if (first) {
                     dif = value[i];
                     first = false;
@@ -75,7 +76,8 @@ public class WorkWithFile {
                     dif -= value[i];
                 }
             }
-            tmp.append("result").append(DELIMITER).append(Math.abs(dif)).append(System.lineSeparator());
+            tmp.append("result").append(DELIMITER).append(Math.abs(dif))
+                .append(System.lineSeparator());
             clear();
         }
         return tmp.toString();
