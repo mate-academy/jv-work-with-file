@@ -10,13 +10,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    public static final int ENTRY_TYPE_INDEX = 0;
+    public static final int AMOUNT_INDEX = 1;
     public static final String SPACE_REGEX = " ";
     public static final String BUY = "buy";
     public static final String SUPPLY = "supply";
     public static final String COMA_REGEX = ",";
     public static final String RESULT_NAME = "result";
-    public static final String EMPTY_REGEX = "";
-    public static final String FILTER_PATTERN = "\\D+";
 
     public void getStatistic(String fromFileName, String toFileName) {
         writeDataToFile(getReport(readDataFromFile(fromFileName)), toFileName);
@@ -36,25 +36,25 @@ public class WorkWithFile {
     }
 
     private String getReport(String data) {
-        int result;
+        int result = 0;
         int totalSupply = 0;
         int totalBuy = 0;
         StringBuilder builder = new StringBuilder();
-        String[] arr = data.split(SPACE_REGEX);
-        for (String tips : arr) {
-            final int intValue = parseInt(tips.replaceAll(FILTER_PATTERN, EMPTY_REGEX));
-            if (tips.contains(BUY)) {
-                totalBuy += intValue;
-            } else if (tips.contains(SUPPLY)) {
-                totalSupply += intValue;
+        String[] info = data.split(SPACE_REGEX);
+        for (String line : info) {
+            String[] array = line.split(COMA_REGEX);
+            if (array[ENTRY_TYPE_INDEX].equals(SUPPLY)) {
+                totalSupply += parseInt(array[AMOUNT_INDEX]);
+            } else if (array[ENTRY_TYPE_INDEX].equals(BUY)) {
+                totalBuy += parseInt(array[AMOUNT_INDEX]);
             }
+            result = totalSupply - totalBuy;
         }
-        result = totalSupply - totalBuy;
         return builder.append(SUPPLY).append(COMA_REGEX)
                 .append(totalSupply).append(System.lineSeparator())
                 .append(BUY).append(COMA_REGEX).append(totalBuy)
-                .append(System.lineSeparator())
-                .append(RESULT_NAME).append(COMA_REGEX).append(result).toString();
+                .append(System.lineSeparator()).append(RESULT_NAME)
+                .append(COMA_REGEX).append(result).toString();
     }
 
     private void writeDataToFile(String formattedData, String direction) {
