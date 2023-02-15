@@ -30,20 +30,16 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can`t open file!" + fileName, e);
         }
-        if (stringBuilder.toString().isEmpty()) {
-            String empty = new String();
-            return empty;
-        }
         return stringBuilder.toString();
     }
 
     /* methods calculateDataForReport return int array with two elements.
     * first element mean sum of all values with supply
     * second element mean sum of all values with buy */
-    private int[] calculateDataForReport(String[] str) {
+    private int[] calculateDataForReport(String[] array) {
         int[] result = new int[]{0, 0};
-        for (int i = 0; i < str.length; i++) {
-            String[] strings = str[i].split(",");
+        for (String arr:array) {
+            String[] strings = arr.split(",");
             if (strings[POSITION_OF_TITLE].equals("supply")) {
                 result[POSITION_OF_SUPPLY_VALUE] += Integer.parseInt(strings[POSITION_OF_VALUE]);
             } else if (strings[POSITION_OF_TITLE].equals("buy")) {
@@ -56,9 +52,12 @@ public class WorkWithFile {
     private String createReport(String string) {
         int[] data = calculateDataForReport(string.split(DELIMITER));
         StringBuilder result = new StringBuilder();
-        result.append("supply,").append(data[0]).append("\n");
-        result.append("buy,").append(data[1]).append("\n");
-        result.append("result,").append(data[0] - data[1]).append("\n");
+        result.append("supply,").append(data[POSITION_OF_SUPPLY_VALUE])
+                .append(System.lineSeparator());
+        result.append("buy,").append(data[POSITION_OF_BUY_VALUE])
+                .append(System.lineSeparator());
+        result.append("result,").append(data[POSITION_OF_SUPPLY_VALUE]
+                - data[POSITION_OF_BUY_VALUE]).append(System.lineSeparator());
         return result.toString();
     }
 
