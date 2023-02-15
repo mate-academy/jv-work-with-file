@@ -44,7 +44,7 @@ public class WorkWithFile {
         }
     }
 
-    private void applyInput(String toFileName) {
+    private void applyInput(String line) {
         String[] em = line.split(DELIMITER);
         if (em.length == FIELDS) {
             var tmp1 = em[FIRST].trim();
