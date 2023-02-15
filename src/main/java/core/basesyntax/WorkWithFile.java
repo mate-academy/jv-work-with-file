@@ -13,10 +13,14 @@ public class WorkWithFile {
     private static final String COMMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
+        printToFile(toFileName, getReport(fromFileName));
+    }
+
+    private String getReport(String fileName) {
         int supplyAmount = 0;
         int buyAmount = 0;
-        String[] data = readFromFile(fromFileName).split(System.lineSeparator());
-        StringBuilder resultBuilder = new StringBuilder();
+        String[] data = readFromFile(fileName).split(System.lineSeparator());
+        StringBuilder reportBuilder = new StringBuilder();
         for (String datum : data) {
             String[] datumInfo = datum.split(COMMA);
             if (datumInfo[0].equals(OPERATION_TYPE_SUPPLY)) {
@@ -25,13 +29,13 @@ public class WorkWithFile {
                 buyAmount += Integer.parseInt(datumInfo[1]);
             }
         }
-        resultBuilder.append(OPERATION_TYPE_SUPPLY).append(COMMA)
+        reportBuilder.append(OPERATION_TYPE_SUPPLY).append(COMMA)
                 .append(supplyAmount).append(System.lineSeparator())
                 .append(OPERATION_TYPE_BUY).append(COMMA)
                 .append(buyAmount).append(System.lineSeparator())
                 .append(OPERATION_TYPES_RESULT).append(COMMA)
                 .append(supplyAmount - buyAmount);
-        printToFile(toFileName, resultBuilder.toString());
+        return reportBuilder.toString();
     }
 
     private String readFromFile(String fileName) {
