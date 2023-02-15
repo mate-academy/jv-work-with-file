@@ -38,8 +38,8 @@ public class WorkWithFile {
     * second element mean sum of all values with buy */
     private int[] calculateDataForReport(String[] array) {
         int[] result = new int[]{0, 0};
-        for (String arr:array) {
-            String[] strings = arr.split(",");
+        for (String line:array) {
+            String[] strings = line.split(",");
             if (strings[POSITION_OF_TITLE].equals("supply")) {
                 result[POSITION_OF_SUPPLY_VALUE] += Integer.parseInt(strings[POSITION_OF_VALUE]);
             } else if (strings[POSITION_OF_TITLE].equals("buy")) {
