@@ -25,8 +25,8 @@ public class WorkWithFile {
             }
             result = supply - buy;
             String resultat = "supply," + supply
-                    + "\r\n" + "buy," + buy
-                    + "\r\n" + "result," + result;
+                    + System.lineSeparator() + "buy," + buy
+                    + System.lineSeparator() + "result," + result;
             File resultFile = new File(toFileName);
             resultFile.createNewFile();
             Files.writeString(Paths.get(resultFile.toURI()), resultat, StandardOpenOption.WRITE);
