@@ -9,6 +9,7 @@ import java.io.IOException;
 public class WorkWithFile {
 
     public static final int AMMOUNT_INDEX = 1;
+    public static final int OPERATION_INDEX = 0;
     public static final String SUPPLY_NAME = "supply";
 
     public static final String BUY_NAME = "buy";
