@@ -16,47 +16,50 @@ public class WorkWithFile {
     private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        setReportToFile(fromFileName,toFileName);
+        writeReportToFile(readFile(fromFileName), toFileName);
     }
 
-    private List<String> getValueFromFile(String fromFileName) {
+    private List<String> readFile(String fromFileName) {
         File fileFrom = new File(fromFileName);
         List<String> linetFromFile;
         try {
             linetFromFile = Files.readAllLines(fileFrom.toPath());
         } catch (IOException e) {
-            throw new RuntimeException("Can`t read file");
+            throw new RuntimeException("Can`t read file", e);
         }
         return linetFromFile;
     }
 
-    private String getRepor(String fromFileName) {
+    private String createReport(List<String> linetFromFile) {
         int summSuplie = 0;
         int summBye = 0;
-        for (String line : getValueFromFile(fromFileName)) {
+        for (String line : linetFromFile) {
             String[] lineArray = line.split(SEPARATOR);
-            if (lineArray[LINE_NAME].equals("supply")) {
+            if (lineArray[LINE_NAME].equals(SUPPLY)) {
                 summSuplie += Integer.parseInt(lineArray[LINE_VALUE]);
-            } else if (lineArray[LINE_NAME].equals("buy")) {
+            } else if (lineArray[LINE_NAME].equals(BUY)) {
                 summBye += Integer.parseInt(lineArray[LINE_VALUE]);
             }
         }
         int res = summSuplie - summBye;
-        StringBuilder report = new StringBuilder();
-        report.append(SUPPLY).append(SEPARATOR).append(summSuplie)
-                .append(System.lineSeparator())
-                .append(BUY).append(SEPARATOR).append(summBye)
-                .append(System.lineSeparator())
-                .append(RESULT).append(SEPARATOR).append(res);
-        return report.toString();
+        return createResultString(res, summSuplie, summBye);
     }
 
-    private void setReportToFile(String fromFileName, String toFileName) {
-        File fileTo = new File(toFileName);
+    private void writeReportToFile(List<String> linetFromFile, String toFileName) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write(getRepor(fromFileName));
+            bufferedWriter.write(createReport(linetFromFile));
         } catch (IOException e) {
             throw new RuntimeException("Can`t write data");
         }
+    }
+
+    private String createResultString(int res, int summSuplie, int summBye) {
+        StringBuilder report = new StringBuilder();
+        report.append(SUPPLY).append(SEPARATOR).append(summSuplie)
+            .append(System.lineSeparator())
+            .append(BUY).append(SEPARATOR).append(summBye)
+            .append(System.lineSeparator())
+            .append(RESULT).append(SEPARATOR).append(res);
+        return report.toString();
     }
 }
