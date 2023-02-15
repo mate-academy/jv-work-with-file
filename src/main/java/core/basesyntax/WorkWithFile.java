@@ -15,7 +15,7 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         StringBuilder inputData = readFromFile(fromFileName);
-        StringBuilder report = createReport(inputData);
+        String report = createReport(inputData.toString());
         writeToFile(toFileName, report);
     }
 
@@ -23,31 +23,31 @@ public class WorkWithFile {
         StringBuilder inputData = new StringBuilder();
         File file = new File(fileName);
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            String readerFile = reader.readLine();
-            if (readerFile == null) {
-                throw new RuntimeException("File is empty");
+            String line = reader.readLine();
+            if (line == null) {
+                throw new RuntimeException("File is empty" + fileName);
             }
-            while (readerFile != null) {
-                inputData.append(readerFile).append(System.lineSeparator());
-                readerFile = reader.readLine();
+            while (line != null) {
+                inputData.append(line).append(System.lineSeparator());
+                line = reader.readLine();
             }
             return inputData;
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't read file" + fileName, e);
         }
     }
 
-    private StringBuilder createReport(StringBuilder inputData) {
-        String[] splitInfo = inputData.toString().split(System.lineSeparator());
+    private String createReport(String inputData) {
+        String[] row = inputData.toString().split(System.lineSeparator());
         int supplyCount = 0;
         int buyCount = 0;
-        for (int i = 0; i < splitInfo.length; i++) {
-            String[] row = splitInfo[i].split(COMMA);
-            if (SUPPLY.equals(row[0])) {
-                supplyCount += Integer.parseInt(row[1]);
+        for (String r : row) {
+            String[] columns = r.split(COMMA);
+            if (SUPPLY.equals(columns[0])) {
+                supplyCount += Integer.parseInt(columns[1]);
             }
-            if (BUY.equals(row[0])) {
-                buyCount += Integer.parseInt(row[1]);
+            if (BUY.equals(columns[0])) {
+                buyCount += Integer.parseInt(columns[1]);
             }
         }
         int result = supplyCount - buyCount;
@@ -55,14 +55,14 @@ public class WorkWithFile {
         return report.append(SUPPLY).append(COMMA).append(supplyCount)
                 .append(System.lineSeparator()).append(BUY).append(COMMA)
                 .append(buyCount).append(System.lineSeparator())
-                .append(RESULT).append(COMMA).append(result);
+                .append(RESULT).append(COMMA).append(result).toString();
     }
 
-    private void writeToFile(String toFileName, StringBuilder report) {
+    private void writeToFile(String toFileName, String report) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write(report.toString());
+            bufferedWriter.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("can't write to the file", e);
+            throw new RuntimeException("can't write to the file" + toFileName, e);
         }
     }
 }
