@@ -15,7 +15,7 @@ public class WorkWithFile {
     private static final String COMMA = ",";
     private static final int INDEX_ZERO = 0;
     private static final int INDEX_ONE = 1;
-    private static final boolean WRITE_WITH_NO_OVERLAY = true;
+    private static final boolean TRUE = true;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String report = createReport(readData(fromFileName));
@@ -58,18 +58,10 @@ public class WorkWithFile {
     }
 
     private void writeData(String toFileName, String report) {
-        BufferedWriter bufferedWriter = null;
-        try {
-            bufferedWriter = new BufferedWriter(new FileWriter(toFileName, WRITE_WITH_NO_OVERLAY));
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, TRUE))) {
             bufferedWriter.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Can't write data into file", e);
-        } finally {
-            try {
-                bufferedWriter.close();
-            } catch (IOException e) {
-                throw new RuntimeException("Can't write data into file", e);
-            }
         }
     }
 }
