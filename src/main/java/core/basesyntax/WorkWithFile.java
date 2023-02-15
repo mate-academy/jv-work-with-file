@@ -15,48 +15,52 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String RESULT = "result";
     private static final String COMA = ",";
-    private int supply;
-    private int buy;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        readDataFromCsvFile(fromFileName);
-        writeReportToCsvFile(toFileName);
+        writeReportToCsvFile(toFileName, reportFromData(readDataFromCsvFile(fromFileName)));
     }
 
-    private void readDataFromCsvFile(String fileName) {
+    private String readDataFromCsvFile(String fileName) {
         File file = new File(fileName);
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            String line = reader.readLine();
-            buy = 0;
-            supply = 0;
-            while (line != null) {
-                String[] value = line.split(",");
-                switch (value[ZERO_INDEX]) {
-                    case BUY:
-                        buy += Integer.parseInt(value[FIRST_INDEX]);
-                        break;
-                    case SUPPLY:
-                        supply += Integer.parseInt(value[FIRST_INDEX]);
-                        break;
-                    default:
-                        System.err.println("Corrupted data in input file");
-                }
-                line = reader.readLine();
+        StringBuilder stringBuilder = new StringBuilder();
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
+            String value = bufferedReader.readLine();
+            while (value != null) {
+                stringBuilder.append(value).append(System.lineSeparator());
+                value = bufferedReader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from file" + fileName, e);
         }
+        return stringBuilder.toString();
     }
 
-    private void writeReportToCsvFile(String fileName) {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(SUPPLY).append(COMA).append(supply).append(System.lineSeparator())
-                .append(BUY).append(COMA).append(buy).append(System.lineSeparator())
-                .append(RESULT).append(COMA).append(supply - buy);
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
-            bufferedWriter.write(stringBuilder.toString());
+    private String reportFromData(String stringBuilder) {
+        String[] dataStrings = stringBuilder.split(System.lineSeparator());
+        int supply = 0;
+        int buy = 0;
+        for (String string : dataStrings) {
+            String[] value = string.split(COMA);
+            if (value[ZERO_INDEX].equals(SUPPLY)) {
+                supply += Integer.parseInt(value[FIRST_INDEX]);
+            } else {
+                buy += Integer.parseInt(value[FIRST_INDEX]);
+            }
+        }
+        int result = supply - buy;
+        return SUPPLY + COMA + supply
+                + System.lineSeparator()
+                + BUY + COMA + buy
+                + System.lineSeparator()
+                + RESULT + COMA + (result);
+    }
+
+    public void writeReportToCsvFile(String fileName, String stringBuilder) {
+        File file = new File(fileName);
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
+            bufferedWriter.write(stringBuilder);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write into file" + fileName, e);
+            throw new RuntimeException("Can't write to file: " + fileName, e);
         }
     }
 }
