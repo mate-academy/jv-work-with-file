@@ -45,15 +45,11 @@ public class WorkWithFile {
             String[] splitLine = s.split(",");
             setInformation(splitLine[WORD_INDEX], splitLine[VALUE_INDEX]);
         }
-        countResultValue();
+        result = totalSupply - totalBuy;
         return SUPPLY + "," + totalSupply
                 + System.lineSeparator() + BUY + ","
                 + totalBuy + System.lineSeparator()
                 + RESULT_VALUE + "," + result;
-    }
-
-    private void countResultValue() {
-        result = totalSupply - totalBuy;
     }
 
     private void setInformation(String name, String value) {
