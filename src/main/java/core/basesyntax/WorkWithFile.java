@@ -5,32 +5,38 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class WorkWithFile {
+    private static final int OPERATION = 0;
+    private static final int AMOUNT = 1;
+
     public void getStatistic(String fromFileName, String toFileName) {
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             int buy = 0;
             int supply = 0;
+            Path toPath = new File(toFileName).toPath();
             String line = reader.readLine();
             while (line != null) {
-                if (line.split(",")[0].equals("buy")) {
-                    buy += Integer.parseInt(line.split(",")[1]);
-                }
-                if (line.split(",")[0].equals("supply")) {
-                    supply += Integer.parseInt(line.split(",")[1]);
+                switch (line.split(",")[OPERATION]) {
+                    case "buy":
+                        buy += Integer.parseInt(line.split(",")[AMOUNT]);
+                        break;
+                    case "supply":
+                        supply += Integer.parseInt(line.split(",")[AMOUNT]);
+                        break;
+                    default:
+                        break;
                 }
                 line = reader.readLine();
             }
-            if (!Files.exists(new File(toFileName).toPath())) {
-                Files.createFile(new File(toFileName).toPath());
+            if (!Files.exists(toPath)) {
+                Files.createFile(toPath);
             }
-            Files.write(new File(toFileName).toPath(),new StringBuilder()
-                    .append("supply,").append(supply)
-                    .append(System.lineSeparator())
-                    .append("buy,").append(buy)
-                    .append(System.lineSeparator())
-                    .append("result,")
-                    .append(supply - buy).toString().getBytes());
+            Files.write(toPath, ("supply," + supply
+                    + System.lineSeparator() + "buy," + buy
+                    + System.lineSeparator() + "result,"
+                    + (supply - buy)).getBytes());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
