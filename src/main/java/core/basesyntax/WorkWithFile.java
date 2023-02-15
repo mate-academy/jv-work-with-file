@@ -7,7 +7,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
@@ -17,7 +16,7 @@ public class WorkWithFile {
         writeData(createReport(data), toFileName);
     }
 
-    public String[] readData(String fileName) {
+    private String[] readData(String fileName) {
         StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName));) {
             String value = bufferedReader.readLine();
@@ -31,7 +30,7 @@ public class WorkWithFile {
         return stringBuilder.toString().split(" ");
     }
 
-    public void writeData(String data, String fileName) {
+    private void writeData(String data, String fileName) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             writer.write(data);
         } catch (IOException e) {
@@ -39,7 +38,7 @@ public class WorkWithFile {
         }
     }
 
-    public String createReport(String[] data) {
+    private String createReport(String[] data) {
         int supplyAmount = 0;
         int buyAmount = 0;
         StringBuilder stringBuilder = new StringBuilder();
