@@ -1,11 +1,11 @@
 package core.basesyntax;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.util.List;
 
 public class WorkWithFile {
     public static final String DATA_SEPARATOR = ",";
@@ -15,7 +15,7 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         int supply = 0;
         int buy = 0;
-        for (String line: readFromFile(fromFileName).split(System.lineSeparator())) {
+        for (String line : readFromFile(fromFileName)) {
             String[] entryType = line.split(DATA_SEPARATOR);
             int amount = Integer.parseInt(entryType[AMOUNT_INDEX]);
             if ("supply".equals(entryType[ENTRY_TYPE_INDEX])) {
@@ -27,19 +27,13 @@ public class WorkWithFile {
         writeToFile(generateString(supply, buy), toFileName);
     }
 
-    private String readFromFile(String fromFileName) {
+    private List<String> readFromFile(String fromFileName) {
         File file = new File(fromFileName);
-        StringBuilder stringBuilder = new StringBuilder();
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
-            String value = bufferedReader.readLine();
-            while (value != null) {
-                stringBuilder.append(value).append(System.lineSeparator());
-                value = bufferedReader.readLine();
-            }
+        try {
+            return Files.readAllLines(file.toPath());
         } catch (IOException e) {
             throw new RuntimeException("Check your file " + fromFileName, e);
         }
-        return stringBuilder.toString();
     }
 
     private String generateString(int supply, int buy) {
