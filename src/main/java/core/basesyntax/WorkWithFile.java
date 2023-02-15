@@ -18,9 +18,13 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         readDataFromFile(fromFileName, toFileName);
+        String unformedData = readDataFromFile(fromFileName, toFileName);
+        String formatData = getFormattedData(unformedData);
+        writeDataToFile(formatData, toFileName);
+
     }
 
-    private void readDataFromFile(String fromFileName, String toFileName) {
+    private String readDataFromFile(String fromFileName, String toFileName) {
         File readFile = new File(fromFileName);
 
         StringBuilder builder = new StringBuilder();
@@ -31,8 +35,7 @@ public class WorkWithFile {
         } catch (IOException exception) {
             throw new RuntimeException("Can't read data from file " + readFile, exception);
         }
-        String formattedData = getFormattedData(builder.toString());
-        writeDataToFile(formattedData, toFileName);
+        return builder.toString();
     }
 
     private String getFormattedData(String data) {
@@ -69,5 +72,3 @@ public class WorkWithFile {
         }
     }
 }
-
-
