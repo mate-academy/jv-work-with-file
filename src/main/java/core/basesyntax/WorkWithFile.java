@@ -10,6 +10,8 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
+    private static final String SPACE = " ";
+    private static final String COMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String [] data = readData(fromFileName);
@@ -21,13 +23,13 @@ public class WorkWithFile {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName));) {
             String value = bufferedReader.readLine();
             while (value != null && !value.isEmpty()) {
-                stringBuilder.append(value).append(" ");
+                stringBuilder.append(value).append(SPACE);
                 value = bufferedReader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from the file " + fileName, e);
         }
-        return stringBuilder.toString().split(" ");
+        return stringBuilder.toString().split(SPACE);
     }
 
     private void writeData(String data, String fileName) {
@@ -43,7 +45,7 @@ public class WorkWithFile {
         int buyAmount = 0;
         StringBuilder stringBuilder = new StringBuilder();
         for (String operation : data) {
-            String[] array = operation.split(",");
+            String[] array = operation.split(COMA);
             if (array[0].equals(SUPPLY)) {
                 supplyAmount += Integer.parseInt(array[1]);
             } else if (array[0].equals(BUY)) {
@@ -51,11 +53,11 @@ public class WorkWithFile {
             }
         }
         int result = supplyAmount - buyAmount;
-        return stringBuilder.append(SUPPLY).append(',')
+        return stringBuilder.append(SUPPLY).append(COMA)
                 .append(supplyAmount).append(System.lineSeparator())
-                .append(BUY).append(',')
+                .append(BUY).append(COMA)
                 .append(buyAmount).append(System.lineSeparator())
-                .append(RESULT).append(',')
+                .append(RESULT).append(COMA)
                 .append(result).toString();
     }
 }
