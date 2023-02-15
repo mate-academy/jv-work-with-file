@@ -12,67 +12,52 @@ public class WorkWithFile {
     private static final String BUY_STRING = "buy";
     private static final String SUPPLY_STRING = "supply";
     private static final String RESULT_STRING = "result";
-    private static final String EMPTY_STRING = "";
-
-    public void updateFile(String path) {
-        FileWriter fileWriter = null;
-        try {
-            fileWriter = new FileWriter(path);
-            fileWriter.write(EMPTY_STRING);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } finally {
-            try {
-                fileWriter.close();
-            } catch (IOException e) {
-                throw new RuntimeException("Can't close resources");
-            }
-        }
-    }
 
     public void getStatistic(String fromFileName, String toFileName) {
-        updateFile(toFileName);
-        BufferedReader reader = null;
-        BufferedWriter writer = null;
-        StringBuilder builder = new StringBuilder();
-        try {
-            reader = new BufferedReader(new FileReader(fromFileName));
+        String[] arrayOfData = readDataFromFile(fromFileName);
+        int[] dataForReport = makeReportFromFileData(arrayOfData);
+        writeDataToFile(toFileName, dataForReport);
+    }
+
+    private String[] readDataFromFile(String fromFileName) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
+            StringBuilder builder = new StringBuilder();
             String value = reader.readLine();
             while (value != null) {
                 builder.append(value).append(WHITESPACE_CHARACTER);
                 value = reader.readLine();
             }
+            return builder.toString().split(WHITESPACE_CHARACTER);
         } catch (IOException e) {
-            throw new RuntimeException("Can't read data", e);
+            throw new RuntimeException("Can't read data from file: " + fromFileName, e);
         }
-        String[] arrayOfData = builder.toString().split(WHITESPACE_CHARACTER);
+    }
+
+    private int[] makeReportFromFileData(String[] data) {
         int counterBuy = 0;
         int counterSupply = 0;
         int result;
-        for (int i = 0; i < arrayOfData.length; i++) {
-            String[] temp = arrayOfData[i].split(COMMA_CHARACTER);
+        for (String datum : data) {
+            String[] temp = datum.split(COMMA_CHARACTER);
             if (temp[0].equals(SUPPLY_STRING)) {
                 counterSupply = counterSupply + Integer.parseInt(temp[1]);
             } else {
                 counterBuy = counterBuy + Integer.parseInt(temp[1]);
             }
         }
-        result = counterBuy < counterSupply ? counterSupply - counterBuy
-                : counterBuy - counterSupply;
-        try {
-            writer = new BufferedWriter(new FileWriter(toFileName, true));
-            writer.write(SUPPLY_STRING + COMMA_CHARACTER + counterSupply
-                    + System.lineSeparator() + BUY_STRING + COMMA_CHARACTER
-                    + counterBuy + System.lineSeparator() + RESULT_STRING
-                    + COMMA_CHARACTER + result + System.lineSeparator());
+        result = counterSupply - counterBuy;
+        return new int[] {counterSupply, counterBuy, result};
+    }
+
+    private void writeDataToFile(String toFileName, int[] report) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
+            StringBuilder builder = new StringBuilder();
+            writer.write(builder.append(SUPPLY_STRING).append(COMMA_CHARACTER).append(report[0])
+                    .append(System.lineSeparator()).append(BUY_STRING).append(COMMA_CHARACTER)
+                    .append(report[1]).append(System.lineSeparator()).append(RESULT_STRING)
+                    .append(COMMA_CHARACTER).append(report[2]).toString());
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data", e);
-        } finally {
-            try {
-                writer.close();
-            } catch (IOException e) {
-                throw new RuntimeException("Can't close resources", e);
-            }
+            throw new RuntimeException("Can't write data to file: " + toFileName, e);
         }
     }
 }
