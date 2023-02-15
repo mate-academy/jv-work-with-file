@@ -57,7 +57,7 @@ public class WorkWithFile {
         }
     }
 
-    private String statisticBuilder (int supply, int buy) {
+    private String statisticBuilder(int supply, int buy) {
         StringBuilder builder = new StringBuilder();
         builder.append(SUPPLY_OPERATION)
                 .append(INFORMATION_SEPARATOR)
@@ -68,7 +68,7 @@ public class WorkWithFile {
                 .append(buy)
                 .append(System.lineSeparator())
                 .append("result").append(INFORMATION_SEPARATOR)
-                .append(supply-buy);
+                .append(supply - buy);
         return builder.toString();
     }
 }
