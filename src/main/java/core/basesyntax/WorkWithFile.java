@@ -21,7 +21,7 @@ public class WorkWithFile {
         write(toFileName, calculateReport(data));
     }
 
-    public String read(String fromFileName) {
+    private String read(String fromFileName) {
         File file = new File(fromFileName);
         StringBuilder builder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
@@ -31,39 +31,39 @@ public class WorkWithFile {
                 value = bufferedReader.readLine();
             }
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("File not found", e);
+            throw new RuntimeException("File not found" + file.getName(), e);
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't read file" + file.getName(), e);
         }
         return builder.toString();
     }
 
     private String calculateReport(String data) {
         String[] arrayLines = data.split(System.lineSeparator());
-        int supply = 0;
-        int buy = 0;
-        for (String str : arrayLines) {
-            String[] position = str.split(COMMA);
-            if (position[POSITION_NAME].equals(SUPPLY)) {
-                supply += Integer.parseInt(position[POSITION_SUM]);
+        int supplySum = 0;
+        int buySum = 0;
+        for (String line : arrayLines) {
+            String[] dataParts = line.split(COMMA);
+            if (dataParts[POSITION_NAME].equals(SUPPLY)) {
+                supplySum += Integer.parseInt(dataParts[POSITION_SUM]);
             }
-            if (position[POSITION_NAME].equals(BUY)) {
-                buy += Integer.parseInt(position[POSITION_SUM]);
+            if (dataParts[POSITION_NAME].equals(BUY)) {
+                buySum += Integer.parseInt(dataParts[POSITION_SUM]);
             }
         }
-        return SUPPLY + COMMA + supply + System.lineSeparator()
-                + BUY + COMMA + buy + System.lineSeparator()
-                + RESULT + COMMA + (supply - buy);
+        StringBuilder builder = new StringBuilder();
+        builder.append(SUPPLY).append(COMMA).append(supplySum).append(System.lineSeparator())
+                .append(BUY).append(COMMA).append(buySum).append(System.lineSeparator())
+                .append(RESULT).append(COMMA).append(supplySum - buySum);
+        return builder.toString();
     }
 
-    private void write(String toFileName, String calculateReport) {
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write(calculateReport);
+    private void write(String toFileName, String report) {
+        File file = new File(toFileName);
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
+            bufferedWriter.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write report to file", e);
+            throw new RuntimeException("Can't write report to file" + file.getName(), e);
         }
     }
 }
-
-
-
