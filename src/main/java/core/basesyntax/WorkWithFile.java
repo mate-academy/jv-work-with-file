@@ -42,7 +42,7 @@ public class WorkWithFile {
         StringBuilder builder = new StringBuilder();
         String[] arr = data.split(REGEX);
         for (String tips : arr) {
-            final int intValue = parseInt(tips.substring(tips.indexOf(",") + 1));
+            final int intValue = parseInt(tips.substring(tips.indexOf(RESULT_REGEX) + 1));
             if (tips.contains(BUY)) {
                 totalBuy += intValue;
             } else if (tips.contains(SUPPLY)) {
