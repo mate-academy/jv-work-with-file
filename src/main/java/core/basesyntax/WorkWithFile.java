@@ -8,6 +8,12 @@ import java.io.IOException;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
+        int[] data = readFile(fromFileName);
+        String report = createReport(data);
+        writeToFile(report, toFileName);
+    }
+
+    public int[] readFile(String fromFileName) {
         int supply = 0;
         int buy = 0;
         try {
@@ -22,19 +28,28 @@ public class WorkWithFile {
                 }
                 strings = bufferedReader.readLine();
             }
-            try {
-                BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName));
-                StringBuilder result = new StringBuilder();
-                result.append("supply,").append(supply).append(System.lineSeparator())
-                        .append("buy,").append(buy).append(System.lineSeparator())
-                        .append("result,").append(supply - buy);
-                writer.write(result.toString());
-                writer.close();
-            } catch (IOException e) {
-                throw new RuntimeException("Can`t write data to file", e);
-            }
         } catch (IOException e) {
-            throw new RuntimeException("Can`t read data from file", e);
+            throw new RuntimeException("Can`t read data from file" + fromFileName, e);
+        }
+        return new int[] {supply, buy};
+    }
+
+    public String createReport(int[] data) {
+        StringBuilder result = new StringBuilder();
+        result.append("supply,").append(data[0]).append(System.lineSeparator())
+                .append("buy,").append(data[1]).append(System.lineSeparator())
+                .append("result,").append(data[0] - data[1]);
+        return result.toString();
+    }
+
+    public void writeToFile(String report, String toFileName) {
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName));
+            writer.write(report);
+            writer.close();
+        } catch (IOException e) {
+            throw new RuntimeException("Can`t write data to file" + toFileName, e);
         }
     }
 }
+
