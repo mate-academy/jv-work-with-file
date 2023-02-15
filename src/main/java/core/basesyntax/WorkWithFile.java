@@ -19,7 +19,7 @@ public class WorkWithFile {
         writeToFile(report, toFileName);
     }
 
-    public int[] readFile(String fromFileName) {
+    private int[] readFile(String fromFileName) {
         int supply = 0;
         int buy = 0;
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
@@ -39,7 +39,7 @@ public class WorkWithFile {
         return new int[] {supply, buy};
     }
 
-    public String createReport(int[] data) {
+    private String createReport(int[] data) {
         StringBuilder result = new StringBuilder();
         result.append("supply,").append(data[SUPPLY_INDEX]).append(System.lineSeparator())
                 .append("buy,").append(data[BUY_INDEX]).append(System.lineSeparator())
@@ -47,7 +47,7 @@ public class WorkWithFile {
         return result.toString();
     }
 
-    public void writeToFile(String report, String toFileName) {
+    private void writeToFile(String report, String toFileName) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write(report);
         } catch (IOException e) {
