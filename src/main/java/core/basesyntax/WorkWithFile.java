@@ -23,8 +23,7 @@ public class WorkWithFile {
     }
 
     private String readData(String fromFileName) {
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             StringBuilder data = new StringBuilder();
             String line = bufferedReader.readLine();
             while (line != null && !line.isEmpty()) {
