@@ -10,6 +10,14 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final int OPERATION = 0;
     private static final int AMOUNT = 1;
+    private static final String BUY = "buy";
+    private static final String SUPPLY = "supply";
+
+    public void getStatistic(String fromFileName, String toFileName) {
+        String readFile = readFromFile(new File(fromFileName));
+        String report = createReport(readFile);
+        writeFile(report, new File(toFileName));
+    }
 
     private String readFromFile(File pathFile) {
         StringBuilder res = new StringBuilder();
@@ -21,7 +29,7 @@ public class WorkWithFile {
                 line = reader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read from file",e);
+            throw new RuntimeException("Can't read from file" + pathFile,e);
         }
         return res.toString();
     }
@@ -32,15 +40,14 @@ public class WorkWithFile {
         int supply = 0;
 
         for (String data : dataForReport.split(System.lineSeparator())) {
-            switch (data.split(",")[OPERATION]) {
-                case "buy":
+            String[] line = data.split(",");
+            switch (line[OPERATION]) {
+                case BUY:
                     buy += Integer.parseInt(data.split(",")[AMOUNT]);
                     break;
-
-                case "supply":
+                case SUPPLY:
                     supply += Integer.parseInt(data.split(",")[AMOUNT]);
                     break;
-
                 default:
                     break;
             }
@@ -60,17 +67,7 @@ public class WorkWithFile {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             writer.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write to file",e);
+            throw new RuntimeException("Can't write to file" + file,e);
         }
-    }
-
-    public void getStatistic(String fromFileName, String toFileName) {
-        writeFile(
-                createReport(
-                readFromFile(
-                        new File(fromFileName)
-                )
-                ), new File(toFileName)
-        );
     }
 }
