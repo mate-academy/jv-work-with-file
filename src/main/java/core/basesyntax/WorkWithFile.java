@@ -12,7 +12,7 @@ public class WorkWithFile {
     public static final String BUY = "buy";
     public static final String RESULT = "result";
     public static final int NAME_INDEX = 0;
-    public static final int VALUE_INDEX  = 1;
+    public static final int VALUE_INDEX = 1;
     public static final String DELIMITER = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
@@ -50,16 +50,23 @@ public class WorkWithFile {
             } else if (operations[NAME_INDEX].equals(BUY)) {
                 buyCounter += Integer.parseInt(operations[VALUE_INDEX ]);
             } else {
-                System.out.println("Can't read file.");            }
+                System.out.println("Can't read file.");
+            }
         }
         return createResultString(supplyCounter, buyCounter);
     }
 
     private String createResultString(int supplyCounter, int buyCounter) {
-        return SUPPLY + DELIMITER + supplyCounter +
-                System.lineSeparator() +
-                BUY + DELIMITER + buyCounter +
-                System.lineSeparator() +
-                RESULT + DELIMITER + (supplyCounter - buyCounter);
+        return SUPPLY + DELIMITER + supplyCounter
+                +
+                System.lineSeparator()
+                +
+                BUY + DELIMITER + buyCounter
+                +
+                System.lineSeparator()
+                +
+                RESULT
+                + DELIMITER
+                + (supplyCounter - buyCounter);
     }
 }
