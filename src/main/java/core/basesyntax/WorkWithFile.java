@@ -26,57 +26,39 @@ public class WorkWithFile {
     private int[] getTotalDataFromFile(String fromFileName) {
         File file = new File(fromFileName);
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
-            int supplyActionsTotal = 0;
-            int buyActionsTotal = 0;
-            String data = bufferedReader.readLine();
-            while (data != null) {
-                String[] dataArray = data.split(",");
-                if (dataArray.length != DATA_LENGTH) {
+            String input = bufferedReader.readLine();
+            int totalBuy = 0;
+            int totalSupply = 0;
+            while (input != null) {
+                String[] inputArray = input.split(",");
+                if (inputArray.length < DATA_LENGTH) {
                     throw new RuntimeException("Invalid data format");
-                } else if (dataArray[INDEX_DATA_OPERATION_TYPE].equals(SUPPLY_ACTION)) {
-                    supplyActionsTotal++;
-                } else if (dataArray[INDEX_DATA_OPERATION_TYPE].equals(BUY_ACTION)) {
-                    buyActionsTotal++;
+                } else if (inputArray[INDEX_DATA_OPERATION_TYPE].equals("buy")) {
+                    totalBuy += Integer.parseInt(inputArray[INDEX_AMOUNT]);
+                } else if (inputArray[INDEX_DATA_OPERATION_TYPE].equals("supply")) {
+                    totalSupply += Integer.parseInt(inputArray[INDEX_AMOUNT]);
                 }
-                data = bufferedReader.readLine();
+                input = bufferedReader.readLine();
             }
-            try (BufferedReader bufferedReader1 = new BufferedReader(new FileReader(file))) {
-                int[] supplyArray = new int[supplyActionsTotal];
-                int[] buyArray = new int[buyActionsTotal];
-                int supplyCount = 0;
-                int buyCount = 0;
-                data = bufferedReader1.readLine();
-                while (data != null) {
-                    String[] dataArray = data.split(",");
-                    if (dataArray[INDEX_DATA_OPERATION_TYPE].equals(SUPPLY_ACTION)) {
-                        supplyArray[supplyCount] = Integer.parseInt(dataArray[INDEX_AMOUNT]);
-                        supplyCount++;
-                    } else if (dataArray[INDEX_DATA_OPERATION_TYPE].equals(BUY_ACTION)) {
-                        buyArray[buyCount] = Integer.parseInt(dataArray[INDEX_AMOUNT]);
-                        buyCount++;
-                    }
-                    data = bufferedReader1.readLine();
-                }
-                int supplyTotal = 0;
-                int buyTotal = 0;
-                for (int buy: buyArray) {
-                    buyTotal += buy;
-                }
-                for (int supply: supplyArray) {
-                    supplyTotal += supply;
-                }
-                int[] result = {supplyTotal, buyTotal};
-                return result;
-            }
+            return new int[] {totalSupply, totalBuy};
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("File " + fromFileName + " not found", e);
-        } catch (IOException e) {
             throw new RuntimeException("Can't read data from " + fromFileName, e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
     private void writeDataToFile(int[] totalData, String toFileName) {
+        String report = createReport(totalData);
         File file = new File(toFileName);
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
+            bufferedWriter.write(report);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write data to " + toFileName, e);
+        }
+    }
+
+    private String createReport(int[] totalData) {
         int supplySum = totalData[SUPPLY_INDEX_IN_ARRAY];
         int buySum = totalData[BUY_INDEX_IN_ARRAY];
         int result = supplySum - buySum;
@@ -85,10 +67,6 @@ public class WorkWithFile {
             .append(System.lineSeparator());
         report.append(BUY_ACTION).append(',').append(buySum).append(System.lineSeparator());
         report.append(RESULT_ACTION).append(',').append(result);
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
-            bufferedWriter.write(report.toString());
-        } catch (IOException e) {
-            throw new RuntimeException("Can't write data to " + toFileName, e);
-        }
+        return report.toString();
     }
 }
