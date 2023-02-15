@@ -8,16 +8,15 @@ import java.util.List;
 public class WorkWithFile {
     private static final int VALUE_INDEX = 1;
     private static final int WORD_INDEX = 0;
-    private static final int SUPPLY_INDEX = 0;
-    private static final int BUY_INDEX = 1;
-    private static final int RESULT_INDEX = 2;
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT_VALUE = "result";
-    private static final String ZERO_VAR = "0";
+    private int totalSupply;
+    private int totalBuy;
+    private int result;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String statistic = readText(fromFileName);
+        String statistic = getResultText(readText(fromFileName));
         writeText(toFileName, statistic);
     }
 
@@ -29,65 +28,41 @@ public class WorkWithFile {
         }
     }
 
-    private String readText(String fromFileName) {
+    private List<String> readText(String fromFileName) {
         List<String> list;
         try {
             list = Files.readAllLines(new File(fromFileName).toPath());
         } catch (IOException e) {
             throw new RuntimeException("wrong file path: " + fromFileName, e);
         }
-        return getResultText(list);
+        return list;
     }
 
     private String getResultText(List<String> list) {
-        StringBuilder stringList = new StringBuilder();
-        String[][] information = getMapInformation(list);
-        for (int i = 0; i < information.length; i++) {
-            if (i != 0) {
-                stringList.append(System.lineSeparator());
-            }
-            stringList.append(information[i][WORD_INDEX]).append(",")
-                    .append(information[i][VALUE_INDEX]);
-        }
-        return stringList.toString();
-    }
-
-    private String[][] getMapInformation(List<String> list) {
-        String[][] statistic = new String[][]{{SUPPLY, ZERO_VAR}, {BUY, ZERO_VAR},
-                {RESULT_VALUE, ZERO_VAR}};
+        totalSupply = 0;
+        totalBuy = 0;
         for (String s : list) {
             String[] splitLine = s.split(",");
-            setInformation(statistic, splitLine[WORD_INDEX], splitLine[VALUE_INDEX]);
+            setInformation(splitLine[WORD_INDEX], splitLine[VALUE_INDEX]);
         }
-        setInformation(statistic, RESULT_VALUE, ZERO_VAR);
-        return statistic;
+        countResultValue();
+        return SUPPLY + "," + totalSupply
+                + System.lineSeparator() + BUY + ","
+                + totalBuy + System.lineSeparator()
+                + RESULT_VALUE + "," + result;
     }
 
-    private String countResultValue(String supply, String buy) {
-        int numValue = Integer.parseInt(supply) - Integer.parseInt(buy);
-        return Integer.toString(numValue);
+    private void countResultValue() {
+        result = totalSupply - totalBuy;
     }
 
-    private String countSumValue(String firstValue, String secondValue) {
-        int numValue = Integer.parseInt(firstValue) + Integer.parseInt(secondValue);
-        return Integer.toString(numValue);
-    }
-
-    private void setInformation(String[][] statistic,
-                                String name, String value) {
+    private void setInformation(String name, String value) {
         switch (name) {
             case SUPPLY:
-                statistic[SUPPLY_INDEX][VALUE_INDEX]
-                        = countSumValue(statistic[SUPPLY_INDEX][VALUE_INDEX], value);
+                totalSupply += Integer.parseInt(value);
                 break;
             case BUY:
-                statistic[BUY_INDEX][VALUE_INDEX]
-                        = countSumValue(statistic[BUY_INDEX][VALUE_INDEX], value);
-                break;
-            case RESULT_VALUE:
-                statistic[RESULT_INDEX][VALUE_INDEX]
-                        = countResultValue(statistic[SUPPLY_INDEX][VALUE_INDEX],
-                        statistic[BUY_INDEX][VALUE_INDEX]);
+                totalBuy += Integer.parseInt(value);
                 break;
             default:
         }
