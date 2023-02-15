@@ -1,73 +1,70 @@
 package core.basesyntax;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class WorkWithFile {
-    private static final String INFORMATION_SEPARATOR = ",";
+    private static final String FILE_SEPARATOR = ",";
     private static final String SUPPLY_OPERATION = "supply";
     private static final String BUYING_OPERATION = "buy";
+    private static final int THEME_INDEX = 0;
+    private static final int VALUE_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         File file = new File(fromFileName);
         StringBuilder stringBuilder = new StringBuilder();
         int buy = 0;
         int supply = 0;
-        int resultOperation = 0;
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(file));
-            int value = reader.read();
-            while (value != -1) {
-                stringBuilder.append((char) value);
-                value = reader.read();
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line = reader.readLine();
+            while (line != null && !line.isEmpty()) {
+                stringBuilder.append(line).append(System.lineSeparator());
+                line = reader.readLine();
             }
             String[] operationsWithGoods = stringBuilder.toString().split(System.lineSeparator());
-            for (String operation: operationsWithGoods) {
-                String[] splitOperation = operation.split(INFORMATION_SEPARATOR);
-                if (isSupply(splitOperation)) {
-                    supply += Integer.parseInt(splitOperation[1].replaceAll("[^0-9]", ""));
+            for (String operationWithGood : operationsWithGoods) {
+                String[] splitOperations = operationWithGood.split(FILE_SEPARATOR);
+                if (isSupply(splitOperations)) {
+                    supply += Integer.parseInt(splitOperations[VALUE_INDEX]);
                 }
-                if (isBuy(splitOperation)) {
-                    buy += Integer.parseInt(splitOperation[1].replaceAll("[^0-9]", ""));
+                if (isBuy(splitOperations)) {
+                    buy += Integer.parseInt(splitOperations[VALUE_INDEX]);
                 }
             }
-            fileBuilder(statisticBuilder(supply, buy),toFileName);
+            writeToFile(createStaticticString(supply, buy), toFileName);
         } catch (IOException e) {
             throw new RuntimeException("Can't read the file.", e);
         }
     }
 
     private boolean isSupply(String[] operation) {
-        return operation[0].equals(SUPPLY_OPERATION);
+        return operation[THEME_INDEX].equals(SUPPLY_OPERATION);
     }
 
     private boolean isBuy(String[] operation) {
-        return operation[0].equals(BUYING_OPERATION);
+        return operation[THEME_INDEX].equals(BUYING_OPERATION);
     }
 
-    private void fileBuilder(String info,String toFileName) {
-        File file = new File(toFileName);
+    private void writeToFile(String info, String toFileName) {
         try {
-            Files.write(file.toPath(), info.getBytes());
+            Files.write(Path.of(toFileName), info.getBytes());
         } catch (IOException e) {
             throw new RuntimeException("Can't write the file", e);
         }
     }
 
-    private String statisticBuilder(int supply, int buy) {
+    private String createStaticticString(int supply, int buy) {
         StringBuilder builder = new StringBuilder();
         builder.append(SUPPLY_OPERATION)
-                .append(INFORMATION_SEPARATOR)
+                .append(FILE_SEPARATOR)
                 .append(supply)
                 .append(System.lineSeparator())
                 .append(BUYING_OPERATION)
-                .append(INFORMATION_SEPARATOR)
+                .append(FILE_SEPARATOR)
                 .append(buy)
                 .append(System.lineSeparator())
-                .append("result").append(INFORMATION_SEPARATOR)
+                .append("result").append(FILE_SEPARATOR)
                 .append(supply - buy);
         return builder.toString();
     }
