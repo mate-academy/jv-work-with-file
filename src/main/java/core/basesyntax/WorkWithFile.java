@@ -1,10 +1,9 @@
 package core.basesyntax;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.util.List;
 
 public class WorkWithFile {
     private static final int VALUE_INDEX = 1;
@@ -23,43 +22,42 @@ public class WorkWithFile {
     }
 
     private void writeText(String toFileName, String statistic) {
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write(statistic);
+        try {
+            Files.writeString(new File(toFileName).toPath(), statistic);
         } catch (IOException e) {
-            throw new RuntimeException("can't write to file");
+            throw new RuntimeException("can't write to file: " + toFileName, e);
         }
     }
 
     private String readText(String fromFileName) {
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
-            return getResultText(bufferedReader);
+        List<String> list;
+        try {
+            list = Files.readAllLines(new File(fromFileName).toPath());
         } catch (IOException e) {
-            throw new RuntimeException("wrong file path");
+            throw new RuntimeException("wrong file path: " + fromFileName, e);
         }
+        return getResultText(list);
     }
 
-    private String getResultText(BufferedReader bufferedReader) throws IOException {
-        StringBuilder list = new StringBuilder();
-        String[][] information = getMapInformation(bufferedReader);
+    private String getResultText(List<String> list) {
+        StringBuilder stringList = new StringBuilder();
+        String[][] information = getMapInformation(list);
         for (int i = 0; i < information.length; i++) {
             if (i != 0) {
-                list.append(System.lineSeparator());
+                stringList.append(System.lineSeparator());
             }
-            list.append(information[i][WORD_INDEX]).append(",")
+            stringList.append(information[i][WORD_INDEX]).append(",")
                     .append(information[i][VALUE_INDEX]);
         }
-        return list.toString();
+        return stringList.toString();
     }
 
-    private String[][] getMapInformation(BufferedReader bufferedReader)
-            throws IOException {
+    private String[][] getMapInformation(List<String> list) {
         String[][] statistic = new String[][]{{SUPPLY, ZERO_VAR}, {BUY, ZERO_VAR},
                 {RESULT_VALUE, ZERO_VAR}};
-        String line = bufferedReader.readLine();
-        while (line != null) {
-            String[] splitLine = line.split(",");
+        for (String s : list) {
+            String[] splitLine = s.split(",");
             setInformation(statistic, splitLine[WORD_INDEX], splitLine[VALUE_INDEX]);
-            line = bufferedReader.readLine();
         }
         setInformation(statistic, RESULT_VALUE, ZERO_VAR);
         return statistic;
