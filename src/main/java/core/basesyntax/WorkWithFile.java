@@ -29,14 +29,12 @@ public class WorkWithFile {
             buy += Integer.valueOf(temp[1]);
         }
         int result = supply - buy;
-
         writeToFile(createReport(supply, buy, result), toFileName);
     }
 
     private String[] readFile(String fromFileName) {
         File file = new File(fromFileName);
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
             StringBuilder stringBuilder = new StringBuilder();
             String value = bufferedReader.readLine();
             while (value != null) {
@@ -60,8 +58,18 @@ public class WorkWithFile {
     }
 
     private String createReport(int supply, int buy, int result) {
-        return TITLE_SUPPLY + DATA_SEPARATOR + String.valueOf(supply) + System.lineSeparator()
-                + TITLE_BUY + DATA_SEPARATOR + String.valueOf(buy) + System.lineSeparator()
-                + TITLE_RESULT + DATA_SEPARATOR + String.valueOf(result);
+        StringBuilder builder = new StringBuilder();
+        return builder.append(TITLE_SUPPLY)
+                .append(DATA_SEPARATOR)
+                .append(String.valueOf(supply))
+                .append(System.lineSeparator())
+                .append(TITLE_BUY)
+                .append(DATA_SEPARATOR)
+                .append(String.valueOf(buy))
+                .append(System.lineSeparator())
+                .append(TITLE_RESULT)
+                .append(DATA_SEPARATOR)
+                .append(String.valueOf(result))
+                .toString();
     }
 }
