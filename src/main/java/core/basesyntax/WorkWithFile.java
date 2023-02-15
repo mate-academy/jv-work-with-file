@@ -14,13 +14,12 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
     
     public void getStatistic(String fromFileName, String toFileName) {
-        File fromFile = new File(fromFileName);
-        File toFile = new File(toFileName);
         String data = read(fromFileName);
-        writeData(toFile, data);
+        String report = getReport(data);
+        writeData(toFileName, report);
     }
-    
-     private String read(String fromFileName) {
+
+    private String read(String fromFileName) {
         File file = new File(fromFileName);
         StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
@@ -29,36 +28,40 @@ public class WorkWithFile {
                 stringBuilder.append(value).append(System.lineSeparator());
                 value = bufferedReader.readLine();
             }
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException("File not found", e);
         } catch (IOException e) {
             throw new RuntimeException("Cant read from file", e);
         }
         return stringBuilder.toString();
     }
 
-    private int getSum(String value, String data) {
+    private String getReport(String data) {
         String[] array = data.split(System.lineSeparator());
-        int amount = 0;
+        int supplyAmount = 0;
+        int buyAmount = 0;
         for (String item : array) {
             String[] itemInfo = item.split(SEPARATOR);
-            if (itemInfo[0].equals(value)) {
-                amount += Integer.parseInt(itemInfo[1]);
+            if (itemInfo[0].equals(SUPPLY)) {
+                supplyAmount += Integer.parseInt(itemInfo[1]);
+            }
+            if (itemInfo[0].equals(BUY)) {
+                buyAmount += Integer.parseInt(itemInfo[1]);
             }
         }
-        return amount;
+        int resultAmount = supplyAmount - buyAmount;
+        StringBuilder result = new StringBuilder();
+        result.append(SUPPLY).append(SEPARATOR).append(supplyAmount).append(System.lineSeparator())
+                .append(BUY).append(SEPARATOR).append(buyAmount).append(System.lineSeparator())
+                .append(RESULT).append(SEPARATOR).append(resultAmount);
+        return result.toString();
     }
 
-  private void writeData(File file, String data) {
+    private void writeData(String toFileName, String text) {
+        File file = new File(toFileName);
         try (FileWriter fileWriter = new FileWriter(file);
                 BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
-            bufferedWriter.write(SUPPLY + SEPARATOR + getSum(SUPPLY, data)
-                    + System.lineSeparator());
-            bufferedWriter.write(BUY + SEPARATOR + getSum(BUY, data)
-                    + System.lineSeparator());
-            bufferedWriter.write(RESULT + SEPARATOR + (getSum(SUPPLY, data) - getSum(BUY, data)));
+            bufferedWriter.write(text);
         } catch (IOException e) {
-            throw new RuntimeException("Cant write data", e);
+            throw new RuntimeException("Cant write text to file" + toFileName, e);
         }
     }
 }
