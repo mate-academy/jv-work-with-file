@@ -17,14 +17,13 @@ public class WorkWithFile {
     public static final String RESULT_NAME = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        readDataFromFile(fromFileName, toFileName);
-        String unformedData = readDataFromFile(fromFileName, toFileName);
+        readDataFromFile(fromFileName);
+        String unformedData = readDataFromFile(fromFileName);
         String formatData = getFormattedData(unformedData);
         writeDataToFile(formatData, toFileName);
-
     }
 
-    private String readDataFromFile(String fromFileName, String toFileName) {
+    private String readDataFromFile(String fromFileName) {
         File readFile = new File(fromFileName);
 
         StringBuilder builder = new StringBuilder();
@@ -53,12 +52,11 @@ public class WorkWithFile {
             }
         }
         result = totalSupply - totalBuy;
-        builder.append(SUPPLY).append(RESULT_REGEX)
+        return builder.append(SUPPLY).append(RESULT_REGEX)
                 .append(totalSupply).append(System.lineSeparator())
                 .append(BUY).append(RESULT_REGEX).append(totalBuy)
                 .append(System.lineSeparator())
-                .append(RESULT_NAME).append(RESULT_REGEX).append(result);
-        return builder.toString();
+                .append(RESULT_NAME).append(RESULT_REGEX).append(result).toString();
     }
 
     private void writeDataToFile(String formattedData, String direction) {
