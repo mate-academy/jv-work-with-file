@@ -9,8 +9,8 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final String DELIMITER = ",";
     private static final int FIELDS = 2;
-    private static final int FIRST = 1;
-    private static final int SECOND = 2;
+    private static final int FIRST = 0;
+    private static final int SECOND = 1;
     private String[] key = new String[FIELDS];
     private Integer[] value = new Integer[FIELDS];
     private int pos = 0;
