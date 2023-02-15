@@ -15,8 +15,8 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] arrayOfData = readDataFromFile(fromFileName);
-        int[] dataForReport = makeReportFromFileData(arrayOfData);
-        writeDataToFile(toFileName, dataForReport);
+        String dataForWriting = makeReportFromFileData(arrayOfData);
+        writeDataToFile(toFileName, dataForWriting);
     }
 
     private String[] readDataFromFile(String fromFileName) {
@@ -33,29 +33,29 @@ public class WorkWithFile {
         }
     }
 
-    private int[] makeReportFromFileData(String[] data) {
+    private String makeReportFromFileData(String[] data) {
         int counterBuy = 0;
         int counterSupply = 0;
-        int result;
         for (String datum : data) {
-            String[] temp = datum.split(COMMA_CHARACTER);
-            if (temp[0].equals(SUPPLY_STRING)) {
-                counterSupply = counterSupply + Integer.parseInt(temp[1]);
+            String[] datumParts = datum.split(COMMA_CHARACTER);
+            if (datumParts[0].equals(SUPPLY_STRING)) {
+                counterSupply = counterSupply + Integer.parseInt(datumParts[1]);
             } else {
-                counterBuy = counterBuy + Integer.parseInt(temp[1]);
+                counterBuy = counterBuy + Integer.parseInt(datumParts[1]);
             }
         }
-        result = counterSupply - counterBuy;
-        return new int[] {counterSupply, counterBuy, result};
+        int result = counterSupply - counterBuy;
+        StringBuilder builder = new StringBuilder();
+
+        return builder.append(SUPPLY_STRING).append(COMMA_CHARACTER).append(counterSupply)
+                .append(System.lineSeparator()).append(BUY_STRING).append(COMMA_CHARACTER)
+                .append(counterBuy).append(System.lineSeparator()).append(RESULT_STRING)
+                .append(COMMA_CHARACTER).append(result).toString();
     }
 
-    private void writeDataToFile(String toFileName, int[] report) {
+    private void writeDataToFile(String toFileName, String report) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            StringBuilder builder = new StringBuilder();
-            writer.write(builder.append(SUPPLY_STRING).append(COMMA_CHARACTER).append(report[0])
-                    .append(System.lineSeparator()).append(BUY_STRING).append(COMMA_CHARACTER)
-                    .append(report[1]).append(System.lineSeparator()).append(RESULT_STRING)
-                    .append(COMMA_CHARACTER).append(report[2]).toString());
+            writer.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to file: " + toFileName, e);
         }
