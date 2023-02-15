@@ -14,7 +14,7 @@ public class WorkWithFile {
         writeData(report, toFileName);
     }
 
-    public String readData(String fromFileName) {
+    private String readData(String fromFileName) {
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
             StringBuilder data = new StringBuilder();
@@ -31,7 +31,7 @@ public class WorkWithFile {
         }
     }
 
-    public void writeData(String data, String toFileName) {
+    private void writeData(String data, String toFileName) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(data);
         } catch (FileNotFoundException e) {
@@ -41,7 +41,7 @@ public class WorkWithFile {
         }
     }
 
-    public String createReport(String data) {
+    private String createReport(String data) {
         int countSupply = 0;
         int countBuy = 0;
         StringBuilder result = new StringBuilder();
