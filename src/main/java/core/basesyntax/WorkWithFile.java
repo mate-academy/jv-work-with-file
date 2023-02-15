@@ -14,8 +14,9 @@ public class WorkWithFile {
     private static final String BUY = "buy";
     private static final String SUPPLY = "supply";
     private static final String RESULT = "result";
+
     public void getStatistic(String fromFileName, String toFileName) {
-        SetReportToFile(fromFileName,toFileName);
+        setReportToFile(fromFileName,toFileName);
     }
 
     private List<String> getValueFromFile(String fromFileName) {
@@ -36,25 +37,26 @@ public class WorkWithFile {
             String[] lineArray = line.split(SEPARATOR);
             if (lineArray[LINE_NAME].equals("supply")) {
                 summSuplie += Integer.parseInt(lineArray[LINE_VALUE]);
+            } else if (lineArray[LINE_NAME].equals("buy")) {
+                summBye += Integer.parseInt(lineArray[LINE_VALUE]);
             }
-            summBye += Integer.parseInt(lineArray[LINE_VALUE]);
         }
+        int res = summSuplie - summBye;
         StringBuilder report = new StringBuilder();
-        report.append(SUPPLY).append(SEPARATOR).append(summSuplie).
-                append(System.lineSeparator()).
-                append(BUY).append(SEPARATOR).append(summBye).
-                append(System.lineSeparator()).
-                append(RESULT).append(SEPARATOR).append(summSuplie - summBye);
-        return  report.toString();
+        report.append(SUPPLY).append(SEPARATOR).append(summSuplie)
+                .append(System.lineSeparator())
+                .append(BUY).append(SEPARATOR).append(summBye)
+                .append(System.lineSeparator())
+                .append(RESULT).append(SEPARATOR).append(res);
+        return report.toString();
     }
-    private void SetReportToFile(String fromFileName, String toFileName) {
+
+    private void setReportToFile(String fromFileName, String toFileName) {
         File fileTo = new File(toFileName);
-        try(BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(getRepor(fromFileName));
         } catch (IOException e) {
             throw new RuntimeException("Can`t write data");
         }
     }
-
-
 }
