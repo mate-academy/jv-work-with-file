@@ -9,11 +9,18 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final String DELIMITER = ",";
     private static final int FIELDS = 2;
+    private static final int FIRST = 1;
+    private static final int SECOND = 2;
     private String[] key = new String[FIELDS];
     private Integer[] value = new Integer[FIELDS];
     private int pos = 0;
     
     public void getStatistic(String fromFileName, String toFileName) {
+        inputFromFile(fromFileName);
+        outputToFile(toFileName);
+    }
+    
+    private void inputFromFile(String fromFileName) {
         try (BufferedReader bri = new BufferedReader(new FileReader(fromFileName))) {
             while (bri.ready()) {
                 String line = bri.readLine();
@@ -25,6 +32,9 @@ public class WorkWithFile {
         } catch (NumberFormatException e) {
             throw new RuntimeException(e.getMessage() + "Numeric parse exception");
         }
+    }
+    
+    private void outputToFile((String toFileName) {
         try (BufferedWriter bro = new BufferedWriter(new FileWriter(toFileName))) {
             String result = applyOutput();
             bro.write(result);
@@ -34,11 +44,11 @@ public class WorkWithFile {
         }
     }
 
-    private void applyInput(String line) {
+    private void applyInput(String ) {
         String[] em = line.split(DELIMITER);
         if (em.length == FIELDS) {
-            var tmp1 = em[0].trim();
-            var tmp2 = em[1].trim();
+            var tmp1 = em[FIRST].trim();
+            var tmp2 = em[SECOND].trim();
             var ind = containsKey(tmp1);
             if (ind == -1) {
                 key[pos] = tmp1;
@@ -57,7 +67,7 @@ public class WorkWithFile {
             int dif = 0;
             boolean first = true;
             for (int i = 0; i < key.length; i++) {
-                tmp.append(String.format("%s,%d\n", key[i], value[i]));
+                tmp.append(key[i]).append(DELIMITER).append(value[i]).append(System.lineSeparator());
                 if (first) {
                     dif = value[i];
                     first = false;
@@ -65,7 +75,7 @@ public class WorkWithFile {
                     dif -= value[i];
                 }
             }
-            tmp.append(String.format("result,%d\n", Math.abs(dif)));
+            tmp.append("result").append(DELIMITER).append(Math.abs(dif)).append(System.lineSeparator());
             clear();
         }
         return tmp.toString();
