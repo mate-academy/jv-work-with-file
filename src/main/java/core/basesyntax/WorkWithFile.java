@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -11,29 +10,23 @@ public class WorkWithFile {
     private static final String FILE_SEPARATOR = ",";
     private static final String SUPPLY_OPERATION = "supply";
     private static final String BUYING_OPERATION = "buy";
-    private static final int THEME_INDEX = 0;
+    private static final int OPERATION_INDEX = 0;
     private static final int VALUE_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        File file = new File(fromFileName);
-        StringBuilder stringBuilder = new StringBuilder();
         int buy = 0;
         int supply = 0;
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String line = reader.readLine();
             while (line != null && !line.isEmpty()) {
-                stringBuilder.append(line).append(System.lineSeparator());
-                line = reader.readLine();
-            }
-            String[] operationsWithGoods = stringBuilder.toString().split(System.lineSeparator());
-            for (String operationWithGood : operationsWithGoods) {
-                String[] splitOperations = operationWithGood.split(FILE_SEPARATOR);
+                String[] splitOperations = line.split(FILE_SEPARATOR);
                 if (isSupply(splitOperations)) {
                     supply += Integer.parseInt(splitOperations[VALUE_INDEX]);
                 }
                 if (isBuy(splitOperations)) {
                     buy += Integer.parseInt(splitOperations[VALUE_INDEX]);
                 }
+                line = reader.readLine();
             }
             writeToFile(createStaticticString(supply, buy), toFileName);
         } catch (IOException e) {
@@ -41,12 +34,12 @@ public class WorkWithFile {
         }
     }
 
-    private boolean isSupply(String[] operation) {
-        return operation[THEME_INDEX].equals(SUPPLY_OPERATION);
+    private boolean isSupply(String[] operations) {
+        return operations[OPERATION_INDEX].equals(SUPPLY_OPERATION);
     }
 
-    private boolean isBuy(String[] operation) {
-        return operation[THEME_INDEX].equals(BUYING_OPERATION);
+    private boolean isBuy(String[] operations) {
+        return operations[OPERATION_INDEX].equals(BUYING_OPERATION);
     }
 
     private void writeToFile(String info, String toFileName) {
