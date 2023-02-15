@@ -17,7 +17,7 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         List<String> readDataList = readDataFromFile(fromFileName);
-        String dataToWrite = valuesCounter(readDataList);
+        String dataToWrite = countValues(readDataList);
         writeDataInFile(toFileName, dataToWrite);
     }
 
@@ -40,7 +40,7 @@ public class WorkWithFile {
         }
     }
 
-    private String valuesCounter(List<String> linesFromFile) {
+    private String countValues(List<String> linesFromFile) {
         int supplyCounter = 0;
         int buyCounter = 0;
         for (String line : linesFromFile) {
@@ -50,23 +50,18 @@ public class WorkWithFile {
             } else if (operations[NAME_INDEX].equals(BUY)) {
                 buyCounter += Integer.parseInt(operations[VALUE_INDEX ]);
             } else {
-                System.out.println("Can't read file.");
+                throw new RuntimeException("Can't read file.");
             }
         }
         return createResultString(supplyCounter, buyCounter);
     }
 
     private String createResultString(int supplyCounter, int buyCounter) {
-        return SUPPLY + DELIMITER + supplyCounter
-                +
-                System.lineSeparator()
-                +
-                BUY + DELIMITER + buyCounter
-                +
-                System.lineSeparator()
-                +
-                RESULT
-                + DELIMITER
-                + (supplyCounter - buyCounter);
+        StringBuilder builder = new StringBuilder();
+        return builder.append(SUPPLY).append(DELIMITER).append(supplyCounter)
+                .append(System.lineSeparator())
+                .append(BUY).append(DELIMITER).append(buyCounter)
+                .append(System.lineSeparator())
+                .append(RESULT).append(DELIMITER).append(supplyCounter - buyCounter).toString();
     }
 }
