@@ -16,7 +16,9 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         File toFile = new File(toFileName);
-        writeInFile(readFile(fromFileName), toFile);
+        int[] numbers = readFile(fromFileName);
+        StringBuilder text = creatText(numbers[0], numbers[1], numbers[2]);
+        writeInFile(text.toString(), toFile);
     }
 
     private int[] readFile(String fromFileName) {
@@ -46,10 +48,9 @@ public class WorkWithFile {
                 .append("result,").append(result);
     }
 
-    private void writeInFile(int[] arrayNubers,File toFile) {
+    private void writeInFile(String text, File toFile) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFile))) {
-            bufferedWriter.write(creatText(arrayNubers[0],arrayNubers[1],arrayNubers[2])
-                    .toString());
+            bufferedWriter.write(text);
         } catch (IOException e) {
             throw new RuntimeException("Cannot write to file " + toFile,e);
         }
