@@ -11,6 +11,10 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final int OPERATION_TYPE_INDEX = 0;
     private static final int AMOUNT_INDEX = 1;
+    private static final String VALUE_SEPARATOR = ",";
+    private static final String SUPPLY_VALUE = "supply";
+    private static final String BUY_VALUE = "buy";
+    private static final String RESULT_VALUE = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
         writeToFile(toFileName, reportFromData(readFromFile(fromFileName)));
@@ -47,21 +51,24 @@ public class WorkWithFile {
         int supply = 0;
         int buy = 0;
         for (String string : dataStrings) {
-            String[] value = string.split(",");
-            if (value[OPERATION_TYPE_INDEX].equals("supply")) {
+            String[] value = string.split(VALUE_SEPARATOR);
+            if (value[OPERATION_TYPE_INDEX].equals(SUPPLY_VALUE)) {
                 supply += Integer.parseInt(value[AMOUNT_INDEX]);
             } else {
                 buy += Integer.parseInt(value[AMOUNT_INDEX]);
             }
         }
         int result = supply - buy;
-        return "supply,"
+        return SUPPLY_VALUE
+                + VALUE_SEPARATOR
                 + supply
                 + System.lineSeparator()
-                + "buy,"
+                + BUY_VALUE
+                + VALUE_SEPARATOR
                 + buy
                 + System.lineSeparator()
-                + "result,"
+                + RESULT_VALUE
+                + VALUE_SEPARATOR
                 + (result);
     }
 }
