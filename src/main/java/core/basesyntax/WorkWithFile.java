@@ -40,7 +40,7 @@ public class WorkWithFile {
         int supply = 0;
         for (String line: report) {
             String[] etteration = line.split(SEPARATOR_INDEX);
-            if (etteration[0].equals(SUPPLY_NAME)) {
+            if (etteration[OPERATION_INDEX].equals(SUPPLY_NAME)) {
                 supply += Integer.parseInt(etteration[AMMOUNT_INDEX]);
             } else {
                 buy += Integer.parseInt(etteration[AMMOUNT_INDEX]);
