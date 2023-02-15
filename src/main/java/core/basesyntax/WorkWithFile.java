@@ -7,22 +7,15 @@ import java.io.IOException;
 
 public class WorkWithFile {
     public static final String BUY = "buy";
+    public static final String COMA = ",";
     public static final String SUPPLY = "supply";
     public static final String RESULT = "result";
+    public static final int BUY_INDEX = 1;
+    public static final int SUPPLY_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int buy = 0;
-        int supply = 0;
-        for (String s : readFile(fromFileName)) {
-            if (s.split(",")[0].equals(BUY)) {
-                buy += Integer.parseInt(s.split(",")[1]);
-            } else {
-                supply += Integer.parseInt(s.split(",")[1]);
-            }
-        }
-        int result = supply - buy;
-        String data = SUPPLY + "," + supply + "\n" + BUY + "," + buy + "\n" + RESULT + "," + result;
-        writeFile(toFileName,data);
+        String report = createReport(readFile(fromFileName));
+        writeToFile(toFileName,report);
     }
 
     private String[] readFile(String fromFileName) {
@@ -34,19 +27,36 @@ public class WorkWithFile {
                 stringBuilder.append((char)value);
                 value = bufferedReader.read();
             }
-            return stringBuilder.toString().split("\n");
+            bufferedReader.close();
+            return stringBuilder.toString().split(System.lineSeparator());
         } catch (IOException exception) {
             throw new RuntimeException("Can't read data from the file " + fromFileName,exception);
         }
     }
 
-    private void writeFile(String toFileName, String data) {
+    private String createReport(String[] data) {
+        int buy = 0;
+        int supply = 0;
+        for (String s : data) {
+            if (s.split(COMA)[0].equals(BUY)) {
+                buy += Integer.parseInt(s.split(COMA)[BUY_INDEX]);
+            } else {
+                supply += Integer.parseInt(s.split(COMA)[SUPPLY_INDEX]);
+            }
+        }
+        int result = supply - buy;
+        return SUPPLY + COMA + supply + System.lineSeparator()
+                + BUY + COMA + buy + System.lineSeparator()
+                + RESULT + COMA + result;
+    }
+
+    private void writeToFile(String toFileName, String data) {
         try {
             FileWriter toFile = new FileWriter(toFileName);
             toFile.write(data);
             toFile.close();
         } catch (IOException exception) {
-            throw new RuntimeException("Can't write to file" + toFileName,exception);
+            throw new RuntimeException("Can't write to file" + toFileName, exception);
         }
     }
 }
