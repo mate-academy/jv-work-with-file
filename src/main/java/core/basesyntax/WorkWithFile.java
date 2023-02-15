@@ -12,6 +12,9 @@ public class WorkWithFile {
     private static final String BUY = "buy";
     private static final String SUPPLY = "supply";
     private static final String RESULT = "result";
+    private static final String SPACE = " ";
+    private static final int ZERO = 0;
+    private static final int ONE = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String data = readFile(fromFileName);
@@ -25,7 +28,7 @@ public class WorkWithFile {
             BufferedReader reader = new BufferedReader(new FileReader(file));
             String value = reader.readLine();
             while (value != null) {
-                builder.append(value).append(" ");
+                builder.append(value).append(SPACE);
                 value = reader.readLine();
             }
         } catch (IOException e) {
@@ -34,19 +37,24 @@ public class WorkWithFile {
         return builder.toString();
     }
 
-    private void writeData(String data, String toFileName) {
-        String[] split = data.split(" ");
+    private int[] calculateData(String data) {
+        String[] split = data.split(SPACE);
         int buyCount = 0;
         int supplyCount = 0;
         for (int i = 0; i < split.length; i++) {
             String[] splitByComma = split[i].split(COMMA);
-            if (splitByComma[0].equals(BUY)) {
-                buyCount += Integer.parseInt(splitByComma[1]);
+            if (splitByComma[ZERO].equals(BUY)) {
+                buyCount += Integer.parseInt(splitByComma[ONE]);
             } else {
-                supplyCount += Integer.parseInt(splitByComma[1]);
+                supplyCount += Integer.parseInt(splitByComma[ONE]);
             }
         }
-        String result = prepareData(buyCount, supplyCount);
+        return new int[] {buyCount, supplyCount};
+    }
+
+    private void writeData(String data, String toFileName) {
+        int[] counts = calculateData(data);
+        String result = prepareData(counts[ZERO], counts[ONE]);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(result);
         } catch (IOException e) {
