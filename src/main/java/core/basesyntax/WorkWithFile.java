@@ -34,12 +34,12 @@ public class WorkWithFile {
                     + "buy,%d%n"
                     + "result,%d%n", supplyAmount, buyAmount, result);
         } catch (IOException e) {
-            throw new RuntimeException("Cannot read the file", e);
+            throw new RuntimeException("Cannot read the file" + fromFileName, e);
         }
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(toWrite);
         } catch (IOException d) {
-            throw new RuntimeException("Cannot write to the file", d);
+            throw new RuntimeException("Cannot write to the file" + toFileName, d);
         }
     }
 }
