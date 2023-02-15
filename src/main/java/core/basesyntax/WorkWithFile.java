@@ -6,11 +6,16 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.Objects;
 
 public class WorkWithFile {
-    public static final String DATA_SEPARATOR = ",";
-    public static final int ENTRY_TYPE_INDEX = 0;
-    public static final int AMOUNT_INDEX = 1;
+    private static final String DATA_SEPARATOR = ",";
+    private static final int ENTRY_TYPE_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
+    private static final String SUPPLY_COMPARE = "supply";
+    private static final String SUPPLY_LITERAL = "supply,";
+    private static final String BUY_LITERAL = "buy,";
+    private static final String RESULT_LITERAL = "result,";
 
     public void getStatistic(String fromFileName, String toFileName) {
         int supply = 0;
@@ -18,7 +23,7 @@ public class WorkWithFile {
         for (String line : readFromFile(fromFileName)) {
             String[] entryType = line.split(DATA_SEPARATOR);
             int amount = Integer.parseInt(entryType[AMOUNT_INDEX]);
-            if ("supply".equals(entryType[ENTRY_TYPE_INDEX])) {
+            if (Objects.equals(entryType[ENTRY_TYPE_INDEX], SUPPLY_COMPARE)) {
                 supply += amount;
             } else {
                 buy += amount;
@@ -37,9 +42,9 @@ public class WorkWithFile {
     }
 
     private String generateString(int supply, int buy) {
-        return new StringBuilder().append("supply,").append(supply).append(System.lineSeparator())
-                .append("buy,").append(buy).append(System.lineSeparator())
-                .append("result,").append(supply - buy).toString();
+        return SUPPLY_LITERAL + supply + System.lineSeparator()
+                + BUY_LITERAL + buy + System.lineSeparator()
+                + RESULT_LITERAL + (supply - buy);
     }
 
     private void writeToFile(String text, String toFileName) {
