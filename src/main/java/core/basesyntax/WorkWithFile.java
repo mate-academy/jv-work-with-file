@@ -8,106 +8,63 @@ import java.io.IOException;
 
 public class WorkWithFile {
     private static final String DELIMITER = ",";
-    private static final int FIELDS = 2;
-    private static final int FIRST = 0;
-    private static final int SECOND = 1;
-    private String[] key = new String[FIELDS];
-    private Integer[] value = new Integer[FIELDS];
-    private int pos = 0;
-    
+    private static final int FIELDS_SIZE = 2;
+    private static final int OPERATION_TYPE = 0;
+    private static final int AMOUNT = 1;
+    private String[] keys = new String[FIELDS_SIZE];
+    private Integer[] values = new Integer[FIELDS_SIZE];
+
     public void getStatistic(String fromFileName, String toFileName) {
-        inputFromFile(fromFileName);
-        outputToFile(toFileName);
+        StringBuilder inDatas = new StringBuilder();
+        inputFromFile(fromFileName, inDatas);
+        String outDatas = calculateStatistic(inDatas);
+        outputToFile(toFileName, outDatas);
     }
-    
-    private void inputFromFile(String fromFileName) {
-        try (BufferedReader bri = new BufferedReader(new FileReader(fromFileName))) {
-            while (bri.ready()) {
-                String line = bri.readLine();
-                applyInput(line);
+
+    private void inputFromFile(String fromFileName, StringBuilder datas) {
+        try (BufferedReader fromFile = new BufferedReader(new FileReader(fromFileName))) {
+            while (fromFile.ready()) {
+                datas.append(fromFile.readLine())
+                        .append(System.lineSeparator());
             }
-            bri.close();
         } catch (IOException e) {
-            throw new RuntimeException(e.getMessage() + "Problem with input from CSV file");
-        } catch (NumberFormatException e) {
-            throw new RuntimeException(e.getMessage() + "Numeric parse exception");
-        }
-    }
-    
-    private void outputToFile(String toFileName) {
-        try (BufferedWriter bro = new BufferedWriter(new FileWriter(toFileName))) {
-            String result = applyOutput();
-            bro.write(result);
-            bro.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage() + "Problem with output to CSV file");
+            throw new RuntimeException("Can't read from file" + fromFileName, e);
         }
     }
 
-    private void applyInput(String line) {
-        String[] em = line.split(DELIMITER);
-        if (em.length == FIELDS) {
-            var tmp1 = em[FIRST].trim();
-            var tmp2 = em[SECOND].trim();
-            var ind = containsKey(tmp1);
-            if (ind == -1) {
-                key[pos] = tmp1;
-                value[pos] = Integer.parseInt(tmp2);
-                pos++;
+    private void outputToFile(String toFileName, String datas) {
+        try (BufferedWriter toFile = new BufferedWriter(new FileWriter(toFileName))) {
+            toFile.write(datas);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write to file" + toFileName, e);
+        }
+    }
+
+    private String calculateStatistic(StringBuilder datas) {
+        String[] lines = datas.toString().split(System.lineSeparator());
+        for (String line : lines) {
+            String[] entries = line.split(DELIMITER);
+            var position = (entries[OPERATION_TYPE].trim().equals("buy")) ? AMOUNT : OPERATION_TYPE;
+            if (keys[position] == null) {
+                keys[position] = entries[OPERATION_TYPE].trim();
+                values[position] = Integer.parseInt(entries[AMOUNT].trim());
             } else {
-                value[ind] += Integer.parseInt(tmp2);
+                values[position] += Integer.parseInt(entries[AMOUNT].trim());
             }
         }
-    }
-
-    private String applyOutput() {
-        StringBuilder tmp = new StringBuilder();
-        if (pos == FIELDS) {        
-            sort();
-            int dif = 0;
-            boolean first = true;
-            for (int i = 0; i < key.length; i++) {
-                tmp.append(key[i]).append(DELIMITER).append(value[i])
-                    .append(System.lineSeparator());
-                if (first) {
-                    dif = value[i];
-                    first = false;
-                } else {
-                    dif -= value[i];
-                }
-            }
-            tmp.append("result").append(DELIMITER).append(Math.abs(dif))
+        datas.setLength(0);
+        datas.append(keys[OPERATION_TYPE]).append(DELIMITER).append(values[OPERATION_TYPE])
                 .append(System.lineSeparator());
-            clear();
-        }
-        return tmp.toString();
-    }
-    
-    private int containsKey(String fkey) {
-        for (int i = 0; i < key.length; i++) {
-            if (key[i] != null && key[i].equals(fkey) == true) {
-                return i;
-            }
-        }
-        return -1;
-    }
-    
-    private void sort() {
-        for (int i = 0; i < FIELDS - 1; i++) {
-            if (key[i].hashCode() > key[i + 1].hashCode()) {
-                var k = key[i];
-                key[i] = key[i + 1];
-                key[i + 1] = k;
-                var v = value[i];
-                value[i] = value[i + 1];
-                value[i + 1] = v;
-            }
-        }
+        datas.append(keys[AMOUNT]).append(DELIMITER).append(values[AMOUNT])
+                .append(System.lineSeparator());
+        datas.append("result").append(DELIMITER).append(values[OPERATION_TYPE] - values[AMOUNT])
+                .append(System.lineSeparator());
+        clear();
+        return datas.toString();
     }
 
     private void clear() {
-        key = new String[FIELDS];
-        value = new Integer[FIELDS];
-        pos = 0;
+        keys = new String[FIELDS_SIZE];
+        values = new Integer[FIELDS_SIZE];
     }
 }
