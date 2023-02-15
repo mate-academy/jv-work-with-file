@@ -11,51 +11,54 @@ public class WorkWithFile {
     public static final int OPERATION_INDEX = 0;
     public static final int AMOUNT_INDEX = 1;
     public static final String REGEX_SPLIT = "[,\\s]";
-    public static final String STATISTIC_PATTERN = "supply,%d%n"
+    public static final String REPORT_PATTERN = "supply,%d%n"
             + "buy,%d%n"
             + "result,%d%n";
-    public static final int INITIAL_SUPPLY_AMOUNT = 0;
-    public static final int INITIAL_BUY_AMOUNT = 0;
-    private String toWrite;
-    private int supplyAmount;
-    private int buyAmount;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        read(fromFileName);
-        calculateStatistic();
-        write(toFileName);
+        String content = read(fromFileName);
+        content = createReport(content);
+        write(content, toFileName);
     }
 
-    private void read(String fromFileName) {
+    public String read(String fromFileName) {
+        StringBuilder builder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String value = bufferedReader.readLine();
-            supplyAmount = INITIAL_SUPPLY_AMOUNT;
-            buyAmount = INITIAL_BUY_AMOUNT;
             while (value != null) {
-                String[] values = value.split(REGEX_SPLIT);
-                switch (values[OPERATION_INDEX]) {
-                    case NAME_OF_SUPPLY:
-                        supplyAmount += Integer.parseInt(values[AMOUNT_INDEX]);
-                        break;
-                    default:
-                        buyAmount += Integer.parseInt(values[AMOUNT_INDEX]);
-                        break;
-                }
+                builder.append(value).append(System.lineSeparator());
                 value = bufferedReader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("Cannot read the file" + fromFileName, e);
         }
+        return builder.toString();
     }
 
-    private void calculateStatistic() {
+    private String createReport(String content) {
+        int supplyAmount = 0;
+        int buyAmount = 0;
+        String report;
+        String[] contentLines = content.split("\\s+");
+        for (String line : contentLines) {
+            String[] values = line.split(REGEX_SPLIT);
+            switch (values[OPERATION_INDEX]) {
+                case NAME_OF_SUPPLY:
+                    supplyAmount += Integer.parseInt(values[AMOUNT_INDEX]);
+                    break;
+                default:
+                    buyAmount += Integer.parseInt(values[AMOUNT_INDEX]);
+                    break;
+            }
+        }
         int result = supplyAmount - buyAmount;
-        toWrite = String.format(STATISTIC_PATTERN, supplyAmount, buyAmount, result);
+        report = String.format(REPORT_PATTERN, supplyAmount, buyAmount, result);
+        return report;
     }
 
-    private void write(String toFileName) {
+    private void write(String content, String toFileName) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write(toWrite);
+            bufferedWriter.write(content);
         } catch (IOException d) {
             throw new RuntimeException("Cannot write data to file" + toFileName, d);
         }
