@@ -34,7 +34,7 @@ public class WorkWithFile {
         }
     }
     
-    private void outputToFile((String toFileName) {
+    private void outputToFile(String toFileName) {
         try (BufferedWriter bro = new BufferedWriter(new FileWriter(toFileName))) {
             String result = applyOutput();
             bro.write(result);
@@ -44,7 +44,7 @@ public class WorkWithFile {
         }
     }
 
-    private void applyInput(String ) {
+    private void applyInput(String toFileName) {
         String[] em = line.split(DELIMITER);
         if (em.length == FIELDS) {
             var tmp1 = em[FIRST].trim();
