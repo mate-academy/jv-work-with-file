@@ -1,6 +1,10 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class WorkWithFile {
 
@@ -15,6 +19,7 @@ public class WorkWithFile {
         String report = convertData(data);
         writeReport(report, toFileName);
     }
+
     private String readFile(String fromFileName) {
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             StringBuilder stringBuilder = new StringBuilder();
