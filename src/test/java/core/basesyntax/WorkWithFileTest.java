@@ -8,7 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class WorkWithFileTest {
-    private WorkWithFile workWithFile = new WorkWithFile();
+    private final WorkWithFile workWithFile = new WorkWithFile();
     private static final String APPLE_RESULT_FILE = "appleResult.csv";
     private static final String GRAPE_RESULT_FILE = "grapeResult.csv";
     private static final String ORANGE_RESULT_FILE = "orangeResult.csv";
@@ -27,7 +27,7 @@ public class WorkWithFileTest {
     }
 
     @Test
-    public void getStatisticAboutApple() {
+    public void getStatisticAboutApple() throws IOException {
         workWithFile.getStatistic("apple.csv", APPLE_RESULT_FILE);
 
         String actualResult = readFromFile(APPLE_RESULT_FILE).trim();
@@ -38,7 +38,7 @@ public class WorkWithFileTest {
     }
 
     @Test
-    public void getStatisticAboutOrange() {
+    public void getStatisticAboutOrange() throws IOException {
         workWithFile.getStatistic("orange.csv", ORANGE_RESULT_FILE);
 
         String actualResult = readFromFile(ORANGE_RESULT_FILE).trim();
@@ -49,7 +49,7 @@ public class WorkWithFileTest {
     }
 
     @Test
-    public void getStatisticAboutGrape() {
+    public void getStatisticAboutGrape() throws IOException {
         workWithFile.getStatistic("grape.csv", GRAPE_RESULT_FILE);
 
         String actualResult = readFromFile(GRAPE_RESULT_FILE).trim();
@@ -60,7 +60,7 @@ public class WorkWithFileTest {
     }
 
     @Test
-    public void getStatisticAboutBanana() {
+    public void getStatisticAboutBanana() throws IOException {
         workWithFile.getStatistic("banana.csv", BANANA_RESULT_FILE);
 
         String actualResult = readFromFile(BANANA_RESULT_FILE).trim();
@@ -71,16 +71,16 @@ public class WorkWithFileTest {
     }
 
     @Test
-    public void getStatisticAboutBananaRepeatedMethodCall() {
+    public void getStatisticAboutBananaRepeatedMethodCall() throws IOException {
         workWithFile.getStatistic("banana.csv", BANANA_RESULT_FILE);
         workWithFile.getStatistic("banana.csv", BANANA_RESULT_FILE);
 
         String actualResult = readFromFile(BANANA_RESULT_FILE).trim();
         String expectedResult = "supply,491" + System.lineSeparator()
-            + "buy,293" + System.lineSeparator()
-            + "result,198";
+                + "buy,293" + System.lineSeparator()
+                + "result,198";
         Assert.assertEquals("Calling the getStatistic() method repeatedly returned incorrect results.",
-            expectedResult, actualResult);
+                expectedResult, actualResult);
     }
 
     private String readFromFile(String fileName) {
