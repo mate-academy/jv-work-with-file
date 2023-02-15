@@ -19,7 +19,9 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         String data = readFile(fromFileName);
-        writeData(data, toFileName);
+        int[] counts = calculateData(data);
+        String result = prepareData(counts[BUY_INDEX], counts[SUPPLY_INDEX]);
+        writeData(result, toFileName);
     }
 
     private String readFile(String fileName) {
@@ -54,10 +56,8 @@ public class WorkWithFile {
     }
 
     private void writeData(String data, String toFileName) {
-        int[] counts = calculateData(data);
-        String result = prepareData(counts[BUY_INDEX], counts[SUPPLY_INDEX]);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write(result);
+            bufferedWriter.write(data);
         } catch (IOException e) {
             throw new RuntimeException("Can't record data to file " + toFileName, e);
         }
