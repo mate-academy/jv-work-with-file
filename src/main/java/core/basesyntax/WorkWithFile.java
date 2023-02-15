@@ -17,10 +17,7 @@ public class WorkWithFile {
     public static final String RESULT_NAME = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        readDataFromFile(fromFileName);
-        String unformedData = readDataFromFile(fromFileName);
-        String formatData = getFormattedData(unformedData);
-        writeDataToFile(formatData, toFileName);
+        writeDataToFile(getFormattedData(readDataFromFile(fromFileName)), toFileName);
     }
 
     private String readDataFromFile(String fromFileName) {
