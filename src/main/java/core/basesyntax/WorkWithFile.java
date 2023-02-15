@@ -15,6 +15,7 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String RESULT = "result";
     private static final String COMMA = ",";
+
     public void getStatistic(String fromFileName, String toFileName) {
         String extractedData = readFromFile(fromFileName);
         writeToFile(toFileName, countResultAndGetReport(extractedData));
