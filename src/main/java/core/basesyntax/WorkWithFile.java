@@ -8,7 +8,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-
     private static final int ZERO_INDEX = 0;
     private static final int FIRST_INDEX = 1;
     private static final String BUY = "buy";
