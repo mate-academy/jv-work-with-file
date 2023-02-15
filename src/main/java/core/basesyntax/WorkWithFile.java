@@ -16,11 +16,11 @@ public class WorkWithFile {
     public static final String RESULT_REGEX = ",";
     public static final String RESULT_NAME = "result";
 
-    public static void getStatistic(String fromFileName, String toFileName) {
+    public void getStatistic(String fromFileName, String toFileName) {
         readDataFromFile(fromFileName, toFileName);
     }
 
-    private static void readDataFromFile(String fromFileName, String toFileName) {
+    private void readDataFromFile(String fromFileName, String toFileName) {
         File readFile = new File(fromFileName);
 
         StringBuilder builder = new StringBuilder();
@@ -35,7 +35,7 @@ public class WorkWithFile {
         writeDataToFile(formattedData, toFileName);
     }
 
-    private static String getFormattedData(String data) {
+    private String getFormattedData(String data) {
         int result;
         int totalSupply = 0;
         int totalBuy = 0;
@@ -43,9 +43,9 @@ public class WorkWithFile {
         String[] arr = data.split(REGEX);
         for (String tips : arr) {
             final int intValue = parseInt(tips.substring(tips.indexOf(",") + 1));
-            if (tips.contains("buy")) {
+            if (tips.contains(BUY)) {
                 totalBuy += intValue;
-            } else if (tips.contains("supply")) {
+            } else if (tips.contains(SUPPLY)) {
                 totalSupply += intValue;
             }
         }
@@ -58,7 +58,7 @@ public class WorkWithFile {
         return builder.toString();
     }
 
-    private static void writeDataToFile(String formattedData, String direction) {
+    private void writeDataToFile(String formattedData, String direction) {
         File managedData = new File(direction);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(managedData))) {
             for (int i = 0; i < formattedData.length(); i++) {
