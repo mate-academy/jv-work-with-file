@@ -2,10 +2,9 @@ package core.basesyntax;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Objects;
+import java.util.List;
 
 public class ReportBuilder {
-
     public static final String SEPARATOR = ",";
     public static final String SUPPLY = "supply";
     public static final String BUY = "buy";
@@ -14,13 +13,13 @@ public class ReportBuilder {
     public Collection<String> buildReport(Collection<String> inputData) {
         int supply = 0;
         int buy = 0;
-        ArrayList<String> result = new ArrayList<>();
+        List<String> result = new ArrayList<>();
         for (String row : inputData) {
-            String[] columns = (row.split(SEPARATOR));
-            if (Objects.equals(columns[0], SUPPLY)) {
+            String[] columns = row.split(SEPARATOR);
+            if (columns[0].equals(SUPPLY)) {
                 supply += Integer.parseInt(columns[1]);
             }
-            if (Objects.equals(columns[0], BUY)) {
+            if (columns[0].equals(BUY)) {
                 buy += Integer.parseInt(columns[1]);
             }
         }
