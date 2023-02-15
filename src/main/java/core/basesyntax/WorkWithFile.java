@@ -10,23 +10,24 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    public static final String REGEX = " ";
+    public static final String SPACE_REGEX = " ";
     public static final String BUY = "buy";
     public static final String SUPPLY = "supply";
-    public static final String RESULT_REGEX = ",";
+    public static final String COMA_REGEX = ",";
     public static final String RESULT_NAME = "result";
+    public static final String EMPTY_REGEX = "";
+    public static final String FILTER_PATTERN = "\\D+";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        writeDataToFile(getFormattedData(readDataFromFile(fromFileName)), toFileName);
+        writeDataToFile(getReport(readDataFromFile(fromFileName)), toFileName);
     }
 
     private String readDataFromFile(String fromFileName) {
         File readFile = new File(fromFileName);
-
         StringBuilder builder = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(readFile))) {
             while (reader.ready()) {
-                builder.append(reader.readLine()).append(REGEX);
+                builder.append(reader.readLine()).append(SPACE_REGEX);
             }
         } catch (IOException exception) {
             throw new RuntimeException("Can't read data from file " + readFile, exception);
@@ -34,14 +35,14 @@ public class WorkWithFile {
         return builder.toString();
     }
 
-    private String getFormattedData(String data) {
+    private String getReport(String data) {
         int result;
         int totalSupply = 0;
         int totalBuy = 0;
         StringBuilder builder = new StringBuilder();
-        String[] arr = data.split(REGEX);
+        String[] arr = data.split(SPACE_REGEX);
         for (String tips : arr) {
-            final int intValue = parseInt(tips.substring(tips.indexOf(RESULT_REGEX) + 1));
+            final int intValue = parseInt(tips.replaceAll(FILTER_PATTERN, EMPTY_REGEX));
             if (tips.contains(BUY)) {
                 totalBuy += intValue;
             } else if (tips.contains(SUPPLY)) {
@@ -49,11 +50,11 @@ public class WorkWithFile {
             }
         }
         result = totalSupply - totalBuy;
-        return builder.append(SUPPLY).append(RESULT_REGEX)
+        return builder.append(SUPPLY).append(COMA_REGEX)
                 .append(totalSupply).append(System.lineSeparator())
-                .append(BUY).append(RESULT_REGEX).append(totalBuy)
+                .append(BUY).append(COMA_REGEX).append(totalBuy)
                 .append(System.lineSeparator())
-                .append(RESULT_NAME).append(RESULT_REGEX).append(result).toString();
+                .append(RESULT_NAME).append(COMA_REGEX).append(result).toString();
     }
 
     private void writeDataToFile(String formattedData, String direction) {
