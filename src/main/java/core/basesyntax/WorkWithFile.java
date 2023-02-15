@@ -12,9 +12,10 @@ public class WorkWithFile {
     private static final String BUY = "buy";
     private static final String SUPPLY = "supply";
     private static final String RESULT = "result";
-    private static final String SPACE = " ";
-    private static final int ZERO = 0;
-    private static final int ONE = 1;
+    private static final int OPERATION_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
+    private static final int BUY_INDEX = 0;
+    private static final int SUPPLY_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String data = readFile(fromFileName);
@@ -28,7 +29,7 @@ public class WorkWithFile {
             BufferedReader reader = new BufferedReader(new FileReader(file));
             String value = reader.readLine();
             while (value != null) {
-                builder.append(value).append(SPACE);
+                builder.append(value).append(System.lineSeparator());
                 value = reader.readLine();
             }
         } catch (IOException e) {
@@ -38,15 +39,15 @@ public class WorkWithFile {
     }
 
     private int[] calculateData(String data) {
-        String[] split = data.split(SPACE);
+        String[] split = data.split(System.lineSeparator());
         int buyCount = 0;
         int supplyCount = 0;
         for (int i = 0; i < split.length; i++) {
             String[] splitByComma = split[i].split(COMMA);
-            if (splitByComma[ZERO].equals(BUY)) {
-                buyCount += Integer.parseInt(splitByComma[ONE]);
+            if (splitByComma[OPERATION_INDEX].equals(BUY)) {
+                buyCount += Integer.parseInt(splitByComma[AMOUNT_INDEX]);
             } else {
-                supplyCount += Integer.parseInt(splitByComma[ONE]);
+                supplyCount += Integer.parseInt(splitByComma[AMOUNT_INDEX]);
             }
         }
         return new int[] {buyCount, supplyCount};
@@ -54,7 +55,7 @@ public class WorkWithFile {
 
     private void writeData(String data, String toFileName) {
         int[] counts = calculateData(data);
-        String result = prepareData(counts[ZERO], counts[ONE]);
+        String result = prepareData(counts[BUY_INDEX], counts[SUPPLY_INDEX]);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(result);
         } catch (IOException e) {
