@@ -9,42 +9,66 @@ import java.io.IOException;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
-        int supply = 0;
-        int buy = 0;
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(new File(fromFileName)));
-            String value = reader.readLine();
-            while (value != null) {
-                String[] values = value.split(",");
-                switch (values[0]) {
-                    case "supply":
-                        supply += Integer.parseInt(values[1]);
-                        break;
-                    case "buy":
-                        buy += Integer.parseInt(values[1]);
-                        break;
-                    default:
-                        break;
-                }
-                value = reader.readLine();
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("Can't read from file", e);
-        }
-
-        // not writing to file if it already exists
+        // exit immediately if the target file already exists
         File file = new File(toFileName);
         if (file.exists()) {
             return;
         }
+        String dataFromFile = readFromFile(fromFileName);
+        String report = generateReport(dataFromFile);
+        writeToFile(toFileName, report);
+    }
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName, true))) {
-            String separator = System.lineSeparator();
-            writer.write("supply," + supply + separator);
-            writer.write("buy," + buy + separator);
-            writer.write("result," + (supply - buy) + separator);
+    private String readFromFile(String fileName) {
+        StringBuilder builder = new StringBuilder();
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(fileName));
+            // I read data symbol by symbol to preserve the original formatting
+            int symbol = reader.read();
+            while (symbol != -1) {
+                builder.append((char) symbol);
+                symbol = reader.read();
+            }
         } catch (IOException e) {
-            throw new RuntimeException("Can't write to file", e);
+            throw new RuntimeException("Can't read from file" + fileName, e);
+        }
+
+        return builder.toString();
+    }
+
+    private String generateReport(String data) {
+        int supply = 0;
+        int buy = 0;
+        String[] entries = data.split("\r\n?|\n"); // split by line separator
+
+        for (String entry: entries) {
+            String[] values = entry.split(",");
+            switch (values[0]) {
+                case "supply":
+                    supply += Integer.parseInt(values[1]);
+                    break;
+                case "buy":
+                    buy += Integer.parseInt(values[1]);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        StringBuilder builder = new StringBuilder();
+        String separator = System.lineSeparator();
+        builder.append("supply," + supply + separator)
+                .append("buy," + buy + separator)
+                .append("result," + (supply - buy) + separator);
+
+        return builder.toString();
+    }
+
+    private void writeToFile(String fileName, String data) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+            writer.write(data);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write to file" + fileName, e);
         }
     }
 }
