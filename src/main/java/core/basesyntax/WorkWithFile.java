@@ -8,6 +8,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final int OPERATION_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
+
     public void getStatistic(String fromFileName, String toFileName) {
         // exit immediately if the target file already exists
         File file = new File(toFileName);
@@ -30,7 +33,7 @@ public class WorkWithFile {
                 symbol = reader.read();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read from file" + fileName, e);
+            throw new RuntimeException("Can't read from file " + fileName, e);
         }
 
         return builder.toString();
@@ -43,12 +46,12 @@ public class WorkWithFile {
 
         for (String entry: entries) {
             String[] values = entry.split(",");
-            switch (values[0]) {
+            switch (values[OPERATION_INDEX]) {
                 case "supply":
-                    supply += Integer.parseInt(values[1]);
+                    supply += Integer.parseInt(values[AMOUNT_INDEX]);
                     break;
                 case "buy":
-                    buy += Integer.parseInt(values[1]);
+                    buy += Integer.parseInt(values[AMOUNT_INDEX]);
                     break;
                 default:
                     break;
@@ -68,7 +71,7 @@ public class WorkWithFile {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             writer.write(data);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write to file" + fileName, e);
+            throw new RuntimeException("Can't write to file " + fileName, e);
         }
     }
 }
