@@ -8,27 +8,27 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 
 public class WorkWithFile {
+    private final String coma = ",";
     private final String supplyString = "supply";
     private final String buyString = "buy";
     private final String resultString = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
         try {
-            String resultat = createReport(fromFileName);
-            writeToFile(toFileName,resultat);
+            String finalResult = createReport(readFromFile(fromFileName));
+            writeToFile(toFileName,finalResult);
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage());
         }
     }
 
     public String[] readFromFile(String fromFileName) throws IOException {
-        String[] lines = String.join(",", Files
-        .readAllLines(Paths.get(fromFileName), StandardCharsets.UTF_8)).split(",");
+        String[] lines = String.join(coma, Files
+        .readAllLines(Paths.get(fromFileName), StandardCharsets.UTF_8)).split(coma);
         return lines;
     }
 
-    public String createReport(String fromFileName) throws IOException {
-        String[] lines = readFromFile(fromFileName);
+    public String createReport(String[] lines) throws IOException {
         int result = 0;
         int supply = 0;
         int buy = 0;
@@ -41,18 +41,16 @@ public class WorkWithFile {
             }
         }
         result = supply - buy;
-        StringBuilder resultat = new StringBuilder();
-        resultat.append(supplyString).append(",").append(supply)
-                .append(System.lineSeparator()).append(buyString).append(",").append(buy)
-                .append(System.lineSeparator()).append(resultString).append(",").append(result);
-        return resultat.toString();
+        StringBuilder finalResult = new StringBuilder();
+        finalResult.append(supplyString).append(coma).append(supply)
+                .append(System.lineSeparator()).append(buyString).append(coma).append(buy)
+                .append(System.lineSeparator()).append(resultString).append(coma).append(result);
+        return finalResult.toString();
     }
 
-    public void writeToFile(String toFileName, String resultat) throws IOException {
+    public void writeToFile(String toFileName, String finalResult) throws IOException {
         File resultFile = new File(toFileName);
         resultFile.createNewFile();
-        Files.writeString(Paths.get(resultFile.toURI()), resultat, StandardOpenOption.WRITE);
+        Files.writeString(Paths.get(resultFile.toURI()), finalResult, StandardOpenOption.WRITE);
     }
 }
-
-
