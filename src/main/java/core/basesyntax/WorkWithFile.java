@@ -17,7 +17,6 @@ public class WorkWithFile {
     private Integer[] values = new Integer[FIELDS_SIZE];
 
     public void getStatistic(String fromFileName, String toFileName) {
-
         StringBuilder inDatas = inputFromFile(fromFileName);
         String outDatas = calculateStatistic(inDatas);
         outputToFile(toFileName, outDatas);
