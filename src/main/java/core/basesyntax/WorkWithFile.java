@@ -7,32 +7,35 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 public class WorkWithFile {
-    static final String SUPPLY = "supply";
-    static final String BUY = "buy";
-    static final String RESULT = "result";
-    static final String SEPARATOR = ",";
-    static final String SPLITTER = " ";
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
+    private static final String COMMA_SEPARATOR = ",";
+    private static final String SPACE_SEPARATOR = " ";
+    private static final int COLUMN_NAME_INDEX = 0;
+    private static final int COLUMN_VALUE_INDEX = 1;
+    private static final int INITIAL_SUPPLY_COUNT = 0;
+    private static final int INITIAL_BUY_COUNT = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
         writeToNewFile(toFileName, getReport(readFromFile(fromFileName)));
     }
 
     public String getReport(String dataFromFile) {
-        String[] data = dataFromFile.split(SPLITTER);
-        int supplyCount = 0;
-        int buyCount = 0;
+        String[] data = dataFromFile.split(SPACE_SEPARATOR);
+        int supplyCount = INITIAL_SUPPLY_COUNT;
+        int buyCount = INITIAL_BUY_COUNT;
         for (String value : data) {
-            int splitIndex = value.indexOf(SEPARATOR);
-            int count = Integer.parseInt(value.substring(splitIndex + 1));
-            if (value.substring(0, splitIndex).equals(SUPPLY)) {
-                supplyCount += count;
-            } else if (value.substring(0, splitIndex).equals(BUY)) {
-                buyCount += count;
+            String[] values = value.split(COMMA_SEPARATOR);
+            if (values[COLUMN_NAME_INDEX].equals(SUPPLY)) {
+                supplyCount += Integer.parseInt(values[COLUMN_VALUE_INDEX]);
+            } else if (values[COLUMN_NAME_INDEX].equals(BUY)) {
+                buyCount += Integer.parseInt(values[COLUMN_VALUE_INDEX]);
             }
         }
-        return SUPPLY + SEPARATOR + supplyCount + System.lineSeparator()
-                + BUY + SEPARATOR + buyCount + System.lineSeparator()
-                + RESULT + SEPARATOR + (supplyCount - buyCount);
+        return SUPPLY + COMMA_SEPARATOR + supplyCount + System.lineSeparator()
+                + BUY + COMMA_SEPARATOR + buyCount + System.lineSeparator()
+                + RESULT + COMMA_SEPARATOR + (supplyCount - buyCount);
     }
 
     public void writeToNewFile(String newFileName, String data) {
@@ -51,7 +54,7 @@ public class WorkWithFile {
             BufferedReader reader = new BufferedReader(new FileReader(file));
             String value = reader.readLine();
             while (value != null) {
-                builder.append(value).append(SPLITTER);
+                builder.append(value).append(SPACE_SEPARATOR);
                 value = reader.readLine();
             }
         } catch (IOException e) {
