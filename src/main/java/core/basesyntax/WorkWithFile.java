@@ -23,19 +23,19 @@ public class WorkWithFile {
 
     private List<String> readFile(String fromFileName) {
         File fileFrom = new File(fromFileName);
-        List<String> lineFromFile;
+        List<String> linesFromFile;
         try {
-            lineFromFile = Files.readAllLines(fileFrom.toPath());
+            linesFromFile = Files.readAllLines(fileFrom.toPath());
         } catch (IOException e) {
-            throw new RuntimeException("Can`t read file", e);
+            throw new RuntimeException("Can`t read file " + fromFileName, e);
         }
-        return lineFromFile;
+        return linesFromFile;
     }
 
-    private String createReport(List<String> linetFromFile) {
+    private String createReport(List<String> linesFromFile) {
         int summSupply = 0;
         int summBuy = 0;
-        for (String line : linetFromFile) {
+        for (String line : linesFromFile) {
             String[] lineArray = line.split(SEPARATOR);
             if (lineArray[LINE_NAME].equals(SUPPLY)) {
                 summSupply += Integer.parseInt(lineArray[LINE_VALUE]);
@@ -51,15 +51,15 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Can`t write data", e);
+            throw new RuntimeException("Can`t write data to file " + toFileName, e);
         }
     }
 
-    private String createResultString(int result, int summSuplie, int summBye) {
+    private String createResultString(int result, int summSupply, int summBuy) {
         StringBuilder report = new StringBuilder();
-        report.append(SUPPLY).append(SEPARATOR).append(summSuplie)
+        report.append(SUPPLY).append(SEPARATOR).append(summSupply)
             .append(System.lineSeparator())
-            .append(BUY).append(SEPARATOR).append(summBye)
+            .append(BUY).append(SEPARATOR).append(summBuy)
             .append(System.lineSeparator())
             .append(RESULT).append(SEPARATOR).append(result);
         return report.toString();
