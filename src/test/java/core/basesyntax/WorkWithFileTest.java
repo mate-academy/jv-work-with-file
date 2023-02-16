@@ -8,7 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class WorkWithFileTest {
-    private final WorkWithFile workWithFile = new WorkWithFile();
+    private WorkWithFile workWithFile = new WorkWithFile();
     private static final String APPLE_RESULT_FILE = "appleResult.csv";
     private static final String GRAPE_RESULT_FILE = "grapeResult.csv";
     private static final String ORANGE_RESULT_FILE = "orangeResult.csv";
@@ -27,7 +27,7 @@ public class WorkWithFileTest {
     }
 
     @Test
-    public void getStatisticAboutApple() throws IOException {
+    public void getStatisticAboutApple() {
         workWithFile.getStatistic("apple.csv", APPLE_RESULT_FILE);
 
         String actualResult = readFromFile(APPLE_RESULT_FILE).trim();
@@ -38,7 +38,7 @@ public class WorkWithFileTest {
     }
 
     @Test
-    public void getStatisticAboutOrange() throws IOException {
+    public void getStatisticAboutOrange() {
         workWithFile.getStatistic("orange.csv", ORANGE_RESULT_FILE);
 
         String actualResult = readFromFile(ORANGE_RESULT_FILE).trim();
@@ -49,7 +49,7 @@ public class WorkWithFileTest {
     }
 
     @Test
-    public void getStatisticAboutGrape() throws IOException {
+    public void getStatisticAboutGrape() {
         workWithFile.getStatistic("grape.csv", GRAPE_RESULT_FILE);
 
         String actualResult = readFromFile(GRAPE_RESULT_FILE).trim();
@@ -60,7 +60,7 @@ public class WorkWithFileTest {
     }
 
     @Test
-    public void getStatisticAboutBanana() throws IOException {
+    public void getStatisticAboutBanana() {
         workWithFile.getStatistic("banana.csv", BANANA_RESULT_FILE);
 
         String actualResult = readFromFile(BANANA_RESULT_FILE).trim();
@@ -71,7 +71,7 @@ public class WorkWithFileTest {
     }
 
     @Test
-    public void getStatisticAboutBananaRepeatedMethodCall() throws IOException {
+    public void getStatisticAboutBananaRepeatedMethodCall() {
         workWithFile.getStatistic("banana.csv", BANANA_RESULT_FILE);
         workWithFile.getStatistic("banana.csv", BANANA_RESULT_FILE);
 

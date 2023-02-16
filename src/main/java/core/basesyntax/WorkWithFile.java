@@ -16,50 +16,52 @@ public class WorkWithFile {
     private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        writeReportToFile(readFile(fromFileName), toFileName);
+        List<String> data = readFile(fromFileName);
+        String report = createReport(data);
+        write(report, toFileName);
     }
 
     private List<String> readFile(String fromFileName) {
         File fileFrom = new File(fromFileName);
-        List<String> linetFromFile;
+        List<String> lineFromFile;
         try {
-            linetFromFile = Files.readAllLines(fileFrom.toPath());
+            lineFromFile = Files.readAllLines(fileFrom.toPath());
         } catch (IOException e) {
             throw new RuntimeException("Can`t read file", e);
         }
-        return linetFromFile;
+        return lineFromFile;
     }
 
     private String createReport(List<String> linetFromFile) {
-        int summSuplie = 0;
-        int summBye = 0;
+        int summSupply = 0;
+        int summBuy = 0;
         for (String line : linetFromFile) {
             String[] lineArray = line.split(SEPARATOR);
             if (lineArray[LINE_NAME].equals(SUPPLY)) {
-                summSuplie += Integer.parseInt(lineArray[LINE_VALUE]);
+                summSupply += Integer.parseInt(lineArray[LINE_VALUE]);
             } else if (lineArray[LINE_NAME].equals(BUY)) {
-                summBye += Integer.parseInt(lineArray[LINE_VALUE]);
+                summBuy += Integer.parseInt(lineArray[LINE_VALUE]);
             }
         }
-        int res = summSuplie - summBye;
-        return createResultString(res, summSuplie, summBye);
+        int result = summSupply - summBuy;
+        return createResultString(result, summSupply, summBuy);
     }
 
-    private void writeReportToFile(List<String> linetFromFile, String toFileName) {
+    private void write(String report, String toFileName) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write(createReport(linetFromFile));
+            bufferedWriter.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Can`t write data");
+            throw new RuntimeException("Can`t write data", e);
         }
     }
 
-    private String createResultString(int res, int summSuplie, int summBye) {
+    private String createResultString(int result, int summSuplie, int summBye) {
         StringBuilder report = new StringBuilder();
         report.append(SUPPLY).append(SEPARATOR).append(summSuplie)
             .append(System.lineSeparator())
             .append(BUY).append(SEPARATOR).append(summBye)
             .append(System.lineSeparator())
-            .append(RESULT).append(SEPARATOR).append(res);
+            .append(RESULT).append(SEPARATOR).append(result);
         return report.toString();
     }
 }
