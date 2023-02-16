@@ -9,29 +9,38 @@ import java.nio.file.Files;
 public class WorkWithFile {
     static final String SUPPLY = "supply";
     static final String BUY = "buy";
+    static final String RESULT = "result";
     static final String SEPARATOR = ",";
     static final String SPLITTER = " ";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String[] splitData = readFromFile(fromFileName).split(SPLITTER);
+        writeToNewFile(toFileName, getReport(readFromFile(fromFileName)));
+    }
+
+    public String getReport(String dataFromFile) {
+        String[] data = dataFromFile.split(SPLITTER);
         int supplyCount = 0;
         int buyCount = 0;
-        for (String data : splitData) {
-            int splitIndex = data.indexOf(SEPARATOR);
-            int count = Integer.parseInt(data.substring(splitIndex + 1));
-            if (data.substring(0, splitIndex).equals(SUPPLY)) {
+        for (String value : data) {
+            int splitIndex = value.indexOf(SEPARATOR);
+            int count = Integer.parseInt(value.substring(splitIndex + 1));
+            if (value.substring(0, splitIndex).equals(SUPPLY)) {
                 supplyCount += count;
-            } else if (data.substring(0, splitIndex).equals(BUY)) {
+            } else if (value.substring(0, splitIndex).equals(BUY)) {
                 buyCount += count;
             }
         }
+        return SUPPLY + SEPARATOR + supplyCount + System.lineSeparator()
+                + BUY + SEPARATOR + buyCount + System.lineSeparator()
+                + RESULT + SEPARATOR + (supplyCount - buyCount);
+    }
 
-        String data = SUPPLY + SEPARATOR + supplyCount + System.lineSeparator() + BUY + SEPARATOR
-                + buyCount + System.lineSeparator() + "result," + (supplyCount - buyCount);
+    public void writeToNewFile(String newFileName, String data) {
+        File file = new File(newFileName);
         try {
-            Files.write(new File(toFileName).toPath(), data.getBytes());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            Files.write(file.toPath(), data.getBytes());
+        } catch (Exception e) {
+            throw new RuntimeException("Can't write data to file " + file, e);
         }
     }
 
