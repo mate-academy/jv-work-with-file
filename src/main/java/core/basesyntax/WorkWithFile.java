@@ -7,50 +7,48 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final int LOWEST_ITERATION_BORDER = -1;
-    private static final String SPLITTER = "\n";
     private static final String BUY = "buy";
     private static final String SUPPLY = "supply";
     private static final String RESULT = "result";
     private static final String COMMA = ",";
-    private static final int INDEX_ZERO = 0;
-    private static final int INDEX_ONE = 1;
-    private static final boolean TRUE = true;
+    private static final int OPERATION_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String report = createReport(readData(fromFileName));
         writeData(toFileName, report);
     }
 
-    private String[] readData(String fromFileName) {
+    private String readData(String fromFileName) {
         StringBuilder builder = new StringBuilder();
-        String[] itemsArray;
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
-            int value = reader.read();
-            while (value != LOWEST_ITERATION_BORDER) {
-                builder.append((char) value);
-                value = reader.read();
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
+            String value = reader.readLine();
+            while (value != null) {
+                builder.append(value).append(System.lineSeparator());
+                value = reader.readLine();
             }
-            String itemsAndQuantities = builder.toString();
-            itemsArray = itemsAndQuantities.split(SPLITTER);
         } catch (IOException e) {
             throw new RuntimeException("Can't read the file", e);
         }
-        return itemsArray;
+        return builder.toString();
     }
 
-    private String createReport(String[] data) {
+    private String createReport(String string) {
+        String[] lines = string.split(System.lineSeparator());
         int buyTotal = 0;
         int supplyTotal = 0;
-        for (String datum : data) {
-            if (datum.split(COMMA)[INDEX_ZERO].equals(BUY)) {
-                buyTotal += Integer.parseInt(datum.split(COMMA)[INDEX_ONE]);
+        for (String line : lines) {
+            if (line.split(COMMA)[OPERATION_INDEX].equals(BUY)) {
+                buyTotal += Integer.parseInt(line.split(COMMA)[AMOUNT_INDEX]);
             } else {
-                supplyTotal += Integer.parseInt(datum.split(COMMA)[INDEX_ONE]);
+                supplyTotal += Integer.parseInt(line.split(COMMA)[AMOUNT_INDEX]);
             }
         }
         int result = supplyTotal - buyTotal;
+        return createResultString(supplyTotal, buyTotal, result);
+    }
+
+    private String createResultString(int supplyTotal, int buyTotal, int result) {
         return (new StringBuilder(SUPPLY).append(COMMA).append(supplyTotal)
                 .append(System.lineSeparator()).append(BUY).append(COMMA)
                 .append(buyTotal).append(System.lineSeparator())
@@ -58,7 +56,7 @@ public class WorkWithFile {
     }
 
     private void writeData(String toFileName, String report) {
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, TRUE))) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Can't write data into file", e);
