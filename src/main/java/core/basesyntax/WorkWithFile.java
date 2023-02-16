@@ -11,6 +11,8 @@ public class WorkWithFile {
     private static final int FIELDS_SIZE = 2;
     private static final int OPERATION_TYPE = 0;
     private static final int AMOUNT = 1;
+    private static final String BUY_OPERATION = "buy";
+    private static final String RESULT_OPERATION = "result";
     private String[] keys = new String[FIELDS_SIZE];
     private Integer[] values = new Integer[FIELDS_SIZE];
 
@@ -28,7 +30,7 @@ public class WorkWithFile {
                         .append(System.lineSeparator());
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read from file" + fromFileName, e);
+            throw new RuntimeException("Can't read from file " + fromFileName, e);
         }
     }
 
@@ -36,7 +38,7 @@ public class WorkWithFile {
         try (BufferedWriter toFile = new BufferedWriter(new FileWriter(toFileName))) {
             toFile.write(datas);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write to file" + toFileName, e);
+            throw new RuntimeException("Can't write to file " + toFileName, e);
         }
     }
 
@@ -44,7 +46,8 @@ public class WorkWithFile {
         String[] lines = datas.toString().split(System.lineSeparator());
         for (String line : lines) {
             String[] entries = line.split(DELIMITER);
-            var position = (entries[OPERATION_TYPE].trim().equals("buy")) ? AMOUNT : OPERATION_TYPE;
+            var position = (entries[OPERATION_TYPE].trim().equals(BUY_OPERATION)) ? AMOUNT
+                    : OPERATION_TYPE;
             if (keys[position] == null) {
                 keys[position] = entries[OPERATION_TYPE].trim();
                 values[position] = Integer.parseInt(entries[AMOUNT].trim());
@@ -52,15 +55,15 @@ public class WorkWithFile {
                 values[position] += Integer.parseInt(entries[AMOUNT].trim());
             }
         }
-        datas.setLength(0);
-        datas.append(keys[OPERATION_TYPE]).append(DELIMITER).append(values[OPERATION_TYPE])
+        StringBuilder outDatas = new StringBuilder();
+        outDatas.append(keys[OPERATION_TYPE]).append(DELIMITER).append(values[OPERATION_TYPE])
                 .append(System.lineSeparator());
-        datas.append(keys[AMOUNT]).append(DELIMITER).append(values[AMOUNT])
+        outDatas.append(keys[AMOUNT]).append(DELIMITER).append(values[AMOUNT])
                 .append(System.lineSeparator());
-        datas.append("result").append(DELIMITER).append(values[OPERATION_TYPE] - values[AMOUNT])
-                .append(System.lineSeparator());
+        outDatas.append(RESULT_OPERATION).append(DELIMITER)
+                .append(values[OPERATION_TYPE] - values[AMOUNT]).append(System.lineSeparator());
         clear();
-        return datas.toString();
+        return outDatas.toString();
     }
 
     private void clear() {
