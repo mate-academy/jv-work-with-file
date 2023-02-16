@@ -11,6 +11,7 @@ public class WorkWithFile {
     public static final int OPERATION_INDEX = 0;
     public static final int AMOUNT_INDEX = 1;
     public static final String REGEX_SPLIT = "[,\\s]";
+    public static final String CONTENT_REGEX_SPLIT = "\\s+";
     public static final String REPORT_PATTERN = "supply,%d%n"
             + "buy,%d%n"
             + "result,%d%n";
@@ -38,8 +39,7 @@ public class WorkWithFile {
     private String createReport(String content) {
         int supplyAmount = 0;
         int buyAmount = 0;
-        String report;
-        String[] contentLines = content.split("\\s+");
+        String[] contentLines = content.split(CONTENT_REGEX_SPLIT);
         for (String line : contentLines) {
             String[] values = line.split(REGEX_SPLIT);
             switch (values[OPERATION_INDEX]) {
@@ -52,8 +52,7 @@ public class WorkWithFile {
             }
         }
         int result = supplyAmount - buyAmount;
-        report = String.format(REPORT_PATTERN, supplyAmount, buyAmount, result);
-        return report;
+        return String.format(REPORT_PATTERN, supplyAmount, buyAmount, result);
     }
 
     private void write(String content, String toFileName) {
