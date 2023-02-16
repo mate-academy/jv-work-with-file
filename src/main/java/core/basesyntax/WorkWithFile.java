@@ -17,21 +17,23 @@ public class WorkWithFile {
     private Integer[] values = new Integer[FIELDS_SIZE];
 
     public void getStatistic(String fromFileName, String toFileName) {
-        StringBuilder inDatas = new StringBuilder();
-        inputFromFile(fromFileName, inDatas);
+
+        StringBuilder inDatas = inputFromFile(fromFileName);
         String outDatas = calculateStatistic(inDatas);
         outputToFile(toFileName, outDatas);
     }
 
-    private void inputFromFile(String fromFileName, StringBuilder datas) {
+    private StringBuilder inputFromFile(String fromFileName) {
+        StringBuilder inDatas = new StringBuilder();
         try (BufferedReader fromFile = new BufferedReader(new FileReader(fromFileName))) {
             while (fromFile.ready()) {
-                datas.append(fromFile.readLine())
+                inDatas.append(fromFile.readLine())
                         .append(System.lineSeparator());
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read from file " + fromFileName, e);
         }
+        return inDatas;
     }
 
     private void outputToFile(String toFileName, String datas) {
@@ -55,15 +57,16 @@ public class WorkWithFile {
                 values[position] += Integer.parseInt(entries[AMOUNT].trim());
             }
         }
-        StringBuilder outDatas = new StringBuilder();
-        outDatas.append(keys[OPERATION_TYPE]).append(DELIMITER).append(values[OPERATION_TYPE])
-                .append(System.lineSeparator());
-        outDatas.append(keys[AMOUNT]).append(DELIMITER).append(values[AMOUNT])
-                .append(System.lineSeparator());
-        outDatas.append(RESULT_OPERATION).append(DELIMITER)
-                .append(values[OPERATION_TYPE] - values[AMOUNT]).append(System.lineSeparator());
+        String outDatas = new String();
+        outDatas = outDatas.concat(keys[OPERATION_TYPE]).concat(DELIMITER)
+                .concat(String.valueOf(values[OPERATION_TYPE])).concat(System.lineSeparator());
+        outDatas = outDatas.concat(keys[AMOUNT]).concat(DELIMITER)
+                .concat(String.valueOf(values[AMOUNT])).concat(System.lineSeparator());
+        outDatas = outDatas.concat(RESULT_OPERATION).concat(DELIMITER)
+                .concat(String.valueOf(values[OPERATION_TYPE] - values[AMOUNT]))
+                .concat(System.lineSeparator());
         clear();
-        return outDatas.toString();
+        return outDatas;
     }
 
     private void clear() {
