@@ -3,7 +3,7 @@ package core.basesyntax;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.StandardOpenOption;
+import java.nio.file.Path;
 import java.util.List;
 
 public class WorkWithFile {
@@ -19,44 +19,35 @@ public class WorkWithFile {
     }
 
     private List<String> readFile(String fromFileName) {
-        File inputFile = new File(fromFileName);
-        List<String> listOfInputFile;
         try {
-            listOfInputFile = Files.readAllLines(inputFile.toPath());
+            return Files.readAllLines(Path.of(fromFileName));
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file");
+            throw new RuntimeException("Can't read file" + fromFileName, e);
         }
-        return listOfInputFile;
     }
 
     private String calculateReport(List<String> listOfInputFile) {
         int sumSupply = 0;
         int sumBuy = 0;
         StringBuilder calculationResult = new StringBuilder();
-        calculationResult.delete(0,calculationResult.length());
-        for (int i = 0; i < listOfInputFile.size();i++) {
-            if (listOfInputFile.get(i).contains(SUPPLY)) {
-                sumSupply = sumSupply + Integer.parseInt(listOfInputFile.get(i).substring(7));
+        for (String element :listOfInputFile) {
+            if (element.contains(SUPPLY)) {
+                sumSupply = sumSupply + Integer.parseInt(element.substring(SUPPLY.length()));
             } else {
-                sumBuy = sumBuy + Integer.parseInt(listOfInputFile.get(i).substring(4));
+                sumBuy = sumBuy + Integer.parseInt(element.substring(BUY.length()));
             }
         }
         int result = sumSupply - sumBuy;
         calculationResult.append(SUPPLY).append(sumSupply).append(NEW_LINE).append(BUY)
                 .append(sumBuy).append(NEW_LINE).append(RESULT).append(result);
-        String calculationResultToString = calculationResult.toString();
-        return calculationResultToString;
+        return calculationResult.toString();
     }
 
-    private void writeToFile(String calculationResultToString, String toFileName) {
-        File outputFile = new File(toFileName);
-        outputFile.delete();
+    private void writeToFile(String text, String toFileName) {
         try {
-            outputFile.createNewFile();
-            Files.write(outputFile.toPath(),calculationResultToString.getBytes(),
-                    StandardOpenOption.APPEND);
+            Files.write(new File(toFileName).toPath(),text.getBytes());
         } catch (IOException e) {
-            throw new RuntimeException("Cant create and write file");
+            throw new RuntimeException("Cant write file" + toFileName,e);
         }
     }
 }
