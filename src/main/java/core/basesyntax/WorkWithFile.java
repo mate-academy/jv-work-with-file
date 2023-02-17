@@ -20,6 +20,7 @@ public class WorkWithFile {
     }
 
     private String readFromFile(String fromFileName) {
+        StringBuilder report = new StringBuilder();
         int supplySum = 0;
         int buySum = 0;
 
@@ -46,14 +47,12 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can`t read file",e);
         }
-        StringBuilder report = new StringBuilder();
-        report.append(SUPPLY_KEY_WORD).append(SEPARATOR)
+        return report.append(SUPPLY_KEY_WORD).append(SEPARATOR)
                 .append(supplySum).append(System.lineSeparator())
                 .append(BUY_KEY_WORD).append(SEPARATOR)
                 .append(buySum).append(System.lineSeparator())
                 .append(RESULT_KEY_WORD).append(SEPARATOR)
-                .append(supplySum - buySum);
-        return report.toString();
+                .append(supplySum - buySum).toString();
     }
 
     private void writeToFile(String report, String toFileName) {
