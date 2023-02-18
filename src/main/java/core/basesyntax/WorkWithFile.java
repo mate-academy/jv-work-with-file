@@ -7,7 +7,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
-
 public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
@@ -31,7 +30,8 @@ public class WorkWithFile {
                     supplyCount += Integer.parseInt(lineArray[INDEX_AMOUNT]);
                 } else if (lineArray[INDEX_NAME].equals(BUY)) {
                     buyCount += Integer.parseInt(lineArray[INDEX_AMOUNT]);
-                } if (lineArray.length != 2) {
+                } 
+                if (lineArray.length != 2) {
                     throw new RuntimeException("Invalid data in line: " + line);
                 }
                 line = bufferedReader.readLine();
