@@ -1,10 +1,18 @@
 package core.basesyntax;
 
-import java.io.*;
-
 import static java.lang.Integer.parseInt;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+
 public class WorkWithFile {
+    private static final int OPERATION_INDEX = 0;
+    private static final int VALUE_INDEX = 1;
+
     public void getStatistic(String fromFileName, String toFileName) {
         String dataFromFile = readFromFile(fromFileName);
         String report = getReport(dataFromFile);
@@ -31,8 +39,6 @@ public class WorkWithFile {
 
     private String getReport(String data) {
         String supply = "supply";
-        int OPERATION_INDEX = 0;
-        int VALUE_INDEX = 1;
         int supplyValue = 0;
         int buyValue = 0;
         int result = 0;
@@ -64,4 +70,3 @@ public class WorkWithFile {
         }
     }
 }
-
