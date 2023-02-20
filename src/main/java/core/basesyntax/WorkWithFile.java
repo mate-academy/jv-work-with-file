@@ -45,7 +45,7 @@ public class WorkWithFile {
                 line = reader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can`t read file",e);
+            throw new RuntimeException("Can`t read " + fromFileName + " file.",e);
         }
         return report.append(SUPPLY_KEY_WORD).append(SEPARATOR)
                 .append(supplySum).append(System.lineSeparator())
@@ -60,7 +60,7 @@ public class WorkWithFile {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFile))) {
             writer.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Can`t write file", e);
+            throw new RuntimeException("Can`t write" + toFileName + " file.", e);
         }
     }
 }
