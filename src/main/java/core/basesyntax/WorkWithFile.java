@@ -62,4 +62,3 @@ public class WorkWithFile {
                 .append(OPERATION_TYPE_RESULT + SPECIFIED_CHARACTER + resultOfAmmount);
     }
 }
-
