@@ -15,15 +15,13 @@ public class WorkWithFile {
     private static final int INDEX_OF_AMMOUNT = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        StringBuilder builder = new StringBuilder();
-        readFile(fromFileName, builder);
-        String[] lines = builder.toString().split(" ");
-        StringBuilder result = new StringBuilder();
-        processData(lines, result);
-        writeToFile(toFileName, result.toString());
+        String dataFromFile = readFile(fromFileName);
+        String report = processData(dataFromFile);
+        writeToFile(toFileName, report);
     }
 
-    private void readFile(String fromFileName, StringBuilder builder) {
+    private String readFile(String fromFileName) {
+        StringBuilder builder = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String value = reader.readLine();
             while (value != null) {
@@ -33,6 +31,7 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from the file " + fromFileName, e);
         }
+        return builder.toString();
     }
 
     private void writeToFile(String toFileName, String result) {
@@ -43,7 +42,9 @@ public class WorkWithFile {
         }
     }
 
-    private void processData(String[] lines, StringBuilder result) {
+    private String processData(String dataFromFile) {
+        String[] lines = dataFromFile.split(" ");
+        StringBuilder result = new StringBuilder();
         int ammountOfSupply = 0;
         int ammountOfBuy = 0;
         for (int i = 0; i < lines.length; i++) {
@@ -60,5 +61,6 @@ public class WorkWithFile {
                 .append(OPERATION_TYPE_BUY + SPECIFIED_CHARACTER
                         + ammountOfBuy + System.lineSeparator())
                 .append(OPERATION_TYPE_RESULT + SPECIFIED_CHARACTER + resultOfAmmount);
+        return result.toString();
     }
 }
