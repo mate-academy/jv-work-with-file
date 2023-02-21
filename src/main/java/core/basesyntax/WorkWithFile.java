@@ -3,9 +3,9 @@ package core.basesyntax;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
-import java.io.IOException;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
@@ -21,7 +21,7 @@ public class WorkWithFile {
                 builderWordsAll.append(value).append(System.lineSeparator());
                 value = reader.readLine();
             }
-        }catch(IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException("Can't read file", e);
         }
         String[] datesFile = builderWordsAll.toString().split(notWord);
@@ -30,7 +30,7 @@ public class WorkWithFile {
                 supply = supply + Integer.parseInt(datesFile[i + 1]);
             }
             if (datesFile[i].equals("buy")) {
-                buy = buy + Integer.parseInt(datesFile[i+1]);
+                buy = buy + Integer.parseInt(datesFile[i + 1]);
             }
         }
         result = supply - buy;
@@ -40,7 +40,7 @@ public class WorkWithFile {
         BufferedWriter bufferedWriter = null;
         try {
             bufferedWriter = new BufferedWriter(new FileWriter(file, false));
-            for (int i = 0; i < forReport.length; i=i+2) {
+            for (int i = 0; i < forReport.length; i = i + 2) {
                 bufferedWriter.write(forReport[i]);
                 bufferedWriter.write(",");
                 bufferedWriter.write(forReport[i + 1]);
