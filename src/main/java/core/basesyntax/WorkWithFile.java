@@ -9,14 +9,13 @@ import java.util.List;
 import java.util.Objects;
 
 public class WorkWithFile {
-    private static final int ARRAY_LENGTH = 2;
 
     public void getStatistic(String fromFileName, String toFileName) {
         out(readFrom(fromFileName), toFileName);
     }
 
     private int[] readFrom(String fromFileName) {
-        int [] result = new int[ARRAY_LENGTH];
+        int [] result = new int[2];
         String [] temp;
         File file = new File(fromFileName);
         try {
