@@ -9,33 +9,39 @@ import java.util.List;
 import java.util.Objects;
 
 public class WorkWithFile {
+    private static final int ARRAY_LENGTH = 2;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        out(readFrom(fromFileName), toFileName);
+        writeToFile(createReport(readFromFile(fromFileName)), toFileName);
     }
 
-    private int[] readFrom(String fromFileName) {
-        int [] result = new int[2];
-        String [] temp;
+    private List<String> readFromFile(String fromFileName) {
         File file = new File(fromFileName);
+        List<String> strings = null;
         try {
-            List<String> strings = Files.readAllLines(file.toPath());
-            for (int i = 0; i < strings.size(); i++) {
-                temp = strings.get(i).split(",");
-                result[0] = (Objects.equals(temp[0], "supply"))
-                        ? result[0] + Integer.parseInt(temp[1]) : result[0];
-                result[1] = (Objects.equals(temp[0], "buy"))
-                        ? result[1] + Integer.parseInt(temp[1]) : result[1];
-            }
+            strings = Files.readAllLines(file.toPath());
+
         } catch (IOException e) {
             throw new RuntimeException("Can`t read file", e);
         }
-        return result;
+        return strings;
     }
 
-    private void out(int [] values, String toFileName) {
-        String message = "supply," + values[0] + System.lineSeparator() + "buy," + values[1]
-                + System.lineSeparator() + "result," + (values[0] - values [1]);
+    private String createReport(List<String> stringList) {
+        int [] result = new int[ARRAY_LENGTH];
+        String [] temp;
+        for (int i = 0; i < stringList.size(); i++) {
+            temp = stringList.get(i).split(",");
+            result[0] = (Objects.equals(temp[0], "supply"))
+                    ? result[0] + Integer.parseInt(temp[1]) : result[0];
+            result[1] = (Objects.equals(temp[0], "buy"))
+                    ? result[1] + Integer.parseInt(temp[1]) : result[1];
+        }
+        return "supply," + result[0] + System.lineSeparator() + "buy," + result[1]
+                + System.lineSeparator() + "result," + (result[0] - result[1]);
+    }
+
+    private void writeToFile(String message, String toFileName) {
         File file = new File(toFileName);
         try {
             BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));
