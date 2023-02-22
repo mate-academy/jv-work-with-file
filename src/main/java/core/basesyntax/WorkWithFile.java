@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class WorkWithFile {
-    private static final int ARRAY_LENGTH = 2;
+    public static final int ARRAY_LENGTH = 2;
 
     public void getStatistic(String fromFileName, String toFileName) {
         writeToFile(createReport(readFromFile(fromFileName)), toFileName);
