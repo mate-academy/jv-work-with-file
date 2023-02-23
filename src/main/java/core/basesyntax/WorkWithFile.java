@@ -10,6 +10,8 @@ import java.util.Objects;
 
 public class WorkWithFile {
     public static final int ARRAY_LENGTH = 2;
+    public static final int SORTING_INDEX = 0;
+    public static final int VALUE_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         writeToFile(createReport(readFromFile(fromFileName)), toFileName);
@@ -32,13 +34,16 @@ public class WorkWithFile {
         String [] temp;
         for (int i = 0; i < stringList.size(); i++) {
             temp = stringList.get(i).split(",");
-            result[0] = (Objects.equals(temp[0], "supply"))
-                    ? result[0] + Integer.parseInt(temp[1]) : result[0];
-            result[1] = (Objects.equals(temp[0], "buy"))
-                    ? result[1] + Integer.parseInt(temp[1]) : result[1];
+            result[SORTING_INDEX] = (Objects.equals(temp[SORTING_INDEX], "supply"))
+                    ? result[SORTING_INDEX]
+                    + Integer.parseInt(temp[VALUE_INDEX]) : result[SORTING_INDEX];
+            result[VALUE_INDEX] = (Objects.equals(temp[SORTING_INDEX], "buy"))
+                    ? result[VALUE_INDEX]
+                    + Integer.parseInt(temp[VALUE_INDEX]) : result[VALUE_INDEX];
         }
-        return "supply," + result[0] + System.lineSeparator() + "buy," + result[1]
-                + System.lineSeparator() + "result," + (result[0] - result[1]);
+        return "supply," + result[SORTING_INDEX] + System.lineSeparator() + "buy,"
+                + result[VALUE_INDEX] + System.lineSeparator()
+                + "result," + (result[SORTING_INDEX] - result[VALUE_INDEX]);
     }
 
     private void writeToFile(String message, String toFileName) {
