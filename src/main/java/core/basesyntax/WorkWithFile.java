@@ -5,21 +5,21 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 
 public class WorkWithFile {
     public static final String SUPPLY = "supply";
     public static final String BUY = "buy";
     public static final String RESULT = "result";
 
-    private String readFile(String pathToFile) throws IOException {
-        return Files.readString(Path.of(pathToFile));
+    private List<String> readFile(String pathToFile) throws IOException {
+        return Files.readAllLines(Path.of(pathToFile));
     }
 
-    private String[] convertToReport(String content) {
+    private String[] convertToReport(List<String> lines) {
         String[] reportArray = new String[3];
         int totalBuy = 0;
         int totalSupply = 0;
-        String[] lines = content.split("\r\n");
         for (String line : lines) {
             String[] str = line.split(",");
             if (str[0].equals(SUPPLY)) {
@@ -37,8 +37,8 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         try {
-            String fileString = readFile(fromFileName);
-            String[] reportArray = convertToReport(fileString);
+            List<String> lines = readFile(fromFileName);
+            String[] reportArray = convertToReport(lines);
             writeReport(reportArray, toFileName);
         } catch (Exception e) {
             e.printStackTrace();
