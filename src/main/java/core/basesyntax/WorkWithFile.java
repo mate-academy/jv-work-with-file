@@ -9,56 +9,57 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final String DELIMITER = "\\W+";
     private static final String DELIMITER_FOR_BUILDER = ",";
-    private static final String BUY = "buy";
-    private static final String SUPPLY = "supply";
-    private static final String RESULT = "result";
+    private static final String INDEX_FIRST = "supply";
+    private static final String INDEX_SECOND = "buy";
+    private static final String INDEX_THIRD = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String read = readFromFile(fromFileName);
-        String convert = convertToString(read);
-        writeToFile(convert, toFileName);
+        String readDataFromFile = readFromFile(fromFileName);
+        String report = prepareReport(readDataFromFile);
+        writeToFile(report, toFileName);
     }
 
     private String readFromFile(String fromFileName) {
-        StringBuilder builder = new StringBuilder();
+        StringBuilder infoForReadingFromFile = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String value = reader.readLine();
             while (value != null) {
-                builder.append(value).append(System.lineSeparator());
+                infoForReadingFromFile.append(value).append(System.lineSeparator());
                 value = reader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("File can`t be read");
+            throw new RuntimeException("File can`t be read from file " + fromFileName, e);
         }
-        return builder.toString();
+        return infoForReadingFromFile.toString();
     }
 
-    private String convertToString(String builder) {
-        StringBuilder actualResult = new StringBuilder();
-        String[] split = builder.split(DELIMITER);
+    private String prepareReport(String infoFromReadingFromFile) {
+        StringBuilder convertedDataFromFile = new StringBuilder();
+        String[] arrayOfInputData = infoFromReadingFromFile.split(DELIMITER);
         int buy = 0;
         int supply = 0;
-        for (int i = 0; i < split.length; i++) {
-            if (split[i].equals(BUY)) {
-                buy = buy + Integer.parseInt(split[i + 1]);
+        for (int i = 0; i < arrayOfInputData.length; i++) {
+            if (arrayOfInputData[i].equals(INDEX_FIRST)) {
+                supply = supply + Integer.parseInt(arrayOfInputData[i + 1]);
             }
-            if (split[i].equals(SUPPLY)) {
-                supply = supply + Integer.parseInt(split[i + 1]);
+            if (arrayOfInputData[i].equals(INDEX_SECOND)) {
+                buy = buy + Integer.parseInt(arrayOfInputData[i + 1]);
             }
         }
-        actualResult.append(SUPPLY).append(DELIMITER_FOR_BUILDER).append(supply)
-                    .append(System.lineSeparator());
-        actualResult.append(BUY).append(DELIMITER_FOR_BUILDER).append(buy)
-                    .append(System.lineSeparator());
-        actualResult.append(RESULT).append(DELIMITER_FOR_BUILDER).append(supply - buy);
-        return actualResult.toString();
+        convertedDataFromFile.append(INDEX_FIRST).append(DELIMITER_FOR_BUILDER).append(supply)
+                .append(System.lineSeparator());
+        convertedDataFromFile.append(INDEX_SECOND).append(DELIMITER_FOR_BUILDER).append(buy)
+                .append(System.lineSeparator());
+        convertedDataFromFile.append(INDEX_THIRD).append(DELIMITER_FOR_BUILDER)
+                .append(supply - buy);
+        return convertedDataFromFile.toString();
     }
 
     private void writeToFile(String actualResult, String toFileName) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(actualResult);
         } catch (IOException e) {
-            throw new RuntimeException("Can`t write data to file", e);
+            throw new RuntimeException("Can`t write data to file" + toFileName, e);
         }
     }
 }
