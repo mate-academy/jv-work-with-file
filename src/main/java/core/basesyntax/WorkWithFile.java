@@ -1,9 +1,20 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class WorkWithFile {
-    public static String getStatistic(String fromFileName, String toFileName) {
+    public static void getStatistic(String fromFileName, String toFileName) {
+        String dataFromFile = readFromFile(fromFileName);
+        String report = getReport(dataFromFile);
+        writeToFile(toFileName, report);
+    }
+
+    private static String getReport(String fromFileName) {
         String[] words = fromFileName.split(",");
         StringBuilder stringBuilder = new StringBuilder();
         int resultSupply = 0;
@@ -18,15 +29,15 @@ public class WorkWithFile {
         }
         int res = resultSupply - resultBuy;
         StringBuilder builder = new StringBuilder();
-        toFileName = builder.append("supply").append(",").append(String.valueOf(resultSupply))
+        String report = builder.append("supply").append(",").append(String.valueOf(resultSupply))
                 .append(System.lineSeparator())
                 .append("buy").append(",").append(String.valueOf(resultBuy))
                 .append(System.lineSeparator())
                 .append("result").append(",").append(String.valueOf(res)).toString();
-        return toFileName;
+        return report;
     }
 
-    public static String readFromFile(String fileName) {
+    private static String readFromFile(String fileName) {
         File file = new File(fileName);
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
@@ -42,7 +53,7 @@ public class WorkWithFile {
         }
     }
 
-    public static void writeToFile(String fileName, String result) {
+    private static void writeToFile(String fileName, String result) {
         File file = new File(fileName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
             bufferedWriter.write(result);
