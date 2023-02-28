@@ -8,6 +8,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String BUY_AMOUNT = "buy";
+    private static final String SUPPLY_AMOUNT = "supply";
+    private static final String COMMA_SEPARATOR = ",";
+    private static final String RESULT = "result";
+
     public static void getStatistic(String fromFileName, String toFileName) {
         String dataFromFile = readFromFile(fromFileName);
         String report = getReport(dataFromFile);
@@ -15,25 +20,25 @@ public class WorkWithFile {
     }
 
     private static String getReport(String fromFileName) {
-        String[] words = fromFileName.split(",");
+        String[] words = fromFileName.split(COMMA_SEPARATOR);
         StringBuilder stringBuilder = new StringBuilder();
         int resultSupply = 0;
         int resultBuy = 0;
         for (int i = 0; i < words.length; i++) {
-            if (words[i].equals("supply")) {
+            if (words[i].equals(SUPPLY_AMOUNT)) {
                 resultSupply += Integer.parseInt(words[i + 1]);
             }
-            if (words[i].equals("buy")) {
+            if (words[i].equals(BUY_AMOUNT)) {
                 resultBuy += Integer.parseInt(words[i + 1]);
             }
         }
         int res = resultSupply - resultBuy;
         StringBuilder builder = new StringBuilder();
-        String report = builder.append("supply").append(",").append(String.valueOf(resultSupply))
+        String report = builder.append(SUPPLY_AMOUNT).append(COMMA_SEPARATOR)
+                .append(String.valueOf(resultSupply)).append(System.lineSeparator())
+                .append(BUY_AMOUNT).append(COMMA_SEPARATOR).append(String.valueOf(resultBuy))
                 .append(System.lineSeparator())
-                .append("buy").append(",").append(String.valueOf(resultBuy))
-                .append(System.lineSeparator())
-                .append("result").append(",").append(String.valueOf(res)).toString();
+                .append(RESULT).append(COMMA_SEPARATOR).append(String.valueOf(res)).toString();
         return report;
     }
 
@@ -49,7 +54,7 @@ public class WorkWithFile {
             }
             return stringBuilder.toString();
         } catch (IOException e) {
-            throw new RuntimeException("Can`t read file", e);
+            throw new RuntimeException("Can`t read file: " + fileName, e);
         }
     }
 
@@ -58,7 +63,7 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
             bufferedWriter.write(result);
         } catch (IOException e) {
-            throw new RuntimeException("Can`t write file", e);
+            throw new RuntimeException("Can`t write file: " + fileName, e);
         }
     }
 }
