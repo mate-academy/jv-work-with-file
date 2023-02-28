@@ -8,11 +8,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final String COMA = ",";
-    private static final String NOTWORD = "\\W+";
-    private static int supply;
-    private static int buy;
+    private static final String COMMA = ",";
+    private static final String WORD_REGEX_DELIMITER = "\\W+";
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static int supply = 0;
+    private static int buy = 0;
     private static int result;
+
     private StringBuilder builderWordsAll = new StringBuilder();
 
     public void getStatistic(String fromFileName, String toFileName) {
@@ -20,7 +23,7 @@ public class WorkWithFile {
         writeToFile(toFileName);
     }
 
-    public void readFromFile(String fromFileName) {
+    private void readFromFile(String fromFileName) {
         try {
             BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
             String value = reader.readLine();
@@ -33,27 +36,27 @@ public class WorkWithFile {
         }
     }
 
-    public String[] createReport() {
+    private String[] createReport() {
         supply = 0;
         buy = 0;
         result = 0;
-        String[] datesFile = builderWordsAll.toString().split(NOTWORD);
+        String[] datesFile = builderWordsAll.toString().split(WORD_REGEX_DELIMITER);
         for (int i = 0; i < datesFile.length; i++) {
-            if (datesFile[i].equals("supply")) {
+            if (datesFile[i].equals(SUPPLY)) {
                 supply = supply + Integer.parseInt(datesFile[i + 1]);
             }
-            if (datesFile[i].equals("buy")) {
+            if (datesFile[i].equals(BUY)) {
                 buy = buy + Integer.parseInt(datesFile[i + 1]);
             }
         }
         result = supply - buy;
-        String[] forReport = new String[]{"supply", String.valueOf(supply),
-                "buy", String.valueOf(buy), "result", String.valueOf(result)};
+        String[] forReport = new String[]{SUPPLY, String.valueOf(supply),
+                BUY, String.valueOf(buy), "result", String.valueOf(result)};
         builderWordsAll = new StringBuilder();
         return forReport;
     }
 
-    public void writeToFile(String toFileName) {
+    private void writeToFile(String toFileName) {
         String[] forReport = createReport();
         File file = new File(toFileName);
         BufferedWriter bufferedWriter = null;
@@ -61,7 +64,7 @@ public class WorkWithFile {
             bufferedWriter = new BufferedWriter(new FileWriter(file, false));
             for (int i = 0; i < forReport.length; i = i + 2) {
                 bufferedWriter.write(forReport[i]);
-                bufferedWriter.write(COMA);
+                bufferedWriter.write(COMMA);
                 bufferedWriter.write(forReport[i + 1]);
                 bufferedWriter.write(System.lineSeparator());
                 bufferedWriter.flush();
