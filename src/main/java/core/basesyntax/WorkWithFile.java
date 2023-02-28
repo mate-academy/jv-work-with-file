@@ -6,7 +6,19 @@ public class WorkWithFile {
     private static final String SPECIAL_DELIMITER = "!Delimiter@";
     public void getStatistic(String fromFileName, String toFileName) {
         File readFromFile = new File(fromFileName);
+        File writeToFile = new File(toFileName);
         String[] fileArray = simplificationArray(convertFileToStringArray(readFromFile));
+        writeStringToFile(fileArray, writeToFile);
+    }
+    private void writeStringToFile (String[] stringFrom, File fileTo){
+        try(BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileTo, true))) {
+            for (String string:stringFrom) {
+                bufferedWriter.write(string);
+                bufferedWriter.write(System.lineSeparator());
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write sting to file ", e);
+        }
     }
     private String[] convertFileToStringArray(File file) {
         try(BufferedReader reader = new BufferedReader(new FileReader(file))) {
@@ -17,7 +29,7 @@ public class WorkWithFile {
             String[] resultArray = string.toString().split(SPECIAL_DELIMITER);
             return resultArray;
         } catch (IOException e) {
-            throw new RuntimeException("Something went wrong.", e);
+            throw new RuntimeException("Can't rewrite file content to string array ", e);
         }
     }
     private String[] simplificationArray(String[] array) {
