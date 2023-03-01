@@ -1,9 +1,15 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class WorkWithFile {
     private static final String SPECIAL_DELIMITER = "!Delimiter@";
+
     public void getStatistic(String fromFileName, String toFileName) {
         File readFromFile = new File(fromFileName);
         File writeToFile = new File(toFileName);
@@ -15,16 +21,17 @@ public class WorkWithFile {
         }
         int firstNumber = Integer.parseInt(fileArray[0].replaceAll("\\D", ""));
         int secondNumber = Integer.parseInt(fileArray[1].replaceAll("\\D", ""));
-        String attachString = String.format("result,%d", firstNumber - secondNumber );
+        String attachString = String.format("result,%d", firstNumber - secondNumber);
         writeStringToFile(fileArray, writeToFile, attachString);
     }
-    private void writeStringToFile (String[] stringFrom, File fileTo, String result){
-        try(FileWriter fileWriter = new FileWriter(fileTo)) {
-        }
-        catch (IOException e) {
+
+    private void writeStringToFile(String[] stringFrom, File fileTo, String result) {
+        try (FileWriter fileWriter = new FileWriter(fileTo)) {
+            fileWriter.write("");
+        } catch (IOException e) {
             throw new RuntimeException("Can't clear a file content", e);
         }
-        try(BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileTo, true))) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileTo, true))) {
             for (String string:stringFrom) {
                 bufferedWriter.write(string);
                 bufferedWriter.write(System.lineSeparator());
@@ -34,8 +41,9 @@ public class WorkWithFile {
             throw new RuntimeException("Can't write sting to file ", e);
         }
     }
+
     private String[] convertFileToStringArray(File file) {
-        try(BufferedReader reader = new BufferedReader(new FileReader(file))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             StringBuilder string = new StringBuilder();
             String nextLine = reader.readLine();
             while (nextLine != null) {
@@ -48,6 +56,7 @@ public class WorkWithFile {
             throw new RuntimeException("Can't rewrite file content to string array ", e);
         }
     }
+
     private String[] simplificateArray(String[] array) {
         StringBuilder checkerString = new StringBuilder();
         for (String str:array) {
