@@ -16,14 +16,14 @@ public class WorkWithFile {
     private static int buy = 0;
     private static int result;
 
-    private StringBuilder builderWordsAll = new StringBuilder();
-
     public void getStatistic(String fromFileName, String toFileName) {
-        readFromFile(fromFileName);
-        writeToFile(toFileName);
+        String dateFromFile = readFromFile(fromFileName);
+        String[] reportString = createReport(dateFromFile);
+        writeToFile(toFileName, reportString);
     }
 
-    private void readFromFile(String fromFileName) {
+    private String readFromFile(String fromFileName) {
+        StringBuilder builderWordsAll = new StringBuilder();
         try {
             BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
             String value = reader.readLine();
@@ -34,13 +34,14 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read file", e);
         }
+        return builderWordsAll.toString();
     }
 
-    private String[] createReport() {
+    private String[] createReport(String dateFromFile) {
         supply = 0;
         buy = 0;
         result = 0;
-        String[] datesFile = builderWordsAll.toString().split(WORD_REGEX_DELIMITER);
+        String[] datesFile = dateFromFile.split(WORD_REGEX_DELIMITER);
         for (int i = 0; i < datesFile.length; i++) {
             if (datesFile[i].equals(SUPPLY)) {
                 supply = supply + Integer.parseInt(datesFile[i + 1]);
@@ -52,20 +53,19 @@ public class WorkWithFile {
         result = supply - buy;
         String[] forReport = new String[]{SUPPLY, String.valueOf(supply),
                 BUY, String.valueOf(buy), "result", String.valueOf(result)};
-        builderWordsAll = new StringBuilder();
+        //builderWordsAll = new StringBuilder();
         return forReport;
     }
 
-    private void writeToFile(String toFileName) {
-        String[] forReport = createReport();
+    private void writeToFile(String toFileName, String[] reportToString) {
         File file = new File(toFileName);
         BufferedWriter bufferedWriter = null;
         try {
             bufferedWriter = new BufferedWriter(new FileWriter(file, false));
-            for (int i = 0; i < forReport.length; i = i + 2) {
-                bufferedWriter.write(forReport[i]);
+            for (int i = 0; i < reportToString.length; i = i + 2) {
+                bufferedWriter.write(reportToString[i]);
                 bufferedWriter.write(COMMA);
-                bufferedWriter.write(forReport[i + 1]);
+                bufferedWriter.write(reportToString[i + 1]);
                 bufferedWriter.write(System.lineSeparator());
                 bufferedWriter.flush();
             }
