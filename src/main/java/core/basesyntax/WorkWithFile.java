@@ -7,15 +7,29 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         File readFromFile = new File(fromFileName);
         File writeToFile = new File(toFileName);
-        String[] fileArray = simplificationArray(convertFileToStringArray(readFromFile));
-        writeStringToFile(fileArray, writeToFile);
+        String[] fileArray = simplificateArray(convertFileToStringArray(readFromFile));
+        if (!fileArray[0].contains("supply")) {
+            String replaceString = fileArray[1];
+            fileArray[1] = fileArray[0];
+            fileArray[0] = replaceString;
+        }
+        int firstNumber = Integer.parseInt(fileArray[0].replaceAll("\\D", ""));
+        int secondNumber = Integer.parseInt(fileArray[1].replaceAll("\\D", ""));
+        String attachString = String.format("result,%d", firstNumber - secondNumber );
+        writeStringToFile(fileArray, writeToFile, attachString);
     }
-    private void writeStringToFile (String[] stringFrom, File fileTo){
+    private void writeStringToFile (String[] stringFrom, File fileTo, String result){
+        try(FileWriter fileWriter = new FileWriter(fileTo)) {
+        }
+        catch (IOException e) {
+            throw new RuntimeException("Can't clear a file content", e);
+        }
         try(BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileTo, true))) {
             for (String string:stringFrom) {
                 bufferedWriter.write(string);
                 bufferedWriter.write(System.lineSeparator());
             }
+            bufferedWriter.write(result);
         } catch (IOException e) {
             throw new RuntimeException("Can't write sting to file ", e);
         }
@@ -23,8 +37,10 @@ public class WorkWithFile {
     private String[] convertFileToStringArray(File file) {
         try(BufferedReader reader = new BufferedReader(new FileReader(file))) {
             StringBuilder string = new StringBuilder();
-            while (reader.readLine() != null) {
-                string.append(reader.readLine()).append(SPECIAL_DELIMITER);
+            String nextLine = reader.readLine();
+            while (nextLine != null) {
+                string.append(nextLine).append(SPECIAL_DELIMITER);
+                nextLine = reader.readLine();
             }
             String[] resultArray = string.toString().split(SPECIAL_DELIMITER);
             return resultArray;
@@ -32,12 +48,13 @@ public class WorkWithFile {
             throw new RuntimeException("Can't rewrite file content to string array ", e);
         }
     }
-    private String[] simplificationArray(String[] array) {
+    private String[] simplificateArray(String[] array) {
         StringBuilder checkerString = new StringBuilder();
         for (String str:array) {
-            if (!checkerString.toString().contains(str)) {
-                int commaIndex = str.charAt(',');
-                checkerString.append(str.substring(0, commaIndex)).append(SPECIAL_DELIMITER);
+            int commaIndex = str.indexOf(',');
+            String stringOption = str.substring(0, commaIndex);
+            if (!(checkerString.toString().contains(stringOption))) {
+                checkerString.append(stringOption).append(SPECIAL_DELIMITER);
             }
         }
         String[] reportArray = checkerString.toString().split(SPECIAL_DELIMITER);
@@ -45,11 +62,12 @@ public class WorkWithFile {
             int sumNumber = 0;
             for (int k = 0; k < array.length; ++k) {
                 if (array[k].contains(reportArray[i])) {
-                    int commaIndex = array[k].charAt(',') + 1;
+                    int commaIndex = array[k].indexOf(',') + 1;
                     sumNumber += Integer.parseInt(array[k].substring(commaIndex));
                 }
             }
-            reportArray[i].concat(String.format(",%d", sumNumber));
+
+            reportArray[i] = reportArray[i].concat(String.format(",%d", sumNumber));
         }
         return reportArray;
     }
