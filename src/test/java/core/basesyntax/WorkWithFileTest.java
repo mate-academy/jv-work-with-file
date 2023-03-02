@@ -73,12 +73,14 @@ public class WorkWithFileTest {
     @Test
     public void getStatisticAboutBananaRepeatedMethodCall() {
         workWithFile.getStatistic("banana.csv", BANANA_RESULT_FILE);
+        workWithFile.getStatistic("banana.csv", BANANA_RESULT_FILE);
+
         String actualResult = readFromFile(BANANA_RESULT_FILE).trim();
         String expectedResult = "supply,491" + System.lineSeparator()
-            + "buy,293" + System.lineSeparator()
-            + "result,198";
+                + "buy,293" + System.lineSeparator()
+                + "result,198";
         Assert.assertEquals("Calling the getStatistic() method repeatedly returned incorrect results.",
-            expectedResult, actualResult);
+                expectedResult, actualResult);
     }
 
     private String readFromFile(String fileName) {
