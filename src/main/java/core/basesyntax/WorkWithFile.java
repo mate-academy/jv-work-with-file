@@ -2,50 +2,68 @@ package core.basesyntax;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
     private static final String COMMA = ",";
+    private static final String WHITESPACE = " ";
     private static final String SUPPLY_TEXT = "supply";
     private static final String BUY_TEXT = "buy";
-    private static final String RESULT = "result";
+    private static final String RESULT_NAME = "result";
+    private static final int STRING_NAME = 0;
+    private static final int STRING_AMOUNT = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        File fileFrom = new File(fromFileName);
-        File fileTo = new File(toFileName);
-        int fullAmount;
-        int supplySum = 0;
-        int buySum = 0;
+        String[] dataFromFile = readFile(fromFileName);
+        String reportString = generateReport(dataFromFile);
+        writeToFile(toFileName, reportString);
+    }
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(fileFrom))) {
-            String eachString = reader.readLine();
-            while (eachString != null) {
-                String[] stringParts = eachString.split(COMMA);
-                String operationType = stringParts[0];
-                int amount = Integer.parseInt(stringParts[1]);
-                if (operationType.equals(SUPPLY_TEXT)) {
-                    supplySum += amount;
-                }
-                if (operationType.equals(BUY_TEXT)) {
-                    buySum += amount;
-                }
-                eachString = reader.readLine();
+    public String[] readFile(String fromFileName) {
+        String result = null;
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
+            String value = reader.readLine();
+            StringBuilder stringBuilder = new StringBuilder();
+            while (value != null) {
+                result = String.valueOf(stringBuilder.append(value).append(WHITESPACE));
+                value = reader.readLine();
             }
-            fullAmount = supplySum - buySum;
+            String[] stringArray = result.split(WHITESPACE);
+            System.out.println(stringBuilder);
+            return stringArray;
         } catch (IOException e) {
-            throw new RuntimeException("File Not found! ", e);
+            throw new RuntimeException("Can`t read from file: " + fromFileName, e);
         }
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileTo))) {
-            StringBuilder writeString = new StringBuilder();
-            String supply = (SUPPLY_TEXT + COMMA + supplySum + System.lineSeparator());
-            String buy = (BUY_TEXT + COMMA + buySum + System.lineSeparator());
-            writeString.append(supply).append(buy).append(RESULT).append(COMMA).append(fullAmount);
-            writer.write(String.valueOf(writeString));
+    }
+
+    public String generateReport(String[] dataFromFile) {
+        int supply = 0;
+        int buy = 0;
+        int result;
+        for (String value : dataFromFile) {
+            String[] operation = value.split(COMMA);
+            String operationType = operation[STRING_NAME];
+            int operationAmount = Integer.parseInt(operation[STRING_AMOUNT]);
+            if (operationType.equals(SUPPLY_TEXT)) {
+                supply += operationAmount;
+            }
+            if (operationType.equals(BUY_TEXT)) {
+                buy += operationAmount;
+            }
+        }
+        result = supply - buy;
+        return SUPPLY_TEXT + COMMA + supply + System.lineSeparator()
+                + BUY_TEXT + COMMA + buy + System.lineSeparator()
+                + RESULT_NAME + COMMA + result;
+    }
+
+    public void writeToFile(String toFileName, String reportString) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
+            bufferedWriter.write(String.valueOf(reportString));
         } catch (IOException e) {
-            throw new RuntimeException("No such file ... ", e);
+            throw new RuntimeException("Can`t write to file: " + toFileName, e);
         }
     }
 }
