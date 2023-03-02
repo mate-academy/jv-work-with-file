@@ -22,10 +22,17 @@ public class WorkWithFile {
         int firstNumber = Integer.parseInt(fileArray[0].replaceAll("\\D", ""));
         int secondNumber = Integer.parseInt(fileArray[1].replaceAll("\\D", ""));
         String attachString = String.format("result,%d", firstNumber - secondNumber);
-        writeStringToFile(fileArray, writeToFile, attachString);
+        writeStringToFile(fileArray, writeToFile);
     }
 
-    private void writeStringToFile(String[] stringFrom, File fileTo, String result) {
+    private void writeStringToFile(String[] stringFrom, File fileTo) {
+        if (!stringFrom[0].contains("supply")) {
+            String replaceString = stringFrom[1];
+            stringFrom[1] = stringFrom[0];
+            stringFrom[0] = replaceString;
+        }
+        int firstNumber = Integer.parseInt(stringFrom[0].replaceAll("\\D", ""));
+        int secondNumber = Integer.parseInt(stringFrom[1].replaceAll("\\D", ""));
         try (FileWriter fileWriter = new FileWriter(fileTo)) {
             fileWriter.write("");
         } catch (IOException e) {
@@ -36,7 +43,8 @@ public class WorkWithFile {
                 bufferedWriter.write(string);
                 bufferedWriter.write(System.lineSeparator());
             }
-            bufferedWriter.write(result);
+            bufferedWriter.write(String.format("result,%d", firstNumber - secondNumber));
+
         } catch (IOException e) {
             throw new RuntimeException("Can't write sting to file ", e);
         }
