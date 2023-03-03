@@ -9,38 +9,61 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
-    private static final int OPERATION_INDEX = 0;
-    private static final int QUANTITY_INDEX = 1;
+    private static final int SEARCH_BY_INDEX = 0;
+    private static final int COUNT_BY_INDEX = 1;
 
-    public static void getStatistic(String fromFileName, String toFileName) {
+    public void getStatistic(String fromFileName, String toFileName) {
+        String fileData = readFromFile(fromFileName);
+        String report = createReport(fileData);
+        writeToFile(toFileName, report);
+    }
 
-        int supplyCount = 0;
-        int buyCount = 0;
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] informationRead = line.split(",");
-                String splittedLine = informationRead[OPERATION_INDEX];
-                int amount = Integer.parseInt(informationRead[QUANTITY_INDEX]);
-                if (splittedLine.equals(SUPPLY)) {
-                    supplyCount += amount;
-                } else if (splittedLine.equals(BUY)) {
-                    buyCount += amount;
-                }
+    private String readFromFile(String fileName) {
+        StringBuilder builder = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            String value = reader.readLine();
+            while (value != null) {
+                builder.append(value).append(System.lineSeparator());
+                value = reader.readLine();
             }
         } catch (Exception e) {
-            throw new RuntimeException("Can't read data from file" + fromFileName, e);
+            throw new RuntimeException("Can't read data from file" + fileName, e);
         }
+        return builder.toString();
+    }
 
+    private String createReport(String readString) {
+        int supplyCount = 0;
+        int buyCount = 0;
+        String[] lines = readString.split(System.lineSeparator());
+        for (String line : lines) {
+            String[] splittedLine = line.split(",");
+            if (splittedLine[SEARCH_BY_INDEX].equals(SUPPLY)) {
+                supplyCount += Integer.parseInt(splittedLine[COUNT_BY_INDEX]);
+            } else {
+                buyCount += Integer.parseInt(splittedLine[COUNT_BY_INDEX]);
+            }
+        }
         int result = supplyCount - buyCount;
+        return report(supplyCount, buyCount, result);
+    }
 
-        try (FileWriter writer = new FileWriter(toFileName)) {
-            writer.write(SUPPLY + "," + supplyCount + System.lineSeparator());
-            writer.write(BUY + "," + buyCount + System.lineSeparator());
-            writer.write(RESULT + "," + result + System.lineSeparator());
+    private String report(int supplyCount, int buyCount, int result) {
+        return SUPPLY
+                + "," + supplyCount
+                + System.lineSeparator()
+                + BUY + ","
+                + buyCount
+                + System.lineSeparator()
+                + RESULT + ","
+                + result;
+    }
+
+    private void writeToFile(String fileName, String text) {
+        try (FileWriter writer = new FileWriter(fileName)) {
+            writer.write(text);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data to file" + toFileName, e);
+            throw new RuntimeException("Can't write data to file" + fileName, e);
         }
     }
 }
