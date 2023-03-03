@@ -9,8 +9,8 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
-    private static final int SEARCH_BY_INDEX = 0;
-    private static final int COUNT_BY_INDEX = 1;
+    private static final int OPERATION_INDEX = 0;
+    private static final int AMMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String fileData = readFromFile(fromFileName);
@@ -38,17 +38,13 @@ public class WorkWithFile {
         String[] lines = readString.split(System.lineSeparator());
         for (String line : lines) {
             String[] splittedLine = line.split(",");
-            if (splittedLine[SEARCH_BY_INDEX].equals(SUPPLY)) {
-                supplyCount += Integer.parseInt(splittedLine[COUNT_BY_INDEX]);
+            if (splittedLine[OPERATION_INDEX].equals(SUPPLY)) {
+                supplyCount += Integer.parseInt(splittedLine[AMMOUNT_INDEX]);
             } else {
-                buyCount += Integer.parseInt(splittedLine[COUNT_BY_INDEX]);
+                buyCount += Integer.parseInt(splittedLine[AMMOUNT_INDEX]);
             }
         }
         int result = supplyCount - buyCount;
-        return report(supplyCount, buyCount, result);
-    }
-
-    private String report(int supplyCount, int buyCount, int result) {
         return SUPPLY
                 + "," + supplyCount
                 + System.lineSeparator()
