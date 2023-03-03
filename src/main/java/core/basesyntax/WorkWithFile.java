@@ -9,30 +9,40 @@ import java.io.IOException;
 
 public class WorkWithFile {
     private static final String SPECIAL_DELIMITER = "!Delimiter@";
+    private static final String NON_DIGIT = "\\D";
+    private static final String COMMA_DIGIT = ",%d";
+    private static final int FIRST_POSITION = 0;
+    private static final int SECOND_POSITION = 1;
+    private static final String EMPTY_STRING = "";
+    private static final char COMMA = ',';
 
     public void getStatistic(String fromFileName, String toFileName) {
         File readFromFile = new File(fromFileName);
         File writeToFile = new File(toFileName);
         String[] fileArray = simplificateArray(convertFileToStringArray(readFromFile));
-        if (!fileArray[0].contains("supply")) {
-            String replaceString = fileArray[1];
-            fileArray[1] = fileArray[0];
-            fileArray[0] = replaceString;
+        if (!fileArray[FIRST_POSITION].contains("supply")) {
+            String replaceString = fileArray[SECOND_POSITION];
+            fileArray[SECOND_POSITION] = fileArray[FIRST_POSITION];
+            fileArray[FIRST_POSITION] = replaceString;
         }
-        int firstNumber = Integer.parseInt(fileArray[0].replaceAll("\\D", ""));
-        int secondNumber = Integer.parseInt(fileArray[1].replaceAll("\\D", ""));
+        int firstNumber = Integer.parseInt(fileArray[FIRST_POSITION]
+                .replaceAll(NON_DIGIT, EMPTY_STRING));
+        int secondNumber = Integer.parseInt(fileArray[SECOND_POSITION]
+                .replaceAll(NON_DIGIT, EMPTY_STRING));
         String attachString = String.format("result,%d", firstNumber - secondNumber);
         writeStringToFile(fileArray, writeToFile);
     }
 
     private void writeStringToFile(String[] stringFrom, File fileTo) {
-        if (!stringFrom[0].contains("supply")) {
-            String replaceString = stringFrom[1];
-            stringFrom[1] = stringFrom[0];
-            stringFrom[0] = replaceString;
+        if (!stringFrom[FIRST_POSITION].contains("supply")) {
+            String replaceString = stringFrom[SECOND_POSITION];
+            stringFrom[SECOND_POSITION] = stringFrom[FIRST_POSITION];
+            stringFrom[FIRST_POSITION] = replaceString;
         }
-        int firstNumber = Integer.parseInt(stringFrom[0].replaceAll("\\D", ""));
-        int secondNumber = Integer.parseInt(stringFrom[1].replaceAll("\\D", ""));
+        int firstNumber = Integer.parseInt(stringFrom[FIRST_POSITION]
+                .replaceAll(NON_DIGIT, EMPTY_STRING));
+        int secondNumber = Integer.parseInt(stringFrom[SECOND_POSITION]
+                .replaceAll(NON_DIGIT, EMPTY_STRING));
         try (FileWriter fileWriter = new FileWriter(fileTo)) {
             fileWriter.write("");
         } catch (IOException e) {
@@ -68,7 +78,7 @@ public class WorkWithFile {
     private String[] simplificateArray(String[] array) {
         StringBuilder checkerString = new StringBuilder();
         for (String str:array) {
-            int commaIndex = str.indexOf(',');
+            int commaIndex = str.indexOf(COMMA);
             String stringOption = str.substring(0, commaIndex);
             if (!(checkerString.toString().contains(stringOption))) {
                 checkerString.append(stringOption).append(SPECIAL_DELIMITER);
@@ -79,12 +89,12 @@ public class WorkWithFile {
             int sumNumber = 0;
             for (int k = 0; k < array.length; ++k) {
                 if (array[k].contains(reportArray[i])) {
-                    int commaIndex = array[k].indexOf(',') + 1;
+                    int commaIndex = array[k].indexOf(COMMA) + 1;
                     sumNumber += Integer.parseInt(array[k].substring(commaIndex));
                 }
             }
 
-            reportArray[i] = reportArray[i].concat(String.format(",%d", sumNumber));
+            reportArray[i] = reportArray[i].concat(String.format(COMMA_DIGIT, sumNumber));
         }
         return reportArray;
     }
