@@ -14,10 +14,10 @@ public class WorkWithFile {
     static final String VOID_DELIMITER = "";
     static final String CARRIAGE_DELIMITER = "\r";
     static final int RESULT_SUPPLY_OPERATION = 0;
-    static final int RESULT_BUY_OPERATION = 0;
-    static final int RESULT_OPERATIONS = 0;
+    static final int RESULT_BUY_OPERATION = 1;
+    static final int RESULT_OPERATIONS = 2;
     static final int FIRST_STRING_SPLIT_LINE_ARGUMENT = 0;
-    static final int SECOND_INT_SPLIT_LINE_ARGUMENT = 0;
+    static final int SECOND_INT_SPLIT_LINE_ARGUMENT = 1;
     static final int RESULT_VALUES_LENGTH = 3;
 
     public void getStatistic(String fromFileName, String toFileName) {
@@ -46,12 +46,15 @@ public class WorkWithFile {
         for (String line : dataStrings) {
             splitLines = line.split(COMMA_DELIMITER);
             if (splitLines[FIRST_STRING_SPLIT_LINE_ARGUMENT].equals(SUPPLY_OPERATION)) {
-                resultsValues[RESULT_SUPPLY_OPERATION] += Integer.valueOf(splitLines[SECOND_INT_SPLIT_LINE_ARGUMENT]);
+                resultsValues[RESULT_SUPPLY_OPERATION] += Integer
+                        .valueOf(splitLines[SECOND_INT_SPLIT_LINE_ARGUMENT]);
             } else {
-                resultsValues[RESULT_BUY_OPERATION] += Integer.valueOf(splitLines[SECOND_INT_SPLIT_LINE_ARGUMENT]);
+                resultsValues[RESULT_BUY_OPERATION] += Integer
+                        .valueOf(splitLines[SECOND_INT_SPLIT_LINE_ARGUMENT]);
             }
         }
-        resultsValues[RESULT_OPERATIONS] = resultsValues[RESULT_SUPPLY_OPERATION] - resultsValues[RESULT_BUY_OPERATION];
+        resultsValues[RESULT_OPERATIONS] =
+                resultsValues[RESULT_SUPPLY_OPERATION] - resultsValues[RESULT_BUY_OPERATION];
         return resultsValues;
     }
 
