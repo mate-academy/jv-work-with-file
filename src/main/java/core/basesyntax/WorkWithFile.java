@@ -13,6 +13,12 @@ public class WorkWithFile {
     static final String LINE_BREAK_DELIMITER = "\n";
     static final String VOID_DELIMITER = "";
     static final String CARRIAGE_DELIMITER = "\r";
+    static final int RESULT_SUPPLY_OPERATION = 0;
+    static final int RESULT_BUY_OPERATION = 0;
+    static final int RESULT_OPERATIONS = 0;
+    static final int FIRST_STRING_SPLIT_LINE_ARGUMENT = 0;
+    static final int SECOND_INT_SPLIT_LINE_ARGUMENT = 0;
+    static final int RESULT_VALUES_LENGTH = 3;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String dataFromFile = readFile(fromFileName);
@@ -36,27 +42,27 @@ public class WorkWithFile {
     private int[] generateReport(String dataFromFile) {
         String[] dataStrings = dataFromFile.split(LINE_BREAK_DELIMITER);
         String[] splitLines;
-        int[] resultsValues = new int[3];
+        int[] resultsValues = new int[RESULT_VALUES_LENGTH];
         for (String line : dataStrings) {
             splitLines = line.split(COMMA_DELIMITER);
-            if (splitLines[0].equals(SUPPLY_OPERATION)) {
-                resultsValues[0] += Integer.valueOf(splitLines[1]);
+            if (splitLines[FIRST_STRING_SPLIT_LINE_ARGUMENT].equals(SUPPLY_OPERATION)) {
+                resultsValues[RESULT_SUPPLY_OPERATION] += Integer.valueOf(splitLines[SECOND_INT_SPLIT_LINE_ARGUMENT]);
             } else {
-                resultsValues[1] += Integer.valueOf(splitLines[1]);
+                resultsValues[RESULT_BUY_OPERATION] += Integer.valueOf(splitLines[SECOND_INT_SPLIT_LINE_ARGUMENT]);
             }
         }
-        resultsValues[2] = resultsValues[0] - resultsValues[1];
+        resultsValues[RESULT_OPERATIONS] = resultsValues[RESULT_SUPPLY_OPERATION] - resultsValues[RESULT_BUY_OPERATION];
         return resultsValues;
     }
 
     private void writeToFile(int[] resultsValues, String toFileName) {
         try (BufferedWriter fileWriter = new BufferedWriter(new FileWriter(toFileName))) {
             fileWriter.write(SUPPLY_OPERATION + COMMA_DELIMITER
-                    + resultsValues[0] + System.lineSeparator());
+                    + resultsValues[RESULT_SUPPLY_OPERATION] + System.lineSeparator());
             fileWriter.write(BUY_OPERATION + COMMA_DELIMITER
-                    + resultsValues[1] + System.lineSeparator());
+                    + resultsValues[RESULT_BUY_OPERATION] + System.lineSeparator());
             fileWriter.write("result" + COMMA_DELIMITER
-                    + resultsValues[2] + System.lineSeparator());
+                    + resultsValues[RESULT_OPERATIONS] + System.lineSeparator());
         } catch (IOException cat) {
             throw new RuntimeException("Can't write to file" + cat);
         }
