@@ -9,11 +9,11 @@ import java.io.IOException;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
-        String report = readData(fromFileName);
+        String report = createReport(readData(fromFileName));
         writeToFile(report, toFileName);
     }
 
-    private String readData(String fromFileName) {
+    private int[] readData(String fromFileName) {
         File fromFile = new File(fromFileName);
         int supply = 0;
         int buy = 0;
@@ -33,12 +33,14 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        String report = createReport(supply, buy);
-        return report;
+        int[] data = new int[]{supply, buy};
+        return data;
     }
 
-    private String createReport(int supply, int buy) {
+    private String createReport(int[] data) {
         StringBuilder report = new StringBuilder("supply,");
+        int supply = data[0];
+        int buy = data[1];
         report.append(supply);
         report.append(System.lineSeparator());
         report.append("buy,");
