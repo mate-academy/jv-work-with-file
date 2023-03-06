@@ -5,7 +5,6 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.Integer;
 
 public class WorkWithFile {
     private static final String SUPPLY = "supply";
