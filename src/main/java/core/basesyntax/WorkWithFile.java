@@ -5,9 +5,7 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-
-import static java.lang.Integer.parseInt;
-
+import java.lang.Integer;
 
 public class WorkWithFile {
     private static final String SUPPLY = "supply";
@@ -44,12 +42,12 @@ public class WorkWithFile {
         for (int i = 0; i < dataArray.length; i++) {
             if (dataArray[i].equals(SUPPLY)) {
                 String value = dataArray[i + 1];
-                amountOfSupplies = amountOfSupplies + parseInt(value);
+                amountOfSupplies = amountOfSupplies + Integer.parseInt(value);
                 i++;
             }
             if (dataArray[i].equals(BUY)) {
                 String value = dataArray[i + 1];
-                amountOfBuy = amountOfBuy + parseInt(value);
+                amountOfBuy = amountOfBuy + Integer.parseInt(value);
                 i++;
             }
         }
