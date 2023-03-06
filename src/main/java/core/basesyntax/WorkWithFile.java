@@ -1,8 +1,13 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 import static java.lang.Integer.parseInt;
+
 
 public class WorkWithFile {
     private static final String SUPPLY = "supply";
@@ -41,15 +46,17 @@ public class WorkWithFile {
                 String value = dataArray[i + 1];
                 amountOfSupplies = amountOfSupplies + parseInt(value);
                 i++;
-            }if (dataArray[i].equals(BUY)) {
+            }
+            if (dataArray[i].equals(BUY)) {
                 String value = dataArray[i + 1];
                 amountOfBuy = amountOfBuy + parseInt(value);
                 i++;
             }
         }
         int result = amountOfSupplies - amountOfBuy;
-        stringBuilder.append(SUPPLY).append(COMA).append(amountOfSupplies).append(System.lineSeparator())
-                .append(BUY).append(COMA).append(amountOfBuy).append(System.lineSeparator())
+        stringBuilder.append(SUPPLY).append(COMA).append(amountOfSupplies)
+                .append(System.lineSeparator()).append(BUY).append(COMA)
+                .append(amountOfBuy).append(System.lineSeparator())
                 .append(RESULT).append(COMA).append(result);
 
         return stringBuilder.toString();
