@@ -7,45 +7,61 @@ import java.nio.file.Files;
 public class WorkWithFile {
     private static final int FIRST_INDEX = 0;
     private static final int SECOND_INDEX = 1;
-    private static final String FIRST_KEY_WORD = "supply";
-    private static final String SECOND_KEY_WORD = "buy";
+    private static final String SUPPLY_KEY_WORD = "supply";
+    private static final String BUY_KEY_WORD = "buy";
     private static final String COMMA_SEPARATOR = ",";
     private static final String NEW_LINE_SEPARATOR = "\n";
 
     public void getStatistic(String fromFileName, String toFileName) {
+        String dataFromFile = readFile(fromFileName);
+        String report = generateReport(dataFromFile);
+        writeToFile(toFileName, report);
+    }
+
+    private String readFile(String fromFileName) {
         File toReading = new File(fromFileName);
-        File toWriting = new File(toFileName);
+        String fileData;
+
+        try {
+            fileData = Files.readString(toReading.toPath());
+        } catch (IOException e) {
+            throw new RuntimeException("Can`t read file: " + fromFileName, e);
+        }
+        return fileData;
+    }
+
+    private String generateReport(String fileData) {
         StringBuilder builder = new StringBuilder();
         int supply = 0;
         int buy = 0;
-        String toWrite;
 
-        try {
-            String[] fileData = Files.readString(toReading.toPath()).split(NEW_LINE_SEPARATOR);
+        String[] separator = fileData.split(NEW_LINE_SEPARATOR);
 
-            for (String line : fileData) {
-                String[] lines = line.split(COMMA_SEPARATOR);
-                if (lines[FIRST_INDEX].equals(FIRST_KEY_WORD)) {
-                    supply += Integer.parseInt(lines[SECOND_INDEX]);
-                }
-                if (lines[FIRST_INDEX].equals(SECOND_KEY_WORD)) {
-                    buy += Integer.parseInt(lines[SECOND_INDEX]);
-                }
+        for (String line : separator) {
+            String[] lines = line.split(COMMA_SEPARATOR);
+            if (lines[FIRST_INDEX].equals(SUPPLY_KEY_WORD)) {
+                supply += Integer.parseInt(lines[SECOND_INDEX]);
             }
-
-            int result = supply - buy;
-            builder.append("supply,").append(supply).append("\n")
-                    .append("buy,").append(buy).append("\n")
-                    .append("result,").append(result);
-            toWrite = builder.toString();
-        } catch (IOException e) {
-            throw new RuntimeException("Can`t read file" + fromFileName, e);
+            if (lines[FIRST_INDEX].equals(BUY_KEY_WORD)) {
+                buy += Integer.parseInt(lines[SECOND_INDEX]);
+            }
         }
+        int result = supply - buy;
+        builder.append(SUPPLY_KEY_WORD).append(COMMA_SEPARATOR)
+                .append(supply).append(NEW_LINE_SEPARATOR)
+                .append(BUY_KEY_WORD).append(COMMA_SEPARATOR)
+                .append(buy).append(NEW_LINE_SEPARATOR)
+                .append("result").append(COMMA_SEPARATOR).append(result);
+        return builder.toString();
+    }
+
+    private void writeToFile(String toFileName, String report) {
+        File toWriting = new File(toFileName);
 
         try {
-            Files.writeString(toWriting.toPath(), toWrite);
+            Files.writeString(toWriting.toPath(), report);
         } catch (IOException e) {
-            throw new RuntimeException("Can`t write file" + toFileName, e);
+            throw new RuntimeException("Can`t write file: " + toFileName, e);
         }
     }
 }
