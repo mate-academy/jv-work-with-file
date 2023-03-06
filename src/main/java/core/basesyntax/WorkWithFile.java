@@ -47,7 +47,7 @@ public class WorkWithFile {
                 buy += Integer.valueOf(arrayLine[VALUE_INDEX]);
             }
         }
-       int result = supply - buy;
+        int result = supply - buy;
         return "supply," + supply + System.lineSeparator()
                 + "buy," + buy + System.lineSeparator()
                 + "result," + result;
@@ -61,4 +61,3 @@ public class WorkWithFile {
         }
     }
 }
-
