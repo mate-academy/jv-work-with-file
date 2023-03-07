@@ -19,11 +19,10 @@ public class WorkWithFile {
     }
 
     private String readFile(String fromFileName) {
-        File toReading = new File(fromFileName);
+        File file = new File(fromFileName);
         String fileData;
-
         try {
-            fileData = Files.readString(toReading.toPath());
+            fileData = Files.readString(file.toPath());
         } catch (IOException e) {
             throw new RuntimeException("Can`t read file: " + fromFileName, e);
         }
@@ -31,7 +30,7 @@ public class WorkWithFile {
     }
 
     private String generateReport(String fileData) {
-        StringBuilder builder = new StringBuilder();
+        StringBuilder dataLines = new StringBuilder();
         int supply = 0;
         int buy = 0;
 
@@ -47,19 +46,18 @@ public class WorkWithFile {
             }
         }
         int result = supply - buy;
-        builder.append(SUPPLY_KEY_WORD).append(COMMA_SEPARATOR)
+        dataLines.append(SUPPLY_KEY_WORD).append(COMMA_SEPARATOR)
                 .append(supply).append(NEW_LINE_SEPARATOR)
                 .append(BUY_KEY_WORD).append(COMMA_SEPARATOR)
                 .append(buy).append(NEW_LINE_SEPARATOR)
                 .append("result").append(COMMA_SEPARATOR).append(result);
-        return builder.toString();
+        return dataLines.toString();
     }
 
     private void writeToFile(String toFileName, String report) {
-        File toWriting = new File(toFileName);
-
+        File file = new File(toFileName);
         try {
-            Files.writeString(toWriting.toPath(), report);
+            Files.writeString(file.toPath(), report);
         } catch (IOException e) {
             throw new RuntimeException("Can`t write file: " + toFileName, e);
         }
