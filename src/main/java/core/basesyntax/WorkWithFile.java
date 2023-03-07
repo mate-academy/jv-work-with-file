@@ -7,56 +7,56 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final String SUPPLY = "supply";
-    private static final String BUY = "buy";
-    private static final String RESULT = "result";
+    private static final String DEFAULT_SUPPLY = "supply";
+    private static final String DEFAULT_BUY = "buy";
+    private static final String DEFAULT_RESULT = "result";
     private static final String COMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String string = readFromFile(fromFileName);
         String result = resultOfDataReading(string);
-        recordToFile(result,toFileName);
+        recordToFile(result, toFileName);
     }
 
     private String readFromFile(String fromFileName) {
-        StringBuilder stringBuilder = new StringBuilder();
+        StringBuilder dataToString = new StringBuilder();
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
             String line;
             while ((line = bufferedReader.readLine()) != null) {
-                stringBuilder.append(line).append(COMA);
+                dataToString.append(line).append(COMA);
             }
             bufferedReader.close();
         } catch (IOException e) {
-            throw new RuntimeException("This file cannot be read ", e);
+            throw new RuntimeException("Can't read data from the file: " + fromFileName, e);
         }
-        return stringBuilder.toString();
+        return dataToString .toString();
     }
 
     private String resultOfDataReading(String dataOfFile) {
-        StringBuilder stringBuilder = new StringBuilder();
-        String[] dataArray = dataOfFile.split(",");
+        StringBuilder resultString = new StringBuilder();
+        String[] dataArray = dataOfFile.split(COMA);
         int amountOfSupplies = 0;
         int amountOfBuy = 0;
         for (int i = 0; i < dataArray.length; i++) {
-            if (dataArray[i].equals(SUPPLY)) {
+            if (dataArray[i].equals(DEFAULT_SUPPLY)) {
                 String value = dataArray[i + 1];
                 amountOfSupplies = amountOfSupplies + Integer.parseInt(value);
                 i++;
             }
-            if (dataArray[i].equals(BUY)) {
+            if (dataArray[i].equals(DEFAULT_BUY)) {
                 String value = dataArray[i + 1];
                 amountOfBuy = amountOfBuy + Integer.parseInt(value);
                 i++;
             }
         }
         int result = amountOfSupplies - amountOfBuy;
-        stringBuilder.append(SUPPLY).append(COMA).append(amountOfSupplies)
-                .append(System.lineSeparator()).append(BUY).append(COMA)
+        resultString.append(DEFAULT_SUPPLY).append(COMA).append(amountOfSupplies)
+                .append(System.lineSeparator()).append(DEFAULT_BUY).append(COMA)
                 .append(amountOfBuy).append(System.lineSeparator())
-                .append(RESULT).append(COMA).append(result);
+                .append(DEFAULT_RESULT).append(COMA).append(result);
 
-        return stringBuilder.toString();
+        return resultString.toString();
     }
 
     private void recordToFile(String stringForWritingToFile, String toFileName) {
