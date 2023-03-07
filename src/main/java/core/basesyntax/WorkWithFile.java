@@ -9,11 +9,11 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final String SPLIT_SYMBOL = " ";
     private static final String SPLIT_COMMA = ",";
-    private static final String OPERATION_TXT_0 = "supply";
-    private static final String OPERATION_TXT_1 = "buy";
+    private static final String OPERATION_SUPPLY = "supply";
+    private static final String OPERATION_BUY = "buy";
     private static final String OPERATION_RESULT = "result";
-    private static final int OPERATION = 0;
-    private static final int AMOUNT = 1;
+    private static final int OPERATION_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] linesFromFile = readTheFile(fromFileName);
@@ -28,16 +28,16 @@ public class WorkWithFile {
 
         for (String line : linesFromFile) {
             String[] lineElements = line.split(SPLIT_COMMA);
-            if (OPERATION_TXT_0.equals(lineElements[OPERATION])) {
-                supply += Integer.parseInt(lineElements[AMOUNT]);
+            if (OPERATION_SUPPLY.equals(lineElements[OPERATION_INDEX])) {
+                supply += Integer.parseInt(lineElements[AMOUNT_INDEX]);
             } else {
-                buy += Integer.parseInt(lineElements[AMOUNT]);
+                buy += Integer.parseInt(lineElements[AMOUNT_INDEX]);
             }
         }
         int result = supply - buy;
-        report.append(OPERATION_TXT_0).append(SPLIT_COMMA).append(supply)
+        report.append(OPERATION_SUPPLY).append(SPLIT_COMMA).append(supply)
                 .append(System.lineSeparator())
-                .append(OPERATION_TXT_1).append(SPLIT_COMMA).append(buy)
+                .append(OPERATION_BUY).append(SPLIT_COMMA).append(buy)
                 .append(System.lineSeparator())
                 .append(OPERATION_RESULT).append(SPLIT_COMMA).append(result);
         return report.toString();
