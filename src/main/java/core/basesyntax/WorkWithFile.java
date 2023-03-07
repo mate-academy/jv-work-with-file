@@ -30,7 +30,7 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from the file: " + fromFileName, e);
         }
-        return dataToString .toString();
+        return dataToString.toString();
     }
 
     private String resultOfDataReading(String dataOfFile) {
