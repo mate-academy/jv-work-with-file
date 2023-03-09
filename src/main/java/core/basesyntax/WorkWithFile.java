@@ -8,9 +8,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final int FIRST_COLUMN = 0;
-    private static final int SECOND_COLUMN = 1;
-    private static final int ZERO = 0;
+    private static final int OPERATION_COLUMN_INDEX = 0;
+    private static final int AMOUNT_COLUMN_INDEX = 1;
     private static final String BUY = "buy";
     private static final String SUPPLY = "supply";
 
@@ -36,16 +35,16 @@ public class WorkWithFile {
     }
 
     private String getReport(String data) {
-        int buy = ZERO;
-        int supply = ZERO;
+        int buy = 0;
+        int supply = 0;
 
-        String[] counter = data.split(System.lineSeparator());
-        for (String line : counter) {
+        String[] report = data.split(System.lineSeparator());
+        for (String line : report) {
             String[] splitData = line.split("\\W+");
-            if (splitData[FIRST_COLUMN].equals(SUPPLY)) {
-                supply += Integer.parseInt(splitData[SECOND_COLUMN]);
+            if (splitData[OPERATION_COLUMN_INDEX].equals(SUPPLY)) {
+                supply += Integer.parseInt(splitData[AMOUNT_COLUMN_INDEX]);
             } else {
-                buy += Integer.parseInt(splitData[SECOND_COLUMN]);
+                buy += Integer.parseInt(splitData[AMOUNT_COLUMN_INDEX]);
             }
         }
         int result = supply - buy;
