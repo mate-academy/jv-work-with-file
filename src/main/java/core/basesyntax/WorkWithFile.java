@@ -53,7 +53,7 @@ public class WorkWithFile {
         int result = amountOfSupplies - amountOfBuy;
         resultString.append(OPERATION_SUPPLY).append(SEPARATOR)
                 .append(amountOfSupplies).append(System.lineSeparator())
-                .append(OPERATION_BUY).append(SEPARATOR )
+                .append(OPERATION_BUY).append(SEPARATOR)
                 .append(amountOfBuy).append(System.lineSeparator())
                 .append(OPERATION_RESULT).append(SEPARATOR).append(result);
 
