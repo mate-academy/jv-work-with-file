@@ -20,13 +20,11 @@ public class WorkWithFile {
 
     private String readFromFile(String fromFileName) {
         StringBuilder dataToString = new StringBuilder();
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 dataToString.append(line).append(SEPARATOR);
             }
-            bufferedReader.close();
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from the file: " + fromFileName, e);
         }
