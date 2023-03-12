@@ -13,22 +13,22 @@ public class WorkWithFile {
     private static final String SEPARATOR = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String string = readFromFile(fromFileName);
-        String result = generateReport(string);
-        writeToFile(result, toFileName);
+        String fileContent = readFromFile(fromFileName);
+        String report = generateReport(fileContent);
+        writeToFile(report, toFileName);
     }
 
     private String readFromFile(String fromFileName) {
-        StringBuilder dataToString = new StringBuilder();
+        StringBuilder fileContent = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
-                dataToString.append(line).append(SEPARATOR);
+                fileContent.append(line).append(SEPARATOR);
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from the file: " + fromFileName, e);
         }
-        return dataToString.toString();
+        return fileContent.toString();
     }
 
     private String generateReport(String fileData) {
@@ -36,16 +36,14 @@ public class WorkWithFile {
         String[] dataArray = fileData.split(SEPARATOR);
         int amountOfSupplies = 0;
         int amountOfBuy = 0;
-        for (int i = 0; i < dataArray.length; i++) {
+        for (int i = 0; i < dataArray.length; i = i + 2) {
             if (dataArray[i].equals(OPERATION_SUPPLY)) {
                 String value = dataArray[i + 1];
                 amountOfSupplies = amountOfSupplies + Integer.parseInt(value);
-                i++;
             }
             if (dataArray[i].equals(OPERATION_BUY)) {
                 String value = dataArray[i + 1];
                 amountOfBuy = amountOfBuy + Integer.parseInt(value);
-                i++;
             }
         }
         int result = amountOfSupplies - amountOfBuy;
