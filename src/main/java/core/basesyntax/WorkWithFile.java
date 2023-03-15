@@ -1,6 +1,9 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
 
@@ -17,9 +20,10 @@ public class WorkWithFile {
     private List<String> readFromFile(String fromFileName) {
         File file = new File(fromFileName);
         try {
-            return Files.readAllLines(file.toPath()).stream().toList();
+            return Files.readAllLines(file.toPath());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can't correctly read data from file "
+                    + file.getName(), e);
         }
     }
 
@@ -47,10 +51,11 @@ public class WorkWithFile {
     }
 
     private void writeFile(String toFileName, String report) {
+        File file = new File(toFileName);
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(toFileName))) {
             bw.write(report);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can't write to " + file.getName(), e);
         }
     }
 }
