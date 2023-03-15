@@ -46,7 +46,9 @@ public class WorkWithFile {
         }
 
         return String.format("%s,%d\n%s,%d\n%s,%d\n",
-                OPERATION_SUPPLY, supplyCount, OPERATION_BUY, buyCount, RESULT, supplyCount - buyCount);
+                OPERATION_SUPPLY, supplyCount,
+                OPERATION_BUY, buyCount,
+                RESULT, supplyCount - buyCount);
     }
 
     private static void writeFile(String fileName, String report) {
