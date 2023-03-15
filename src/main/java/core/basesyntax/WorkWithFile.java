@@ -41,13 +41,13 @@ public class WorkWithFile {
             }
         }
 
-        StringBuilder sb = new StringBuilder();
-        sb.append(FILE_FIELD[0]).append(DELIMITER).append(supplyCunt)
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(FILE_FIELD[0]).append(DELIMITER).append(supplyCunt)
                 .append(System.lineSeparator())
                 .append(FILE_FIELD[1]).append(DELIMITER).append(buyCount)
                 .append(System.lineSeparator())
                 .append(FILE_FIELD[2]).append(DELIMITER).append(supplyCunt - buyCount);
-        return sb.toString();
+        return stringBuilder.toString();
     }
 
     private void writeFile(String toFileName, String report) {
