@@ -8,16 +8,20 @@ import java.nio.file.Files;
 import java.util.List;
 
 public class WorkWithFile {
-    private static final String[] FILE_FIELD = {"supply", "buy", "result"};
+    private static final int OPERATION = 0;
+    private static final int VALUE = 1;
+    private static final String OPERATION_SUPPLY = "supply";
+    private static final String OPERATION_BUY = "buy";
+    private static final String RESULT = "result";
     private static final String DELIMITER = ",";
 
-    public void getStatistic(String fromFileName, String toFileName) {
+    public static void getStatistic(String fromFileName, String toFileName) {
         List<String> dataFromFile = readFromFile(fromFileName);
-        String report = makeReport(dataFromFile);
+        String report = generateReport(dataFromFile);
         writeFile(toFileName, report);
     }
 
-    private List<String> readFromFile(String fromFileName) {
+    private static List<String> readFromFile(String fromFileName) {
         File file = new File(fromFileName);
         try {
             return Files.readAllLines(file.toPath());
@@ -27,33 +31,28 @@ public class WorkWithFile {
         }
     }
 
-    private String makeReport(List<String> dataFromFile) {
-        int supplyCunt = 0;
+    private static String generateReport(List<String> dataFromFile) {
+        int supplyCount = 0;
         int buyCount = 0;
 
         for (String line : dataFromFile) {
-            String[] dataArray = line.split(DELIMITER);
-            if (dataArray[0].equals(FILE_FIELD[0])) {
-                supplyCunt += Integer.parseInt(dataArray[1]);
+            String[] data = line.split(DELIMITER);
+            if (data[OPERATION].equals(OPERATION_SUPPLY)) {
+                supplyCount += Integer.parseInt(data[VALUE]);
             }
-            if (dataArray[0].equals(FILE_FIELD[1])) {
-                buyCount += Integer.parseInt(dataArray[1]);
+            if (data[OPERATION].equals(OPERATION_BUY)) {
+                buyCount += Integer.parseInt(data[VALUE]);
             }
         }
 
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(FILE_FIELD[0]).append(DELIMITER).append(supplyCunt)
-                .append(System.lineSeparator())
-                .append(FILE_FIELD[1]).append(DELIMITER).append(buyCount)
-                .append(System.lineSeparator())
-                .append(FILE_FIELD[2]).append(DELIMITER).append(supplyCunt - buyCount);
-        return stringBuilder.toString();
+        return String.format("%s,%d\n%s,%d\n%s,%d\n",
+                OPERATION_SUPPLY, supplyCount, OPERATION_BUY, buyCount, RESULT, supplyCount - buyCount);
     }
 
-    private void writeFile(String toFileName, String report) {
-        File file = new File(toFileName);
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(toFileName))) {
-            bw.write(report);
+    private static void writeFile(String fileName, String report) {
+        File file = new File(fileName);
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
+            bufferedWriter.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Can't write to " + file.getName(), e);
         }
