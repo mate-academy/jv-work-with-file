@@ -15,13 +15,13 @@ public class WorkWithFile {
     private static final String RESULT = "result";
     private static final String DELIMITER = ",";
 
-    public static void getStatistic(String fromFileName, String toFileName) {
+    public void getStatistic(String fromFileName, String toFileName) {
         List<String> dataFromFile = readFromFile(fromFileName);
         String report = generateReport(dataFromFile);
         writeFile(toFileName, report);
     }
 
-    private static List<String> readFromFile(String fromFileName) {
+    private List<String> readFromFile(String fromFileName) {
         File file = new File(fromFileName);
         try {
             return Files.readAllLines(file.toPath());
@@ -31,7 +31,7 @@ public class WorkWithFile {
         }
     }
 
-    private static String generateReport(List<String> dataFromFile) {
+    private String generateReport(List<String> dataFromFile) {
         int supplyCount = 0;
         int buyCount = 0;
 
@@ -51,7 +51,7 @@ public class WorkWithFile {
                 RESULT, supplyCount - buyCount);
     }
 
-    private static void writeFile(String fileName, String report) {
+    private void writeFile(String fileName, String report) {
         File file = new File(fileName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
             bufferedWriter.write(report);
