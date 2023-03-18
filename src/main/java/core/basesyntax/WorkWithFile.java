@@ -13,19 +13,28 @@ public class WorkWithFile {
     private static final String WORD_TO_DETECT_BUY_COUNTER_NUMBER = "buy";
 
     public void getStatistic(String fromFileName, String toFileName) {
+        String textFromFile = readFromFile(fromFileName);
+        String report = reportCreation(textFromFile);
+        writeToFile(report, toFileName);
+    }
+
+    private String readFromFile(String fromFileName) {
         File file = new File(fromFileName);
-        StringBuilder textFromFile = new StringBuilder();
+        StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
             int value = bufferedReader.read();
             while (value != -1) {
-                textFromFile.append((char) value);
+                stringBuilder.append((char) value);
                 value = bufferedReader.read();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can`t read from file", e);
+            throw new RuntimeException("Can`t read from file: " + fromFileName, e);
         }
+        return stringBuilder.toString();
+    }
 
-        String[] textFromFileAsArray = textFromFile.toString().split(SPLIT_REGEXP);
+    private String reportCreation(String text) {
+        String[] textFromFileAsArray = text.split(SPLIT_REGEXP);
         int supplyCounter = 0;
         int buyCounter = 0;
         for (int i = 0; i < textFromFileAsArray.length; i++) {
@@ -36,8 +45,7 @@ public class WorkWithFile {
                 buyCounter += Integer.parseInt(textFromFileAsArray[i + 1]);
             }
         }
-
-        StringBuilder report = new StringBuilder().append("supply,")
+        StringBuilder stringBuilderReport = new StringBuilder().append("supply,")
                 .append(supplyCounter)
                 .append(System.lineSeparator())
                 .append("buy,")
@@ -45,12 +53,16 @@ public class WorkWithFile {
                 .append(System.lineSeparator())
                 .append("result,")
                 .append(supplyCounter - buyCounter);
+        return stringBuilderReport.toString();
+    }
 
-        File file1 = new File(toFileName);
+    private void writeToFile(String report, String writeToFile) {
+
+        File file1 = new File(writeToFile);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file1))) {
-            bufferedWriter.write(report.toString());
+            bufferedWriter.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Can`t write to file", e);
+            throw new RuntimeException("Can`t write to file: " + writeToFile, e);
         }
     }
 }
