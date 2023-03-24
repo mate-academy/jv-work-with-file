@@ -10,10 +10,9 @@ public class WorkWithFile {
     private StringBuilder stringBuilder;
     private String resultString;
 
-    public void getStatistic(String fromFileName, String toFileName) {
-        File file = new File(fromFileName);
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(file));
+    private void readDataFromFile(String nameFile) {
+        File file = new File(nameFile);
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             stringBuilder = new StringBuilder();
             String value = reader.readLine();
             while (value != null) {
@@ -23,9 +22,11 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Cant read file", e);
         }
+    }
+
+    private void processData() {
         int sumSupply = 0;
         int sumBuy = 0;
-        int result = 0;
         String[] split = stringBuilder.toString().split("\\W+");
         for (int i = 0; i < split.length; i++) {
             if (split[i].equals("supply")) {
@@ -35,15 +36,23 @@ public class WorkWithFile {
                 sumBuy += Integer.parseInt(split[i + 1]);
             }
         }
-
-        result = sumSupply - sumBuy;
         resultString = "supply," + sumSupply + System.lineSeparator() + "buy," + sumBuy
-                + System.lineSeparator() + "result," + result;
-        File fileOut = new File(toFileName);
+                + System.lineSeparator() + "result," + (sumSupply - sumBuy);
+    }
+
+    private void writeToFile(String toFile) {
+        File fileOut = new File(toFile);
         try {
             Files.write(fileOut.toPath(), resultString.getBytes());
         } catch (IOException e) {
             throw new RuntimeException("Cant write file", e);
         }
     }
+
+    public void getStatistic(String fromFileName, String toFileName) {
+        readDataFromFile(fromFileName);
+        processData();
+        writeToFile(toFileName);
+    }
+
 }
