@@ -28,7 +28,7 @@ public class WorkWithFile {
             }
         }
         int result = supply - buy;
-        StringBuilder stringBuilderOut = createOutputString(supply, buy, result);
+        StringBuilder stringBuilderOut = new StringBuilder(createOutputString(supply, buy, result));
         writeDataToFile(toFileName, stringBuilderOut);
     }
 
@@ -46,15 +46,13 @@ public class WorkWithFile {
         return stringBuilder.toString();
     }
 
-    private StringBuilder createOutputString(int supply, int buy, int result) {
-        StringBuilder stringBuilderOut = new StringBuilder();
-        stringBuilderOut.append(SUPPLY).append(COMMA).append(supply)
-                .append(System.lineSeparator());
-        stringBuilderOut.append(BUY).append(COMMA).append(buy)
-                .append(System.lineSeparator());
-        stringBuilderOut.append(RESULT).append(COMMA).append(result)
-                .append(System.lineSeparator());
-        return stringBuilderOut;
+    private String createOutputString(int supply, int buy, int result) {
+        return SUPPLY + COMMA + supply
+                + System.lineSeparator()
+                + BUY + COMMA + buy
+                + System.lineSeparator()
+                + RESULT + COMMA + result
+                + System.lineSeparator();
     }
 
     private void writeDataToFile(String toFileName, StringBuilder stringBuilderOut) {
