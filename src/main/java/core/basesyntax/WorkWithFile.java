@@ -8,20 +8,19 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private int buySum = 0;
-    private int supplySum = 0;
-    private final String supplyOperation = "supply";
-    private final String buyOperation = "buy";
-    private final String result = "result";
+    private static final byte buySum = 0;
+    private static final byte supplySum = 1;
+    private static final String supplyOperation = "supply";
+    private static final String buyOperation = "buy";
+    private static final String result = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String[] tempString = readFile(fromFileName).toString().split("\\W+");
-        calculateSum(tempString);
-        checkWriteFile(toFileName);
-        writeFile(toFileName);
+        String[] fromFileData = readFile(fromFileName).toString().split("\\W+");
+        int[] totalAmounts = calculateSum(fromFileData);
+        writeFile(toFileName, totalAmounts);
     }
 
-    public StringBuilder readFile(String fromFile) {
+    private StringBuilder readFile(String fromFile) {
         File file = new File(fromFile);
         StringBuilder textBox = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFile))) {
@@ -39,37 +38,27 @@ public class WorkWithFile {
         return textBox;
     }
 
-    public void calculateSum(String[] dataArray) {
-        supplySum = 0;
-        buySum = 0;
+    private int[] calculateSum(String[] dataArray) {
+        int[] operationValues = {0,0};
         for (int i = 0; i < dataArray.length; i++) {
             dataArray[i] = dataArray[i].toLowerCase();
             if (dataArray[i].equals(supplyOperation)) {
-                supplySum += Integer.parseInt(dataArray[i + 1]);
+                operationValues[supplySum] += Integer.parseInt(dataArray[i + 1]);
             } else if (dataArray[i].equals(buyOperation)) {
-                buySum += Integer.parseInt(dataArray[i + 1]);
+                operationValues[buySum] += Integer.parseInt(dataArray[i + 1]);
             }
         }
+        return operationValues;
     }
 
-    public void checkWriteFile(String toFile) {
-        File checkFile = new File(toFile);
-        if (checkFile.length() != 0) {
-            try (BufferedWriter bufferedWriter =
-                         new BufferedWriter(new FileWriter(toFile, false))) {
-                bufferedWriter.write("");
-            } catch (IOException e) {
-                throw new RuntimeException("Can't write data to file " + toFile, e);
-            }
-        }
-    }
-
-    public void writeFile(String toFile) {
+    private void writeFile(String toFile, int[] operationsSum) {
         File file = new File(toFile);
+        int resultSum = operationsSum[supplySum] - operationsSum[buySum];
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, false))) {
-            bufferedWriter.write(supplyOperation + "," + supplySum + System.lineSeparator()
-                    + buyOperation + "," + buySum + System.lineSeparator()
-                    + result + "," + (supplySum - buySum) + System.lineSeparator());
+            bufferedWriter.write(supplyOperation + "," + operationsSum[supplySum]
+                    + System.lineSeparator() + buyOperation + ","
+                    + operationsSum[buySum] + System.lineSeparator()
+                    + result + "," + resultSum + System.lineSeparator());
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to file " + toFile, e);
         }
