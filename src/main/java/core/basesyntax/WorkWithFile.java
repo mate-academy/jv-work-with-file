@@ -8,21 +8,22 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private final String supply = "supply";
-    private final String buy = "buy";
-    private final String result = "result";
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
+    private static final String SLASH = "/";
+    private static final String COMMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         File fromFile = new File(fromFileName);
-        StringBuilder stringBuilder = readDataFromFile(fromFile);
-        String[] arrayString = stringBuilder.toString().split("/");
+        String[] arrayString = readDataFromFile(fromFile).split(SLASH);
         int supply = 0;
         int buy = 0;
         for (String string : arrayString) {
-            String[] str = string.split(",");
-            if (str[0].equals(this.supply)) {
+            String[] str = string.split(COMMA);
+            if (str[0].equals(SUPPLY)) {
                 supply += Integer.parseInt(str[1]);
-            } else if (str[0].equals(this.buy)) {
+            } else if (str[0].equals(BUY)) {
                 buy += Integer.parseInt(str[1]);
             }
         }
@@ -31,27 +32,27 @@ public class WorkWithFile {
         writeDataToFile(toFileName, stringBuilderOut);
     }
 
-    private StringBuilder readDataFromFile(File fromFile) {
+    private String readDataFromFile(File fromFile) {
         StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFile))) {
             String value = reader.readLine();
             while (value != null) {
-                stringBuilder.append(value).append("/");
+                stringBuilder.append(value).append(SLASH);
                 value = reader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("Can`t read line from file: " + fromFile, e);
         }
-        return stringBuilder;
+        return stringBuilder.toString();
     }
 
     private StringBuilder createOutputString(int supply, int buy, int result) {
         StringBuilder stringBuilderOut = new StringBuilder();
-        stringBuilderOut.append(this.supply).append(",").append(supply)
+        stringBuilderOut.append(SUPPLY).append(COMMA).append(supply)
                 .append(System.lineSeparator());
-        stringBuilderOut.append(this.buy).append(",").append(buy)
+        stringBuilderOut.append(BUY).append(COMMA).append(buy)
                 .append(System.lineSeparator());
-        stringBuilderOut.append(this.result).append(",").append(result)
+        stringBuilderOut.append(RESULT).append(COMMA).append(result)
                 .append(System.lineSeparator());
         return stringBuilderOut;
     }
@@ -63,10 +64,5 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can`t write date to file: " + toFileName, e);
         }
-    }
-
-    @Override
-    public String toString() {
-        return "WorkWithFile{}";
     }
 }
