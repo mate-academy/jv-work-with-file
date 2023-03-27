@@ -47,9 +47,5 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can`t write data to file", e);
         }
-        System.out.println("Supply, " + supplySum);
-        System.out.println("Buy, " + buySum);
-        System.out.println("Result, " + result);
-
     }
 }
