@@ -8,6 +8,10 @@ import java.io.IOException;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
+        if (fromFileName == null || fromFileName.isEmpty()
+                || toFileName == null || toFileName.isEmpty()) {
+            throw new RuntimeException("Invalid file name");
+        }
         String fileContent = fileToString(fromFileName);
         String[] separatedItems = fileContent.split("\n");
         int buy = 0;
