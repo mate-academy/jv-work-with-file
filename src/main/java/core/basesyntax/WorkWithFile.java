@@ -13,12 +13,11 @@ public class WorkWithFile {
             throw new RuntimeException("Invalid file name");
         }
         String fileContent = fileToString(fromFileName);
-        String[] separatedItems = fileContent.split("\n");
+        String[] separatedItems = fileContent.split(System.lineSeparator());
         int buy = 0;
         int supply = 0;
         for (String item : separatedItems) {
             String[] splited = item.split(",");
-            splited[1] = splited[1].substring(0, splited[1].indexOf("\r"));
             if (splited[0].equals("buy")) {
                 buy += Integer.parseInt(splited[1]);
             } else {
