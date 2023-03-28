@@ -43,7 +43,7 @@ public class WorkWithFile {
     }
 
     private int createReport(String data) {
-        String[] dataSplit = data.split("\\r\\n");
+        String[] dataSplit = data.split(System.lineSeparator());
         for (String element : dataSplit) {
             String[] elements = element.split(",");
             if (elements[0].equals("supply")) {
