@@ -7,26 +7,42 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class WorkWithFile {
-    public void getStatistic(String fromFileName, String toFileName) {
-        final String separator = System.getProperty("line.separator");
-        int supplySum = 0;
-        int buySum = 0;
-        int result = 0;
-        String data;
+    private int supplySum = 0;
+    private int buySum = 0;
 
+    public void getStatistic(String fromFileName, String toFileName) {
+        int result = 0;
+        String data = readFromFile(fromFileName);
+        if (data != null) {
+            result = createReport(data);
+        }
+        if (createNewFile(toFileName)) {
+            writeToFile(toFileName, result);
+        }
+    }
+
+    private boolean createNewFile(String toFileName) {
+        boolean fileCreated;
         File file = new File(toFileName);
         try {
-            file.createNewFile();
+            fileCreated = file.createNewFile();
         } catch (IOException e) {
             throw new RuntimeException("Can`t create file", e);
         }
+        return fileCreated;
+    }
 
+    private String readFromFile(String fromFileName) {
+        String data;
         try {
             data = new String(Files.readAllBytes(Paths.get(fromFileName)));
         } catch (IOException e) {
             throw new RuntimeException("Can`t read file", e);
         }
+        return data;
+    }
 
+    private int createReport(String data) {
         String[] dataSplit = data.split("\\r\\n");
         for (String element : dataSplit) {
             String[] elements = element.split(",");
@@ -35,9 +51,12 @@ public class WorkWithFile {
             } else if (elements[0].equals("buy")) {
                 buySum += Integer.parseInt(elements[1]);
             }
-            result = supplySum - buySum;
         }
+        return supplySum - buySum;
+    }
 
+    public void writeToFile(String toFileName, int result) {
+        final String separator = System.getProperty("line.separator");
         try {
             FileWriter myWriter = new FileWriter(toFileName);
             myWriter.write("supply," + supplySum + separator
@@ -49,3 +68,4 @@ public class WorkWithFile {
         }
     }
 }
+
