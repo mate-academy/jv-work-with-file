@@ -56,7 +56,7 @@ public class WorkWithFile {
     }
 
     public void writeToFile(String toFileName, int result) {
-        final String separator = System.getProperty("line.separator");
+        final String separator = System.lineSeparator();
         try {
             FileWriter myWriter = new FileWriter(toFileName);
             myWriter.write("supply," + supplySum + separator
