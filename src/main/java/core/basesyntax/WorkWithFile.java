@@ -17,9 +17,8 @@ public class WorkWithFile {
                 supply += Integer.parseInt(splited[1]);
             }
         }
-        int result = supply - buy;
+        final int result = supply - buy;
         createReport(buy, supply, result, toFileName);
-        System.out.println(supply + " - " + buy + " = " + result);
     }
 
     private String fileToString(String fromFileName) {
