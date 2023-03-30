@@ -14,17 +14,17 @@ import java.util.Collections;
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         ArrayList<String> strings = new ArrayList<>();
-        StringBuilder result = new StringBuilder();
         int sum;
         try {
             try (InputStream inputStream = new FileInputStream(fromFileName);
-                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
+                    BufferedReader bufferedReader = new BufferedReader(
+                            new InputStreamReader(inputStream))) {
                 while (bufferedReader.ready()) {
                     strings.add(bufferedReader.readLine());
                 }
             }
         } catch (IOException e) {
-            throw new RuntimeException ("Can't read file", e);
+            throw new RuntimeException("Can't read file", e);
         }
         for (int i = 0; i < strings.size(); i++) {
             for (int j = i + 1; j < strings.size(); j++) {
@@ -41,6 +41,7 @@ public class WorkWithFile {
         if (strings.get(0).length() < strings.get(1).length()) {
             Collections.swap(strings, 0, 1);
         }
+        StringBuilder result = new StringBuilder();
         String[] supply = strings.get(0).split(",");
         String[] buy = strings.get(1).split(",");
         int difference = Integer.parseInt(supply[1]) - Integer.parseInt(buy[1]);
@@ -55,7 +56,7 @@ public class WorkWithFile {
                 }
             }
         } catch (IOException e) {
-            throw new RuntimeException ("Can't write to file", e);
+            throw new RuntimeException("Can't write to file", e);
         }
     }
 }
