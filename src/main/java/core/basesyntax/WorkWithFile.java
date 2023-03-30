@@ -10,25 +10,14 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         if (fromFileName == null || fromFileName.isEmpty()
                 || toFileName == null || toFileName.isEmpty()) {
-            throw new RuntimeException("Invalid file name");
+            throw new RuntimeException("Invalid file");
         }
-        String fileContent = fileToString(fromFileName);
-        String[] separatedItems = fileContent.split(System.lineSeparator());
-        int buy = 0;
-        int supply = 0;
-        for (String item : separatedItems) {
-            String[] splited = item.split(",");
-            if (splited[0].equals("buy")) {
-                buy += Integer.parseInt(splited[1]);
-            } else {
-                supply += Integer.parseInt(splited[1]);
-            }
-        }
-        final int result = supply - buy;
-        createReport(buy, supply, result, toFileName);
+        String fileContent = readFile(fromFileName);
+        String report = createReport(fileContent);
+        writeToFile(report, toFileName);
     }
 
-    private String fileToString(String fromFileName) {
+    private String readFile(String fromFileName) {
         StringBuilder stringBuilder = new StringBuilder();
         File file = new File(fromFileName);
         try (FileReader fileReader = new FileReader(file)) {
@@ -42,19 +31,37 @@ public class WorkWithFile {
         return stringBuilder.toString();
     }
 
-    private void createReport(int buy, int supply, int result, String toFileName) {
+    private String createReport(String content) {
+        int buy = 0;
+        int supply = 0;
+        String[] separatedItems = content.split(System.lineSeparator());
+        for (String item : separatedItems) {
+            String[] splited = item.split(",");
+            if (splited[0].equals("buy")) {
+                buy += Integer.parseInt(splited[1]);
+            } else {
+                supply += Integer.parseInt(splited[1]);
+            }
+        }
+        final int result = supply - buy;
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("supply," + supply + System.lineSeparator());
+        stringBuilder.append("buy," + buy + System.lineSeparator());
+        stringBuilder.append("result," + result + System.lineSeparator());
+        return stringBuilder.toString();
+    }
+
+    private void writeToFile(String report, String toFileName) {
         File file = new File(toFileName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
-            bufferedWriter.write("supply," + supply + System.lineSeparator());
-            bufferedWriter.write("buy," + buy + System.lineSeparator());
-            bufferedWriter.write("result," + result + System.lineSeparator());
+            bufferedWriter.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Can't make report", e);
+            throw new RuntimeException("Can't write to file: ", e);
         }
         try {
             file.createNewFile();
         } catch (IOException e) {
-            throw new RuntimeException("Can't create file");
+            throw new RuntimeException("Can't create file: ", e);
         }
     }
 }
