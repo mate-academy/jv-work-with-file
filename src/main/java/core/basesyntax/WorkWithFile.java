@@ -25,8 +25,8 @@ public class WorkWithFile {
     public void readFile(ArrayList<String> array, String fileName) {
         try {
             try (InputStream inputStream = new FileInputStream(fileName);
-                 BufferedReader bufferedReader = new BufferedReader(
-                         new InputStreamReader(inputStream))) {
+                    BufferedReader bufferedReader = new BufferedReader(
+                            new InputStreamReader(inputStream))) {
                 while (bufferedReader.ready()) {
                     array.add(bufferedReader.readLine());
                 }
@@ -42,7 +42,8 @@ public class WorkWithFile {
                 String[] currentStrings = array.get(i).split(",");
                 String[] nextString = array.get(j).split(",");
                 if (currentStrings[INDEX_ZERO].equals(nextString[INDEX_ZERO])) {
-                    int sum = (Integer.parseInt(currentStrings[INDEX_ONE])) + (Integer.parseInt(nextString[1]));
+                    int sum = (Integer.parseInt(currentStrings[INDEX_ONE])) +
+                            (Integer.parseInt(nextString[1]));
                     array.set(i, currentStrings[INDEX_ZERO] + "," + sum);
                     array.remove(j);
                     j--;
