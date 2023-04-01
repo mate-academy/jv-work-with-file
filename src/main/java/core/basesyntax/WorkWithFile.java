@@ -12,51 +12,65 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class WorkWithFile {
+    static final int INDEX_ZERO = 0;
+    static final int INDEX_ONE = 1;
+
     public void getStatistic(String fromFileName, String toFileName) {
         ArrayList<String> strings = new ArrayList<>();
-        int sum;
+        readFile(strings, fromFileName);
+        generateReport(strings);
+        writeToFile(strings, toFileName);
+    }
+
+    public void readFile(ArrayList<String> array, String fileName) {
         try {
-            try (InputStream inputStream = new FileInputStream(fromFileName);
-                    BufferedReader bufferedReader = new BufferedReader(
-                            new InputStreamReader(inputStream))) {
+            try (InputStream inputStream = new FileInputStream(fileName);
+                 BufferedReader bufferedReader = new BufferedReader(
+                         new InputStreamReader(inputStream))) {
                 while (bufferedReader.ready()) {
-                    strings.add(bufferedReader.readLine());
+                    array.add(bufferedReader.readLine());
                 }
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't read file: " + fileName, e);
         }
-        for (int i = 0; i < strings.size(); i++) {
-            for (int j = i + 1; j < strings.size(); j++) {
-                String[] first = strings.get(i).split(",");
-                String[] second = strings.get(j).split(",");
-                if (first[0].equals(second[0])) {
-                    sum = (Integer.parseInt(first[1])) + (Integer.parseInt(second[1]));
-                    strings.set(i, first[0] + "," + sum);
-                    strings.remove(j);
+    }
+
+    public void generateReport(ArrayList<String> array) {
+        for (int i = 0; i < array.size(); i++) {
+            for (int j = i + 1; j < array.size(); j++) {
+                String[] currentStrings = array.get(i).split(",");
+                String[] nextString = array.get(j).split(",");
+                if (currentStrings[INDEX_ZERO].equals(nextString[INDEX_ZERO])) {
+                    int sum = (Integer.parseInt(currentStrings[INDEX_ONE])) + (Integer.parseInt(nextString[1]));
+                    array.set(i, currentStrings[INDEX_ZERO] + "," + sum);
+                    array.remove(j);
                     j--;
                 }
             }
         }
-        if (strings.get(0).length() < strings.get(1).length()) {
-            Collections.swap(strings, 0, 1);
+        if (array.get(INDEX_ZERO).length() < array.get(INDEX_ONE).length()) {
+            Collections.swap(array, INDEX_ZERO, INDEX_ONE);
         }
         StringBuilder result = new StringBuilder();
-        String[] supply = strings.get(0).split(",");
-        String[] buy = strings.get(1).split(",");
-        int difference = Integer.parseInt(supply[1]) - Integer.parseInt(buy[1]);
+        String[] supply = array.get(INDEX_ZERO).split(",");
+        String[] buy = array.get(INDEX_ONE).split(",");
+        int difference = Integer.parseInt(supply[INDEX_ONE]) - Integer.parseInt(buy[1]);
         result.append("result").append(",").append(difference);
-        strings.add(result.toString());
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true))) {
-            File file = new File(toFileName);
+        array.add(result.toString());
+    }
+
+    public void writeToFile(ArrayList<String> array, String fileName) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName, true))) {
+            File file = new File(fileName);
             if (file.length() == 0) {
-                for (String toWrite : strings) {
+                for (String toWrite : array) {
                     bufferedWriter.write(toWrite + System.lineSeparator());
                     bufferedWriter.flush();
                 }
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't write to file", e);
+            throw new RuntimeException("Can't write to file: " + fileName, e);
         }
     }
 }
