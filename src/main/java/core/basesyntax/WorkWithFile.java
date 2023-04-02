@@ -10,12 +10,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 public class WorkWithFile {
-    int buy;
-    int supply;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String data = readFile(fromFileName);
-        String report = generateReport(data, supply, buy);
+        String report = generateReport(data);
         writeToFile(report, toFileName);
     }
 
@@ -26,24 +24,30 @@ public class WorkWithFile {
                     BufferedReader bufferedReader = new BufferedReader(
                             new InputStreamReader(inputStream))) {
                 while (bufferedReader.ready()) {
-                    String line = bufferedReader.readLine();
-                    if (line.contains("supply")) {
-                        supply += Integer.parseInt(line.replaceAll("[a-zA-Z\\p{Punct}]", ""));
-                    }else {
-                        buy += Integer.parseInt(line.replaceAll("[a-zA-Z\\p{Punct}]", ""));
-                    }
+                    builder.append(bufferedReader.readLine()).append(System.lineSeparator());
                 }
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read file: " + fileName, e);
         }
-        return builder.append("supply,").append(supply).append(System.lineSeparator())
-                .append("buy,").append(buy).toString();
+        return builder.toString();
     }
 
-    public String generateReport(String data, int supply, int buy) {
-        int difference =  supply - buy;
-        return data + System.lineSeparator() + "result" + "," + difference;
+    public String generateReport(String data) {
+        int supply = 0;
+        int buy = 0;
+        String[] forReport = data.split(System.lineSeparator());
+        for (String s : forReport) {
+            if (s.contains("supply")) {
+                supply += Integer.parseInt(s.replaceAll("[a-zA-Z\\p{Punct}]", ""));
+            }
+            if (s.contains("buy")) {
+                buy += Integer.parseInt(s.replaceAll("[a-zA-Z\\p{Punct}]", ""));
+            }
+        }
+        int difference = supply - buy;
+        return "supply," + supply + System.lineSeparator() + "buy," +
+                buy + System.lineSeparator() + "result," + difference;
     }
 
     public void writeToFile(String report, String fileName) {
