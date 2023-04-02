@@ -46,8 +46,8 @@ public class WorkWithFile {
             }
         }
         int difference = supply - buy;
-        return "supply," + supply + System.lineSeparator() + "buy," +
-                buy + System.lineSeparator() + "result," + difference;
+        return "supply," + supply + System.lineSeparator() + "buy,"
+                + buy + System.lineSeparator() + "result," + difference;
     }
 
     public void writeToFile(String report, String fileName) {
