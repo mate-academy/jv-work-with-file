@@ -34,16 +34,16 @@ public class WorkWithFile {
         return builder.toString();
     }
 
-    private String generateReport(String data) {
+    private String generateReport(String string) {
         int supply = 0;
         int buy = 0;
-        String[] forReport = data.split(System.lineSeparator());
-        for (String s : forReport) {
-            if (s.contains(SUPPLY)) {
-                supply += Integer.parseInt(s.replaceAll("[a-zA-Z\\p{Punct}]", ""));
+        String[] data = string.split(System.lineSeparator());
+        for (String line : data) {
+            if (line.contains(SUPPLY)) {
+                supply += Integer.parseInt(line.replaceAll("[a-zA-Z\\p{Punct}]", ""));
             }
-            if (s.contains(BUY)) {
-                buy += Integer.parseInt(s.replaceAll("[a-zA-Z\\p{Punct}]", ""));
+            if (line.contains(BUY)) {
+                buy += Integer.parseInt(line.replaceAll("[a-zA-Z\\p{Punct}]", ""));
             }
         }
         int difference = supply - buy;
@@ -52,11 +52,10 @@ public class WorkWithFile {
     }
 
     private void writeToFile(String report, String fileName) {
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName, true))) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
             File file = new File(fileName);
             if (file.length() == 0) {
                 bufferedWriter.write(report);
-                bufferedWriter.flush();
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file: " + fileName, e);
