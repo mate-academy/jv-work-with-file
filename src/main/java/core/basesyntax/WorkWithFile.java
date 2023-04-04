@@ -1,50 +1,30 @@
 package core.basesyntax;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.util.List;
 
 public class WorkWithFile {
-    private int supplySum = 0;
-    private int buySum = 0;
 
-    public void getStatistic(String fromFileName, String toFileName) {
-        int result = 0;
-        String data = readFromFile(fromFileName);
-        if (data != null) {
-            result = createReport(data);
-        }
-        if (createNewFile(toFileName)) {
-            writeToFile(toFileName, result);
-        }
-    }
-
-    private boolean createNewFile(String toFileName) {
-        boolean fileCreated;
-        File file = new File(toFileName);
+    private List<String> readFromFile(String fromFileName) {
+        List<String> data;
+        File file = new File(fromFileName);
         try {
-            fileCreated = file.createNewFile();
-        } catch (IOException e) {
-            throw new RuntimeException("Can`t create file", e);
-        }
-        return fileCreated;
-    }
-
-    private String readFromFile(String fromFileName) {
-        String data;
-        try {
-            data = new String(Files.readAllBytes(Paths.get(fromFileName)));
+            data = Files.readAllLines(file.toPath());
         } catch (IOException e) {
             throw new RuntimeException("Can`t read file", e);
         }
         return data;
     }
 
-    private int createReport(String data) {
-        String[] dataSplit = data.split(System.lineSeparator());
-        for (String element : dataSplit) {
+    private String balanceCalculate(List<String> data) {
+        int supplySum = 0;
+        int buySum = 0;
+        final String separator = System.lineSeparator();
+        for (String element : data) {
             String[] elements = element.split(",");
             if (elements[0].equals("supply")) {
                 supplySum += Integer.parseInt(elements[1]);
@@ -52,17 +32,26 @@ public class WorkWithFile {
                 buySum += Integer.parseInt(elements[1]);
             }
         }
-        return supplySum - buySum;
+        int result = supplySum - buySum;
+        return ("supply," + supplySum + separator
+                + "buy," + buySum + separator
+                + "result," + result);
     }
 
-    public void writeToFile(String toFileName, int result) {
-        final String separator = System.lineSeparator();
+    public void getStatistic(String fromFileName, String toFileName) {
+        String result = "";
+        List<String> data = readFromFile(fromFileName);
+        if (data != null) {
+            result = balanceCalculate(data);
+        }
+        writeToFile(toFileName, result);
+    }
+
+    public void writeToFile(String toFileName, String statistic) {
         try {
-            FileWriter myWriter = new FileWriter(toFileName);
-            myWriter.write("supply," + supplySum + separator
-                    + "buy," + buySum + separator
-                    + "result," + result);
-            myWriter.close();
+            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName));
+            bufferedWriter.write(statistic);
+            bufferedWriter.close();
         } catch (IOException e) {
             throw new RuntimeException("Can`t write data to file", e);
         }
