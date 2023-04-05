@@ -7,42 +7,58 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final int NUMBER_0 = 0;
+    private static final String OPERATION_SUPPLY = "supply";
 
-    private static final int NUMBER_1 = 1;
+    private static final String OPERATION_BUY = "buy";
+
+    private static final String OPERATION_RESULT = "result";
+
+    private static final String COMA_SEPARATOR = ",";
+
+    private static final String TEXT_OF_EXCEPTION = "File not found";
+
+    private static final String REGEX = "\\W";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String stringWithData;
-        int supplyAmount = NUMBER_0;
-        int buyAmount = NUMBER_0;
-        int result = NUMBER_0;
+        int supplyAmount = 0;
+        int buyAmount = 0;
+        StringBuilder builder = new StringBuilder();
 
-        readFromFile(fromFileName, supplyAmount, buyAmount);
-
+        readFromFile(fromFileName, supplyAmount, buyAmount, builder);
+        writeStringToFile(toFileName, builder);
 
     }
 
-    private void readFromFile(String fromFileName, int supplyAmount, int buyAmount) {
+    private void writeStringToFile(String toFileName, StringBuilder builder) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
+            bufferedWriter.write(builder.toString());
+        } catch (IOException e) {
+            throw new RuntimeException(TEXT_OF_EXCEPTION);
+        }
+    }
+
+    private void readFromFile(String fromFileName, int supplyAmount, int buyAmount,
+                              StringBuilder builder) {
         String stringWithData;
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             while ((stringWithData = bufferedReader.readLine()) != null) {
-                String[] arrayString = stringWithData.split("\\W");
-                if (arrayString[NUMBER_0].equalsIgnoreCase("supply")) {
-                    supplyAmount += Integer.parseInt(arrayString[NUMBER_1]);
+                String[] arrayString = stringWithData.split(REGEX);
+                if (arrayString[0].equals(OPERATION_SUPPLY)) {
+                    supplyAmount += Integer.parseInt(arrayString[1]);
                 } else {
-                    buyAmount += Integer.parseInt(arrayString[NUMBER_1]);
+                    buyAmount += Integer.parseInt(arrayString[1]);
                 }
             }
-            StringBuilder builder = new StringBuilder();
-            builder.append("supply,").append(supplyAmount).append(System.lineSeparator())
-                    .append("buy,").append(buyAmount).append(System.lineSeparator())
-                    .append("result,").append(supplyAmount - buyAmount);
 
-            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter())
-
+            builder.append(OPERATION_SUPPLY).append(COMA_SEPARATOR).append(supplyAmount)
+                    .append(System.lineSeparator())
+                    .append(OPERATION_BUY).append(COMA_SEPARATOR).append(buyAmount)
+                    .append(System.lineSeparator())
+                    .append(OPERATION_RESULT).append(COMA_SEPARATOR)
+                    .append(supplyAmount - buyAmount);
 
         } catch (IOException e) {
-            throw new RuntimeException("File not found");
+            throw new RuntimeException(TEXT_OF_EXCEPTION);
         }
     }
 }
