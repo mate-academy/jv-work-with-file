@@ -21,7 +21,7 @@ public class WorkWithFile {
         writeToFile(toFileName, report);
     }
 
-    public void writeToFile(String toFileName, String statistic) {
+    private void writeToFile(String toFileName, String statistic) {
         try {
             BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName));
             bufferedWriter.write(statistic);
