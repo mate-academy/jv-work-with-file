@@ -6,6 +6,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
+    private static final String DELIMITER = ",";
+    private static final String NEW_LINE = "\n";
+
     public void getStatistic(String fromFileName, String toFileName) {
         try {
             BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
@@ -16,10 +22,10 @@ public class WorkWithFile {
             int buyTotal = 0;
 
             while (line != null) {
-                String[] values = line.split(",");
-                if (values[0].equals("supply")) {
+                String[] values = line.split(DELIMITER);
+                if (values[0].equals(SUPPLY)) {
                     supplyTotal += Integer.parseInt(values[1]);
-                } else if (values[0].equals("buy")) {
+                } else if (values[0].equals(BUY)) {
                     buyTotal += Integer.parseInt(values[1]);
                 }
                 line = reader.readLine();
@@ -27,14 +33,14 @@ public class WorkWithFile {
 
             int result = supplyTotal - buyTotal;
 
-            writer.write("supply," + supplyTotal + "\n");
-            writer.write("buy," + buyTotal + "\n");
-            writer.write("result," + result + "\n");
+            writer.write(SUPPLY + DELIMITER + supplyTotal + NEW_LINE);
+            writer.write(BUY + DELIMITER + buyTotal + NEW_LINE);
+            writer.write(RESULT + DELIMITER + result + NEW_LINE);
 
             reader.close();
             writer.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Can't write to file: " + toFileName, e);
         }
     }
 }
