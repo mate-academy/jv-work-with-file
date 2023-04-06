@@ -12,22 +12,8 @@ public class WorkWithFile {
     private final StringBuilder stringBuilder = new StringBuilder();
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int buyCounter = 0;
-        int supplyCounter = 0;
         readInformationFromFile(fromFileName);
-        String[] buyAndSupplyArray = stringBuilder.toString().split(SPLIT_BY_THIS_STRING);
-        for (int i = 0; i < buyAndSupplyArray.length; i += 2) {
-            if (buyAndSupplyArray[i].equals("supply")) {
-                supplyCounter += Integer.parseInt(buyAndSupplyArray[i + 1]);
-            } else if (buyAndSupplyArray[i].equals("buy")) {
-                buyCounter += Integer.parseInt(buyAndSupplyArray[i + 1]);
-            }
-        }
-        int result = supplyCounter - buyCounter;
-        stringBuilder.setLength(EMPTY_STRING_LENGTH);
-        stringBuilder.append("supply,").append(supplyCounter).append(System.lineSeparator())
-                        .append("buy,").append(buyCounter).append(System.lineSeparator())
-                        .append("result,").append(result);
+        createReport();
         writeInformationToFile(toFileName);
     }
 
@@ -41,6 +27,24 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void createReport() {
+        int buyCounter = 0;
+        int supplyCounter = 0;
+        String[] buyAndSupplyArray = stringBuilder.toString().split(SPLIT_BY_THIS_STRING);
+        for (int i = 0; i < buyAndSupplyArray.length; i += 2) {
+            if (buyAndSupplyArray[i].equals("supply")) {
+                supplyCounter += Integer.parseInt(buyAndSupplyArray[i + 1]);
+            } else if (buyAndSupplyArray[i].equals("buy")) {
+                buyCounter += Integer.parseInt(buyAndSupplyArray[i + 1]);
+            }
+        }
+        int result = supplyCounter - buyCounter;
+        stringBuilder.setLength(EMPTY_STRING_LENGTH);
+        stringBuilder.append("supply,").append(supplyCounter).append(System.lineSeparator())
+                .append("buy,").append(buyCounter).append(System.lineSeparator())
+                .append("result,").append(result);
     }
 
     private void writeInformationToFile(String toFileName) {
