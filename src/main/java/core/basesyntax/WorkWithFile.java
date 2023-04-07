@@ -12,7 +12,9 @@ public class WorkWithFile {
     private static final String DATA_SEPARATOR = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        writeResult(toFileName, createReport(readData(fromFileName)));
+        int[] inputData = readData(fromFileName);
+        String report = createReport(inputData);
+        writeResult(toFileName, report);
     }
 
     private int[] readData(String fromFile) {
