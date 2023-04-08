@@ -1,18 +1,12 @@
 package core.basesyntax;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-
-import javax.management.RuntimeErrorException;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
@@ -32,12 +26,11 @@ public class WorkWithFile {
         File file = new File(fromFileName);
         try {
             List<String> list = Files.readAllLines(file.toPath());
-            for(String line : list) {
+            for (String line : list) {
                 String[] lineSplit = line.split(",");
                 if (lineSplit[0].equals("supply")) {
                     sumOfsupply += Integer.parseInt(lineSplit[1]);
-                }
-                else {
+                } else {
                     sumOfBuy += Integer.parseInt(lineSplit[1]);
                 }
             }
