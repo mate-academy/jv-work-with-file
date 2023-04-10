@@ -11,56 +11,68 @@ import java.util.List;
 import java.util.Map;
 
 public class WorkWithFile {
-    private static Map<String, List<Integer>> transactions = new HashMap<>();
-    private static Map<String, String> results = new HashMap<>();
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
+    private final Map<String, List<Integer>> transactions = new HashMap<>();
+    private final Map<String, String> results = new HashMap<>();
 
-    public void getStatistic(String fromFileName, String toFileName) {
-        if (results.containsKey(fromFileName)) {
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-                writer.write(results.get(fromFileName));
-            } catch (IOException e) {
-                throw new RuntimeException("Can't correctly write data to file " + toFileName, e);
-            }
+    public void getStatistic(String inputFileName, String outputFileName) {
+        if (results.containsKey(inputFileName)) {
+            writeToFile(outputFileName, results.get(inputFileName));
             return;
         }
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
-                BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName, true))) {
-            transactions.clear();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",");
-                String type = parts[0];
-                int amount = Integer.parseInt(parts[1]);
-                if (!transactions.containsKey(type)) {
-                    transactions.put(type, new ArrayList<>());
-                }
-                transactions.get(type).add(amount);
-            }
+        try (BufferedReader reader = new BufferedReader(new FileReader(inputFileName));
+                BufferedWriter writer = new BufferedWriter(new FileWriter(outputFileName))) {
 
-            int totalBuy = 0;
-            int totalSupply = 0;
-            int countBuy = 0;
-            int countSupply = 0;
-            for (Map.Entry<String, List<Integer>> entry : transactions.entrySet()) {
-                String type = entry.getKey();
-                List<Integer> amounts = entry.getValue();
-                int total = amounts.stream().mapToInt(Integer::intValue).sum();
-                if (type.equals("supply")) {
-                    totalSupply += total;
-                    countSupply += amounts.size();
-                } else if (type.equals("buy")) {
-                    totalBuy += total;
-                    countBuy += amounts.size();
-                }
-            }
+            processTransactions(reader);
+
+            int totalBuy = calculateTotal(BUY);
+            int totalSupply = calculateTotal(SUPPLY);
             int result = totalSupply - totalBuy;
-            String resultString = String.format("supply,%d\nbuy,%d\nresult,%d\n",
-                    totalSupply, totalBuy, result);
-            writer.write(resultString);
-            results.put(fromFileName, resultString);
+
+            StringBuilder resultString = new StringBuilder();
+            resultString.append(SUPPLY).append(",").append(totalSupply).append("\n")
+                    .append(BUY).append(",").append(totalBuy).append("\n")
+                    .append(RESULT).append(",").append(result).append("\n");
+
+            writer.write(resultString.toString());
+            results.put(inputFileName, resultString.toString());
+
         } catch (IOException e) {
-            throw new RuntimeException("Can't correctly read data from file " + fromFileName, e);
+            throw new RuntimeException("Error processing file: " + inputFileName, e);
+        }
+    }
+
+    private void processTransactions(BufferedReader reader) throws IOException {
+        String line;
+        while ((line = reader.readLine()) != null) {
+            String[] parts = line.split(",");
+            String type = parts[0];
+            int amount = Integer.parseInt(parts[1]);
+            if (!transactions.containsKey(type)) {
+                transactions.put(type, new ArrayList<>());
+            }
+            transactions.get(type).add(amount);
+        }
+    }
+
+    private int calculateTotal(String type) {
+        List<Integer> amounts = transactions.get(type);
+        if (amounts == null) {
+            return 0;
+        }
+        return amounts.stream().mapToInt(Integer::intValue).sum();
+    }
+
+    private void writeToFile(String fileName, String content) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+            writer.write(content);
+        } catch (IOException e) {
+            throw new RuntimeException("Error writing to file: " + fileName, e);
         }
     }
 }
+
+
