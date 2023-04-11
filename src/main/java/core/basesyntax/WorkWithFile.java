@@ -10,7 +10,7 @@ public class WorkWithFile {
     private static final String BUY = "buy";
     private static final String RESULT = "result";
     private static final String DELIMITER = ",";
-    private static final String NEW_LINE = "\n";
+    private static final String NEW_LINE = System.lineSeparator();
     private static final int INDEX_OPERATION = 0;
     private static final int INDEX_VALUE = 1;
 
