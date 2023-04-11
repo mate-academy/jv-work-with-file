@@ -13,34 +13,57 @@ public class WorkWithFile {
     private static final String NEW_LINE = "\n";
 
     public void getStatistic(String fromFileName, String toFileName) {
+        String content = readFile(fromFileName);
+        String report = generateReport(content);
+        writeToFile(report, toFileName);
+    }
+
+    private String readFile(String fileName) {
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
-            FileWriter writer = new FileWriter(toFileName);
-
-            String line = reader.readLine();
-            int supplyTotal = 0;
-            int buyTotal = 0;
-
-            while (line != null) {
-                String[] values = line.split(DELIMITER);
-                if (values[0].equals(SUPPLY)) {
-                    supplyTotal += Integer.parseInt(values[1]);
-                } else if (values[0].equals(BUY)) {
-                    buyTotal += Integer.parseInt(values[1]);
-                }
-                line = reader.readLine();
+            BufferedReader reader = new BufferedReader(new FileReader(fileName));
+            StringBuilder content = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                content.append(line);
+                content.append(System.lineSeparator());
             }
-
-            int result = supplyTotal - buyTotal;
-
-            writer.write(SUPPLY + DELIMITER + supplyTotal + NEW_LINE);
-            writer.write(BUY + DELIMITER + buyTotal + NEW_LINE);
-            writer.write(RESULT + DELIMITER + result + NEW_LINE);
-
             reader.close();
+            return content.toString();
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to read file: " + fileName, e);
+        }
+    }
+
+    private String generateReport(String content) {
+        int supplyTotal = 0;
+        int buyTotal = 0;
+        String[] lines = content.split(System.lineSeparator());
+        for (String line : lines) {
+            String[] values = line.split(DELIMITER);
+            if (values[0].equals(SUPPLY)) {
+                supplyTotal += Integer.parseInt(values[1]);
+            } else if (values[0].equals(BUY)) {
+                buyTotal += Integer.parseInt(values[1]);
+            }
+        }
+
+        int result = supplyTotal - buyTotal;
+
+        StringBuilder report = new StringBuilder();
+        report.append(SUPPLY).append(DELIMITER).append(supplyTotal).append(NEW_LINE);
+        report.append(BUY).append(DELIMITER).append(buyTotal).append(NEW_LINE);
+        report.append(RESULT).append(DELIMITER).append(result).append(NEW_LINE);
+
+        return report.toString();
+    }
+
+    private void writeToFile(String report, String fileName) {
+        try {
+            FileWriter writer = new FileWriter(fileName);
+            writer.write(report);
             writer.close();
         } catch (IOException e) {
-            throw new RuntimeException("Can't write to file: " + toFileName, e);
+            throw new RuntimeException("Failed to write report to file: " + fileName, e);
         }
     }
 }
