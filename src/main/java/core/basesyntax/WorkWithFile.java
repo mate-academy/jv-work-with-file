@@ -11,6 +11,8 @@ public class WorkWithFile {
     private static final String RESULT = "result";
     private static final String DELIMITER = ",";
     private static final String NEW_LINE = "\n";
+    private static final int INDEX_OPERATION = 0;
+    private static final int INDEX_VALUE = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String content = readFile(fromFileName);
@@ -19,8 +21,7 @@ public class WorkWithFile {
     }
 
     private String readFile(String fileName) {
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(fileName));
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             StringBuilder content = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
@@ -40,10 +41,22 @@ public class WorkWithFile {
         String[] lines = content.split(System.lineSeparator());
         for (String line : lines) {
             String[] values = line.split(DELIMITER);
-            if (values[0].equals(SUPPLY)) {
-                supplyTotal += Integer.parseInt(values[1]);
-            } else if (values[0].equals(BUY)) {
-                buyTotal += Integer.parseInt(values[1]);
+            if (values.length == 2 && values[INDEX_OPERATION].equals(SUPPLY)) {
+                try {
+                    int value = Integer.parseInt(values[INDEX_VALUE]);
+                    supplyTotal += value;
+                } catch (NumberFormatException e) {
+                    throw new RuntimeException("Invalid value found in file: "
+                            + values[INDEX_VALUE], e);
+                }
+            } else if (values.length == 2 && values[INDEX_OPERATION].equals(BUY)) {
+                try {
+                    int value = Integer.parseInt(values[INDEX_VALUE]);
+                    buyTotal += value;
+                } catch (NumberFormatException e) {
+                    throw new RuntimeException("Invalid value found in file: "
+                            + values[INDEX_VALUE], e);
+                }
             }
         }
 
@@ -58,10 +71,8 @@ public class WorkWithFile {
     }
 
     private void writeToFile(String report, String fileName) {
-        try {
-            FileWriter writer = new FileWriter(fileName);
+        try (FileWriter writer = new FileWriter(fileName)) {
             writer.write(report);
-            writer.close();
         } catch (IOException e) {
             throw new RuntimeException("Failed to write report to file: " + fileName, e);
         }
