@@ -10,16 +10,12 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final int POSITION_OPERATION_TYPE = 0;
     private static final int POSITION_AMOUNT = 1;
+    private static final String SEPARATOR = ",";
+    private static final String OPERATION_SUPPLY = "supply";
+    private static final String OPERATION_BUY = "buy";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        File file = new File(toFileName);
-        String report = createReport(fromFileName);
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-            writer.write(report);
-            writer.flush();
-        } catch (IOException e) {
-            throw new RuntimeException("Can't write data to file ", e);
-        }
+        writeData(createReport(fromFileName), toFileName);
     }
 
     private String createReport(String fromFileName) {
@@ -27,11 +23,11 @@ public class WorkWithFile {
         int buy = 0;
         String[] lines = readData(fromFileName).split(System.lineSeparator());
         for (String line : lines) {
-            String[] data = line.split(",");
-            if (data[POSITION_OPERATION_TYPE].equals("supply")) {
+            String[] data = line.split(SEPARATOR);
+            if (data[POSITION_OPERATION_TYPE].equals(OPERATION_SUPPLY)) {
                 supply += Integer.parseInt(data[POSITION_AMOUNT]);
             }
-            if (data[POSITION_OPERATION_TYPE].equals("buy")) {
+            if (data[POSITION_OPERATION_TYPE].equals(OPERATION_BUY)) {
                 buy += Integer.parseInt(data[POSITION_AMOUNT]);
             }
         }
@@ -49,8 +45,18 @@ public class WorkWithFile {
                 value = reader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read the file ", e);
+            throw new RuntimeException("Can't read the file " + fromFileName, e);
         }
         return builder.toString();
+    }
+
+    private void writeData(String data, String toFileName) {
+        File file = new File(toFileName);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            writer.write(data);
+            writer.flush();
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write data to file " + toFileName, e);
+        }
     }
 }
