@@ -7,49 +7,58 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final String SPLIT_BY_THIS_STRING = "\\W+";
-    private static final int EMPTY_STRING_LENGTH = 0;
-    private final StringBuilder stringBuilder = new StringBuilder();
-
     public void getStatistic(String fromFileName, String toFileName) {
-        readInformationFromFile(fromFileName);
-        createReport();
-        writeInformationToFile(toFileName);
+        String fileInfoInString = readInformationFromFile(fromFileName);
+        String report = createReport(fileInfoInString);
+        writeInformationToFile(toFileName, report);
     }
 
-    private void readInformationFromFile(String fromFileName) {
+    private String readInformationFromFile(String fromFileName) {
+        StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String currentStringInFile = bufferedReader.readLine();
             while (currentStringInFile != null) {
-                stringBuilder.append(currentStringInFile).append(" ");
+                stringBuilder.append(currentStringInFile).append(System.lineSeparator());
                 currentStringInFile = bufferedReader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        return stringBuilder.toString();
     }
 
-    private void createReport() {
+    private String createReport(String fileInString) {
+        final int operationTypeIndex = 0;
+        final int amountIndex = 1;
         int buyCounter = 0;
         int supplyCounter = 0;
-        String[] buyAndSupplyArray = stringBuilder.toString().split(SPLIT_BY_THIS_STRING);
-        for (int i = 0; i < buyAndSupplyArray.length; i += 2) {
-            if (buyAndSupplyArray[i].equals("supply")) {
-                supplyCounter += Integer.parseInt(buyAndSupplyArray[i + 1]);
-            } else if (buyAndSupplyArray[i].equals("buy")) {
-                buyCounter += Integer.parseInt(buyAndSupplyArray[i + 1]);
+        String[] arrayOfLines = fileInString.split(System.lineSeparator());
+        for (String currentElement : arrayOfLines) {
+            String[] buyAndSupplyArray = currentElement.split("\\W+");
+            switch (buyAndSupplyArray[operationTypeIndex]) {
+                case "supply":
+                    supplyCounter += Integer.parseInt(buyAndSupplyArray[amountIndex]);
+                    break;
+                case "buy":
+                    buyCounter += Integer.parseInt(buyAndSupplyArray[amountIndex]);
+                    break;
+                default:
+                    break;
             }
         }
         int result = supplyCounter - buyCounter;
-        stringBuilder.setLength(EMPTY_STRING_LENGTH);
-        stringBuilder.append("supply,").append(supplyCounter).append(System.lineSeparator())
-                .append("buy,").append(buyCounter).append(System.lineSeparator())
+        StringBuilder stringBuilder = new StringBuilder().append("supply,")
+                .append(supplyCounter)
+                .append(System.lineSeparator())
+                .append("buy,").append(buyCounter)
+                .append(System.lineSeparator())
                 .append("result,").append(result);
+        return stringBuilder.toString();
     }
 
-    private void writeInformationToFile(String toFileName) {
+    private void writeInformationToFile(String toFileName, String report) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write(stringBuilder.toString());
+            bufferedWriter.write(report);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
