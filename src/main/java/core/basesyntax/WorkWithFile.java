@@ -7,6 +7,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final int OPERATION_TYPE_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
+    private static final String SUPPLY_STRING = "supply,";
+    private static final String BUY_STRING = "buy,";
+    private static final String RESULT_STRING = "result,";
+    private static final String SPLIT_BY_THIS_STRING = "\\W+";
+
     public void getStatistic(String fromFileName, String toFileName) {
         String fileInfoInString = readInformationFromFile(fromFileName);
         String report = createReport(fileInfoInString);
@@ -28,33 +35,28 @@ public class WorkWithFile {
     }
 
     private String createReport(String fileInString) {
-        final int operationTypeIndex = 0;
-        final int amountIndex = 1;
-        final String supplyString = "supply,";
-        final String buyString = "buy,";
-        final String resultString = "result,";
         int buyCounter = 0;
         int supplyCounter = 0;
         String[] arrayOfLines = fileInString.split(System.lineSeparator());
-        for (String currentElement : arrayOfLines) {
-            String[] buyAndSupplyArray = currentElement.split("\\W+");
-            switch (buyAndSupplyArray[operationTypeIndex]) {
+        for (String line : arrayOfLines) {
+            String[] buyAndSupplyArray = line.split(SPLIT_BY_THIS_STRING);
+            switch (buyAndSupplyArray[OPERATION_TYPE_INDEX]) {
                 case "supply":
-                    supplyCounter += Integer.parseInt(buyAndSupplyArray[amountIndex]);
+                    supplyCounter += Integer.parseInt(buyAndSupplyArray[AMOUNT_INDEX]);
                     break;
                 case "buy":
                 default:
-                    buyCounter += Integer.parseInt(buyAndSupplyArray[amountIndex]);
+                    buyCounter += Integer.parseInt(buyAndSupplyArray[AMOUNT_INDEX]);
                     break;
             }
         }
         int result = supplyCounter - buyCounter;
-        StringBuilder report = new StringBuilder().append(supplyString)
+        StringBuilder report = new StringBuilder().append(SUPPLY_STRING)
                 .append(supplyCounter)
                 .append(System.lineSeparator())
-                .append(buyString).append(buyCounter)
+                .append(BUY_STRING).append(buyCounter)
                 .append(System.lineSeparator())
-                .append(resultString).append(result);
+                .append(RESULT_STRING).append(result);
         return report.toString();
     }
 
