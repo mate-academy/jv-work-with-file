@@ -13,6 +13,8 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
+    private static final int FIRST = 0;
+    private static final int SECOND = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         List<String> dataFromFile = readFromFile(fromFileName);
@@ -40,10 +42,10 @@ public class WorkWithFile {
         int buyResult = 0;
         for (String line : data) {
             String[] values = line.split(",");
-            if (values[0].equals(SUPPLY)) {
-                supplyResult += Integer.parseInt(values[1]);
-            } else if (values[0].equals(BUY)) {
-                buyResult += Integer.parseInt(values[1]);
+            if (values[FIRST].equals(SUPPLY)) {
+                supplyResult += Integer.parseInt(values[SECOND]);
+            } else if (values[FIRST].equals(BUY)) {
+                buyResult += Integer.parseInt(values[SECOND]);
             }
         }
         int finalResult = supplyResult - buyResult;
