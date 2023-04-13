@@ -14,7 +14,13 @@ public class WorkWithFile {
     public static final String SUPPLY = "supply";
     public static final String BUY = "buy";
 
-    public String readFile(String fileName) {
+    public void getStatistic(String fromFileName, String toFileName) {
+        String fileContent = readFile(fromFileName);
+        String report = generateReport(fileContent);
+        writeToFile(report, toFileName);
+    }
+
+    private String readFile(String fileName) {
         StringBuilder fileContent = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             String line;
@@ -30,7 +36,7 @@ public class WorkWithFile {
         return fileContent.toString();
     }
 
-    public String generateReport(String fileContent) {
+    private String generateReport(String fileContent) {
         int supply = 0;
         int buy = 0;
         String[] lines = fileContent.split(SEPARATE);
@@ -49,7 +55,7 @@ public class WorkWithFile {
                 + "result," + result;
     }
 
-    public void writeToFile(String report, String fileName) {
+    private void writeToFile(String report, String fileName) {
         File file = new File(fileName);
         BufferedWriter writer;
         try (FileWriter fileWriter = new FileWriter(file)) {
@@ -59,11 +65,5 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't write file " + fileName, e);
         }
-    }
-
-    public void getStatistic(String fromFileName, String toFileName) {
-        String fileContent = readFile(fromFileName);
-        String report = generateReport(fileContent);
-        writeToFile(report, toFileName);
     }
 }
