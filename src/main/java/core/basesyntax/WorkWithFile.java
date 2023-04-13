@@ -5,74 +5,61 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
-    private final Map<String, List<Integer>> transactions = new HashMap<>();
-    private final Map<String, String> results = new HashMap<>();
 
-    public void getStatistic(String inputFileName, String outputFileName) {
-        if (results.containsKey(inputFileName)) {
-            writeToFile(outputFileName, results.get(inputFileName));
-            return;
-        }
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(inputFileName));
-                BufferedWriter writer = new BufferedWriter(new FileWriter(outputFileName))) {
-
-            processTransactions(reader);
-
-            int totalBuy = calculateTotal(BUY);
-            int totalSupply = calculateTotal(SUPPLY);
-            int result = totalSupply - totalBuy;
-
-            StringBuilder resultString = new StringBuilder();
-            resultString.append(SUPPLY).append(",").append(totalSupply).append("\n")
-                    .append(BUY).append(",").append(totalBuy).append("\n")
-                    .append(RESULT).append(",").append(result).append("\n");
-
-            writer.write(resultString.toString());
-            results.put(inputFileName, resultString.toString());
-
-        } catch (IOException e) {
-            throw new RuntimeException("Error processing file: " + inputFileName, e);
-        }
+    public void getStatistic(String fromFileName, String toFileName) {
+        List<String> dataFromFile = readFromFile(fromFileName);
+        String report = generateReport(dataFromFile);
+        writeFile(toFileName, report);
     }
 
-    private void processTransactions(BufferedReader reader) throws IOException {
-        String line;
-        while ((line = reader.readLine()) != null) {
-            String[] parts = line.split(",");
-            String type = parts[0];
-            int amount = Integer.parseInt(parts[1]);
-            if (!transactions.containsKey(type)) {
-                transactions.put(type, new ArrayList<>());
+    public static List<String> readFromFile(String fromFileName) {
+        File file = new File(fromFileName);
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            List<String> data = new ArrayList<>();
+            String value = reader.readLine();
+            while (value != null) {
+                data.add(value);
+                value = reader.readLine();
             }
-            transactions.get(type).add(amount);
-        }
-    }
-
-    private int calculateTotal(String type) {
-        List<Integer> amounts = transactions.get(type);
-        if (amounts == null) {
-            return 0;
-        }
-        return amounts.stream().mapToInt(Integer::intValue).sum();
-    }
-
-    private void writeToFile(String fileName, String content) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
-            writer.write(content);
+            return data;
         } catch (IOException e) {
-            throw new RuntimeException("Error writing to file: " + fileName, e);
+            throw new RuntimeException("Cannot read the file", e);
+        }
+    }
+
+    public static String generateReport(List<String> data) {
+        int supplyResult = 0;
+        int buyResult = 0;
+        for (String line : data) {
+            String[] values = line.split(",");
+            if (values[0].equals(SUPPLY)) {
+                supplyResult += Integer.parseInt(values[1]);
+            } else if (values[0].equals(BUY)) {
+                buyResult += Integer.parseInt(values[1]);
+            }
+        }
+        int finalResult = supplyResult - buyResult;
+        StringBuilder resultString = new StringBuilder();
+        resultString.append(SUPPLY).append(",").append(supplyResult).append("\n")
+                .append(BUY).append(",").append(buyResult).append("\n")
+                .append(RESULT).append(",").append(finalResult).append("\n");
+        return resultString.toString();
+    }
+
+    private static void writeFile(String toFileName, String result) {
+        File file = new File(toFileName);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            writer.write(result);
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot write to file", e);
         }
     }
 }
-
-
