@@ -14,22 +14,25 @@ public class WorkWithFile {
     }
 
     private String readInformationFromFile(String fromFileName) {
-        StringBuilder stringBuilder = new StringBuilder();
+        StringBuilder fileContent = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String currentStringInFile = bufferedReader.readLine();
             while (currentStringInFile != null) {
-                stringBuilder.append(currentStringInFile).append(System.lineSeparator());
+                fileContent.append(currentStringInFile).append(System.lineSeparator());
                 currentStringInFile = bufferedReader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can`t read from file: " + fromFileName, e);
         }
-        return stringBuilder.toString();
+        return fileContent.toString();
     }
 
     private String createReport(String fileInString) {
         final int operationTypeIndex = 0;
         final int amountIndex = 1;
+        final String supplyString = "supply,";
+        final String buyString = "buy,";
+        final String resultString = "result,";
         int buyCounter = 0;
         int supplyCounter = 0;
         String[] arrayOfLines = fileInString.split(System.lineSeparator());
@@ -40,27 +43,26 @@ public class WorkWithFile {
                     supplyCounter += Integer.parseInt(buyAndSupplyArray[amountIndex]);
                     break;
                 case "buy":
-                    buyCounter += Integer.parseInt(buyAndSupplyArray[amountIndex]);
-                    break;
                 default:
+                    buyCounter += Integer.parseInt(buyAndSupplyArray[amountIndex]);
                     break;
             }
         }
         int result = supplyCounter - buyCounter;
-        StringBuilder stringBuilder = new StringBuilder().append("supply,")
+        StringBuilder report = new StringBuilder().append(supplyString)
                 .append(supplyCounter)
                 .append(System.lineSeparator())
-                .append("buy,").append(buyCounter)
+                .append(buyString).append(buyCounter)
                 .append(System.lineSeparator())
-                .append("result,").append(result);
-        return stringBuilder.toString();
+                .append(resultString).append(result);
+        return report.toString();
     }
 
     private void writeInformationToFile(String toFileName, String report) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(report);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can`t write to file: " + toFileName, e);
         }
     }
 }
