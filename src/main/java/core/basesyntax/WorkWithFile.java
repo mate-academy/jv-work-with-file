@@ -23,7 +23,7 @@ public class WorkWithFile {
             throw new RuntimeException("can't create BufferedReader", e);
         }
         String dataString = builder.toString();
-        String[] dataStrings = dataString.split("\r\n");
+        String[] dataStrings = dataString.split(System.lineSeparator());
         String[] forSolution = new String[2];
         int variableSupply = 0;
         int variableBuy = 0;
