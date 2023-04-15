@@ -39,8 +39,8 @@ public class WorkWithFile {
         int variableResult = variableSupply - variableBuy;
         File fileForWrite = new File(toFileName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileForWrite))) {
-            bufferedWriter.write("supply," + variableSupply + "\r\n" + "buy,"
-                    + variableBuy + "\r\n" + "result," + variableResult);
+            bufferedWriter.write("supply," + variableSupply + System.lineSeparator() + "buy,"
+                    + variableBuy + System.lineSeparator() + "result," + variableResult);
         } catch (IOException e) {
             throw new RuntimeException("can't create BufferedWriter", e);
         }
