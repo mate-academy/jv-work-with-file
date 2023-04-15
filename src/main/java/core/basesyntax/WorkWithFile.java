@@ -8,41 +8,62 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    public void getStatistic(String fromFileName, String toFileName) {
-        File fileForRead = new File(fromFileName);
-        StringBuilder builder = new StringBuilder();
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
+
+    private File fileForRead;
+    private File fileForWrite;
+
+    void getStatistic(String fromFileName, String toFileName) {
+        fileForRead = new File(fromFileName);
+        fileForWrite = new File(toFileName);
+        String dataString = readFile(fileForRead);
+        String stringDataToFile = generateReport(dataString);
+        writeToFile(fileForWrite, stringDataToFile);
+    }
+
+    private String readFile(File file) {
+        StringBuilder stringBuilderForFilesData = new StringBuilder();
         try {
             FileReader fileReader = new FileReader(fileForRead);
             BufferedReader bufferedReader = new BufferedReader(fileReader);
-            int value = bufferedReader.read();
-            while (value != -1) {
-                builder.append((char) value);
-                value = bufferedReader.read();
+            int valueResultMethod = bufferedReader.read();
+            while (valueResultMethod != -1) {
+                stringBuilderForFilesData.append((char) valueResultMethod);
+                valueResultMethod = bufferedReader.read();
             }
         } catch (IOException e) {
-            throw new RuntimeException("can't create BufferedReader", e);
+            throw new RuntimeException("Can`t read from file: " + file.getName(), e);
         }
-        String dataString = builder.toString();
-        String[] dataStrings = dataString.split(System.lineSeparator());
-        String[] forSolution = new String[2];
+        return stringBuilderForFilesData.toString();
+    }
+
+    private String generateReport(String data) {
         int variableSupply = 0;
         int variableBuy = 0;
+        int variableResult;
+        String[] dataStrings = data.split(System.lineSeparator());
+        String[] forWriteSolution;
         for (int a = 0; a < dataStrings.length; a++) {
-            forSolution = dataStrings[a].split(",");
-            int b = Integer.valueOf(forSolution[1]);
-            if (forSolution[0].equals("supply")) {
+            forWriteSolution = dataStrings[a].split(",");
+            int b = Integer.valueOf(forWriteSolution[1]);
+            if (forWriteSolution[0].equals(SUPPLY)) {
                 variableSupply += b;
-            } else if (forSolution[0].equals("buy")) {
+            } else if (forWriteSolution[0].equals(BUY)) {
                 variableBuy += b;
             }
         }
-        int variableResult = variableSupply - variableBuy;
-        File fileForWrite = new File(toFileName);
+        variableResult = variableSupply - variableBuy;
+        return SUPPLY + "," + variableSupply + System.lineSeparator() + BUY
+                + "," + variableBuy + System.lineSeparator() + RESULT + "," + variableResult;
+    }
+
+    private void writeToFile(File file, String dataForWrite) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileForWrite))) {
-            bufferedWriter.write("supply," + variableSupply + System.lineSeparator() + "buy,"
-                    + variableBuy + System.lineSeparator() + "result," + variableResult);
+            bufferedWriter.write(dataForWrite);
         } catch (IOException e) {
-            throw new RuntimeException("can't create BufferedWriter", e);
+            throw new RuntimeException("Can`t write to file: " + file.getName(), e);
         }
     }
 }
