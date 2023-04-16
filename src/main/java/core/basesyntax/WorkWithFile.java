@@ -11,11 +11,12 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
+    private static final int NUMBER_OF_ITEMS_IN_LINE = 2;
 
     private File fileForRead;
     private File fileForWrite;
 
-    void getStatistic(String fromFileName, String toFileName) {
+    public void getStatistic(String fromFileName, String toFileName) {
         fileForRead = new File(fromFileName);
         fileForWrite = new File(toFileName);
         String dataString = readFile(fileForRead);
@@ -25,13 +26,11 @@ public class WorkWithFile {
 
     private String readFile(File file) {
         StringBuilder stringBuilderForFilesData = new StringBuilder();
-        try {
-            FileReader fileReader = new FileReader(fileForRead);
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
-            int valueResultMethod = bufferedReader.read();
-            while (valueResultMethod != -1) {
-                stringBuilderForFilesData.append((char) valueResultMethod);
-                valueResultMethod = bufferedReader.read();
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileForRead))) {
+            int currentSymbol = bufferedReader.read();
+            while (currentSymbol != -1) {
+                stringBuilderForFilesData.append((char) currentSymbol);
+                currentSymbol = bufferedReader.read();
             }
         } catch (IOException e) {
             throw new RuntimeException("Can`t read from file: " + file.getName(), e);
@@ -47,11 +46,13 @@ public class WorkWithFile {
         String[] forWriteSolution;
         for (int a = 0; a < dataStrings.length; a++) {
             forWriteSolution = dataStrings[a].split(",");
-            int b = Integer.valueOf(forWriteSolution[1]);
-            if (forWriteSolution[0].equals(SUPPLY)) {
-                variableSupply += b;
-            } else if (forWriteSolution[0].equals(BUY)) {
-                variableBuy += b;
+            if (forWriteSolution.length == NUMBER_OF_ITEMS_IN_LINE) {
+                int transaction = Integer.valueOf(forWriteSolution[1]);
+                if (forWriteSolution[0].equals(SUPPLY)) {
+                    variableSupply += transaction;
+                } else if (forWriteSolution[0].equals(BUY)) {
+                    variableBuy += transaction;
+                }
             }
         }
         variableResult = variableSupply - variableBuy;
