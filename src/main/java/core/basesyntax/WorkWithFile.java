@@ -49,10 +49,10 @@ public class WorkWithFile {
         for (int a = 0; a < dataStrings.length; a++) {
             forWriteSolution = dataStrings[a].split(",");
             if (forWriteSolution.length == NUMBER_OF_ITEMS_IN_LINE) {
-                int transaction = Integer.valueOf(forWriteSolution[INDEX_OF_AMOUNT]);
-                if (forWriteSolution[INDEX_OF_OPERATION].equals(SUPPLY)) {
+                int transaction = Integer.valueOf(forWriteSolution[INDEX_OF_OPERATION]);
+                if (forWriteSolution[INDEX_OF_AMOUNT].equals(SUPPLY)) {
                     variableSupply += transaction;
-                } else if (forWriteSolution[INDEX_OF_OPERATION].equals(BUY)) {
+                } else if (forWriteSolution[INDEX_OF_AMOUNT].equals(BUY)) {
                     variableBuy += transaction;
                 }
             }
