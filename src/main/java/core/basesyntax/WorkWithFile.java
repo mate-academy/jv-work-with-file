@@ -12,6 +12,8 @@ public class WorkWithFile {
     private static final String BUY = "buy";
     private static final String RESULT = "result";
     private static final int NUMBER_OF_ITEMS_IN_LINE = 2;
+    private static final int INDEX_OF_AMOUNT = 0;
+    private static final int INDEX_OF_OPERATION = 1;
 
     private File fileForRead;
     private File fileForWrite;
@@ -47,10 +49,10 @@ public class WorkWithFile {
         for (int a = 0; a < dataStrings.length; a++) {
             forWriteSolution = dataStrings[a].split(",");
             if (forWriteSolution.length == NUMBER_OF_ITEMS_IN_LINE) {
-                int transaction = Integer.valueOf(forWriteSolution[1]);
-                if (forWriteSolution[0].equals(SUPPLY)) {
+                int transaction = Integer.valueOf(forWriteSolution[INDEX_OF_AMOUNT]);
+                if (forWriteSolution[INDEX_OF_OPERATION].equals(SUPPLY)) {
                     variableSupply += transaction;
-                } else if (forWriteSolution[0].equals(BUY)) {
+                } else if (forWriteSolution[INDEX_OF_OPERATION].equals(BUY)) {
                     variableBuy += transaction;
                 }
             }
