@@ -21,15 +21,13 @@ public class WorkWithFile {
 
     private String readStatisticFromFile(String fromFileName) {
         StringBuilder stringBuilder = new StringBuilder();
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
-            String value;
-            while ((value = reader.readLine()) != null) {
-                stringBuilder.append(value).append(SEPARATE_FOR_LINE);
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                stringBuilder.append(line).append(SEPARATE_FOR_LINE);
             }
-            reader.close();
         } catch (IOException e) {
-            throw new RuntimeException("Can't not read file" + fromFileName, e);
+            throw new RuntimeException("Can't not read file:" + fromFileName, e);
         }
         return stringBuilder.toString();
     }
@@ -42,7 +40,8 @@ public class WorkWithFile {
             String[] splitCurrentLine = cureent.split(SEPARATE_CURRENT_LINE);
             if (splitCurrentLine[OPERATION_INDEX].equals(OPERATION_SUPPLY)) {
                 supplyValue += Integer.parseInt(splitCurrentLine[VALUE_INDEX]);
-            } else {
+            }
+            if (splitCurrentLine[OPERATION_INDEX].equals(OPERATION_BUY)) {
                 buyValue += Integer.parseInt(splitCurrentLine[VALUE_INDEX]);
             }
         }
@@ -58,7 +57,7 @@ public class WorkWithFile {
             bufferedWriter.write(OPERATION_RESULT + SEPARATE_CURRENT_LINE
                     + (reportDate[OPERATION_INDEX] - reportDate[VALUE_INDEX]));
         } catch (IOException e) {
-            throw new RuntimeException("Can't not write data to file" + toFileName, e);
+            throw new RuntimeException("Can't not write data to file:" + toFileName, e);
         }
     }
 }
