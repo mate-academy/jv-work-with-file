@@ -12,7 +12,8 @@ public class WorkWithFile {
     private static final String OPERATION_SUPPLY = "supply";
     private static final String OPERATION_BUY = "buy";
     private static final String OPERATION_RESULT = "result";
-    private static final String SEPARATE = ",";
+    private static final String SEPARATE_FOR_LINE = "%&%";
+    private static final String SEPARATE_CURRENT_LINE = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         writeStatisticToFile(toFileName, generateReport(readStatisticFromFile(fromFileName)));
@@ -24,7 +25,7 @@ public class WorkWithFile {
             BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
             String value;
             while ((value = reader.readLine()) != null) {
-                stringBuilder.append(value).append("%&%");
+                stringBuilder.append(value).append(SEPARATE_FOR_LINE);
             }
             reader.close();
         } catch (IOException e) {
@@ -36,9 +37,9 @@ public class WorkWithFile {
     private int[] generateReport(String incomeLine) {
         int supplyValue = 0;
         int buyValue = 0;
-        String[] split = incomeLine.split("%&%");
+        String[] split = incomeLine.split(SEPARATE_FOR_LINE);
         for (String cureent : split) {
-            String[] splitCurrentLine = cureent.split(SEPARATE);
+            String[] splitCurrentLine = cureent.split(SEPARATE_CURRENT_LINE);
             if (splitCurrentLine[OPERATION_INDEX].equals(OPERATION_SUPPLY)) {
                 supplyValue += Integer.parseInt(splitCurrentLine[VALUE_INDEX]);
             } else {
@@ -50,10 +51,12 @@ public class WorkWithFile {
 
     private void writeStatisticToFile(String toFileName, int[] reportDate) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write(OPERATION_SUPPLY + SEPARATE + reportDate[0]
-                    + System.lineSeparator());
-            bufferedWriter.write(OPERATION_BUY + SEPARATE + reportDate[1] + System.lineSeparator());
-            bufferedWriter.write(OPERATION_RESULT + SEPARATE + (reportDate[0] - reportDate[1]));
+            bufferedWriter.write(OPERATION_SUPPLY + SEPARATE_CURRENT_LINE
+                    + reportDate[OPERATION_INDEX] + System.lineSeparator());
+            bufferedWriter.write(OPERATION_BUY + SEPARATE_CURRENT_LINE
+                    + reportDate[VALUE_INDEX] + System.lineSeparator());
+            bufferedWriter.write(OPERATION_RESULT + SEPARATE_CURRENT_LINE
+                    + (reportDate[OPERATION_INDEX] - reportDate[VALUE_INDEX]));
         } catch (IOException e) {
             throw new RuntimeException("Can't not write data to file" + toFileName, e);
         }
