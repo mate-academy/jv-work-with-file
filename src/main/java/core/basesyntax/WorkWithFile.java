@@ -15,33 +15,45 @@ public class WorkWithFile {
     private static final String SEPARATE = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String[] split;
-        int supplyValue = 0;
-        int buyValue = 0;
+        writeStatisticToFile(toFileName, generateReport(readStatisticFromFile(fromFileName)));
+    }
+
+    private String readStatisticFromFile(String fromFileName) {
+        StringBuilder stringBuilder = new StringBuilder();
         try {
             BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
             String value;
             while ((value = reader.readLine()) != null) {
-                split = value.split(SEPARATE);
-                if (split[OPERATION_INDEX].equals(OPERATION_SUPPLY)) {
-                    supplyValue += Integer.parseInt(split[VALUE_INDEX]);
-                } else {
-                    buyValue += Integer.parseInt(split[VALUE_INDEX]);
-                }
+                stringBuilder.append(value).append("%&%");
             }
             reader.close();
         } catch (IOException e) {
             throw new RuntimeException("Can't not read file" + fromFileName, e);
         }
-        writeStatisticToFile(toFileName, supplyValue, buyValue);
+        return stringBuilder.toString();
     }
 
-    private void writeStatisticToFile(String toFileName, int supplyValue, int buyValue) {
+    private int[] generateReport(String incomeLine) {
+        int supplyValue = 0;
+        int buyValue = 0;
+        String[] split = incomeLine.split("%&%");
+        for (String cureent : split) {
+            String[] splitCurrentLine = cureent.split(SEPARATE);
+            if (splitCurrentLine[OPERATION_INDEX].equals(OPERATION_SUPPLY)) {
+                supplyValue += Integer.parseInt(splitCurrentLine[VALUE_INDEX]);
+            } else {
+                buyValue += Integer.parseInt(splitCurrentLine[VALUE_INDEX]);
+            }
+        }
+        return new int[]{supplyValue, buyValue};
+    }
+
+    private void writeStatisticToFile(String toFileName, int[] reportDate) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write(OPERATION_SUPPLY + SEPARATE + supplyValue
+            bufferedWriter.write(OPERATION_SUPPLY + SEPARATE + reportDate[0]
                     + System.lineSeparator());
-            bufferedWriter.write(OPERATION_BUY + SEPARATE + buyValue + System.lineSeparator());
-            bufferedWriter.write(OPERATION_RESULT + SEPARATE + (supplyValue - buyValue));
+            bufferedWriter.write(OPERATION_BUY + SEPARATE + reportDate[1] + System.lineSeparator());
+            bufferedWriter.write(OPERATION_RESULT + SEPARATE + (reportDate[0] - reportDate[1]));
         } catch (IOException e) {
             throw new RuntimeException("Can't not write data to file" + toFileName, e);
         }
