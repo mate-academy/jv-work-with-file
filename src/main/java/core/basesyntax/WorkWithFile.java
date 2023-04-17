@@ -24,14 +24,19 @@ public class WorkWithFile {
             while ((value = reader.readLine()) != null) {
                 split = value.split(SEPARATE);
                 if (split[OPERATION_INDEX].equals(OPERATION_SUPPLY)) {
-                    supplyValue = supplyValue + Integer.parseInt(split[VALUE_INDEX]);
+                    supplyValue += Integer.parseInt(split[VALUE_INDEX]);
                 } else {
-                    buyValue = buyValue + Integer.parseInt(split[VALUE_INDEX]);
+                    buyValue += Integer.parseInt(split[VALUE_INDEX]);
                 }
             }
+            reader.close();
         } catch (IOException e) {
             throw new RuntimeException("Can't not read file" + fromFileName, e);
         }
+        writeStatisticToFile(toFileName, supplyValue, buyValue);
+    }
+
+    private void writeStatisticToFile(String toFileName, int supplyValue, int buyValue) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(OPERATION_SUPPLY + SEPARATE + supplyValue
                     + System.lineSeparator());
