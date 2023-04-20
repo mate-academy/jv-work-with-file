@@ -8,6 +8,10 @@ import java.io.IOException;
 
 public class WorkWithFile {
     private static final String CHECK_SUPPLY = "supply";
+    private static final String SEPARATOR = " ";
+    private static final String CSV_SEPARATOR = ",";
+    private static final int AMOUNT_INDEX = 1;
+    private static final int OPERATION_INDEX = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] dataFromFile = readFile(fromFileName);
@@ -20,13 +24,13 @@ public class WorkWithFile {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String value = bufferedReader.readLine();
             while (value != null) {
-                stringBuilder.append(value).append(" ");
+                stringBuilder.append(value).append(SEPARATOR);
                 value = bufferedReader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("An error occurred while reading the file: ", e);
         }
-        return stringBuilder.toString().split(" ");
+        return stringBuilder.toString().split(SEPARATOR);
     }
 
     private void writeFile(String[] calculatedStatistic, String toFileName) {
@@ -34,28 +38,27 @@ public class WorkWithFile {
             for (String data : calculatedStatistic) {
                 bufferedWriter.write(data);
                 bufferedWriter.write(System.lineSeparator());
-                bufferedWriter.flush();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't write file", e);
+            throw new RuntimeException("An error occurred while writing to the file: ", e);
         }
 
     }
 
     private String[] calculateStatistic(String[] dataFromFile) {
-        int sumOfSupply = 0;
-        int sumOfBuy = 0;
-        int ammount = 0;
+        int supplySum = 0;
+        int buySum = 0;
+        int ammount;
         for (String line : dataFromFile) {
-            String[] lineSeparation = line.split(",");
-            ammount = Integer.parseInt(lineSeparation[1]);
-            if (lineSeparation[0].equals(CHECK_SUPPLY)) {
-                sumOfSupply += ammount;
+            String[] lineSeparation = line.split(CSV_SEPARATOR);
+            ammount = Integer.parseInt(lineSeparation[AMOUNT_INDEX]);
+            if (lineSeparation[OPERATION_INDEX].equals(CHECK_SUPPLY)) {
+                supplySum += ammount;
             } else {
-                sumOfBuy += ammount;
+                buySum += ammount;
             }
         }
-        int result = sumOfSupply - sumOfBuy;
-        return new String[] {"supply," + sumOfSupply, "buy," + sumOfBuy, "result," + result};
+        int result = supplySum - buySum;
+        return new String[]{"supply," + supplySum, "buy," + buySum, "result," + result};
     }
 }
