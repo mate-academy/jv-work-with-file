@@ -5,8 +5,6 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class WorkWithFile {
     private static final String OPERATION_SUPPLY = "supply";
@@ -18,9 +16,10 @@ public class WorkWithFile {
     private static final int AMOUNT_INDEX_0 = 0;
     private static final int AMOUNT_INDEX_1 = 1;
     private static final String DELIMITER = "\\W";
+    private static final String SPLIT_DELIMITER = "!%=&!";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        List<String> dataFromBuffer = readFromFile(fromFileName);
+        String dataFromBuffer = readFromFile(fromFileName);
         int supplyAmount = calculateStatisticAmount(dataFromBuffer, OPERATION_SUPPLY);
         int buyAmount = calculateStatisticAmount(dataFromBuffer, OPERATION_BUY);
         String reportMessage = createReportMessage(supplyAmount, buyAmount);
@@ -35,33 +34,29 @@ public class WorkWithFile {
         }
     }
 
-    private List<String> readFromFile(String fromFileName) {
-        List<String> dataFromBuffer = new ArrayList<>();
+    private String readFromFile(String fromFileName) {
+        StringBuilder dataFromBuffer = new StringBuilder();
         String line;
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             while ((line = bufferedReader.readLine()) != null) {
-                dataFromBuffer.add(line);
+                dataFromBuffer.append(line).append(SPLIT_DELIMITER);
             }
         } catch (IOException e) {
             throw new RuntimeException(TEXT_OF_EXCEPTION, e);
         }
-        return dataFromBuffer;
+        return dataFromBuffer.toString();
     }
 
     private String createReportMessage(int supplyAmount, int buyAmount) {
-        return new StringBuilder().append(OPERATION_SUPPLY).append(COMA_SEPARATOR)
-                .append(supplyAmount)
-                .append(System.lineSeparator())
-                .append(OPERATION_BUY).append(COMA_SEPARATOR).append(buyAmount)
-                .append(System.lineSeparator())
-                .append(OPERATION_RESULT).append(COMA_SEPARATOR)
-                .append(supplyAmount - buyAmount)
-                .toString();
+        return OPERATION_SUPPLY + COMA_SEPARATOR + supplyAmount + System.lineSeparator()
+                + OPERATION_BUY + COMA_SEPARATOR + buyAmount + System.lineSeparator()
+                + OPERATION_RESULT + COMA_SEPARATOR + (supplyAmount - buyAmount);
     }
 
-    private int calculateStatisticAmount(List<String> dataFromBuffer, String operation) {
+    private int calculateStatisticAmount(String dataFromBuffer, String operation) {
         int amount = 0;
-        for (String lineFromBuffer : dataFromBuffer) {
+        String[] arrayWithDataFromBuffer = dataFromBuffer.split(SPLIT_DELIMITER);
+        for (String lineFromBuffer : arrayWithDataFromBuffer) {
             String[] splitString = lineFromBuffer.split(DELIMITER);
             if (splitString[AMOUNT_INDEX_0].equals(operation)) {
                 amount += Integer.parseInt(splitString[AMOUNT_INDEX_1]);
