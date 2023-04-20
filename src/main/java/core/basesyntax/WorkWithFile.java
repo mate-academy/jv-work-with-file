@@ -9,8 +9,10 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final int AMOUNT_INDEX = 1;
     private static final int OPERATION_INDEX = 0;
-    private static final String CSV_SEPARATOR = ",";
+    private static final String SEPARATOR = ",";
+    private static final String BUY_OPERATION = "buy";
     private static final String SUPPLY_OPERATION = "supply";
+    private static final String RESULT_OPERATION = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String data = readFromFile(fromFileName);
@@ -20,7 +22,6 @@ public class WorkWithFile {
 
     private static String readFromFile(String filename) {
         StringBuilder information = new StringBuilder();
-
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(filename))) {
             String line = bufferedReader.readLine();
             while (line != null) {
@@ -28,7 +29,7 @@ public class WorkWithFile {
                 line = bufferedReader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can`t read from file with name:" + filename, e);
+            throw new RuntimeException("Can`t read from file with name: " + filename, e);
         }
         return information.toString();
     }
@@ -46,9 +47,8 @@ public class WorkWithFile {
         int supplySum = 0;
         String[] splitData;
         String[] dataArray = data.split(System.lineSeparator());
-
         for (int i = 0; i < dataArray.length; i++) {
-            splitData = dataArray[i].split(CSV_SEPARATOR);
+            splitData = dataArray[i].split(SEPARATOR);
             if (splitData[OPERATION_INDEX].equals(SUPPLY_OPERATION)) {
                 supplySum += Integer.parseInt(splitData[AMOUNT_INDEX]);
             } else {
@@ -59,10 +59,17 @@ public class WorkWithFile {
     }
 
     private String createResult(int buySum, int supplySum) {
-        StringBuilder result = new StringBuilder();
-        result.append("supply,").append(supplySum).append(System.lineSeparator())
-                .append("buy,").append(buySum).append(System.lineSeparator())
-                .append("result,").append(supplySum - buySum);
-        return result.toString().trim();
+        String result = SUPPLY_OPERATION
+                + SEPARATOR
+                + supplySum
+                + System.lineSeparator()
+                + BUY_OPERATION
+                + SEPARATOR
+                + buySum
+                + System.lineSeparator()
+                + RESULT_OPERATION
+                + SEPARATOR
+                + (supplySum - buySum);
+        return result.trim();
     }
 }
