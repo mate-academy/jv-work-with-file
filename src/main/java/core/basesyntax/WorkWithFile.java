@@ -5,14 +5,16 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 public class WorkWithFile {
+    private static final int AMOUNT_INDEX = 1;
+    private static final int OPERATION_INDEX = 0;
+    private static final String CSV_SEPARATOR = ",";
+    private static final String SUPPLY_OPERATION = "supply";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String data = readFromFile(fromFileName);
-        data = workWithFileData(data);
+        data = processData(data);
         writeToFile(toFileName, data);
     }
 
@@ -26,9 +28,8 @@ public class WorkWithFile {
                 line = bufferedReader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can`t read file", e);
+            throw new RuntimeException("Can`t read from file with name:" + filename, e);
         }
-
         return information.toString();
     }
 
@@ -36,33 +37,32 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
             bufferedWriter.write(data);
         } catch (IOException e) {
-            throw new RuntimeException("Can`t write file", e);
+            throw new RuntimeException("Can`t write to file with name: " + fileName, e);
         }
     }
 
-    private String workWithFileData(String data) {
-        int sumOfBuy = 0;
-        int sumOfSupply = 0;
+    private String processData(String data) {
+        int buySum = 0;
+        int supplySum = 0;
         String[] splitData;
-        StringBuilder result = new StringBuilder();
         String[] dataArray = data.split(System.lineSeparator());
-        Map<String, Integer> operationMap = new LinkedHashMap<>();
 
         for (int i = 0; i < dataArray.length; i++) {
-            splitData = dataArray[i].split(",");
-            if (splitData[0].equals("supply")) {
-                sumOfSupply += Integer.valueOf(splitData[1]);
-                operationMap.put(splitData[0], sumOfSupply);
+            splitData = dataArray[i].split(CSV_SEPARATOR);
+            if (splitData[OPERATION_INDEX].equals(SUPPLY_OPERATION)) {
+                supplySum += Integer.parseInt(splitData[AMOUNT_INDEX]);
             } else {
-                sumOfBuy += Integer.valueOf(splitData[1]);
-                operationMap.put(splitData[0], sumOfBuy);
+                buySum += Integer.parseInt(splitData[AMOUNT_INDEX]);
             }
         }
+        return createResult(buySum, supplySum);
+    }
 
-        result.append("supply,").append(operationMap.get("supply")).append(System.lineSeparator())
-                .append("buy,").append(operationMap.get("buy")).append(System.lineSeparator())
-                .append("result,").append(operationMap.get("supply") - operationMap.get("buy"));
-
+    private String createResult(int buySum, int supplySum) {
+        StringBuilder result = new StringBuilder();
+        result.append("supply,").append(supplySum).append(System.lineSeparator())
+                .append("buy,").append(buySum).append(System.lineSeparator())
+                .append("result,").append(supplySum - buySum);
         return result.toString().trim();
     }
 }
