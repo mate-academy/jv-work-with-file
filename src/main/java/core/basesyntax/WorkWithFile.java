@@ -9,9 +9,9 @@ import java.nio.file.Files;
 import java.util.List;
 
 public class WorkWithFile {
-    private static final int ZEROELEMENT = 0;
-    private static final int FIRSTELEMENT = 1;
-    private static final String COMMA = ",";
+    private static final int OPERATION_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
+    private static final String DELIMITER = ",";
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
@@ -36,7 +36,7 @@ public class WorkWithFile {
         try {
             dataFromFile = Files.readAllLines(file.toPath());
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("File not found", e);
+            throw new RuntimeException("File not found" + fromFileName, e);
         } catch (IOException e) {
             throw new RuntimeException("Сan't read from file: " + fromFileName, e);
         }
@@ -44,19 +44,19 @@ public class WorkWithFile {
     }
 
     private String generateReport(List<String> dataFromFile) {
-        int sumOfsupply = 0;
+        int sumOfSupply = 0;
         int sumOfBuy = 0;
-        StringBuilder reportData = new StringBuilder();
         for (String line : dataFromFile) {
-            String[] lineSplit = line.split(COMMA);
-            if (lineSplit[ZEROELEMENT].equals(SUPPLY)) {
-                sumOfsupply += Integer.parseInt(lineSplit[FIRSTELEMENT]);
+            String[] lineSplit = line.split(DELIMITER);
+            if (lineSplit[OPERATION_INDEX].equals(SUPPLY)) {
+                sumOfSupply += Integer.parseInt(lineSplit[AMOUNT_INDEX]);
             } else {
-                sumOfBuy += Integer.parseInt(lineSplit[FIRSTELEMENT]);
+                sumOfBuy += Integer.parseInt(lineSplit[AMOUNT_INDEX]);
             }
         }
-        return reportData.append(SUPPLY + COMMA).append(sumOfsupply).append(System.lineSeparator())
-            .append(BUY + COMMA).append(sumOfBuy).append(System.lineSeparator())
-            .append(RESULT + COMMA).append(sumOfsupply - sumOfBuy).toString();
+        return new StringBuilder().append(SUPPLY + DELIMITER)
+            .append(sumOfSupply).append(System.lineSeparator())
+            .append(BUY + DELIMITER).append(sumOfBuy).append(System.lineSeparator())
+            .append(RESULT + DELIMITER).append(sumOfSupply - sumOfBuy).toString();
     }
 }
