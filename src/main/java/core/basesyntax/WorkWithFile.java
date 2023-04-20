@@ -11,41 +11,26 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class WorkWithFile {
-    private static final String NAME_OF_FIRST_CELL = "supply";
-    private static final String NAME_OF_SECOND_CELL = "buy";
-    private static final String NAME_OF_THIRD_CELL = "result";
+    private static final String NAME_OF_FIRST_LINE = "supply";
+    private static final String NAME_OF_SECOND_LINE = "buy";
+    private static final String NAME_OF_THIRD_LINE = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String[] entity = systemizeEntity(parseLinesFromFile(fromFileName));
+        String entity = systemizeEntity(parseLinesFromFile(fromFileName));
         writeToFile(entity, toFileName);
     }
 
-    private void writeToFile(String[] entity, String toFileName) {
-        File file = createFile(toFileName);
-        for (String line : entity) {
-            try {
-                Files.write(file.toPath(), line.getBytes(StandardCharsets.UTF_8),
-                        StandardOpenOption.APPEND);
-            } catch (IOException e) {
-                throw new RuntimeException("File cannot be written", e);
-            }
-        }
-    }
-
-    private File createFile(String toFileName) {
+    private void writeToFile(String entity, String toFileName) {
         File file = new File(toFileName);
         try {
-            if (file.exists()) {
-                file.delete();
-            }
-            file.createNewFile();
+            Files.write(file.toPath(), entity.getBytes(StandardCharsets.UTF_8),
+                    StandardOpenOption.CREATE);
         } catch (IOException e) {
-            throw new RuntimeException("Can't create file", e);
+            throw new RuntimeException("File cannot be written", e);
         }
-        return file;
     }
 
-    private String[] systemizeEntity(String[] parsedLines) {
+    private String systemizeEntity(String[] parsedLines) {
         Map<String, String> consolidatedMap = new HashMap<>();
         for (String line : parsedLines) {
             String[] parts = line.split(",");
@@ -57,17 +42,16 @@ public class WorkWithFile {
         return tableFormation(consolidatedMap);
     }
 
-    private String[] tableFormation(Map<String, String> consolidatedMap) {
-        String resultSum = String.valueOf(Integer.parseInt(consolidatedMap.get(NAME_OF_FIRST_CELL))
-                - Integer.parseInt(consolidatedMap.get(NAME_OF_SECOND_CELL)));
-        return new String[]{
-                NAME_OF_FIRST_CELL + "," + consolidatedMap.get(NAME_OF_FIRST_CELL)
-                        + System.lineSeparator(),
-                NAME_OF_SECOND_CELL + "," + consolidatedMap.get(NAME_OF_SECOND_CELL)
-                        + System.lineSeparator(),
-                NAME_OF_THIRD_CELL + "," + resultSum
-                        + System.lineSeparator()
-        };
+    private String tableFormation(Map<String, String> contentMap) {
+        String resultSum = String.valueOf(Integer.parseInt(contentMap.get(NAME_OF_FIRST_LINE))
+                - Integer.parseInt(contentMap.get(NAME_OF_SECOND_LINE)));
+        return new StringBuilder()
+                .append(NAME_OF_FIRST_LINE + ",").append(contentMap.get(NAME_OF_FIRST_LINE))
+                .append(System.lineSeparator())
+                .append(NAME_OF_SECOND_LINE).append(",").append(contentMap.get(NAME_OF_SECOND_LINE))
+                .append(System.lineSeparator())
+                .append(NAME_OF_THIRD_LINE).append(",").append(resultSum)
+                .append(System.lineSeparator()).toString();
     }
 
     private String[] parseLinesFromFile(String fromFileName) {
