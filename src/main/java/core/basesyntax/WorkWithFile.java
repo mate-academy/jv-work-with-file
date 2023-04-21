@@ -14,6 +14,9 @@ public class WorkWithFile {
     private static final String NAME_OF_FIRST_LINE = "supply";
     private static final String NAME_OF_SECOND_LINE = "buy";
     private static final String NAME_OF_THIRD_LINE = "result";
+    private static final String COMMA = ",";
+    private static final int NAME_INDEX = 0;
+    private static final int AMMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String entity = systemizeEntity(parseLinesFromFile(fromFileName));
@@ -33,11 +36,11 @@ public class WorkWithFile {
     private String systemizeEntity(String[] parsedLines) {
         Map<String, String> consolidatedMap = new HashMap<>();
         for (String line : parsedLines) {
-            String[] parts = line.split(",");
-            consolidatedMap.put(parts[0], consolidatedMap.get(parts[0]) == null
-                    ? parts[1] :
-                    String.valueOf(Integer.parseInt(consolidatedMap.get(parts[0]))
-                            + Integer.parseInt(parts[1])));
+            String[] parts = line.split(COMMA);
+            consolidatedMap.put(parts[NAME_INDEX], consolidatedMap.get(parts[NAME_INDEX]) == null
+                    ? parts[AMMOUNT_INDEX] :
+                    String.valueOf(Integer.parseInt(consolidatedMap.get(parts[NAME_INDEX]))
+                            + Integer.parseInt(parts[AMMOUNT_INDEX])));
         }
         return tableFormation(consolidatedMap);
     }
@@ -45,13 +48,12 @@ public class WorkWithFile {
     private String tableFormation(Map<String, String> contentMap) {
         String resultSum = String.valueOf(Integer.parseInt(contentMap.get(NAME_OF_FIRST_LINE))
                 - Integer.parseInt(contentMap.get(NAME_OF_SECOND_LINE)));
-        return new StringBuilder()
-                .append(NAME_OF_FIRST_LINE + ",").append(contentMap.get(NAME_OF_FIRST_LINE))
-                .append(System.lineSeparator())
-                .append(NAME_OF_SECOND_LINE).append(",").append(contentMap.get(NAME_OF_SECOND_LINE))
-                .append(System.lineSeparator())
-                .append(NAME_OF_THIRD_LINE).append(",").append(resultSum)
-                .append(System.lineSeparator()).toString();
+        return NAME_OF_FIRST_LINE + COMMA + contentMap.get(NAME_OF_FIRST_LINE)
+                + System.lineSeparator()
+                + NAME_OF_SECOND_LINE + COMMA + contentMap.get(NAME_OF_SECOND_LINE)
+                + System.lineSeparator()
+                + NAME_OF_THIRD_LINE + COMMA + resultSum
+                + System.lineSeparator();
     }
 
     private String[] parseLinesFromFile(String fromFileName) {
