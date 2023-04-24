@@ -10,6 +10,9 @@ public class WorkWithFile {
     private static final String SUPPLY_VALUE = "supply";
     private static final String BUY_VALUE = "buy";
     private static final String RESULT_VALUE = "result";
+    private static final int OPERATION_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
+
     private static final String SEPARATE_COMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
@@ -37,8 +40,8 @@ public class WorkWithFile {
         String[] lines = contents.trim().split(System.lineSeparator());
         for (String line : lines) {
             String[] splitter = line.split(SEPARATE_COMA);
-            String operation = splitter[0].trim();
-            int amount = Integer.parseInt(splitter[1].trim());
+            String operation = splitter[OPERATION_INDEX].trim();
+            int amount = Integer.parseInt(splitter[AMOUNT_INDEX].trim());
             switch (operation) {
                 case SUPPLY_VALUE:
                     totalSupply += amount;
@@ -63,4 +66,3 @@ public class WorkWithFile {
         }
     }
 }
-
