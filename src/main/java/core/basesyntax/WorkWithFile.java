@@ -18,7 +18,6 @@ public class WorkWithFile {
         writeToFile(report, toFileName);
     }
 
-
     private String readFile(String fileName) {
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             StringBuilder builder = new StringBuilder();
@@ -41,17 +40,19 @@ public class WorkWithFile {
             String operation = splitter[0].trim();
             int amount = Integer.parseInt(splitter[1].trim());
             switch (operation) {
-                case SUPPLY_VALUE -> totalSupply += amount;
-                case BUY_VALUE -> totalBuy += amount;
-                default -> {
-
-                }
+                case SUPPLY_VALUE:
+                    totalSupply += amount;
+                    break;
+                case BUY_VALUE:
+                    totalBuy += amount;
+                    break;
+                default:
             }
         }
         int result = totalSupply - totalBuy;
-        return SUPPLY_VALUE + SEPARATE_COMA + totalSupply + System.lineSeparator() +
-                BUY_VALUE + SEPARATE_COMA + totalBuy + System.lineSeparator() +
-                RESULT_VALUE + SEPARATE_COMA + result;
+        return SUPPLY_VALUE + SEPARATE_COMA + totalSupply + System.lineSeparator()
+                + BUY_VALUE + SEPARATE_COMA + totalBuy + System.lineSeparator()
+                + RESULT_VALUE + SEPARATE_COMA + result;
     }
 
     private void writeToFile(String report, String fileName) {
