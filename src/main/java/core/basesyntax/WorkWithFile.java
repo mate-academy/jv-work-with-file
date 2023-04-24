@@ -7,32 +7,59 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String SUPPLY_VALUE = "supply";
+    private static final String BUY_VALUE = "buy";
+    private static final String RESULT_VALUE = "result";
+    private static final String SEPARATE_COMA = ",";
+
     public void getStatistic(String fromFileName, String toFileName) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
-                BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            int totalSupply = 0;
-            int totalBuy = 0;
+        String contents = readFile(fromFileName);
+        String report = generateReport(contents);
+        writeToFile(report, toFileName);
+    }
+
+
+    private String readFile(String fileName) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            StringBuilder builder = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",");
-                String operation = parts[0].trim();
-                int amount = Integer.parseInt(parts[1].trim());
-                switch (operation) {
-                    case "supply":
-                        totalSupply += amount;
-                        break;
-                    case "buy":
-                        totalBuy += amount;
-                        break;
-                    default:
+                builder.append(line).append(System.lineSeparator());
+            }
+            return builder.toString();
+        } catch (IOException e) {
+            throw new RuntimeException("Can't read file: " + fileName, e);
+        }
+    }
+
+    private String generateReport(String contents) {
+        int totalSupply = 0;
+        int totalBuy = 0;
+        String[] lines = contents.trim().split(System.lineSeparator());
+        for (String line : lines) {
+            String[] splitter = line.split(SEPARATE_COMA);
+            String operation = splitter[0].trim();
+            int amount = Integer.parseInt(splitter[1].trim());
+            switch (operation) {
+                case SUPPLY_VALUE -> totalSupply += amount;
+                case BUY_VALUE -> totalBuy += amount;
+                default -> {
+
                 }
             }
-            int result = totalSupply - totalBuy;
-            writer.write("supply," + totalSupply + System.lineSeparator());
-            writer.write("buy," + totalBuy + System.lineSeparator());
-            writer.write("result," + result);
+        }
+        int result = totalSupply - totalBuy;
+        return SUPPLY_VALUE + SEPARATE_COMA + totalSupply + System.lineSeparator() +
+                BUY_VALUE + SEPARATE_COMA + totalBuy + System.lineSeparator() +
+                RESULT_VALUE + SEPARATE_COMA + result;
+    }
+
+    private void writeToFile(String report, String fileName) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+            writer.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Error reading/writing file", e);
+            throw new RuntimeException("Can`t write file" + fileName, e);
         }
     }
 }
+
