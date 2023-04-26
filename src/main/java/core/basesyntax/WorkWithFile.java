@@ -11,6 +11,8 @@ public class WorkWithFile {
     private static final String BUY = "buy";
     private static final String RESULT = "result";
     private static final String COMMA = ",";
+    private static final int INDEX_ONE = 1;
+    private static final int INDEX_ZERO = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] infoFromFileName = readFile(fromFileName);
@@ -33,14 +35,14 @@ public class WorkWithFile {
     }
 
     private String getReport(String[] information) {
-        int sumSupply = 0;
-        int sumBuy = 0;
+        int sumSupply = INDEX_ZERO;
+        int sumBuy = INDEX_ZERO;
         for (String sentence : information) {
-            String[] word = sentence.split(",");
+            String[] word = sentence.split(COMMA);
             if (word[0].equals(SUPPLY)) {
-                sumSupply += Integer.parseInt(word[1]);
+                sumSupply += Integer.parseInt(word[INDEX_ONE]);
             } else {
-                sumBuy += Integer.parseInt(word[1]);
+                sumBuy += Integer.parseInt(word[INDEX_ONE]);
             }
         }
         return (SUPPLY) + (COMMA) + (sumSupply) + (System.lineSeparator())
