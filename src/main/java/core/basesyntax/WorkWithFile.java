@@ -10,7 +10,7 @@ public class WorkWithFile {
         int supply = 0;
         int buy = 0;
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
-             FileWriter writer = new FileWriter(toFileName)) {
+                FileWriter writer = new FileWriter(toFileName)) {
             String value = reader.readLine();
             while (value != null) {
                 String[] parts = value.split(",");
