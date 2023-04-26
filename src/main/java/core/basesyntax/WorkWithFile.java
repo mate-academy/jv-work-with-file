@@ -25,9 +25,9 @@ public class WorkWithFile {
         }
         reader.close();
         int result = supplySum - buySum;
-        writer.write("supply" + supplySum + "\n");
-        writer.write("buy" + buySum + "\n");
-        writer.write("result" + result + "\n");
+        writer.write("supply," + supplySum + "\n");
+        writer.write("buy," + buySum + "\n");
+        writer.write("result," + result + "\n");
         writer.close();
     }
 }
