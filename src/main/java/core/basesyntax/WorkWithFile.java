@@ -10,10 +10,13 @@ public class WorkWithFile {
     private static final String SUPLY_TEXT = "supply";
     private static final String BUY_TEXT = "buy";
     private static final String RESULT_TEXT = "result";
+    private static final String SEPARATOR = ",";
+    private static final int AMOUNT_INDEX = 1;
+    private static final int OPERATION_INDEX = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] data = readFromFile(fromFileName);
-        String[] calculated = calculate(data);
+        String calculated = calculate(data);
         writeToFile(toFileName, calculated);
     }
 
@@ -31,32 +34,31 @@ public class WorkWithFile {
         return stringBuilder.toString().split(System.lineSeparator());
     }
 
-    private void writeToFile(String fileName, String[] calculate) {
+    private void writeToFile(String fileName, String calculate) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
-            for (String data : calculate) {
-                bufferedWriter.write(data);
-                bufferedWriter.write(System.lineSeparator());
-            }
+            bufferedWriter.write(calculate);
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to file " + fileName, e);
         }
     }
 
-    private String[] calculate(String[] dataFromFile) {
+    private String calculate(String[] dataFromFile) {
         int supply = 0;
         int buy = 0;
         int amount;
+        StringBuilder stringBuilder = new StringBuilder();
         for (String line : dataFromFile) {
-            String[] lineSeparation = line.split(",");
-            amount = Integer.parseInt(lineSeparation[1]);
-            if (lineSeparation[0].equals(SUPLY_TEXT)) {
+            String[] lineSeparation = line.split(SEPARATOR);
+            amount = Integer.parseInt(lineSeparation[AMOUNT_INDEX]);
+            if (lineSeparation[OPERATION_INDEX ].equals(SUPLY_TEXT)) {
                 supply += amount;
             } else {
                 buy += amount;
             }
         }
-        return new String[]{SUPLY_TEXT + ","
-                + supply, BUY_TEXT + ","
-                + buy, RESULT_TEXT + "," + (supply - buy)};
+        return stringBuilder.append(SUPLY_TEXT).append(",").append(supply)
+                .append(System.lineSeparator())
+                .append(BUY_TEXT).append(",").append(buy).append(System.lineSeparator())
+                .append(RESULT_TEXT).append(",").append((supply - buy)).toString();
     }
 }
