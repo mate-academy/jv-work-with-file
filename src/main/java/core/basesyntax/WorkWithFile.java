@@ -9,9 +9,9 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         int supply = 0;
         int buy = 0;
-        try (BufferedReader br = new BufferedReader(new FileReader(fromFileName));
-                FileWriter fw = new FileWriter(toFileName)) {
-            String value = br.readLine();
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
+             FileWriter writer = new FileWriter(toFileName)) {
+            String value = reader.readLine();
             while (value != null) {
                 String[] parts = value.split(",");
                 if (parts[0].equals("supply")) {
@@ -19,16 +19,16 @@ public class WorkWithFile {
                 } else if (parts[0].equals("buy")) {
                     buy += Integer.parseInt(parts[1]);
                 }
-                value = br.readLine();
+                value = reader.readLine();
             }
             int result = supply - buy;
-            fw.write("supply," + supply + System.lineSeparator());
-            fw.write("buy," + buy + System.lineSeparator());
-            fw.write("result," + result + System.lineSeparator());
+            writer.write("supply," + supply + System.lineSeparator());
+            writer.write("buy," + buy + System.lineSeparator());
+            writer.write("result," + result + System.lineSeparator());
 
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can't read data from the file "
+                    + fromFileName + toFileName, e);
         }
-
     }
 }
