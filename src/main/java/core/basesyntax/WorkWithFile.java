@@ -54,7 +54,7 @@ public class WorkWithFile {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, false))) {
             writer.write(statistic.toString());
         } catch (IOException e) {
-            throw new RuntimeException("Can`t write data to file",e);
+            throw new RuntimeException("Can`t write data to file", e);
         }
     }
 }
