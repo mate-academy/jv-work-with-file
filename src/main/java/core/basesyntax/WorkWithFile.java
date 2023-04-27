@@ -1,31 +1,39 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
-        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName));
-        crateReport(readFromFile(fromFileName));
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
+            bufferedWriter.write(crateReport(readFromFile(fromFileName)));
+
+        } catch (IOException e) {
+            throw new RuntimeException(e + " Can not write to file " + toFileName);
+        }
     }
 
-    public String readFromFile(String fromFileName) throws IOException {
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
+    private String readFromFile(String fromFileName) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             StringBuilder stringBuilder = new StringBuilder();
             String value = bufferedReader.readLine();
             while (value != null) {
                 stringBuilder.append(value).append("/");
+                value = bufferedReader.readLine();
             }
             return stringBuilder.toString();
+        } catch (IOException e) {
+            throw new RuntimeException(e + " Can not read from file " + fromFileName);
         }
-        catch (IOException e) {throw new IOException("WTF?!");}
     }
 
-    public String crateReport(String readFromFile) {
+    private String crateReport(String readFromFile) {
         String[] fileLines = readFromFile.split("/");
         int supplySum = 0;
         int buySum = 0;
-        int result = supplySum - buySum;
         for (String fileLine : fileLines) {
             if (fileLine.contains("supply")) {
                 String[] supplyLine = fileLine.split(",");
@@ -35,8 +43,11 @@ public class WorkWithFile {
                 buySum += Integer.parseInt(buyLine[1]);
             }
         }
+        int result = supplySum - buySum;
         StringBuilder stringBuilder = new StringBuilder("supply,");
-        return stringBuilder.append(supplySum).append("\n").append("buy,")
-                .append(buySum).append("\n").append("result,").append(result).toString();
+        return stringBuilder.append(supplySum)
+                .append(System.lineSeparator()).append("buy,")
+                .append(buySum).append(System.lineSeparator())
+                .append("result,").append(result).toString();
     }
 }
