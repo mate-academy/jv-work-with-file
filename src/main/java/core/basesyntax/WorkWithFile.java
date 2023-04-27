@@ -2,46 +2,60 @@ package core.basesyntax;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    public static final String supply = "supply";
-    public static final String buy = "buy";
-    public static final int ZERO_LENGTH = 0;
-    public static final int firstElement = 0;
-    public static final int secondElement = 1;
+    public static final String COMMA = ",";
+    public static final String SUPPLY = "supply";
+    public static final String BUY = "buy";
+    public static final int ZERO_INDEX = 0;
+    public static final int FIRST_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        File file = new File(fromFileName);
-        File destinationFile = new File(toFileName);
-        int supplyCounter = 0;
-        int buyCounter = 0;
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
-                BufferedWriter bufferedWriter = new BufferedWriter(
-                        new FileWriter(destinationFile, true))) {
-            if (destinationFile.length() != ZERO_LENGTH) {
-                return;
-            }
+        String[] stringFromFile = readFile(fromFileName);
+        String reportAsString = makeReport(stringFromFile);
+        writeFile(reportAsString,toFileName);
+    }
+
+    private String[] readFile(String file) {
+        StringBuilder stringBuilder = new StringBuilder();
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
             String value = bufferedReader.readLine();
             while (value != null) {
-                String[] elements = value.split(",");
-                if (elements[firstElement].equals(supply)) {
-                    supplyCounter += Integer.parseInt(elements[secondElement]);
-                }
-                if (elements[firstElement].equals(buy)) {
-                    buyCounter += Integer.parseInt(elements[secondElement]);
-                }
+                stringBuilder.append(value).append(System.lineSeparator());
                 value = bufferedReader.readLine();
             }
-            int result = supplyCounter - buyCounter;
-            bufferedWriter.write(supply + "," + supplyCounter + System.lineSeparator());
-            bufferedWriter.write(buy + "," + buyCounter + System.lineSeparator());
-            bufferedWriter.write("result," + result + System.lineSeparator());
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from the file ", e);
+        }
+        return stringBuilder.toString().split(System.lineSeparator());
+    }
+
+    private String makeReport(String[] file) {
+        int supplyAmount = ZERO_INDEX;
+        int buyAmount = ZERO_INDEX;
+        for (String line : file) {
+            String[] element = line.split(COMMA);
+            if (element[ZERO_INDEX].equals(SUPPLY)) {
+                supplyAmount += Integer.parseInt(element[FIRST_INDEX]);
+            }
+            if (element[ZERO_INDEX].equals(BUY)) {
+                buyAmount += Integer.parseInt(element[FIRST_INDEX]);
+            }
+        }
+        int result = supplyAmount - buyAmount;
+        return SUPPLY + COMMA + supplyAmount + System.lineSeparator()
+                + BUY + COMMA + buyAmount + System.lineSeparator()
+                + "result," + result + System.lineSeparator();
+    }
+
+    private void writeFile(String report, String toFileName) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
+            bufferedWriter.write(report);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write data from the file ", e);
         }
     }
 }
