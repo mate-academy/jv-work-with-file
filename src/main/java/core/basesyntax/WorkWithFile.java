@@ -1,6 +1,12 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -43,12 +49,12 @@ public class WorkWithFile {
         int supplyAmount = data[INDEX_OF_SUPPLY_AMOUNT];
         int buyAmount = data[INDEX_OF_BUY_AMOUNT];
         int result = supplyAmount - buyAmount;
-        stringBuilder.append(SUPPLY_TYPE_STRING).append(COMMA_SEPARATOR).
-                append(supplyAmount).append(System.lineSeparator());
-        stringBuilder.append(BUY_TYPE_STRING).append(COMMA_SEPARATOR).
-                append(buyAmount).append(System.lineSeparator());
-        stringBuilder.append(RESULT_REPORT_STRING).append(COMMA_SEPARATOR).
-                append(result);
+        stringBuilder.append(SUPPLY_TYPE_STRING).append(COMMA_SEPARATOR)
+                .append(supplyAmount).append(System.lineSeparator());
+        stringBuilder.append(BUY_TYPE_STRING).append(COMMA_SEPARATOR)
+                .append(buyAmount).append(System.lineSeparator());
+        stringBuilder.append(RESULT_REPORT_STRING).append(COMMA_SEPARATOR)
+                .append(result);
         return stringBuilder.toString();
     }
 
