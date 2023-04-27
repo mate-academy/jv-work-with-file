@@ -2,12 +2,18 @@ package core.basesyntax;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    public static final String COMMA_SEPARATOR = ",";
+    public static final int START_INDEX = 0;
+    public static final int INDEX_RAISER = 2;
+    public static final String WORD_SUPPLY = "supply";
+    public static final String WORD_BUY = "buy";
+    public static final String WORD_RESULT = "result";
+
     public void getStatistic(String fromFileName, String toFileName) {
         String[] dataToRead = getDataFromFile(fromFileName);
         String dataToWrite = dataProcessing(dataToRead);
@@ -15,43 +21,39 @@ public class WorkWithFile {
     }
 
     private String[] getDataFromFile(String fileName) {
-        File file = new File(fileName);
         StringBuilder stringBuilder = new StringBuilder();
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
             String value = bufferedReader.readLine();
             while (value != null) {
-                stringBuilder.append(value).append(",");
+                stringBuilder.append(value).append(COMMA_SEPARATOR);
                 value = bufferedReader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't read from file: " + fileName, e);
         }
-        return stringBuilder.toString().split(",");
+        return stringBuilder.toString().split(COMMA_SEPARATOR);
     }
 
     private String dataProcessing(String[] data) {
-        int supply = 0;
-        int buy = 0;
-        for (int i = 0; i < data.length; i += 2) {
-            if (data[i].equals("supply")) {
+        int supply = START_INDEX;
+        int buy = START_INDEX;
+        for (int i = START_INDEX; i < data.length; i += INDEX_RAISER) {
+            if (data[i].equals(WORD_SUPPLY)) {
                 supply += Integer.parseInt(data[i + 1]);
             } else {
                 buy += Integer.parseInt(data[i + 1]);
             }
         }
-        return "supply," + supply + System.lineSeparator()
-                + "buy," + buy + System.lineSeparator()
-                + "result," + (supply - buy);
+        return WORD_SUPPLY + COMMA_SEPARATOR + supply + System.lineSeparator()
+                + WORD_BUY + COMMA_SEPARATOR + buy + System.lineSeparator()
+                + WORD_RESULT + COMMA_SEPARATOR + (supply - buy);
     }
 
     private void writeDataToFile(String fileName, String data) {
-        try {
-            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName));
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
             bufferedWriter.write(data);
-            bufferedWriter.close();
         } catch (IOException e) {
-            throw new RuntimeException("Can't write to file", e);
+            throw new RuntimeException("Can't write to file: " + fileName, e);
         }
     }
 }
