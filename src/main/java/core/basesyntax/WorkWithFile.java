@@ -12,14 +12,19 @@ public class WorkWithFile {
     private static final String BUY = "buy";
     private static final String COMMA = ",";
     private static final String RESULT = "result";
-    private static final int LENGTH_OF_WORD_SUPPLY = 7;
-    private static final int LENGTH_OF_WORD_BUY = 4;
 
     public void getStatistic(String fromFileName, String toFileName) {
+        String[] resultSupplyBuy = readFile(fromFileName);
+        int sumSupply = calculateSum(resultSupplyBuy, SUPPLY);
+        int sumBuy = calculateSum(resultSupplyBuy, BUY);
+        int resultInt = sumSupply - sumBuy;
+        writeToFile(toFileName, sumSupply, sumBuy, resultInt);
+    }
+
+    private String[] readFile(String fromFileName) {
         File file = new File(fromFileName);
         StringBuilder builder;
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(file));
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             builder = new StringBuilder();
             String value = reader.readLine();
             while (value != null) {
@@ -27,30 +32,28 @@ public class WorkWithFile {
                 value = reader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't read file " + fromFileName, e);
         }
-        String[] resultSupplyBuy = builder.toString().split("\r\n");
-        StringBuilder builderSupply = new StringBuilder();
-        StringBuilder builderBuy = new StringBuilder();
-        for (String test : resultSupplyBuy) {
-            if (test.startsWith(SUPPLY)) {
-                builderSupply.append(test.substring(LENGTH_OF_WORD_SUPPLY)).append(" ");
+        return builder.toString().split("\r\n");
+    }
+
+    public int calculateSum(String[] array, String type) {
+        StringBuilder builder = new StringBuilder();
+        for (String test : array) {
+            if (test.startsWith(type)) {
+                String[] parts = test.split(",");
+                builder.append(parts[1]).append(" ");
             }
-            if (test.startsWith(BUY)) {
-                builderBuy.append(test.substring(LENGTH_OF_WORD_BUY)).append(" ");
-            }
         }
-        String[] arrayStringSupply = builderSupply.toString().split(" ");
-        int sumSupply = 0;
-        for (String testStringSupply : arrayStringSupply) {
-            sumSupply += Integer.parseInt(testStringSupply);
+        String[] arrayString = builder.toString().split(" ");
+        int sum = 0;
+        for (String testString : arrayString) {
+            sum += Integer.parseInt(testString);
         }
-        String[] arrayStringBuy = builderBuy.toString().split(" ");
-        int sumBuy = 0;
-        for (String testStringBuy : arrayStringBuy) {
-            sumBuy += Integer.parseInt(testStringBuy);
-        }
-        int resultInt = sumSupply - sumBuy;
+        return sum;
+    }
+
+    private void writeToFile(String toFileName, int sumSupply, int sumBuy, int resultInt) {
         File fileResult = new File(toFileName);
         StringBuilder stringBuilder;
         try (BufferedWriter bufferedWriter =
@@ -70,7 +73,7 @@ public class WorkWithFile {
             bufferedWriter.write(stringBuilder.toString());
             bufferedWriter.flush();
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't write to file " + toFileName, e);
         }
     }
 }
