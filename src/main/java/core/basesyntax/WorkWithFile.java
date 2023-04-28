@@ -52,7 +52,10 @@ public class WorkWithFile {
 
     public String createReport(int supply, int buy) {
         StringBuilder builder = new StringBuilder();
-        return builder.append(SUPPLY).append(",").append(supply).append(System.lineSeparator()).append(BUY).append(",").append(buy).append(System.lineSeparator()).append(RESULT).append(",").append(supply - buy).toString();
+        return builder.append(SUPPLY).append(",").append(supply)
+                .append(System.lineSeparator()).append(BUY).append(",")
+                .append(buy).append(System.lineSeparator()).append(RESULT)
+                .append(",").append(supply - buy).toString();
     }
 
     private void writeToFile(String fileName, String calculate) {
