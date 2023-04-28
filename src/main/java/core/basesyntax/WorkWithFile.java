@@ -14,29 +14,33 @@ public class WorkWithFile {
     private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        File fromFile = new File(fromFileName);
+        String report = dataCalculation(fromFileName);
+        writeToFile(toFileName, report);
+    }
+
+    public static String dataCalculation(String fromFileName) {
         int sumOfSupply = 0;
         int sumOfBuy = 0;
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFile))) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String readDataFromFile = "";
+            String[] dataLine;
             while (readDataFromFile != null) {
                 readDataFromFile = bufferedReader.readLine();
                 if (readDataFromFile != null) {
-                    int valueAfterComma = Integer.parseInt(
-                            readDataFromFile.substring(readDataFromFile.indexOf(COMMA) + 1));
-                    if (readDataFromFile.startsWith(SUPPLY)) {
-                        sumOfSupply += valueAfterComma;
+                    dataLine = readDataFromFile.split(",");
+                    if (dataLine[0].equals(SUPPLY)) {
+                        sumOfSupply += Integer.parseInt(dataLine[1]);
                     }
-                    if (readDataFromFile.startsWith(BUY)) {
-                        sumOfBuy += valueAfterComma;
+                    if (dataLine[0].equals(BUY)) {
+                        sumOfBuy += Integer.parseInt(dataLine[1]);
                     }
                 }
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read file: " + fromFileName, e);
         }
-        String report = createReport(sumOfSupply, sumOfBuy);
-        writeToFile(toFileName, report);
+        return createReport(sumOfSupply, sumOfBuy);
+
     }
 
     private static String createReport(int sumOfSupply, int sumOfBuy) {
@@ -49,21 +53,12 @@ public class WorkWithFile {
     public static void writeToFile(String toFileName, String dataWriteToFile) {
         File toFile = new File(toFileName);
         if (!toFile.exists()) {
-            createFile(toFileName);
             try {
+                toFile.createNewFile();
                 Files.write(toFile.toPath(), dataWriteToFile.getBytes(), StandardOpenOption.APPEND);
             } catch (IOException e) {
                 throw new RuntimeException("Can't write data to file: " + toFileName, e);
             }
-        }
-    }
-
-    public static void createFile(String toFileName) {
-        File toFile = new File(toFileName);
-        try {
-            toFile.createNewFile();
-        } catch (IOException e) {
-            throw new RuntimeException("Can't create file: " + toFileName, e);
         }
     }
 }
