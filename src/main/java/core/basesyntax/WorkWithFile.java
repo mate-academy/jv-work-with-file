@@ -7,47 +7,61 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    public void getStatistic(String fromFileName, String toFileName) {
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write(crateReport(readFromFile(fromFileName)));
 
-        } catch (IOException e) {
-            throw new RuntimeException(e + " Can not write to file " + toFileName);
-        }
+    private static final int SUPPLY_INDEX = 0;
+    private static final int BUY_INDEX = 1;
+    private static final int AMOUNT_INDEX = 1;
+    private static final int AMOUNT_OF_OPERATIONS = 2;
+    private static final String LINE_SPLITERATOR = "/";
+    private static final String SPLITERATOR = ",";
+    private static final String SUPPLY_LINE = "supply";
+
+    public void getStatistic(String fromFileName, String toFileName) {
+        writeToFile(toFileName, createReportString(createReport(readFromFile(fromFileName))));
     }
 
     private String readFromFile(String fromFileName) {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             StringBuilder stringBuilder = new StringBuilder();
-            String value = bufferedReader.readLine();
-            while (value != null) {
-                stringBuilder.append(value).append("/");
-                value = bufferedReader.readLine();
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                stringBuilder.append(line).append(LINE_SPLITERATOR);
             }
             return stringBuilder.toString();
         } catch (IOException e) {
-            throw new RuntimeException(e + " Can not read from file " + fromFileName);
+            throw new RuntimeException("Can not read from file " + fromFileName, e);
         }
     }
 
-    private String crateReport(String readFromFile) {
-        String[] fileLines = readFromFile.split("/");
-        int supplySum = 0;
-        int buySum = 0;
+    private int[] createReport(String readFromFile) {
+        int[] sums = new int[AMOUNT_OF_OPERATIONS];
+        String[] fileLines = readFromFile.split(LINE_SPLITERATOR);
+
         for (String fileLine : fileLines) {
-            if (fileLine.contains("supply")) {
-                String[] supplyLine = fileLine.split(",");
-                supplySum += Integer.parseInt(supplyLine[1]);
+            if (fileLine.contains(SUPPLY_LINE)) {
+                String[] supplyLine = fileLine.split(SPLITERATOR);
+                sums[SUPPLY_INDEX] += Integer.parseInt(supplyLine[AMOUNT_INDEX]);
             } else {
-                String[] buyLine = fileLine.split(",");
-                buySum += Integer.parseInt(buyLine[1]);
+                String[] buyLine = fileLine.split(SPLITERATOR);
+                sums[BUY_INDEX] += Integer.parseInt(buyLine[AMOUNT_INDEX]);
             }
         }
-        int result = supplySum - buySum;
+        return sums;
+    }
+
+    private String createReportString(int[] sums) {
+        int result = sums[SUPPLY_INDEX] - sums[BUY_INDEX];
         StringBuilder stringBuilder = new StringBuilder("supply,");
-        return stringBuilder.append(supplySum)
-                .append(System.lineSeparator()).append("buy,")
-                .append(buySum).append(System.lineSeparator())
+        return stringBuilder.append(sums[SUPPLY_INDEX]).append(System.lineSeparator())
+                .append("buy,").append(sums[BUY_INDEX]).append(System.lineSeparator())
                 .append("result,").append(result).toString();
+    }
+
+    private void writeToFile(String file, String report) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
+            bufferedWriter.write(report);
+        } catch (IOException e) {
+            throw new RuntimeException("Can not write to file " + file, e);
+        }
     }
 }
