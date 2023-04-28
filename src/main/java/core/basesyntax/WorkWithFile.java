@@ -48,9 +48,9 @@ public class WorkWithFile {
         int[] statisticArray = calculateStatistic(readFile(fromFileName));
         File file = new File(toFileName);
         StringBuilder statistic = new StringBuilder();
-        statistic.append("supply,").append(statisticArray[0]).append("\r")
-                .append("\nbuy,").append(statisticArray[1]).append("\r")
-                .append("\nresult,").append(statisticArray[2]);
+        statistic.append("supply,").append(statisticArray[0]).append(System.lineSeparator())
+                .append("buy,").append(statisticArray[1]).append(System.lineSeparator())
+                .append("result,").append(statisticArray[2]).append(System.lineSeparator());
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, false))) {
             writer.write(statistic.toString());
         } catch (IOException e) {
