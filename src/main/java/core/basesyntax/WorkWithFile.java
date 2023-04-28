@@ -2,14 +2,13 @@ package core.basesyntax;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final int NAME_COL_INDEX = 0;
-    private static final int AMOUNT_COL_INDEX = 1;
+    private static final int OPERATION_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
     private static final String SUPPLY_ACTION = "supply";
     private static final String BUY_ACTION = "buy";
     private static final String RESULT = "result";
@@ -23,17 +22,35 @@ public class WorkWithFile {
 
         for (String entry : dataEntries) {
             String[] entryData = entry.split(SEPARATOR);
-            String action = entryData[NAME_COL_INDEX];
-            int amount = Integer.parseInt(entryData[AMOUNT_COL_INDEX]);
-
+            String action = entryData[OPERATION_INDEX];
+            int amount = Integer.parseInt(entryData[AMOUNT_INDEX]);
             int actionIndex = getActionIndex(action);
             int resultIndex = getActionIndex(RESULT);
+
             totals[actionIndex] += amount;
-            totals[resultIndex] = action.equals(SUPPLY_ACTION) ? totals[resultIndex] + amount
-                    : totals[resultIndex] - amount;
+            if (action.equals(SUPPLY_ACTION)) {
+                totals[resultIndex] += amount;
+            } else {
+                totals[resultIndex] -= amount;
+            }
+        }
+        writeContentToFile(totals, toFileName);
+    }
+
+    private String[] getContentFromFile(String fileName) {
+        StringBuilder builder = new StringBuilder();
+
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
+            String currentLine = bufferedReader.readLine();
+            builder.append(currentLine);
+            while ((currentLine = bufferedReader.readLine()) != null) {
+                builder.append(LINE_SEPARATOR).append(currentLine);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Can't read from file " + fileName, e);
         }
 
-        writeContentToFile(totals, toFileName);
+        return builder.toString().split(LINE_SEPARATOR);
     }
 
     private int getActionIndex(String actionName) {
@@ -45,29 +62,17 @@ public class WorkWithFile {
         return -1;
     }
 
-    private String[] getContentFromFile(String fileName) {
-        File sourceFile = new File(fileName);
-        StringBuilder builder = new StringBuilder();
+    private void writeContentToFile(int[] content, String fileName) {
+        String result = createResultString(content);
 
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(sourceFile))) {
-            String currentLine = bufferedReader.readLine();
-            builder.append(currentLine);
-
-            while (true) {
-                currentLine = bufferedReader.readLine();
-                if (currentLine == null) {
-                    break;
-                }
-                builder.append(LINE_SEPARATOR).append(currentLine);
-            }
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
+            bufferedWriter.write(result);
         } catch (IOException e) {
-            throw new RuntimeException("Can't read from file " + fileName, e);
+            throw new RuntimeException("Can't write to file " + fileName, e);
         }
-
-        return builder.toString().split(LINE_SEPARATOR);
     }
 
-    private void writeContentToFile(int[] content, String fileName) {
+    private String createResultString(int[] content) {
         StringBuilder builder = new StringBuilder();
         for (String fieldName : OUTPUT_FIELDS) {
             builder.append(fieldName)
@@ -75,17 +80,6 @@ public class WorkWithFile {
                     .append(content[getActionIndex(fieldName)])
                     .append(LINE_SEPARATOR);
         }
-
-        File destFile = new File(fileName);
-        try (
-                BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(destFile))
-        ) {
-            if (destFile.exists()) {
-                bufferedWriter.write("");
-            }
-            bufferedWriter.write(builder.toString());
-        } catch (IOException e) {
-            throw new RuntimeException("Can't write to file " + fileName, e);
-        }
+        return builder.toString();
     }
 }
