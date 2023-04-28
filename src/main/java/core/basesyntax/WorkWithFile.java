@@ -15,11 +15,25 @@ public class WorkWithFile {
     private static final int SECOND_VALUE = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        writeInFile(getResult(readFile(fromFileName)), toFileName);
+        writeInFile(getResult(readFile(fromFileName).toString()), toFileName);
     }
 
-    public String getResult(StringBuilder readFile) {
-        String[] readFileToStringArray = readFile.toString().split(System.lineSeparator());
+    private StringBuilder readFile(String fromFileName) {
+        StringBuilder readFile = new StringBuilder();
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
+            String line;
+
+            while ((line = bufferedReader.readLine()) != null) {
+                readFile.append(line).append(System.lineSeparator());
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("The file at path" + fromFileName + " was not read : " + e);
+        }
+        return readFile;
+    }
+
+    private String getResult(String fileContent) {
+        String[] readFileToStringArray = fileContent.split(System.lineSeparator());
         int sumSupply = 0;
         int sumBuy = 0;
         for (String oneLine : readFileToStringArray) {
@@ -49,26 +63,11 @@ public class WorkWithFile {
         return result.toString();
     }
 
-    public void writeInFile(String resultInString, String toFileName) {
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write(resultInString);
+    private void writeInFile(String data, String fileName) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
+            bufferedWriter.write(data);
         } catch (IOException e) {
-            throw new RuntimeException("The file at path " + toFileName + " was not written" + e);
+            throw new RuntimeException("The file at path " + fileName + " was not written" + e);
         }
-    }
-
-    public StringBuilder readFile(String fromFileName) {
-        StringBuilder readFile = new StringBuilder();
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
-            String line;
-
-            while ((line = bufferedReader.readLine()) != null) {
-                readFile.append(line).append(System.lineSeparator());
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("The file at path" + fromFileName + " was not read : " + e);
-        }
-        return readFile;
-
     }
 }
