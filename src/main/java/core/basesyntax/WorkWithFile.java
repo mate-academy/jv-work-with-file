@@ -12,6 +12,8 @@ public class WorkWithFile {
     private static final int ARRAY_INDEX = 1;
     private static final String BUY = "buy";
     private static final String SUPPLY = "supply";
+    private static final String RESULT = "result";
+    private static final String COMMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         writeToFile(createResultString(calculateStatistic(readFile(fromFileName))), toFileName);
@@ -21,22 +23,24 @@ public class WorkWithFile {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, false))) {
             writer.write(dataToWrite);
         } catch (IOException e) {
-            throw new RuntimeException("Can`t write data to file", e);
+            throw new RuntimeException("Can`t write data to file " + fileName, e);
         }
     }
 
     private String createResultString(int[] calculatedData) {
         StringBuilder statistic = new StringBuilder();
-        statistic.append("supply,").append(calculatedData[0]).append(System.lineSeparator())
-                .append("buy,").append(calculatedData[1]).append(System.lineSeparator())
-                .append("result,").append(calculatedData[2]).append(System.lineSeparator());
+        statistic.append(SUPPLY).append(COMMA).append(calculatedData[0])
+                .append(System.lineSeparator())
+                .append(BUY).append(COMMA).append(calculatedData[1])
+                .append(System.lineSeparator())
+                .append(RESULT).append(COMMA).append(calculatedData[2])
+                .append(System.lineSeparator());
         return statistic.toString();
     }
 
     private int[] calculateStatistic(String dataFromFile) {
         int buyCounter = 0;
         int supplyCounter = 0;
-        int result;
         String data = dataFromFile.replaceAll(SPECIFIED_CHARACTERS, ",");
         String[] dataArray = data.split(",");
         for (int i = 0; i < dataArray.length + LIMIT_OF_LOOP; i++) {
@@ -46,7 +50,7 @@ public class WorkWithFile {
                 supplyCounter += Integer.parseInt(dataArray[i + ARRAY_INDEX]);
             }
         }
-        result = supplyCounter - buyCounter;
+        int result = supplyCounter - buyCounter;
         return new int[]{supplyCounter, buyCounter, result};
     }
 
@@ -59,7 +63,7 @@ public class WorkWithFile {
                 value = reader.read();
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can`t read data from file " + fileName, e);
         }
         return fileContent.toString();
     }
