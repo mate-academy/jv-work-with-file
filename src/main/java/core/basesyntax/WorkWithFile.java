@@ -7,47 +7,19 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final String CATEGORY_IN_FILE_SUPPLY = "supply";
-    private static final String CATEGORY_IN_FILE_BUY = "buy";
-    private static final String CATEGORY_IN_FILE_RESULT = "result";
+    private static final String SUPPLY_OPERATION = "supply";
+    private static final String BUY_OPERATION = "buy";
+    private static final String RESULT_OPERATION = "result";
+    private static final String SEPARATOR = ",";
+    private static final int AMOUNT_INDEX = 1;
+    private static final int OPERATION_INDEX = 0;
+    private static final int SUM_START_VALUE = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
         writeInFile(getResult(readFile(fromFileName)), toFileName);
     }
 
-    public void writeInFile(String resultInString, String toFileName) {
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write(resultInString);
-        } catch (IOException e) {
-            throw new RuntimeException("The file at path " + toFileName + " was not written" + e);
-        }
-    }
-
-    public String getResult(StringBuilder readFile) {
-        String[] readFileToStringArray = readFile.toString().split(System.lineSeparator());
-        String[] oneCategoryAndPrice;
-        StringBuilder stringBuilder = new StringBuilder();
-        int sumSupply = 0;
-        int sumBuy = 0;
-        for (String oneLine: readFileToStringArray) {
-            oneCategoryAndPrice = oneLine.split(",");
-            if (oneCategoryAndPrice[0].equals(CATEGORY_IN_FILE_SUPPLY)) {
-                sumSupply += Integer.parseInt(oneCategoryAndPrice[1]);
-            } else if (oneCategoryAndPrice[0].equals(CATEGORY_IN_FILE_BUY)) {
-                sumBuy += Integer.parseInt(oneCategoryAndPrice[1]);
-            }
-        }
-
-        return stringBuilder.append(CATEGORY_IN_FILE_SUPPLY).append(",").append(sumSupply)
-                .append(System.lineSeparator())
-                .append(CATEGORY_IN_FILE_BUY)
-                .append(",").append(sumBuy)
-                .append(System.lineSeparator())
-                .append(CATEGORY_IN_FILE_RESULT)
-                .append(",").append(sumSupply - sumBuy).toString();
-    }
-
-    public StringBuilder readFile(String fromFileName) {
+    private String[] readFile(String fromFileName) {
         StringBuilder readFile = new StringBuilder();
         String oneLine;
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
@@ -59,6 +31,39 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("The file at path" + fromFileName + " was not read : " + e);
         }
-        return readFile;
+        return readFile.toString().split(System.lineSeparator());
+    }
+
+    private String getResult(String[] lines) {
+        String[] splitLine;
+        int sumSupply = SUM_START_VALUE;
+        int sumBuy = SUM_START_VALUE;
+        for (String oneLine: lines) {
+            splitLine = oneLine.split(SEPARATOR);
+            if (splitLine[OPERATION_INDEX].equals(SUPPLY_OPERATION)) {
+                sumSupply += Integer.parseInt(splitLine[AMOUNT_INDEX]);
+            } else if (splitLine[OPERATION_INDEX].equals(BUY_OPERATION)) {
+                sumBuy += Integer.parseInt(splitLine[AMOUNT_INDEX]);
+            }
+        }
+        return createReport(sumSupply,sumBuy);
+    }
+
+    private String createReport(int sumSupply, int sumBuy) {
+        return new StringBuilder().append(SUPPLY_OPERATION).append(SEPARATOR).append(sumSupply)
+                .append(System.lineSeparator())
+                .append(BUY_OPERATION)
+                .append(SEPARATOR).append(sumBuy)
+                .append(System.lineSeparator())
+                .append(RESULT_OPERATION)
+                .append(SEPARATOR).append(sumSupply - sumBuy).toString();
+    }
+
+    private void writeInFile(String resultInString, String toFileName) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
+            bufferedWriter.write(resultInString);
+        } catch (IOException e) {
+            throw new RuntimeException("The file at path " + toFileName + " was not written" + e);
+        }
     }
 }
