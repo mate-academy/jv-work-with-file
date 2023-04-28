@@ -14,52 +14,56 @@ public class WorkWithFile {
     private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
+        File fromFile = new File(fromFileName);
         int sumOfSupply = 0;
         int sumOfBuy = 0;
-        int valueAfterComma;
-
-        File fromFile = new File(fromFileName);
-        StringBuilder stringBuilder = new StringBuilder();
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFile));
-            String readDataFromFile = bufferedReader.readLine();
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFile))) {
+            String readDataFromFile = "";
             while (readDataFromFile != null) {
-                stringBuilder.append(readDataFromFile).append(" ");
                 readDataFromFile = bufferedReader.readLine();
+                if (readDataFromFile != null) {
+                    int valueAfterComma = Integer.parseInt(
+                            readDataFromFile.substring(readDataFromFile.indexOf(COMMA) + 1));
+                    if (readDataFromFile.startsWith(SUPPLY)) {
+                        sumOfSupply += valueAfterComma;
+                    }
+                    if (readDataFromFile.startsWith(BUY)) {
+                        sumOfBuy += valueAfterComma;
+                    }
+                }
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read file: " + fromFileName, e);
         }
+        String report = createReport(sumOfSupply, sumOfBuy);
+        writeToFile(toFileName, report);
+    }
 
-        String[] dataFromFile = stringBuilder.toString().split(" ");
-        for (String data: dataFromFile) {
-            valueAfterComma = Integer.parseInt(data.substring(data.indexOf(COMMA) + 1));
-            if (data.startsWith(SUPPLY)) {
-                sumOfSupply += valueAfterComma;
-            } else {
-                sumOfBuy += valueAfterComma;
-            }
-        }
-        String[] dataWriteToFile = new String[3];
-        dataWriteToFile[0] = SUPPLY + COMMA + sumOfSupply + System.lineSeparator();
-        dataWriteToFile[1] = BUY + COMMA + sumOfBuy + System.lineSeparator();
-        dataWriteToFile[2] = RESULT + COMMA + (sumOfSupply - sumOfBuy);
+    private static String createReport(int sumOfSupply, int sumOfBuy) {
+        String dataWriteToFile = SUPPLY + COMMA + sumOfSupply + System.lineSeparator()
+                + BUY + COMMA + sumOfBuy + System.lineSeparator()
+                + RESULT + COMMA + (sumOfSupply - sumOfBuy);
+        return dataWriteToFile;
+    }
 
+    public static void writeToFile(String toFileName, String dataWriteToFile) {
         File toFile = new File(toFileName);
         if (!toFile.exists()) {
+            createFile(toFileName);
             try {
-                toFile.createNewFile();
+                Files.write(toFile.toPath(), dataWriteToFile.getBytes(), StandardOpenOption.APPEND);
             } catch (IOException e) {
-                throw new RuntimeException("Can't create file: " + toFileName, e);
+                throw new RuntimeException("Can't write data to file: " + toFileName, e);
             }
+        }
+    }
 
-            for (String data: dataWriteToFile) {
-                try {
-                    Files.write(toFile.toPath(), data.getBytes(), StandardOpenOption.APPEND);
-                } catch (IOException e) {
-                    throw new RuntimeException("Can't write data to file: " + toFileName, e);
-                }
-            }
+    public static void createFile(String toFileName) {
+        File toFile = new File(toFileName);
+        try {
+            toFile.createNewFile();
+        } catch (IOException e) {
+            throw new RuntimeException("Can't create file: " + toFileName, e);
         }
     }
 }
