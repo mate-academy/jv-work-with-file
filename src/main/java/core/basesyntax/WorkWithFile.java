@@ -45,7 +45,7 @@ public class WorkWithFile {
         return createReport(supplyAllSum, buyAllSum);
     }
 
-    private static String createReport(int supplyAllSum, int buyAllSum) {
+    private String createReport(int supplyAllSum, int buyAllSum) {
         return "supply," + supplyAllSum
                 + System.lineSeparator() + "buy,"
                 + buyAllSum + System.lineSeparator() + "result," + (supplyAllSum - buyAllSum);
