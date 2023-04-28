@@ -7,12 +7,46 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final String CATEGORY_IN_FILE_SUPPLY = "supply";
-    private static final String CATEGORY_IN_FILE_BUY = "buy";
-    private static final String CATEGORY_IN_FILE_RESULT = "result";
+    private static final String SUPPLY_CATEGORY = "supply";
+    private static final String BUY_CATEGORY = "buy";
+    private static final String SPLIT_VALUE = ",";
+    private static final String RESULT_CATEGORY = "result";
+    private static final int FIRST_VALUE = 0;
+    private static final int SECOND_VALUE = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         writeInFile(getResult(readFile(fromFileName)), toFileName);
+    }
+
+    public String getResult(StringBuilder readFile) {
+        String[] readFileToStringArray = readFile.toString().split(System.lineSeparator());
+        int sumSupply = 0;
+        int sumBuy = 0;
+        for (String oneLine : readFileToStringArray) {
+            String[] oneCategoryAndPrice = oneLine.split(SPLIT_VALUE);
+            if (oneCategoryAndPrice[FIRST_VALUE].equals(SUPPLY_CATEGORY)) {
+                sumSupply += Integer.parseInt(oneCategoryAndPrice[SECOND_VALUE]);
+            } else if (oneCategoryAndPrice[FIRST_VALUE].equals(BUY_CATEGORY)) {
+                sumBuy += Integer.parseInt(oneCategoryAndPrice[SECOND_VALUE]);
+            }
+        }
+        return createResultString(sumSupply, sumBuy);
+    }
+
+    private String createResultString(int sumSupply, int sumBuy) {
+        StringBuilder result = new StringBuilder();
+        result.append(SUPPLY_CATEGORY)
+                .append(SPLIT_VALUE)
+                .append(sumSupply)
+                .append(System.lineSeparator())
+                .append(BUY_CATEGORY)
+                .append(SPLIT_VALUE)
+                .append(sumBuy)
+                .append(System.lineSeparator())
+                .append(RESULT_CATEGORY)
+                .append(SPLIT_VALUE)
+                .append(sumSupply - sumBuy);
+        return result.toString();
     }
 
     public void writeInFile(String resultInString, String toFileName) {
@@ -23,41 +57,18 @@ public class WorkWithFile {
         }
     }
 
-    public String getResult(StringBuilder readFile) {
-        String[] readFileToStringArray = readFile.toString().split(System.lineSeparator());
-        String[] oneCategoryAndPrice;
-        StringBuilder stringBuilder = new StringBuilder();
-        int sumSupply = 0;
-        int sumBuy = 0;
-        for (String oneLine : readFileToStringArray) {
-            oneCategoryAndPrice = oneLine.split(",");
-            if (oneCategoryAndPrice[0].equals(CATEGORY_IN_FILE_SUPPLY)) {
-                sumSupply += Integer.parseInt(oneCategoryAndPrice[1]);
-            } else if (oneCategoryAndPrice[0].equals(CATEGORY_IN_FILE_BUY)) {
-                sumBuy += Integer.parseInt(oneCategoryAndPrice[1]);
-            }
-        }
-        return stringBuilder.append(CATEGORY_IN_FILE_SUPPLY).append(",").append(sumSupply)
-                .append(System.lineSeparator())
-                .append(CATEGORY_IN_FILE_BUY)
-                .append(",").append(sumBuy)
-                .append(System.lineSeparator())
-                .append(CATEGORY_IN_FILE_RESULT)
-                .append(",").append(sumSupply - sumBuy).toString();
-    }
-
     public StringBuilder readFile(String fromFileName) {
         StringBuilder readFile = new StringBuilder();
-        String oneLine;
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
-            oneLine = bufferedReader.readLine();
-            while (oneLine != null) {
-                readFile.append(oneLine).append(System.lineSeparator());
-                oneLine = bufferedReader.readLine();
+            String line;
+
+            while ((line = bufferedReader.readLine()) != null) {
+                readFile.append(line).append(System.lineSeparator());
             }
         } catch (IOException e) {
             throw new RuntimeException("The file at path" + fromFileName + " was not read : " + e);
         }
         return readFile;
+
     }
 }
