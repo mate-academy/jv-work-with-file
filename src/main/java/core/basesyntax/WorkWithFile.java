@@ -20,9 +20,9 @@ public class WorkWithFile {
             String str = bufferedReader.readLine();
             while (str != null) {
                 if (str.contains(BUY_KEYWORD)) {
-                    buyAllSum += Integer.parseInt(str.replaceAll("[a-zA-Z[.][,][_][-]]", ""));
+                    buyAllSum += Integer.parseInt(str.replaceAll("[a-zA-Z.,_-]", ""));
                 } else {
-                    supplyAllSum += Integer.parseInt(str.replaceAll("[a-zA-Z[.][,][_][-]]", ""));
+                    supplyAllSum += Integer.parseInt(str.replaceAll("[a-zA-Z.,_-]", ""));
                 }
                 str = bufferedReader.readLine();
             }
