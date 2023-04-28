@@ -2,8 +2,6 @@ package core.basesyntax;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -21,16 +19,13 @@ public class WorkWithFile {
     }
 
     private String readFromFile(String fileName) {
-        File file = new File(fileName);
         StringBuilder builder = new StringBuilder();
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
             String dataFromFile = bufferedReader.readLine();
             while (dataFromFile != null) {
                 builder.append(dataFromFile).append(System.lineSeparator());
                 dataFromFile = bufferedReader.readLine();
             }
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException("File not found" + fileName, e);
         } catch (IOException e) {
             throw new RuntimeException("Can not read file" + fileName, e);
         }
@@ -50,6 +45,10 @@ public class WorkWithFile {
             }
         }
         int result = supply - buy;
+        return createReportString(supply, buy, result);
+    }
+
+    private String createReportString(int supply, int buy, int result) {
         StringBuilder resultBuilder = new StringBuilder();
         return resultBuilder
                 .append(SUPPLY_DATA)
@@ -67,8 +66,7 @@ public class WorkWithFile {
     }
 
     private void writeDataToFile(String toFileName, String report) {
-        File file = new File(toFileName);
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Can not write to file: " + toFileName, e);
