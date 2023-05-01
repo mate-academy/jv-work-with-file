@@ -13,7 +13,7 @@ public class WorkWithFile {
     private static final int NAME_INDEX = 0;
     private static final int NUMBER_INDEX = 1;
     private static final String SPACE = " ";
-    private static final String COMA = ",";
+    private static final String COMMA = ",";
 
     private String [] readFile(String fromFileName) {
         StringBuilder builder = new StringBuilder();
@@ -33,7 +33,7 @@ public class WorkWithFile {
         int buyCounter = 0;
         int supplyCounter = 0;
         for (String line : fromFileDate) {
-            String[] words = line.split(COMA);
+            String[] words = line.split(COMMA);
             if (words[NAME_INDEX].equals(BUY)) {
                 buyCounter += Integer.parseInt(words[NUMBER_INDEX]);
             }
@@ -41,12 +41,12 @@ public class WorkWithFile {
                 supplyCounter += Integer.parseInt(words[NUMBER_INDEX]);
             }
         }
-        StringBuilder giveReport = new StringBuilder();
-        giveReport.append(SUPPLE).append(COMA).append(supplyCounter).append(System.lineSeparator())
-                .append(BUY).append(COMA).append(buyCounter).append(System.lineSeparator())
-                .append(RESULT).append(COMA).append(supplyCounter - buyCounter)
+        StringBuilder report = new StringBuilder();
+        report.append(SUPPLE).append(COMMA).append(supplyCounter).append(System.lineSeparator())
+                .append(BUY).append(COMMA).append(buyCounter).append(System.lineSeparator())
+                .append(RESULT).append(COMMA).append(supplyCounter - buyCounter)
                 .append(System.lineSeparator());
-        return giveReport.toString();
+        return report.toString();
     }
 
     public void getStatistic(String fromFileName, String toFileName) {
