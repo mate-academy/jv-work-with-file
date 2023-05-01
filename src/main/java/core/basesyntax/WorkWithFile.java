@@ -49,7 +49,7 @@ public class WorkWithFile {
     }
 
     private void writeData(String toFileName, String dataToWrite) {
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, false))) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(dataToWrite);
         } catch (IOException e) {
             throw new RuntimeException("Can't write data: " + toFileName, e);
