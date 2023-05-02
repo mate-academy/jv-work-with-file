@@ -13,10 +13,10 @@ public class WorkWithFile {
     public static final String DELIMITER = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        writeData(toFileName, analysisData(readData(fromFileName)));
+        writeData(toFileName, processData(readData(fromFileName)));
     }
 
-    private String analysisData(String[] value) {
+    private String processData(String[] value) {
         int buy = 0;
         int supply = 0;
         String[] arrayData;
@@ -41,7 +41,6 @@ public class WorkWithFile {
                 stringBuilder.append(value).append(System.lineSeparator());
                 value = bufferedReader.readLine();
             }
-
         } catch (IOException e) {
             throw new RuntimeException("Can't read file: " + fromFileName, e);
         }
@@ -56,4 +55,3 @@ public class WorkWithFile {
         }
     }
 }
-
