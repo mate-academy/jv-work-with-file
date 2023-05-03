@@ -11,7 +11,7 @@ public class WorkWithFile {
     private static final String BUY_OPERATION = "buy";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String[] dataRows= getDataRows(fromFileName);
+        String[] dataRows = getDataRows(fromFileName);
         int supply = countSupply(dataRows);
         int buy = countBuy(dataRows);
         int result = countResult(supply, buy);
