@@ -38,9 +38,9 @@ public class WorkWithFile {
     }
 
     private String generateReport(int[] data) {
-        int result = data[0] - data[1];
-        return "supply," + data[0] + System.lineSeparator()
-                + "buy," + data[1] + System.lineSeparator()
+        int result = data[NAME_POSITION] - data[NUMBER_POSITION];
+        return "supply," + data[NAME_POSITION] + System.lineSeparator()
+                + "buy," + data[NUMBER_POSITION] + System.lineSeparator()
                 + "result," + result + System.lineSeparator();
     }
 
