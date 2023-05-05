@@ -11,6 +11,14 @@ public class WorkWithFile {
     private static final int FIRST_HALF_ARRAY = 0;
     private static final int SECOND_HALF_ARRAY = 1;
     private static final int SIZE_REPORT = 3;
+    private static final String ACTION_WITH_BUY = "buy";
+    private static final String ACTION_WITH_SUPPLY = "supply";
+
+    public void getStatistic(String fromFileName, String toFileName) {
+        String doneData = readFile(fromFileName);
+        String readyReport = operationWithFile(doneData);
+        writeTiFile(readyReport, toFileName);
+    }
 
     private String readFile(String fromFileName) {
         File startFile = new File(fromFileName);
@@ -28,20 +36,19 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read file", e);
         }
-        String lineOfFile = builder.toString();
-        return lineOfFile;
+        return builder.toString();
     }
 
-    private String operationWithFile(String lineOfFile) {
-        String[] lineOfStartFile = lineOfFile.split(System.lineSeparator());
+    private String operationWithFile(String builder) {
+        String[] lineOfStartFile = builder.toString().split(System.lineSeparator());
         int sumOfBuy = 0;
         int sumOfSupply = 0;
         for (int i = 0; i < lineOfStartFile.length; i++) {
             if (Character.isDigit(lineOfStartFile[i].charAt(0))) {
                 String[] elementsStartWithNumber = lineOfStartFile[i].split("(?<=\\d)(?=\\D)");
-                if (elementsStartWithNumber[SECOND_HALF_ARRAY].equals("buy")) {
+                if (elementsStartWithNumber[SECOND_HALF_ARRAY].equals(ACTION_WITH_BUY)) {
                     sumOfBuy += Integer.parseInt(elementsStartWithNumber[FIRST_HALF_ARRAY]);
-                } else if (elementsStartWithNumber[SECOND_HALF_ARRAY].equals("suplly")) {
+                } else if (elementsStartWithNumber[SECOND_HALF_ARRAY].equals(ACTION_WITH_SUPPLY)) {
                     sumOfSupply += Integer.parseInt(elementsStartWithNumber[FIRST_HALF_ARRAY]);
                 }
             }
@@ -72,21 +79,12 @@ public class WorkWithFile {
         return String.join(System.lineSeparator(), report);
     }
 
-    private void closeFile(String report, String toFileName) {
+    private void writeTiFile(String report, String toFileName) {
         File finalFile = new File(toFileName);
-        String[] readyReport = report.split(System.lineSeparator());
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(finalFile))) {
-            for (int k = 0; k < readyReport.length; k++) {
-                bufferedWriter.write(readyReport[k] + System.lineSeparator());
-            }
+            bufferedWriter.write(report);
         } catch (IOException e) {
             throw new RuntimeException("can't close file", e);
         }
-    }
-
-    public void getStatistic(String fromFileName, String toFileName) {
-        String doneData = readFile(fromFileName);
-        String readyReport = operationWithFile(doneData);
-        closeFile(readyReport, toFileName);
     }
 }
