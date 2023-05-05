@@ -37,7 +37,7 @@ public class WorkWithFile {
                 + "buy," + countBuy + System.lineSeparator()
                 + "result," + result;
 
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName,false))) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(newFile,false))) {
             bufferedWriter.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Can't find file" + e);
