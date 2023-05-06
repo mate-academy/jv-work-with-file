@@ -11,20 +11,21 @@ public class WorkWithFile {
     private static final int FIRST_HALF_ARRAY = 0;
     private static final int SECOND_HALF_ARRAY = 1;
     private static final int SIZE_REPORT = 3;
-    private static final String ACTION_WITH_BUY = "buy";
-    private static final String ACTION_WITH_SUPPLY = "supply";
+    private static final String AMOUND_INDEX = "buy";
+    private static final String ACTION_INDEX = "supply";
+    private static final String SYMBOL_THAT_SAPARATE_ELEMENTS = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String doneData = readFile(fromFileName);
         String readyReport = operationWithFile(doneData);
-        writeTiFile(readyReport, toFileName);
+        writeToFile(readyReport, toFileName);
     }
 
     private String readFile(String fromFileName) {
         File startFile = new File(fromFileName);
         StringBuilder builder = null;
         if (!startFile.exists()) {
-            throw new RuntimeException("File does not exist");
+            throw new RuntimeException("File fromFileName does not exist");
         }
         try (BufferedReader reader = new BufferedReader(new FileReader(startFile))) {
             builder = new StringBuilder();
@@ -34,28 +35,25 @@ public class WorkWithFile {
                 value = reader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't read fromFileName", e);
         }
         return builder.toString();
     }
 
     private String operationWithFile(String builder) {
-        String[] lineOfStartFile = builder.toString().split(System.lineSeparator());
+        String[] line = builder.toString().split(System.lineSeparator());
         int sumOfBuy = 0;
         int sumOfSupply = 0;
-        for (int i = 0; i < lineOfStartFile.length; i++) {
-            if (Character.isDigit(lineOfStartFile[i].charAt(0))) {
-                String[] elementsStartWithNumber = lineOfStartFile[i].split("(?<=\\d)(?=\\D)");
-                if (elementsStartWithNumber[SECOND_HALF_ARRAY].equals(ACTION_WITH_BUY)) {
+        for (int i = 0; i < line.length; i++) {
+            if (Character.isDigit(line[i].charAt(0))) {
+                String[] elementsStartWithNumber = line[i].split("(?<=\\d)(?=\\D)");
+                if (elementsStartWithNumber[SECOND_HALF_ARRAY].equals(AMOUND_INDEX)) {
                     sumOfBuy += Integer.parseInt(elementsStartWithNumber[FIRST_HALF_ARRAY]);
-                } else if (elementsStartWithNumber[SECOND_HALF_ARRAY].equals(ACTION_WITH_SUPPLY)) {
+                } else if (elementsStartWithNumber[SECOND_HALF_ARRAY].equals(ACTION_INDEX)) {
                     sumOfSupply += Integer.parseInt(elementsStartWithNumber[FIRST_HALF_ARRAY]);
                 }
             }
-            String[] elementOfLine = lineOfStartFile[i].split(",");
-            if (elementOfLine.length != 2) {
-                throw new RuntimeException("Invalid input file format at line " + (i + 1));
-            }
+            String[] elementOfLine = line[i].split(SYMBOL_THAT_SAPARATE_ELEMENTS);
             String action = elementOfLine[FIRST_HALF_ARRAY];
             int quantity = 0;
             try {
@@ -63,23 +61,22 @@ public class WorkWithFile {
             } catch (NumberFormatException e) {
                 throw new RuntimeException("Invalid input file format at line " + (i + 1), e);
             }
-            if (action.equals("buy")) {
+            if (action.equals(AMOUND_INDEX)) {
                 sumOfBuy += quantity;
-            } else if (action.equals("supply")) {
+            } else if (action.equals(ACTION_INDEX)) {
                 sumOfSupply += quantity;
             } else {
                 throw new RuntimeException("Invalid action in input file at line " + (i + 1));
             }
         }
         int result = sumOfSupply - sumOfBuy;
-        String[] report = new String[SIZE_REPORT];
-        report[0] = "supply," + Integer.toString(sumOfSupply);
-        report[1] = "buy," + Integer.toString(sumOfBuy);
-        report[2] = "result," + Integer.toString(result);
-        return String.join(System.lineSeparator(), report);
+        String report = "supply," + Integer.toString(sumOfSupply) + System.lineSeparator()
+                + "buy," + Integer.toString(sumOfBuy) + System.lineSeparator()
+                + "result," + Integer.toString(result) + System.lineSeparator();
+        return report;
     }
 
-    private void writeTiFile(String report, String toFileName) {
+    private void writeToFile(String report, String toFileName) {
         File finalFile = new File(toFileName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(finalFile))) {
             bufferedWriter.write(report);
