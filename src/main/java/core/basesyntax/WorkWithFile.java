@@ -13,11 +13,9 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        File newFile = new File(toFileName);
-        File checkFile = new File(fromFileName);
-        String data = readFromFile(checkFile);
+        String data = readFromFile(new File(fromFileName));
         String report = generateReport(data);
-        writeReportToFile(newFile, report);
+        writeReportToFile(new File(toFileName), report);
     }
 
     private String readFromFile(File file) {
