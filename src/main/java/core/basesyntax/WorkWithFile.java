@@ -9,14 +9,16 @@ import java.io.IOException;
 
 public class WorkWithFile {
     private static final String DELIMITER = "\\W";
+    private static final String BUY = "buy";
+    private static final String SUPPLY = "supply";
 
     public void getStatistic(String fromFileName, String toFileName) {
         File checkFile = new File(fromFileName);
         File newFile = new File(toFileName);
         readFromFile(checkFile);
         String[] allText = readFromFile(checkFile).split(DELIMITER);
-        int countSupply = getCount(allText, "supply");
-        int countBuy = getCount(allText, "buy");
+        int countSupply = getCount(allText, SUPPLY);
+        int countBuy = getCount(allText, BUY);
         int result = countSupply - countBuy;
         String report = generateReport(countSupply, countBuy, result);
         writeReportToFile(newFile, report);
