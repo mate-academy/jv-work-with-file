@@ -13,42 +13,40 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        File checkFile = new File(fromFileName);
         File newFile = new File(toFileName);
-        readFromFile(checkFile);
-        String[] allText = readFromFile(checkFile).split(DELIMITER);
-        int countSupply = getCount(allText, SUPPLY);
-        int countBuy = getCount(allText, BUY);
-        int result = countSupply - countBuy;
-        String report = generateReport(countSupply, countBuy, result);
+        File checkFile = new File(fromFileName);
+        String data = readFromFile(checkFile);
+        String report = generateReport(data);
         writeReportToFile(newFile, report);
     }
 
     private String readFromFile(File file) {
-        StringBuilder builder = new StringBuilder();
+        StringBuilder textFromFile = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
             String reader = bufferedReader.readLine();
             while (reader != null) {
-                builder.append(reader).append(System.lineSeparator());
+                textFromFile.append(reader).append(System.lineSeparator());
                 reader = bufferedReader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't find file " + file);
         }
-        return builder.toString();
+        return textFromFile.toString();
     }
 
-    private int getCount(String[] data, String keyword) {
-        int count = 0;
-        for (int i = 0; i < data.length; i++) {
-            if (data[i].equals(keyword)) {
-                count += Integer.parseInt(data[i + 1]);
+    private String generateReport(String data) {
+        String[] allText = data.split(DELIMITER);
+        int countBuy = 0;
+        int countSupply = 0;
+        for (int i = 0; i < allText.length; i++) {
+            if (allText[i].equals(BUY)) {
+                countBuy += Integer.parseInt(allText[i + 1]);
+            }
+            if (allText[i].equals(SUPPLY)) {
+                countSupply += Integer.parseInt(allText[i + 1]);
             }
         }
-        return count;
-    }
-
-    private String generateReport(int countSupply, int countBuy, int result) {
+        int result = countSupply - countBuy;
         return "supply," + countSupply + System.lineSeparator()
                 + "buy," + countBuy + System.lineSeparator()
                 + "result," + result;
