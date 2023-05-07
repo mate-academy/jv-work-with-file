@@ -8,24 +8,25 @@ import java.io.IOException;
 
 public class WorkWithFile {
     private static final int TWO_FIELDS = 2;
-    private static final String KOMA = ",";
+    private static final int TYPE_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
+
+    private static final String SUPPLY_OPERATION = "supply";
+    private static final String BUY_OPERATION = "buy";
+    private static final String SEPARATOR = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] lines = readLinesFromFile(fromFileName);
         int supplyTotal = 0;
         int buyTotal = 0;
-        int supplyCount = 0;
-        int buyCount = 0;
         for (String line : lines) {
             String[] fields = parseLine(line);
-            String type = fields[0];
-            int amount = Integer.parseInt(fields[1]);
-            if (type.equals("supply")) {
+            String type = fields[TYPE_INDEX];
+            int amount = Integer.parseInt(fields[AMOUNT_INDEX]);
+            if (type.equals(SUPPLY_OPERATION)) {
                 supplyTotal += amount;
-                supplyCount++;
-            } else if (type.equals("buy")) {
+            } else if (type.equals(BUY_OPERATION)) {
                 buyTotal += amount;
-                buyCount++;
             } else {
                 throw new RuntimeException("Invalid input type: " + type);
             }
@@ -39,12 +40,12 @@ public class WorkWithFile {
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             return reader.lines().toArray(String[]::new);
         } catch (IOException e) {
-            throw new RuntimeException("Can not read from the file");
+            throw new RuntimeException("Can not read from the file: " + fileName);
         }
     }
 
     private String[] parseLine(String line) {
-        String[] fields = line.split(KOMA);
+        String[] fields = line.split(SEPARATOR);
         if (fields.length != TWO_FIELDS) {
             throw new RuntimeException("Invalid input format");
         }
@@ -67,7 +68,7 @@ public class WorkWithFile {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             writer.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Can not write to the file");
+            throw new RuntimeException("Can not write to the file: " + fileName);
         }
     }
 }
