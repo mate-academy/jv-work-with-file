@@ -31,9 +31,9 @@ public class WorkWithFile {
             throw new RuntimeException("Can't read this file", e);
         }
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFile))) {
-            String builder = "supply," + supplies + System.lineSeparator() +
-                    "buy," + buyes + System.lineSeparator() +
-                    "result," + result + System.lineSeparator();
+            String builder = "supply," + supplies + System.lineSeparator()
+                    + "buy," + buyes + System.lineSeparator()
+                    + "result," + result + System.lineSeparator();
             bufferedWriter.write(builder);
         } catch (IOException e) {
             throw new RuntimeException("Can't write data", e);
