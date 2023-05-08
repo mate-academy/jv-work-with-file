@@ -7,36 +7,54 @@ import java.io.FileReader;
 import java.io.FileWriter;
 
 public class WorkWithFile {
+    private static final String COMMA = ",";
+
     public void getStatistic(String fromFileName, String toFileName) {
-        int sumSupply = 0;
-        int sumBuy = 0;
+        String text = readFromFile(fromFileName);
+        String resultReport = createReport(text);
+        writeToFile(toFileName, resultReport);
+    }
+
+    public static String readFromFile(String fromFileName) {
         File fileRead = new File(fromFileName);
         try {
             BufferedReader reader = new BufferedReader(new FileReader(fileRead));
             StringBuilder builder = new StringBuilder();
             String value = reader.readLine();
             while (value != null) {
-                builder.append(value).append(",");
+                builder.append(value).append(COMMA);
                 value = reader.readLine();
             }
-            String resultBuilder = builder.toString();
-            String[] data = resultBuilder.split(",");
-            for (int i = 0; i < data.length; i++) {
-                if (data[i].equals("supply")) {
-                    sumSupply = sumSupply + Integer.parseInt(data[i + 1]);
-                }
-                if (data[i].equals("buy")) {
-                    sumBuy = sumBuy + Integer.parseInt(data[i + 1]);
-                }
-            }
-            int result = sumSupply - sumBuy;
-            String resultString = "supply," + sumSupply + System.lineSeparator()
-                    + "buy," + sumBuy + System.lineSeparator()
-                    + "result," + result;
-            File fileWrite = new File(toFileName);
-            BufferedWriter writer = new BufferedWriter(new FileWriter(fileWrite));
-            writer.write(resultString);
             reader.close();
+            return builder.toString();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static String createReport(String line) {
+        int sumSupply = 0;
+        int sumBuy = 0;
+        String[] data = line.split(COMMA);
+        for (int i = 0; i < data.length; i++) {
+            if (data[i].equals("supply")) {
+                sumSupply = sumSupply + Integer.parseInt(data[i + 1]);
+            }
+            if (data[i].equals("buy")) {
+                sumBuy = sumBuy + Integer.parseInt(data[i + 1]);
+            }
+        }
+        int result = sumSupply - sumBuy;
+        return "supply," + sumSupply + System.lineSeparator()
+                + "buy," + sumBuy + System.lineSeparator()
+                + "result," + result;
+    }
+
+    public static void writeToFile(String toFileName, String report) {
+        File fileWrite = new File(toFileName);
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(fileWrite));
+            writer.write(report);
             writer.close();
         } catch (Exception e) {
             throw new RuntimeException(e);
