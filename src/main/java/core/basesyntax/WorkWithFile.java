@@ -15,7 +15,7 @@ public class WorkWithFile {
         writeToFile(toFileName, resultReport);
     }
 
-    public static String readFromFile(String fromFileName) {
+    private String readFromFile(String fromFileName) {
         File fileRead = new File(fromFileName);
         try {
             BufferedReader reader = new BufferedReader(new FileReader(fileRead));
@@ -28,11 +28,11 @@ public class WorkWithFile {
             reader.close();
             return builder.toString();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can't read data from the file ", e);
         }
     }
 
-    public static String createReport(String line) {
+    private String createReport(String line) {
         int sumSupply = 0;
         int sumBuy = 0;
         String[] data = line.split(COMMA);
@@ -50,14 +50,14 @@ public class WorkWithFile {
                 + "result," + result;
     }
 
-    public static void writeToFile(String toFileName, String report) {
+    private void writeToFile(String toFileName, String report) {
         File fileWrite = new File(toFileName);
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(fileWrite));
             writer.write(report);
             writer.close();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can't write data to file ", e);
         }
     }
 }
