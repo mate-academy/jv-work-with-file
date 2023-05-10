@@ -16,11 +16,11 @@ public class WorkWithFile {
         try {
             List<String> fileContent = readFile(fromFile);
             handler = handle(handler, fileContent);
-            result = handler.supplies - handler.buyes;
+            result = handler.supplies - handler.buys;
         } catch (IOException e) {
             throw new RuntimeException("Can't read this file", e);
         }
-        writeFile(toFile, handler.supplies, handler.buyes, result);
+        writeFile(toFile, handler.supplies, handler.buys, result);
     }
 
     private static Handler handle(Handler handler, List<String> fileContent) {
@@ -41,12 +41,12 @@ public class WorkWithFile {
     }
 
     private static class Handler {
-        public final int supplies;
-        public final int buyes;
+        private final int supplies;
+        private final int buys;
 
         public Handler(int supplies, int buyes) {
             this.supplies = supplies;
-            this.buyes = buyes;
+            this.buys = buyes;
         }
     }
 
