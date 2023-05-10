@@ -44,16 +44,16 @@ public class WorkWithFile {
         private final int supplies;
         private final int buys;
 
-        public Handler(int supplies, int buyes) {
+        public Handler(int supplies, int buys) {
             this.supplies = supplies;
-            this.buys = buyes;
+            this.buys = buys;
         }
     }
 
-    private static void writeFile(File toFile, int supplies, int buyes, int result) {
+    private static void writeFile(File toFile, int supplies, int buys, int result) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFile))) {
             String builder = "supply," + supplies + System.lineSeparator()
-                    + "buy," + buyes + System.lineSeparator()
+                    + "buy," + buys + System.lineSeparator()
                     + "result," + result + System.lineSeparator();
             bufferedWriter.write(builder);
         } catch (IOException e) {
