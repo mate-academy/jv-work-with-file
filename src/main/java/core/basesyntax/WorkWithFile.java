@@ -8,6 +8,9 @@ import java.nio.file.Path;
 import java.util.List;
 
 public class WorkWithFile {
+    public static final int START_ACTION = 0;
+    public static final int START_SUM = 1;
+
     public void getStatistic(String fromFileName, String toFileName) {
         List<String> dataFromFile = readFile(fromFileName);
         String report = createReport(dataFromFile);
@@ -19,12 +22,12 @@ public class WorkWithFile {
         int buys = 0;
         int result;
         for (String content : dataFromFile) {
-            String action = content.split(",")[0];
-            String sum = content.split(",")[1];
-            if (action.equals("supply")) {
+            String action = content.split(",")[START_ACTION];
+            String sum = content.split(",")[START_SUM];
+            if ("supply".equals(action)) {
                 supplies += Integer.parseInt(sum);
             }
-            if (action.equals("buy")) {
+            if ("buy".equals(action)) {
                 buys += Integer.parseInt(sum);
             }
         }
