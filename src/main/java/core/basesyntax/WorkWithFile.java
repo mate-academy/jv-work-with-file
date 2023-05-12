@@ -42,7 +42,7 @@ public class WorkWithFile {
         }
     }
 
-    private static void writeToFile(String toFileName, String report) {
+    private void writeToFile(String toFileName, String report) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(report);
         } catch (IOException e) {
