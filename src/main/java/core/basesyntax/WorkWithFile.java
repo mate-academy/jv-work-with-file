@@ -12,9 +12,10 @@ public class WorkWithFile {
     private static final String RESULT = "result";
     private static final String WHITESPACE = " ";
     private static final String COMA = ",";
+    private static final int INDEX_ZERO = 0;
+    private static final int INDEX_ONE = 1;
+    private static final int INDEX_TWO = 2;
     private static final int ZERO = 0;
-    private static final int ONE = 1;
-    private static final int TWO = 2;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] readedData = readFile(fromFileName);
@@ -42,17 +43,17 @@ public class WorkWithFile {
         int sumBuy = ZERO;
         for (String data : readedData) {
             String[] reportData = data.split(COMA);
-            if (reportData[ZERO].equals(SUPPLY)) {
-                sumSupply += Integer.parseInt(reportData[ONE]);
-            } else if (reportData[ZERO].equals(BUY)) {
-                sumBuy += Integer.parseInt(reportData[1]);
+            if (reportData[INDEX_ZERO].equals(SUPPLY)) {
+                sumSupply += Integer.parseInt(reportData[INDEX_ONE]);
+            } else if (reportData[INDEX_ZERO].equals(BUY)) {
+                sumBuy += Integer.parseInt(reportData[INDEX_ONE]);
             }
         }
         int result = sumSupply - sumBuy;
         String[] reportFinal = new String[3];
-        reportFinal[ZERO] = SUPPLY + COMA + sumSupply;
-        reportFinal[ONE] = BUY + COMA + sumBuy;
-        reportFinal[TWO] = RESULT + COMA + result;
+        reportFinal[INDEX_ZERO] = SUPPLY + COMA + sumSupply;
+        reportFinal[INDEX_ONE] = BUY + COMA + sumBuy;
+        reportFinal[INDEX_TWO] = RESULT + COMA + result;
         return reportFinal;
     }
 
