@@ -14,19 +14,16 @@ public class WorkWithFile {
     private static final String COMA = ",";
     private static final int INDEX_ZERO = 0;
     private static final int INDEX_ONE = 1;
-    private static final int INDEX_TWO = 2;
-    private static final int ZERO = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] readedData = readFile(fromFileName);
-        String[] readyReport = generateReport(readedData);
+        String readyReport = generateReport(readedData);
         writeToFile(readyReport, toFileName);
     }
 
-    public String[] readFile(String fromFileName) {
+    private String[] readFile(String fromFileName) {
         StringBuilder readedData = new StringBuilder();
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String words = bufferedReader.readLine();
             while (words != null) {
                 readedData.append(words).append(" ");
@@ -38,9 +35,9 @@ public class WorkWithFile {
         return readedData.toString().split(WHITESPACE);
     }
 
-    public String[] generateReport(String[] readedData) {
-        int sumSupply = ZERO;
-        int sumBuy = ZERO;
+    private String generateReport(String[] readedData) {
+        int sumSupply = 0;
+        int sumBuy = 0;
         for (String data : readedData) {
             String[] reportData = data.split(COMA);
             if (reportData[INDEX_ZERO].equals(SUPPLY)) {
@@ -50,20 +47,15 @@ public class WorkWithFile {
             }
         }
         int result = sumSupply - sumBuy;
-        String[] reportFinal = new String[3];
-        reportFinal[INDEX_ZERO] = SUPPLY + COMA + sumSupply;
-        reportFinal[INDEX_ONE] = BUY + COMA + sumBuy;
-        reportFinal[INDEX_TWO] = RESULT + COMA + result;
-        return reportFinal;
+
+        return SUPPLY + COMA + sumSupply + "\n" + BUY + COMA + sumBuy + "\n"
+                + RESULT + COMA + result;
     }
 
-    public void writeToFile(String[] readyReport, String toFileName) {
-        try {
-            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName));
-            for (String data : readyReport) {
-                bufferedWriter.write(data);
-                bufferedWriter.newLine();
-                bufferedWriter.flush();
+    private void writeToFile(String readyReport, String toFileName) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
+            {
+                bufferedWriter.write(readyReport);
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to file: " + toFileName, e);
