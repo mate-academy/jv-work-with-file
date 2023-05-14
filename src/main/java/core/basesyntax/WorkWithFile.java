@@ -9,12 +9,12 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class WorkWithFile {
-    private final static String SUPPLY = "supply";
-    private final static String BUY = "buy";
-    private final static String RESULT = "result";
-    private final static String DELIMITER = ",";
-    private final static int keyIndex = 0;
-    private final static int valueIndex = 1;
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
+    private static final String DELIMITER = ",";
+    private static final int keyIndex = 0;
+    private static final int valueIndex = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         Stream<String> stream = readLines(fromFileName);
