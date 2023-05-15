@@ -11,7 +11,7 @@ public class WorkWithFile {
     private static final String SEPARATE_COMMA = ",";
     private static final int AMOUNT_INDEX = 1;
     private static final int OPERATION_INDEX = 0;
-    private static final int RESULT_VALUE = 0;
+    private static final String RESULT_VALUE = "result";
     private static final String BUY_VALUE = "buy";
     private static final String SUPPLY_VALUE = "supply";
 
@@ -23,8 +23,7 @@ public class WorkWithFile {
 
     private String readFile(String fromFileName) {
         File file = new File(fromFileName);
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(file));
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             StringBuilder builder = new StringBuilder();
             String value = reader.readLine();
             while (value != null) {
@@ -39,10 +38,8 @@ public class WorkWithFile {
 
     private void writeFile(String toFileName, String report) {
         File file = new File(toFileName);
-        try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             writer.write(String.valueOf(report));
-            writer.close();
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file", e);
         }
@@ -62,6 +59,7 @@ public class WorkWithFile {
                     break;
                 case BUY_VALUE:
                     totalBuy += amount;
+                    break;
                 default:
             }
         }
