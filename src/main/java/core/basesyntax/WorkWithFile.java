@@ -11,7 +11,7 @@ public class WorkWithFile {
     private static final String BUY = "buy";
     private static final String RESULT = "result";
     private static final String KOMA = ",";
-    private static final String[] resaultArr = new String[]{SUPPLY, BUY, RESULT};
+    private static final String[] resultArr = new String[]{SUPPLY, BUY, RESULT};
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] dataInArray = readData(fromFileName);
@@ -41,34 +41,31 @@ public class WorkWithFile {
         File file = new File(fileName);
         try {
             file.createNewFile();
-        } catch (IOException e) {
-            throw new RuntimeException("Can't creat the file");
-        }
-        StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < 3; i++) {
-            builder.append(resaultArr[i]).append(KOMA)
-                    .append(values[i]).append(System.lineSeparator());
-        }
-        try {
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < 3; i++) {
+                builder.append(resultArr[i]).append(KOMA)
+                        .append(values[i]).append(System.lineSeparator());
+            }
             Files.write(file.toPath(), builder.toString().getBytes());
         } catch (IOException e) {
-            throw new RuntimeException("Can't add data to the file");
+            throw new RuntimeException("Error occurred while creating or writing to the file");
         }
     }
 
     private int[] reportValues(String[] dataSplited) {
-        int resault;
+        int result;
         int supply = 0;
         int buy = 0;
         for (String string : dataSplited) {
-            if (string.substring(0, string.indexOf(KOMA)).equals(SUPPLY)) {
-                supply += Integer.parseInt(string.substring(string.indexOf(KOMA) + 1));
+            String[] parts = string.split(KOMA);
+            if (parts[0].equals(SUPPLY)) {
+                supply += Integer.parseInt(parts[1]);
             } else {
-                buy += Integer.parseInt(string.substring(string.indexOf(KOMA) + 1));
+                buy += Integer.parseInt(parts[1]);
             }
         }
-        resault = supply - buy;
-        return new int[] {supply, buy, resault};
+        result = supply - buy;
+        return new int[] {supply, buy, result};
     }
 
 }
