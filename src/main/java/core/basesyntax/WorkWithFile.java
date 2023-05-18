@@ -5,38 +5,51 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Scanner;
 
 public class WorkWithFile {
     private static final String[] STATISTICS_FIELDS = {"supply", "buy", "result"};
-    private static final int SUPPLY_POS = 0;
-    private static final int BUY_POS = 1;
-    private static final int RESULT_POS = 2;
+    private static final int SUPPLY_POSITION = 0;
+    private static final int BUY_POSITION = 1;
+    private static final int RESULT_POSITION = 2;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        writeToFile(readFromFile(fromFileName), toFileName);
+        String fileContent = readFromFile(fromFileName);
+        int[] statisticsValues = calculateStatistics(fileContent);
+        writeToFile(statisticsValues, toFileName);
     }
 
-    private int[] readFromFile(String fromFileName) {
-        int[] statisticsValues = new int[3];
+    private String readFromFile(String fromFileName) {
+        StringBuilder sb = new StringBuilder();
 
         try (FileReader reader = new FileReader(fromFileName);
                 BufferedReader bufferedReader = new BufferedReader(reader)) {
             String readLine = bufferedReader.readLine();
-            String[] readValue;
-
             while (readLine != null) {
-                readValue = readLine.split(",");
-                if (readValue[0].equals(STATISTICS_FIELDS[SUPPLY_POS])) {
-                    statisticsValues[0] += Integer.parseInt(readValue[1]);
-                } else {
-                    statisticsValues[1] += Integer.parseInt(readValue[1]);
-                }
+                sb.append(readLine).append(System.lineSeparator());
                 readLine = bufferedReader.readLine();
             }
         } catch (IOException e) {
             System.out.println("Error while reading a file");
         }
-        statisticsValues[RESULT_POS] = statisticsValues[SUPPLY_POS] - statisticsValues[BUY_POS];
+
+        return sb.toString().trim();
+    }
+
+    private int[] calculateStatistics(String fileContent) {
+        int[] statisticsValues = new int[3];
+
+        Scanner scanner = new Scanner(fileContent);
+        while (scanner.hasNextLine()) {
+            String[] line = scanner.nextLine().split(",");
+            if (line[0].equals(STATISTICS_FIELDS[SUPPLY_POSITION])) {
+                statisticsValues[SUPPLY_POSITION] += Integer.parseInt(line[1]);
+            } else {
+                statisticsValues[BUY_POSITION] += Integer.parseInt(line[1]);
+            }
+        }
+        statisticsValues[RESULT_POSITION] =
+                statisticsValues[SUPPLY_POSITION] - statisticsValues[BUY_POSITION];
 
         return statisticsValues;
     }
