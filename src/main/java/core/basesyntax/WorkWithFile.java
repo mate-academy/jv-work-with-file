@@ -20,14 +20,14 @@ public class WorkWithFile {
                 String[] fields = line.split(SEPARATOR);
                 String operation = fields[0];
                 int amount = Integer.parseInt(fields[1]);
-                if (operation.equals(OPERATION_SUPPLY)) {
+                if (OPERATION_SUPPLY.equals(operation)) {
                     totalSupply += amount;
-                } else if (operation.equals(OPERATION_BUY)) {
+                } else if (OPERATION_BUY.equals(operation)) {
                     totalBuy += amount;
                 }
             }
 
-            int result = totalSupply - totalBuy;
+            int result = calculateResult(totalSupply, totalBuy);
             String report = generateReport(totalSupply, totalBuy, result);
             writeToFile(report, toFileName);
         } catch (IOException e) {
@@ -43,15 +43,21 @@ public class WorkWithFile {
 
     private String generateReport(int totalSupply, int totalBuy, int result) {
         StringBuilder report = new StringBuilder();
-        report.append("supply").append(SEPARATOR).append(totalSupply).append("\n");
-        report.append("buy").append(SEPARATOR).append(totalBuy).append("\n");
+        report.append(OPERATION_SUPPLY).append(SEPARATOR).append(totalSupply).append("\n");
+        report.append(OPERATION_BUY).append(SEPARATOR).append(totalBuy).append("\n");
         report.append("result").append(SEPARATOR).append(result).append("\n");
         return report.toString();
     }
 
-    private void writeToFile(String report, String fileName) throws IOException {
+    private void writeToFile(String report, String fileName) {
         try (FileWriter writer = new FileWriter(fileName)) {
             writer.write(report);
+        } catch (IOException e) {
+            throw new RuntimeException("Error writing to file", e);
         }
+    }
+
+    private int calculateResult(int totalSupply, int totalBuy) {
+        return totalSupply - totalBuy;
     }
 }
