@@ -5,13 +5,17 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Scanner;
 
 public class WorkWithFile {
     private static final String[] STATISTICS_FIELDS = {"supply", "buy", "result"};
     private static final int SUPPLY_POSITION = 0;
     private static final int BUY_POSITION = 1;
     private static final int RESULT_POSITION = 2;
+
+    //incoming data contents looks like: name, value
+    //so position 0 is name, position 1 is value
+    private static final int NAME_POSITION = 0;
+    private static final int VALUE_POSITION = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String fileContent = readFromFile(fromFileName);
@@ -20,32 +24,31 @@ public class WorkWithFile {
     }
 
     private String readFromFile(String fromFileName) {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder fileContent = new StringBuilder();
 
         try (FileReader reader = new FileReader(fromFileName);
                 BufferedReader bufferedReader = new BufferedReader(reader)) {
             String readLine = bufferedReader.readLine();
             while (readLine != null) {
-                sb.append(readLine).append(System.lineSeparator());
+                fileContent.append(readLine).append(System.lineSeparator());
                 readLine = bufferedReader.readLine();
             }
         } catch (IOException e) {
-            System.out.println("Error while reading a file");
+            throw new RuntimeException("Error while reading a file", e);
         }
 
-        return sb.toString().trim();
+        return fileContent.toString().trim();
     }
 
     private int[] calculateStatistics(String fileContent) {
         int[] statisticsValues = new int[3];
 
-        Scanner scanner = new Scanner(fileContent);
-        while (scanner.hasNextLine()) {
-            String[] line = scanner.nextLine().split(",");
-            if (line[0].equals(STATISTICS_FIELDS[SUPPLY_POSITION])) {
-                statisticsValues[SUPPLY_POSITION] += Integer.parseInt(line[1]);
+        for (String line : fileContent.split(System.lineSeparator())) {
+            String[] parsedLine = line.split(",");
+            if (parsedLine[NAME_POSITION].equals(STATISTICS_FIELDS[SUPPLY_POSITION])) {
+                statisticsValues[SUPPLY_POSITION] += Integer.parseInt(parsedLine[VALUE_POSITION]);
             } else {
-                statisticsValues[BUY_POSITION] += Integer.parseInt(line[1]);
+                statisticsValues[BUY_POSITION] += Integer.parseInt(parsedLine[VALUE_POSITION]);
             }
         }
         statisticsValues[RESULT_POSITION] =
@@ -62,7 +65,7 @@ public class WorkWithFile {
                         + statisticsValues[i] + System.lineSeparator());
             }
         } catch (IOException e) {
-            System.out.println("Error while writing into a file");
+            throw new RuntimeException("Error while writing into a file", e);
         }
 
     }
