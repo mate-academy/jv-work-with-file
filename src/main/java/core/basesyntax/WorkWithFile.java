@@ -9,6 +9,8 @@ public class WorkWithFile {
     private static final String OPERATION_SUPPLY = "supply";
     private static final String OPERATION_BUY = "buy";
     private static final String SEPARATOR = ",";
+    private static final int OPERATION_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         try {
@@ -18,8 +20,8 @@ public class WorkWithFile {
 
             for (String line : lines) {
                 String[] fields = line.split(SEPARATOR);
-                String operation = fields[0];
-                int amount = Integer.parseInt(fields[1]);
+                String operation = fields[OPERATION_INDEX];
+                int amount = Integer.parseInt(fields[AMOUNT_INDEX]);
                 if (OPERATION_SUPPLY.equals(operation)) {
                     totalSupply += amount;
                 } else if (OPERATION_BUY.equals(operation)) {
@@ -31,7 +33,7 @@ public class WorkWithFile {
             String report = generateReport(totalSupply, totalBuy, result);
             writeToFile(report, toFileName);
         } catch (IOException e) {
-            throw new RuntimeException("Error processing file", e);
+            throw new RuntimeException("Error processing file " + fromFileName, e);
         }
     }
 
@@ -39,6 +41,10 @@ public class WorkWithFile {
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             return reader.lines().toArray(String[]::new);
         }
+    }
+
+    private int calculateResult(int totalSupply, int totalBuy) {
+        return totalSupply - totalBuy;
     }
 
     private String generateReport(int totalSupply, int totalBuy, int result) {
@@ -53,11 +59,7 @@ public class WorkWithFile {
         try (FileWriter writer = new FileWriter(fileName)) {
             writer.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Error writing to file", e);
+            throw new RuntimeException("Error writing to file " + fileName, e);
         }
-    }
-
-    private int calculateResult(int totalSupply, int totalBuy) {
-        return totalSupply - totalBuy;
     }
 }
