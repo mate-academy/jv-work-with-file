@@ -32,8 +32,8 @@ public class WorkWithFile {
     }
 
     private String createReport(String[] values) {
-        int supplySum = OPERATION_INDEX;
-        int buySum = OPERATION_INDEX;
+        int supplySum = 0;
+        int buySum = 0;
         for (String value: values) {
             String[] element = value.split(SEPARATOR);
             if (element[OPERATION_INDEX].equals("supply")) {
@@ -54,6 +54,7 @@ public class WorkWithFile {
     private void writeToFile(String fileName, String report) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
             bufferedWriter.write(report);
+
         } catch (IOException ex) {
             throw new RuntimeException("Can't write data to file" + fileName + ex);
         }
