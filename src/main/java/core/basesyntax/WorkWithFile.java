@@ -9,50 +9,65 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class WorkWithFile {
+    private static final String SUPPLY_WORD = "supply";
+    private static final String BUY_WORD = "buy";
+    private static final String RESULT_WORD = "result";
+    private static final String COMA_SEPARATOR = ",";
+    private static final String REGEX_PATTERN = "[^0-9]";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int supplySum = getSumOfNumber(getResultFromFileByWord(fromFileName, "supply"));
-        int buySum = getSumOfNumber(getResultFromFileByWord(fromFileName, "buy"));
-        int result = supplySum - buySum;
-
-        try {
-            Files.deleteIfExists(Path.of(toFileName));
-        } catch (IOException e) {
-            throw new RuntimeException("Can't delete a file", e);
-        }
-
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName, true))) {
-            writer.write("supply," + supplySum + System.lineSeparator()
-                    + "buy," + buySum + System.lineSeparator()
-                    + "result," + result);
-        } catch (IOException e) {
-            throw new RuntimeException("Can't write to the file", e);
-        }
+        String[] fileContent = readFromFile(fromFileName);
+        String report = generateReport(fileContent);
+        writeToFile(toFileName, report);
     }
 
-    private String[] getResultFromFileByWord(String file, String worldForSearch) {
+    private String[] readFromFile(String file) {
         StringBuilder builder = new StringBuilder();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line = reader.readLine();
             while (line != null) {
-                if (line.contains(worldForSearch)) {
-                    builder.append(line).append(" ");
-                }
+                builder.append(line).append(" ");
                 line = reader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't read file" + file, e);
         }
         return builder.toString().split(" ");
     }
 
-    private int getSumOfNumber(String[] array) {
-        int sum = 0;
+    private String generateReport(String[] array) {
+        int supplySum = 0;
+        int buySum = 0;
+        StringBuilder builder = new StringBuilder(SUPPLY_WORD);
 
         for (String value: array) {
-            sum += Integer.parseInt(value.replaceAll("[^0-9]", ""));
+            if (value.contains(SUPPLY_WORD)) {
+                supplySum += Integer.parseInt(value.replaceAll(REGEX_PATTERN, ""));
+            }
+            if (value.contains(BUY_WORD)) {
+                buySum += Integer.parseInt(value.replaceAll(REGEX_PATTERN, ""));
+            }
         }
-        return sum;
+
+        return builder.append(COMA_SEPARATOR).append(supplySum)
+                .append(System.lineSeparator())
+                .append(BUY_WORD).append(COMA_SEPARATOR).append(buySum)
+                .append(System.lineSeparator())
+                .append(RESULT_WORD).append(COMA_SEPARATOR).append(supplySum - buySum).toString();
+    }
+
+    private void writeToFile(String file, String data) {
+        try {
+            Files.deleteIfExists(Path.of(file));
+        } catch (IOException e) {
+            throw new RuntimeException("Can't delete a file" + file, e);
+        }
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
+            writer.write(data);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write to the file" + file, e);
+        }
     }
 }
