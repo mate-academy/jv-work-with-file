@@ -56,7 +56,7 @@ public class WorkWithFile {
             bufferedWriter.write(report);
 
         } catch (IOException ex) {
-            throw new RuntimeException("Can't write data to file" + fileName + ex);
+            throw new RuntimeException("Can't write data to file " + fileName, ex);
         }
     }
 }
