@@ -7,40 +7,46 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String SEPARATOR = ",";
+    private static final int OPERATION_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int [] values = readFromfile(fromFileName);
-        String report = createReport(values);
+        String[] readFile = readFromFile(fromFileName);
+        String report = createReport(readFile);
         writeToFile(toFileName, report);
-
     }
 
-    private int[] readFromfile(String fileName) {
-        int supplySum = 0;
-        int buySum = 0;
+    private String[] readFromFile(String fileName) {
+        StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
             String line = bufferedReader.readLine();
             while (line != null) {
-                String[] values = line.split(",");
-                if (values[0].equals("supply")) {
-                    supplySum += Integer.parseInt(values[1]);
-                } else {
-                    buySum += Integer.parseInt(values[1]);
-                }
+                stringBuilder.append(line).append(System.lineSeparator());
                 line = bufferedReader.readLine();
             }
-
         } catch (IOException e) {
-            throw new RuntimeException("Can't read from file " + e);
+            throw new RuntimeException("Can't read from file " + fileName + e);
         }
-        return new int[] {supplySum, buySum};
+        return stringBuilder.toString().split(System.lineSeparator());
     }
 
-    private String createReport(int[] values) {
-        int result = values[0] - values[1];
+    private String createReport(String[] values) {
+        int supplySum = OPERATION_INDEX;
+        int buySum = OPERATION_INDEX;
+        for (String value: values) {
+            String[] element = value.split(SEPARATOR);
+            if (element[OPERATION_INDEX].equals("supply")) {
+                supplySum += Integer.parseInt(element[AMOUNT_INDEX]);
+            }
+            if (element[OPERATION_INDEX].equals("buy")) {
+                buySum += Integer.parseInt(element[AMOUNT_INDEX]);
+            }
+        }
+        int result = supplySum - buySum;
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("supply,").append(values[0]).append(System.lineSeparator());
-        stringBuilder.append("buy,").append(values[1]).append(System.lineSeparator());
+        stringBuilder.append("supply,").append(supplySum).append(System.lineSeparator());
+        stringBuilder.append("buy,").append(buySum).append(System.lineSeparator());
         stringBuilder.append("result,").append(result).append(System.lineSeparator());
         return stringBuilder.toString();
     }
@@ -51,6 +57,5 @@ public class WorkWithFile {
         } catch (IOException ex) {
             throw new RuntimeException("Can't write data to file" + ex);
         }
-
     }
 }
