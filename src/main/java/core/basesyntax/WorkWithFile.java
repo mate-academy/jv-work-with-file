@@ -9,9 +9,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class WorkWithFile {
-    private static final String SUPPLY_WORD = "supply";
-    private static final String BUY_WORD = "buy";
-    private static final String RESULT_WORD = "result";
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
     private static final String COMA_SEPARATOR = ",";
     private static final String REGEX_PATTERN = "[^0-9]";
 
@@ -39,22 +39,22 @@ public class WorkWithFile {
     private String generateReport(String[] array) {
         int supplySum = 0;
         int buySum = 0;
-        StringBuilder builder = new StringBuilder(SUPPLY_WORD);
+        StringBuilder builder = new StringBuilder(SUPPLY);
 
         for (String value: array) {
-            if (value.contains(SUPPLY_WORD)) {
+            if (value.contains(SUPPLY)) {
                 supplySum += Integer.parseInt(value.replaceAll(REGEX_PATTERN, ""));
             }
-            if (value.contains(BUY_WORD)) {
+            if (value.contains(BUY)) {
                 buySum += Integer.parseInt(value.replaceAll(REGEX_PATTERN, ""));
             }
         }
 
         return builder.append(COMA_SEPARATOR).append(supplySum)
                 .append(System.lineSeparator())
-                .append(BUY_WORD).append(COMA_SEPARATOR).append(buySum)
+                .append(BUY).append(COMA_SEPARATOR).append(buySum)
                 .append(System.lineSeparator())
-                .append(RESULT_WORD).append(COMA_SEPARATOR).append(supplySum - buySum).toString();
+                .append(RESULT).append(COMA_SEPARATOR).append(supplySum - buySum).toString();
     }
 
     private void writeToFile(String file, String data) {
