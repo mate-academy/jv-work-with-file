@@ -5,8 +5,6 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 public class WorkWithFile {
     private static final String SUPPLY = "supply";
@@ -58,13 +56,7 @@ public class WorkWithFile {
     }
 
     private void writeToFile(String file, String data) {
-        try {
-            Files.deleteIfExists(Path.of(file));
-        } catch (IOException e) {
-            throw new RuntimeException("Can't delete a file" + file, e);
-        }
-
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             writer.write(data);
         } catch (IOException e) {
             throw new RuntimeException("Can't write to the file" + file, e);
