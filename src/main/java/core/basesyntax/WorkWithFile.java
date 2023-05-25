@@ -1,71 +1,62 @@
 package core.basesyntax;
 
 import java.io.BufferedReader;
-import java.io.File;
+import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
 
 public class WorkWithFile {
-    private static final String SUPPLY = "supply";
-    private static final String BUY = "buy";
-    private static final String RESULT = "result";
-    private static final String KOMA = ",";
-    private static final String[] resultArr = new String[]{SUPPLY, BUY, RESULT};
+    private static final String SEPARATOR = ",";
+    private static final int OPERATION_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] dataInArray = readData(fromFileName);
-        int[] finalValues = reportValues(dataInArray);
-        writeData(finalValues, toFileName);
+        String report = createReport(dataInArray);
+        writeData(toFileName, report);
     }
 
     private String[] readData(String fileName) {
-        File file = new File(fileName);
-        StringBuilder builder = new StringBuilder();
-        if (file.length() == 0) {
-            return new String[0];
-        }
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
-            int value = bufferedReader.read();
-            while (value != -1) {
-                builder.append((char) value);
-                value = bufferedReader.read();
+        StringBuilder stringBuilder = new StringBuilder();
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
+            String line = bufferedReader.readLine();
+            while (line != null) {
+                stringBuilder.append(line).append(System.lineSeparator());
+                line = bufferedReader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read data from the file " + fileName, e);
+            throw new RuntimeException("Can't read from file " + fileName + e);
         }
-        return builder.toString().split("\\s+");
+        return stringBuilder.toString().split(System.lineSeparator());
     }
 
-    private void writeData(int[] values, String fileName) {
-        File file = new File(fileName);
-        try {
-            file.createNewFile();
-            StringBuilder builder = new StringBuilder();
-            for (int i = 0; i < 3; i++) {
-                builder.append(resultArr[i]).append(KOMA)
-                        .append(values[i]).append(System.lineSeparator());
+    private String createReport(String[] values) {
+        int supplySum = 0;
+        int buySum = 0;
+        for (String value : values) {
+            String[] element = value.split(SEPARATOR);
+            if (element[OPERATION_INDEX].equals("supply")) {
+                supplySum += Integer.parseInt(element[AMOUNT_INDEX]);
             }
-            Files.write(file.toPath(), builder.toString().getBytes());
-        } catch (IOException e) {
-            throw new RuntimeException("Error occurred while creating or writing to the file");
-        }
-    }
-
-    private int[] reportValues(String[] dataSplited) {
-        int result;
-        int supply = 0;
-        int buy = 0;
-        for (String string : dataSplited) {
-            String[] parts = string.split(KOMA);
-            if (parts[0].equals(SUPPLY)) {
-                supply += Integer.parseInt(parts[1]);
-            } else {
-                buy += Integer.parseInt(parts[1]);
+            if (element[OPERATION_INDEX].equals("buy")) {
+                buySum += Integer.parseInt(element[AMOUNT_INDEX]);
             }
         }
-        result = supply - buy;
-        return new int[] {supply, buy, result};
+        int result = supplySum - buySum;
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("supply,").append(supplySum).append(System.lineSeparator());
+        stringBuilder.append("buy,").append(buySum).append(System.lineSeparator());
+        stringBuilder.append("result,").append(result).append(System.lineSeparator());
+        return stringBuilder.toString();
     }
 
+    private void writeData(String fileName, String report) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
+            bufferedWriter.write(report);
+
+        } catch (IOException ex) {
+            throw new RuntimeException("Can't write data to file " + fileName, ex);
+        }
+    }
 }
