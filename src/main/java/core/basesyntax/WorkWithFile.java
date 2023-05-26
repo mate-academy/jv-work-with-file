@@ -19,24 +19,7 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         String[] textFromFile = readStatisticFromFile(fromFileName);
 
-        int supply = 0;
-        int buy = 0;
-
-        for (String text : textFromFile) {
-            String[] block = text.split(SEPARATOR);
-            String operationType = block[OPERATION_INDEX].trim();
-            int amount = Integer.parseInt(block[AMOUNT_INDEX].trim());
-
-            if (operationType.equals(SUPPLY)) {
-                supply += amount;
-            } else if (operationType.equals(BUY)) {
-                buy += amount;
-            }
-        }
-
-        int result = supply - buy;
-
-        String report = generateReport(supply, buy, result);
+        String report = generateReport(textFromFile);
         writeStatisticsToFile(toFileName, report);
     }
 
@@ -54,7 +37,23 @@ public class WorkWithFile {
         return textFromFile.toArray(new String[0]);
     }
 
-    private String generateReport(int supply, int buy, int result) {
+    private String generateReport(String[] textFromFile) {
+        int supply = 0;
+        int buy = 0;
+
+        for (String text : textFromFile) {
+            String[] block = text.split(SEPARATOR);
+            String operationType = block[OPERATION_INDEX].trim();
+            int amount = Integer.parseInt(block[AMOUNT_INDEX].trim());
+
+            if (operationType.equals(SUPPLY)) {
+                supply += amount;
+            } else if (operationType.equals(BUY)) {
+                buy += amount;
+            }
+        }
+
+        int result = supply - buy;
         StringBuilder report = new StringBuilder();
         report.append(SUPPLY).append(SEPARATOR).append(supply).append("\n");
         report.append(BUY).append(SEPARATOR).append(buy).append("\n");
