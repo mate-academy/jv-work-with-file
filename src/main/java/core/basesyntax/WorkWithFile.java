@@ -16,27 +16,25 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] splitFile = read(fromFileName).split(System.lineSeparator());
-        int supplyCount = 0;
-        int buyCount = 0;
-        int result;
-
-        for (String eachElement : splitFile) {
-            String[] toCountElement = eachElement.split(SEPARATOR);
-            String type = toCountElement[INDEX_ZERO];
-            int count = Integer.parseInt((toCountElement[INDEX_ONE]));
-            if (type.equals(SUPPLY_VALUE)) {
-                supplyCount += count;
-            }
-            if (type.equals(BUY_VALUE)) {
-                buyCount += count;
-            }
-        }
-        result = supplyCount - buyCount;
-        String finalDataFile = dataCreator(supplyCount, buyCount, result);
+        int supplyCount = calculateCount(splitFile, SUPPLY_VALUE);
+        int buyCount = calculateCount(splitFile, BUY_VALUE);
+        int result = supplyCount - buyCount;
+        String finalDataFile = generateReport(supplyCount, buyCount, result);
         write(toFileName, finalDataFile);
     }
 
-    private String dataCreator(int supplyCount, int buyCount, int result) {
+    private int calculateCount(String[] data, String type) {
+        int count = 0;
+        for (String element : data) {
+            String[] toCountElement = element.split(SEPARATOR);
+            if (toCountElement[INDEX_ZERO].equals(type)) {
+                count += Integer.parseInt(toCountElement[INDEX_ONE]);
+            }
+        }
+        return count;
+    }
+
+    private String generateReport(int supplyCount, int buyCount, int result) {
         StringBuilder builder = new StringBuilder();
         return builder.append(SUPPLY_VALUE).append(SEPARATOR)
                 .append(supplyCount).append(System.lineSeparator())
