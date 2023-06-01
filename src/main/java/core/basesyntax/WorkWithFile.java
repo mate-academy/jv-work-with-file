@@ -9,51 +9,51 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final int OPERATION_INDEX = 0;
     private static final int AMOUNT_INDEX = 1;
-    private static final String SEPARATED_VALUES = ",";
+    private static final String COMMA_SEPARATED = ",";
+    private static final String SPACE_SEPARATED = " ";
     private static final String OPERATION_NAME = "supply";
 
-    private int [] readFile(String fromFileName) {
-        int [] variables = new int [2];
+    public void getStatistic(String fromFileName, String toFileName) {
+        String [] data = readFile(fromFileName);
+        String report = getReport(data);
+        writeFile(toFileName, report);
+    }
+
+    private String [] readFile(String fromFileName) {
+        StringBuilder builder = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String value = reader.readLine();
             while (value != null) {
-                String [] separatedStr = value.split(SEPARATED_VALUES);
-                if (separatedStr[OPERATION_INDEX].equals(OPERATION_NAME)) {
-                    variables[OPERATION_INDEX] += Integer.parseInt(separatedStr[AMOUNT_INDEX]);
-                } else {
-                    variables[AMOUNT_INDEX] += Integer.parseInt(separatedStr[AMOUNT_INDEX]);
-                }
+                builder.append(value).append(SPACE_SEPARATED);
                 value = reader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read file" + fromFileName, e);
         }
-        return variables;
+        return builder.toString().split(SPACE_SEPARATED);
     }
 
-    private String getReport(int [] variables) {
-        int result = variables[OPERATION_INDEX] - variables[AMOUNT_INDEX];
-        System.out.println("supply," + variables[OPERATION_INDEX] + System.lineSeparator()
-                + "buy," + variables[AMOUNT_INDEX] + System.lineSeparator()
-                + "result," + result);
-        return "supply," + variables[OPERATION_INDEX] + System.lineSeparator()
-                + "buy," + variables[AMOUNT_INDEX] + System.lineSeparator()
-                + "result," + result + System.lineSeparator();
+    private String getReport(String [] data) {
+        int supplySum = 0;
+        int buySum = 0;
+        for (String element: data) {
+            String[] stringSeparated = element.split(COMMA_SEPARATED);
+            if (stringSeparated[OPERATION_INDEX].equals(OPERATION_NAME)) {
+                supplySum += Integer.parseInt(stringSeparated[AMOUNT_INDEX]);
+            } else {
+                buySum += Integer.parseInt(stringSeparated[AMOUNT_INDEX]);
+            }
+        }
+        return "supply," + supplySum + System.lineSeparator()
+                + "buy," + buySum + System.lineSeparator()
+                + "result," + (supplySum - buySum) + System.lineSeparator();
     }
 
     private void writeFile(String toFileName, String report) {
-        try {
-            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName));
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(report);
-            bufferedWriter.close();
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to file " + toFileName, e);
         }
-    }
-
-    public void getStatistic(String fromFileName, String toFileName) {
-        int[] variables = readFile(fromFileName);
-        String report = getReport(variables);
-        writeFile(toFileName, report);
     }
 }
