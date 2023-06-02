@@ -15,27 +15,35 @@ public class WorkWithFile {
     public static final int VALUE_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        writeReportToFile(makeReportFromFile(fromFileName), toFileName);
+        writeReportToFile(createReport(readFromFile(fromFileName)), toFileName);
     }
 
-    private Report makeReportFromFile(String fromFileName) {
-        String[] fromFileLineArray;
+    private String[] readFromFile(String fromFileName) {
+        StringBuilder fileContent = new StringBuilder();
         String fromFileLine;
-        Report report = new Report();
         try (BufferedReader buffer = new BufferedReader(new FileReader(fromFileName))) {
             fromFileLine = buffer.readLine();
             while (fromFileLine != null) {
-                fromFileLineArray = fromFileLine.split(FILE_SEPARATOR);
-                if (fromFileLineArray[OPERATION_INDEX].equals(SUPPLY)) {
-                    report.calculateSupplySum(Integer.parseInt(fromFileLineArray[VALUE_INDEX]));
-                }
-                if (fromFileLineArray[OPERATION_INDEX].equals(BUY)) {
-                    report.calculateBuySum(Integer.parseInt(fromFileLineArray[VALUE_INDEX]));
-                }
+                fileContent.append(System.lineSeparator()).append(fromFileLine);
                 fromFileLine = buffer.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("Cannot read file " + fromFileName, e);
+        }
+        return fileContent.toString().split(System.lineSeparator());
+    }
+
+    private Report createReport(String[] fileContent) {
+        String[] lineArray;
+        Report report = new Report();
+        for (String line : fileContent) {
+            lineArray = line.split(FILE_SEPARATOR);
+            if (lineArray[OPERATION_INDEX].equals(SUPPLY)) {
+                report.calculateSupplySum(Integer.parseInt(lineArray[VALUE_INDEX]));
+            }
+            if (lineArray[OPERATION_INDEX].equals(BUY)) {
+                report.calculateBuySum(Integer.parseInt(lineArray[VALUE_INDEX]));
+            }
         }
         report.calculateResult();
         return report;
