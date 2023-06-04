@@ -8,7 +8,6 @@ import java.nio.file.Paths;
 
 public class WorkWithFile {
     private static final String SPLITTER = ",";
-    private static final String DELIMITER = "\r\n";
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
@@ -20,7 +19,8 @@ public class WorkWithFile {
         try {
             String text = new String(Files.readAllBytes(Paths.get(fromFileName)));
 
-            String[] splittedText = text.split(DELIMITER);
+            String[] splittedText = text.split(System.lineSeparator());
+
             int supplyCount = 0;
             int buyCount = 0;
             int result = 0;
