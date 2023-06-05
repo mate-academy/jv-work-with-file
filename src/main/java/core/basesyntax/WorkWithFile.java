@@ -32,20 +32,20 @@ public class WorkWithFile {
     private void createReport(String[] validArray) {
         int supplyValue = 0;
         int buyValue = 0;
-            for (int i = 0; i < validArray.length; i++) {
-                if (validArray[i].equals("supply")) {
-                    supplyValue += Integer.parseInt(validArray[i + 1]);
-                }
-                if (validArray[i].equals("buy")) {
-                    buyValue += Integer.parseInt(validArray[i + 1]);
-                }
+        for (int i = 0; i < validArray.length; i++) {
+            if (validArray[i].equals("supply")) {
+                supplyValue += Integer.parseInt(validArray[i + 1]);
             }
-            int result = supplyValue - buyValue;
-            array
-                    .append(getBuilder("supply", supplyValue))
-                    .append(getBuilder("buy", buyValue))
-                    .append("result,")
-                    .append(result);
+            if (validArray[i].equals("buy")) {
+                buyValue += Integer.parseInt(validArray[i + 1]);
+            }
+        }
+        int result = supplyValue - buyValue;
+        array
+                .append(getBuilder("supply", supplyValue))
+                .append(getBuilder("buy", buyValue))
+                .append("result,")
+                .append(result);
     }
 
     private StringBuilder getBuilder(String string, int value) {
