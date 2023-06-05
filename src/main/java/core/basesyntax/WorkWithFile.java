@@ -9,11 +9,11 @@ import java.util.List;
 
 public class WorkWithFile {
     private final StringBuilder array = new StringBuilder();
-     private boolean dataWritten = false;
+    private boolean dataWritten = false;
 
     public void getStatistic(String fromFileName, String toFileName) {
         createReport(fromFileName);
-            writeToFile(toFileName);
+        writeToFile(toFileName);
     }
 
     private void createReport(String fileName) {
@@ -45,7 +45,7 @@ public class WorkWithFile {
     }
 
     private StringBuilder getBuilder(String string, int value) {
-         return new StringBuilder()
+        return new StringBuilder()
                 .append(string)
                 .append(",")
                 .append(value)
