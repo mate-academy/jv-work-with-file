@@ -53,10 +53,10 @@ public class WorkWithFile {
     }
 
     private void writeToFile(String data, String fileName) {
-            try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
-                bufferedWriter.write(data);
-            } catch (IOException e) {
-                throw new RuntimeException("Can't write data to file " + fileName, e);
-            }
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
+            bufferedWriter.write(data);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write data to file " + fileName, e);
+        }
     }
 }
