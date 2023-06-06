@@ -8,28 +8,25 @@ import java.nio.file.Files;
 import java.util.List;
 
 public class WorkWithFile {
-    private final StringBuilder array = new StringBuilder();
-    private boolean dataWritten = false;
-
     public void getStatistic(String fromFileName, String toFileName) {
-        readFromFile(fromFileName);
-        writeToFile(toFileName);
+        String[] data = readFromFile(fromFileName);
+        String report = createReport(data);
+        writeToFile(report, toFileName);
     }
 
-    private void readFromFile(String fileName) {
+    private String[] readFromFile(String fileName) {
         File file = new File(fileName);
         try {
             List<String> strings = Files.readAllLines(file.toPath());
             String text = String.join(System.lineSeparator(), strings);
             String validText = text.replace(System.lineSeparator(), ",");
-            String[] value = validText.split(",");
-            createReport(value);
+            return validText.split(",");
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't read file " + fileName, e);
         }
     }
 
-    private void createReport(String[] validArray) {
+    private String createReport(String[] validArray) {
         int supplyValue = 0;
         int buyValue = 0;
         for (int i = 0; i < validArray.length; i++) {
@@ -41,11 +38,10 @@ public class WorkWithFile {
             }
         }
         int result = supplyValue - buyValue;
-        array
-                .append(getBuilder("supply", supplyValue))
+        return getBuilder("supply", supplyValue)
                 .append(getBuilder("buy", buyValue))
-                .append("result,")
-                .append(result);
+                .append(getBuilder("result", result))
+                .toString();
     }
 
     private StringBuilder getBuilder(String string, int value) {
@@ -56,16 +52,11 @@ public class WorkWithFile {
                 .append(System.lineSeparator());
     }
 
-    private void writeToFile(String fileName) {
-        File file = new File(fileName);
-        if (!dataWritten) {
-            try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, true))) {
-                bufferedWriter.write(array.toString());
-                dataWritten = true;
+    private void writeToFile(String data, String fileName) {
+            try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
+                bufferedWriter.write(data);
             } catch (IOException e) {
-                throw new RuntimeException("Can't write data to file", e);
+                throw new RuntimeException("Can't write data to file " + fileName, e);
             }
-        }
     }
 }
-
