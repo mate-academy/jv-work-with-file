@@ -18,7 +18,6 @@ public class WorkWithFile {
     static final String DATA_SEPARATOR = ",";
     static final String RECORD_SEPARATOR = ";";
 
-
     public void getStatistic(String fromFileName, String toFileName) {
         String dataFile = readFromFile(fromFileName);
         String dataReport = countReportResult(dataFile);
@@ -44,7 +43,7 @@ public class WorkWithFile {
         }
     }
 
-    private String countReportResult (String input) {
+    private String countReportResult(String input) {
         String[] records = input.split(RECORD_SEPARATOR);
         final int[] resultValues = new int[]{0, 0};
         for (String record : records) {
@@ -58,7 +57,8 @@ public class WorkWithFile {
         String result = createReportString(resultValues);
         return result;
     }
-    private String createReportString (int[] resultValues) {
+
+    private String createReportString(int[] resultValues) {
         StringBuilder builder = new StringBuilder();
         builder.append(SUPPLY_WORD).append(DATA_SEPARATOR).append(resultValues[SUPPLY_INDEX]);
         builder.append(System.lineSeparator());
