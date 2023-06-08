@@ -13,50 +13,59 @@ public class WorkWithFile {
     static final String RESULT_WORD = "result";
     static final int NAME_COLUMN_INDEX = 0;
     static final int VALUE_COLUMN_INDEX = 1;
+    static final int SUPPLY_INDEX = 0;
+    static final int BUY_INDEX = 1;
+    static final String DATA_SEPARATOR = ",";
+    static final String RECORD_SEPARATOR = ";";
+
 
     public void getStatistic(String fromFileName, String toFileName) {
-        writeToFile(getFromFile(fromFileName),toFileName);
+        String dataFile = readFromFile(fromFileName);
+        String dataReport = countReportResult(dataFile);
+        writeToFile(dataReport,toFileName);
     }
 
-    private String getFromFile(String fromFileName) {
+    private String readFromFile(String fromFileName) {
         File file = new File(fromFileName);
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             StringBuilder stringBuilder = new StringBuilder();
             String value = reader.readLine();
             while (value != null) {
-                stringBuilder.append(value).append(";");
+                stringBuilder.append(value).append(RECORD_SEPARATOR);
                 value = reader.readLine();
             }
             String fromFileString = stringBuilder.toString();
             if (fromFileString.isEmpty()) {
                 return new String();
             }
-            return countFromString(stringBuilder.toString());
+            return stringBuilder.toString();
         } catch (IOException e) {
             throw new RuntimeException("can't read file");
         }
     }
 
-    private String countFromString(String input) {
-        final int indexSupply = 0;
-        final int indexBuy = 1;
-        String[] records = input.split(";");
-        final int[] resultValues = new int[]{0,0};
-        for (String record:records) {
-            String[] dataRecord = record.split(",");
+    private String countReportResult (String input) {
+        String[] records = input.split(RECORD_SEPARATOR);
+        final int[] resultValues = new int[]{0, 0};
+        for (String record : records) {
+            String[] dataRecord = record.split(DATA_SEPARATOR);
             if (dataRecord[NAME_COLUMN_INDEX].equals(SUPPLY_WORD)) {
-                resultValues[indexSupply] += Integer.parseInt(dataRecord[VALUE_COLUMN_INDEX]);
+                resultValues[SUPPLY_INDEX] += Integer.parseInt(dataRecord[VALUE_COLUMN_INDEX]);
             } else if (dataRecord[NAME_COLUMN_INDEX].equals(BUY_WORD)) {
-                resultValues[indexBuy] += Integer.parseInt(dataRecord[VALUE_COLUMN_INDEX]);
+                resultValues[BUY_INDEX] += Integer.parseInt(dataRecord[VALUE_COLUMN_INDEX]);
             }
         }
+        String result = createReportString(resultValues);
+        return result;
+    }
+    private String createReportString (int[] resultValues) {
         StringBuilder builder = new StringBuilder();
-        builder.append(SUPPLY_WORD).append(",").append(resultValues[indexSupply]);
+        builder.append(SUPPLY_WORD).append(DATA_SEPARATOR).append(resultValues[SUPPLY_INDEX]);
         builder.append(System.lineSeparator());
-        builder.append(BUY_WORD).append(",").append(resultValues[indexBuy]);
+        builder.append(BUY_WORD).append(DATA_SEPARATOR).append(resultValues[BUY_INDEX]);
         builder.append(System.lineSeparator());
-        int resultAmount = resultValues[indexSupply] - resultValues[indexBuy];
-        builder.append(RESULT_WORD).append(",").append(resultAmount);
+        int resultAmount = resultValues[SUPPLY_INDEX] - resultValues[BUY_INDEX];
+        builder.append(RESULT_WORD).append(DATA_SEPARATOR).append(resultAmount);
         builder.append(System.lineSeparator());
         return builder.toString();
     }
