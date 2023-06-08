@@ -5,8 +5,6 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class WorkWithFile {
     private static final String DELIMITER = ",";
@@ -15,43 +13,57 @@ public class WorkWithFile {
     private static final String REPORT_HEADER_SUPPLY = "supply";
     private static final String REPORT_HEADER_BUY = "buy";
     private static final String REPORT_HEADER_RESULT = "result";
+    private static final String LINE_SEPARATOR = System.lineSeparator();
+    private static final int OPERATION_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
-                BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-
-            List<String> fileContent = readFileContent(reader);
-
-            int supplyTotal = processFileContent(fileContent, OPERATION_SUPPLY);
-            int buyTotal = processFileContent(fileContent, OPERATION_BUY);
-            int result = supplyTotal - buyTotal;
-
-            String reportContent = prepareReportContent(supplyTotal, buyTotal, result);
-            writeToFile(writer, reportContent);
-
+        try {
+            String fileContent = readFile(fromFileName);
+            String reportContent = generateReport(fileContent);
+            writeToFile(toFileName, reportContent);
             System.out.println("Report generated successfully.");
-
         } catch (IOException e) {
-            throw new RuntimeException("An error occurred: " + e.getMessage());
+            throw new RuntimeException("An error occurred while processing the file: "
+                    + e.getMessage(), e);
         }
     }
 
-    private List<String> readFileContent(BufferedReader reader) throws IOException {
-        List<String> fileContent = new ArrayList<>();
-        String line;
-        while ((line = reader.readLine()) != null) {
-            fileContent.add(line);
+    private String readFile(String fileName) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            StringBuilder contentBuilder = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                contentBuilder.append(line).append(LINE_SEPARATOR);
+            }
+            return contentBuilder.toString();
+        } catch (IOException e) {
+            throw new RuntimeException("An error occurred while reading the file: "
+                    + e.getMessage(), e);
         }
-        return fileContent;
     }
 
-    private int processFileContent(List<String> fileContent, String operationType) {
+    private String generateReport(String fileContent) {
+        int supplyTotal = processFileContent(fileContent, OPERATION_SUPPLY);
+        int buyTotal = processFileContent(fileContent, OPERATION_BUY);
+        int result = supplyTotal - buyTotal;
+        return prepareReportContent(supplyTotal, buyTotal, result);
+    }
+
+    private void writeToFile(String fileName, String reportContent) throws IOException {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+            writer.write(reportContent);
+        }
+    }
+
+    private int processFileContent(String fileContent, String operationType) {
         int total = 0;
-        for (String line : fileContent) {
+        String[] lines = fileContent.split(LINE_SEPARATOR);
+        for (String line : lines) {
             String[] parts = line.split(DELIMITER);
             if (parts.length == 2) {
-                String operation = parts[0].trim();
-                int amount = Integer.parseInt(parts[1].trim());
+                String operation = parts[OPERATION_INDEX].trim();
+                int amount = Integer.parseInt(parts[AMOUNT_INDEX].trim());
                 if (operation.equals(operationType)) {
                     total += amount;
                 }
@@ -61,13 +73,9 @@ public class WorkWithFile {
     }
 
     private String prepareReportContent(int supplyTotal, int buyTotal, int result) {
-        String reportContent = REPORT_HEADER_SUPPLY + DELIMITER + supplyTotal + "\r\n"
-                + REPORT_HEADER_BUY + DELIMITER + buyTotal + "\r\n"
+        String reportContent = REPORT_HEADER_SUPPLY + DELIMITER + supplyTotal + LINE_SEPARATOR
+                + REPORT_HEADER_BUY + DELIMITER + buyTotal + LINE_SEPARATOR
                 + REPORT_HEADER_RESULT + DELIMITER + result;
         return reportContent;
-    }
-
-    private void writeToFile(BufferedWriter writer, String content) throws IOException {
-        writer.write(content);
     }
 }
