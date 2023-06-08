@@ -40,29 +40,29 @@ public class WorkWithFile {
     private String countFromString(String input) {
         final int indexSupply = 0;
         final int indexBuy = 1;
-        final int[] resultValues = new int[]{0,0};
         String[] records = input.split(";");
-        for(String record:records) {
+        final int[] resultValues = new int[]{0,0};
+        for (String record:records) {
             String[] dataRecord = record.split(",");
-            if(dataRecord[NAME_COLUMN_INDEX].equals(SUPPLY_WORD)) {
+            if (dataRecord[NAME_COLUMN_INDEX].equals(SUPPLY_WORD)) {
                 resultValues[indexSupply] += Integer.parseInt(dataRecord[VALUE_COLUMN_INDEX]);
-            } else if(dataRecord[NAME_COLUMN_INDEX].equals(BUY_WORD)) {
+            } else if (dataRecord[NAME_COLUMN_INDEX].equals(BUY_WORD)) {
                 resultValues[indexBuy] += Integer.parseInt(dataRecord[VALUE_COLUMN_INDEX]);
             }
         }
-        int resultAmount = resultValues[indexSupply] - resultValues[indexBuy];
         StringBuilder builder = new StringBuilder();
         builder.append(SUPPLY_WORD).append(",").append(resultValues[indexSupply]);
         builder.append(System.lineSeparator());
         builder.append(BUY_WORD).append(",").append(resultValues[indexBuy]);
         builder.append(System.lineSeparator());
+        int resultAmount = resultValues[indexSupply] - resultValues[indexBuy];
         builder.append(RESULT_WORD).append(",").append(resultAmount);
         builder.append(System.lineSeparator());
         return builder.toString();
     }
 
-    private void writeToFile (String output,String toFileName) {
-        File file = new File (toFileName);
+    private void writeToFile(String output,String toFileName) {
+        File file = new File(toFileName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
             bufferedWriter.write(output);
         } catch (IOException e) {
