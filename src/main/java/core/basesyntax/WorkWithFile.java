@@ -12,34 +12,31 @@ public class WorkWithFile {
     private static final int AMOUNT_INDEX = 1;
     private static final String SUPPLY_OPERATION_TYPE = OperationType.SUPPLY.name().toLowerCase();
     private static final String BUY_OPERATION_TYPE = OperationType.BUY.name().toLowerCase();
-    private static StringBuilder result;
-    private static String textFromFile;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        readFromFile(fromFileName);
-        createReport();
-        writeReportToFile(toFileName);
+        String textFromFile = readFromFile(fromFileName);
+        String report = createReport(textFromFile);
+        writeFile(toFileName, report);
     }
 
-    private void readFromFile(String fromFileName) {
+    private String readFromFile(String fromFileName) {
         File fromFile = new File(fromFileName);
         String dataRow;
+        StringBuilder stringBuilder = new StringBuilder();
 
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFile));
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFile))) {
             dataRow = bufferedReader.readLine();
-            result = new StringBuilder();
             do {
-                result.append(dataRow).append(System.lineSeparator());
+                stringBuilder.append(dataRow).append(System.lineSeparator());
                 dataRow = bufferedReader.readLine();
             } while (dataRow != null);
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't read file " + fromFileName, e);
         }
-        textFromFile = result.toString();
+        return stringBuilder.toString();
     }
 
-    private void createReport() {
+    private String createReport(String textFromFile) {
         int firstOperationTypeSum = 0;
         int secondOperationTypeSum = 0;
         String[] dataRowSplit = textFromFile.split(System.lineSeparator());
@@ -51,20 +48,21 @@ public class WorkWithFile {
                 secondOperationTypeSum += Integer.valueOf(dataRowAndColumnSplit[AMOUNT_INDEX]);
             }
         }
-        result = new StringBuilder().append(SUPPLY_OPERATION_TYPE).append(',')
+        return new StringBuilder().append(SUPPLY_OPERATION_TYPE).append(',')
                 .append(firstOperationTypeSum)
                 .append(System.lineSeparator())
                 .append(BUY_OPERATION_TYPE).append(',').append(secondOperationTypeSum)
                 .append(System.lineSeparator())
-                .append("result,").append(firstOperationTypeSum - secondOperationTypeSum);
+                .append("result,").append(firstOperationTypeSum - secondOperationTypeSum)
+                .toString();
     }
 
-    private void writeReportToFile(String toFileName) {
+    private void writeFile(String toFileName, String report) {
         File toFile = new File(toFileName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFile))) {
-            bufferedWriter.write(result.toString());
+            bufferedWriter.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write to file", e);
+            throw new RuntimeException("Can't write to file " + toFileName, e);
         }
     }
 }
