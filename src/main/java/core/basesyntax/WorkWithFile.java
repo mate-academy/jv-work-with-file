@@ -30,16 +30,7 @@ public class WorkWithFile {
             }
         }
         int result = supplyAmount - buyAmount;
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(OperationType.SUPPLY.toString().toLowerCase())
-                .append(COMMA_SEPARATOR).append(supplyAmount);
-        stringBuilder.append(System.lineSeparator())
-                .append(OperationType.BUY.toString().toLowerCase())
-                .append(COMMA_SEPARATOR).append(buyAmount);
-        stringBuilder.append(System.lineSeparator())
-                .append(OperationType.RESULT.toString().toLowerCase())
-                .append(COMMA_SEPARATOR).append(result);
-        writeDataToFile(toFileName, stringBuilder.toString());
+        writeDataToFile(toFileName, createReport(supplyAmount, buyAmount, result));
     }
 
     private String[] getDataFromFile(String fileName) {
@@ -62,5 +53,18 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't write file", e);
         }
+    }
+
+    private String createReport(int supplyAmount, int buyAmount, int result) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(OperationType.SUPPLY.toString().toLowerCase())
+                .append(COMMA_SEPARATOR).append(supplyAmount);
+        stringBuilder.append(System.lineSeparator())
+                .append(OperationType.BUY.toString().toLowerCase())
+                .append(COMMA_SEPARATOR).append(buyAmount);
+        stringBuilder.append(System.lineSeparator())
+                .append(OperationType.RESULT.toString().toLowerCase())
+                .append(COMMA_SEPARATOR).append(result);
+        return stringBuilder.toString();
     }
 }
