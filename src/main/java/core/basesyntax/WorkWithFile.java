@@ -29,8 +29,7 @@ public class WorkWithFile {
                 buyAmount += Integer.parseInt(splittedDataString[AMOUNT_POSITION]);
             }
         }
-        int result = supplyAmount - buyAmount;
-        writeDataToFile(toFileName, createReport(supplyAmount, buyAmount, result));
+        writeDataToFile(toFileName, createReport(supplyAmount, buyAmount));
     }
 
     private String[] getDataFromFile(String fileName) {
@@ -55,7 +54,8 @@ public class WorkWithFile {
         }
     }
 
-    private String createReport(int supplyAmount, int buyAmount, int result) {
+    private String createReport(int supplyAmount, int buyAmount) {
+        int result = supplyAmount - buyAmount;
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(OperationType.SUPPLY.toString().toLowerCase())
                 .append(COMMA_SEPARATOR).append(supplyAmount);
