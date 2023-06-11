@@ -15,21 +15,8 @@ public class WorkWithFile {
     private static final OperationType BUY = OperationType.BUY;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int supplyAmount = 0;
-        int buyAmount = 0;
         String[] data = getDataFromFile(fromFileName);
-        for (String dataObject : data) {
-            String[] splittedDataString = dataObject.split(COMMA_SEPARATOR);
-            if (splittedDataString[OPERATION_TYPE_POSITION]
-                    .equals(SUPPLY.toString().toLowerCase())) {
-                supplyAmount += Integer.parseInt(splittedDataString[AMOUNT_POSITION]);
-            }
-            if (splittedDataString[OPERATION_TYPE_POSITION]
-                    .equals(BUY.toString().toLowerCase())) {
-                buyAmount += Integer.parseInt(splittedDataString[AMOUNT_POSITION]);
-            }
-        }
-        writeDataToFile(toFileName, createReport(supplyAmount, buyAmount));
+        writeDataToFile(toFileName, createReport(data));
     }
 
     private String[] getDataFromFile(String fileName) {
@@ -54,7 +41,20 @@ public class WorkWithFile {
         }
     }
 
-    private String createReport(int supplyAmount, int buyAmount) {
+    private String createReport(String[] data) {
+        int supplyAmount = 0;
+        int buyAmount = 0;
+        for (String dataObject : data) {
+            String[] splittedDataString = dataObject.split(COMMA_SEPARATOR);
+            if (splittedDataString[OPERATION_TYPE_POSITION]
+                    .equals(SUPPLY.toString().toLowerCase())) {
+                supplyAmount += Integer.parseInt(splittedDataString[AMOUNT_POSITION]);
+            }
+            if (splittedDataString[OPERATION_TYPE_POSITION]
+                    .equals(BUY.toString().toLowerCase())) {
+                buyAmount += Integer.parseInt(splittedDataString[AMOUNT_POSITION]);
+            }
+        }
         int result = supplyAmount - buyAmount;
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(OperationType.SUPPLY.toString().toLowerCase())
