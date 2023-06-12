@@ -10,14 +10,14 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
+    private static final String CSV_SEPARATOR = ",";
     private static final int OPERATION_TYPE = 0;
     private static final int AMOUNT = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        WorkWithFile workWithFile = new WorkWithFile();
-        String[] fileInfo = workWithFile.readFile(fromFileName).split(System.lineSeparator());
-        String report = workWithFile.createReport(fileInfo);
-        workWithFile.writeFile(report, toFileName);
+        String[] fileInfo = readFile(fromFileName).split(System.lineSeparator());
+        String report = createReport(fileInfo);
+        writeFile(report, toFileName);
     }
 
     private String readFile(String fromFileName) {
@@ -43,7 +43,7 @@ public class WorkWithFile {
         int totalNumber = 0;
         StringBuilder report = new StringBuilder();
         for (String info : fileInfo) {
-            lineInfo = info.split(",");
+            lineInfo = info.split(CSV_SEPARATOR);
             if (lineInfo[OPERATION_TYPE].equals(SUPPLY)) {
                 numberOfSupply += Integer.parseInt(lineInfo[AMOUNT]);
             } else if (lineInfo[OPERATION_TYPE].equals(BUY)) {
