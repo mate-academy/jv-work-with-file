@@ -22,27 +22,28 @@ public class WorkWithFile {
         int buySum = 0;
         int index = 0;
         Scanner scanner = new Scanner(new File(fromFile));
-            while (scanner.hasNext()) {
-                String[] strings = scanner.nextLine().split(",");
-                String doing = strings[index];
-                int number = Integer.parseInt(strings[index + 1]);
-                if (doing.equals("supply")) {
-                    supplySum += number;
-                } else {
-                    buySum += number;
-                }
+        while (scanner.hasNext()) {
+            String[] strings = scanner.nextLine().split(",");
+            String doing = strings[index];
+            int number = Integer.parseInt(strings[index + 1]);
+            if (doing.equals("supply")) {
+                supplySum += number;
+            } else {
+                buySum += number;
             }
-            scanner.close();
+        }
+        scanner.close();
 
         return new int[]{supplySum, buySum};
     }
 
     private void writeInFile(int sumSupply, int sumBuy, String toFile) throws IOException {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(toFile));
-            String stringBuilder = "supply," + sumSupply + System.lineSeparator() +
+        BufferedWriter writer = new BufferedWriter(new FileWriter(toFile));
+        String stringBuilder = "supply," + sumSupply + System.lineSeparator() +
                 "buy," + sumBuy + System.lineSeparator() +
                 "result," + (sumSupply - sumBuy);
-            writer.write(stringBuilder);
-            writer.close();
+        writer.write(stringBuilder);
+        writer.close();
     }
 }
+
