@@ -39,9 +39,9 @@ public class WorkWithFile {
 
     private void writeInFile(int sumSupply, int sumBuy, String toFile) throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter(toFile));
-        String stringBuilder = "supply," + sumSupply + System.lineSeparator() +
-                "buy," + sumBuy + System.lineSeparator() +
-                "result," + (sumSupply - sumBuy);
+        String stringBuilder = "supply," + sumSupply + System.lineSeparator()
+                + "buy," + sumBuy + System.lineSeparator()
+                + "result," + (sumSupply - sumBuy);
         writer.write(stringBuilder);
         writer.close();
     }
