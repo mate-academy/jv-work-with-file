@@ -56,12 +56,9 @@ public class WorkWithFile {
         int supply = operationAmount[0];
         int buy = operationAmount[1];
         int result = supply - buy;
-        return SUPPLY + COMMA_SPLITTER +
-                supply + System.lineSeparator() +
-                BUY + COMMA_SPLITTER +
-                buy + System.lineSeparator() +
-                RESULT + COMMA_SPLITTER +
-                result + System.lineSeparator();
+        return SUPPLY + COMMA_SPLITTER + supply + System.lineSeparator()
+                + BUY + COMMA_SPLITTER + buy + System.lineSeparator()
+                + RESULT + COMMA_SPLITTER + result + System.lineSeparator();
     }
 
     public void writeToFile(String text, String toFileName) {
