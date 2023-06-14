@@ -16,27 +16,34 @@ public class WorkWithFile {
     private static final String COMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String dataFromFile;
+        readFile(fromFileName);
+        createReport(readFile(fromFileName));
+        writeToFile(toFileName, createReport(fromFileName));
+    }
+
+    private String readFile(String fromFileName) {
         File file = new File(fromFileName);
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(file));
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             StringBuilder stringBuilder = new StringBuilder();
             String value = reader.readLine();
             while (value != null) {
                 stringBuilder.append(value).append(System.lineSeparator());
                 value = reader.readLine();
             }
-            dataFromFile = stringBuilder.toString();
+            return stringBuilder.toString();
         } catch (IOException e) {
             throw new RuntimeException("Can't read file", e);
         }
-        String[] separatedValue = dataFromFile.split("\n");
+    }
+
+    private String createReport(String dataFromFile) {
         int buySummary = 0;
         int supplySummary = 0;
+        String[] separatedValue = dataFromFile.trim().split(System.lineSeparator());
         for (String dat : separatedValue) {
             String[] dataComponents = dat.split(COMA);
-            String operationType = dataComponents[OPERATION_TYPE_INDEX];
-            int money = Integer.parseInt(dataComponents[AMOUNT_INDEX]);
+            String operationType = dataComponents[OPERATION_TYPE_INDEX].trim();
+            int money = Integer.parseInt(dataComponents[AMOUNT_INDEX].trim());
             if (operationType.equals(BUY)) {
                 buySummary = buySummary + money;
             }
@@ -49,10 +56,14 @@ public class WorkWithFile {
         report.append(SUPPLY).append(COMA).append(supplySummary).append(System.lineSeparator())
                 .append(BUY).append(COMA).append(buySummary).append(System.lineSeparator())
                 .append(RESULT).append(COMA).append(result);
-        String reportToFile = report.toString();
+        //String reportToFile = report.toString();
+        return report.toString();
+    }
+
+    private void writeToFile(String toFileName, String report) {
         File fileReport = new File(toFileName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileReport))) {
-            bufferedWriter.write(reportToFile);
+            bufferedWriter.write(createReport(report));
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to file", e);
         }
