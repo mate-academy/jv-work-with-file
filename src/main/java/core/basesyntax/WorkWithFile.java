@@ -16,9 +16,9 @@ public class WorkWithFile {
     private static final String COMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        readFile(fromFileName);
-        createReport(readFile(fromFileName));
-        writeToFile(toFileName, createReport(fromFileName));
+        String dataFromFile = readFile(fromFileName);
+        String report = createReport(dataFromFile);
+        writeToFile(toFileName, report);
     }
 
     private String readFile(String fromFileName) {
