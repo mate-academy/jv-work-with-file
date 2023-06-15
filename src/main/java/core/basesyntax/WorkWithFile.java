@@ -27,7 +27,7 @@ public class WorkWithFile {
                 str = bfReader.readLine();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Can not read the file" + inputFileName, e);
         }
         int result = supplyAmount - buyAmount;
         return String.format("supply,%d%nbuy,%d%nresult,%d", supplyAmount, buyAmount, result);
@@ -37,7 +37,7 @@ public class WorkWithFile {
         try (BufferedWriter bfWriter = new BufferedWriter(new FileWriter(outputFileName))) {
             bfWriter.write(statistic);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Can not write data to" + outputFileName, e);
         }
     }
 }
