@@ -5,29 +5,27 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String results = getStatisticValuesFromInputFile(fromFileName);
+        List<String> dataToAnalyze = readInputFile(fromFileName);
+        String results = getStatisticValuesFromRetrievedData(dataToAnalyze, fromFileName);
         writeStatisticToFile(results, toFileName);
     }
 
-    private String getStatisticValuesFromInputFile(String inputFileName) {
+    private String getStatisticValuesFromRetrievedData(List<String> data, String inputFileName) {
         int buyAmount = 0;
         int supplyAmount = 0;
-        try (BufferedReader bfReader = new BufferedReader(new FileReader(inputFileName))) {
-            String str = bfReader.readLine();
-            while (str != null) {
-                if (str.startsWith("b")) {
-                    buyAmount += Integer.parseInt(str.replaceFirst("\\w+,", ""));
-                } else {
-                    supplyAmount += Integer.parseInt(str.replaceFirst("\\w+,", ""));
-                }
-                str = bfReader.readLine();
+
+        for (String str : data) {
+            if (str.startsWith("b")) {
+                buyAmount += Integer.parseInt(str.replaceFirst("\\w+,", ""));
+            } else {
+                supplyAmount += Integer.parseInt(str.replaceFirst("\\w+,", ""));
             }
-        } catch (IOException e) {
-            throw new RuntimeException("Can not read the file" + inputFileName, e);
         }
         int result = supplyAmount - buyAmount;
         return String.format("supply,%d%nbuy,%d%nresult,%d", supplyAmount, buyAmount, result);
@@ -39,5 +37,19 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can not write data to" + outputFileName, e);
         }
+    }
+
+    private List<String> readInputFile(String inputFileName) {
+        List<String> retrievedData = new ArrayList<>();
+        try (BufferedReader bfReader = new BufferedReader(new FileReader(inputFileName))) {
+            String str = bfReader.readLine();
+            while (str != null) {
+                retrievedData.add(str);
+                str = bfReader.readLine();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Can not read the file" + inputFileName, e);
+        }
+        return retrievedData;
     }
 }
