@@ -13,7 +13,7 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
-    private static final String COMA = ",";
+    private static final String COMMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String dataFromFile = readFile(fromFileName);
@@ -32,7 +32,7 @@ public class WorkWithFile {
             }
             return stringBuilder.toString();
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't read file: fromFileName", e);
         }
     }
 
@@ -41,7 +41,7 @@ public class WorkWithFile {
         int supplySummary = 0;
         String[] separatedValue = dataFromFile.trim().split(System.lineSeparator());
         for (String dat : separatedValue) {
-            String[] dataComponents = dat.split(COMA);
+            String[] dataComponents = dat.split(COMMA);
             String operationType = dataComponents[OPERATION_TYPE_INDEX].trim();
             int money = Integer.parseInt(dataComponents[AMOUNT_INDEX].trim());
             if (operationType.equals(BUY)) {
@@ -53,19 +53,18 @@ public class WorkWithFile {
         }
         int result = supplySummary - buySummary;
         StringBuilder report = new StringBuilder();
-        report.append(SUPPLY).append(COMA).append(supplySummary).append(System.lineSeparator())
-                .append(BUY).append(COMA).append(buySummary).append(System.lineSeparator())
-                .append(RESULT).append(COMA).append(result);
-        //String reportToFile = report.toString();
+        report.append(SUPPLY).append(COMMA).append(supplySummary).append(System.lineSeparator())
+                .append(BUY).append(COMMA).append(buySummary).append(System.lineSeparator())
+                .append(RESULT).append(COMMA).append(result);
         return report.toString();
     }
 
     private void writeToFile(String toFileName, String report) {
         File fileReport = new File(toFileName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileReport))) {
-            bufferedWriter.write(createReport(report));
+            bufferedWriter.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data to file", e);
+            throw new RuntimeException("Can't write data to file: toFileName", e);
         }
     }
 }
