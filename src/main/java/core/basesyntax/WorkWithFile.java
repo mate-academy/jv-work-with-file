@@ -1,37 +1,34 @@
 package core.basesyntax;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.Scanner;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
-        try {
-            String dataFromFile = readFromFile(fromFileName);
-            String sumReport = getSumReportFromFile(dataFromFile);
-            writeInFile(toFileName, sumReport);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        String dataFromFile = readFromFile(fromFileName);
+        String sumReport = getSumReportFromFile(dataFromFile);
+        writeInFile(toFileName, sumReport);
     }
 
-    private String readFromFile(String fromFile) throws IOException {
-        Scanner scanner = new Scanner(new File(fromFile));
+    private String readFromFile(String fromFile) {
         StringBuilder stringBuilder = new StringBuilder();
-        while (scanner.hasNext()) {
-            stringBuilder.append(scanner.nextLine()).append(",");
+        try (Scanner scanner = new Scanner(new File(fromFile))) {
+            while (scanner.hasNext()) {
+                stringBuilder.append(scanner.nextLine()).append(",");
+            }
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
         }
-        scanner.close();
 
         return stringBuilder.toString();
     }
 
-    private void writeInFile(String toFile, String sumReport) throws IOException {
-        BufferedWriter writer = new BufferedWriter(new FileWriter(toFile));
-        writer.write(sumReport);
-        writer.close();
+    private void writeInFile(String toFile, String sumReport) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFile))) {
+            writer.write(sumReport);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private String getSumReportFromFile(String dataFromFile) {
