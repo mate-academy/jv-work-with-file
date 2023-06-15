@@ -21,7 +21,7 @@ public class WorkWithFile {
         int supplyAmount = 0;
 
         for (String str : data) {
-            if (str.startsWith("b")) {
+            if (str.startsWith("buy")) {
                 buyAmount += Integer.parseInt(str.replaceFirst("\\w+,", ""));
             } else {
                 supplyAmount += Integer.parseInt(str.replaceFirst("\\w+,", ""));
