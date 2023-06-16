@@ -32,18 +32,18 @@ public class WorkWithFile {
             }
             return stringBuilder.toString();
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file: fromFileName", e);
+            throw new RuntimeException("Can't read file:" + fromFileName, e);
         }
     }
 
     private String createReport(String dataFromFile) {
         int buySummary = 0;
         int supplySummary = 0;
-        String[] separatedValue = dataFromFile.trim().split(System.lineSeparator());
-        for (String dat : separatedValue) {
-            String[] dataComponents = dat.split(COMMA);
-            String operationType = dataComponents[OPERATION_TYPE_INDEX].trim();
-            int money = Integer.parseInt(dataComponents[AMOUNT_INDEX].trim());
+        String[] lines = dataFromFile.split(System.lineSeparator());
+        for (String line : lines) {
+            String[] dataComponents = line.split(COMMA);
+            String operationType = dataComponents[OPERATION_TYPE_INDEX];
+            int money = Integer.parseInt(dataComponents[AMOUNT_INDEX]);
             if (operationType.equals(BUY)) {
                 buySummary = buySummary + money;
             }
@@ -64,7 +64,7 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileReport))) {
             bufferedWriter.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data to file: toFileName", e);
+            throw new RuntimeException("Can't write data to file:" + toFileName, e);
         }
     }
 }
