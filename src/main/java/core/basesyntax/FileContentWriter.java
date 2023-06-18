@@ -11,15 +11,15 @@ public class FileContentWriter {
             throw new RuntimeException("File path must be present");
         }
 
-        File file = new File(filePath);
+        File fileToWrite = new File(filePath);
 
         try {
-            file.createNewFile();
+            fileToWrite.createNewFile();
         } catch (IOException e) {
             throw new RuntimeException("Can't create result CSV file: " + filePath, e);
         }
 
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileToWrite))) {
             bufferedWriter.write(content);
         } catch (IOException e) {
             throw new RuntimeException("Can't write result to CSV file: " + filePath, e);

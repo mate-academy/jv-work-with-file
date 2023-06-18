@@ -7,20 +7,22 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class FileContentReader {
+    public static final String DEFAULT_SYSTEM_LINE_SEPARATOR = System.lineSeparator();
+
     public String read(String filePath) {
         if (filePath == null) {
             throw new RuntimeException("File path must not be a null");
         }
 
-        File file = new File(filePath);
-        StringBuilder stringBuilder = new StringBuilder();
+        File fileToRead = new File(filePath);
+        StringBuilder fileContentBuilder = new StringBuilder();
 
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
-            String value = bufferedReader.readLine();
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileToRead))) {
+            String contentLine = bufferedReader.readLine();
 
-            while (value != null) {
-                stringBuilder.append(value).append(System.lineSeparator());
-                value = bufferedReader.readLine();
+            while (contentLine != null) {
+                fileContentBuilder.append(contentLine).append(DEFAULT_SYSTEM_LINE_SEPARATOR);
+                contentLine = bufferedReader.readLine();
             }
         } catch (FileNotFoundException e) {
             throw new RuntimeException("Can't find the file to read: " + filePath, e);
@@ -28,10 +30,14 @@ public class FileContentReader {
             throw new RuntimeException("Can't read from the file: " + filePath, e);
         }
 
-        if (stringBuilder.length() > 0) {
-            stringBuilder.setLength(stringBuilder.length() - System.lineSeparator().length());
+        // To remove rightmost DEFAULT_SYSTEM_LINE_SEPARATOR
+        // applied by the last iteration of reading the file content
+        if (fileContentBuilder.length() > 0) {
+            fileContentBuilder.setLength(
+                    fileContentBuilder.length() - DEFAULT_SYSTEM_LINE_SEPARATOR.length()
+            );
         }
 
-        return stringBuilder.toString();
+        return fileContentBuilder.toString();
     }
 }
