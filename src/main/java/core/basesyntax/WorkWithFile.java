@@ -17,6 +17,12 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         List<String> inputLines = getFileContents(fromFileName);
 
+        String report = createReport(inputLines);
+
+        writeToFile(toFileName, report);
+    }
+
+    private String createReport(List<String> inputLines) {
         int buyBalance = 0;
         int supplyBalance = 0;
         for (String line: inputLines) {
@@ -28,14 +34,14 @@ public class WorkWithFile {
             }
         }
 
-        writeToFile(toFileName, new StringBuilder()
+        return new StringBuilder()
                 .append(SUPPLY_CODE).append(",").append(supplyBalance)
                 .append(System.lineSeparator())
                 .append(BUY_CODE).append(",").append(buyBalance)
                 .append(System.lineSeparator())
                 .append(RESULT).append(",").append(supplyBalance - buyBalance)
                 .append(System.lineSeparator())
-                .toString());
+                .toString();
     }
 
     private void writeToFile(String toFileName, String contents) {
