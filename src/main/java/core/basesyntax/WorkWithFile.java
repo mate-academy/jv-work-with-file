@@ -11,44 +11,63 @@ public class WorkWithFile {
     private static final int NUMBER_POSITION = 1;
     private static final String SEPARATOR = ",";
     private static final String SUPPLY = "supply";
+    private static final String RESULT = "result";
+    private static final String BUY = "buy";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int[] data = readFile(fromFileName);
-        String report = generateReport(data);
-        writeReport(toFileName, report);
+        writeReport(resultCalculation(readFile(fromFileName)), toFileName);
     }
 
-    private int[] readFile(String fromFileName) {
-        int[] values = new int[2];
-        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
-            String line = reader.readLine();
-            while (line != null) {
-                String[] separate = line.split(SEPARATOR);
-                if (separate[NAME_POSITION].equals(SUPPLY)) {
-                    values[NAME_POSITION] += Integer.parseInt(separate[NUMBER_POSITION]);
-                } else {
-                    values[NUMBER_POSITION] += Integer.parseInt(separate[NUMBER_POSITION]);
-                }
-                line = reader.readLine();
+    private String readFile(String fromFileName) {
+        StringBuilder stringBuilder = new StringBuilder();
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                stringBuilder.append(line).append(System.lineSeparator());
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read " + fromFileName, e);
         }
-        return values;
+        return stringBuilder.toString();
     }
 
-    private String generateReport(int[] data) {
-        int result = data[NAME_POSITION] - data[NUMBER_POSITION];
-        return "supply," + data[NAME_POSITION] + System.lineSeparator()
-                + "buy," + data[NUMBER_POSITION] + System.lineSeparator()
-                + "result," + result + System.lineSeparator();
+    private String resultCalculation(String dataFromFile) {
+        String[] stringArray = dataFromFile.split(System.lineSeparator());
+        int supplySum = 0;
+        int buySum = 0;
+        for (String oneLine : stringArray) {
+            String[] categoryAndPrice = oneLine.split(SEPARATOR);
+            if (categoryAndPrice[NAME_POSITION].equals(SUPPLY)) {
+                supplySum += Integer.parseInt(categoryAndPrice[NUMBER_POSITION]);
+            } else if (categoryAndPrice[NAME_POSITION].equals(BUY)) {
+                buySum += Integer.parseInt(categoryAndPrice[NUMBER_POSITION]);
+            }
+        }
+        return generateReport(supplySum, buySum);
     }
 
-    private void writeReport(String toFileName, String report) {
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write(report);
+    private String generateReport(int supplySum, int buySum) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder
+                .append(SUPPLY)
+                .append(SEPARATOR)
+                .append(supplySum)
+                .append(System.lineSeparator())
+                .append(BUY)
+                .append(SEPARATOR)
+                .append(buySum)
+                .append(System.lineSeparator())
+                .append(RESULT)
+                .append(SEPARATOR)
+                .append(supplySum - buySum);
+        return stringBuilder.toString();
+    }
+
+    private void writeReport(String data, String report) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(report))) {
+            bufferedWriter.write(data);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write file ", e);
+            throw new RuntimeException("Can't write file " + report, e);
         }
     }
 }
