@@ -1,84 +1,69 @@
 package core.basesyntax;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 
 public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
-        File inputFile = new File(fromFileName);
-        File uptputFile = new File(toFileName);
-        writeToFile(uptputFile, createReport(readCsvFile(inputFile)));
+        writeToFile(toFileName, createReport(readCsvFile(fromFileName)));
     }
 
-    public void writeToFile(File file, String data) {
+    public void writeToFile(String file, String data) {
+        File uptputFile = new File(file);
         FileWriter fileWriter;
         try {
-            fileWriter = new FileWriter(file);
+            Files.write(uptputFile.toPath(), data.getBytes());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        try (BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
-            bufferedWriter.write(data);
-        } catch (IOException e) {
-            throw new RuntimeException("Buffered writer cant access Writer", e);
-        }
-
     }
 
-    public String createReport(String[][] data) {
+    public String createReport(String data) {
         StringBuilder report = new StringBuilder();
-        int i = 0;
         int supply = 0;
         int buy = 0;
-        int result = 0;
-        while (data[i][0] != null) {
-            if (data[i][0].equalsIgnoreCase("buy")) {
-                buy = buy + Integer.parseInt(data[i][1]);
+        String[] record = data.split(System.lineSeparator());
+        for (int i = 0; i < record.length; i++) {
+            if (record[i].split(",")[0].equalsIgnoreCase("buy")) {
+                buy = buy + Integer.parseInt(record[i].split(",")[1]);
             } else {
-                supply = supply + Integer.parseInt(data[i][1]);
+                supply = supply + Integer.parseInt(record[i].split(",")[1]);
             }
-            result = supply - buy;
-            i++;
         }
+        int result = supply - buy;
         report.append("supply").append(",").append(supply).append(System.lineSeparator())
                 .append("buy").append(",").append(buy).append(System.lineSeparator())
                 .append("result").append(",").append(result).append(System.lineSeparator());
         return report.toString();
     }
 
-    public String[][] readCsvFile(File file) {
-        String[][] csvFileContent = new String[20][2];
+    public String readCsvFile(String file) {
+        File inputFile = new File(file);
+        StringBuilder csvFileContent = new StringBuilder();
         FileReader fileReader = null;
         BufferedReader bufferedReader = null;
-        try {
-            fileReader = new FileReader(file);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException("File not found", e);
-        }
         String lineOfFile;
         try {
+            fileReader = new FileReader(inputFile);
             bufferedReader = new BufferedReader(fileReader);
             lineOfFile = bufferedReader.readLine();
         } catch (IOException e) {
             throw new RuntimeException("Cant read file.", e);
         }
-        int counter = 0;
         while (lineOfFile != null) {
-            csvFileContent[counter] = lineOfFile.split(",");
-            counter++;
+            csvFileContent.append(lineOfFile).append(System.lineSeparator());
             try {
                 lineOfFile = bufferedReader.readLine();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
-        return csvFileContent;
+        return csvFileContent.toString();
     }
 
 }
