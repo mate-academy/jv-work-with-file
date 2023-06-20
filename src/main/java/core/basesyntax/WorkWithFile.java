@@ -9,8 +9,8 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final String CSV_SEPARATOR = ",";
     private static final String CSV_OPERATION_TYPE = "buy";
-    private static final int CSV_ROW_ELEMENT = 0;
-    private static final int CSV_ROW_DATA_ELEMENT = 1;
+    private static final int OPERATION_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] dataFromFile = readFromFile(fromFileName).split(System.lineSeparator());
@@ -45,10 +45,10 @@ public class WorkWithFile {
         StringBuilder reportInfo = new StringBuilder();
         for (String reportElement : report) {
             String[] reportData = reportElement.split(CSV_SEPARATOR);
-            if (reportData[CSV_ROW_ELEMENT].equals(CSV_OPERATION_TYPE)) {
-                countBuy += Integer.parseInt(reportData[CSV_ROW_DATA_ELEMENT]);
+            if (reportData[OPERATION_INDEX].equals(CSV_OPERATION_TYPE)) {
+                countBuy += Integer.parseInt(reportData[AMOUNT_INDEX]);
             } else {
-                countSupply += Integer.parseInt(reportData[CSV_ROW_DATA_ELEMENT]);
+                countSupply += Integer.parseInt(reportData[AMOUNT_INDEX]);
             }
         }
         reportInfo.append("supply,").append(countSupply).append(System.lineSeparator());
