@@ -8,62 +8,55 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final String PARAMETER_0_SUPPLY = "supply";
-    private static final String PARAMETER_1_BUY = "buy";
-    private static final String PARAMETER_2_RESULT = "result";
+    private static final String SUPPLY_OPERATION = "supply";
+    private static final String BUY_OPERATION = "buy";
+    private static final String RESULT = "result";
+    private static final String COMMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] incomeData = getIncomeData(fromFileName);
-        int[] reportNumbers = getReportNumbers(incomeData);
-        writeReportToFile(toFileName, reportNumbers);
+        String reportData = getReportData(incomeData);
+        writeReportToFile(toFileName, reportData);
     }
 
     private String[] getIncomeData(String fromFileName) {
         StringBuilder stringBuilder = new StringBuilder();
-        String[] resultData;
         File incomeData = new File(fromFileName);
         try (BufferedReader reader = new BufferedReader(new FileReader(incomeData))) {
             String lineValue = reader.readLine();
             while (lineValue != null) {
-                stringBuilder.append(lineValue).append(",");
-                System.out.println(lineValue);
+                stringBuilder.append(lineValue).append(COMMA);
                 lineValue = reader.readLine();
             }
-            resultData = stringBuilder.toString().split(",");
         } catch (IOException e) {
-            throw new RuntimeException("Can't open file", e);
+            throw new RuntimeException("Can't open file " + fromFileName, e);
         }
-        return resultData;
+        return stringBuilder.toString().split(COMMA);
     }
 
-    private int[] getReportNumbers(String[] incomeData) {
+    private String getReportData(String[] incomeData) {
         int supply = 0;
         int buy = 0;
-        int result;
         for (int i = 0; i < incomeData.length; i = i + 2) {
-            if (incomeData[i].equals(PARAMETER_0_SUPPLY)) {
+            if (incomeData[i].equals(SUPPLY_OPERATION)) {
                 supply = supply + Integer.parseInt(incomeData [i + 1]);
                 continue;
             }
-            if (incomeData[i].equals(PARAMETER_1_BUY)) {
+            if (incomeData[i].equals(BUY_OPERATION)) {
                 buy = buy + Integer.parseInt(incomeData[i + 1]);
             }
         }
-        result = supply - buy;
-        return new int[] {supply, buy, result};
+        return SUPPLY_OPERATION + COMMA + supply + System.lineSeparator()
+                + BUY_OPERATION + COMMA + buy + System.lineSeparator()
+                + RESULT + COMMA + (supply - buy);
     }
 
-    private void writeReportToFile(String toFileName, int[] reportNumbers) {
-        String[] parameters = new String[] {PARAMETER_0_SUPPLY, PARAMETER_1_BUY,
-                PARAMETER_2_RESULT};
+    private void writeReportToFile(String toFileName, String reportData) {
         File resultData = new File(toFileName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(resultData))) {
-            for (int i = 0; i < parameters.length; i++) {
-                bufferedWriter.write(parameters[i] + ","
-                        + reportNumbers[i] + System.lineSeparator());
-            }
+            bufferedWriter.write(reportData);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data to file", e);
+            throw new RuntimeException("Can't write data to file " + toFileName, e);
         }
     }
 }
