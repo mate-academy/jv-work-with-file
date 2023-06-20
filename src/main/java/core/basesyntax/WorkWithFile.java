@@ -12,18 +12,16 @@ public class WorkWithFile {
     private static final String BUY = "buy";
     private static final String RESULT = "result";
     private static final String COMMA = ",";
-    private int supply;
-    private int buy;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        readFromFile(fromFileName);
-        String report = createReport();
+        String reportData = readFromFile(fromFileName);
+        String report = createReport(reportData);
         writeToFile(report, toFileName);
-        supply = 0;
-        buy = 0;
     }
 
-    private void readFromFile(String fromFileName) {
+    private String readFromFile(String fromFileName) {
+        int supply = 0;
+        int buy = 0;
         File file = new File(fromFileName);
         if (file.exists()) {
             try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
@@ -42,6 +40,7 @@ public class WorkWithFile {
                 throw new RuntimeException("Can't read file" + fromFileName, e);
             }
         }
+        return supply + " " + buy;
     }
 
     private void writeToFile(String report, String toFileName) {
@@ -52,13 +51,15 @@ public class WorkWithFile {
         }
     }
 
-    private String createReport() {
+    private String createReport(String reportData) {
+        String[] report = reportData.split(" ");
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(SUPPLY).append(COMMA).append(String.valueOf(supply))
+        stringBuilder.append(SUPPLY).append(COMMA).append(report[0])
                 .append(System.lineSeparator());
-        stringBuilder.append(BUY).append(COMMA).append(String.valueOf(buy))
+        stringBuilder.append(BUY).append(COMMA).append(report[1])
                 .append(System.lineSeparator());
-        stringBuilder.append(RESULT).append(COMMA).append(String.valueOf(supply - buy));
+        stringBuilder.append(RESULT).append(COMMA)
+                .append(Integer.parseInt(report[0]) - Integer.parseInt(report[1]));
         return stringBuilder.toString();
     }
 }
