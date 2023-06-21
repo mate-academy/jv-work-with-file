@@ -6,8 +6,12 @@ import java.nio.file.Files;
 
 public class WorkWithFile {
 
+    private static final byte RECORD_SPLIT_INDEX = 0;
+
     public void getStatistic(String fromFileName, String toFileName) {
-        writeToFile(toFileName, createReport(readCsvFile(fromFileName)));
+        String fileContent = readCsvFile(fromFileName);
+        String report = createReport(fileContent);
+        writeToFile(toFileName, report);
     }
 
     private void writeToFile(String file, String data) {
@@ -26,7 +30,7 @@ public class WorkWithFile {
         String[] record = data.split(System.lineSeparator());
         for (String singleLineEntry : record) {
             String[] recordSplit = singleLineEntry.split(",");
-            if (recordSplit[0].equalsIgnoreCase("buy")) {
+            if (recordSplit[RECORD_SPLIT_INDEX].equalsIgnoreCase("buy")) {
                 buy = buy + Integer.parseInt(recordSplit[1]);
             } else {
                 supply = supply + Integer.parseInt(recordSplit[1]);
@@ -45,7 +49,7 @@ public class WorkWithFile {
         try {
             csvFileContent = Files.readString(inputFile.toPath());
         } catch (IOException e) {
-            throw new RuntimeException("Cant read file.", e);
+            throw new RuntimeException("Cant read file " + inputFile, e);
         }
         return csvFileContent;
     }
