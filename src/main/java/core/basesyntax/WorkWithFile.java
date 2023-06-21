@@ -1,8 +1,5 @@
 package core.basesyntax;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -18,24 +15,27 @@ public class WorkWithFile {
     private static final String REPORT_FORMAT = "supply,%d%nbuy,%d%nresult,%d";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String report = readAndProcessFile(fromFileName);
+        String[] data = readLinesFromFile(fromFileName);
+        String report = processData(data);
         writeToFile(toFileName, report);
     }
 
-    private String readAndProcessFile(String fileName) {
-        int[] results = new int[REPORT_PARTS];
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                processLine(line, results);
-            }
-            results[RESULT_REPORT_INDEX] = results[SUPPLY_REPORT_INDEX] - results[BUY_REPORT_INDEX];
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(String.format("File '%s' not found", fileName), e);
+    private String[] readLinesFromFile(String fileName) {
+        try {
+            return Files.readAllLines(Path.of(fileName)).toArray(String[]::new);
         } catch (IOException e) {
-            throw new RuntimeException(String.format("Cannot read from file '%s'", fileName), e);
+            throw new RuntimeException(
+                    String.format("Cannot read lines from file '%s'", fileName), e
+            );
         }
+    }
 
+    private String processData(String[] data) {
+        int[] results = new int[REPORT_PARTS];
+        for (String line : data) {
+            processLine(line, results);
+        }
+        results[RESULT_REPORT_INDEX] = results[SUPPLY_REPORT_INDEX] - results[BUY_REPORT_INDEX];
         return generateReport(results);
     }
 
