@@ -14,22 +14,21 @@ public class WorkWithFile {
     private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        createReport(fromFileName, toFileName);
+        List<String> fileContent = readFromFile(fromFileName);
+        String report = buildReportResult(fileContent);
+        writeToFile(toFileName, report);
     }
 
-    private String[] readFromFile(String fromFileName) {
+    private List<String> readFromFile(String fromFileName) {
         File file = new File(fromFileName);
-        List<String> strings;
         try {
-            strings = Files.readAllLines(file.toPath());
+            return Files.readAllLines(file.toPath());
         } catch (IOException e) {
             throw new RuntimeException("Can't read form file " + fromFileName, e);
         }
-        String[] result = strings.toArray(new String[0]);
-        return result;
     }
 
-    private void createReport(String fromFileName, String toFileName) {
+    private void writeToFile(String toFileName, String report) {
         try {
             Files.deleteIfExists(Path.of(toFileName));
         } catch (IOException e) {
@@ -37,17 +36,17 @@ public class WorkWithFile {
         }
         File file = new File(toFileName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, true))) {
-            bufferedWriter.write(buildReportResult(fromFileName));
+            bufferedWriter.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file " + toFileName, e);
         }
     }
 
-    private String buildReportResult(String fromFileName) {
+    private String buildReportResult(List<String> fileContent) {
         StringBuilder builder = new StringBuilder("supply,");
         int supplyResult = 0;
         int buyResult = 0;
-        for (String dataElement : readFromFile(fromFileName)) {
+        for (String dataElement : fileContent) {
             String[] splitElement = dataElement.split(",");
             if (splitElement[OPERATION_TYPE_INDEX].equals("supply")) {
                 supplyResult += Integer.parseInt(splitElement[AMOUNT_INDEX]);
