@@ -9,30 +9,43 @@ import java.io.IOException;
 
 public class WorkWithFile {
     private static final String SPLIT_REGEX = ",";
-    private static final int TOTAL_BUY_INDEX = 0;
-    private static final int TOTAL_SUPPLY_INDEX = 1;
+    private static final int OPERATION_TYPE_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
+    private static final String OPERATION_TYPE_SUPPLY = "supply";
+    private static final String OPERATION_TYPE_BUY = "buy";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] strings = readFile(fromFileName);
-        int[] totalBuyAndSupply = generateReport(strings);
-        writeFile(toFileName, totalBuyAndSupply);
+        String report = generateReport(strings);
+        writeFile(toFileName, report);
     }
 
-    private int[] generateReport(String[] strings) {
+    private String generateReport(String[] strings) {
         int totalSupply = 0;
         int totalBuy = 0;
 
         for (String string : strings) {
             String[] splitString = string.split(SPLIT_REGEX);
-            if (splitString[0].equals("supply")) {
-                totalSupply += Integer.parseInt(splitString[1]);
+            if (splitString[OPERATION_TYPE_INDEX].equals(OPERATION_TYPE_SUPPLY)) {
+                totalSupply += Integer.parseInt(splitString[AMOUNT_INDEX]);
             }
-            if (splitString[0].equals("buy")) {
-                totalBuy += Integer.parseInt(splitString[1]);
+            if (splitString[OPERATION_TYPE_INDEX].equals(OPERATION_TYPE_BUY)) {
+                totalBuy += Integer.parseInt(splitString[AMOUNT_INDEX]);
             }
         }
 
-        return new int[]{totalBuy, totalSupply};
+        int result = totalSupply - totalBuy;
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("supply,")
+                .append(totalSupply)
+                .append(System.lineSeparator())
+                .append("buy,")
+                .append(totalBuy)
+                .append(System.lineSeparator())
+                .append("result,")
+                .append(result);
+
+        return stringBuilder.toString();
     }
 
     private String[] readFile(String fromFileName) {
@@ -52,17 +65,11 @@ public class WorkWithFile {
         return stringBuilder.toString().split(System.lineSeparator());
     }
 
-    private void writeFile(String toFileName, int[] totalBuyAndSupply) {
-        int totalSupply = totalBuyAndSupply[TOTAL_SUPPLY_INDEX];
-        int totalBuy = totalBuyAndSupply[TOTAL_BUY_INDEX];
-
+    private void writeFile(String toFileName, String report) {
         File toFile = new File(toFileName);
-        int result = totalSupply - totalBuy;
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFile))) {
             toFile.createNewFile();
-            bufferedWriter.write("supply," + totalSupply + System.lineSeparator()
-                    + "buy," + totalBuy + System.lineSeparator()
-                    + "result," + result);
+            bufferedWriter.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Cant write data in the file", e);
         }
