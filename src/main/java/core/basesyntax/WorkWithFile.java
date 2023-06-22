@@ -7,63 +7,52 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final int ARRAY_INDEX_ZERO = 0;
-    private static final int ARRAY_INDEX_ONE = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write(createReportData(fromFileName, toFileName));
-        } catch (IOException e) {
-            throw new RuntimeException("Can't write data to file " + toFileName, e);
-        }
+        readFile(fromFileName, toFileName);
+        createReport(fromFileName, toFileName);
+        writeToFile(fromFileName, toFileName);
     }
 
-    private int countSupply(String fromFileName, String toFileName) {
+    private String readFile(String fromFileName, String toFileName) {
         int countSupply = 0;
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
-            String value = bufferedReader.readLine();
-            while (value != null) {
-                String[] splitString = value.split(",");
-                if (splitString[ARRAY_INDEX_ZERO].equals("supply")) {
-                    countSupply += Integer.parseInt(splitString[ARRAY_INDEX_ONE]);
-                }
-                value = bufferedReader.readLine();
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("Can't read data from file " + fromFileName, e);
-        }
-        return countSupply;
-    }
-
-    private int countBuy(String fromFileName, String toFileName) {
         int countBuy = 0;
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
             String value = bufferedReader.readLine();
             while (value != null) {
                 String[] splitString = value.split(",");
-                if (splitString[ARRAY_INDEX_ZERO].equals("buy")) {
-                    countBuy += Integer.parseInt(splitString[ARRAY_INDEX_ONE]);
+                if (splitString[0].equals("supply")) {
+                    countSupply += Integer.parseInt(splitString[1]);
+                } else if (splitString[0].equals("buy")) {
+                    countBuy += Integer.parseInt(splitString[1]);
                 }
                 value = bufferedReader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from file " + fromFileName, e);
         }
-        return countBuy;
+        return countSupply + "," + countBuy;
     }
 
-    private String createReportData(String fromFileName, String toFileName) {
-        int result = countSupply(fromFileName, toFileName) - countBuy(fromFileName, toFileName);
+    private String createReport(String fromFileName, String toFileName) {
+        String[] split = readFile(fromFileName, toFileName).split(",");
+        int result = Integer.parseInt(split[0]) - Integer.parseInt(split[1]);
         StringBuilder builder = new StringBuilder();
-        builder.append("supply,").append(countSupply(fromFileName, toFileName))
+        builder.append("supply,").append(Integer.parseInt(split[0]))
                 .append(System.lineSeparator());
-        builder.append("buy,").append(countBuy(fromFileName, toFileName))
-                .append(System.lineSeparator());
+        builder.append("buy,").append(Integer.parseInt(split[1]))
+        .append(System.lineSeparator());
         builder.append("result,").append(result);
         String report = builder.toString();
         return report;
+    }
+
+    private void writeToFile(String fromFileName, String toFileName) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
+            bufferedWriter.write(createReport(fromFileName, toFileName));
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write data to file " + toFileName, e);
+        }
     }
 }
