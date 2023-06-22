@@ -12,9 +12,9 @@ import java.util.Arrays;
 import java.util.List;
 
 public class WorkWithFile {
-    private final int NAME_INDEX = 0;
-    private final int PARAM_INDEX = 1;
-    private final int RESULT_INDEX = 2;
+    public final int NAME_INDEX = 0;
+    public final int PARAM_INDEX = 1;
+    public final int RESULT_INDEX = 2;
 
     public void getStatistic(String fromFileName, String toFileName) {
         writeWtoFile(createReport(readFromFile(fromFileName)), toFileName);
