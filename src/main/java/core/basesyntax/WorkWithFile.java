@@ -19,7 +19,7 @@ public class WorkWithFile {
         writeWtoFile(csvReport, toFileName);
     }
 
-    public List<String> readFromFile(String fromFileName) {
+    private List<String> readFromFile(String fromFileName) {
         try {
             return Files.readAllLines(Paths.get(fromFileName));
         } catch (IOException e) {
@@ -27,7 +27,7 @@ public class WorkWithFile {
         }
     }
 
-    public String createReport(List<String> fileLines) {
+    private String createReport(List<String> fileLines) {
         int supplySum = 0;
         int buySum = 0;
         for (String fileLine : fileLines) {
@@ -43,7 +43,7 @@ public class WorkWithFile {
                 + "result," + (supplySum - buySum);
     }
 
-    public void writeWtoFile(String report, String toFileName) {
+    private void writeWtoFile(String report, String toFileName) {
         File file = new File(toFileName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, true))) {
             Files.writeString(Path.of(toFileName), "");
