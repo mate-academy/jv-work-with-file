@@ -38,9 +38,9 @@ public class WorkWithFile {
                 buySum += Integer.parseInt(splitedText[PARAM_INDEX]);
             }
         }
-        return "supply," + supplySum + "_" +
-                "buy," + buySum + "_" +
-                "result," + (supplySum - buySum);
+        return "supply," + supplySum + "_"
+                + "buy," + buySum + "_"
+                + "result," + (supplySum - buySum);
     }
 
     public void writeWtoFile(String report, String toFileName) {
