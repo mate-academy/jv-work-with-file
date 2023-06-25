@@ -9,48 +9,51 @@ import java.io.IOException;
 public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
-        readFile(fromFileName, toFileName);
-        createReport(fromFileName, toFileName);
-        writeToFile(fromFileName, toFileName);
+        String dataFromFile = readFile(fromFileName);
+        String report = createReport(dataFromFile);
+        writeToFile(report, toFileName);
     }
 
-    private String readFile(String fromFileName, String toFileName) {
-        int countSupply = 0;
-        int countBuy = 0;
+    private String readFile(String fromFileName) {
+        StringBuilder stringBuilder = new StringBuilder();
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
             String value = bufferedReader.readLine();
             while (value != null) {
-                String[] splitString = value.split(",");
-                if (splitString[0].equals("supply")) {
-                    countSupply += Integer.parseInt(splitString[1]);
-                } else if (splitString[0].equals("buy")) {
-                    countBuy += Integer.parseInt(splitString[1]);
-                }
+                stringBuilder.append(value).append(System.lineSeparator());
                 value = bufferedReader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from file " + fromFileName, e);
         }
-        return countSupply + "," + countBuy;
+        return stringBuilder.toString();
     }
 
-    private String createReport(String fromFileName, String toFileName) {
-        String[] split = readFile(fromFileName, toFileName).split(",");
-        int result = Integer.parseInt(split[0]) - Integer.parseInt(split[1]);
+    private String createReport(String dataFromFile) {
+        int countSupply = 0;
+        int countBuy = 0;
+        String[] splitDataFromFile = dataFromFile.split(System.lineSeparator());
+        for (int i = 0; i < splitDataFromFile.length; i++) {
+            String[] splitString = splitDataFromFile[i].split(",");
+            if (splitString[0].equals("supply")) {
+                countSupply += Integer.parseInt(splitString[1]);
+            } else if (splitString[0].equals("buy")) {
+                countBuy += Integer.parseInt(splitString[1]);
+            }
+        }
+
+        int result = countSupply - countBuy;
         StringBuilder builder = new StringBuilder();
-        builder.append("supply,").append(Integer.parseInt(split[0]))
-                .append(System.lineSeparator());
-        builder.append("buy,").append(Integer.parseInt(split[1]))
-        .append(System.lineSeparator());
+        builder.append("supply,").append(countSupply).append(System.lineSeparator());
+        builder.append("buy,").append(countBuy).append(System.lineSeparator());
         builder.append("result,").append(result);
         String report = builder.toString();
         return report;
     }
 
-    private void writeToFile(String fromFileName, String toFileName) {
+    private void writeToFile(String report, String toFileName) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write(createReport(fromFileName, toFileName));
+            bufferedWriter.write(createReport(report));
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to file " + toFileName, e);
         }
