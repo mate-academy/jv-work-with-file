@@ -1,13 +1,16 @@
 package core.basesyntax;
 
-import java.io.*;
-import java.util.Arrays;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String COMMA = ",";
-
 
     public void getStatistic(String fromFileName, String toFileName) {
         int supplyAmount = 0;
