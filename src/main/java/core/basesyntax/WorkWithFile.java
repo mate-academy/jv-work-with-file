@@ -12,6 +12,7 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
+    private static final String LINE_SEPARATOR = System.lineSeparator();
     private final int[] types = new int[2];
 
     public void getStatistic(String fromFileName, String toFileName) {
@@ -20,7 +21,7 @@ public class WorkWithFile {
         writeToFile(text, toFileName);
     }
 
-    public String readFile(String fromFileName) {
+    private String readFile(String fromFileName) {
         StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String line;
@@ -28,23 +29,23 @@ public class WorkWithFile {
                 stringBuilder.append(line).append(SPACE);
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read this file", e);
+            throw new RuntimeException("Can't read file with name " + fromFileName, e);
         }
         return stringBuilder.toString();
     }
 
-    public int[] processData(String table) {
+    private int[] processData(String table) {
         String[] data = table.split(SPACE);
         int supply = 0;
         int buy = 0;
         for (String separatedData : data) {
             String[] operationInfo = separatedData.split(COMMA_SPLITTER);
             String operationType = operationInfo[0];
-            int amount = Integer.parseInt(operationInfo[1]);
+            int operationAmount = Integer.parseInt(operationInfo[1]);
             if (operationType.equals(SUPPLY)) {
-                supply += amount;
+                supply += operationAmount;
             } else {
-                buy += amount;
+                buy += operationAmount;
             }
         }
         types[0] = supply;
@@ -52,16 +53,18 @@ public class WorkWithFile {
         return types;
     }
 
-    public String writeToString(int[] operationAmount) {
+    private String writeToString(int[] operationAmount) {
         int supply = operationAmount[0];
         int buy = operationAmount[1];
         int result = supply - buy;
-        return SUPPLY + COMMA_SPLITTER + supply + System.lineSeparator()
-                + BUY + COMMA_SPLITTER + buy + System.lineSeparator()
-                + RESULT + COMMA_SPLITTER + result + System.lineSeparator();
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(SUPPLY).append(COMMA_SPLITTER).append(supply).append(LINE_SEPARATOR)
+                .append(BUY).append(COMMA_SPLITTER).append(buy).append(LINE_SEPARATOR)
+                .append(RESULT).append(COMMA_SPLITTER).append(result).append(LINE_SEPARATOR);
+        return stringBuilder.toString();
     }
 
-    public void writeToFile(String text, String toFileName) {
+    private void writeToFile(String text, String toFileName) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(text);
         } catch (IOException e) {
