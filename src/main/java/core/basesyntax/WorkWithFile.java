@@ -40,7 +40,6 @@ public class WorkWithFile {
     private void calculateStatistics(String unsortedStats) {
         String[] splitedStats = unsortedStats.split("[,\\r?\\n]+");
 
-
         supplyAmount = 0;
         buyAmount = 0;
         resultAmount = 0;
