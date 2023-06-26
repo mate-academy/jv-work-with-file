@@ -26,7 +26,7 @@ public class WorkWithFile {
         StringBuilder resultBuilder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             while ((line = bufferedReader.readLine()) != null) {
-               resultBuilder.append(line).append(System.lineSeparator());
+                resultBuilder.append(line).append(System.lineSeparator());
             }
         } catch (FileNotFoundException e) {
             throw new RuntimeException("Cannot find file", e);
@@ -38,12 +38,11 @@ public class WorkWithFile {
     }
 
     private void calculateStatistics(String unsortedStats) {
-        String[] splitedStats = unsortedStats.split("[,\\r?\\n]+");
-
         supplyAmount = 0;
         buyAmount = 0;
         resultAmount = 0;
 
+        String[] splitedStats = unsortedStats.split("[,\\r?\\n]+");
         for (int i = 1; i < splitedStats.length; i += 2) {
             String actionType = splitedStats[i - 1];
             int amount = Integer.parseInt(splitedStats[i]);
