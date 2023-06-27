@@ -10,39 +10,45 @@ public class WorkWithFile {
     static final String ROW_SUPPLY = "supply";
     static final String ROW_BUY = "buy";
     static final String ROW_RESULT = "result";
-    static final String SEPARATOR = ",";
+    static final String SEPARATOR_FIRST = ":";
+    static final String SEPARATOR_SECOND = ",";
     static final int RESET_DATA = 0;
     static final int INDEX_FIRST = 0;
     static final int INDEX_SECOND = 1;
     private int supply = 0;
     private int buy = 0;
-    private String[] result;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        readFile(fromFileName);
-        writeFile(toFileName, result);
+        String data = readFile(fromFileName);
+        String[] report = generateReport(data);
+        writeFile(toFileName, report);
     }
 
-    private void readFile(String fromFileName) {
+    private String readFile(String fromFileName) {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
-            String strings;
-            while ((strings = bufferedReader.readLine()) != null) {
-                createReport(strings);
+            String stringResult = "";
+            String string;
+            while ((string = bufferedReader.readLine()) != null) {
+                stringResult += string + SEPARATOR_FIRST;
             }
+            return stringResult;
         } catch (IOException e) {
             throw new RuntimeException("Can`t read file: " + fromFileName, e);
         }
     }
 
-    public void createReport(String string) {
-        String[] dataRow = string.split(SEPARATOR);
-        if (dataRow[INDEX_FIRST].equals(ROW_SUPPLY)) {
-            supply += Integer.parseInt(dataRow[INDEX_SECOND]);
-        } else {
-            buy += Integer.parseInt(dataRow[INDEX_SECOND]);
+    public String[] generateReport(String string) {
+        String[] data = string.split(SEPARATOR_FIRST);
+        for (String row: data) {
+            String[] dataRow = row.split(SEPARATOR_SECOND);
+            if (dataRow[INDEX_FIRST].equals(ROW_SUPPLY)) {
+                supply += Integer.parseInt(dataRow[INDEX_SECOND]);
+            } else {
+                buy += Integer.parseInt(dataRow[INDEX_SECOND]);
+            }
         }
 
-        result = new String[]{ROW_SUPPLY + "," + supply + System.lineSeparator(),
+        return new String[]{ROW_SUPPLY + "," + supply + System.lineSeparator(),
                 ROW_BUY + "," + buy + System.lineSeparator(),
                 ROW_RESULT + "," + (supply - buy)};
     }
