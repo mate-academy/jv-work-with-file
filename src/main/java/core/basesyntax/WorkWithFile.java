@@ -15,12 +15,10 @@ public class WorkWithFile {
     static final int RESET_DATA = 0;
     static final int INDEX_FIRST = 0;
     static final int INDEX_SECOND = 1;
-    private int supply = 0;
-    private int buy = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String data = readFile(fromFileName);
-        String[] report = generateReport(data);
+        String report = generateReport(data);
         writeFile(toFileName, report);
     }
 
@@ -37,7 +35,9 @@ public class WorkWithFile {
         }
     }
 
-    public String[] generateReport(String string) {
+    public String generateReport(String string) {
+        int supply = 0;
+        int buy = 0;
         String[] data = string.split(SEPARATOR_FIRST);
         for (String row: data) {
             String[] dataRow = row.split(SEPARATOR_SECOND);
@@ -48,21 +48,17 @@ public class WorkWithFile {
             }
         }
 
-        return new String[]{ROW_SUPPLY + "," + supply + System.lineSeparator(),
-                ROW_BUY + "," + buy + System.lineSeparator(),
-                ROW_RESULT + "," + (supply - buy)};
+        return ROW_SUPPLY + "," + supply + System.lineSeparator()
+                + ROW_BUY + "," + buy + System.lineSeparator()
+                + ROW_RESULT + "," + (supply - buy);
     }
 
-    public void writeFile(String toFileName, String[] result) {
+    public void writeFile(String toFileName, String result) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            for (String row : result) {
-                bufferedWriter.write(row);
-                bufferedWriter.flush();
-            }
+            bufferedWriter.write(result);
+            bufferedWriter.flush();
         } catch (IOException e) {
             throw new RuntimeException("Can`t write data to file: " + toFileName, e);
         }
-        buy = RESET_DATA;
-        supply = RESET_DATA;
     }
 }
