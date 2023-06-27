@@ -13,6 +13,8 @@ public class WorkWithFile {
     private static final String BUY = "buy";
     private static final String RESULT = "result";
     private static final String LINE_SEPARATOR = System.lineSeparator();
+    private static final String WRITE_EXCEPTION = "Can't write to file %s";
+    private static final String READ_EXCEPTION = "Can't read file with name %s";
     private final int[] types = new int[2];
 
     public void getStatistic(String fromFileName, String toFileName) {
@@ -29,7 +31,7 @@ public class WorkWithFile {
                 stringBuilder.append(line).append(SPACE);
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file with name " + fromFileName, e);
+            throw new RuntimeException(String.format(READ_EXCEPTION, fromFileName), e);
         }
         return stringBuilder.toString();
     }
@@ -68,7 +70,7 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(text);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write file! ", e);
+            throw new RuntimeException(String.format(WRITE_EXCEPTION, toFileName), e);
         }
     }
 }
