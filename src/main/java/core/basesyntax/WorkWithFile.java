@@ -15,8 +15,8 @@ public class WorkWithFile {
     }
 
     private String[] readFromFile(String fileName) {
-        File myFile = new File(fileName);
         StringBuilder builder = new StringBuilder();
+        File myFile = new File(fileName);
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(myFile))) {
             String line = bufferedReader.readLine();
             while (line != null) {
@@ -26,14 +26,14 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read the file.", e);
         }
+        return parseFileData(builder.toString());
+    }
 
-        String finishString = builder.toString();
-
-        if (finishString.length() == 0) {
+    private String[] parseFileData(String FileData) {
+        if (FileData.length() == 0) {
             return new String[0];
         }
-
-        return finishString.split(" ");
+        return FileData.split(" ");
     }
 
     private String createReport(String[] data) {
