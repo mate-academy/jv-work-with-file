@@ -1,6 +1,10 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -51,8 +55,8 @@ public class WorkWithFile {
         }
         for (int i = 0; i < result.length; i++) {
             try {
-                Files.write(file.toPath(), (result[i] +
-                        System.lineSeparator()).getBytes(StandardCharsets.UTF_8),
+                Files.write(file.toPath(), (result[i]
+                                + System.lineSeparator()).getBytes(StandardCharsets.UTF_8),
                         StandardOpenOption.APPEND);
             } catch (IOException e) {
                 throw new RuntimeException("Error writing file" + e);
