@@ -21,7 +21,9 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read file", e);
         }
-        String[] fileInfo = stringBuilder.toString().replace("\r\n", " ").split(" ");
+        String[] fileInfo = stringBuilder.toString()
+                .replace(System.lineSeparator(), " ")
+                .split(" ");
         int supplySum = 0;
         int buySum = 0;
         for (int k = 0; k < fileInfo.length; k++) {
@@ -32,8 +34,9 @@ public class WorkWithFile {
                 buySum += Integer.parseInt(stringInfo[1]);
             }
         }
-        String secondFileInfo = "supply," + supplySum + "\r\n" + "buy,"
-                + buySum + "\r\n" + "result," + (supplySum - buySum) + "\r\n";
+        String secondFileInfo = "supply," + supplySum + System.lineSeparator() + "buy,"
+                + buySum + System.lineSeparator()
+                + "result," + (supplySum - buySum) + System.lineSeparator();
         File file2 = new File(toFileName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file2))) {
             bufferedWriter.write(secondFileInfo);
