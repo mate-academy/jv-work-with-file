@@ -7,7 +7,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class WorkWithFile {
-    private static final String[] REPORT_CONTENT = {"supply", "buy", "result"};
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
     private static final String COMMA_SEPARATOR = ",";
     private static final int SUPPLY_INDEX = 0;
     private static final int BUY_INDEX = 1;
@@ -44,19 +46,17 @@ public class WorkWithFile {
         for (int i = 0; i < tmp.length; i++) {
             switch (tmp[i]) {
                 case ("supply"):
-                    report[SUPPLY_INDEX]
-                            = report[SUPPLY_INDEX] + Integer.parseInt(tmp[i + 1]);
+                    report[SUPPLY_INDEX] += Integer.parseInt(tmp[i + 1]);
                     break;
                 case ("buy"):
-                    report[BUY_INDEX]
-                            = report[BUY_INDEX] + Integer.parseInt(tmp[i + 1]);
+                    report[BUY_INDEX] += Integer.parseInt(tmp[i + 1]);
                     break;
                 default:
             }
         }
 
-        return REPORT_CONTENT[0] + COMMA_SEPARATOR + report[SUPPLY_INDEX] + System.lineSeparator()
-                + REPORT_CONTENT[1] + COMMA_SEPARATOR + report[BUY_INDEX] + System.lineSeparator()
-                + REPORT_CONTENT[2] + COMMA_SEPARATOR + (report[SUPPLY_INDEX] - report[BUY_INDEX]);
+        return SUPPLY + COMMA_SEPARATOR + report[SUPPLY_INDEX] + System.lineSeparator()
+                + BUY + COMMA_SEPARATOR + report[BUY_INDEX] + System.lineSeparator()
+                + RESULT + COMMA_SEPARATOR + (report[SUPPLY_INDEX] - report[BUY_INDEX]);
     }
 }
