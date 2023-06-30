@@ -8,18 +8,21 @@ import java.io.IOException;
 
 public class WorkWithFile {
     private static final String COMMA_SPLITTER = ",";
-    private static final String SPACE = " ";
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
     private static final String LINE_SEPARATOR = System.lineSeparator();
     private static final String WRITE_EXCEPTION = "Can't write to file %s";
     private static final String READ_EXCEPTION = "Can't read file with name %s";
-    private final int[] types = new int[2];
+    private static final int SUPPLY_INDEX = 0;
+    private static final int BUY_INDEX = 1;
+    private static final int RESULT_INDEX = 2;
+    private static final int OPERATION_TYPE = 0;
+    private static final int OPERATION_INFO = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String table = readFile(fromFileName);
-        String text = writeToString(processData(table));
+        String text = processData(table);
         writeToFile(text, toFileName);
     }
 
@@ -28,7 +31,7 @@ public class WorkWithFile {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
-                stringBuilder.append(line).append(SPACE);
+                stringBuilder.append(line).append(LINE_SEPARATOR);
             }
         } catch (IOException e) {
             throw new RuntimeException(String.format(READ_EXCEPTION, fromFileName), e);
@@ -36,33 +39,32 @@ public class WorkWithFile {
         return stringBuilder.toString();
     }
 
-    private int[] processData(String table) {
-        String[] data = table.split(SPACE);
+    private String processData(String table) {
+        String[] data = table.split(LINE_SEPARATOR);
         int supply = 0;
         int buy = 0;
         for (String separatedData : data) {
             String[] operationInfo = separatedData.split(COMMA_SPLITTER);
-            String operationType = operationInfo[0];
-            int operationAmount = Integer.parseInt(operationInfo[1]);
+            String operationType = operationInfo[OPERATION_TYPE];
+            int operationAmount = Integer.parseInt(operationInfo[OPERATION_INFO]);
             if (operationType.equals(SUPPLY)) {
                 supply += operationAmount;
             } else {
                 buy += operationAmount;
             }
         }
-        types[0] = supply;
-        types[1] = buy;
-        return types;
+        int[] operationAmount = {supply, buy, supply - buy};
+        return generateReport(operationAmount);
     }
 
-    private String writeToString(int[] operationAmount) {
-        int supply = operationAmount[0];
-        int buy = operationAmount[1];
-        int result = supply - buy;
+    private String generateReport(int[] operationAmount) {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(SUPPLY).append(COMMA_SPLITTER).append(supply).append(LINE_SEPARATOR)
-                .append(BUY).append(COMMA_SPLITTER).append(buy).append(LINE_SEPARATOR)
-                .append(RESULT).append(COMMA_SPLITTER).append(result).append(LINE_SEPARATOR);
+        stringBuilder.append(SUPPLY).append(COMMA_SPLITTER).append(operationAmount[SUPPLY_INDEX])
+                .append(LINE_SEPARATOR)
+                .append(BUY).append(COMMA_SPLITTER).append(operationAmount[BUY_INDEX])
+                .append(LINE_SEPARATOR)
+                .append(RESULT).append(COMMA_SPLITTER).append(operationAmount[RESULT_INDEX])
+                .append(LINE_SEPARATOR);
         return stringBuilder.toString();
     }
 
