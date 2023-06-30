@@ -3,46 +3,52 @@ package core.basesyntax;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    public void getStatistic(String fromFileName, String toFileName) {
-        File file1 = new File(fromFileName);
-        StringBuilder stringBuilder = new StringBuilder();
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(file1));
-            int value = bufferedReader.read();
-            while (value != -1) {
-                stringBuilder.append((char) value);
-                value = bufferedReader.read();
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
-        }
-        String[] fileInfo = stringBuilder.toString()
-                .replace(System.lineSeparator(), " ")
-                .split(" ");
+    protected void getStatistic(String fromFileName, String toFileName) {
+        String[] fileInfo = this.readFromFile(fromFileName);
         int supplySum = 0;
         int buySum = 0;
-        for (int k = 0; k < fileInfo.length; k++) {
-            String[] stringInfo = fileInfo[k].split(",");
+        for (String s : fileInfo) {
+            String[] stringInfo = s.split(",");
             if (stringInfo[0].equals("supply")) {
                 supplySum += Integer.parseInt(stringInfo[1]);
             } else {
                 buySum += Integer.parseInt(stringInfo[1]);
             }
         }
-        String secondFileInfo = "supply," + supplySum + System.lineSeparator() + "buy,"
-                + buySum + System.lineSeparator()
-                + "result," + (supplySum - buySum) + System.lineSeparator();
-        File file2 = new File(toFileName);
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file2))) {
-            bufferedWriter.write(secondFileInfo);
-        } catch (IOException e) {
-            throw new RuntimeException("Can't write data to file", e);
-        }
+        this.writeToFile(toFileName, supplySum, buySum);
     }
 
+    private String[] readFromFile(String fromFileName) {
+        StringBuilder stringBuilder = new StringBuilder();
+        try {
+            File fromFile = new File(fromFileName);
+            BufferedReader bufferedReader = new BufferedReader(new java.io.FileReader(fromFile));
+            int fromText = bufferedReader.read();
+            while (fromText != -1) {
+                stringBuilder.append((char) fromText);
+                fromText = bufferedReader.read();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Can't read file", e);
+        }
+        return stringBuilder.toString()
+                .replace(System.lineSeparator(), " ")
+                .split(" ");
+    }
+
+    private void writeToFile(String toFileName, int supplySum, int buySum) {
+        String toFileInfo = "supply," + supplySum + System.lineSeparator() + "buy,"
+                + buySum + System.lineSeparator()
+                + "result," + (supplySum - buySum) + System.lineSeparator();
+        File toFile = new File(toFileName);
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFile))) {
+            bufferedWriter.write(toFileInfo);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write data toFile file", e);
+        }
+    }
 }
