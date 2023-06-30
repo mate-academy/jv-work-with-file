@@ -9,10 +9,10 @@ import java.util.List;
 
 public class WorkWithFile {
 
-    public static final String SEPARATOR = ",";
-    public static final String CSV_OPERATION_TYPE_SUPPLY = "supply";
-    public static final String CSV_OPERATION_TYPE_BUY = "buy";
-    public static final String CSV_OPERATION_TYPE_RESULT = "result";
+    private static final String SEPARATOR = ",";
+    private static final String CSV_OPERATION_TYPE_SUPPLY = "supply";
+    private static final String CSV_OPERATION_TYPE_BUY = "buy";
+    private static final String CSV_OPERATION_TYPE_RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
         int totalSupply = 0;
