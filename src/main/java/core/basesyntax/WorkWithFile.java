@@ -5,8 +5,10 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+
 public class WorkWithFile {
     public static final String lineSeparator = System.lineSeparator();
+
     public void getStatistic(String fromFileName, String toFileName) {
         int supplyTotal = 0;
         int buyTotal = 0;
