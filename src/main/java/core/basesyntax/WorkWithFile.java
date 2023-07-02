@@ -24,7 +24,7 @@ public class WorkWithFile {
         writeReport(toFileName, supplyTotal[0], buyTotal[0], result);
     }
 
-    public void processLine(String line, int[] supplyTotal, int[] buyTotal) {
+    private void processLine(String line, int[] supplyTotal, int[] buyTotal) {
         String[] parts = line.split(",");
         String operationType = parts[0];
         int amount = Integer.parseInt(parts[1].trim());
