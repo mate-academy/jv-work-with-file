@@ -11,7 +11,7 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         int supply = 0;
         int buy = 0;
-        for (String lineOfData : getData(fromFileName)) {
+        for (String lineOfData : getDataFromFile(fromFileName)) {
             if (getOperationType(lineOfData).equals("supply")) {
                 supply += getOperationAmount(lineOfData);
             } else {
@@ -25,10 +25,10 @@ public class WorkWithFile {
                 .append("\nbuy,").append(buy)
                 .append("\nresult,").append(result);
         createFile(toFileName);
-        writeData(toFileName, textTorWrite.toString());
+        writeDataToFile(toFileName, textTorWrite.toString());
     }
 
-    private static List<String> getData(String fromFileName) {
+    private static List<String> getDataFromFile(String fromFileName) {
         try {
             return Files.readAllLines(Path.of(fromFileName));
         } catch (IOException e) {
@@ -36,7 +36,7 @@ public class WorkWithFile {
         }
     }
 
-    private static void writeData(String toFileName, String text) {
+    private static void writeDataToFile(String toFileName, String text) {
         try {
             Files.write(Path.of(toFileName), text.getBytes(StandardCharsets.UTF_8));
         } catch (IOException e) {
@@ -49,7 +49,7 @@ public class WorkWithFile {
             File file = new File(fileName);
             file.createNewFile();
         } catch (IOException e) {
-            System.out.println("Cant create file" + e);
+            throw new RuntimeException("Cant create file" + e);
         }
     }
 
