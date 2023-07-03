@@ -14,9 +14,9 @@ public class WorkWithFile {
     private static final String RESULT_NAME = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        writeToFile(toFileName, updateData(
-                                readFromFile(
-                                fromFileName)));
+        String[] dataFromFile = readFromFile(fromFileName);
+        String report = updateData(dataFromFile);
+        writeToFile(toFileName, report);
     }
 
     private String[] readFromFile(String filePath) {
@@ -28,7 +28,7 @@ public class WorkWithFile {
                 line = reader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't read file" + filePath, e);
         }
         return data.toString().split(System.lineSeparator());
     }
@@ -59,7 +59,7 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(filePath))) {
             bufferedWriter.write(result);
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file");
+            throw new RuntimeException("Can't read file" + filePath, e);
         }
     }
 }
