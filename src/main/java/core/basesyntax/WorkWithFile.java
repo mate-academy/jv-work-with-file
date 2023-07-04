@@ -8,6 +8,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String SUPPLY_NAME = "supply";
+    private static final String BUY_NAME = "buy";
+    private static final int KEY_INDEX = 0;
+    private static final int VALUE_INDEX = 1;
+    private static final int ZERO_VALUE = 0;
+
     public void getStatistic(String fromFileName, String toFileName) {
         String[] fileData = readFromFile(fromFileName);
         String report = createReport(fileData);
@@ -24,36 +30,37 @@ public class WorkWithFile {
                 line = bufferedReader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read the file.", e);
+            throw new RuntimeException("Can't read the file [" + fileName + "].", e);
         }
         return parseFileData(builder.toString());
     }
 
-    private String[] parseFileData(String FileData) {
-        if (FileData.length() == 0) {
-            return new String[0];
+    private String[] parseFileData(String fileData) {
+        if (fileData.length() == ZERO_VALUE) {
+            return new String[ZERO_VALUE];
         }
-        return FileData.split(" ");
+        return fileData.split(" ");
     }
 
     private String createReport(String[] data) {
         StringBuilder builder = new StringBuilder();
-        int supplyNumber = 0;
-        int buyNumber = 0;
+        int supplyNumber = ZERO_VALUE;
+        int buyNumber = ZERO_VALUE;
 
         for (String line : data) {
             String[] splitLine = line.split(",");
-            if (splitLine[0].equals("supply")) {
-                supplyNumber += Integer.parseInt(splitLine[1]);
+            if (splitLine[KEY_INDEX].equals(SUPPLY_NAME)) {
+                supplyNumber += Integer.parseInt(splitLine[VALUE_INDEX]);
             } else {
-                buyNumber += Integer.parseInt(splitLine[1]);
+                buyNumber += Integer.parseInt(splitLine[VALUE_INDEX]);
             }
         }
 
-        builder.append("supply,").append(supplyNumber).append(System.lineSeparator())
-                .append("buy,").append(buyNumber).append(System.lineSeparator())
+        builder.append(SUPPLY_NAME).append(",").append(supplyNumber)
+                .append(System.lineSeparator())
+                .append(BUY_NAME).append(",").append(buyNumber)
+                .append(System.lineSeparator())
                 .append("result,").append(supplyNumber - buyNumber);
-
         return builder.toString();
     }
 
@@ -62,7 +69,7 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(myFile))) {
             bufferedWriter.write(data);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write to the file.", e);
+            throw new RuntimeException("Can't write to the file [" + fileName + "].", e);
         }
     }
 }
