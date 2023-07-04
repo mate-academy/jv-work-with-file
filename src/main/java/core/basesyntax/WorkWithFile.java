@@ -12,7 +12,7 @@ public class WorkWithFile {
         File fileToRead = new File(fromFileName);
         File fileToWrite = new File(toFileName);
         try (BufferedReader reader = new BufferedReader(new FileReader(fileToRead));
-                 BufferedWriter writer = new BufferedWriter(new FileWriter(fileToWrite, true))) {
+                 BufferedWriter writer = new BufferedWriter(new FileWriter(fileToWrite))) {
             int countSupply = 0;
             int countBuy = 0;
             int result = 0;
@@ -28,11 +28,14 @@ public class WorkWithFile {
             }
             result = countSupply - countBuy;
             StringBuilder report = new StringBuilder();
+            String separator = System.lineSeparator();
             report.append("supply,")
                     .append(countSupply)
-                    .append("\nbuy,")
+                    .append(separator)
+                    .append("buy,")
                     .append(countBuy)
-                    .append("\nresult,")
+                    .append(separator)
+                    .append("result,")
                     .append(result);
             writer.write(report.toString());
         } catch (IOException e) {
