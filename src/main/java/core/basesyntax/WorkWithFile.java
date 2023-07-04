@@ -40,7 +40,7 @@ public class WorkWithFile {
                     .append(result);
             writer.write(report.toString());
         } catch (IOException e) {
-            throw new RuntimeException("File not read", e);
+            throw new RuntimeException("The file was not read", e);
         }
     }
 }
