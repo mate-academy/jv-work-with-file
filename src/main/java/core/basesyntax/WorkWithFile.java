@@ -43,19 +43,24 @@ public class WorkWithFile {
     }
 
     private String createReport(String[] data) {
-        StringBuilder builder = new StringBuilder();
-        int supplyNumber = ZERO_VALUE;
-        int buyNumber = ZERO_VALUE;
+        int supplyNumber = calculateSum(SUPPLY_NAME, data);
+        int buyNumber = calculateSum(BUY_NAME, data);
+        return createReportString(supplyNumber, buyNumber);
+    }
 
+    private int calculateSum(String operationName, String[] data) {
+        int result = 0;
         for (String line : data) {
             String[] splitLine = line.split(",");
-            if (splitLine[KEY_INDEX].equals(SUPPLY_NAME)) {
-                supplyNumber += Integer.parseInt(splitLine[VALUE_INDEX]);
-            } else {
-                buyNumber += Integer.parseInt(splitLine[VALUE_INDEX]);
+            if (splitLine[KEY_INDEX].equals(operationName)) {
+                result += Integer.parseInt(splitLine[VALUE_INDEX]);
             }
         }
+        return result;
+    }
 
+    private String createReportString(int supplyNumber, int buyNumber) {
+        StringBuilder builder = new StringBuilder();
         builder.append(SUPPLY_NAME).append(",").append(supplyNumber)
                 .append(System.lineSeparator())
                 .append(BUY_NAME).append(",").append(buyNumber)
