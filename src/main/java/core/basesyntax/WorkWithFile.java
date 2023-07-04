@@ -8,34 +8,34 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String COMMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String value = readFile(fromFileName);
-        String report = createReport(value);
+        String currentLine = readFile(fromFileName);
+        String report = createReport(currentLine);
         fileWrite(toFileName, report);
     }
 
-    public static String readFile(String fromFileName) {
-        File fl = new File(fromFileName);
-        try {
-            BufferedReader brd = new BufferedReader(new FileReader(fl));
-            StringBuilder strBuilder = new StringBuilder();
-            String value = brd.readLine();
-            while (value != null) {
-                strBuilder.append(value).append(",");
-                value = brd.readLine();
+    private String readFile(String fromFileName) {
+        File inputfile = new File(fromFileName);
+        try (BufferedReader reader = new BufferedReader(new FileReader(inputfile))) {
+            StringBuilder fileContent = new StringBuilder();
+            String currentLine = reader.readLine();
+            while (currentLine != null) {
+                fileContent.append(currentLine).append(COMMA);
+                currentLine = reader.readLine();
             }
-            return strBuilder.toString();
+            return fileContent.toString();
         } catch (IOException e) {
             throw new RuntimeException("Can't read file", e);
         }
     }
 
-    private static String createReport(String value) {
+    private String createReport(String currentLine) {
         int supplyResult = 0;
         int buyResult = 0;
         int result = 0;
-        String[] data = value.split(",");
+        String[] data = currentLine.split(COMMA);
         for (int i = 0; i < data.length; i++) {
             if (data[i].equals("supply")) {
                 supplyResult += Integer.parseInt(data[i + 1]);
@@ -44,23 +44,22 @@ public class WorkWithFile {
             }
             result = supplyResult - buyResult;
         }
-        StringBuilder resultBld = new StringBuilder();
-        StringBuilder report = resultBld.append("supply").append(",").append(supplyResult)
+        StringBuilder resultBuilder = new StringBuilder();
+        StringBuilder report = resultBuilder.append("supply").append(COMMA).append(supplyResult)
                 .append(System.lineSeparator())
-                .append("buy").append(",").append(buyResult)
+                .append("buy").append(COMMA).append(buyResult)
                 .append(System.lineSeparator())
-                .append("result").append(",").append(result);
-        return String.valueOf(report);
+                .append("result").append(COMMA).append(result);
+        return report.toString();
     }
 
-    private static void fileWrite(String toFileName, String report) {
-        File fl = new File(toFileName);
-        try {
-            BufferedWriter bwrt = new BufferedWriter(new FileWriter(fl));
-            bwrt.write(String.valueOf(report));
-            bwrt.close();
+    private void fileWrite(String toFileName, String report) {
+        File outputfile = new File(toFileName);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputfile))) {
+            writer.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Can't write file", e);
         }
     }
 }
+
