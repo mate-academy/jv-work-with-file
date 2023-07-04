@@ -8,6 +8,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String SEPARATOR = System.lineSeparator();
+
     public void getStatistic(String fromFileName, String toFileName) {
         File fileToRead = new File(fromFileName);
         File fileToWrite = new File(toFileName);
@@ -28,13 +30,12 @@ public class WorkWithFile {
             }
             result = countSupply - countBuy;
             StringBuilder report = new StringBuilder();
-            String separator = System.lineSeparator();
             report.append("supply,")
                     .append(countSupply)
-                    .append(separator)
+                    .append(SEPARATOR)
                     .append("buy,")
                     .append(countBuy)
-                    .append(separator)
+                    .append(SEPARATOR)
                     .append("result,")
                     .append(result);
             writer.write(report.toString());
