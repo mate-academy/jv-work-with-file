@@ -9,6 +9,7 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final String SEPARATE_LINE = System.lineSeparator();
     private static final String SUPPLY = "supply";
+    private static final String COMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String readFile = readFile(fromFileName);
@@ -34,7 +35,7 @@ public class WorkWithFile {
         int supply = 0;
         int buy = 0;
         for (String data : splittedData) {
-            String[] separatedData = data.split(",");
+            String[] separatedData = data.split(COMA);
             if (separatedData[0].equals(SUPPLY)) {
                 supply += Integer.parseInt(separatedData[1]);
             } else {
