@@ -25,7 +25,7 @@ public class WorkWithFile {
                 stringBuilder.append(line).append(SEPARATE_LINE);
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can not read file", e);
+            throw new RuntimeException("File not found", e);
         }
         return stringBuilder.toString();
     }
@@ -57,7 +57,7 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(preparedData);
         } catch (IOException e) {
-            throw new RuntimeException("Can not write to file or file does not exit", e);
+            throw new RuntimeException("Write error", e);
         }
     }
 }
