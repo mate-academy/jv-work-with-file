@@ -1,19 +1,24 @@
 package core.basesyntax;
 
-import java.io.*;
-import java.util.Arrays;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class WorkWithFile {
     private static final String NEW_LINE = "\\.";
-    private static final String READING_FROM_FILE_ERROR = "I can't read from this file any information.";
+    private static final String READING_FROM_FILE_ERROR = "I can't read from this file any "
+                                                          + "information.";
     private static final String SPLIT_FOR_COLUMNS = ",";
     private static final int OPERATION_INDEX = 0;
     private static final int VALUE_INDEX = 1;
     private static final String BUY_TYPE = "buy";
     private static final String SUPPLY_TYPE = "supply";
-    private static final String WRITE_REPORT_ERROR = "Sorry, but I can't work with this data for making a great report.";
+    private static final String WRITE_REPORT_ERROR = "Sorry, but I can't work with this data.";
     private static final String RESULT_TYPE = "result";
-    private static final String WRITING_TO_FILE_ERROR = "Sorry, but i can't write in file with name ";
+    private static final String WRITING_TO_FILE_ERROR = "Sorry, but i can't write in file";
+
     public void getStatistic(String fromFileName, String toFileName) {
         String[] dataFromFile = readFileToString(fromFileName);
         int[] supplyBuyInfo = calculateSupplyBuy(dataFromFile);
@@ -25,7 +30,7 @@ public class WorkWithFile {
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             String line = reader.readLine();
             StringBuilder result = new StringBuilder();
-            while (line  != null) {
+            while (line != null) {
                 result.append(line).append(".");
                 line = reader.readLine();
             }
@@ -35,7 +40,7 @@ public class WorkWithFile {
         }
     }
 
-    private static int[] calculateSupplyBuy (String[] informationFromFile) {
+    private static int[] calculateSupplyBuy(String[] informationFromFile) {
         int supplyAmount = 0;
         int buyAmount = 0;
 
@@ -51,16 +56,16 @@ public class WorkWithFile {
         return new int[] {supplyAmount, buyAmount};
     }
 
-    private static String writeReport (int[] supplyAndBuy) {
-        if(supplyAndBuy.length != 2) {
+    private static String writeReport(int[] supplyAndBuy) {
+        if (supplyAndBuy.length != 2) {
             throw new RuntimeException(WRITE_REPORT_ERROR);
         }
 
         int supply = supplyAndBuy[0];
         int buy = supplyAndBuy[1];
-        return  SUPPLY_TYPE + SPLIT_FOR_COLUMNS + supply + System.lineSeparator() +
-                BUY_TYPE + SPLIT_FOR_COLUMNS + buy + System.lineSeparator() +
-                RESULT_TYPE + SPLIT_FOR_COLUMNS + (supply - buy) + System.lineSeparator();
+        return SUPPLY_TYPE + SPLIT_FOR_COLUMNS + supply + System.lineSeparator()
+                + BUY_TYPE + SPLIT_FOR_COLUMNS + buy + System.lineSeparator()
+                + RESULT_TYPE + SPLIT_FOR_COLUMNS + (supply - buy) + System.lineSeparator();
     }
 
     private void writeToFile(String message, String fileName) {
