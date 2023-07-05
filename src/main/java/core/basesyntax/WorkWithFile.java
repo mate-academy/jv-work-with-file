@@ -8,6 +8,9 @@ import java.nio.file.Path;
 import java.util.List;
 
 public class WorkWithFile {
+    private static final int OPERATION_TYPE_INDEX = 0;
+    private static final String COLUMN_SEPARATOR = ",";
+
     public void getStatistic(String fromFileName, String toFileName) {
         int supply = 0;
         int buy = 0;
@@ -20,41 +23,40 @@ public class WorkWithFile {
         }
 
         int result = supply - buy;
-        StringBuilder textTorWrite = new StringBuilder()
-                .append("supply,").append(supply)
-                .append("\nbuy,").append(buy)
-                .append("\nresult,").append(result);
+        StringBuilder textTorWrite = new StringBuilder("supply,").append(supply)
+                .append(System.lineSeparator()).append("buy,").append(buy)
+                .append(System.lineSeparator()).append("result,").append(result);
         createFile(toFileName);
         writeDataToFile(toFileName, textTorWrite.toString());
     }
 
-    private static List<String> getDataFromFile(String fromFileName) {
+    private List<String> getDataFromFile(String fromFileName) {
         try {
             return Files.readAllLines(Path.of(fromFileName));
         } catch (IOException e) {
-            throw new RuntimeException("Cant read data from file", e);
+            throw new RuntimeException("Cant read data from file" + fromFileName, e);
         }
     }
 
-    private static void writeDataToFile(String toFileName, String text) {
+    private void writeDataToFile(String toFileName, String text) {
         try {
             Files.write(Path.of(toFileName), text.getBytes(StandardCharsets.UTF_8));
         } catch (IOException e) {
-            throw new RuntimeException("Cant write data to file", e);
+            throw new RuntimeException("Cant write data to file" + toFileName, e);
         }
     }
 
-    private static void createFile(String fileName) {
+    private void createFile(String fileName) {
         try {
             File file = new File(fileName);
             file.createNewFile();
         } catch (IOException e) {
-            throw new RuntimeException("Cant create file" + e);
+            throw new RuntimeException("Cant create file" + fileName, e);
         }
     }
 
     private String getOperationType(String lineOfData) {
-        return lineOfData.split(",")[0];
+        return lineOfData.split(COLUMN_SEPARATOR)[OPERATION_TYPE_INDEX];
     }
 
     private int getOperationAmount(String lineOfData) {
