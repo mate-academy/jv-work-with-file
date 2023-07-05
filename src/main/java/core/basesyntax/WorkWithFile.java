@@ -1,7 +1,73 @@
 package core.basesyntax;
 
-public class WorkWithFile {
-    public void getStatistic(String fromFileName, String toFileName) {
+import java.io.*;
+import java.util.Arrays;
 
+public class WorkWithFile {
+    private static final String NEW_LINE = "\\.";
+    private static final String READING_FROM_FILE_ERROR = "I can't read from this file any information.";
+    private static final String SPLIT_FOR_COLUMNS = ",";
+    private static final int OPERATION_INDEX = 0;
+    private static final int VALUE_INDEX = 1;
+    private static final String BUY_TYPE = "buy";
+    private static final String SUPPLY_TYPE = "supply";
+    private static final String WRITE_REPORT_ERROR = "Sorry, but I can't work with this data for making a great report.";
+    private static final String RESULT_TYPE = "result";
+    private static final String WRITING_TO_FILE_ERROR = "Sorry, but i can't write in file with name ";
+    public void getStatistic(String fromFileName, String toFileName) {
+        String[] dataFromFile = readFileToString(fromFileName);
+        int[] supplyBuyInfo = calculateSupplyBuy(dataFromFile);
+        String report = writeReport(supplyBuyInfo);
+        writeToFile(report, toFileName);
+    }
+
+    private static String[] readFileToString(String fileName) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            String line = reader.readLine();
+            StringBuilder result = new StringBuilder();
+            while (line  != null) {
+                result.append(line).append(".");
+                line = reader.readLine();
+            }
+            return result.toString().split(NEW_LINE);
+        } catch (IOException e) {
+            throw new RuntimeException(READING_FROM_FILE_ERROR);
+        }
+    }
+
+    private static int[] calculateSupplyBuy (String[] informationFromFile) {
+        int supplyAmount = 0;
+        int buyAmount = 0;
+
+        for (String line : informationFromFile) {
+            String[] splitLine = line.split(SPLIT_FOR_COLUMNS);
+            String operation = splitLine[OPERATION_INDEX];
+            int amount = Integer.parseInt(splitLine[VALUE_INDEX]);
+
+            buyAmount += operation.equals(BUY_TYPE) ? amount : 0;
+            supplyAmount += operation.equals(SUPPLY_TYPE) ? amount : 0;
+        }
+
+        return new int[] {supplyAmount, buyAmount};
+    }
+
+    private static String writeReport (int[] supplyAndBuy) {
+        if(supplyAndBuy.length != 2) {
+            throw new RuntimeException(WRITE_REPORT_ERROR);
+        }
+
+        int supply = supplyAndBuy[0];
+        int buy = supplyAndBuy[1];
+        return  SUPPLY_TYPE + SPLIT_FOR_COLUMNS + supply + System.lineSeparator() +
+                BUY_TYPE + SPLIT_FOR_COLUMNS + buy + System.lineSeparator() +
+                RESULT_TYPE + SPLIT_FOR_COLUMNS + (supply - buy) + System.lineSeparator();
+    }
+
+    private void writeToFile(String message, String fileName) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
+            bufferedWriter.write(message);
+        } catch (IOException e) {
+            throw new RuntimeException(WRITING_TO_FILE_ERROR + fileName);
+        }
     }
 }
