@@ -11,7 +11,7 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
-    private static final String COMA = ",";
+    private static final String COMMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String readFile = readFile(fromFileName);
@@ -37,7 +37,7 @@ public class WorkWithFile {
         int supply = 0;
         int buy = 0;
         for (String data : splittedData) {
-            String[] separatedData = data.split(COMA);
+            String[] separatedData = data.split(COMMA);
             if (separatedData[0].equals(SUPPLY)) {
                 supply += Integer.parseInt(separatedData[1]);
             } else {
@@ -49,9 +49,9 @@ public class WorkWithFile {
 
     public String prepareData(int supply, int buy) {
         int result = supply - buy;
-        StringBuilder stringBuilder = new StringBuilder(SUPPLY).append(COMA);
-        stringBuilder.append(supply).append(SEPARATE_LINE).append(BUY).append(COMA)
-                .append(buy).append(SEPARATE_LINE).append(RESULT).append(COMA).append(result);
+        StringBuilder stringBuilder = new StringBuilder(SUPPLY).append(COMMA);
+        stringBuilder.append(supply).append(SEPARATE_LINE).append(BUY).append(COMMA)
+                .append(buy).append(SEPARATE_LINE).append(RESULT).append(COMMA).append(result);
         return stringBuilder.toString();
     }
 
