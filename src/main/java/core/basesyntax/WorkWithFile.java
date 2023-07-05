@@ -22,7 +22,7 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         Map<String, Integer> data = readData(fromFileName);
         String report = createReport(data);
-        storeStatistic(toFileName, report);
+        writeData(toFileName, report);
     }
 
     private Map<String, Integer> readData(String fromFileName) {
@@ -54,7 +54,7 @@ public class WorkWithFile {
                 + System.lineSeparator();
     }
 
-    private void storeStatistic(String toFileName, String report) {
+    private void writeData(String toFileName, String report) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write(report);
         } catch (IOException e) {
