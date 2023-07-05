@@ -9,6 +9,8 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final String SEPARATE_LINE = System.lineSeparator();
     private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
     private static final String COMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
@@ -47,9 +49,9 @@ public class WorkWithFile {
 
     public String prepareData(int supply, int buy) {
         int result = supply - buy;
-        StringBuilder stringBuilder = new StringBuilder("supply,");
-        stringBuilder.append(supply).append(SEPARATE_LINE).append("buy,")
-                .append(buy).append(SEPARATE_LINE).append("result,").append(result);
+        StringBuilder stringBuilder = new StringBuilder(SUPPLY).append(",");
+        stringBuilder.append(supply).append(SEPARATE_LINE).append(BUY).append(",")
+                .append(buy).append(SEPARATE_LINE).append(RESULT).append(",").append(result);
         return stringBuilder.toString();
     }
 
