@@ -8,6 +8,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String COMA_SEPARATOR = ",";
+    private static final String BUY_OPERATION_TYPE = "buy";
+    private static final String SUPPLY_OPERATION_TYPE = "supply";
+
+    private static final int INDEX_OF_AMOUNTS = 1;
+
     public void getStatistic(String fromFileName, String toFileName) {
         String inputData = readFromFile(fromFileName);
         StringBuilder report = filteredData(inputData);
@@ -24,7 +30,7 @@ public class WorkWithFile {
                 value = reader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can't read from file '" + fromFileName + "'!",e);
         }
         return inputData.toString();
     }
@@ -34,7 +40,7 @@ public class WorkWithFile {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(output))) {
             writer.write(data);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can't write to file '" + toFileName + "'!",e);
         }
     }
 
@@ -43,17 +49,21 @@ public class WorkWithFile {
         int supplyAmount = 0;
         int buyAmount = 0;
         for (String line : data) {
-            String[] lineItems = line.split(",");
-            buyAmount += (lineItems[0].equals("buy")) ? Integer.valueOf(lineItems[1]) : 0;
-            supplyAmount += (lineItems[0].equals("supply")) ? Integer.valueOf(lineItems[1]) : 0;
+            String[] lineItems = line.split(COMA_SEPARATOR);
+            buyAmount += (lineItems[0].equals(BUY_OPERATION_TYPE))
+                    ? Integer.valueOf(lineItems[INDEX_OF_AMOUNTS]) : 0;
+            supplyAmount += (lineItems[0].equals(SUPPLY_OPERATION_TYPE))
+                    ? Integer.valueOf(lineItems[INDEX_OF_AMOUNTS]) : 0;
         }
         StringBuilder report = createReport(buyAmount,supplyAmount);
         return report;
     }
 
     private StringBuilder createReport(int buy, int supply) {
-        return new StringBuilder().append("supply,").append(supply).append(System.lineSeparator())
-                .append("buy,").append(buy).append(System.lineSeparator())
+        return new StringBuilder().append(SUPPLY_OPERATION_TYPE).append(COMA_SEPARATOR)
+                .append(supply).append(System.lineSeparator())
+                .append(BUY_OPERATION_TYPE).append(COMA_SEPARATOR)
+                .append(buy).append(System.lineSeparator())
                 .append("result,").append(supply - buy);
     }
 }
