@@ -19,8 +19,7 @@ public class WorkWithFile {
         try {
             return Files.readAllLines(Path.of(fileName)).toArray(String[]::new);
         } catch (IOException e) {
-            throw new RuntimeException("Can`t read file - " + fileName
-                    + System.lineSeparator() + e);
+            throw new RuntimeException("Can`t read file - " + fileName, e);
         }
     }
 
@@ -53,8 +52,7 @@ public class WorkWithFile {
         try {
             Files.write(Path.of(fileName), statistic.getBytes());
         } catch (IOException e) {
-            throw new RuntimeException("Can`t write data in file - "
-                    + fileName + System.lineSeparator() + e);
+            throw new RuntimeException("Can`t write data in file - " + fileName, e);
         }
     }
 }
