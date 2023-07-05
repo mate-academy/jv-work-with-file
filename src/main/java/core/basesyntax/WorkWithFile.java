@@ -12,8 +12,8 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
-    private static final int OPERATION_INFO = 0;
-    private static final int OPERATION_AMOUNT = 1;
+    private static final int OPERATION_INFO_INDEX = 0;
+    private static final int OPERATION_AMOUNT_INDEX = 1;
     private static final int SUPPLY_INDEX = 0;
     private static final int BUY_INDEX = 1;
 
@@ -31,7 +31,7 @@ public class WorkWithFile {
                 stringBuilder.append(line).append(LINE_SEPARATOR);
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read from file" + fromFileName + e);
+            throw new RuntimeException("Can't read from file" + fromFileName, e);
         }
         return stringBuilder.toString();
     }
@@ -42,25 +42,24 @@ public class WorkWithFile {
         int buy = 0;
         for (String table : tables) {
             String[] info = table.split(COMA_SEPARATOR);
-            String separateInfo = info[OPERATION_INFO];
-            int separateAmount = Integer.parseInt(info[OPERATION_AMOUNT]);
-            if (separateInfo.equals(SUPPLY)) {
-                supply += separateAmount;
-            } else if (separateInfo.equals(BUY)) {
-                buy += separateAmount;
+            String operationType = info[OPERATION_INFO_INDEX];
+            int operationAmount = Integer.parseInt(info[OPERATION_AMOUNT_INDEX]);
+            if (operationType.equals(SUPPLY)) {
+                supply += operationAmount;
+            } else if (operationType.equals(BUY)) {
+                buy += operationAmount;
             }
         }
-        int[] operationAmount = {supply, buy};
-        return creatingReport(operationAmount);
+        return creatingReport(supply, buy);
     }
 
-    private String creatingReport(int[] operationAmount) {
+    private String creatingReport(int supply, int buy) {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(SUPPLY).append(COMA_SEPARATOR).append(operationAmount[SUPPLY_INDEX])
+        stringBuilder.append(SUPPLY).append(COMA_SEPARATOR).append(supply)
                 .append(LINE_SEPARATOR).append(BUY).append(COMA_SEPARATOR)
-                .append(operationAmount[BUY_INDEX]).append(LINE_SEPARATOR)
+                .append(buy).append(LINE_SEPARATOR)
                 .append(RESULT).append(COMA_SEPARATOR)
-                .append(operationAmount[SUPPLY_INDEX] - operationAmount[BUY_INDEX])
+                .append(supply - buy)
                 .append(LINE_SEPARATOR);
         return stringBuilder.toString();
     }
