@@ -49,9 +49,9 @@ public class WorkWithFile {
 
     public String prepareData(int supply, int buy) {
         int result = supply - buy;
-        StringBuilder stringBuilder = new StringBuilder(SUPPLY).append(",");
-        stringBuilder.append(supply).append(SEPARATE_LINE).append(BUY).append(",")
-                .append(buy).append(SEPARATE_LINE).append(RESULT).append(",").append(result);
+        StringBuilder stringBuilder = new StringBuilder(SUPPLY).append(COMA);
+        stringBuilder.append(supply).append(SEPARATE_LINE).append(BUY).append(COMA)
+                .append(buy).append(SEPARATE_LINE).append(RESULT).append(COMA).append(result);
         return stringBuilder.toString();
     }
 
