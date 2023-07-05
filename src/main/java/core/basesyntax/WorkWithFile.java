@@ -15,9 +15,6 @@ public class WorkWithFile {
     public static final String SUPPLY_OPERATION = "supply";
     public static final String BUY_OPERATION = "buy";
     public static final String RESULT_OF_OPERATIONS = "result";
-    public static final String SPACE_SEPARATOR = " ";
-    public static final int POSITION_OF_SUPPLY = 0;
-    public static final int POSITION_OF_BUY = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String dataFromFile = readFromFile(fromFileName);
@@ -43,20 +40,8 @@ public class WorkWithFile {
     }
 
     private void writeToFile(String fileName,String report) {
-        int supply = Integer.parseInt(
-                report.split(SPACE_SEPARATOR)[POSITION_OF_SUPPLY]);
-        int buy = Integer.parseInt(
-                report.split(SPACE_SEPARATOR)[POSITION_OF_BUY]);
-        int result = supply - buy;
-        StringBuilder operations = new StringBuilder();
-        operations.append(SUPPLY_OPERATION + COMA_SEPARATOR)
-                .append(supply).append(System.lineSeparator());
-        operations.append(BUY_OPERATION + COMA_SEPARATOR)
-                .append(buy).append(System.lineSeparator());
-        operations.append(RESULT_OF_OPERATIONS + COMA_SEPARATOR)
-                .append(result);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
-            bufferedWriter.write(operations.toString());
+            bufferedWriter.write(report);
         } catch (FileNotFoundException e) {
             throw new RuntimeException("Can't find file " + fileName, e);
         } catch (IOException e) {
@@ -65,18 +50,26 @@ public class WorkWithFile {
     }
 
     private String createReport(String[] data) {
-        int supplySum = 0;
-        int buySum = 0;
+        int supply = 0;
+        int buy = 0;
         for (String dataLine : data) {
             String nameOfOperation = dataLine.split(COMA_SEPARATOR)[POSITION_OF_NAME_OF_OPERATION];
             int amountOfOperation = Integer.parseInt(
                     dataLine.split(COMA_SEPARATOR)[POSITION_OF_AMOUNT_OF_OPERATION]);
             if (nameOfOperation.equals(SUPPLY_OPERATION)) {
-                supplySum += amountOfOperation;
+                supply += amountOfOperation;
             } else if (nameOfOperation.equals(BUY_OPERATION)) {
-                buySum += amountOfOperation;
+                buy += amountOfOperation;
             }
         }
-        return supplySum + " " + buySum;
+        int result = supply - buy;
+        StringBuilder report = new StringBuilder();
+        report.append(SUPPLY_OPERATION + COMA_SEPARATOR)
+                .append(supply).append(System.lineSeparator());
+        report.append(BUY_OPERATION + COMA_SEPARATOR)
+                .append(buy).append(System.lineSeparator());
+        report.append(RESULT_OF_OPERATIONS + COMA_SEPARATOR)
+                .append(result);
+        return report.toString();
     }
 }
