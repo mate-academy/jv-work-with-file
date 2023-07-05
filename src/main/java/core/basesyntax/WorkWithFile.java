@@ -27,7 +27,7 @@ public class WorkWithFile {
                 stringBuilder.append(line).append(SEPARATE_LINE);
             }
         } catch (IOException e) {
-            throw new RuntimeException("File not found", e);
+            throw new RuntimeException("File " + fromFileName + " not found", e);
         }
         return stringBuilder.toString();
     }
