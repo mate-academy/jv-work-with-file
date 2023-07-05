@@ -9,11 +9,21 @@ import java.util.List;
 
 public class WorkWithFile {
     private static final int OPERATION_TYPE_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
     private static final String COLUMN_SEPARATOR = ",";
 
+    private int supply;
+    private int buy;
+    private int result;
+
     public void getStatistic(String fromFileName, String toFileName) {
-        int supply = 0;
-        int buy = 0;
+        calculateStatistic(fromFileName);
+        saveStatisticToFile(toFileName);
+    }
+
+    private void calculateStatistic(String fromFileName) {
+        supply = 0;
+        buy = 0;
         for (String lineOfData : getDataFromFile(fromFileName)) {
             if (getOperationType(lineOfData).equals("supply")) {
                 supply += getOperationAmount(lineOfData);
@@ -21,8 +31,10 @@ public class WorkWithFile {
                 buy += getOperationAmount(lineOfData);
             }
         }
+        result = supply - buy;
+    }
 
-        int result = supply - buy;
+    private void saveStatisticToFile(String toFileName) {
         StringBuilder textTorWrite = new StringBuilder("supply,").append(supply)
                 .append(System.lineSeparator()).append("buy,").append(buy)
                 .append(System.lineSeparator()).append("result,").append(result);
@@ -60,6 +72,6 @@ public class WorkWithFile {
     }
 
     private int getOperationAmount(String lineOfData) {
-        return Integer.parseInt(lineOfData.split(",")[1]);
+        return Integer.parseInt(lineOfData.split(COLUMN_SEPARATOR)[AMOUNT_INDEX]);
     }
 }
