@@ -35,7 +35,7 @@ public class WorkWithFile {
                 }
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read the file", e);
+            throw new RuntimeException("Can't read the file" + fileName, e);
         }
         info.append(supplyString).append(separator).append(totalSupply)
                 .append(System.lineSeparator());
