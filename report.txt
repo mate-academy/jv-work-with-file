@@ -1,3 +1,0 @@
-supply,47
-buy,33
-result,14
