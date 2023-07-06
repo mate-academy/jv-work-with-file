@@ -1,9 +1,6 @@
 package core.basesyntax;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -28,7 +25,8 @@ public class WorkWithFile {
     private static String[] generateReport(List<String> records) {
         int[] totalSupplyBuyResult = new int[3];
         calculateSupplyAndBuy(totalSupplyBuyResult, records);
-        totalSupplyBuyResult[2] = totalSupplyBuyResult[SUPPLY_INDEX] - totalSupplyBuyResult[BUY_INDEX];
+        totalSupplyBuyResult[2] = totalSupplyBuyResult[SUPPLY_INDEX]
+                - totalSupplyBuyResult[BUY_INDEX];
         String[] resultData = new String[3];
         resultData[0] = "supply," + totalSupplyBuyResult[SUPPLY_INDEX];
         resultData[1] = "buy," + totalSupplyBuyResult[BUY_INDEX];
