@@ -16,10 +16,11 @@ public class WorkWithFile {
     private static final int SUPPLY_INDEX = 0;
     private static final int BUY_INDEX = 1;
     private static final int RESULT_INDEX = 2;
+    private static final int INFO_ARRAY_LENGTH = 3;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String data = readFile(fromFileName);
-        String report = extractedData(data);
+        String report = extractData(data);
         writeToFile(report,toFileName);
     }
 
@@ -38,7 +39,7 @@ public class WorkWithFile {
         return stringBuilder.toString();
     }
 
-    private String extractedData(String data) {
+    private String extractData(String data) {
         String[] allInfo = data.split("\\W+");
         int totalSupply = 0;
         int totalBuy = 0;
@@ -49,11 +50,15 @@ public class WorkWithFile {
                 totalBuy += Integer.parseInt(allInfo[i + 1]);
             }
         }
-        int [] operationInfo = {totalSupply, totalBuy, totalSupply - totalBuy};
-        return createReportMessage(operationInfo);
+        int [] operationInfo = new int[INFO_ARRAY_LENGTH];
+        return createReportMessage(operationInfo, totalSupply, totalBuy, totalSupply - totalBuy);
     }
 
-    private String createReportMessage(int[] operationInfo) {
+    private String createReportMessage(int[] operationInfo, int totalSupply,
+                                       int totalBuy, int result) {
+        operationInfo[SUPPLY_INDEX] = totalSupply;
+        operationInfo[BUY_INDEX] = totalBuy;
+        operationInfo[RESULT_INDEX] = result;
         StringBuilder sb = new StringBuilder();
         sb.append(SUPPLY).append(COMMA).append(operationInfo[SUPPLY_INDEX]).append(LINE_SEPARATOR)
                 .append(BUY).append(COMMA).append(operationInfo[BUY_INDEX]).append(LINE_SEPARATOR)
