@@ -17,6 +17,8 @@ public class WorkWithFile {
     private static final String WRITE_REPORT_ERROR = "Sorry, but I can't work with this data.";
     private static final String RESULT_TYPE = "result";
     private static final String WRITING_TO_FILE_ERROR = "Sorry, but i can't write in file";
+    private static final String OTHER_ERROR = "There were some problems during the execution"
+                                               + " of the program";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] dataFromFile = readFileToString(fromFileName);
@@ -37,7 +39,7 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException(READING_FROM_FILE_ERROR);
         } catch (RuntimeException e) {
-            throw new RuntimeException("There were some problems during the execution of the program " + e);
+            throw new RuntimeException(OTHER_ERROR + e);
         }
     }
 
@@ -65,9 +67,12 @@ public class WorkWithFile {
         int buy = supplyAndBuy[1];
 
         StringBuilder result = new StringBuilder();
-        result.append(SUPPLY_TYPE).append(SPLIT_FOR_COLUMNS).append(supply).append(System.lineSeparator());
-        result.append(BUY_TYPE).append(SPLIT_FOR_COLUMNS).append(buy).append(System.lineSeparator());
-        result.append(RESULT_TYPE).append(SPLIT_FOR_COLUMNS).append(supply - buy).append(System.lineSeparator());
+        result.append(SUPPLY_TYPE).append(SPLIT_FOR_COLUMNS).append(supply)
+                .append(System.lineSeparator());
+        result.append(BUY_TYPE).append(SPLIT_FOR_COLUMNS).append(buy)
+                .append(System.lineSeparator());
+        result.append(RESULT_TYPE).append(SPLIT_FOR_COLUMNS).append(supply - buy)
+                .append(System.lineSeparator());
 
         return String.valueOf(result);
     }
