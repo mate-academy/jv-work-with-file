@@ -17,9 +17,9 @@ public class WorkWithFile {
         writeToFile(toFileName,fromFileName);
     }
 
-    public String[] readFromFile(String fromFileName) {
-        String coma = ",";
-        String space = " ";
+    private String[] readFromFile(String fromFileName) {
+        final String coma = ",";
+        final String space = " ";
         File fileFrom = new File(fromFileName);
         WorkWithFile workWithFile = new WorkWithFile();
 
@@ -68,7 +68,7 @@ public class WorkWithFile {
         return report;
     }
 
-    public void writeToFile(String toFileName, String fromFileName) {
+    private void writeToFile(String toFileName, String fromFileName) {
         File fileTo = new File(toFileName);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileTo))) {
             for (String reportUnit : readFromFile(fromFileName)) {
