@@ -7,7 +7,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final String NEW_LINE = "\\.";
     private static final String READING_FROM_FILE_ERROR = "I can't read from this file any "
                                                           + "information.";
     private static final String SPLIT_FOR_COLUMNS = ",";
@@ -34,9 +33,11 @@ public class WorkWithFile {
                 result.append(line).append(".");
                 line = reader.readLine();
             }
-            return result.toString().split(NEW_LINE);
+            return result.toString().split("\\.");
         } catch (IOException e) {
             throw new RuntimeException(READING_FROM_FILE_ERROR);
+        } catch (RuntimeException e) {
+            throw new RuntimeException("There were some problems during the execution of the program " + e);
         }
     }
 
@@ -60,12 +61,15 @@ public class WorkWithFile {
         if (supplyAndBuy.length != 2) {
             throw new RuntimeException(WRITE_REPORT_ERROR);
         }
-
         int supply = supplyAndBuy[0];
         int buy = supplyAndBuy[1];
-        return SUPPLY_TYPE + SPLIT_FOR_COLUMNS + supply + System.lineSeparator()
-                + BUY_TYPE + SPLIT_FOR_COLUMNS + buy + System.lineSeparator()
-                + RESULT_TYPE + SPLIT_FOR_COLUMNS + (supply - buy) + System.lineSeparator();
+
+        StringBuilder result = new StringBuilder();
+        result.append(SUPPLY_TYPE).append(SPLIT_FOR_COLUMNS).append(supply).append(System.lineSeparator());
+        result.append(BUY_TYPE).append(SPLIT_FOR_COLUMNS).append(buy).append(System.lineSeparator());
+        result.append(RESULT_TYPE).append(SPLIT_FOR_COLUMNS).append(supply - buy).append(System.lineSeparator());
+
+        return String.valueOf(result);
     }
 
     private void writeToFile(String message, String fileName) {
