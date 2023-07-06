@@ -8,39 +8,51 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String LINE_SEPARATOR = System.lineSeparator();
+    private static final String[] OPERATIONS_TYPE = {"supply","buy"};
+
     public void getStatistic(String fromFileName, String toFileName) {
-        String dataFromFile = getDataFromFile(fromFileName);
-        String dataToFile = getRapport(dataFromFile);
+        String[] dataFromFile = readDataFromFile(fromFileName);
+        String dataToFile = getReport(calculateStatistic(dataFromFile));
         writeDataToFile(dataToFile,toFileName);
     }
 
-    private String getRapport(String dateFromFile) {
-        int supplyAmount = 0;
-        int buyAmount = 0;
+    private String getReport(int[] operationValues) {
+        int result = operationValues[0];
         StringBuilder builder = new StringBuilder();
-        String[] dataArray = dateFromFile.split(System.lineSeparator());
-        for (String data: dataArray) {
-            String[] temp = data.split(",");
-            if (temp[0].equals("supply")) {
-                supplyAmount += Integer.parseInt(temp[1]);
-            }
-            if (temp[0].equals("buy")) {
-                buyAmount += Integer.parseInt(temp[1]);
+        for (int i = 0; i < OPERATIONS_TYPE.length; i++) {
+            builder.append(OPERATIONS_TYPE[i]).append(",").append(operationValues[i])
+                    .append(LINE_SEPARATOR);
+            if (i != 0) {
+                result -= operationValues[i];
             }
         }
-        builder.append("supply,").append(supplyAmount).append(System.lineSeparator())
-                .append("buy,").append(buyAmount).append(System.lineSeparator())
-                .append("result,").append(supplyAmount - buyAmount).append(System.lineSeparator());
+        builder.append("result,").append(result).append(LINE_SEPARATOR);
         return builder.toString();
     }
 
-    private String getDataFromFile(String fileName) {
+    private int[] calculateStatistic(String[] dateFromFile) {
+        int[] result = new int[OPERATIONS_TYPE.length];
+        //String[] dataArray = dateFromFile;
+        for (String data: dateFromFile) {
+            //String[] temp = data.split(COMA_SEPARATOR);
+            for (int i = 0; i < OPERATIONS_TYPE.length; i++) {
+                String[] temp = data.split(",");
+                if (temp[0].equals(OPERATIONS_TYPE[i])) {
+                    result[i] += Integer.parseInt(temp[1]);
+                }
+            }
+        }
+        return result;
+    }
+
+    private String[] readDataFromFile(String fileName) {
         File fileFrom = new File(fileName);
-        StringBuilder builder = new StringBuilder((int) fileFrom.length());
+        StringBuilder builder = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(fileFrom))) {
             int value = reader.read();
             if (value == -1) {
-                return "";
+                return new String[0];
             }
             while (value != -1) {
                 builder.append((char)value);
@@ -49,7 +61,8 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from file " + fileName, e);
         }
-        return builder.toString();
+        //String[] dataArray = dateFromFile.split(LINE_SEPARATOR)
+        return builder.toString().split(LINE_SEPARATOR);
     }
 
     private void writeDataToFile(String data, String fileName) {
