@@ -14,10 +14,13 @@ public class WorkWithFile {
     private int result = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        // read from file
-        File fileFrom = new File(fromFileName);
+        writeToFile(toFileName,fromFileName);
+    }
+
+    public String[] readFromFile(String fromFileName) {
         String coma = ",";
         String space = " ";
+        File fileFrom = new File(fromFileName);
         WorkWithFile workWithFile = new WorkWithFile();
 
         try {
@@ -62,11 +65,13 @@ public class WorkWithFile {
             }
             counter++;
         }
+        return report;
+    }
 
-        // write to new file
+    public void writeToFile(String toFileName, String fromFileName) {
         File fileTo = new File(toFileName);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileTo))) {
-            for (String reportUnit : report) {
+            for (String reportUnit : readFromFile(fromFileName)) {
                 writer.write(reportUnit);
                 writer.write(System.lineSeparator());
             }
