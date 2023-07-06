@@ -33,9 +33,7 @@ public class WorkWithFile {
 
     private int[] calculateStatistic(String[] dateFromFile) {
         int[] result = new int[OPERATIONS_TYPE.length];
-        //String[] dataArray = dateFromFile;
         for (String data: dateFromFile) {
-            //String[] temp = data.split(COMA_SEPARATOR);
             for (int i = 0; i < OPERATIONS_TYPE.length; i++) {
                 String[] temp = data.split(",");
                 if (temp[0].equals(OPERATIONS_TYPE[i])) {
@@ -61,7 +59,6 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from file " + fileName, e);
         }
-        //String[] dataArray = dateFromFile.split(LINE_SEPARATOR)
         return builder.toString().split(LINE_SEPARATOR);
     }
 
