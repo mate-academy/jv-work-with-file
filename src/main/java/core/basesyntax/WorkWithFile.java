@@ -21,13 +21,13 @@ public class WorkWithFile {
     public String readFromFile(String fileName) {
         StringBuilder data = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
-            String str = bufferedReader.readLine();
-            while (str != null) {
-                data.append(str).append(System.lineSeparator());
-                str = bufferedReader.readLine();
+            String line = bufferedReader.readLine();
+            while (line != null) {
+                data.append(line).append(System.lineSeparator());
+                line = bufferedReader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read this file - " + fileName);
+            throw new RuntimeException("Can't read this file - " + fileName, e);
         }
         return data.toString();
     }
