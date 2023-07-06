@@ -25,7 +25,7 @@ public class WorkWithFile {
                 dataList.add(line);
                 line = bufferedReader.readLine();
             }
-            String report = makeReport(dataList.stream().toArray(String[]::new));
+            String report = createReport(dataList.stream().toArray(String[]::new));
             writeReportToFile(report, toFileName);
         } catch (FileNotFoundException e) {
             throw new RuntimeException("Can't find a file!", e);
@@ -34,7 +34,7 @@ public class WorkWithFile {
         }
     }
 
-    private String makeReport(String[] dataFields) {
+    private String createReport(String[] dataFields) {
         StringBuilder report = new StringBuilder();
         int amountOfSupplying = 0;
         int amountOfBuying = 0;
