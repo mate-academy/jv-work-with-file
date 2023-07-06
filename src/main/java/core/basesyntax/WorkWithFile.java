@@ -5,57 +5,59 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class WorkWithFile {
-    private static final String SUPPLY_WORD = "supply,";
-    private static final String BUY_WORD = "buy,";
-    private static final String RESULT_WORD = "result,";
-    private String result = "";
+    private static final String SUPPLY_WORD = "supply";
+    private static final String BUY_WORD = "buy";
+    private static final String RESULT_WORD = "result";
+    private static final String COMMA_SEPARATOR = ",";
+    private static final String REGEX = "[^\\d+$]";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        ArrayList<String> list = new ArrayList<>();
+        ArrayList<String> lines = new ArrayList<>();
         File myFile = new File(fromFileName);
         Scanner scanner;
         try (FileReader filereader = new FileReader(myFile)) {
             scanner = new Scanner(filereader);
             while (scanner.hasNextLine()) {
-                list.add(Arrays.toString(scanner.nextLine().split(System.lineSeparator())));
+                lines.add(scanner.nextLine());
             }
         } catch (IOException e) {
             throw new RuntimeException("Can`t read file: " + fromFileName, e);
         }
-
-        String[] words = new String[list.size()];
-        words = list.toArray(words);
-
-        getResult(words);
-        writeFile(result, toFileName);
-        result = "";
+        getResult(lines, toFileName);
     }
 
-    private String getResult(String[] words) {
+    private void getResult(ArrayList<String> lines, String toFileName) {
         int sumSupply = 0;
         int sumBuy = 0;
         int total;
 
-        StringBuilder builder = new StringBuilder(result);
-        for (String word : words) {
-            if (word.contains(SUPPLY_WORD)) {
-                sumSupply += Integer.parseInt(word.replaceAll("[^\\d+$]", ""));
+        for (String line : lines) {
+            if (line.contains(SUPPLY_WORD)) {
+                sumSupply += Integer.parseInt(line.replaceAll(REGEX, ""));
             }
-            if (word.contains(BUY_WORD)) {
-                sumBuy += Integer.parseInt(word.replaceAll("[^\\d+$]", ""));
+            if (line.contains(BUY_WORD)) {
+                sumBuy += Integer.parseInt(line.replaceAll(REGEX, ""));
             }
         }
         total = sumSupply - sumBuy;
-        builder.append(SUPPLY_WORD).append(sumSupply).append(System.lineSeparator());
-        builder.append(BUY_WORD).append(sumBuy).append(System.lineSeparator());
-        builder.append(RESULT_WORD).append(total);
+        getReport(sumSupply, sumBuy, total, toFileName);
+    }
+
+    private void getReport(int sumSupply, int sumBuy, int total, String toFileName) {
+        String result = "";
+        StringBuilder builder = new StringBuilder(result);
+        builder.append(SUPPLY_WORD).append(COMMA_SEPARATOR)
+                .append(sumSupply).append(System.lineSeparator());
+        builder.append(BUY_WORD).append(COMMA_SEPARATOR)
+                .append(sumBuy).append(System.lineSeparator());
+        builder.append(RESULT_WORD).append(COMMA_SEPARATOR).append(total);
         result = builder.toString();
+
         System.out.println(result);
-        return result;
+        writeFile(result, toFileName);
     }
 
     private void writeFile(String result, String toFileName) {
