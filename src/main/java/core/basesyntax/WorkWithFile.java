@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class WorkWithFile {
-    private static final String SUPPLY_WORD = "supply";
-    private static final String BUY_WORD = "buy";
+    private static final String SUPPLY_OPERATION = "supply";
+    private static final String BUY_OPERATION = "buy";
     private static final String RESULT_WORD = "result";
     private static final String COMMA_SEPARATOR = ",";
     private static final String REGEX = "[^\\d+$]";
@@ -35,10 +35,10 @@ public class WorkWithFile {
         int total;
 
         for (String line : lines) {
-            if (line.contains(SUPPLY_WORD)) {
+            if (line.contains(SUPPLY_OPERATION)) {
                 sumSupply += Integer.parseInt(line.replaceAll(REGEX, ""));
             }
-            if (line.contains(BUY_WORD)) {
+            if (line.contains(BUY_OPERATION)) {
                 sumBuy += Integer.parseInt(line.replaceAll(REGEX, ""));
             }
         }
@@ -49,9 +49,9 @@ public class WorkWithFile {
     private void getReport(int sumSupply, int sumBuy, int total, String toFileName) {
         String result = "";
         StringBuilder builder = new StringBuilder(result);
-        builder.append(SUPPLY_WORD).append(COMMA_SEPARATOR)
+        builder.append(SUPPLY_OPERATION).append(COMMA_SEPARATOR)
                 .append(sumSupply).append(System.lineSeparator());
-        builder.append(BUY_WORD).append(COMMA_SEPARATOR)
+        builder.append(BUY_OPERATION).append(COMMA_SEPARATOR)
                 .append(sumBuy).append(System.lineSeparator());
         builder.append(RESULT_WORD).append(COMMA_SEPARATOR).append(total);
         result = builder.toString();
