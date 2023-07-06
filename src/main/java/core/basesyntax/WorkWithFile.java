@@ -27,19 +27,18 @@ public class WorkWithFile {
         int supply = 0;
         int buy = 0;
         for (String line : data) {
-            if (line.matches("(" + SUPPLY_TEXT + "|" + BUY_TEXT + "),\\d+")) {
-                String[] arguments = line.split(",");
-                if (arguments[0].equals(SUPPLY_TEXT)) {
-                    supply += Integer.parseInt(arguments[1]);
-                } else {
-                    buy += Integer.parseInt(arguments[1]);
-                }
+            String[] arguments = line.split(",");
+            int lineValue = Integer.parseInt(arguments[1]);
+            if (arguments[0].equals(SUPPLY_TEXT)) {
+                supply += lineValue;
+            } else {
+                buy += lineValue;
             }
         }
-        return writeReport(supply, buy);
+        return createReport(supply, buy);
     }
 
-    private String writeReport(int supply, int buy) {
+    private String createReport(int supply, int buy) {
         String report = new StringBuilder()
                 .append(SUPPLY_TEXT).append(",").append(supply).append(System.lineSeparator())
                 .append(BUY_TEXT).append(",").append(buy).append(System.lineSeparator())
