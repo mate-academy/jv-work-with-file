@@ -15,12 +15,10 @@ public class WorkWithFile {
     private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String[] suppliesAndBuy = readDataFromFile(fromFileName);
-        String createReport = createReport(suppliesAndBuy);
-        writeReportToFile(toFileName, createReport);
+        writeReportToFile(toFileName, createReport(readDataFromFile(fromFileName)));
     }
 
-    public String [] readDataFromFile(String fromFileName) {
+    private String [] readDataFromFile(String fromFileName) {
         String suppliesAndBuy;
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String value = reader.readLine();
@@ -36,7 +34,7 @@ public class WorkWithFile {
         return suppliesAndBuy.split(System.lineSeparator());
     }
 
-    public String createReport(String [] suppliesAndBuy) {
+    private String createReport(String [] suppliesAndBuy) {
         int supplyTotal = 0;
         int buyTotal = 0;
         StringBuilder createReport = new StringBuilder();
@@ -55,7 +53,6 @@ public class WorkWithFile {
                            .append(System.lineSeparator())
                            .append(RESULT).append(COMMA).append(result)
                            .append(System.lineSeparator()).toString();
-
     }
 
     private void writeReportToFile(String toFileName, String createReport) {
