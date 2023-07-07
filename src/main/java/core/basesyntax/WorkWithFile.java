@@ -18,20 +18,27 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         File dataFile = new File(fromFileName);
+        File destinationFile = new File(toFileName);
+
+        List<String> dataList = readFromFile(dataFile);
+        String report = createReport(dataList.stream().toArray(String[]::new));
+        writeReportToFile(report, destinationFile);
+    }
+
+    private List<String> readFromFile(File fromFileName) {
         List<String> dataList = new ArrayList<>();
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(dataFile))) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String line = bufferedReader.readLine();
             while (line != null) {
                 dataList.add(line);
                 line = bufferedReader.readLine();
             }
-            String report = createReport(dataList.stream().toArray(String[]::new));
-            writeReportToFile(report, toFileName);
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("Can't find a file!", e);
+            throw new RuntimeException("Can't find " + fromFileName.getName(), e);
         } catch (IOException e) {
-            throw new RuntimeException("Can't read a file!", e);
+            throw new RuntimeException("Can't read " + fromFileName.getName(), e);
         }
+        return dataList;
     }
 
     private String createReport(String[] dataFields) {
@@ -58,13 +65,11 @@ public class WorkWithFile {
         return report.toString();
     }
 
-    private void writeReportToFile(String report, String toFileName) {
-        File destinationFile = new File(toFileName);
-
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(destinationFile))) {
+    private void writeReportToFile(String report, File toFileName) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write to a file!", e);
+            throw new RuntimeException("Can't write to " + toFileName.getName(), e);
         }
     }
 }
