@@ -7,10 +7,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class WorkWithFile {
-        private static final String DELIMITER = ",";
-        private static final int OPERATION_INDEX = 0;
-        private static final int VALUE_INDEX = 1;
-
+    private static final String DELIMITER = ",";
+    private static final int OPERATION_INDEX = 0;
+    private static final int VALUE_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         int supply = 0;
