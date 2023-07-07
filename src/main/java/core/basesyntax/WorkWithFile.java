@@ -18,7 +18,6 @@ public class WorkWithFile {
     private static final String READ_ERROR_MESSAGE = "Can`t read the file";
     private static final String WRITE_ERROR_MESSAGE = "Can`t write to the file";
 
-
     public void getStatistic(String fromFileName, String toFileName) {
         StringBuilder fileStringBuilder = new StringBuilder();
         fileStringBuilder = readFile(fromFileName, fileStringBuilder);
