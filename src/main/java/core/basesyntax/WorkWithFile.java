@@ -12,6 +12,7 @@ public class WorkWithFile {
     private static final String BUY = "buy";
     private static final String RESULT = "result";
     private static final String COMA = ",";
+    private static final String LINE_SEPARATOR = System.lineSeparator();
     private int supplySum = 0;
     private int buySum = 0;
 
@@ -26,15 +27,15 @@ public class WorkWithFile {
         return builder.append(SUPPLY)
                 .append(COMA)
                 .append(supplySum)
-                .append(System.lineSeparator())
+                .append(LINE_SEPARATOR)
                 .append(BUY)
                 .append(COMA)
                 .append(buySum)
-                .append(System.lineSeparator())
+                .append(LINE_SEPARATOR)
                 .append(RESULT)
                 .append(COMA)
                 .append(supplySum - buySum)
-                .append(System.lineSeparator()).toString();
+                .append(LINE_SEPARATOR).toString();
     }
 
     private void readFile(String fromFileName) {
