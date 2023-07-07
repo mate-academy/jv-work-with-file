@@ -1,5 +1,6 @@
 package core.basesyntax;
 
+import javax.management.monitor.CounterMonitorMBean;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -32,7 +33,7 @@ public class WorkWithFile {
                 value = bufferedReader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can`t read file", e);
+            throw new RuntimeException("Can`t read file: " + fromFile, e);
         }
         return gatheredData.toString();
     }
@@ -42,16 +43,14 @@ public class WorkWithFile {
         int supply = 0;
         int buy = 0;
         String[] gatheredData = unformattedData.split(System.lineSeparator());
-        int commaIndex;
+        String[] splitLine;
         for (String dataLine : gatheredData) {
-            commaIndex = dataLine.indexOf(COMA_SEPARATOR);
-            int separatedQuantityFromDataLine =
-                    Integer.parseInt(dataLine.substring(commaIndex + 1));
-            if (dataLine.substring(0, commaIndex).equals(BUY_OPERATION)) {
-                buy += separatedQuantityFromDataLine;
+            splitLine = dataLine.split(COMA_SEPARATOR);
+            if (splitLine[0].equals(BUY_OPERATION)) {
+                buy += Integer.parseInt(splitLine[1]);
             }
-            if (dataLine.substring(0, commaIndex).equals(SUPPLY_OPERATION)) {
-                supply += separatedQuantityFromDataLine;
+            if (splitLine[0].equals(SUPPLY_OPERATION)) {
+                supply += Integer.parseInt(splitLine[1]);
             }
         }
         StringBuilder report = new StringBuilder();
@@ -69,7 +68,7 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
             bufferedWriter.write(data);
         } catch (IOException e) {
-            throw new RuntimeException("Can`t write to file", e);
+            throw new RuntimeException("Can`t write to file: " + toFileName, e);
         }
     }
 }
