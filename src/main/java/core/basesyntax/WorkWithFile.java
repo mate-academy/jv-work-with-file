@@ -12,7 +12,6 @@ public class WorkWithFile {
     private static final int VALUE_INDEX = 1;
     private static final String BUY_TYPE = "buy";
     private static final String SUPPLY_TYPE = "supply";
-    private static final String WRITE_REPORT_ERROR = "Sorry, but I can't work with this data.";
     private static final String RESULT_TYPE = "result";
     private static final String WRITING_TO_FILE_ERROR = "Sorry, but i can't write in file";
 
