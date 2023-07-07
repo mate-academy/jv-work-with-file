@@ -55,7 +55,7 @@ public class WorkWithFile {
                 currentString = bufferedReader.readLine();
             }
         } catch (IOException ex) {
-            throw new RuntimeException("Can't read from file" + fromFileName, ex);
+            throw new RuntimeException("Can't read from " + fromFileName, ex);
         }
     }
 
@@ -64,7 +64,7 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
             bufferedWriter.write(report);
         } catch (IOException ex) {
-            throw new RuntimeException("Can't write in this file!" + file, ex);
+            throw new RuntimeException("Can't write in this " + file, ex);
         }
     }
 }
