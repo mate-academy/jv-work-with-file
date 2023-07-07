@@ -18,7 +18,7 @@ public class WorkWithFile {
         saveToFile(toFileName, report);
     }
 
-    public String readFromFile(String fileName) {
+    private String readFromFile(String fileName) {
         StringBuilder data = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
             String line = bufferedReader.readLine();
@@ -32,7 +32,7 @@ public class WorkWithFile {
         return data.toString();
     }
 
-    public int[] countValues(String file) {
+    private int[] countValues(String file) {
         String[] linesArray = file.split(System.lineSeparator());
         int totalSupplyValue = 0;
         int totalBuyValue = 0;
@@ -47,13 +47,13 @@ public class WorkWithFile {
         return new int[]{totalSupplyValue, totalBuyValue};
     }
 
-    public String createReport(int[] data) {
+    private String createReport(int[] data) {
         return "supply," + data[0] + System.lineSeparator()
                 + "buy," + data[1] + System.lineSeparator()
                 + "result," + (data[0] - data[1]);
     }
 
-    public void saveToFile(String toFile, String report) {
+    private void saveToFile(String toFile, String report) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFile))) {
             bufferedWriter.write(report);
         } catch (IOException e) {
