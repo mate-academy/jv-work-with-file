@@ -8,6 +8,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    public static final String coma = ",";
+    public static final String supply = "supply";
+    public static final String buy = "buy";
+    public static final String result = "result";
+    public static final int index0 = 0;
+    public static final int index1 = 1;
+
     public void getStatistic(String fromFileName, String toFileName) {
         String[] data = readFromFile(fromFileName);
         String report = createReport(data);
@@ -33,17 +40,13 @@ public class WorkWithFile {
 
     private String createReport(String[] data) {
         int supplyInt = 0;
-        String supply = "supply";
         int buyInt = 0;
-        String buy = "buy";
         int resultInt = 0;
-        String result = "result";
-        final String coma = ",";
         int quantity = 0;
         for (String line : data) {
             String[] dataUnits = line.split(coma);
-            quantity = Integer.parseInt(dataUnits[1]);
-            if (dataUnits[0].equals(supply)) {
+            quantity = Integer.parseInt(dataUnits[index1]);
+            if (dataUnits[index0].equals(supply)) {
                 supplyInt += quantity;
             } else {
                 buyInt += quantity;
