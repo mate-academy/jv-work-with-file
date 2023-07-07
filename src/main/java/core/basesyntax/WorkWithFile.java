@@ -17,7 +17,8 @@ public class WorkWithFile {
     private int buySum = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        readFile(fromFileName);
+        String readedString = readFile(fromFileName);
+        calculateStatistics(readedString);
         String report = createReport();
         writeFile(toFileName, report);
     }
@@ -38,28 +39,37 @@ public class WorkWithFile {
                 .append(LINE_SEPARATOR).toString();
     }
 
-    private void readFile(String fromFileName) {
-        supplySum = 0;
-        buySum = 0;
+    private String readFile(String fromFileName) {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
+            StringBuilder builder = new StringBuilder();
             String currentString = bufferedReader.readLine();
             while (currentString != null) {
-                String[] splited = currentString.split(COMA);
-                for (int i = 0; i < splited.length; i++) {
-                    if (splited[i].equals(SUPPLY)) {
-                        supplySum += Integer.parseInt(splited[i + 1]);
-                    } else if (splited[i].equals(BUY)) {
-                        buySum += Integer.parseInt(splited[i + 1]);
-                    }
-                }
+                builder.append(currentString).append(LINE_SEPARATOR);
                 currentString = bufferedReader.readLine();
             }
+            return builder.toString();
         } catch (IOException ex) {
             throw new RuntimeException("Can't read from " + fromFileName, ex);
         }
     }
 
+    private void calculateStatistics(String readedString) {
+        String[] splited = readedString.split(LINE_SEPARATOR);
+        for (int i = 0; i < splited.length; i++) {
+            String[] comaSplited = splited[i].split(COMA);
+            for (int j = 0; j < comaSplited.length; j++) {
+                if (comaSplited[j].equals(SUPPLY)) {
+                    supplySum += Integer.parseInt(comaSplited[j + 1]);
+                } else if (comaSplited[j].equals(BUY)) {
+                    buySum += Integer.parseInt(comaSplited[j + 1]);
+                }
+            }
+        }
+    }
+
     private void writeFile(String toFileName, String report) {
+        supplySum = 0;
+        buySum = 0;
         File file = new File(toFileName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
             bufferedWriter.write(report);
