@@ -15,7 +15,7 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         String storetable = readDataFromFile(fromFileName);
-        String report = filterData(storetable);
+        String report = calculateData(storetable);
         writeNewData(report, toFileName);
     }
 
@@ -33,7 +33,7 @@ public class WorkWithFile {
         return stringBuilder.toString();
     }
 
-    private String filterData(String storetable) {
+    private String calculateData(String storetable) {
         String[] datastore = storetable.split(System.lineSeparator());
         int sumSupply = 0;
         int sumBuy = 0;
@@ -71,5 +71,3 @@ public class WorkWithFile {
         }
     }
 }
-
-
