@@ -15,6 +15,10 @@ public class WorkWithFile {
     private static final String REGEX = "[^\\d+$]";
 
     public void getStatistic(String fromFileName, String toFileName) {
+        getResult(readFromFile(fromFileName), toFileName);
+    }
+
+    private ArrayList readFromFile(String fromFileName) {
         ArrayList<String> lines = new ArrayList<>();
         File myFile = new File(fromFileName);
         Scanner scanner;
@@ -26,7 +30,7 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can`t read file: " + fromFileName, e);
         }
-        getResult(lines, toFileName);
+        return lines;
     }
 
     private void getResult(ArrayList<String> lines, String toFileName) {
@@ -55,12 +59,11 @@ public class WorkWithFile {
                 .append(sumBuy).append(System.lineSeparator());
         builder.append(RESULT_WORD).append(COMMA_SEPARATOR).append(total);
         result = builder.toString();
-
         System.out.println(result);
-        writeFile(result, toFileName);
+        writeToFile(result, toFileName);
     }
 
-    private void writeFile(String result, String toFileName) {
+    private void writeToFile(String result, String toFileName) {
         try (FileWriter fileWriter = new FileWriter(toFileName)) {
             fileWriter.write(result);
         } catch (IOException e) {
