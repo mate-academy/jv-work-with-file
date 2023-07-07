@@ -12,15 +12,10 @@ public class WorkWithFile {
     private static final int VALUE_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) throws RuntimeException {
-        int supply;
-        int buy;
-
-        supply = readData(fromFileName, "supply");
-        buy = readData(fromFileName, "buy");
-
+        int supply = readData(fromFileName, "supply");
+        int buy = readData(fromFileName, "buy");
         String report = createReport(supply, buy);
         writeData(toFileName, report);
-
     }
 
     private int readData(String fileName, String operationType) {
@@ -34,10 +29,9 @@ public class WorkWithFile {
                     total += Integer.parseInt(parts[VALUE_INDEX]);
                 }
             }
-        } catch (RuntimeException | IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException("Can't read file " + fileName, e);
         }
-
         return total;
     }
 
