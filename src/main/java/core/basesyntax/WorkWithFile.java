@@ -15,10 +15,8 @@ public class WorkWithFile {
         int supply;
         int buy;
 
-
         supply = readData(fromFileName, "supply");
         buy = readData(fromFileName, "buy");
-
 
         String report = createReport(supply, buy);
         writeData(toFileName, report);
