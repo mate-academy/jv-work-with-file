@@ -11,27 +11,21 @@ public class WorkWithFile {
     private static final int OPERATION_INDEX = 0;
     private static final int VALUE_INDEX = 1;
 
-    public void getStatistic(String fromFileName, String toFileName) {
+    public void getStatistic(String fromFileName, String toFileName) throws RuntimeException {
         int supply;
         int buy;
 
-        try {
-            supply = readData(fromFileName, "supply");
-            buy = readData(fromFileName, "buy");
-        } catch (IOException e) {
-            throw new RuntimeException("Can't read file " + fromFileName, e);
-        }
+
+        supply = readData(fromFileName, "supply");
+        buy = readData(fromFileName, "buy");
+
 
         String report = createReport(supply, buy);
+        writeData(toFileName, report);
 
-        try {
-            writeData(toFileName, report);
-        } catch (IOException e) {
-            throw new RuntimeException("Can't write to file " + toFileName, e);
-        }
     }
 
-    private int readData(String fileName, String operationType) throws IOException {
+    private int readData(String fileName, String operationType) {
         int total = 0;
 
         try (BufferedReader reader = Files.newBufferedReader(Paths.get(fileName))) {
@@ -42,18 +36,18 @@ public class WorkWithFile {
                     total += Integer.parseInt(parts[VALUE_INDEX]);
                 }
             }
-        } catch (IOException e) {
-            throw new IOException("Can't read file " + fileName, e);
+        } catch (RuntimeException | IOException e) {
+            throw new RuntimeException("Can't read file " + fileName, e);
         }
 
         return total;
     }
 
-    private void writeData(String fileName, String data) throws IOException {
+    private void writeData(String fileName, String data) {
         try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(fileName))) {
             writer.write(data);
         } catch (IOException e) {
-            throw new IOException("Can't write to file " + fileName, e);
+            throw new RuntimeException("Can't write to file " + fileName, e);
         }
     }
 
