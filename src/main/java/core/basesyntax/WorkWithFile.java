@@ -10,6 +10,10 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
+    private static final String COMMA = ",";
+    private static final String LINE_SEPARATOR = System.lineSeparator();
+    private static final int INDEX_TYPE = 0;
+    private static final int INDEX_VALUE = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String infoFromFile = readFile(fromFileName);
@@ -22,7 +26,7 @@ public class WorkWithFile {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String value = bufferedReader.readLine();
             while (value != null) {
-                builder.append(value).append(System.lineSeparator());
+                builder.append(value).append(LINE_SEPARATOR);
                 value = bufferedReader.readLine();
             }
         } catch (IOException e) {
@@ -32,13 +36,13 @@ public class WorkWithFile {
     }
 
     private String calculator(String data) {
-        String[] statistics = data.split(System.lineSeparator());
+        String[] statistics = data.split(LINE_SEPARATOR);
         int supply = 0;
         int buy = 0;
         for (String statistic : statistics) {
-            String[] info = statistic.split(",");
-            String operationType = info[0];
-            int index = Integer.parseInt(info[1]);
+            String[] info = statistic.split(COMMA);
+            String operationType = info[INDEX_TYPE];
+            int index = Integer.parseInt(info[INDEX_VALUE]);
             if (operationType.equals(SUPPLY)) {
                 supply += index;
             } else {
@@ -50,10 +54,10 @@ public class WorkWithFile {
 
     private String report(int supply, int buy) {
         StringBuilder builder = new StringBuilder();
-        builder.append(SUPPLY).append(",").append(supply)
-                .append(System.lineSeparator()).append(BUY).append(",")
+        builder.append(SUPPLY).append(COMMA).append(supply)
+                .append(System.lineSeparator()).append(BUY).append(COMMA)
                 .append(buy).append(System.lineSeparator()).append(RESULT)
-                .append(",").append(supply - buy).append(System.lineSeparator());
+                .append(COMMA).append(supply - buy).append(LINE_SEPARATOR);
 
         return builder.toString();
     }
