@@ -28,7 +28,7 @@ public class WorkWithFileTest {
 
     @Test
     public void getStatisticAboutApple() {
-        workWithFile.getStatistic("apple.csv", APPLE_RESULT_FILE);
+        workWithFile.createReport("apple.csv", APPLE_RESULT_FILE);
 
         String actualResult = readFromFile(APPLE_RESULT_FILE).trim();
         String expectedResult = "supply,188" + System.lineSeparator()
@@ -39,7 +39,7 @@ public class WorkWithFileTest {
 
     @Test
     public void getStatisticAboutOrange() {
-        workWithFile.getStatistic("orange.csv", ORANGE_RESULT_FILE);
+        workWithFile.createReport("orange.csv", ORANGE_RESULT_FILE);
 
         String actualResult = readFromFile(ORANGE_RESULT_FILE).trim();
         String expectedResult = "supply,295" + System.lineSeparator()
@@ -50,7 +50,7 @@ public class WorkWithFileTest {
 
     @Test
     public void getStatisticAboutGrape() {
-        workWithFile.getStatistic("grape.csv", GRAPE_RESULT_FILE);
+        workWithFile.createReport("grape.csv", GRAPE_RESULT_FILE);
 
         String actualResult = readFromFile(GRAPE_RESULT_FILE).trim();
         String expectedResult = "supply,352" + System.lineSeparator()
@@ -61,7 +61,7 @@ public class WorkWithFileTest {
 
     @Test
     public void getStatisticAboutBanana() {
-        workWithFile.getStatistic("banana.csv", BANANA_RESULT_FILE);
+        workWithFile.createReport("banana.csv", BANANA_RESULT_FILE);
 
         String actualResult = readFromFile(BANANA_RESULT_FILE).trim();
         String expectedResult = "supply,491" + System.lineSeparator()
@@ -72,8 +72,8 @@ public class WorkWithFileTest {
 
     @Test
     public void getStatisticAboutBananaRepeatedMethodCall() {
-        workWithFile.getStatistic("banana.csv", BANANA_RESULT_FILE);
-        workWithFile.getStatistic("banana.csv", BANANA_RESULT_FILE);
+        workWithFile.createReport("banana.csv", BANANA_RESULT_FILE);
+        workWithFile.createReport("banana.csv", BANANA_RESULT_FILE);
 
         String actualResult = readFromFile(BANANA_RESULT_FILE).trim();
         String expectedResult = "supply,491" + System.lineSeparator()
