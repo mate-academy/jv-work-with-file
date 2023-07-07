@@ -15,6 +15,8 @@ public class WorkWithFile {
     private static final String RESULT = "result";
     private static final int INDEX_OPERATION = 0;
     private static final int INDEX_NUMBER = 1;
+    private static final String ERROR_READ_FILE = "The file was not read: ";
+    private static final String ERROR_WRITE_FILE = "Data was not written to the file: ";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String textFile = readFromFile(fromFileName);
@@ -30,10 +32,9 @@ public class WorkWithFile {
                 fileText.append(line).append(SPACE_SYMBOL);
                 line = reader.readLine();
             }
-            System.out.println(fileText);
             return fileText.toString();
         } catch (IOException e) {
-            throw new RuntimeException("The file was not read: " + fileName, e);
+            throw new RuntimeException(ERROR_READ_FILE + fileName, e);
         }
     }
 
@@ -46,8 +47,8 @@ public class WorkWithFile {
     private int calculateSumByCategory(String data, String categoryCalculate) {
         int sum = 0;
         String[] generalSplitDataArray = data.split(SPACE_SYMBOL);
-        for (int i = 0; i < generalSplitDataArray.length; i++) {
-            String[] derivedSplitDataArray = generalSplitDataArray[i].split(SEPARATION_SYMBOL);
+        for (String generalSplitData : generalSplitDataArray) {
+            String[] derivedSplitDataArray = generalSplitData.split(SEPARATION_SYMBOL);
             String category = derivedSplitDataArray[INDEX_OPERATION];
             if (category.equals(categoryCalculate)) {
                 int price = Integer.parseInt(derivedSplitDataArray[INDEX_NUMBER]);
@@ -61,7 +62,7 @@ public class WorkWithFile {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             writer.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Data was not written to the file: " + fileName, e);
+            throw new RuntimeException(ERROR_WRITE_FILE + fileName, e);
         }
     }
 
@@ -82,6 +83,3 @@ public class WorkWithFile {
         return report.toString();
     }
 }
-
-
-
