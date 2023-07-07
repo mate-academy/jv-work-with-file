@@ -14,7 +14,7 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         String[] dataFromFile = readDataFromFile(fromFileName);
         String dataToFile = getReport(calculateStatistic(dataFromFile));
-        writeDataToFile(dataToFile,toFileName);
+        writeDataToFile(dataToFile, toFileName);
     }
 
     private String getReport(int[] operationValues) {
@@ -74,3 +74,4 @@ public class WorkWithFile {
         }
     }
 }
+
