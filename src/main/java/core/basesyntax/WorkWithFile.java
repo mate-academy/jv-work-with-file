@@ -6,77 +6,71 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Field;
 
 public class WorkWithFile {
-    private int supply = 0;
-    private int buy = 0;
-    private int result = 0;
-
     public void getStatistic(String fromFileName, String toFileName) {
-        writeToFile(toFileName,fromFileName);
+        String[] data = readFromFile(fromFileName);
+        String report = createReport(data);
+        writeToFile(toFileName,report);
     }
 
     private String[] readFromFile(String fromFileName) {
-        final String coma = ",";
-        final String space = " ";
-        File fileFrom = new File(fromFileName);
-        WorkWithFile workWithFile = new WorkWithFile();
-
+        String[] data;
+        File file = new File(fromFileName);
+        StringBuilder stringBuilder = new StringBuilder();
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(fileFrom));
-            StringBuilder sbRead = new StringBuilder();
-            String value = reader.readLine();
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+            String value = bufferedReader.readLine();
             while (value != null) {
-                sbRead.append(value).append(space);
-                value = reader.readLine();
-            }
-            String[] lines = sbRead.toString().split(space);
-            int quantity = 0;
-
-            for (String line : lines) {
-                int signPosition = line.indexOf(coma);
-                quantity = Integer.parseInt(line.substring(signPosition + 1));
-                Field field = WorkWithFile.class.getDeclaredField(line.substring(0,signPosition));
-                int currentQuantity = (int) field.get(workWithFile);
-                currentQuantity += quantity;
-                field.set(workWithFile, currentQuantity);
+                stringBuilder.append(value).append(System.lineSeparator());
+                value = bufferedReader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read from file", e);
-        } catch (NoSuchFieldException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can't find a file " + fromFileName,e);
         }
-
-        workWithFile.result = workWithFile.supply - workWithFile.buy;
-        String[] report = new String[3];
-        int counter = 0;
-        for (Field f : workWithFile.getClass().getDeclaredFields()) {
-            try {
-                StringBuilder sbWrite = new StringBuilder();
-                report[counter] = sbWrite
-                        .append(f.getName())
-                        .append(coma)
-                        .append(f.get(workWithFile)).toString();
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException(e);
-            }
-            counter++;
-        }
-        return report;
+        data = stringBuilder.toString().split(System.lineSeparator());
+        return data;
     }
 
-    private void writeToFile(String toFileName, String fromFileName) {
-        File fileTo = new File(toFileName);
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileTo))) {
-            for (String reportUnit : readFromFile(fromFileName)) {
-                writer.write(reportUnit);
-                writer.write(System.lineSeparator());
+    private String createReport(String[] data) {
+        int supplyInt = 0;
+        String supply = "supply";
+        int buyInt = 0;
+        String buy = "buy";
+        int resultInt = 0;
+        String result = "result";
+        final String coma = ",";
+        int quantity = 0;
+        for (String line : data) {
+            int signPosition = line.indexOf(coma);
+            quantity = Integer.parseInt(line.substring(signPosition + 1));
+            if (line.substring(0, signPosition).equals(supply)) {
+                supplyInt += quantity;
+            } else {
+                buyInt += quantity;
             }
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
+        }
+        resultInt = supplyInt - buyInt;
+        StringBuilder stringBuilder = new StringBuilder();
+        return stringBuilder.append(supply).append(coma)
+                .append(supplyInt)
+                .append(System.lineSeparator())
+                .append(buy)
+                .append(coma)
+                .append(buyInt)
+                .append(System.lineSeparator())
+                .append(result)
+                .append(coma).append(resultInt)
+                .append(System.lineSeparator())
+                .toString();
+    }
+
+    private void writeToFile(String toFileName, String report) {
+        File file = new File(toFileName);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            writer.write(report);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't find a file " + toFileName,e);
         }
     }
 }
