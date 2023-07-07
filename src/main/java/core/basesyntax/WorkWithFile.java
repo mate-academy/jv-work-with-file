@@ -7,6 +7,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class WorkWithFile {
+        private static final String DELIMITER = ",";
+        private static final int OPERATION_INDEX = 0;
+        private static final int VALUE_INDEX = 1;
+
 
     public void getStatistic(String fromFileName, String toFileName) {
         int supply = 0;
@@ -16,13 +20,13 @@ public class WorkWithFile {
             String line;
 
             while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",");
-                switch (parts[0]) {
+                String[] parts = line.split(DELIMITER);
+                switch (parts[OPERATION_INDEX]) {
                     case "supply":
-                        supply += Integer.parseInt(parts[1]);
+                        supply += Integer.parseInt(parts[VALUE_INDEX]);
                         break;
                     case "buy":
-                        buy += Integer.parseInt(parts[1]);
+                        buy += Integer.parseInt(parts[VALUE_INDEX]);
                         break;
                     default:
                         throw new RuntimeException("Something went terribly "
@@ -39,12 +43,19 @@ public class WorkWithFile {
 
             try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(toFileName))) {
                 writer.write(report.toString());
-                System.out.println(report.toString());
             } catch (IOException e) {
-                throw new RuntimeException("Can't write to file", e);
+                throw new RuntimeException("Can't write to file" + toFileName, e);
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't read file" + fromFileName, e);
         }
+    }
+
+    private void readFromFile(String fromFileName) {
+
+    }
+
+    private void writeToFile(String toFileName, int supply, int buy, int result) {
+
     }
 }
