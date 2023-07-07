@@ -7,11 +7,17 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class WorkWithFile {
+    private static final int GROUP_INDEX = 0;
+    private static final int VALUE_INDEX = 1;
+    private static final int START_VALUE = 0;
     private static final String SUPPLY_TEXT = "supply";
     private static final String BUY_TEXT = "buy";
     private static final String RESULT_TEXT = "result,";
     private static final String COMA_SEPARATOR = ",";
     private static final String SPACE_SEPARATOR = " ";
+    private static final String READ_ERROR_MESSAGE = "Can`t read the file";
+    private static final String WRITE_ERROR_MESSAGE = "Can`t write to the file";
+
 
     public void getStatistic(String fromFileName, String toFileName) {
         StringBuilder fileStringBuilder = new StringBuilder();
@@ -25,19 +31,19 @@ public class WorkWithFile {
         try (BufferedWriter writer = Files.newBufferedWriter(Path.of(toFileName))) {
             writer.write(result);
         } catch (IOException e) {
-            throw new RuntimeException("Can`t write to the file" + e);
+            throw new RuntimeException(WRITE_ERROR_MESSAGE + toFileName + e);
         }
     }
 
     private String formString(String[] linesArray) {
-        int supply = 0;
-        int buy = 0;
+        int supply = START_VALUE;
+        int buy = START_VALUE;
         for (String line : linesArray) {
             String[] soloLineArray = line.split(COMA_SEPARATOR);
-            if (soloLineArray[0].equals(SUPPLY_TEXT)) {
-                supply += Integer.parseInt(soloLineArray[1]);
+            if (soloLineArray[GROUP_INDEX].equals(SUPPLY_TEXT)) {
+                supply += Integer.parseInt(soloLineArray[VALUE_INDEX]);
             } else {
-                buy += Integer.parseInt(soloLineArray[1]);
+                buy += Integer.parseInt(soloLineArray[VALUE_INDEX]);
             }
         }
         return new StringBuilder().append(SUPPLY_TEXT).append(COMA_SEPARATOR)
@@ -55,7 +61,7 @@ public class WorkWithFile {
                 line = reader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can`t read the file" + e);
+            throw new RuntimeException(READ_ERROR_MESSAGE + fromFileName + e);
         }
         return fileStringBuilder;
     }
