@@ -19,46 +19,46 @@ public class WorkWithFile {
         writeFile(toFileName, resultFileMap);
     }
 
-    public Map<String, Integer> readFile(String fileName) {
+    private Map<String, Integer> readFile(String fileName) {
         File fromFile = new File(fileName);
-        Map<String, Integer> fileMap = new LinkedHashMap<>();
-        fileMap.put("supply", ZERO_NUMBER);
-        fileMap.put("buy", ZERO_NUMBER);
-        fileMap.put("result", ZERO_NUMBER);
+        Map<String, Integer> resultMap = new LinkedHashMap<>();
+        resultMap.put("supply", ZERO_NUMBER);
+        resultMap.put("buy", ZERO_NUMBER);
+        resultMap.put("result", ZERO_NUMBER);
 
-        try (BufferedReader readerFrom = new BufferedReader(new FileReader(fromFile))) {
-            String value = readerFrom.readLine();
-
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFile))) {
+            String value = reader.readLine();
+            String[] valueStringArray;
             while (value != null) {
-                String[] valueStringArray = value.split(",");
+                valueStringArray = value.split(",");
 
-                if (fileMap.containsKey(valueStringArray[MAP_INDEX_KEY])) {
-                    int sumNumbers = fileMap.get(valueStringArray[MAP_INDEX_KEY]);
-                    fileMap.put(valueStringArray[MAP_INDEX_KEY],
-                            (sumNumbers + Integer.parseInt(valueStringArray[1])));
+                if (resultMap.containsKey(valueStringArray[MAP_INDEX_KEY])) {
+                    int sumNumbers = resultMap.get(valueStringArray[MAP_INDEX_KEY]);
+                    resultMap.put(valueStringArray[MAP_INDEX_KEY],
+                            (sumNumbers + Integer.parseInt(valueStringArray[MAP_INDEX_VALUE])));
                 } else {
-                    fileMap.put(valueStringArray[MAP_INDEX_KEY],
+                    resultMap.put(valueStringArray[MAP_INDEX_KEY],
                             Integer.parseInt(valueStringArray[MAP_INDEX_VALUE]));
                 }
 
-                value = readerFrom.readLine();
+                value = reader.readLine();
             }
-            fileMap.put("result", fileMap.get("supply") - fileMap.get("buy"));
+            resultMap.put("result", resultMap.get("supply") - resultMap.get("buy"));
 
         } catch (IOException e) {
             throw new RuntimeException("Cant open the file " + fileName, e);
         }
-        return fileMap;
+        return resultMap;
     }
 
-    public void writeFile(String fileName, Map<String, Integer> fileMap) {
+    private void writeFile(String fileName, Map<String, Integer> resultMap) {
         File toFile = new File(fileName);
 
-        try (BufferedWriter writeTo = new BufferedWriter(new FileWriter(toFile))) {
-            for (Map.Entry<String, Integer> entry : fileMap.entrySet()) {
+        try (BufferedWriter write = new BufferedWriter(new FileWriter(toFile))) {
+            for (Map.Entry<String, Integer> entry : resultMap.entrySet()) {
                 String lineToWrite = entry.getKey() + "," + entry.getValue();
-                writeTo.write(lineToWrite);
-                writeTo.newLine();
+                write.write(lineToWrite);
+                write.newLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("Cant open the file " + fileName, e);
