@@ -40,7 +40,8 @@ public class WorkWithFile {
     }
 
     private String readFile(String fromFileName) {
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
+        File file = new File(fromFileName);
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
             StringBuilder builder = new StringBuilder();
             String currentString = bufferedReader.readLine();
             while (currentString != null) {
@@ -49,7 +50,7 @@ public class WorkWithFile {
             }
             return builder.toString();
         } catch (IOException ex) {
-            throw new RuntimeException("Can't read from " + fromFileName, ex);
+            throw new RuntimeException("Can't read from " + file.getName(), ex);
         }
     }
 
@@ -74,7 +75,7 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
             bufferedWriter.write(report);
         } catch (IOException ex) {
-            throw new RuntimeException("Can't write in this " + file, ex);
+            throw new RuntimeException("Can't write in this " + file.getName(), ex);
         }
     }
 }
