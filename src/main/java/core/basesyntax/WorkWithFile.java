@@ -26,7 +26,7 @@ public class WorkWithFile {
                 value = bufferedReader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't find a file " + fromFileName,e);
+            throw new RuntimeException("Can't find a file " + fromFileName, e);
         }
         data = stringBuilder.toString().split(System.lineSeparator());
         return data;
