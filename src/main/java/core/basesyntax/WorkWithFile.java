@@ -18,8 +18,7 @@ public class WorkWithFile {
         String[] data;
         File file = new File(fromFileName);
         StringBuilder stringBuilder = new StringBuilder();
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
             String value = bufferedReader.readLine();
             while (value != null) {
                 stringBuilder.append(value).append(System.lineSeparator());
@@ -42,9 +41,9 @@ public class WorkWithFile {
         final String coma = ",";
         int quantity = 0;
         for (String line : data) {
-            int signPosition = line.indexOf(coma);
-            quantity = Integer.parseInt(line.substring(signPosition + 1));
-            if (line.substring(0, signPosition).equals(supply)) {
+            String[] dataUnits = line.split(coma);
+            quantity = Integer.parseInt(dataUnits[1]);
+            if (dataUnits[0].equals(supply)) {
                 supplyInt += quantity;
             } else {
                 buyInt += quantity;
