@@ -32,7 +32,7 @@ public class WorkWithFile {
         resultData[BUY_INDEX] = "buy," + totalSupplyBuyResult[BUY_INDEX];
         resultData[RESULT_INDEX] = "result," + totalSupplyBuyResult[RESULT_INDEX];
         StringBuilder result = new StringBuilder();
-        for(int i = 0; i < resultData.length; i++){
+        for (int i = 0; i < resultData.length; i++) {
             result.append(resultData[i]).append(System.lineSeparator());
         }
         return result.toString();
