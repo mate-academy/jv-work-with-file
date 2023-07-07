@@ -17,32 +17,30 @@ public class WorkWithFile {
     private static final String WRITING_TO_FILE_ERROR = "Sorry, but i can't write in file";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String[] dataFromFile = readFileToString(fromFileName);
-        int[] supplyBuyInfo = calculateSupplyBuy(dataFromFile);
-        String report = createReport(supplyBuyInfo);
-        writeToFile(report, toFileName);
+        String dataFromFile = readFileToString(fromFileName);
+        String supplyBuyInfo = calculateSupplyBuy(dataFromFile);
+        writeToFile(supplyBuyInfo, toFileName);
     }
 
-    private String[] readFileToString(String fileName) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
-            String line = reader.readLine();
-            StringBuilder result = new StringBuilder();
-            while (line != null) {
-                result.append(line).append(".");
-                line = reader.readLine();
+    private String readFileToString(String fileName) {
+        StringBuilder stringBuilder = new StringBuilder();
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                stringBuilder.append(line).append(System.lineSeparator());
             }
-            return result.toString().split("\\.");
         } catch (IOException e) {
-            throw new RuntimeException("I can't read from this file any "
-                                       + "information.", e);
+            throw new RuntimeException("Can't read from file" + fileName, e);
         }
+        return stringBuilder.toString();
     }
 
-    private int[] calculateSupplyBuy(String[] informationFromFile) {
+    private String calculateSupplyBuy(String informationFromFile) {
+        String[] report = informationFromFile.split(System.lineSeparator());
         int supplyAmount = 0;
         int buyAmount = 0;
 
-        for (String line : informationFromFile) {
+        for (String line : report) {
             String[] splitLine = line.split(SPLIT_FOR_COLUMNS);
             String operation = splitLine[OPERATION_INDEX];
             int amount = Integer.parseInt(splitLine[VALUE_INDEX]);
@@ -51,16 +49,10 @@ public class WorkWithFile {
             supplyAmount += operation.equals(SUPPLY_TYPE) ? amount : 0;
         }
 
-        return new int[] {supplyAmount, buyAmount};
+        return createReport(supplyAmount, buyAmount);
     }
 
-    private String createReport(int[] supplyAndBuy) {
-        if (supplyAndBuy.length != 2) {
-            throw new RuntimeException(WRITE_REPORT_ERROR);
-        }
-        int supply = supplyAndBuy[0];
-        int buy = supplyAndBuy[1];
-
+    private String createReport(int supply, int buy) {
         StringBuilder result = new StringBuilder();
         result.append(SUPPLY_TYPE).append(SPLIT_FOR_COLUMNS).append(supply)
                 .append(System.lineSeparator());
