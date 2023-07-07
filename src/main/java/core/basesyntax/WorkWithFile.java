@@ -8,12 +8,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    public static final String coma = ",";
-    public static final String supply = "supply";
-    public static final String buy = "buy";
-    public static final String result = "result";
-    public static final int index0 = 0;
-    public static final int index1 = 1;
+    public static final String COMA = ",";
+    public static final String SUPPLY = "supply";
+    public static final String BUY = "buy";
+    public static final String RESULT = "result";
+    public static final int OPERATION_INDEX = 0;
+    public static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] data = readFromFile(fromFileName);
@@ -44,9 +44,9 @@ public class WorkWithFile {
         int resultInt = 0;
         int quantity = 0;
         for (String line : data) {
-            String[] dataUnits = line.split(coma);
-            quantity = Integer.parseInt(dataUnits[index1]);
-            if (dataUnits[index0].equals(supply)) {
+            String[] dataUnits = line.split(COMA);
+            quantity = Integer.parseInt(dataUnits[AMOUNT_INDEX]);
+            if (dataUnits[OPERATION_INDEX].equals(SUPPLY)) {
                 supplyInt += quantity;
             } else {
                 buyInt += quantity;
@@ -54,15 +54,15 @@ public class WorkWithFile {
         }
         resultInt = supplyInt - buyInt;
         StringBuilder stringBuilder = new StringBuilder();
-        return stringBuilder.append(supply).append(coma)
+        return stringBuilder.append(SUPPLY).append(COMA)
                 .append(supplyInt)
                 .append(System.lineSeparator())
-                .append(buy)
-                .append(coma)
+                .append(BUY)
+                .append(COMA)
                 .append(buyInt)
                 .append(System.lineSeparator())
-                .append(result)
-                .append(coma).append(resultInt)
+                .append(RESULT)
+                .append(COMA).append(resultInt)
                 .append(System.lineSeparator())
                 .toString();
     }
