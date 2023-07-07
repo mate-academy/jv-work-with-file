@@ -7,44 +7,65 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final String REGEX = ",";
-    private static final String IS_SUPPLY = "supply";
-    private static final String IS_BUY = "buy";
+    private static final String COMMA = ",";
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
     private static final String RESULT = "result";
+    private static final int OPERATION_TYPE_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int supplyTotal = 0;
-        int buyTotal = 0;
+        String[] suppliesAndBuy = readDataFromFile(fromFileName);
+        String createReport = createReport(suppliesAndBuy);
+        writeReportToFile(toFileName, createReport);
+    }
+
+    public String [] readDataFromFile(String fromFileName) {
+        String suppliesAndBuy;
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] fields = line.split(REGEX);
-                if (fields.length == 2) {
-                    String operationType = fields[0];
-                    int amount = Integer.parseInt(fields[1]);
-                    if (operationType.equals(IS_SUPPLY)) {
-                        supplyTotal += amount;
-                    } else if (operationType.equals(IS_BUY)) {
-                        buyTotal += amount;
-                    }
-                }
+            String value = reader.readLine();
+            StringBuilder readDataFromFile = new StringBuilder();
+            while (value != null) {
+                readDataFromFile.append(value).append(System.lineSeparator());
+                value = reader.readLine();
             }
+            suppliesAndBuy = readDataFromFile.toString();
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from the file " + fromFileName, e);
         }
-        writeStatisticToFile(toFileName, supplyTotal, buyTotal);
+        return suppliesAndBuy.split(System.lineSeparator());
     }
 
-    private void writeStatisticToFile(String toFileName,int supplyTotal, int buyTotal) {
-        StringBuilder report = new StringBuilder();
+    public String createReport(String [] suppliesAndBuy) {
+        int supplyTotal = 0;
+        int buyTotal = 0;
+        StringBuilder createReport = new StringBuilder();
+        for (String supplyAndBuy : suppliesAndBuy) {
+            String[] fields = supplyAndBuy.split(COMMA);
+            if (fields[OPERATION_TYPE_INDEX].equals(SUPPLY)) {
+                supplyTotal += Integer.parseInt(fields[AMOUNT_INDEX]);
+            } else if (fields[OPERATION_TYPE_INDEX].equals(BUY)) {
+                buyTotal += Integer.parseInt(fields[AMOUNT_INDEX]);
+            }
+        }
         int result = supplyTotal - buyTotal;
-        report.append(IS_SUPPLY).append(REGEX).append(supplyTotal).append(System.lineSeparator());
-        report.append(IS_BUY).append(REGEX).append(buyTotal).append(System.lineSeparator());
-        report.append(RESULT).append(REGEX).append(result).append(System.lineSeparator());
+        return createReport.append(SUPPLY).append(COMMA).append(supplyTotal)
+                           .append(System.lineSeparator())
+                           .append(BUY).append(COMMA).append(buyTotal)
+                           .append(System.lineSeparator())
+                           .append(RESULT).append(COMMA).append(result)
+                           .append(System.lineSeparator()).toString();
+
+    }
+
+    private void writeReportToFile(String toFileName, String createReport) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            writer.write(report.toString());
+            writer.write(createReport);
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to the file " + toFileName, e);
         }
     }
 }
+
+
+
