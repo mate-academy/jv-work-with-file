@@ -15,41 +15,53 @@ public class WorkWithFile {
     public static final int MAP_INDEX_VALUE = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        File fromFile = new File(fromFileName);
-        File toFile = new File(toFileName);
-        Map<String, Integer> resultFileMap = new LinkedHashMap<>();
-        resultFileMap.put("supply", ZERO_NUMBER);
-        resultFileMap.put("buy", ZERO_NUMBER);
-        resultFileMap.put("result", ZERO_NUMBER);
+        Map<String, Integer> resultFileMap = readFile(fromFileName);
+        writeFile(toFileName, resultFileMap);
+    }
 
-        try (BufferedReader readerFrom = new BufferedReader(new FileReader(fromFile));
-                BufferedWriter writeTo = new BufferedWriter(new FileWriter(toFile))) {
+    public Map<String, Integer> readFile(String fileName) {
+        File fromFile = new File(fileName);
+        Map<String, Integer> fileMap = new LinkedHashMap<>();
+        fileMap.put("supply", ZERO_NUMBER);
+        fileMap.put("buy", ZERO_NUMBER);
+        fileMap.put("result", ZERO_NUMBER);
+
+        try (BufferedReader readerFrom = new BufferedReader(new FileReader(fromFile))) {
             String value = readerFrom.readLine();
 
             while (value != null) {
                 String[] valueStringArray = value.split(",");
 
-                if (resultFileMap.containsKey(valueStringArray[MAP_INDEX_KEY])) {
-                    int sumNumbers = resultFileMap.get(valueStringArray[MAP_INDEX_KEY]);
-                    resultFileMap.put(valueStringArray[MAP_INDEX_KEY],
+                if (fileMap.containsKey(valueStringArray[MAP_INDEX_KEY])) {
+                    int sumNumbers = fileMap.get(valueStringArray[MAP_INDEX_KEY]);
+                    fileMap.put(valueStringArray[MAP_INDEX_KEY],
                             (sumNumbers + Integer.parseInt(valueStringArray[1])));
                 } else {
-                    resultFileMap.put(valueStringArray[MAP_INDEX_KEY],
+                    fileMap.put(valueStringArray[MAP_INDEX_KEY],
                             Integer.parseInt(valueStringArray[MAP_INDEX_VALUE]));
                 }
 
                 value = readerFrom.readLine();
             }
-            resultFileMap.put("result", resultFileMap.get("supply") - resultFileMap.get("buy"));
+            fileMap.put("result", fileMap.get("supply") - fileMap.get("buy"));
 
-            for (Map.Entry<String, Integer> entry : resultFileMap.entrySet()) {
+        } catch (IOException e) {
+            throw new RuntimeException("Cant open the file " + fileName, e);
+        }
+        return fileMap;
+    }
+
+    public void writeFile(String fileName, Map<String, Integer> fileMap) {
+        File toFile = new File(fileName);
+
+        try (BufferedWriter writeTo = new BufferedWriter(new FileWriter(toFile))) {
+            for (Map.Entry<String, Integer> entry : fileMap.entrySet()) {
                 String lineToWrite = entry.getKey() + "," + entry.getValue();
                 writeTo.write(lineToWrite);
                 writeTo.newLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Cant open the file.", e);
+            throw new RuntimeException("Cant open the file " + fileName, e);
         }
-
     }
 }
