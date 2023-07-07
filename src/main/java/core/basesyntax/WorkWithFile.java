@@ -57,7 +57,7 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFile))) {
             bufferedWriter.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Can't save report to file - " + toFile);
+            throw new RuntimeException("Can't save report to file - " + toFile, e);
         }
     }
 }
