@@ -55,8 +55,8 @@ public class WorkWithFile {
     private String report(int supply, int buy) {
         StringBuilder builder = new StringBuilder();
         builder.append(SUPPLY).append(COMMA).append(supply)
-                .append(System.lineSeparator()).append(BUY).append(COMMA)
-                .append(buy).append(System.lineSeparator()).append(RESULT)
+                .append(LINE_SEPARATOR).append(BUY).append(COMMA)
+                .append(buy).append(LINE_SEPARATOR).append(RESULT)
                 .append(COMMA).append(supply - buy).append(LINE_SEPARATOR);
 
         return builder.toString();
