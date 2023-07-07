@@ -39,7 +39,6 @@ public class WorkWithFile {
     }
 
     private StringBuilder buildReport(String unformattedData) {
-        System.out.println(unformattedData);
         int supply = 0;
         int buy = 0;
         String[] gatheredData = unformattedData.split(System.lineSeparator());
