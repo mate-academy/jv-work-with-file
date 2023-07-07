@@ -27,8 +27,7 @@ public class WorkWithFile {
 
     private String readFile(String fromFileName) {
         StringBuilder stringBuilder = new StringBuilder();
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String value = bufferedReader.readLine();
             while (value != null) {
                 stringBuilder.append(value).append(SPACE);
@@ -51,8 +50,8 @@ public class WorkWithFile {
                 totalBuy += Integer.parseInt(allInfo[i + 1]);
             }
         }
-        int [] operationInfo = new int[INFO_ARRAY_LENGTH];
-        return createReportMessage(operationInfo, totalSupply, totalBuy, totalSupply - totalBuy);
+        return createReportMessage(new int[INFO_ARRAY_LENGTH], totalSupply,
+                totalBuy, totalSupply - totalBuy);
     }
 
     private String createReportMessage(int[] operationInfo, int totalSupply,
@@ -61,7 +60,8 @@ public class WorkWithFile {
         operationInfo[BUY_INDEX] = totalBuy;
         operationInfo[RESULT_INDEX] = result;
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(SUPPLY).append(COMMA).append(operationInfo[SUPPLY_INDEX]).append(LINE_SEPARATOR)
+        stringBuilder.append(SUPPLY).append(COMMA).append(operationInfo[SUPPLY_INDEX])
+                .append(LINE_SEPARATOR)
                 .append(BUY).append(COMMA).append(operationInfo[BUY_INDEX]).append(LINE_SEPARATOR)
                 .append(RESULT).append(COMMA).append(operationInfo[RESULT_INDEX])
                 .append(LINE_SEPARATOR);
