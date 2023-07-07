@@ -7,13 +7,18 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String DELIMITER = ",";
+    private static final int CORRECT_PARTS_SIZE = 2;
+    private static final int ACTION_INDEX = 0;
+    private static final int VALUE_INDEX = 1;
+
     public void getStatistic(String fromFileName, String toFileName) {
         String fileContent = readFileContent(fromFileName);
         String report = createReport(fileContent);
         writeToFile(toFileName, report);
     }
 
-    public static String readFileContent(String filePath) {
+    private String readFileContent(String filePath) {
         StringBuilder fileContent = new StringBuilder();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
@@ -28,7 +33,7 @@ public class WorkWithFile {
         return fileContent.toString();
     }
 
-    public static String createReport(String fileContent) {
+    private String createReport(String fileContent) {
         int totalSupply = 0;
         int totalBuy = 0;
 
@@ -36,10 +41,10 @@ public class WorkWithFile {
         StringBuilder result = new StringBuilder();
 
         for (String line : lines) {
-            String[] parts = line.split(",");
-            if (parts.length == 2) {
-                String action = parts[0].trim();
-                int value = Integer.parseInt(parts[1].trim());
+            String[] parts = line.split(DELIMITER);
+            if (parts.length == CORRECT_PARTS_SIZE) {
+                String action = parts[ACTION_INDEX].trim();
+                int value = Integer.parseInt(parts[VALUE_INDEX].trim());
 
                 if (action.equalsIgnoreCase("supply")) {
                     totalSupply += value;
@@ -56,7 +61,7 @@ public class WorkWithFile {
         return result.toString();
     }
 
-    public static void writeToFile(String fileName, String content) {
+    private void writeToFile(String fileName, String content) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             writer.write(content);
         } catch (IOException e) {
