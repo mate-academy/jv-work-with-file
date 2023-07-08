@@ -14,41 +14,31 @@ public class WorkWithFile {
     private static final int RESULT_INDEX = 2;
     private static final int RECORD_NAME_INDEX = 0;
     private static final int RECORD_VALUE_INDEX = 1;
+    private static final String SEPARATOR = ",";
 
     public static void getStatistic(String fromFileName, String toFileName) {
-        deleteResultFileIfExist(toFileName);
         List<String> records = readCsvToList(fromFileName);
         String report = generateReport(records);
         writeToFile(report, new File(toFileName));
     }
 
     private static String generateReport(List<String> records) {
-        int[] totalSupplyBuyResult = new int[3];
-        calculateSupplyAndBuy(totalSupplyBuyResult, records);
+        int[] totalSupplyBuyResult = calculateSupplyAndBuy(records);
         totalSupplyBuyResult[RESULT_INDEX] = totalSupplyBuyResult[SUPPLY_INDEX]
                 - totalSupplyBuyResult[BUY_INDEX];
-        String[] resultData = new String[3];
-        resultData[SUPPLY_INDEX] = "supply," + totalSupplyBuyResult[SUPPLY_INDEX];
-        resultData[BUY_INDEX] = "buy," + totalSupplyBuyResult[BUY_INDEX];
-        resultData[RESULT_INDEX] = "result," + totalSupplyBuyResult[RESULT_INDEX];
-        StringBuilder result = new StringBuilder();
-        for (int i = 0; i < resultData.length; i++) {
-            result.append(resultData[i]).append(System.lineSeparator());
-        }
-        return result.toString();
+
+        return new StringBuilder().append("supply,").append(totalSupplyBuyResult[SUPPLY_INDEX])
+                .append(System.lineSeparator())
+                .append("buy,").append(totalSupplyBuyResult[BUY_INDEX])
+                .append(System.lineSeparator())
+                .append("result,").append(totalSupplyBuyResult[RESULT_INDEX])
+                .append(System.lineSeparator()).toString();
     }
 
-    private static void deleteResultFileIfExist(String toFileName) {
-        try {
-            Files.deleteIfExists(Path.of(toFileName));
-        } catch (IOException e) {
-            throw new RuntimeException("Can not delete if exist file " + e);
-        }
-    }
-
-    private static void calculateSupplyAndBuy(int[] resultArray, List<String> records) {
+    private static int[] calculateSupplyAndBuy(List<String> records) {
+        int[] resultArray = new int[3];
         for (int i = 0; i < records.size(); i++) {
-            String[] record = records.get(i).split(",");
+            String[] record = records.get(i).split(SEPARATOR);
             if (record[RECORD_NAME_INDEX].equals("supply")) {
                 resultArray[SUPPLY_INDEX] += Integer.parseInt(record[RECORD_VALUE_INDEX]);
             } else if (record[RECORD_NAME_INDEX].equals("buy")) {
@@ -57,18 +47,14 @@ public class WorkWithFile {
                 throw new RuntimeException("Invalid record type " + records.get(0));
             }
         }
+        return resultArray;
     }
 
     private static void writeToFile(String result, File file) {
-        try {
-            file.createNewFile();
-        } catch (IOException e) {
-            throw new RuntimeException("Can not create file" + e);
-        }
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             writer.write(result);
         } catch (IOException e) {
-            throw new RuntimeException("Can`t write file" + file, e);
+            throw new RuntimeException("Can`t write to a file: " + file, e);
         }
     }
 
@@ -77,7 +63,7 @@ public class WorkWithFile {
         try {
             records = Files.readAllLines(Path.of(fileName));
         } catch (IOException e) {
-            throw new RuntimeException("Can not read file " + fileName + e);
+            throw new RuntimeException("Can not read from the file: " + fileName, e);
         }
         return records;
     }
