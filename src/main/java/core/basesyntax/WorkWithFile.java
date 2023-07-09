@@ -14,22 +14,32 @@ public class WorkWithFile {
     private static final String COMMA_SEPARATOR = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String fileRead;
-        File fromFile = new File(fromFileName);
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
+        String fileRead = readingFromFile(fromFileName);
+        String completedReport = generateReport(fileRead);
+        writeReportToFile(toFileName, completedReport);
+    }
+
+    private String readingFromFile(String fileName) {
+        String dataFromFile;
+        File fromFile = new File(fileName);
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFile))) {
             StringBuilder stringBuilder = new StringBuilder();
             String valueString = bufferedReader.readLine();
             while (valueString != null) {
                 stringBuilder.append(valueString).append(System.lineSeparator());
                 valueString = bufferedReader.readLine();
             }
-            fileRead = stringBuilder.toString();
+            dataFromFile = stringBuilder.toString();
         } catch (IOException e) {
             throw new RuntimeException("Can't read to file", e);
         }
+        return dataFromFile.toString();
+    }
+
+    private String generateReport(String informationForReport) {
         int allSupply = 0;
         int allBuy = 0;
-        String[] splitFileRead = fileRead.split("\\W+");
+        String[] splitFileRead = informationForReport.split("\\W+");
         for (int i = 0; i < splitFileRead.length; i++) {
             if (splitFileRead[i].equals(VALUE_SUPPLY)) {
                 allSupply += Integer.parseInt(splitFileRead[i + 1]);
@@ -46,9 +56,13 @@ public class WorkWithFile {
                 .append(allBuy + System.lineSeparator())
                 .append(VALUE_RESULT).append(COMMA_SEPARATOR)
                 .append(result);
-        File toFile = new File(toFileName);
+        return stringBuilderFile.toString();
+    }
+
+    private void writeReportToFile(String fileName, String report) {
+        File toFile = new File(fileName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFile))) {
-            bufferedWriter.write(stringBuilderFile.toString());
+            bufferedWriter.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file", e);
         }
