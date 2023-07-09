@@ -16,7 +16,7 @@ public class WorkWithFile {
     }
 
     private int[] readFromFile(String fromFileName) {
-        try(BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             int supplyTotal = 0;
             int buyTotal = 0;
             String line;
