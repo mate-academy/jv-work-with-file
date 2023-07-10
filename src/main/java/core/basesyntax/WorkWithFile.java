@@ -19,7 +19,7 @@ public class WorkWithFile {
     }
 
     private String [] readDataFromFile(String fromFileName) {
-        String suppliesAndBuy;
+        String text;
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String value = reader.readLine();
             StringBuilder readDataFromFile = new StringBuilder();
@@ -27,19 +27,19 @@ public class WorkWithFile {
                 readDataFromFile.append(value).append(System.lineSeparator());
                 value = reader.readLine();
             }
-            suppliesAndBuy = readDataFromFile.toString();
+            text = readDataFromFile.toString();
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from the file " + fromFileName, e);
         }
-        return suppliesAndBuy.split(System.lineSeparator());
+        return text.split(System.lineSeparator());
     }
 
-    private String createReport(String [] suppliesAndBuy) {
+    private String createReport(String [] text) {
         int supplyTotal = 0;
         int buyTotal = 0;
         StringBuilder createReport = new StringBuilder();
-        for (String supplyAndBuy : suppliesAndBuy) {
-            String[] fields = supplyAndBuy.split(COMMA);
+        for (String line : text) {
+            String[] fields = line.split(COMMA);
             if (fields[OPERATION_TYPE_INDEX].equals(SUPPLY)) {
                 supplyTotal += Integer.parseInt(fields[AMOUNT_INDEX]);
             } else if (fields[OPERATION_TYPE_INDEX].equals(BUY)) {
