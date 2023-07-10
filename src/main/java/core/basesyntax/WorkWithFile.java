@@ -37,7 +37,7 @@ public class WorkWithFile {
     private String createReport(String [] text) {
         int supplyTotal = 0;
         int buyTotal = 0;
-        StringBuilder createReport = new StringBuilder();
+        StringBuilder report = new StringBuilder();
         for (String line : text) {
             String[] fields = line.split(COMMA);
             if (fields[OPERATION_TYPE_INDEX].equals(SUPPLY)) {
@@ -47,7 +47,7 @@ public class WorkWithFile {
             }
         }
         int result = supplyTotal - buyTotal;
-        return createReport.append(SUPPLY).append(COMMA).append(supplyTotal)
+        return report.append(SUPPLY).append(COMMA).append(supplyTotal)
                            .append(System.lineSeparator())
                            .append(BUY).append(COMMA).append(buyTotal)
                            .append(System.lineSeparator())
