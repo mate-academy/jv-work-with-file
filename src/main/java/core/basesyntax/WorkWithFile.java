@@ -12,28 +12,23 @@ public class WorkWithFile {
     private static final String DELIMITER = ",";
 
     public void getStatistic(String fromFileName, String toFileName) throws RuntimeException {
-        int supply = readData(fromFileName, "supply");
-        int buy = readData(fromFileName, "buy");
-        String report = createReport(supply, buy);
+        String [] data = readData(fromFileName);
+        String report = createReport(data);
         writeData(toFileName, report);
 
     }
 
-    private int readData(String fileName, String type) {
-        int sum = 0;
+    private String[] readData(String fileName) {
+        StringBuilder builder = new StringBuilder();
         try (BufferedReader reader = Files.newBufferedReader(Paths.get(fileName))) {
             String value;
             while ((value = reader.readLine()) != null) {
-                String[] parts = value.split(DELIMITER);
-                if (parts[TYPE_INDEX].equals(type)) {
-                    sum += Integer.parseInt(parts[VALUE_INDEX]);
-                }
-
+                builder.append(value).append(System.lineSeparator());
             }
         } catch (IOException e) {
             throw new RuntimeException("Cant read file" + fileName, e);
         }
-        return sum;
+        return builder.toString().split(System.lineSeparator());
     }
 
     private void writeData(String fileName, String data) {
@@ -44,7 +39,20 @@ public class WorkWithFile {
         }
     }
 
-    private String createReport(int supply, int buy) {
+    private String createReport(String[] data) {
+        int supply = 0;
+        int buy = 0;
+        for (String line : data) {
+            String[] info = line.split(DELIMITER);
+            String operation = info[TYPE_INDEX];
+            int amount = Integer.parseInt(info[VALUE_INDEX]);
+
+            if (operation.equals("supply")) {
+                supply += amount;
+            } else {
+                buy += amount;
+            }
+        }
         int result = supply - buy;
         return "supply," + supply + System.lineSeparator()
                 + "buy," + buy + System.lineSeparator()
