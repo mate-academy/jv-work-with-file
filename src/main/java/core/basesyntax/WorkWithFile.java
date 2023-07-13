@@ -15,12 +15,13 @@ public class WorkWithFile {
     }
 
     private String readFromFile(String fileName) {
-    try {
-        return Files.readString(Path.of(fileName));
-    } catch (IOException e) {
-        throw new RuntimeException("Error reading from the file", e);
+        try {
+            return Files.readString(Path.of(fileName));
+        } catch (IOException e) {
+            throw new RuntimeException("Error reading from the file", e);
+        }
     }
-}
+
     private String createReport(String data) {
         int supplyTotal = 0;
         int buyTotal = 0;
