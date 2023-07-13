@@ -7,6 +7,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class WorkWithFile {
+    private static final int OPERATION_TYPE_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String dataFromFile = readFromFile(fromFileName);
@@ -29,8 +31,8 @@ public class WorkWithFile {
         String[] lines = data.split(System.lineSeparator());
         for (String line : lines) {
             String[] values = line.split(",");
-            String operationType = values[0].trim();
-            int amount = Integer.parseInt(values[1].trim());
+            String operationType = values[OPERATION_TYPE_INDEX].trim();
+            int amount = Integer.parseInt(values[AMOUNT_INDEX].trim());
 
             if (operationType.equals("supply")) {
                 supplyTotal += amount;
