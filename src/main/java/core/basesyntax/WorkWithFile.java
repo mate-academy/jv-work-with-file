@@ -13,43 +13,30 @@ public class WorkWithFile {
     private static final String BUY = "buy";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String data = getSumUpFromFile(fromFileName);
+        String data = readFromFile(fromFileName);
+        String report = createReport(data);
+        writeToFile(report, toFileName);
+    }
 
+    private void writeToFile(String report, String toFileName) {
         try {
-            Files.write(Path.of(toFileName), data.getBytes());
+            Files.write(Path.of(toFileName), report.getBytes());
         } catch (IOException e) {
             throw new RuntimeException("Can't read file, ", e);
         }
     }
 
-    private String getSumUpFromFile(String fileName) {
-        int buy = 0;
+    private String createReport(String data) {
+        String[] line = data.split("[,\r\n]+");
         int supply = 0;
-        File file = new File(fileName);
+        int buy = 0;
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            String value = reader.readLine();
-            String[] values;
-
-            while (value != null) {
-                values = value.split(",");
-
-                switch (values[0]) {
-                    case SUPPLY:
-                        supply += Integer.parseInt(values[1]);
-                        break;
-                    case BUY:
-                        buy += Integer.parseInt(values[1]);
-                        break;
-                    default:
-                        throw new RuntimeException("Incorrect file content");
-                }
-
-                value = reader.readLine();
+        for (int i = 0; i < line.length - 1; i += 2) {
+            if (line[i].equals(SUPPLY)) {
+                supply += Integer.parseInt(line[i + 1]);
+            } else if (line[i].equals(BUY)) {
+                buy += Integer.parseInt(line[i + 1]);
             }
-
-        } catch (IOException e) {
-            throw new RuntimeException("Can't read file, ", e);
         }
 
         return "supply," + supply + System.lineSeparator()
@@ -57,4 +44,22 @@ public class WorkWithFile {
                 + "result," + (supply - buy);
     }
 
+    private String readFromFile(String fileName) {
+        StringBuilder stringBuilder = new StringBuilder();
+        File file = new File(fileName);
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String value = reader.readLine();
+
+            while (value != null) {
+                stringBuilder.append(value).append(System.lineSeparator());
+                value = reader.readLine();
+            }
+
+        } catch (IOException e) {
+            throw new RuntimeException("Can't read file, ", e);
+        }
+
+        return stringBuilder.toString();
+    }
 }
