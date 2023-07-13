@@ -12,34 +12,34 @@ import java.util.List;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
-        String[] values = readFromFile(fromFileName).split(" ");
-        Arrays.sort(values, (a, b) -> b.length() - a.length());
-        String[] words = new String[]{};
+        String[] dataFromFile = readFromFile(fromFileName).split(" ");
+        String report = createReport(dataFromFile);
+        writeToFile(toFileName, report);
+    }
+
+    public String createReport(String[] dataFromFile) {
+        Arrays.sort(dataFromFile, (a, b) -> b.length() - a.length());
         List<String> list = new ArrayList<>();
         int count = 0;
-        for (int i = 0; i < values.length; i++) {
-            String[] value = values[i].split(",");
+        for (int i = 0; i < dataFromFile.length; i++) {
+            String[] value = dataFromFile[i].split(",");
             if (!list.contains(value[0])) {
                 list.add(value[0]);
             }
         }
         StringBuilder stringBuilder = new StringBuilder();
         for (String s : list) {
-            for (int i = 0; i < values.length; i++) {
-                String[] value = values[i].split(",");
+            for (int i = 0; i < dataFromFile.length; i++) {
+                String[] value = dataFromFile[i].split(",");
                 if (s.equals(value[0])) {
                     count += Integer.parseInt(value[1]);
                 }
             }
             stringBuilder.append(s).append(",").append(count).append(System.lineSeparator());
             count = 0;
-
         }
-
         String result = String.valueOf(calculateResult(stringBuilder.toString()));
-        stringBuilder.append("result").append(",").append(result);
-        writeToFile(toFileName, stringBuilder.toString());
-
+        return stringBuilder.append("result").append(",").append(result).toString();
     }
 
     public String readFromFile(String fileName) {
@@ -70,7 +70,6 @@ public class WorkWithFile {
     }
 
     public int calculateResult(String data) {
-
         String[] values = data.split(System.lineSeparator());
         int result1 = Integer.parseInt(values[0].substring(values[0].indexOf(',') + 1));
         int result2 = Integer.parseInt(values[1].substring(values[1].indexOf(',') + 1));
