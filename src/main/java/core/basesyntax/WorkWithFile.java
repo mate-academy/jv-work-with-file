@@ -34,7 +34,8 @@ public class WorkWithFile {
         for (int i = 0; i < line.length - 1; i += 2) {
             if (line[i].equals(SUPPLY)) {
                 supply += Integer.parseInt(line[i + 1]);
-            } else if (line[i].equals(BUY)) {
+            }
+            if (line[i].equals(BUY)) {
                 buy += Integer.parseInt(line[i + 1]);
             }
         }
