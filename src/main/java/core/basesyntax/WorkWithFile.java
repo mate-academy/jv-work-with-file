@@ -6,11 +6,11 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class WorkWithFile {
+    private static final int OPERATION_NAME_INDEX = 0;
+    private static final int VALUE_INDEX = 1;
+
     public void getStatistic(String fromFileName, String toFileName) {
         String[] dataFromFile = readFromFile(fromFileName).split(" ");
         String report = createReport(dataFromFile);
@@ -18,28 +18,22 @@ public class WorkWithFile {
     }
 
     public String createReport(String[] dataFromFile) {
-        Arrays.sort(dataFromFile, (a, b) -> b.length() - a.length());
-        List<String> list = new ArrayList<>();
-        int count = 0;
+        int buy = 0;
+        int supply = 0;
+        StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < dataFromFile.length; i++) {
             String[] value = dataFromFile[i].split(",");
-            if (!list.contains(value[0])) {
-                list.add(value[0]);
+            if ("supply".equals(value[OPERATION_NAME_INDEX])) {
+                supply += Integer.parseInt(value[VALUE_INDEX]);
+            } else {
+                buy += Integer.parseInt(value[VALUE_INDEX]);
             }
         }
-        StringBuilder stringBuilder = new StringBuilder();
-        for (String s : list) {
-            for (int i = 0; i < dataFromFile.length; i++) {
-                String[] value = dataFromFile[i].split(",");
-                if (s.equals(value[0])) {
-                    count += Integer.parseInt(value[1]);
-                }
-            }
-            stringBuilder.append(s).append(",").append(count).append(System.lineSeparator());
-            count = 0;
-        }
-        String result = String.valueOf(calculateResult(stringBuilder.toString()));
-        return stringBuilder.append("result").append(",").append(result).toString();
+        String result = calculateResult(supply, buy);
+        return stringBuilder.append("supply").append(",").append(supply)
+                .append(System.lineSeparator()).append("buy").append(",")
+                .append(buy).append(System.lineSeparator())
+                .append("result").append(",").append(result).toString();
     }
 
     public String readFromFile(String fileName) {
@@ -69,11 +63,8 @@ public class WorkWithFile {
         }
     }
 
-    public int calculateResult(String data) {
-        String[] values = data.split(System.lineSeparator());
-        int result1 = Integer.parseInt(values[0].substring(values[0].indexOf(',') + 1));
-        int result2 = Integer.parseInt(values[1].substring(values[1].indexOf(',') + 1));
-        int result = result1 >= result2 ? result1 - result2 : result2 - result1;
-        return result;
+    public String calculateResult(int supply, int buy) {
+        int result = supply >= buy ? supply - buy : buy - supply;
+        return String.valueOf(result);
     }
 }
