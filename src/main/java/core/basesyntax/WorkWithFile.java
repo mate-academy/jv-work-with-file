@@ -20,7 +20,6 @@ public class WorkWithFile {
     public String createReport(String[] dataFromFile) {
         int buy = 0;
         int supply = 0;
-        StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < dataFromFile.length; i++) {
             String[] value = dataFromFile[i].split(",");
             if ("supply".equals(value[OPERATION_NAME_INDEX])) {
@@ -29,11 +28,8 @@ public class WorkWithFile {
                 buy += Integer.parseInt(value[VALUE_INDEX]);
             }
         }
-        String result = calculateResult(supply, buy);
-        return stringBuilder.append("supply").append(",").append(supply)
-                .append(System.lineSeparator()).append("buy").append(",")
-                .append(buy).append(System.lineSeparator())
-                .append("result").append(",").append(result).toString();
+
+        return calculateResult(supply, buy);
     }
 
     public String readFromFile(String fileName) {
@@ -64,7 +60,11 @@ public class WorkWithFile {
     }
 
     public String calculateResult(int supply, int buy) {
+        StringBuilder stringBuilder = new StringBuilder();
         int result = supply >= buy ? supply - buy : buy - supply;
-        return String.valueOf(result);
+        return stringBuilder.append("supply").append(",").append(supply)
+                .append(System.lineSeparator()).append("buy").append(",")
+                .append(buy).append(System.lineSeparator())
+                .append("result").append(",").append(result).toString();
     }
 }
