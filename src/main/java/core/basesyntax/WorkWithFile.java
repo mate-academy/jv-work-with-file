@@ -52,12 +52,18 @@ public class WorkWithFile {
     }
 
     private String creatingReport(int supply, int buy) {
-        return SUPPLY + COMA_SEPARATOR + supply +
-                LINE_SEPARATOR + BUY + COMA_SEPARATOR +
-                buy + LINE_SEPARATOR +
-                RESULT + COMA_SEPARATOR +
-                (supply - buy) +
-                LINE_SEPARATOR;
+        return SUPPLY
+                + COMA_SEPARATOR
+                + supply
+                + LINE_SEPARATOR
+                + BUY
+                + COMA_SEPARATOR
+                + buy
+                + LINE_SEPARATOR
+                + RESULT
+                + COMA_SEPARATOR
+                + (supply - buy)
+                + LINE_SEPARATOR;
     }
 
     private void writeToFile(String text, String toFileName) {
