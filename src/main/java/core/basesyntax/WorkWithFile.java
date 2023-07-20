@@ -9,28 +9,11 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final String OPERATION_SUPPLY = "supply";
     private static final String OPERATION_BUY = "buy";
-    private static final String OPERATION_RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int supply = 0;
-        int buy = 0;
         String[] dataFromFile = readDataFromFile(fromFileName);
-        for (int i = 0; i < dataFromFile.length; i += 2) {
-            switch (dataFromFile[i]) {
-                case OPERATION_SUPPLY:
-                    supply += Integer.parseInt(dataFromFile[i + 1]);
-                    break;
-                case OPERATION_BUY:
-                    buy += Integer.parseInt(dataFromFile[i + 1]);
-                    break;
-                default:
-                    throw new IllegalStateException("Unexpected value: " + dataFromFile[i]);
-            }
-        }
-        String statisticData = OPERATION_SUPPLY + "," + supply + System.lineSeparator()
-                + OPERATION_BUY + "," + buy + System.lineSeparator()
-                + OPERATION_RESULT + "," + (supply - buy);
-        writeDataToFile(toFileName, statisticData);
+        String report = generateReport(dataFromFile);
+        writeDataToFile(toFileName, report);
     }
 
     private String[] readDataFromFile(String fromFileName) {
@@ -53,5 +36,25 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to the file " + toFileName, e);
         }
+    }
+
+    private String generateReport(String[] data) {
+        int supply = 0;
+        int buy = 0;
+        for (int i = 0; i < data.length; i += 2) {
+            switch (data[i]) {
+                case OPERATION_SUPPLY:
+                    supply += Integer.parseInt(data[i + 1]);
+                    break;
+                case OPERATION_BUY:
+                    buy += Integer.parseInt(data[i + 1]);
+                    break;
+                default:
+                    throw new IllegalStateException("Unexpected value: " + data[i]);
+            }
+        }
+        return OPERATION_SUPPLY + "," + supply + System.lineSeparator()
+                + OPERATION_BUY + "," + buy + System.lineSeparator()
+                + "result," + (supply - buy);
     }
 }
