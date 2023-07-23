@@ -8,11 +8,9 @@ import java.io.IOException;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
-        int supplySum = 0;
-        int buySum = 0;
-        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
-                BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
+            int supplySum = 0;
+            int buySum = 0;
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
@@ -26,14 +24,14 @@ public class WorkWithFile {
             }
             int result = supplySum - buySum;
 
-            writeToFile(writer, "supply", supplySum);
-            writeToFile(writer, "buy", buySum);
-            writeToFile(writer, "result", result);
-
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
+                writeToFile(writer, "supply", supplySum);
+                writeToFile(writer, "buy", buySum);
+                writeToFile(writer, "result", result);
+            }
         } catch (IOException e) {
             throw new RuntimeException("Can't read/write data...", e);
         }
-
     }
 
     private void writeToFile(BufferedWriter writer, String operation, int amount)
