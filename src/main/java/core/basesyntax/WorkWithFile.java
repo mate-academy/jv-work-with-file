@@ -8,6 +8,14 @@ import java.io.IOException;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
+        String[] parts = readFromFile(fromFileName).split(" ");
+        int sumBuy = getSumBuy(parts);
+        int sumSupply = getSumSupply(parts);
+        int difference = getDifference(sumBuy, sumSupply);
+        getWrite(toFileName, sumSupply, sumBuy, difference, parts);
+    }
+
+    private String readFromFile(String fromFileName) {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             StringBuilder dataFromFile = new StringBuilder();
             String elementFromData = bufferedReader.readLine();
@@ -15,62 +23,58 @@ public class WorkWithFile {
                 dataFromFile.append(elementFromData).append(" ");
                 elementFromData = bufferedReader.readLine();
             }
-
-            String[] rows = dataFromFile.toString().split(" ");
-            String[] uniqueWords = new String[rows.length];
-            int[] sums = new int[rows.length];
-            int uniqueCount = 0;
-            int supplySum = 0;
-            int buySum = 0;
-
-            for (String row : rows) {
-                String[] parts = row.split(",");
-                String word = parts[0].trim();
-                int value = Integer.parseInt(parts[1]);
-                int index = -1;
-
-                for (int i = 0; i < uniqueCount; i++) {
-                    if (uniqueWords[i].equals(word)) {
-                        index = i;
-                    }
-                }
-                if (index < 0) {
-                    uniqueWords[uniqueCount] = word;
-                    sums[uniqueCount] = value;
-                    uniqueCount++;
-                } else {
-                    sums[index] += value;
-                }
-                if (word.equals("supply")) {
-                    supplySum += value;
-                } else if (word.equals("buy")) {
-                    buySum += value;
-                }
-            }
-            int difference = supplySum - buySum;
-            for (int i = 0; i < uniqueCount - 1; i++) {
-                for (int j = 0; j < uniqueCount - i - 1; j++) {
-                    if (sums[j] < sums[j + 1]) {
-                        int tempSum = sums[j];
-                        sums[j] = sums[j + 1];
-                        sums[j + 1] = tempSum;
-
-                        String tempWord = uniqueWords[j];
-                        uniqueWords[j] = uniqueWords[j + 1];
-                        uniqueWords[j + 1] = tempWord;
-                    }
-                }
-            }
-            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName));
-            for (int i = 0; i < uniqueCount; i++) {
-                bufferedWriter.write(uniqueWords[i] + "," + sums[i]);
-                bufferedWriter.newLine();
-            }
-            bufferedWriter.write("result," + difference);
-            bufferedWriter.close();
-
+            return dataFromFile.toString();
         } catch (IOException e) {
-            throw new RuntimeException("Houston, we have a problems", e);
+            throw new RuntimeException("Can't read from file", e);
+        }
+    }
+
+    private int getSumBuy(String[] parts) {
+        int sumBuy = 0;
+        for (int i = 0; i < parts.length; i++) {
+            String[] miniPart = parts[i].split(",");
+            if (miniPart[0].startsWith("buy")) {
+                sumBuy = sumBuy + Integer.parseInt(miniPart[1]);
+            }
+        }
+        return sumBuy;
+    }
+
+    private int getSumSupply(String[] parts) {
+        int sumSupply = 0;
+        for (int i = 0; i < parts.length; i++) {
+            String[] miniPart = parts[i].split(",");
+            if (miniPart[0].startsWith("s")) {
+                sumSupply = sumSupply + Integer.parseInt(miniPart[1]);
+            }
+        }
+        return sumSupply;
+    }
+
+    private int getDifference(int sumBuy, int sumSupply) {
+        return Math.abs(sumBuy - sumSupply);
+    }
+
+    private void getWrite(String toFileName, int sumSupply, int sumBuy,
+                          int difference, String[] parts) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
+            if (getSumBuy(parts) > getSumSupply(parts)) {
+                bufferedWriter.write("buy," + getSumBuy(parts));
+                bufferedWriter.newLine();
+                bufferedWriter.write("supply," + getSumSupply(parts));
+                bufferedWriter.newLine();
+                bufferedWriter.write("result,"
+                        + getDifference(getSumBuy(parts), getSumSupply(parts)));
+            } else {
+                bufferedWriter.write("supply," + getSumSupply(parts));
+                bufferedWriter.newLine();
+                bufferedWriter.write("buy," + getSumBuy(parts));
+                bufferedWriter.newLine();
+                bufferedWriter.write("result,"
+                        + getDifference(getSumBuy(parts), getSumSupply(parts)));
+            }
+        } catch (IOException r) {
+            throw new RuntimeException("Can't write to file", r);
         }
     }
 }
