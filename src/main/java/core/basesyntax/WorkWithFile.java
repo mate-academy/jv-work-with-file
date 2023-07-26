@@ -12,7 +12,8 @@ public class WorkWithFile {
         int sumBuy = getSumBuy(parts);
         int sumSupply = getSumSupply(parts);
         int difference = getDifference(sumBuy, sumSupply);
-        getWrite(toFileName, sumSupply, sumBuy, difference, parts);
+        String[] resultArray = getResultArray(sumSupply, sumBuy, difference);
+        getWrite(resultArray, toFileName);
     }
 
     private String readFromFile(String fromFileName) {
@@ -55,26 +56,31 @@ public class WorkWithFile {
         return Math.abs(sumBuy - sumSupply);
     }
 
-    private void getWrite(String toFileName, int sumSupply, int sumBuy,
-                          int difference, String[] parts) {
+    private void getWrite(String[] resultArray, String toFileName) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            if (getSumBuy(parts) > getSumSupply(parts)) {
-                bufferedWriter.write("buy," + getSumBuy(parts));
+            for (int i = 0; i < resultArray.length; i++) {
+                bufferedWriter.write(resultArray[i]);
                 bufferedWriter.newLine();
-                bufferedWriter.write("supply," + getSumSupply(parts));
-                bufferedWriter.newLine();
-                bufferedWriter.write("result,"
-                        + getDifference(getSumBuy(parts), getSumSupply(parts)));
-            } else {
-                bufferedWriter.write("supply," + getSumSupply(parts));
-                bufferedWriter.newLine();
-                bufferedWriter.write("buy," + getSumBuy(parts));
-                bufferedWriter.newLine();
-                bufferedWriter.write("result,"
-                        + getDifference(getSumBuy(parts), getSumSupply(parts)));
             }
         } catch (IOException r) {
             throw new RuntimeException("Can't write to file", r);
         }
     }
+
+    private String[] getResultArray(int sumSupply,
+                                 int sumBuy, int difference) {
+        String[] array = new String[3];
+        if (sumBuy > sumSupply) {
+            array[0] = "buy," + sumBuy;
+            array[1] = "supply," + sumSupply;
+            array[2] = "result," + difference;
+            return array;
+        } else {
+            array[0] = "supply," + sumSupply;
+            array[1] = "buy," + sumBuy;
+            array[2] = "result," + difference;
+            return array;
+        }
+    }
 }
+
