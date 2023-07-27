@@ -1,11 +1,12 @@
 package core.basesyntax;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
+
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         int supply = 0;
@@ -52,5 +53,3 @@ public class WorkWithFile {
         }
     }
 }
-
-
