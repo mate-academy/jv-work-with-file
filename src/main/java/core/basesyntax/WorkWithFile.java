@@ -11,6 +11,12 @@ public class WorkWithFile {
     private static final String KEYWORD = "supply";
 
     public void getStatistic(String fromFileName, String toFileName) {
+        int [] dataFromFile = readFromFile(fromFileName);
+        String report = createReport(dataFromFile);
+        writeToFile(toFileName,report);
+    }
+
+    int [] readFromFile(String fromFileName) {
         int sumSupply = 0;
         int sumBuy = 0;
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
@@ -29,20 +35,19 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can`t read from file",e);
         }
-        String report = createReport(sumSupply, sumBuy);
-        writeToFile(toFileName,report);
+        return new int [] {sumSupply,sumBuy};
     }
 
-    String createReport(int sumSupply, int sumBuy) {
+    String createReport(int [] dataFromFile) {
         StringBuilder resultStr = new StringBuilder();
         resultStr.append("supply,")
-                .append(sumSupply)
+                .append(dataFromFile[0])
                 .append(System.lineSeparator())
                 .append("buy,")
-                .append(sumBuy)
+                .append(dataFromFile[1])
                 .append(System.lineSeparator())
                 .append("result,")
-                .append(sumSupply - sumBuy);
+                .append(dataFromFile[0] - dataFromFile[1]);
         return resultStr.toString();
     }
 
