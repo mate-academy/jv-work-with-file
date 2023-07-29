@@ -8,10 +8,20 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class WorkWithFile {
-    public void getStatistic(String fromFileName, String toFileName) {
-        int supply = 0;
-        int buy = 0;
+    private int supply;
+    private int buy;
+    private int result;
 
+    public void getStatistic(String fromFileName, String toFileName) {
+        supply = 0;
+        buy = 0;
+        result = 0;
+        readFile(fromFileName);
+        calculateResult();
+        writeReportToFile(toFileName);
+    }
+
+    private void readFile(String fromFileName) {
         try {
             Scanner scanner = new Scanner(new File(fromFileName));
             while (scanner.hasNextLine()) {
@@ -33,12 +43,19 @@ public class WorkWithFile {
             }
             scanner.close();
         } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can't write data to file ", e);
         }
+    }
+
+    private void calculateResult() {
+        result = supply - buy;
+    }
+
+    private void writeReportToFile(String toFileName) {
         String[][] report = {
                 {"supply", String.valueOf(supply)},
                 {"buy", String.valueOf(buy)},
-                {"result", String.valueOf(supply - buy)}
+                {"result", String.valueOf(result)}
         };
 
         try {
