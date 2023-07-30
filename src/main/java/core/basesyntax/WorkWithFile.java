@@ -27,9 +27,7 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("something went wrong");
         }
-
         int result = totalSupply - totalBuy;
-
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write("supply," + totalSupply);
             writer.newLine();
