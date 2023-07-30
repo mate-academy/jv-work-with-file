@@ -40,9 +40,10 @@ public class WorkWithFile {
         int sumSupply = 0;
         int sumBuy = 0;
         String [] splitLine = dataFromFile.split(",");
-        for (int i = 0; i < splitLine.length - 1; i+=2) {
+        for (int i = 0; i < splitLine.length - 1; i += 2) {
             if (splitLine[i].equals(KEYWORD)) {
                 sumSupply += Integer.parseInt(splitLine[i + ONE]);
+                //   а здесь тоже нужно менять на константу ^^^^?
             } else {
                 sumBuy += Integer.parseInt(splitLine[i + ONE]);
             }
