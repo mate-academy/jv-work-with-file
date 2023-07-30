@@ -1,6 +1,13 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.StringReader;
 
 public class WorkWithFile {
     private static final String BUY_OPERATION = "buy";
@@ -71,8 +78,8 @@ public class WorkWithFile {
     private static void writeToFile(String fileContentProcessed, String toFile) {
         File resultFile = new File(toFile);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(resultFile));
-             BufferedReader bufferedReader = new BufferedReader(
-                     new StringReader(fileContentProcessed))) {
+                BufferedReader bufferedReader = new BufferedReader(
+                        new StringReader(fileContentProcessed))) {
             String line = bufferedReader.readLine();
             while (line != null) {
                 bufferedWriter.write(line);
