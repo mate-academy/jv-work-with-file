@@ -10,7 +10,6 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         int totalSupply = 0;
         int totalBuy = 0;
-
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String line;
             while ((line = reader.readLine()) != null) {
