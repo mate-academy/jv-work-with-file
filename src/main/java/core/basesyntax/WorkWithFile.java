@@ -9,25 +9,23 @@ import java.io.IOException;
 
 public class WorkWithFile {
     private static final String KEYWORD = "supply";
+    private static final int FIRSTINDEX = 0;
+    private static final int SECONDINDEX = 1;
+    private static final int ONE = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int [] dataFromFile = readFromFile(fromFileName);
-        String report = createReport(dataFromFile);
+        String dataFromFile = readFromFile(fromFileName);
+        int [] resultNumber = parseNumber(dataFromFile);
+        String report = createReport(resultNumber);
         writeToFile(toFileName,report);
     }
 
-    int [] readFromFile(String fromFileName) {
-        int sumSupply = 0;
-        int sumBuy = 0;
+    private String readFromFile(String fromFileName) {
+        StringBuilder readStr = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String readLine = bufferedReader.readLine();
             while (readLine != null) {
-                String[] splitLine = readLine.split(",");
-                if (splitLine[0].equals(KEYWORD)) {
-                    sumSupply += Integer.parseInt(splitLine[1]);
-                } else {
-                    sumBuy += Integer.parseInt(splitLine[1]);
-                }
+                readStr.append(readLine).append(",");
                 readLine = bufferedReader.readLine();
             }
         } catch (FileNotFoundException e) {
@@ -35,23 +33,37 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can`t read from file",e);
         }
+        return readStr.toString();
+    }
+
+    private int [] parseNumber(String dataFromFile) {
+        int sumSupply = 0;
+        int sumBuy = 0;
+        String [] splitLine = dataFromFile.split(",");
+        for (int i = 0; i < splitLine.length - 1; i+=2) {
+            if (splitLine[i].equals(KEYWORD)) {
+                sumSupply += Integer.parseInt(splitLine[i + ONE]);
+            } else {
+                sumBuy += Integer.parseInt(splitLine[i + ONE]);
+            }
+        }
         return new int [] {sumSupply,sumBuy};
     }
 
-    String createReport(int [] dataFromFile) {
+    private String createReport(int [] resultNumber) {
         StringBuilder resultStr = new StringBuilder();
         resultStr.append("supply,")
-                .append(dataFromFile[0])
+                .append(resultNumber[FIRSTINDEX])
                 .append(System.lineSeparator())
                 .append("buy,")
-                .append(dataFromFile[1])
+                .append(resultNumber[SECONDINDEX])
                 .append(System.lineSeparator())
                 .append("result,")
-                .append(dataFromFile[0] - dataFromFile[1]);
+                .append(resultNumber[FIRSTINDEX] - resultNumber[SECONDINDEX]);
         return resultStr.toString();
     }
 
-    void writeToFile(String toFileName, String report) {
+    private void writeToFile(String toFileName, String report) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(report);
         } catch (IOException e) {
