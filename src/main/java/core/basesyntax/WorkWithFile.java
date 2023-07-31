@@ -8,44 +8,60 @@ import java.io.FileWriter;
 
 public class WorkWithFile {
     private static final int MAX_SUPPLY = 500;
-    private int buy;
-    private int supply;
+    private static final String INDEX_SPLIT_LINE = ",";
+    private static final String INDEX_LINESEPARATOR = System.lineSeparator();
+    private static String fromFileName;
+    private static String toFileName;
 
     public void getStatistic(String fromFileName, String toFileName) {
+        WorkWithFile.fromFileName = fromFileName;
+        WorkWithFile.toFileName = toFileName;
+        writeNewText();
+    }
+
+    protected String[] readText() {
         File fromFile = new File(fromFileName);
-        File toFile = new File(toFileName);
         try {
-            BufferedReader fromFileReder = new BufferedReader(new FileReader(fromFile));
+            BufferedReader fromFileReader = new BufferedReader(new FileReader(fromFile));
             StringBuilder readedFromFile = new StringBuilder();
-            int data = fromFileReder.read();
+            int data = fromFileReader.read();
             while (data != -1) {
                 readedFromFile.append((char) data);
-                data = fromFileReder.read();
+                data = fromFileReader.read();
             }
-            String[] dataLoop = readedFromFile.toString().split(System.lineSeparator());
-            for (String line : dataLoop) {
-                if (line.split(",")[0].equals("buy")) {
-                    buy += Integer.parseInt(line.split(",")[1]);
-                }
-                if (line.split(",")[0].equals("supply")) {
-                    supply += Integer.parseInt(line.split(",")[1]);
-                }
+            return readedFromFile.toString().split(INDEX_LINESEPARATOR);
+        } catch (Exception e) {
+            throw new RuntimeException("Can't read file" + fromFileName, e);
+        }
+    }
+
+    protected StringBuilder createNewText() {
+        int buy = 0;
+        int supply = 0;
+        for (String line : readText()) {
+            if (line.split(INDEX_SPLIT_LINE)[0].equals("buy")) {
+                buy += Integer.parseInt(line.split(INDEX_SPLIT_LINE)[1]);
+            } else {
+                supply += Integer.parseInt(line.split(INDEX_SPLIT_LINE)[1]);
             }
-            int result = supply - buy;
-            if (supply > MAX_SUPPLY) {
-                supply = supply / 2;
-                buy = buy / 2;
-                result = result / 2;
-            }
-            String writeInfo = "supply," + supply + System.lineSeparator() + "buy," + buy
-                    + System.lineSeparator() + "result," + result;
+        }
+        if (supply > MAX_SUPPLY) {
+            supply = supply / 2;
+            buy = buy / 2;
+        }
+        return new StringBuilder().append("supply,").append(supply).append(INDEX_LINESEPARATOR)
+                .append("buy,").append(buy).append(INDEX_LINESEPARATOR).append("result,")
+                .append(supply - buy);
+    }
+
+    protected void writeNewText() {
+        File toFile = new File(toFileName);
+        try {
             BufferedWriter writeTo = new BufferedWriter(new FileWriter(toFile));
-            writeTo.write(writeInfo);
+            writeTo.write(createNewText().toString());
             writeTo.close();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can't write file" + toFileName, e);
         }
     }
 }
-
-
