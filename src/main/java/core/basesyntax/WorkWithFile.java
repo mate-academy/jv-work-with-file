@@ -7,59 +7,48 @@ import java.io.FileReader;
 import java.io.FileWriter;
 
 public class WorkWithFile {
-    private static final int MAX_SUPPLY = 500;
-    private static final String INDEX_SPLIT_LINE = ",";
-    private static final String INDEX_LINESEPARATOR = System.lineSeparator();
-    private static String fromFileName;
-    private static String toFileName;
+    private static final String INDEX_SEPARATOR = System.lineSeparator();
 
     public void getStatistic(String fromFileName, String toFileName) {
-        WorkWithFile.fromFileName = fromFileName;
-        WorkWithFile.toFileName = toFileName;
-        writeNewText();
+        String[] textFromFile = readFile(fromFileName);
+        String report = createReport(textFromFile);
+        writeToFile(toFileName, report);
     }
 
-    protected String[] readText() {
+    private String[] readFile(String fromFileName) {
         File fromFile = new File(fromFileName);
-        try {
-            BufferedReader fromFileReader = new BufferedReader(new FileReader(fromFile));
-            StringBuilder readedFromFile = new StringBuilder();
+        StringBuilder readedFromFile = new StringBuilder();
+        try (BufferedReader fromFileReader = new BufferedReader(new FileReader(fromFile))) {
             int data = fromFileReader.read();
             while (data != -1) {
                 readedFromFile.append((char) data);
                 data = fromFileReader.read();
             }
-            return readedFromFile.toString().split(INDEX_LINESEPARATOR);
         } catch (Exception e) {
             throw new RuntimeException("Can't read file" + fromFileName, e);
         }
+        return readedFromFile.toString().split(INDEX_SEPARATOR);
     }
 
-    protected StringBuilder createNewText() {
+    private String createReport(String[] textFromFile) {
         int buy = 0;
         int supply = 0;
-        for (String line : readText()) {
-            if (line.split(INDEX_SPLIT_LINE)[0].equals("buy")) {
-                buy += Integer.parseInt(line.split(INDEX_SPLIT_LINE)[1]);
+        for (String line : textFromFile) {
+            if (line.split(",")[0].equals("buy")) {
+                buy += Integer.parseInt(line.split(",")[1]);
             } else {
-                supply += Integer.parseInt(line.split(INDEX_SPLIT_LINE)[1]);
+                supply += Integer.parseInt(line.split(",")[1]);
             }
         }
-        if (supply > MAX_SUPPLY) {
-            supply = supply / 2;
-            buy = buy / 2;
-        }
-        return new StringBuilder().append("supply,").append(supply).append(INDEX_LINESEPARATOR)
-                .append("buy,").append(buy).append(INDEX_LINESEPARATOR).append("result,")
-                .append(supply - buy);
+        return new StringBuilder().append("supply,").append(supply).append(INDEX_SEPARATOR)
+                .append("buy,").append(buy).append(INDEX_SEPARATOR).append("result,")
+                .append(supply - buy).toString();
     }
 
-    protected void writeNewText() {
+    private void writeToFile(String toFileName,String report) {
         File toFile = new File(toFileName);
-        try {
-            BufferedWriter writeTo = new BufferedWriter(new FileWriter(toFile));
-            writeTo.write(createNewText().toString());
-            writeTo.close();
+        try (BufferedWriter writeTo = new BufferedWriter(new FileWriter(toFile))) {
+            writeTo.write(report);
         } catch (Exception e) {
             throw new RuntimeException("Can't write file" + toFileName, e);
         }
