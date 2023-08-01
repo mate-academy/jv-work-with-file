@@ -9,6 +9,8 @@ import java.io.FileWriter;
 public class WorkWithFile {
     private static final String LINE_SEPARATOR = System.lineSeparator();
     private static final String SPLIT_LINE = ",";
+    private static final int OPERATION_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] textFromFile = readFile(fromFileName);
@@ -34,10 +36,11 @@ public class WorkWithFile {
         int buy = 0;
         int supply = 0;
         for (String line : textFromFile) {
-            if (line.split(SPLIT_LINE)[0].equals("buy")) {
-                buy += Integer.parseInt(line.split(SPLIT_LINE)[1]);
+            String[] record = line.split(SPLIT_LINE);
+            if (record[OPERATION_INDEX].equals("buy")) {
+                buy += Integer.parseInt(record[AMOUNT_INDEX]);
             } else {
-                supply += Integer.parseInt(line.split(SPLIT_LINE)[1]);
+                supply += Integer.parseInt(record[AMOUNT_INDEX]);
             }
         }
         return new StringBuilder().append("supply,").append(supply).append(LINE_SEPARATOR)
