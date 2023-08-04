@@ -52,7 +52,7 @@ public class WorkWithFile {
         stringBuilder.append(VALUE_SUPPLY).append(COMMA_SEPARATOR)
                 .append(sumSupply + System.lineSeparator())
                 .append(VALUE_BUY).append(COMMA_SEPARATOR)
-                .append(sumBuy + System.lineSeparator())
+                .append(sumBuy).append(System.lineSeparator())
                 .append(VALUE_RESULT).append(COMMA_SEPARATOR)
                 .append(result);
         return stringBuilder.toString();
@@ -62,8 +62,8 @@ public class WorkWithFile {
         File toFile = new File(toFileName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFile))) {
             bufferedWriter.write(completedReport);
-    } catch (IOException e) {
-            throw new RuntimeException("Can't write to file", e);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write to file" + toFileName, e);
         }
     }
 }
