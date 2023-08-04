@@ -1,10 +1,9 @@
 package core.basesyntax;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class WorkWithFile {
     public static final String SUPPLY = "supply";
@@ -13,29 +12,37 @@ public class WorkWithFile {
     public static final int OPERATION_TYPE_INDEX = 0;
     public static final int AMOUNT_INDEX = 1;
 
-    public void getStatistic(String fromFileName, String toFileName) {
+    public void createReport(String fromFileName, String toFileName) {
+        String dataFromFile = readFile(fromFileName);
+        String report = getReport(dataFromFile);
+        writeFile(report, toFileName);
+    }
+
+    private String readFile(String fromFileName) {
+        Path path = Path.of(fromFileName);
+        try {
+            String fileData = Files.readString(path);
+            return fileData;
+        } catch (IOException e) {
+            throw new RuntimeException("File not found or cannot be read", e);
+        }
+    }
+
+    private String getReport(String dataFromFile) {
+        String[] splittedData = dataFromFile.split(System.lineSeparator());
         int supplyAmount = 0;
         int buyAmount = 0;
-        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
-            while (reader.ready()) {
-                String line = reader.readLine();
-                String[] lineSplitted = line.split(",");
-                String operationType = lineSplitted[OPERATION_TYPE_INDEX];
-                int amount = Integer.parseInt(lineSplitted[AMOUNT_INDEX]);
-                if (operationType.equals(SUPPLY)) {
-                    supplyAmount += amount;
-                } else {
-                    buyAmount += amount;
-                }
+        for (String line : splittedData) {
+            String[] splittedLine = line.split(",");
+            String operationType = splittedLine[OPERATION_TYPE_INDEX];
+            int amount = Integer.parseInt(splittedLine[AMOUNT_INDEX]);
+            if (operationType.equals(SUPPLY)) {
+                supplyAmount += amount;
+            } else {
+                buyAmount += amount;
             }
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
-
-        String statistic = getStatistic(supplyAmount, buyAmount);
-        write(statistic, toFileName);
+        return getStatistic(supplyAmount, buyAmount);
     }
 
     private String getStatistic(int supplyAmount, int buyAmount) {
@@ -54,7 +61,7 @@ public class WorkWithFile {
         return statistic.toString();
     }
 
-    private void write(String statistic, String toFileName) {
+    private void writeFile(String statistic, String toFileName) {
         try (FileWriter writer = new FileWriter(toFileName)) {
             writer.write(statistic);
         } catch (IOException e) {
