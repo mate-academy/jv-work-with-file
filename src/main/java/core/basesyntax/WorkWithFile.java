@@ -13,7 +13,6 @@ public class WorkWithFile {
     private static final String VALUE_RESULT = "result";
     private static final String COMMA_SEPARATOR = ",";
 
-
     public void getStatistic(String fromFileName, String toFileName) {
         String fileRead = readingFromFile(fromFileName);
         String completedReport = generateReport(fileRead);
@@ -61,11 +60,10 @@ public class WorkWithFile {
 
     private void writeReportToFile(String toFileName, String completedReport) {
         File toFile = new File(toFileName);
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFile))){
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFile))) {
             bufferedWriter.write(completedReport);
     } catch (IOException e) {
             throw new RuntimeException("Can't write to file", e);
         }
-
     }
 }
