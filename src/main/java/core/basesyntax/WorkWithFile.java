@@ -8,20 +8,14 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class WorkWithFile {
-    private int supply;
-    private int buy;
-    private int result;
-
     public void getStatistic(String fromFileName, String toFileName) {
-        supply = 0;
-        buy = 0;
-        result = 0;
-        readFile(fromFileName);
-        calculateResult();
-        writeReportToFile(toFileName);
+        int[] supplyBuy = new int[2];
+        readFile(fromFileName,supplyBuy);
+        int report = createReport(supplyBuy[0], supplyBuy[1]);
+        writeReportToFile(toFileName, supplyBuy[0], supplyBuy[1], report);
     }
 
-    private void readFile(String fromFileName) {
+    private void readFile(String fromFileName, int[] supplyBuy) {
         try {
             Scanner scanner = new Scanner(new File(fromFileName));
             while (scanner.hasNextLine()) {
@@ -32,10 +26,10 @@ public class WorkWithFile {
 
                 switch (action) {
                     case "supply":
-                        supply += amount;
+                        supplyBuy[0] += amount; // Update supply value at index 0
                         break;
                     case "buy":
-                        buy += amount;
+                        supplyBuy[1] += amount; // Update buy value at index 1
                         break;
                     default:
                         break;
@@ -43,15 +37,15 @@ public class WorkWithFile {
             }
             scanner.close();
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("Can't write data to file ", e);
+            throw new RuntimeException("Can't read data from file " + fromFileName, e);
         }
     }
 
-    private void calculateResult() {
-        result = supply - buy;
+    private int createReport(int supply, int buy) {
+        return supply - buy;
     }
 
-    private void writeReportToFile(String toFileName) {
+    private void writeReportToFile(String toFileName, int supply, int buy, int result) {
         String[][] report = {
                 {"supply", String.valueOf(supply)},
                 {"buy", String.valueOf(buy)},
