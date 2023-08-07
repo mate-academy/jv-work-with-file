@@ -7,6 +7,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final int VALUE_INDEX = 1;
+
     public void getStatistic(String fromFileName, String toFileName) {
         String dataFromFile = readFile(fromFileName);
         String report = createReport(dataFromFile);
@@ -23,36 +25,37 @@ public class WorkWithFile {
     }
 
     private String createReport(String dataFromFile) {
-        String[] countedValues = dataFromFile.split(" ");
-
-        return "supply," + countedValues[0]
+        int supply = 0;
+        int buy = 0;
+        int result = 0;
+        String[] countedValues = dataFromFile.split(System.lineSeparator());
+        for (String value: countedValues) {
+            String[] values = value.split("[, ]");
+            if (value.contains("supply")) {
+                supply += Integer.parseInt(values[VALUE_INDEX]);
+            } else {
+                buy += Integer.parseInt(values[VALUE_INDEX]);
+            }
+        }
+        result = supply - buy;
+        return "supply," + supply
                 + System.lineSeparator()
-                + "buy," + countedValues[1]
+                + "buy," + buy
                 + System.lineSeparator()
-                + "result," + countedValues[2];
+                + "result," + result;
     }
 
     private String readFile(String fromFileName) {
-        int buy = 0;
-        int supply = 0;
-        int result = 0;
+        StringBuilder builder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String dataLine = bufferedReader.readLine();
             while (dataLine != null) {
-                String[] data = dataLine.split("[, ]");
-                if (dataLine.contains("buy")) {
-                    buy += Integer.parseInt(data[1]);
-                } else {
-                    supply += Integer.parseInt(data[1]);
-                }
-
+                builder.append(dataLine).append(System.lineSeparator());
                 dataLine = bufferedReader.readLine();
             }
-            result = supply - buy;
-
-            return supply + " " + buy + " " + result;
+            return builder.toString();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can't read from a file " + fromFileName, e);
         }
     }
 }
