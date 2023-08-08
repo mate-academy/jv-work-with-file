@@ -58,9 +58,4 @@ public class WorkWithFile {
             throw new RuntimeException("Can't write to file.", e);
         }
     }
-
-    public static void main(String[] args) {
-        WorkWithFile workWithFile = new WorkWithFile();
-        workWithFile.getStatistic("input.txt", "output.txt");
-    }
 }
