@@ -56,7 +56,6 @@ public class WorkWithFile {
     private int calculateAmountOfOperationType(String fromFileName, String operationType) {
         String[][] dataRowsAndColumns = readFromFile(fromFileName);
         int amount = 0;
-        //int i = 0; i < dataRowsAndColumns.length; i++
         for (String[] row : dataRowsAndColumns) {
             if (row[OPERATION_TYPE_INDEX].equals(operationType)) {
                 amount += Integer.parseInt(row[AMOUNT_INDEX]);
