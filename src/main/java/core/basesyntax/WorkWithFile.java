@@ -1,10 +1,10 @@
 package core.basesyntax;
 
-import java.io.IOException;
 import java.io.BufferedWriter;
 import java.io.BufferedReader;
 import java.io.FileWriter;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,7 +13,6 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String RESULT = "result";
     private static final String COMA = ",";
-
 
     public void getStatistic(String fromFileName, String toFileName) {
         Map<String, Integer> data = new HashMap<>();
