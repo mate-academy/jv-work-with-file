@@ -24,13 +24,14 @@ public class WorkWithFile {
         StringBuilder supplyBuyInfo = new StringBuilder();
 
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(filename))) {
-            String line;
+            String line = bufferedReader.readLine();
 
-            while ((line = bufferedReader.readLine()) != null) {
+            while (line != null) {
                 supplyBuyInfo.append(line).append(System.lineSeparator());
+                line = bufferedReader.readLine();
             }
         } catch (IOException ex) {
-            throw new RuntimeException("Can't read data from " + filename);
+            throw new RuntimeException("Can't read data from " + filename, ex);
         }
 
         return supplyBuyInfo.toString().split(System.lineSeparator());
@@ -42,11 +43,11 @@ public class WorkWithFile {
         int supplyAmount = 0;
 
         for (String line : data) {
-            String[] info = line.split(DELIMITER);
-            String operation = info[OPERATION_INDEX];
-            int amount = Integer.parseInt(info[AMOUNT_INDEX]);
+            String[] operationInfo = line.split(DELIMITER);
+            String operationType = operationInfo[OPERATION_INDEX];
+            int amount = Integer.parseInt(operationInfo[AMOUNT_INDEX]);
 
-            if (operation.equals(SUPPLY_TYPE)) {
+            if (operationType.equals(SUPPLY_TYPE)) {
                 supplyAmount += amount;
             } else {
                 buyAmount += amount;
@@ -67,7 +68,7 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(filename))) {
             bufferedWriter.write(report);
         } catch (IOException ex) {
-            throw new RuntimeException("Can't write data to " + filename);
+            throw new RuntimeException("Can't write data to " + filename, ex);
         }
     }
 }
