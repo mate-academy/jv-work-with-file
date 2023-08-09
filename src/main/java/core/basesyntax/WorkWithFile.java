@@ -18,7 +18,8 @@ public class WorkWithFile {
     private static final int RESULT_INDEX = 2;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String report = createReport(fromFileName);
+        String[][] data = readFromFile(fromFileName);
+        String report = createReport(data);
         writeToFile(report, toFileName);
     }
 
@@ -26,24 +27,19 @@ public class WorkWithFile {
         File file = new File(toFileName);
         try {
             file.createNewFile();
-        } catch (IOException e) {
-            throw new RuntimeException("Can't create the file " + toFileName, e);
-        }
-
-        try {
             Files.write(file.toPath(), report.getBytes());
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data to the file " + toFileName, e);
+            throw new RuntimeException("Can't create or write data to the file " + toFileName, e);
         }
     }
 
-    private String createReport(String fromFileName) {
+    private String createReport(String[][] dataRowsAndColumns) {
         StringBuilder report = new StringBuilder();
         int[] reportDataAmounts = new int[REPORT_DATA.length];
         for (int i = 0; i < REPORT_DATA.length; i++) {
             report.append(REPORT_DATA[i]).append(DATA_SEPARATOR_CHARACTER);
             reportDataAmounts[i] = (i != RESULT_INDEX)
-                    ? calculateAmountOfOperationType(fromFileName, REPORT_DATA[i])
+                    ? calculateAmountOfOperationType(dataRowsAndColumns, REPORT_DATA[i])
                     : reportDataAmounts[SUPPLY_INDEX] - reportDataAmounts[BUY_INDEX];
             report.append(reportDataAmounts[i]);
             if (i != RESULT_INDEX) {
@@ -53,10 +49,9 @@ public class WorkWithFile {
         return report.toString();
     }
 
-    private int calculateAmountOfOperationType(String fromFileName, String operationType) {
-        String[][] dataRowsAndColumns = readFromFile(fromFileName);
+    private int calculateAmountOfOperationType(String[][] data, String operationType) {
         int amount = 0;
-        for (String[] row : dataRowsAndColumns) {
+        for (String[] row : data) {
             if (row[OPERATION_TYPE_INDEX].equals(operationType)) {
                 amount += Integer.parseInt(row[AMOUNT_INDEX]);
             }
@@ -67,11 +62,11 @@ public class WorkWithFile {
     private String[][] readFromFile(String fileName) {
         String fileText = convertFileTextToString(fileName);
         String[] dataRows = fileText.split(NEWLINE_CHARACTER);
-        String[][] dataRowsAndColumns = new String[dataRows.length][DATA_COLUMNS];
+        String[][] data = new String[dataRows.length][DATA_COLUMNS];
         for (int i = 0; i < dataRows.length; i++) {
-            dataRowsAndColumns[i] = dataRows[i].split(DATA_SEPARATOR_CHARACTER);
+            data[i] = dataRows[i].split(DATA_SEPARATOR_CHARACTER);
         }
-        return dataRowsAndColumns;
+        return data;
     }
 
     private String convertFileTextToString(String fileName) {
