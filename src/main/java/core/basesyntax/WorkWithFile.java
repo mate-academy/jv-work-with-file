@@ -13,11 +13,17 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         Map<String, Integer> data = new HashMap<>();
+
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                String[] tokens = line.split(COMA);
-                data.put(tokens[0], Integer.parseInt(tokens[1]));
+                String[] parts = line.split(COMA);
+                if (parts.length == 2) {
+                    String operationType = parts[0].trim();
+                    int amount = Integer.parseInt(parts[1].trim());
+
+                    data.put(operationType, data.getOrDefault(operationType, 0) + amount);
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
