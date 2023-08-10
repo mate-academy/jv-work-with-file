@@ -8,28 +8,35 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static String line;
-    private static String tmp = "";
-    private static String[] dataFromFile;
+    private static final int STEP = 2;
+    private static final String SUPPLY_OPERATION = "supply";
+    private String line;
+    private String tmp = "";
 
     public void getStatistic(String fromFileName, String toFileName) {
+        String[] textFromFile = readFromFile(fromFileName);
+        String[] report = createReport(textFromFile);
+        writeToFile(report,toFileName);
+    }
+
+    public String[] createReport(String[] dataFromFile) {
+
         int supplyValue = 0;
         int buyValue = 0;
-        dataFromFile = readFromFile(fromFileName);
 
-        for (int i = 0; i < dataFromFile.length; i += 2) {
-            if (dataFromFile[i].equals("supply")) {
+        for (int i = 0; i < dataFromFile.length; i += STEP) {
+            if (dataFromFile[i].equals(SUPPLY_OPERATION)) {
                 supplyValue += Integer.valueOf(dataFromFile[i + 1]);
             } else {
                 buyValue += Integer.valueOf(dataFromFile[i + 1]);
             }
         }
 
-        writeToFile(new String[]{"supply," + supplyValue, "buy," + buyValue, "result,"
-                + (supplyValue - buyValue)}, toFileName);
+        return (new String[]{"supply," + supplyValue, "buy," + buyValue, "result,"
+                + (supplyValue - buyValue)});
     }
 
-    private static String[] readFromFile(String fileName) {
+    private String[] readFromFile(String fileName) {
 
         if (!tmp.equals("")) {
             tmp = "";
