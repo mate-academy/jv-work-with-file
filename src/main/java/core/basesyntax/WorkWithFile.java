@@ -11,6 +11,8 @@ import java.io.PrintWriter;
 public class WorkWithFile {
     private static final String BUY_WORD = "buy";
     private static final String SUPPLY_WORD = "supply";
+    private static final int INDEX_OF_WORD = 0;
+    private static final int INDEX_OF_NUMBER = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         writeDataToTheFile(toFileName, createReport(readDataFromFile(fromFileName)));
@@ -35,10 +37,10 @@ public class WorkWithFile {
         String[] temporaryArray;
         for (String partOfData : data) {
             temporaryArray = partOfData.split(",");
-            if (temporaryArray[0].equals(BUY_WORD)) {
-                buyCounter += Integer.parseInt(temporaryArray[1]);
-            } else if (temporaryArray[0].equals(SUPPLY_WORD)) {
-                supplyCounter += Integer.parseInt(temporaryArray[1]);
+            if (temporaryArray[INDEX_OF_WORD].equals(BUY_WORD)) {
+                buyCounter += Integer.parseInt(temporaryArray[INDEX_OF_NUMBER]);
+            } else if (temporaryArray[INDEX_OF_WORD].equals(SUPPLY_WORD)) {
+                supplyCounter += Integer.parseInt(temporaryArray[INDEX_OF_NUMBER]);
             }
         }
         return SUPPLY_WORD + "," + supplyCounter + System.lineSeparator()
