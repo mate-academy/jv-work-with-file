@@ -1,6 +1,10 @@
 package core.basesyntax;
 
 public class Calculate {
+    private static final String SUPPLY = "supply,";
+    private static final String TO_BUY = "buy,";
+    private static final String RESULT = "result,";
+
     public String calculateBuySupplyData(String data) {
         int toBuy = 0;
         int toSupply = 0;
@@ -15,11 +19,11 @@ public class Calculate {
     }
 
     private String resultData(int totalBuy, int totalSupply) {
-        StringBuilder stringBuilder = new StringBuilder("supply," + totalSupply)
+        StringBuilder stringBuilder = new StringBuilder(SUPPLY + totalSupply)
                 .append(System.lineSeparator())
-                .append("buy," + totalBuy)
+                .append(TO_BUY + totalBuy)
                 .append(System.lineSeparator())
-                .append("result," + (totalSupply - totalBuy));
+                .append(RESULT + (totalSupply - totalBuy));
         return stringBuilder.toString();
     }
 }

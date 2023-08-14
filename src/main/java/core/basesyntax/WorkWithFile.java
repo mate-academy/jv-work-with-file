@@ -10,9 +10,4 @@ public class WorkWithFile {
         String dataToWrite = dataToCalculate.calculateBuySupplyData(dataFromFile);
         writeData.writer(toFileName,dataToWrite);
     }
-
-    public static void main(String[] args) {
-        WorkWithFile test = new WorkWithFile();
-        test.getStatistic("apple.csv","raport.txt");
-    }
 }

@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
@@ -13,10 +12,8 @@ public class ReadData {
                 data.append(line).append(" ");
             }
             return data.toString();
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException("Can`t find file with name " + fromFile,e);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can`t read data from file" + fromFile,e);
         }
     }
 
