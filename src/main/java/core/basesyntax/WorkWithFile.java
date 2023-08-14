@@ -23,12 +23,10 @@ public class WorkWithFile {
     }
 
     private void writeStatistic(File toFile, String statistic) {
-        try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(toFile));
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFile))) {
             writer.write(statistic);
-            writer.close();
         } catch (IOException e) {
-            throw new RuntimeException("Can't write into the file", e);
+            throw new RuntimeException("Can't write into the file " + toFile, e);
         }
     }
 
@@ -56,7 +54,7 @@ public class WorkWithFile {
         try {
             reader = new BufferedReader(new FileReader(file));
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("Can't read the file", e);
+            throw new RuntimeException("Can't read the file " + file, e);
         }
         StringBuilder result = new StringBuilder();
         reader.lines().forEach(s -> result.append(s).append("\n"));
