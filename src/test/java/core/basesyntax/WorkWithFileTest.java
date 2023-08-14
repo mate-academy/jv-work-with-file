@@ -8,7 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class WorkWithFileTest {
-    private WorkWithFile workWithFile = new WorkWithFile();
+    private final WorkWithFile workWithFile = new WorkWithFile();
     private static final String APPLE_RESULT_FILE = "appleResult.csv";
     private static final String GRAPE_RESULT_FILE = "grapeResult.csv";
     private static final String ORANGE_RESULT_FILE = "orangeResult.csv";
@@ -77,10 +77,9 @@ public class WorkWithFileTest {
 
         String actualResult = readFromFile(BANANA_RESULT_FILE).trim();
         String expectedResult = "supply,491" + System.lineSeparator()
-            + "buy,293" + System.lineSeparator()
-            + "result,198";
-        Assert.assertEquals("Calling the getStatistic() method repeatedly returned incorrect results.",
-            expectedResult, actualResult);
+                + "buy,293" + System.lineSeparator()
+                + "result,198";
+        Assert.assertEquals(expectedResult, actualResult);
     }
 
     private String readFromFile(String fileName) {
