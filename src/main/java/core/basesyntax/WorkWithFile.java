@@ -26,7 +26,7 @@ public class WorkWithFile {
         writeToFile(reportData, toFile);
     }
 
-    private static String[] readFromFile(File inputData) {
+    private String[] readFromFile(File inputData) {
         StringBuilder stringBuilder = new StringBuilder();
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(inputData));
@@ -41,7 +41,7 @@ public class WorkWithFile {
         return stringBuilder.toString().split(",");
     }
 
-    private static String[] createReport(String[] readData) {
+    private String[] createReport(String[] readData) {
         String supplyString = "supply";
         String buyString = "buy";
         int supplyCount = 0;
@@ -58,7 +58,7 @@ public class WorkWithFile {
                              "result" + "," + (supplyCount - buyCount)};
     }
 
-    private static void writeToFile(String[] reportData, File toFile) {
+    private void writeToFile(String[] reportData, File toFile) {
         for (String data : reportData) {
             try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFile, true))) {
                 bufferedWriter.write(data);
