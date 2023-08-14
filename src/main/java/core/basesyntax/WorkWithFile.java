@@ -28,7 +28,7 @@ public class WorkWithFile {
             writer.write(statistic);
             writer.close();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can't write into the file", e);
         }
     }
 
@@ -44,9 +44,11 @@ public class WorkWithFile {
             }
             buySum += Integer.parseInt(data[1]);
         }
-        return SUPPLY_STRING + COMA_SYMBOL + supplySum + System.lineSeparator()
-                + BUY_STRING + COMA_SYMBOL + buySum + System.lineSeparator()
-                + RESULT_STRING + COMA_SYMBOL + (supplySum - buySum);
+        StringBuilder result = new StringBuilder().append(SUPPLY_STRING).append(COMA_SYMBOL)
+                .append(supplySum).append(System.lineSeparator()).append(BUY_STRING)
+                .append(COMA_SYMBOL).append(buySum).append(System.lineSeparator())
+                .append(RESULT_STRING).append(COMA_SYMBOL).append((supplySum - buySum));
+        return result.toString();
     }
 
     private String readFile(File file) {
@@ -54,7 +56,7 @@ public class WorkWithFile {
         try {
             reader = new BufferedReader(new FileReader(file));
         } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can't read the file", e);
         }
         StringBuilder result = new StringBuilder();
         reader.lines().forEach(s -> result.append(s).append("\n"));
