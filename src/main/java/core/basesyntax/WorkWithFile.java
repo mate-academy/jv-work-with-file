@@ -8,7 +8,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-
     private static final String WORD_BUY = "buy";
     private static final String WORD_SUPPLY = "supply";
     private static final String COMMA = ",";
@@ -17,12 +16,12 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
 
-        String report = createReport(fromFileName);
+        String[] data = readFile(fromFileName);
+        String report = createReport(data);
         writeToFile(report, toFileName);
-
     }
 
-    private String createReport(String fromFileName) {
+    private String[] readFile(String fromFileName) {
 
         File fileToRead = new File(fromFileName);
 
@@ -36,33 +35,35 @@ public class WorkWithFile {
                 info = bufferedReader.readLine();
             }
 
-            String[] splittedInfoBySpace = contentOfFile.toString().split(SPACE);
-
-            int bought = NUMBER_ZERO;
-            int supplied = NUMBER_ZERO;
-
-            for (String splittedInfo : splittedInfoBySpace) {
-                String[] tempData = splittedInfo.split(COMMA);
-                if (tempData[NUMBER_ZERO].startsWith(WORD_BUY)) {
-                    bought += Integer.parseInt(tempData[1]);
-                } else if (tempData[NUMBER_ZERO].startsWith(WORD_SUPPLY)) {
-                    supplied += Integer.parseInt(tempData[1]);
-                }
-            }
-
-            int result = supplied - bought;
-
-            StringBuilder infoReport = new StringBuilder();
-            infoReport.append(WORD_SUPPLY).append(COMMA).append(supplied)
-                    .append(System.lineSeparator()).append(WORD_BUY).append(COMMA)
-                    .append(bought).append(System.lineSeparator())
-                    .append("result,").append(result);
-
-            return infoReport.toString();
-
+            return contentOfFile.toString().split(SPACE);
         } catch (IOException e) {
             throw new RuntimeException("can't read the file: " + fromFileName, e);
         }
+    }
+
+    private String createReport(String[] data) {
+
+        int bought = NUMBER_ZERO;
+        int supplied = NUMBER_ZERO;
+
+        for (String splittedInfo : data) {
+            String[] tempData = splittedInfo.split(COMMA);
+            if (tempData[NUMBER_ZERO].startsWith(WORD_BUY)) {
+                bought += Integer.parseInt(tempData[1]);
+            } else if (tempData[NUMBER_ZERO].startsWith(WORD_SUPPLY)) {
+                supplied += Integer.parseInt(tempData[1]);
+            }
+        }
+
+        int result = supplied - bought;
+
+        StringBuilder infoReport = new StringBuilder();
+        infoReport.append(WORD_SUPPLY).append(COMMA).append(supplied)
+                .append(System.lineSeparator()).append(WORD_BUY).append(COMMA)
+                .append(bought).append(System.lineSeparator())
+                .append("result,").append(result);
+
+        return infoReport.toString();
     }
 
     private void writeToFile(String report, String toFileName) {
@@ -78,7 +79,3 @@ public class WorkWithFile {
         }
     }
 }
-
-
-
-
