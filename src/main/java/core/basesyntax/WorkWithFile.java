@@ -38,26 +38,28 @@ public class WorkWithFile {
         int buySum = 0;
         for (String line : dataFromFile) {
             String[] operationInfo = line.split(SEPARATOR);
-            int sum = Integer.parseInt(operationInfo[1]);
-            if (operationInfo[0].contains(SUPPLY)) {
-                supplySum += sum;
-            }
-            if (operationInfo[0].contains(BUY)) {
-                buySum += sum;
+            int operationAmount = Integer.parseInt(operationInfo[1]);
+            String operationType = operationInfo[0];
+            if (operationType.contains(SUPPLY)) {
+                supplySum += operationAmount;
+            } else {
+                buySum += operationAmount;
             }
         }
         int resultAmount = supplySum - buySum;
-        report.append(SUPPLY).append(SEPARATOR).append(supplySum).append(System.lineSeparator())
-            .append(BUY).append(SEPARATOR).append(buySum).append(System.lineSeparator())
-            .append(RESULT).append(SEPARATOR).append(resultAmount);
+        report.append(SUPPLY).append(SEPARATOR).append(supplySum)
+                .append(System.lineSeparator())
+                .append(BUY).append(SEPARATOR).append(buySum)
+                .append(System.lineSeparator())
+                .append(RESULT).append(SEPARATOR).append(resultAmount);
         return report.toString();
     }
 
     private void writeToFile(String fileName, String report) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
             bufferedWriter.write(report);
-        } catch (IOException j) {
-            throw new RuntimeException("Can't write file " + fileName, j);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write file " + fileName, e);
         }
     }
 }
