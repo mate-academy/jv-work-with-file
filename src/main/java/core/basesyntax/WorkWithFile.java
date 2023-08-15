@@ -1,13 +1,13 @@
 package core.basesyntax;
 
 public class WorkWithFile {
-    private static ReadData readData = new ReadData();
-    private static Calculate dataToCalculate = new Calculate();
-    private static WriteData writeData = new WriteData();
+    private static FileDataReader readData = new FileDataReader();
+    private static ReportCalculate dataToCalculate = new ReportCalculate();
+    private static FileDataWritter writeData = new FileDataWritter();
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String dataFromFile = readData.getDataFromFile(fromFileName);
-        String dataToWrite = dataToCalculate.calculateBuySupplyData(dataFromFile);
-        writeData.writer(toFileName,dataToWrite);
+        String dataFromFile = readData.readFrom(fromFileName);
+        String dataToWrite = dataToCalculate.calculateReportFrom(dataFromFile);
+        writeData.writeTo(toFileName, dataToWrite);
     }
 }
