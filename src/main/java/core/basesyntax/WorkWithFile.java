@@ -53,8 +53,9 @@ public class WorkWithFile {
             int result = supplied - bought;
 
             StringBuilder infoReport = new StringBuilder();
-            infoReport.append(WORD_SUPPLY).append(COMMA).append(supplied).append(System.lineSeparator())
-                    .append(WORD_BUY).append(COMMA).append(bought).append(System.lineSeparator())
+            infoReport.append(WORD_SUPPLY).append(COMMA).append(supplied)
+                    .append(System.lineSeparator()).append(WORD_BUY).append(COMMA)
+                    .append(bought).append(System.lineSeparator())
                     .append("result,").append(result);
 
             return infoReport.toString();
@@ -64,7 +65,7 @@ public class WorkWithFile {
         }
     }
 
-    private void writeToFile (String report, String toFileName) {
+    private void writeToFile(String report, String toFileName) {
 
         File fileToWrite = new File(toFileName);
 
