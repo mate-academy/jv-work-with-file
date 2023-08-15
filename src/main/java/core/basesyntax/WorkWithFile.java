@@ -42,8 +42,8 @@ public class WorkWithFile {
             }
         }
         result = supplyAmount - buyAmount;
-        report.append("supply").append(",").append(supplyAmount).append("\r\n")
-                .append("buy").append(",").append(buyAmount).append("\r\n")
+        report.append("supply").append(",").append(supplyAmount).append(System.lineSeparator())
+                .append("buy").append(",").append(buyAmount).append(System.lineSeparator())
                 .append("result").append(",").append(result);
         return report.toString();
     }
