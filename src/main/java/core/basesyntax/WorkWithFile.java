@@ -30,7 +30,7 @@ public class WorkWithFile {
     private String createReport(String[] data) {
         int buyAmount = 0;
         int supplyAmount = 0;
-        int result = 0;
+        int result;
         StringBuilder report = new StringBuilder();
 
         for (int i = 0; i < data.length; i++) {
