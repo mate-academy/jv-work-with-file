@@ -6,36 +6,30 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class WorkWithFile {
+    private static final int OPERATION_TYPE_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
+
     public void getStatistic(String fromFileName, String toFileName) {
-        String[] fromFileContent = readFile(fromFileName);
-        String reportData = reportDataGenerator(fromFileContent);
+        List<String> fromFileContent = readFile(fromFileName);
+        String reportData = generateReport(fromFileContent);
         writeToFile(toFileName, reportData);
     }
 
-    private String[] readFile(String fileName) {
-        File file = new File(fileName);
-
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
-            StringBuilder builder = new StringBuilder();
-            String line = bufferedReader.readLine();
-
-            while (line != null) {
-                builder.append(line).append(";");
-                line = bufferedReader.readLine();
-            }
-
-            String fileContent = builder.toString();
-
-            if (fileContent.length() != 0) {
-                return fileContent.split(";");
-            } else {
-                return new String[0];
+    private List<String> readFile(String fileName) {
+        List<String> lines = new ArrayList<>();
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                lines.add(line);
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read " + fileName, e);
         }
+        return lines;
     }
 
     private void writeToFile(String fileName, String reportData) {
@@ -48,14 +42,14 @@ public class WorkWithFile {
         }
     }
 
-    private String reportDataGenerator(String[] input) {
+    private String generateReport(List<String> input) {
         int supplyTotal = 0;
         int buyTotal = 0;
 
-        for (int i = 0; i < input.length; i++) {
-            String[] record = input[i].split(",");
-            String key = record[0];
-            int value = Integer.parseInt(record[1]);
+        for (String record : input) { // Use enhanced for loop to iterate through List
+            String[] parts = record.split(",");
+            String key = parts[OPERATION_TYPE_INDEX];
+            int value = Integer.parseInt(parts[AMOUNT_INDEX]);
 
             if (key.equals("supply")) {
                 supplyTotal += value;
@@ -66,12 +60,6 @@ public class WorkWithFile {
 
         int result = supplyTotal - buyTotal;
 
-        StringBuilder builder = new StringBuilder();
-        builder.append("supply").append(",").append(supplyTotal).append(System.lineSeparator())
-                .append("buy").append(",").append(buyTotal).append(System.lineSeparator())
-                .append("result").append(",").append(result).append(System.lineSeparator());
-        String reportData = builder.toString();
-
-        return reportData;
+        return String.format("supply,%d%nbuy,%d%nresult,%d%n", supplyTotal, buyTotal, result);
     }
 }
