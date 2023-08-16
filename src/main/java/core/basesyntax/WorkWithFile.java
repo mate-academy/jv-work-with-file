@@ -35,11 +35,9 @@ public class WorkWithFile {
     }
 
     private String createReport(String[] data) {
+        StringBuilder report = new StringBuilder();
         int buyAmount = 0;
         int supplyAmount = 0;
-        int result;
-        StringBuilder report = new StringBuilder();
-
         for (int i = 0; i < data.length; i++) {
             String[] splitData = data[i].split(SEPARATION_SIGN);
             if (splitData[TYPE_OF_OPERATION_INDEX].equals(BUY_WORD)) {
@@ -48,11 +46,10 @@ public class WorkWithFile {
                 supplyAmount += Integer.parseInt(splitData[AMOUNT_OF_OPERATION_INDEX]);
             }
         }
+        int result = 0;
         result = supplyAmount - buyAmount;
-        report.append(SUPPLY_WORD).append(SEPARATION_SIGN)
-                .append(supplyAmount).append(System.lineSeparator())
-                .append(BUY_WORD).append(SEPARATION_SIGN)
-                .append(buyAmount).append(System.lineSeparator())
+        report.append(SUPPLY_WORD).append(SEPARATION_SIGN).append(supplyAmount).append(System.lineSeparator())
+                .append(BUY_WORD).append(SEPARATION_SIGN).append(buyAmount).append(System.lineSeparator())
                 .append(RESULT_WORD).append(SEPARATION_SIGN).append(result);
         return report.toString();
     }
