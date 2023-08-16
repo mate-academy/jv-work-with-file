@@ -2,11 +2,9 @@ package core.basesyntax;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 
 public class WorkWithFile {
     private static final String BUY_WORD = "buy";
@@ -25,9 +23,9 @@ public class WorkWithFile {
     private String[] readDataFromFile(String fileName) {
         StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
-            String temporary;
-            while ((temporary = bufferedReader.readLine()) != null) {
-                stringBuilder.append(temporary).append(WHITESPACE_SEPARATOR);
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                stringBuilder.append(line).append(WHITESPACE_SEPARATOR);
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from the file: " + fileName, e);
@@ -38,36 +36,30 @@ public class WorkWithFile {
     private String createReport(String[] data) {
         int supplyCounter = 0;
         int buyCounter = 0;
-        String[] temporaryArray;
+        String[] operationData;
         for (String partOfData : data) {
-            temporaryArray = partOfData.split(COMMA_SEPARATOR);
-            if (temporaryArray[INDEX_OF_WORD].equals(BUY_WORD)) {
-                buyCounter += Integer.parseInt(temporaryArray[INDEX_OF_NUMBER]);
-            } else if (temporaryArray[INDEX_OF_WORD].equals(SUPPLY_WORD)) {
-                supplyCounter += Integer.parseInt(temporaryArray[INDEX_OF_NUMBER]);
+            operationData = partOfData.split(COMMA_SEPARATOR);
+            String operation = operationData[INDEX_OF_WORD];
+            String operationAmount = operationData[INDEX_OF_NUMBER];
+            if (operation.equals(BUY_WORD)) {
+                buyCounter += Integer.parseInt(operationAmount);
+            } else if (operation.equals(SUPPLY_WORD)) {
+                supplyCounter += Integer.parseInt(operationAmount);
             }
         }
-        return SUPPLY_WORD + COMMA_SEPARATOR + supplyCounter + System.lineSeparator()
-                + BUY_WORD + COMMA_SEPARATOR + buyCounter + System.lineSeparator()
-                + "result," + (supplyCounter - buyCounter);
+        StringBuilder result = new StringBuilder();
+        return result.append(SUPPLY_WORD).append(COMMA_SEPARATOR)
+                .append(supplyCounter).append(System.lineSeparator())
+                .append(BUY_WORD).append(COMMA_SEPARATOR).append(buyCounter)
+                .append(System.lineSeparator()).append("result,")
+                .append((supplyCounter - buyCounter)).toString();
     }
 
     private void writeDataToTheFile(String fileName, String data) {
-        if (new File(fileName).length() != 0) {
-            deleteContentsOfFile(fileName);
-        }
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName, true))) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
             bufferedWriter.write(data);
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to the file: " + fileName, e);
-        }
-    }
-
-    private void deleteContentsOfFile(String fileName) {
-        try (PrintWriter writer = new PrintWriter(fileName)) {
-            writer.write("");
-        } catch (IOException e) {
-            throw new RuntimeException("Can't delete content of the file: " + fileName, e);
         }
     }
 }
