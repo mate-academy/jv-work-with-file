@@ -7,6 +7,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String SUPPLY_WORD = "supply";
+    private static final String BUY_WORD = "buy";
+    private static final String SEPARATION_SIGN = ",";
+    private static final String RESULT_WORD = "result";
+    private static final int TYPE_OF_OPERATION_INDEX = 0;
+    private static final int AMOUNT_OF_OPERATION_INDEX = 1;
+
     public void getStatistic(String fromFileName, String toFileName) {
         String[] data = readFromFile(fromFileName);
         String finalReport = createReport(data);
@@ -14,17 +21,17 @@ public class WorkWithFile {
     }
 
     private String[] readFromFile(String fromFileName) {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String value = reader.readLine();
             while (value != null) {
-                sb.append(value).append(System.lineSeparator());
+                stringBuilder.append(value).append(System.lineSeparator());
                 value = reader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read a file", e);
+            throw new RuntimeException("Can't read a file with name " + fromFileName, e);
         }
-        return sb.toString().split(System.lineSeparator());
+        return stringBuilder.toString().split(System.lineSeparator());
     }
 
     private String createReport(String[] data) {
@@ -34,17 +41,19 @@ public class WorkWithFile {
         StringBuilder report = new StringBuilder();
 
         for (int i = 0; i < data.length; i++) {
-            String[] splitData = data[i].split(",");
-            if (splitData[0].equals("buy")) {
-                buyAmount += Integer.parseInt(splitData[1]);
-            } else if (splitData[0].equals("supply")) {
-                supplyAmount += Integer.parseInt(splitData[1]);
+            String[] splitData = data[i].split(SEPARATION_SIGN);
+            if (splitData[TYPE_OF_OPERATION_INDEX].equals(BUY_WORD)) {
+                buyAmount += Integer.parseInt(splitData[AMOUNT_OF_OPERATION_INDEX]);
+            } else if (splitData[TYPE_OF_OPERATION_INDEX].equals(SUPPLY_WORD)) {
+                supplyAmount += Integer.parseInt(splitData[AMOUNT_OF_OPERATION_INDEX]);
             }
         }
         result = supplyAmount - buyAmount;
-        report.append("supply").append(",").append(supplyAmount).append(System.lineSeparator())
-                .append("buy").append(",").append(buyAmount).append(System.lineSeparator())
-                .append("result").append(",").append(result);
+        report.append(SUPPLY_WORD).append(SEPARATION_SIGN)
+                .append(supplyAmount).append(System.lineSeparator())
+                .append(BUY_WORD).append(SEPARATION_SIGN)
+                .append(buyAmount).append(System.lineSeparator())
+                .append(RESULT_WORD).append(SEPARATION_SIGN).append(result);
         return report.toString();
     }
 
@@ -53,7 +62,7 @@ public class WorkWithFile {
         try (FileWriter fileWriter = new FileWriter(file)) {
             fileWriter.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Can't open file", e);
+            throw new RuntimeException("Can't write a file : " + toFileName, e);
         }
     }
 }
