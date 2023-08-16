@@ -48,7 +48,7 @@ public class WorkWithFile {
         }
         int result = 0;
         result = supplyAmount - buyAmount;
-        report.append(SUPPLY_WORD).append(SEPARATION_SIGN).append(supplyAmount).append(System.lineSeparator())
+        report new.append(SUPPLY_WORD).append(SEPARATION_SIGN).append(supplyAmount).append(System.lineSeparator())
                 .append(BUY_WORD).append(SEPARATION_SIGN).append(buyAmount).append(System.lineSeparator())
                 .append(RESULT_WORD).append(SEPARATION_SIGN).append(result);
         return report.toString();
