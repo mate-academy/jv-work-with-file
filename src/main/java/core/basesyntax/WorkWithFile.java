@@ -2,7 +2,6 @@ package core.basesyntax;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -15,37 +14,15 @@ public class WorkWithFile {
     private static final String COMMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        File fromFile = createFile(fromFileName);
-        File toFile = createFile(toFileName);
-        String[] strings = getReadLines(fromFile);
-        int supplyAmount = accountAmount(strings, SUPPLY);
-        int buyAmount = accountAmount(strings, BUY);
+        String[] strings = readData(fromFileName);
+        int supplyAmount = calculateAmountOfOperation(strings, SUPPLY);
+        int buyAmount = calculateAmountOfOperation(strings, BUY);
         int resultAmount = supplyAmount - buyAmount;
         String report = createReport(supplyAmount, buyAmount, resultAmount);
-        writeToFile(toFile, report);
+        writeToFile(toFileName, report);
     }
 
-    private File createFile(String fileName) {
-        return new File(fileName);
-    }
-
-    private int accountAmount(String[] strings, String typeOfAmount) {
-        int amount = 0;
-        for (String line : strings) {
-            String[] typeAndAmount = line.split(COMMA);
-            if (typeAndAmount.length == 2 && typeOfAmount.equals(SUPPLY)
-                    && typeAndAmount[0].equals("supply")) {
-                amount += Integer.parseInt(typeAndAmount[1]);
-            }
-            if (typeAndAmount.length == 2 && typeOfAmount.equals(BUY)
-                    && typeAndAmount[0].equals("buy")) {
-                amount += Integer.parseInt(typeAndAmount[1]);
-            }
-        }
-        return amount;
-    }
-
-    private String[] getReadLines(File fromFile) {
+    private String[] readData(String fromFile) {
         StringBuilder textFromFile = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFile))) {
             String line = reader.readLine();
@@ -59,13 +36,27 @@ public class WorkWithFile {
         return textFromFile.toString().split(NEW_LINE);
     }
 
-    private String createReport(int supplyAmount, int buyAmount, int resultAmount) {
-        return SUPPLY + COMMA + supplyAmount + NEW_LINE
-                + BUY + COMMA + buyAmount + NEW_LINE
-                + RESULT + COMMA + resultAmount;
+    private int calculateAmountOfOperation(String[] operationsData, String operation) {
+        int amount = 0;
+        for (String line : operationsData) {
+            String[] operationAndAmount = line.split(COMMA);
+            String currentOperation = operationAndAmount[0];
+            if (operationAndAmount.length == 2 && currentOperation.equals(operation)) {
+                String currentAmount = operationAndAmount[1];
+                amount += Integer.parseInt(currentAmount);
+            }
+        }
+        return amount;
     }
 
-    private void writeToFile(File toFile, String report) {
+    private String createReport(int supplyAmount, int buyAmount, int resultAmount) {
+        StringBuilder dataOfReport = new StringBuilder().append(SUPPLY).append(COMMA)
+                .append(supplyAmount).append(NEW_LINE).append(BUY).append(COMMA).append(buyAmount)
+                .append(NEW_LINE).append(RESULT).append(COMMA).append(resultAmount);
+        return dataOfReport.toString();
+    }
+
+    private void writeToFile(String toFile, String report) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFile))) {
             writer.write(report);
         } catch (IOException e) {
