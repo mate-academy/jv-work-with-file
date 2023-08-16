@@ -1,0 +1,4 @@
+supply,100
+supply,10
+buy,5
+buy,100
