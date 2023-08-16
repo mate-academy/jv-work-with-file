@@ -2,70 +2,59 @@ package core.basesyntax;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class WorkWithFile {
+    private static final String SUPPLY_STRING = "supply";
+    private static final String BUY_STRING = "buy";
+    private static final String COMMA_SEPARATOR = ",";
+
     public void getStatistic(String fromFileName, String toFileName) {
-        File fromFile = new File(fromFileName);
-        File toFile = new File(toFileName);
-        Path reportPath = Paths.get(toFileName);
-        try {
-            if (Files.exists(reportPath)) {
-                Files.delete(reportPath);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("Can't remove file", e);
-        }
-        String[] reportData = createReport(readFromFile(fromFile));
-        writeToFile(reportData, toFile);
+        String[] data = readFromFile(fromFileName);
+        String reportData = createReport(data);
+        writeToFile(toFileName, reportData);
     }
 
-    private String[] readFromFile(File inputData) {
+    private String[] readFromFile(String inputData) {
         StringBuilder stringBuilder = new StringBuilder();
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(inputData));
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(inputData))) {
             String lineValue = bufferedReader.readLine();
             while (lineValue != null) {
-                stringBuilder.append(lineValue).append(",");
+                stringBuilder.append(lineValue).append(System.lineSeparator());
                 lineValue = bufferedReader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't read data from the file " + inputData, e);
         }
-        return stringBuilder.toString().split(",");
+        return stringBuilder.toString().split(System.lineSeparator());
     }
 
-    private String[] createReport(String[] readData) {
-        String supplyString = "supply";
-        String buyString = "buy";
+    private String createReport(String[] readData) {
         int supplyCount = 0;
         int buyCount = 0;
-        for (int i = 0; i < readData.length; i += 2) {
-            if (readData[i].equals(supplyString)) {
-                supplyCount += Integer.parseInt(readData[i + 1]);
+        for (String data : readData) {
+            String[] currentLine = data.split(COMMA_SEPARATOR);
+            if (currentLine[0].equals(SUPPLY_STRING)) {
+                supplyCount += Integer.parseInt(currentLine[1]);
             } else {
-                buyCount += Integer.parseInt(readData[i + 1]);
+                buyCount += Integer.parseInt(currentLine[1]);
             }
         }
-        return new String[] {supplyString + "," + supplyCount,
-                             buyString + "," + buyCount,
-                             "result" + "," + (supplyCount - buyCount)};
+        StringBuilder reportBuilder = new StringBuilder().append(SUPPLY_STRING)
+                .append(COMMA_SEPARATOR).append(supplyCount).append(System.lineSeparator())
+                .append(BUY_STRING).append(COMMA_SEPARATOR).append(buyCount)
+                .append(System.lineSeparator()).append("result").append(COMMA_SEPARATOR)
+                .append(supplyCount - buyCount);
+        return reportBuilder.toString();
     }
 
-    private void writeToFile(String[] reportData, File toFile) {
-        for (String data : reportData) {
-            try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFile, true))) {
-                bufferedWriter.write(data);
-                bufferedWriter.newLine();
-            } catch (IOException e) {
-                throw new RuntimeException("Can't write file", e);
-            }
+    private void writeToFile(String toFile, String reportData) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFile))) {
+            bufferedWriter.write(reportData);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write data to the file " + toFile, e);
         }
     }
 }
