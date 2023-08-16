@@ -14,7 +14,18 @@ public class WorkWithFile {
     private static final String BUY_OPERATION = "buy";
     private static final String SUPPLY_OPERATION = "supply";
 
-    public String[] readFromFile(String fromFileName) {
+    public void getStatistic(String fromFileName, String toFileName) {
+        int[] data = processData(fromFileName);
+        int supplyCount = data[0];
+        int buyCount = data[1];
+        StringBuilder report = new StringBuilder();
+        report.append("supply,").append(supplyCount).append(System.lineSeparator())
+                .append("buy,").append(buyCount).append(System.lineSeparator())
+                .append("result,").append(supplyCount - buyCount);
+        writeToFile(toFileName, report.toString());
+    }
+
+    private String[] readFromFile(String fromFileName) {
         ArrayList<String> lines = new ArrayList<>();
         try (BufferedReader fileReader = new BufferedReader(new FileReader(fromFileName))) {
             String line = fileReader.readLine();
@@ -23,12 +34,12 @@ public class WorkWithFile {
                 line = fileReader.readLine();
             }
         } catch (IOException e) {
-            System.out.println("Error occurred while reading from file");
+            throw new RuntimeException("Error occurred while reading from file " + fromFileName, e);
         }
         return lines.toArray(new String[0]);
     }
 
-    public void getStatistic(String fromFileName, String toFileName) {
+    private int[] processData(String fromFileName) {
         int supplyCount = 0;
         int buyCount = 0;
         String[] lines = readFromFile(fromFileName);
@@ -40,18 +51,14 @@ public class WorkWithFile {
                 buyCount += Integer.parseInt(splited[INDEX_OF_NUMBER]);
             }
         }
-        StringBuilder report = new StringBuilder();
-        report.append("supply,").append(supplyCount).append(System.lineSeparator())
-                .append("buy,").append(buyCount).append(System.lineSeparator())
-                .append("result,").append(supplyCount - buyCount);
-        writeToFile(toFileName, report.toString());
+        return new int[] {supplyCount, buyCount};
     }
 
-    private static void writeToFile(String toFileName, String message) {
+    private void writeToFile(String toFileName, String message) {
         try (BufferedWriter fileWriter = new BufferedWriter(new FileWriter(toFileName))) {
             fileWriter.write(message);
         } catch (IOException e) {
-            System.out.println("Error occurred while writing to file");
+            throw new RuntimeException("Error occurred while writing to file " + toFileName, e);
         }
     }
 }
