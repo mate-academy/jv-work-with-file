@@ -13,7 +13,12 @@ public class WorkWithFile {
     private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        File file = new File(fromFileName);
+        String output = readFile(fromFileName);
+        writeToFile(output, toFileName);
+    }
+
+    private String readFile(String sourceFile) {
+        File file = new File(sourceFile);
         int supplyResult = 0;
         int buyResult = 0;
         int result = 0;
@@ -34,14 +39,16 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read the file", e);
         }
-
         StringBuilder builder = new StringBuilder();
         builder.append(SUPPLY).append(",").append(supplyResult).append(System.lineSeparator())
                 .append(BUY).append(",").append(buyResult).append(System.lineSeparator())
                 .append(RESULT).append(",").append(result);
-        String output = builder.toString();
 
-        File file2 = new File(toFileName);
+        return builder.toString();
+    }
+
+    private void writeToFile(String data, String resultFile) {
+        File file2 = new File(resultFile);
         try {
             if (file2.exists()) {
                 file2.delete();
@@ -52,7 +59,7 @@ public class WorkWithFile {
         }
 
         try {
-            Files.write(file2.toPath(), output.getBytes(), StandardOpenOption.APPEND);
+            Files.write(file2.toPath(), data.getBytes(), StandardOpenOption.APPEND);
         } catch (IOException e) {
             throw new RuntimeException("Can't write into the file", e);
         }
