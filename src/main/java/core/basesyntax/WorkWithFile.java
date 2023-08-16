@@ -13,22 +13,20 @@ public class WorkWithFile {
     private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        try {
-            String report = calculateReport(readFromFile(fromFileName));
-            writeToFile(toFileName, report);
-            System.out.println("Report generated successfully.");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        String report = calculateReport(readFromFile(fromFileName));
+        writeToFile(toFileName, report);
+        System.out.println("Report generated successfully.");
     }
 
-    private String readFromFile(String fileName) throws IOException {
+    private String readFromFile(String fileName) {
         StringBuilder data = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 data.append(line).append(System.lineSeparator());
             }
+        } catch (IOException e) {
+            System.out.println("Reading file failed.");
         }
         return data.toString();
     }
@@ -39,31 +37,29 @@ public class WorkWithFile {
 
         String[] lines = data.split(System.lineSeparator());
         for (String line : lines) {
-            String[] parts = line.split(COMMA);
-            if (parts.length == 2) {
-                String operationType = parts[0].trim();
-                int amount = Integer.parseInt(parts[1].trim());
-                if (operationType.equalsIgnoreCase(SUPPLY)) {
-                    supplyTotal += amount;
-                } else if (operationType.equalsIgnoreCase(BUY)) {
-                    buyTotal += amount;
-                }
+            String[] operationInfo = line.split(COMMA);
+            String operationType = operationInfo[0];
+            int operationAmount = Integer.parseInt(operationInfo[1]);
+            if (operationType.equalsIgnoreCase(SUPPLY)) {
+                supplyTotal += operationAmount;
+            } else {
+                buyTotal += operationAmount;
             }
         }
-
         int result = supplyTotal - buyTotal;
-
         StringBuilder report = new StringBuilder();
-        report.append(SUPPLY + COMMA).append(supplyTotal).append(System.lineSeparator());
-        report.append(BUY + COMMA).append(buyTotal).append(System.lineSeparator());
-        report.append(RESULT + COMMA).append(result);
+        report.append(SUPPLY).append(COMMA).append(supplyTotal).append(System.lineSeparator());
+        report.append(BUY).append(COMMA).append(buyTotal).append(System.lineSeparator());
+        report.append(RESULT).append(COMMA).append(result);
 
         return report.toString();
     }
 
-    private void writeToFile(String fileName, String content) throws IOException {
+    private void writeToFile(String fileName, String content) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             writer.write(content);
+        } catch (IOException e) {
+            System.out.println("Writing file failed.");
         }
     }
 }
