@@ -8,6 +8,9 @@ import java.io.IOException;
 
 public class WorkWithFile {
     private static final Character SEPARATOR = ',';
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String file = readFile(fromFileName);
@@ -35,18 +38,17 @@ public class WorkWithFile {
         String[] dataLines = fileData.split(System.lineSeparator());
         for (String line : dataLines) {
             String[] operationInfo = line.split(String.valueOf(SEPARATOR));
-            if (operationInfo[0].equals("supply")) {
-                supply += Integer.parseInt(operationInfo[1]);
+            final String VALUE = operationInfo[1];
+            if (operationInfo[0].equals(SUPPLY)) {
+                supply += Integer.parseInt(VALUE);
             } else {
-                buy += Integer.parseInt(operationInfo[1]);
+                buy += Integer.parseInt(VALUE);
             }
         }
         int result = supply - buy;
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("supply,").append(supply).append(System.lineSeparator());
-        stringBuilder.append("buy,").append(buy).append(System.lineSeparator());
-        stringBuilder.append("result,").append(result);
-        return stringBuilder.toString();
+        return new StringBuilder(SUPPLY).append(SEPARATOR).append(supply).append(System.lineSeparator())
+                .append(BUY).append(SEPARATOR).append(buy).append(System.lineSeparator())
+                .append(RESULT).append(SEPARATOR).append(result).toString();
     }
 
     private void writeToFile(String toFileName, String report) {
