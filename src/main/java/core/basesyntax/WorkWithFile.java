@@ -13,7 +13,7 @@ public class WorkWithFile {
     private static final String BUY = "buy";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        makeWrittenFile(stringStat(calculateArrayOfStat(stringDataReport(fromFileName))),
+        writeToFile(createReport(stringDataReport(fromFileName)),
                 new File(toFileName));
     }
 
@@ -25,13 +25,12 @@ public class WorkWithFile {
                 stringBuilder.append(value).append(System.lineSeparator());
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't read file" + fromFileName, e);
         }
-        String[] text = stringBuilder.toString().split(System.lineSeparator());
-        return text;
+        return stringBuilder.toString().split(System.lineSeparator());
     }
 
-    private int[] calculateArrayOfStat(String[] text) {
+    private StringBuilder createReport(String[] text) {
         int supply = 0;
         int buy = 0;
         int result;
@@ -45,18 +44,10 @@ public class WorkWithFile {
             }
         }
         result = supply - buy;
-        int[] arrayOfStat = new int[]{supply, buy, result};
-        return arrayOfStat;
-    }
-
-    private StringBuilder stringStat(int[] arrayOfStat) {
-        int supply = arrayOfStat[0];
-        int buy = arrayOfStat[1];
-        int result = arrayOfStat[2];
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("supply," + supply + System.lineSeparator())
-                .append("buy," + buy + System.lineSeparator())
-                .append("result," + result + System.lineSeparator());
+        stringBuilder.append("supply,").append(supply).append(System.lineSeparator())
+                .append("buy,").append(buy).append(System.lineSeparator())
+                .append("result,").append(result).append(System.lineSeparator());
         return stringBuilder;
     }
 
@@ -64,7 +55,7 @@ public class WorkWithFile {
         try {
             toFileName.createNewFile();
         } catch (IOException e) {
-            throw new RuntimeException("Can't create this file", e);
+            throw new RuntimeException("Can't create this file" + toFileName, e);
         }
         return true;
     }
@@ -75,8 +66,8 @@ public class WorkWithFile {
         }
     }
 
-    private void makeWrittenFile(StringBuilder stringBuilder, File toFileName) {
-        String[] stats = stringBuilder.toString().split(System.lineSeparator());
+    private void writeToFile(StringBuilder statistic, File toFileName) {
+        String[] stats = statistic.toString().split(System.lineSeparator());
         fileExistCheck(toFileName);
         createFile(toFileName);
         for (String stat : stats) {
