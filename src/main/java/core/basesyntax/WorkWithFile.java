@@ -42,9 +42,9 @@ public class WorkWithFile {
 
     private String createReport() {
         int result = resultSupply - resultBuy;
-        return SUPPLY + ", " + resultSupply + System.lineSeparator()
-                + BUY + ", " + resultBuy + System.lineSeparator()
-                + "result, " + result;
+        return SUPPLY + "," + resultSupply + System.lineSeparator()
+                + BUY + "," + resultBuy + System.lineSeparator()
+                + "result," + result;
     }
 
     private List<String> readFromFile(String fromFileName) {
