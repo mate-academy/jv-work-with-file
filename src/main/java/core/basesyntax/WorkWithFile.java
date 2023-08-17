@@ -49,7 +49,8 @@ public class WorkWithFile {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Не удается создать или записать данные в файл " + toFileName, e);
+            throw new RuntimeException("Не удается создать или записать данные в файл "
+                    + toFileName, e);
         }
     }
 }
