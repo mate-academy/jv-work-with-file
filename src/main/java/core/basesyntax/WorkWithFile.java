@@ -26,7 +26,7 @@ public class WorkWithFile {
                 data.append(line).append(System.lineSeparator());
             }
         } catch (IOException e) {
-            System.out.println("Reading file failed.");
+            throw new RuntimeException("Failed to read the file:" + fileName, e);
         }
         return data.toString();
     }
@@ -34,7 +34,6 @@ public class WorkWithFile {
     private String calculateReport(String data) {
         int supplyTotal = 0;
         int buyTotal = 0;
-
         String[] lines = data.split(System.lineSeparator());
         for (String line : lines) {
             String[] operationInfo = line.split(COMMA);
@@ -59,7 +58,7 @@ public class WorkWithFile {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             writer.write(content);
         } catch (IOException e) {
-            System.out.println("Writing file failed.");
+            throw new RuntimeException("Failed to write in file:" + fileName, e);
         }
     }
 }
