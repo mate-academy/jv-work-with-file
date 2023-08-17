@@ -11,6 +11,7 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String COMMA = ",";
     private static final String RESULT = "result";
+
     public void getStatistic(String fromFileName, String toFileName) {
         String receivingFile = readFromFile(fromFileName);
         String report = calculateReport(receivingFile);
@@ -61,4 +62,3 @@ public class WorkWithFile {
         }
     }
 }
-
