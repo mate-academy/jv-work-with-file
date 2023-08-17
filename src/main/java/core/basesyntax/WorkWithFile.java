@@ -15,42 +15,68 @@ public class WorkWithFile {
     private static final int REQUIRED_PARTS_LENGTH = 2;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
-            int totalSupply = 0;
-            int totalBuy = 0;
-            String line;
+        String[] lines = readLinesFromFile(fromFileName);
+        int totalSupply = calculateTotalSupply(lines);
+        int totalBuy = calculateTotalBuy(lines);
+        int result = calculateResult(totalSupply, totalBuy);
+        String report = generateReport(totalSupply, totalBuy, result);
 
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.trim().split(",");
-                if (parts.length == REQUIRED_PARTS_LENGTH) {
-                    String operation = parts[OPERATION_INDEX];
-                    int amount = Integer.parseInt(parts[AMOUNT_INDEX]);
+        writeToFile(report, toFileName);
+    }
 
-                    if (SUPPLY.equals(operation)) {
-                        totalSupply += amount;
-                    } else if (BUY.equals(operation)) {
-                        totalBuy += amount;
-                    }
-                }
-            }
-
-            int result = totalSupply - totalBuy;
-
-            String report = "supply," + totalSupply + System.lineSeparator()
-                    + "buy," + totalBuy + System.lineSeparator() + "result," + result;
-
-            writeToFile(report, toFileName);
+    private String[] readLinesFromFile(String fileName) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            return reader.lines().toArray(String[]::new);
         } catch (IOException e) {
-            throw new RuntimeException("Произошла ошибка: " + e.getMessage(), e);
+            throw new RuntimeException("An error occurred while reading the file: "
+                    + e.getMessage(), e);
         }
+    }
+
+    private int calculateTotalSupply(String[] lines) {
+        int totalSupply = 0;
+        for (String line : lines) {
+            totalSupply += extractAmount(line, SUPPLY);
+        }
+        return totalSupply;
+    }
+
+    private int calculateTotalBuy(String[] lines) {
+        int totalBuy = 0;
+        for (String line : lines) {
+            totalBuy += extractAmount(line, BUY);
+        }
+        return totalBuy;
+    }
+
+    private int extractAmount(String line, String operation) {
+        String[] parts = line.trim().split(",");
+        if (hasValidParts(parts) && operation.equals(parts[OPERATION_INDEX])) {
+            return Integer.parseInt(parts[AMOUNT_INDEX]);
+        }
+        return 0;
+    }
+
+    private int calculateResult(int totalSupply, int totalBuy) {
+        return totalSupply - totalBuy;
+    }
+
+    private String generateReport(int totalSupply, int totalBuy, int result) {
+        return "supply," + totalSupply + System.lineSeparator()
+                + "buy," + totalBuy + System.lineSeparator()
+                + "result," + result;
     }
 
     private void writeToFile(String report, String toFileName) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Не удается создать или записать данные в файл "
-                    + toFileName, e);
+            throw new RuntimeException("An error occurred while writing to the file: "
+                    + e.getMessage(), e);
         }
+    }
+
+    private boolean hasValidParts(String[] parts) {
+        return parts.length == REQUIRED_PARTS_LENGTH;
     }
 }
