@@ -38,15 +38,16 @@ public class WorkWithFile {
         String[] dataLines = fileData.split(System.lineSeparator());
         for (String line : dataLines) {
             String[] operationInfo = line.split(String.valueOf(SEPARATOR));
-            final String VALUE = operationInfo[1];
+            final String value = operationInfo[1];
             if (operationInfo[0].equals(SUPPLY)) {
-                supply += Integer.parseInt(VALUE);
+                supply += Integer.parseInt(value);
             } else {
-                buy += Integer.parseInt(VALUE);
+                buy += Integer.parseInt(value);
             }
         }
         int result = supply - buy;
-        return new StringBuilder(SUPPLY).append(SEPARATOR).append(supply).append(System.lineSeparator())
+        return new StringBuilder(SUPPLY).append(SEPARATOR).append(supply)
+                .append(System.lineSeparator())
                 .append(BUY).append(SEPARATOR).append(buy).append(System.lineSeparator())
                 .append(RESULT).append(SEPARATOR).append(result).toString();
     }
