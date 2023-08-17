@@ -43,8 +43,9 @@ public class WorkWithFile {
         }
         int difference = supplySum - buySum;
         StringBuilder result = new StringBuilder();
-        result.append(SUPPLY_STRING).append(SEPARATOR_STRING).append(supplySum).append(System.lineSeparator())
-                .append(BUY_STRING).append(SEPARATOR_STRING).append(buySum).append(System.lineSeparator())
+        result.append(SUPPLY_STRING).append(SEPARATOR_STRING).append(supplySum)
+                .append(System.lineSeparator()).append(BUY_STRING)
+                .append(SEPARATOR_STRING).append(buySum).append(System.lineSeparator())
                 .append(RESULT_STRING).append(SEPARATOR_STRING).append(difference);
         return result.toString();
     }
