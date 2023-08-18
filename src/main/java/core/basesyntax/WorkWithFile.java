@@ -11,6 +11,9 @@ public class WorkWithFile {
     private static final String SEPARATOR = ",";
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
+    private static final String RESULT = "result";
+    private static final int INT_VALUE_INDEX = 1;
+    private static final int STRING_VALUE_INDEX = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
         writeToFile(createReport(stringDataReport(fromFileName)),
@@ -25,58 +28,37 @@ public class WorkWithFile {
                 stringBuilder.append(value).append(System.lineSeparator());
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file" + fromFileName, e);
+            throw new RuntimeException("Can't read file: " + fromFileName, e);
         }
         return stringBuilder.toString().split(System.lineSeparator());
     }
 
-    private StringBuilder createReport(String[] text) {
+    private String createReport(String[] text) {
         int supply = 0;
         int buy = 0;
-        int result;
         String[] strings;
-        for (String s : text) {
-            strings = s.split(SEPARATOR);
-            if (strings[0].equals(SUPPLY)) {
-                supply += Integer.valueOf(strings[1]);
-            } else if (strings[0].equals(BUY)) {
-                buy += Integer.valueOf(strings[1]);
+        for (String string : text) {
+            strings = string.split(SEPARATOR);
+            if (strings[STRING_VALUE_INDEX].equals(SUPPLY)) {
+                supply += Integer.valueOf(strings[INT_VALUE_INDEX]);
+            } else if (strings[STRING_VALUE_INDEX].equals(BUY)) {
+                buy += Integer.valueOf(strings[INT_VALUE_INDEX]);
             }
         }
-        result = supply - buy;
+        int result = supply - buy;
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("supply,").append(supply).append(System.lineSeparator())
-                .append("buy,").append(buy).append(System.lineSeparator())
-                .append("result,").append(result).append(System.lineSeparator());
-        return stringBuilder;
+        stringBuilder.append(SUPPLY).append(SEPARATOR).append(supply).append(System.lineSeparator())
+                .append(BUY).append(SEPARATOR).append(buy).append(System.lineSeparator())
+                .append(RESULT).append(SEPARATOR).append(result).append(System.lineSeparator());
+        return stringBuilder.toString();
     }
 
-    private boolean createFile(File toFileName) {
-        try {
-            toFileName.createNewFile();
+    private void writeToFile(String stats, File toFileName) {
+        try (BufferedWriter bufferedWriter =
+                new BufferedWriter(new FileWriter(toFileName))) {
+            bufferedWriter.write(stats);
         } catch (IOException e) {
-            throw new RuntimeException("Can't create this file" + toFileName, e);
-        }
-        return true;
-    }
-
-    private void fileExistCheck(File toFileName) {
-        if (toFileName.exists()) {
-            toFileName.delete();
-        }
-    }
-
-    private void writeToFile(StringBuilder statistic, File toFileName) {
-        String[] stats = statistic.toString().split(System.lineSeparator());
-        fileExistCheck(toFileName);
-        createFile(toFileName);
-        for (String stat : stats) {
-            try (BufferedWriter bufferedWriter =
-                         new BufferedWriter(new FileWriter(toFileName, true))) {
-                bufferedWriter.write(stat + System.lineSeparator());
-            } catch (IOException e) {
-                throw new RuntimeException("Can't write this file", e);
-            }
+            throw new RuntimeException("Can't write this file: " + toFileName, e);
         }
     }
 }
