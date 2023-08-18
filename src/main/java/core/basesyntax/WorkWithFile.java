@@ -29,7 +29,7 @@ public class WorkWithFile {
             return reader.lines().toArray(String[]::new);
         } catch (IOException e) {
             throw new RuntimeException("An error occurred while reading the file: "
-                    + e.getMessage(), e);
+                     + e.getMessage(), e);
         }
     }
 
@@ -71,8 +71,8 @@ public class WorkWithFile {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("An error occurred while writing to the file: "
-                    + e.getMessage(), e);
+            throw new RuntimeException("An error occurred while reading the file: "
+                    + toFileName, e);
         }
     }
 
