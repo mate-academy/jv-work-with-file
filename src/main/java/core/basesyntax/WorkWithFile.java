@@ -15,25 +15,20 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         String[] data = readDataFromFile(fromFileName);
         String report = formReport(data);
-        createNewDataFile(toFileName, report);
+        writeFile(toFileName, report);
     }
 
     public String[] readDataFromFile(String fromFileName) {
-        try (FileReader fileReader = new FileReader(fromFileName)) {
-            StringBuilder parsedCsv = new StringBuilder();
-            BufferedReader reader = new BufferedReader(fileReader);
-
+        StringBuilder parsedCsv = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String value;
-            if ((value = reader.readLine()) == null) {
-                return null;
-            }
-            do {
+            while ((value = reader.readLine()) != null) {
                 parsedCsv.append(value).append(PARSED_STRING_SEPARATOR);
-            } while ((value = reader.readLine()) != null);
+            }
 
             return parsedCsv.toString().split(PARSED_STRING_SEPARATOR);
-        } catch (IOException e) {
-            throw new RuntimeException("Try to read file was unsuccessful", e);
+        } catch (Exception e) {
+            throw new RuntimeException("Can't read data from the file " + fromFileName, e);
         }
     }
 
@@ -43,7 +38,7 @@ public class WorkWithFile {
         StringBuilder result = new StringBuilder();
 
         for (String data: parsedString) {
-            int amountNumber = Integer.parseInt(data.substring(data.indexOf(',') + 1));
+            int amountNumber = Integer.parseInt(data.split(",")[1]);
             if (data.contains(BUY_CATEGORY_NAME)) {
                 buyAmount += amountNumber;
             } else if (data.contains(SUPPLY_CATEGORY_NAME)) {
@@ -66,11 +61,11 @@ public class WorkWithFile {
                 .toString();
     }
 
-    private void createNewDataFile(String fileName, String data) {
+    private void writeFile(String fileName, String data) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
             bufferedWriter.write(data);
         } catch (IOException e) {
-            throw new RuntimeException("Try to write file was unsuccessful", e);
+            throw new RuntimeException("Can't write data to the file " + fileName, e);
         }
     }
 }
