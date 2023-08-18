@@ -38,7 +38,7 @@ public class WorkWithFile {
         int supply = 0;
         int buy = 0;
         for (String element : data) {
-            String[] elements = element.split(",");
+            String[] elements = element.split(COMMA);
             String nameOperation = elements[0];
             int quantity = Integer.parseInt(elements[1]);
             if (nameOperation.equals(BUY)) {
