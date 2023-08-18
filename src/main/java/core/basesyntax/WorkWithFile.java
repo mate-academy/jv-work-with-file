@@ -13,40 +13,59 @@ public class WorkWithFile {
     private static final String CHARACTER = ",";
     private static final String RESULT = "result";
 
-    private String readAndSortFile(String fileName) {
+    private static final int OPERATION_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
+
+    private String readFile(String fileName) {
         File file = new File(fileName);
         StringBuilder builder = new StringBuilder();
-        int buy = 0;
-        int supply = 0;
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(file));
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String value = reader.readLine();
             while (value != null) {
-                String[] splitArray = value.split(CHARACTER);
-                if (splitArray[0].equals(BUY)) {
-                    buy = buy + Integer.parseInt(splitArray[1]);
-                } else if (splitArray[0].equals(SUPPLY)) {
-                    supply = supply + Integer.parseInt(splitArray[1]);
-                }
+                builder.append(value).append(System.lineSeparator());
                 value = reader.readLine();
             }
-
         } catch (IOException e) {
             throw new RuntimeException("Can't read from file", e);
         }
-        builder.append(SUPPLY).append(CHARACTER).append(supply).append(System.lineSeparator());
-        builder.append(BUY).append(CHARACTER).append(buy).append(System.lineSeparator());
-        builder.append(RESULT).append(CHARACTER).append(supply - buy);
-        String result = builder.toString();
-        return result;
+        return builder.toString();
     }
 
-    public void getStatistic(String fromFileName, String toFileName) {
+    private String createReport(String data) {
+        int buyTotal = 0;
+        int supplyTotal = 0;
+        String[] lines = data.split(System.lineSeparator());
+        for (String line : lines) {
+            String[] splitArray = line.split(CHARACTER);
+            String operation = splitArray[OPERATION_INDEX];
+            int amount = Integer.parseInt(splitArray[AMOUNT_INDEX]);
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            writer.write(readAndSortFile(fromFileName));
+            if (operation.equals(BUY)) {
+                buyTotal += amount;
+            } else if (operation.equals(SUPPLY)) {
+                supplyTotal += amount;
+            }
+        }
+
+        StringBuilder builder = new StringBuilder();
+        builder.append(SUPPLY).append(CHARACTER).append(supplyTotal).append(System.lineSeparator());
+        builder.append(BUY).append(CHARACTER).append(buyTotal).append(System.lineSeparator());
+        builder.append(RESULT).append(CHARACTER).append(supplyTotal - buyTotal);
+
+        return builder.toString();
+    }
+
+    private void writeReportToFile(String report, String fileName) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+            writer.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file", e);
         }
+    }
+
+    public void getStatistic(String fromFileName, String toFileName) {
+        String dataFromFile = readFile(fromFileName);
+        String report = createReport(dataFromFile);
+        writeReportToFile(report, toFileName);
     }
 }
