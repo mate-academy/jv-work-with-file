@@ -11,6 +11,7 @@ public class WorkWithFile {
     private static final String FORMED_STRING_SEPARATOR = ",";
     private static final String BUY_CATEGORY_NAME = "buy";
     private static final String SUPPLY_CATEGORY_NAME = "supply";
+    private static final byte OPERATION_AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] data = readDataFromFile(fromFileName);
@@ -38,7 +39,9 @@ public class WorkWithFile {
         StringBuilder result = new StringBuilder();
 
         for (String data: parsedString) {
-            int amountNumber = Integer.parseInt(data.split(",")[1]);
+            String[] records = data.split(FORMED_STRING_SEPARATOR);
+            int amountNumber = Integer.parseInt(records[OPERATION_AMOUNT_INDEX]);
+
             if (data.contains(BUY_CATEGORY_NAME)) {
                 buyAmount += amountNumber;
             } else if (data.contains(SUPPLY_CATEGORY_NAME)) {
