@@ -8,14 +8,18 @@ import java.io.IOException;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
-        BufferedWriter bufferedWriter = null;
+        int[] valuesFromFile = readFromFile(fromFileName);
+        writeInFile(toFileName, valuesFromFile[0], valuesFromFile[1]);
+    }
+
+    private int[] readFromFile(String fromFileName) {
+        int[] readValuesFromFile = new int[2];
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
             StringBuilder stringBuilder = new StringBuilder();
             String value = bufferedReader.readLine();
             int supply = 0;
             int buy = 0;
-            int result = 0;
             while (value != null) {
                 String[] strings = value.split(",");
                 switch (strings[0]) {
@@ -29,15 +33,22 @@ public class WorkWithFile {
                 stringBuilder.append(value);
                 value = bufferedReader.readLine();
             }
-            result = supply - buy;
-            bufferedWriter = new BufferedWriter(new FileWriter(toFileName));
+            readValuesFromFile[0] = supply;
+            readValuesFromFile[1] = buy;
+        } catch (IOException e) {
+            throw new RuntimeException("Can't read file " + fromFileName,e);
+        }
+        return readValuesFromFile;
+    }
+
+    private void writeInFile(String toFileName, int supply, int buy) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
+            int result = supply - buy;
             bufferedWriter.write("supply," + supply + System.lineSeparator());
             bufferedWriter.write("buy," + buy + System.lineSeparator());
             bufferedWriter.write("result," + result + System.lineSeparator());
-            bufferedWriter.close();
-
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file",e);
+            throw new RuntimeException("Can't write in the file " + toFileName,e);
         }
     }
 }
