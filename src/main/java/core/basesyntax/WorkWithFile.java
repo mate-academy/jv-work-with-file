@@ -11,6 +11,8 @@ public class WorkWithFile {
     private String typeBuy = "buy";
     private String typeResult = "result";
     private String specificCharacter = ",";
+    private int word = 0;
+    private int amount = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String dataFromFile = readFromFile(fromFileName);
@@ -38,11 +40,11 @@ public class WorkWithFile {
         int amountOfBuy = 0;
         for (int i = 0; i < dataFromFile.length; i++) {
             String[] dataOnLine = dataFromFile[i].split(specificCharacter);
-            if (dataOnLine[0].equals(typeSupply)) {
-                amountOfSupply += Integer.parseInt(dataOnLine[1]);
+            if (dataOnLine[word].equals(typeSupply)) {
+                amountOfSupply += Integer.parseInt(dataOnLine[amount]);
             }
-            if (dataOnLine[0].equals(typeBuy)) {
-                amountOfBuy += Integer.parseInt(dataOnLine[1]);
+            if (dataOnLine[word].equals(typeBuy)) {
+                amountOfBuy += Integer.parseInt(dataOnLine[amount]);
             }
         }
         int finalAmount = amountOfSupply - amountOfBuy;
