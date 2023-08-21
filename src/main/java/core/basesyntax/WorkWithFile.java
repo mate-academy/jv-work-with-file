@@ -16,7 +16,6 @@ public class WorkWithFile {
     private static final String BUY_WORD = "buy";
     private static final String SUPPLY_WORD = "supply";
 
-
     public void getStatistic(String fromFileName, String toFileName) {
 
         String[] data = readFromFile(fromFileName);
@@ -26,7 +25,6 @@ public class WorkWithFile {
 
     private String[] readFromFile(String fileName) {
         StringBuilder output = new StringBuilder();
-
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             String line = reader.readLine();
             while (line != null) {
@@ -36,7 +34,6 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can`t read file: " + fileName, e);
         }
-
         return output.toString().split(HELPER_SEPARATOR);
     }
 
@@ -56,18 +53,18 @@ public class WorkWithFile {
     }
 
     private void makeReport(String fileName, int[] data) {
+        StringBuilder wholeString = new StringBuilder();
+        int result = data[SUPPLY_INDEX] - data[BUY_INDEX];
+        wholeString.append(SUPPLY_WORD).append(SEPARATOR).append(data[SUPPLY_INDEX])
+                .append(System.lineSeparator())
+                .append(BUY_WORD).append(SEPARATOR).append(data[BUY_INDEX])
+                .append(System.lineSeparator())
+                .append("result").append(SEPARATOR).append(result)
+                .append(System.lineSeparator());
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
-            StringBuilder wholeString = new StringBuilder();
-            wholeString.append(makeLine("supply", data[SUPPLY_INDEX]))
-                            .append(makeLine("buy", data[BUY_INDEX]))
-                            .append(makeLine("result", data[SUPPLY_INDEX] - data[BUY_INDEX]));
             bufferedWriter.write(wholeString.toString());
         } catch (IOException e) {
             throw new RuntimeException("Can`t write to file: " + fileName, e);
         }
-    }
-
-    private String makeLine(String name, int value) {
-        return name + SEPARATOR + value + System.lineSeparator();
     }
 }
