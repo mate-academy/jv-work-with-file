@@ -7,7 +7,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-
     private static final int SUPPLY_INDEX = 0;
     private static final int BUY_INDEX = 1;
     private static final int NAME_COLUMN = 0;
@@ -26,7 +25,6 @@ public class WorkWithFile {
     }
 
     private String[] readFromFile(String fileName) {
-        int[] results = new int[2];
         StringBuilder output = new StringBuilder();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
@@ -59,9 +57,11 @@ public class WorkWithFile {
 
     private void makeReport(String fileName, int[] data) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
-            bufferedWriter.write(makeLine("supply", data[SUPPLY_INDEX]));
-            bufferedWriter.write(makeLine("buy", data[BUY_INDEX]));
-            bufferedWriter.write(makeLine("result", data[SUPPLY_INDEX] - data[BUY_INDEX]));
+            StringBuilder wholeString = new StringBuilder();
+            wholeString.append(makeLine("supply", data[SUPPLY_INDEX]))
+                            .append(makeLine("buy", data[BUY_INDEX]))
+                            .append(makeLine("result", data[SUPPLY_INDEX] - data[BUY_INDEX]));
+            bufferedWriter.write(wholeString.toString());
         } catch (IOException e) {
             throw new RuntimeException("Can`t write to file: " + fileName, e);
         }
