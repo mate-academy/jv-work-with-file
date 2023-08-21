@@ -44,7 +44,7 @@ public class WorkWithFile {
             try (FileWriter fileWriter = new FileWriter(toFileName)) {
                 fileWriter.write(String.valueOf(result));
             } catch (IOException e) {
-                throw new RuntimeException("cant wrie to file", e);
+                throw new RuntimeException("cant write to file", e);
             }
         }
     }
