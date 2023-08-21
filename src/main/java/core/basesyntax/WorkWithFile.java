@@ -36,19 +36,24 @@ public class WorkWithFile {
     private String generateReport(String dataFromFile) {
         int supply = 0;
         int buy = 0;
-        String[] strings = dataFromFile.split(LINE_SEPARATOR);
-        for (String string : strings) {
-            String[] count = string.split(SPLIT_OPERATOR);
-            if (count[0].equals(SUPPLY_CONST)) {
-                supply += Integer.parseInt(count[1]);
+        String[] operationsData = dataFromFile.split(LINE_SEPARATOR);
+        for (String operationLine : operationsData) {
+            String[] operationInfo = operationLine.split(SPLIT_OPERATOR);
+            String operation = operationInfo[0];
+            String amount = operationInfo[1];
+            if (operation.equals(SUPPLY_CONST)) {
+                supply += Integer.parseInt(amount);
             } else {
-                buy += Integer.parseInt(count[1]);
+                buy += Integer.parseInt(amount);
             }
         }
         int result = supply - buy;
-        return SUPPLY_CONST + SPLIT_OPERATOR + supply + LINE_SEPARATOR
-                + BUY_CONST + SPLIT_OPERATOR + buy + LINE_SEPARATOR
-                + RESULT_CONST + SPLIT_OPERATOR + result + LINE_SEPARATOR;
+        StringBuilder generatedReport = new StringBuilder();
+        generatedReport.append(SUPPLY_CONST).append(SPLIT_OPERATOR).append(supply)
+                .append(LINE_SEPARATOR).append(BUY_CONST).append(SPLIT_OPERATOR).append(buy)
+                .append(LINE_SEPARATOR).append(RESULT_CONST).append(SPLIT_OPERATOR).append(result)
+                .append(LINE_SEPARATOR);
+        return generatedReport.toString();
     }
 
     private void writeReport(String resultData, String toFileName) {
