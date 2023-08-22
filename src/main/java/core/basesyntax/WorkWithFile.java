@@ -7,12 +7,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private String typeSupply = "supply";
-    private String typeBuy = "buy";
-    private String typeResult = "result";
-    private String specificCharacter = ",";
-    private int word = 0;
-    private int amount = 1;
+    private static final String TYPE_SUPPLY = "supply";
+    private static final String TYPE_BUY = "buy";
+    private static final String TYPE_RESULT = "result";
+    private static final String SPECIFIC_CHARACTER = ",";
+    private static final int WORD = 0;
+    private static final int AMOUNT = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String dataFromFile = readFromFile(fromFileName);
@@ -39,20 +39,20 @@ public class WorkWithFile {
         int amountOfSupply = 0;
         int amountOfBuy = 0;
         for (int i = 0; i < dataFromFile.length; i++) {
-            String[] dataOnLine = dataFromFile[i].split(specificCharacter);
-            if (dataOnLine[word].equals(typeSupply)) {
-                amountOfSupply += Integer.parseInt(dataOnLine[amount]);
+            String[] dataOnLine = dataFromFile[i].split(SPECIFIC_CHARACTER);
+            if (dataOnLine[WORD].equals(TYPE_SUPPLY)) {
+                amountOfSupply += Integer.parseInt(dataOnLine[AMOUNT]);
             }
-            if (dataOnLine[word].equals(typeBuy)) {
-                amountOfBuy += Integer.parseInt(dataOnLine[amount]);
+            if (dataOnLine[WORD].equals(TYPE_BUY)) {
+                amountOfBuy += Integer.parseInt(dataOnLine[AMOUNT]);
             }
         }
         int finalAmount = amountOfSupply - amountOfBuy;
         StringBuilder result = new StringBuilder();
-        result = result.append(typeSupply + specificCharacter + amountOfSupply
-                        + System.lineSeparator()).append(typeBuy + specificCharacter
-                        + amountOfBuy + System.lineSeparator()).append(typeResult
-                        + specificCharacter + finalAmount + System.lineSeparator());
+        result = result.append(TYPE_SUPPLY + SPECIFIC_CHARACTER + amountOfSupply
+                        + System.lineSeparator()).append(TYPE_BUY + SPECIFIC_CHARACTER
+                        + amountOfBuy + System.lineSeparator()).append(TYPE_RESULT
+                        + SPECIFIC_CHARACTER + finalAmount + System.lineSeparator());
         return result.toString();
     }
 
