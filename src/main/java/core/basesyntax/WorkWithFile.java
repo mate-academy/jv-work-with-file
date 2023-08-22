@@ -9,21 +9,26 @@ import java.io.IOException;
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         String readString = readFile(fromFileName);
+        int[] sums = createReport(readString);
+        String statistic = generateStatistic(sums[0], sums[1]);
+        writeToFile(toFileName, statistic);
+    }
+
+    private int[] createReport(String readString) {
         if (!readString.isEmpty()) {
-            int supplySum = 0;
-            int buySum = 0;
+            int[] sums = new int[2];
 
             String[] stringInput = readString.split("\\W+");
             for (int i = 0; i < stringInput.length / 2; i++) {
                 if (stringInput[i * 2].equals("supply")) {
-                    supplySum += Integer.parseInt(stringInput[i * 2 + 1]);
+                    sums[0] += Integer.parseInt(stringInput[i * 2 + 1]);
                 } else if (stringInput[i * 2].equals("buy")) {
-                    buySum += Integer.parseInt(stringInput[i * 2 + 1]);
+                    sums[1] += Integer.parseInt(stringInput[i * 2 + 1]);
                 }
             }
-            String statistic = generateStatistic(supplySum, buySum);
-            writeToFile(toFileName, statistic);
+            return sums;
         }
+        return new int[0];
     }
 
     private String readFile(String fromFileName) {
