@@ -23,7 +23,7 @@ public class WorkWithFile {
         writeToFile(toFileName, report);
     }
 
-    public int [] readFromFile(String fromFileName) {
+    public int[] readFromFile(String fromFileName) {
         int buyVolume = 0;
         int supplyVolume = 0;
 
@@ -47,7 +47,7 @@ public class WorkWithFile {
         return new int[]{buyVolume, supplyVolume};
     }
 
-    public String createReport(int [] operationsValue) {
+    public String createReport(int[] operationsValue) {
         StringBuilder reportBuilder = new StringBuilder();
         reportBuilder.append(SUPPLY_OPERATION_TYPE)
                      .append(REPORT_SEPARATOR)
