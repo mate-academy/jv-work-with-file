@@ -9,14 +9,16 @@ import java.io.IOException;
 
 public class WorkWithFile {
     private static final String BUY_OPERATION_TYPE = "buy";
-    private static final int INDEX_OF_BUY_OPERATION_VOLUME = 0;
     private static final String SUPPLY_OPERATION_TYPE = "supply";
+    private static final int INDEX_OF_BUY_OPERATION_VOLUME = 0;
     private static final int INDEX_OF_SUPPLY_OPERATION_VOLUME = 1;
+    private static final int INDEX_OF_OPERATION_TYPE = 0;
+    private static final int INDEX_OF_OPERATION_AMOUNT = 1;
     private static final String REPORT_SEPARATOR = ",";
     private static final String REPORT_RESULT = "result,";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int [] operationsValue = readFromFile(fromFileName);
+        int[] operationsValue = readFromFile(fromFileName);
         String report = createReport(operationsValue);
         writeToFile(toFileName, report);
     }
@@ -28,12 +30,15 @@ public class WorkWithFile {
         try (BufferedReader reader = new BufferedReader(new FileReader(new File(fromFileName)));) {
             String value;
             while ((value = reader.readLine()) != null) {
-                String amount = value.substring(value.lastIndexOf(",") + 1);
-                if (value.contains(BUY_OPERATION_TYPE)) {
-                    buyVolume += Integer.parseInt(amount);
+                String[] dataLine = value.split(REPORT_SEPARATOR);
+                String operationType = dataLine[INDEX_OF_OPERATION_TYPE];
+                int amount = Integer.parseInt(dataLine[INDEX_OF_OPERATION_AMOUNT]);
+
+                if (operationType.equals(BUY_OPERATION_TYPE)) {
+                    buyVolume += amount;
                 }
-                if (value.contains(SUPPLY_OPERATION_TYPE)) {
-                    supplyVolume += Integer.parseInt(amount);
+                if (operationType.equals(SUPPLY_OPERATION_TYPE)) {
+                    supplyVolume += amount;
                 }
             }
         } catch (IOException e) {
@@ -43,19 +48,26 @@ public class WorkWithFile {
     }
 
     public String createReport(int [] operationsValue) {
-        return SUPPLY_OPERATION_TYPE + REPORT_SEPARATOR
-               + operationsValue[INDEX_OF_SUPPLY_OPERATION_VOLUME] + System.lineSeparator()
-               + BUY_OPERATION_TYPE + REPORT_SEPARATOR
-               + operationsValue[INDEX_OF_BUY_OPERATION_VOLUME] + System.lineSeparator()
-               + REPORT_RESULT + (operationsValue[INDEX_OF_SUPPLY_OPERATION_VOLUME]
-                - operationsValue[INDEX_OF_BUY_OPERATION_VOLUME]);
+        StringBuilder reportBuilder = new StringBuilder();
+        reportBuilder.append(SUPPLY_OPERATION_TYPE)
+                     .append(REPORT_SEPARATOR)
+                     .append(operationsValue[INDEX_OF_SUPPLY_OPERATION_VOLUME])
+                     .append(System.lineSeparator())
+                     .append(BUY_OPERATION_TYPE)
+                     .append(REPORT_SEPARATOR)
+                     .append(operationsValue[INDEX_OF_BUY_OPERATION_VOLUME])
+                     .append(System.lineSeparator())
+                     .append(REPORT_RESULT)
+                     .append(operationsValue[INDEX_OF_SUPPLY_OPERATION_VOLUME]
+                            - operationsValue[INDEX_OF_BUY_OPERATION_VOLUME]);
+        return reportBuilder.toString();
     }
 
     public void writeToFile(String toFileName, String report) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File(toFileName)))) {
             writer.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't write data to the file" + toFileName, e);
         }
     }
 }
