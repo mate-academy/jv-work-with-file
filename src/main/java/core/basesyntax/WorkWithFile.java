@@ -8,45 +8,56 @@ import java.io.IOException;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
-        int[] valuesFromFile = readFromFile(fromFileName);
-        writeInFile(toFileName, valuesFromFile[0], valuesFromFile[1]);
+        String dataFromFile = readFromFile(fromFileName);
+        String report = createReport(dataFromFile);
+        writeInFile(toFileName, report);
     }
 
-    private int[] readFromFile(String fromFileName) {
-        int[] readValuesFromFile = new int[2];
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
-            StringBuilder stringBuilder = new StringBuilder();
+    private String readFromFile(String fromFileName) {
+        StringBuilder stringBuilder = new StringBuilder();
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String value = bufferedReader.readLine();
-            int supply = 0;
-            int buy = 0;
             while (value != null) {
-                String[] strings = value.split(",");
-                switch (strings[0]) {
-                    case "supply":
-                        supply = supply + Integer.parseInt(strings[1]);
-                        break;
-                    default :
-                        buy = buy + Integer.parseInt(strings[1]);
-                        break;
-                }
                 stringBuilder.append(value);
+                stringBuilder.append(" ");
                 value = bufferedReader.readLine();
             }
-            readValuesFromFile[0] = supply;
-            readValuesFromFile[1] = buy;
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file " + fromFileName,e);
+            throw new RuntimeException("Can't read file " + fromFileName, e);
         }
-        return readValuesFromFile;
+        return stringBuilder.toString();
     }
 
-    private void writeInFile(String toFileName, int supply, int buy) {
+    private String createReport(String rows) {
+        String[] split = rows.split("\\s+");
+        StringBuilder stringBuilder = new StringBuilder();
+        int supplyInt = 0;
+        int buyInt = 0;
+        String buyConstant = "buy";
+        String supplyConstant = "supply";
+        for (String strings: split) {
+            String[]record = strings.split(",");
+            String count = record[1];
+            if (record[0].equals(supplyConstant)) {
+                supplyInt += Integer.parseInt(count);
+            }
+            if (record[0].equals(buyConstant)) {
+                buyInt += Integer.parseInt(count);
+            }
+        }
+        String resultTotal = "result";
+        stringBuilder.append(supplyConstant).append(",")
+                .append(supplyInt).append(System.lineSeparator());
+        stringBuilder.append(buyConstant).append(",")
+                .append(buyInt).append(System.lineSeparator());
+        stringBuilder.append(resultTotal).append(",")
+                .append((supplyInt - buyInt)).append(System.lineSeparator());
+        return stringBuilder.toString();
+    }
+
+    private void writeInFile(String toFileName, String report) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            int result = supply - buy;
-            bufferedWriter.write("supply," + supply + System.lineSeparator());
-            bufferedWriter.write("buy," + buy + System.lineSeparator());
-            bufferedWriter.write("result," + result + System.lineSeparator());
+            bufferedWriter.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Can't write in the file " + toFileName,e);
         }
