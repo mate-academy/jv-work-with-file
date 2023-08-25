@@ -11,6 +11,8 @@ import java.util.Map;
 public class WorkWithFile {
     private static final String OPERATION_SUPPLY = "supply";
     private static final String OPERATION_BUY = "buy";
+    private static final int OPERATION_TYPE_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
@@ -22,8 +24,8 @@ public class WorkWithFile {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] data = line.split(",");
-                String operationType = data[0];
-                int amount = Integer.parseInt(data[1]);
+                String operationType = data[OPERATION_TYPE_INDEX];
+                int amount = Integer.parseInt(data[AMOUNT_INDEX]);
                 updateOperationData(operationType, amount, supplyData, buyData);
             }
 
