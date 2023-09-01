@@ -16,12 +16,12 @@ public class WorkWithFile {
     private static final String DELIMITER = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String[] lines = readingFile(fromFileName);
-        int[] calculate = calculateSupplyAndBuy(lines);
-        writingFile(toFileName, calculate[INDEX_SUPPLY], calculate[INDEX_BUY]);
+        String[] lines = readFile(fromFileName);
+        String data = createReport(lines);
+        writeFile(toFileName, data);
     }
 
-    private String[] readingFile(String fromFileName) {
+    private String[] readFile(String fromFileName) {
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String line = reader.readLine();
             List<String> lines = new ArrayList<>();
@@ -35,7 +35,7 @@ public class WorkWithFile {
         }
     }
 
-    private int[] calculateSupplyAndBuy(String[] lines) {
+    private String createReport(String[] lines) {
         int supply = 0;
         int buy = 0;
         for (String line : lines) {
@@ -48,15 +48,17 @@ public class WorkWithFile {
                 buy += quantity;
             }
         }
-        return new int[]{supply, buy};
+        int result = supply - buy;
+        StringBuilder data = new StringBuilder("supply,"
+                + supply + System.lineSeparator()
+                + "buy," + buy + System.lineSeparator()
+                + "result," + result);
+        return data.toString();
     }
 
-    private void writingFile(String toFileName, int supply, int buy) {
-        int result = supply - buy;
+    private void writeFile(String toFileName, String data) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            writer.write("supply," + supply + System.lineSeparator()
-                    + "buy," + buy + System.lineSeparator()
-                    + "result," + result);
+            writer.write(data);
         } catch (IOException e) {
             throw new RuntimeException("Can't write file", e);
         }
