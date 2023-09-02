@@ -12,14 +12,13 @@ public class WorkWithFile {
     private static final String SPACE = " ";
     private static final String SEPARATOR = System.lineSeparator();
 
-    public static void getStatistic(String fromFileName, String toFileName) {
-        WorkWithFile workWithFile = new WorkWithFile();
-        String[] splitLines = workWithFile.readLines(fromFileName);
-        String calculatedReport = workWithFile.calculateArray(splitLines);
-        workWithFile.writeToFile(toFileName, calculatedReport);
+    public void getStatistic(String fromFileName, String toFileName) {
+        String[] splitLines = readLines(fromFileName);
+        String calculatedReport = calculateArray(splitLines);
+        writeToFile(toFileName, calculatedReport);
     }
 
-    public String[] readLines(String filePath) {
+    private String[] readLines(String filePath) {
         File file = new File(filePath);
         StringBuilder stringBuilder = new StringBuilder();
         String[] splitLines;
@@ -36,7 +35,7 @@ public class WorkWithFile {
         }
     }
 
-    public String calculateArray(String[] splitLines) {
+    private String calculateArray(String[] splitLines) {
         int supply = 0;
         int buy = 0;
         for (int i = 0; i < splitLines.length; i++) {
@@ -55,7 +54,7 @@ public class WorkWithFile {
         return report;
     }
 
-    public void writeToFile(String filePath, String message) {
+    private void writeToFile(String filePath, String message) {
         File file = new File(filePath);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
             bufferedWriter.write(message);
