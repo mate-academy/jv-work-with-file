@@ -9,6 +9,9 @@ import java.nio.file.Files;
 public class WorkWithFile {
     private static final int FIRST_COLUMN_INDEX = 0;
     private static final int SECOND_COLUMN_INDEX = 1;
+    private static final String SEPARATOR = ",";
+    private static final String BUY_WORD_FOR_COMPARING = "buy";
+    private static final String SUPPLY_WORD_FOR_COMPARING = "supply";
 
     public void getStatistic(String fromFileName, String toFileName) {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
@@ -16,10 +19,10 @@ public class WorkWithFile {
             int buySum = 0;
             int supplySum = 0;
             while (value != null) {
-                String[] splitData = value.split(",");
-                if (splitData[FIRST_COLUMN_INDEX].equals("buy")) {
+                String[] splitData = value.split(SEPARATOR);
+                if (splitData[FIRST_COLUMN_INDEX].equals(BUY_WORD_FOR_COMPARING)) {
                     buySum += Integer.parseInt(splitData[SECOND_COLUMN_INDEX]);
-                } else if (splitData[FIRST_COLUMN_INDEX].equals("supply")) {
+                } else if (splitData[FIRST_COLUMN_INDEX].equals(SUPPLY_WORD_FOR_COMPARING)) {
                     supplySum += Integer.parseInt(splitData[SECOND_COLUMN_INDEX]);
                 }
                 value = bufferedReader.readLine();
