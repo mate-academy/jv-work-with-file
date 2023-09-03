@@ -9,15 +9,18 @@ public class WorkWithFile {
     public static final String SUPPLY_FIELD = "supply";
     public static final String BUY_FIELD = "buy";
     public static final String RESULT_FIELD = "result";
+    public static final int SUPPLY_FIELD_INDEX = 0;
+    public static final int BUY_FIELD_INDEX = 1;
+    public static final int RESULT_FIELD_INDEX = 2;
+    public static final int NAME_FIELD_INDEX = 0;
+    public static final int AMOUNT_FIELD_INDEX = 1;
     public static final String SEPARATOR = ",";
     public static final String INITIAL_AMOUNT = "0";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        File file = new File(fromFileName);
-        List<String> originalReport = readReport(file);
-        String[][] finishedReport = getStatsArray(originalReport);
-        file = new File(toFileName);
-        writeReport(file, finishedReport);
+        List<String> originalReport = readReport(fromFileName);
+        String report = generateReport(getStatsArray(originalReport));
+        writeReport(toFileName, report);
     }
 
     private String[][] getStatsArray(List<String> strings) {
@@ -27,38 +30,45 @@ public class WorkWithFile {
         String[] fieldArray;
         for (String field : strings) {
             fieldArray = field.split(SEPARATOR);
-            if (fieldArray[0].equals(SUPPLY_FIELD)) {
-                statsArray[0][1] = Integer.toString(Integer.parseInt(statsArray[0][1])
-                        + Integer.parseInt(fieldArray[1]));
+            if (fieldArray[NAME_FIELD_INDEX].equals(SUPPLY_FIELD)) {
+                statsArray[SUPPLY_FIELD_INDEX][AMOUNT_FIELD_INDEX] = Integer.toString(
+                        Integer.parseInt(statsArray[SUPPLY_FIELD_INDEX][AMOUNT_FIELD_INDEX])
+                        + Integer.parseInt(fieldArray[AMOUNT_FIELD_INDEX]));
             } else {
-                statsArray[1][1] = Integer.toString(Integer.parseInt(statsArray[1][1])
-                        + Integer.parseInt(fieldArray[1]));
+                statsArray[BUY_FIELD_INDEX][1] = Integer.toString(Integer.parseInt(
+                        statsArray[BUY_FIELD_INDEX][AMOUNT_FIELD_INDEX])
+                        + Integer.parseInt(fieldArray[AMOUNT_FIELD_INDEX]));
             }
         }
 
-        statsArray[2][1] = Integer.toString(Integer.parseInt(statsArray[0][1])
-                - Integer.parseInt(statsArray[1][1]));
+        statsArray[RESULT_FIELD_INDEX][1] = Integer.toString(
+                Integer.parseInt(statsArray[SUPPLY_FIELD_INDEX][AMOUNT_FIELD_INDEX])
+                - Integer.parseInt(statsArray[BUY_FIELD_INDEX][AMOUNT_FIELD_INDEX]));
         return statsArray;
     }
 
-    private List<String> readReport(File file) {
+    private List<String> readReport(String fromFileName) {
         try {
-            return Files.readAllLines(file.toPath());
+            return Files.readAllLines(new File(fromFileName).toPath());
         } catch (IOException e) {
             throw new RuntimeException("File reading error.", e);
         }
     }
 
-    private void writeReport(File file, String[][] report) {
-        StringBuilder stringToWrite = new StringBuilder();
-        for (String[] strings : report) {
-            stringToWrite.append(strings[0]).append(SEPARATOR)
-                    .append(strings[1]).append(System.lineSeparator());
-        }
+    private void writeReport(String toFileName, String report) {
         try {
-            Files.writeString(file.toPath(), stringToWrite.toString());
+            Files.writeString(new File(toFileName).toPath(), report);
         } catch (IOException e) {
             throw new RuntimeException("File writing error.", e);
         }
+    }
+
+    private String generateReport(String[][] report) {
+        StringBuilder stringToWrite = new StringBuilder();
+        for (String[] strings : report) {
+            stringToWrite.append(strings[NAME_FIELD_INDEX]).append(SEPARATOR)
+                    .append(strings[AMOUNT_FIELD_INDEX]).append(System.lineSeparator());
+        }
+        return stringToWrite.toString();
     }
 }
