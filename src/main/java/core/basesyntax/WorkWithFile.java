@@ -45,14 +45,19 @@ public class WorkWithFile {
 
         int resultSum = supplySum - buySum;
 
-        StringBuilder reportBuilder = new StringBuilder();
-        reportBuilder.append(SUPPLY).append(SEPARATOR).append(supplySum)
-                .append(System.lineSeparator())
-                .append(BUY).append(SEPARATOR).append(buySum)
-                .append(System.lineSeparator())
-                .append(RESULT).append(SEPARATOR).append(resultSum);
+        String reportBuilder = SUPPLY
+                + SEPARATOR
+                + supplySum
+                + System.lineSeparator()
+                + BUY
+                + SEPARATOR
+                + buySum
+                + System.lineSeparator()
+                + RESULT
+                + SEPARATOR
+                + resultSum;
 
-        return reportBuilder.toString();
+        return reportBuilder;
     }
 
     private void writeToFile(String report, String toFileName) {
