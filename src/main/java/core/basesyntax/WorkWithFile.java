@@ -1,10 +1,9 @@
 package core.basesyntax;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.List;
 
 public class WorkWithFile {
     private static final int FIRST_COLUMN_INDEX = 0;
@@ -14,23 +13,28 @@ public class WorkWithFile {
     private static final String SUPPLY_WORD_FOR_COMPARING = "supply";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
-            String value = bufferedReader.readLine();
-            int buySum = 0;
-            int supplySum = 0;
-            while (value != null) {
-                String[] splitData = value.split(SEPARATOR);
-                if (splitData[FIRST_COLUMN_INDEX].equals(BUY_WORD_FOR_COMPARING)) {
-                    buySum += Integer.parseInt(splitData[SECOND_COLUMN_INDEX]);
-                } else if (splitData[FIRST_COLUMN_INDEX].equals(SUPPLY_WORD_FOR_COMPARING)) {
-                    supplySum += Integer.parseInt(splitData[SECOND_COLUMN_INDEX]);
-                }
-                value = bufferedReader.readLine();
+        List<String> data = readFromFile(fromFileName);
+        int buySum = 0;
+        int supplySum = 0;
+        for (String line : data) {
+            String[] splitData = line.split(SEPARATOR);
+            if (splitData[FIRST_COLUMN_INDEX].equals(BUY_WORD_FOR_COMPARING)) {
+                buySum += Integer.parseInt(splitData[SECOND_COLUMN_INDEX]);
+            } else if (splitData[FIRST_COLUMN_INDEX].equals(SUPPLY_WORD_FOR_COMPARING)) {
+                supplySum += Integer.parseInt(splitData[SECOND_COLUMN_INDEX]);
             }
-            writeToFile(toFileName, buySum, supplySum);
+        }
+        writeToFile(toFileName, buySum, supplySum);
+    }
+
+    private List<String> readFromFile(String fromFileName) {
+        File file = new File(fromFileName);
+        try {
+            return Files.readAllLines(file.toPath());
         } catch (IOException e) {
             throw new RuntimeException("Can't access the data", e);
         }
+
     }
 
     private void writeToFile(String toFileName, int buySum, int supplySum) {
