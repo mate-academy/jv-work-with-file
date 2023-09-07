@@ -10,6 +10,12 @@ public class WorkWithFile {
     static final int ZERO = 0;
     static final int ONE = 1;
 
+    public void getStatistic(String fromFileName, String toFileName) {
+        String info = readFile(fromFileName);
+        String report = createReport(info);
+        writeReportToFile(report, toFileName);
+    }
+
     private String readFile(String fromFileName) {
         StringBuilder builder = new StringBuilder();
         String text;
@@ -54,11 +60,4 @@ public class WorkWithFile {
             throw new RuntimeException(e);
         }
     }
-
-    public void getStatistic(String fromFileName, String toFileName) {
-        String info = readFile(fromFileName);
-        String report = createReport(info);
-        writeReportToFile(report, toFileName);
-    }
-
 }
