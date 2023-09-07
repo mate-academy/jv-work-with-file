@@ -10,7 +10,7 @@ public class WorkWithFile {
     static final int ZERO = 0;
     static final int ONE = 1;
 
-    public String readFile(String fromFileName) {
+    private String readFile(String fromFileName) {
         StringBuilder builder = new StringBuilder();
         String text;
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
@@ -23,7 +23,7 @@ public class WorkWithFile {
         return builder.toString();
     }
 
-    public String createReport(String data) {
+    private String createReport(String data) {
         int supplyCount = 0;
         int buyCount = 0;
         int result = 0;
@@ -45,7 +45,7 @@ public class WorkWithFile {
         return builder.toString();
     }
 
-    public void writeReportToFile(String fileData, String toFileName) {
+    private void writeReportToFile(String fileData, String toFileName) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write(fileData);
             writer.flush();
