@@ -7,8 +7,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    static final int ZERO = 0;
-    static final int ONE = 1;
+    static final int OPERATION_INDEX = 0;
+    static final int AMOUNT_INDEX = 1;
+    static final String DELIMITER = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String info = readFile(fromFileName);
@@ -24,7 +25,7 @@ public class WorkWithFile {
                 builder.append(text).append(System.lineSeparator());
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can't read data from file" + fromFileName, e);
         }
         return builder.toString();
     }
@@ -35,11 +36,11 @@ public class WorkWithFile {
         int result = 0;
         String[] lines = data.split(System.lineSeparator());
         for (String line : lines) {
-            String[] part = line.split(",");
-            if (part[ZERO].startsWith("supply")) {
-                supplyCount += Integer.parseInt(part[ONE]);
-            } else if (part[ZERO].startsWith("buy")) {
-                buyCount += Integer.parseInt(part[ONE]);
+            String[] part = line.split(DELIMITER);
+            if (part[OPERATION_INDEX].startsWith("supply")) {
+                supplyCount += Integer.parseInt(part[AMOUNT_INDEX]);
+            } else if (part[OPERATION_INDEX].startsWith("buy")) {
+                buyCount += Integer.parseInt(part[AMOUNT_INDEX]);
             }
             result = supplyCount - buyCount;
         }
@@ -54,10 +55,8 @@ public class WorkWithFile {
     private void writeReportToFile(String fileData, String toFileName) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write(fileData);
-            writer.flush();
-            writer.close();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can't write data to file" + toFileName, e);
         }
     }
 }
