@@ -34,7 +34,6 @@ public class WorkWithFile {
         }
     }
 
-
     private String calculateStatistic(String[] splitArray) {
         int sumSupply = 0;
         int sumBuy = 0;
