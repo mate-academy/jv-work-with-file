@@ -57,7 +57,7 @@ public class WorkWithFile {
                         + "buy," + sumBuy + SEPARATOR
                         + "result," + calculation;
 
-            return result;
+        return result;
     }
 
     private void writeToFail(String toFilePath, String result) {
