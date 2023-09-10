@@ -18,8 +18,8 @@ public class WorkWithFile {
         writeToFail(toFileName, calculateSolution);
     }
 
-    private String[] readLine(String FilePath) {
-        File file = new File(FilePath);
+    private String[] readLine(String filePath) {
+        File file = new File(filePath);
         StringBuilder stringBuilder = new StringBuilder();
         String[] splitArray;
 
@@ -53,17 +53,17 @@ public class WorkWithFile {
 
         int calculation = sumSupply - sumBuy;
 
-        String result = "supply," + sumSupply + SEPARATOR +
-            "buy," + sumBuy + SEPARATOR +
-            "result," + calculation;
+        String result = "supply," + sumSupply + SEPARATOR
+                        + "buy," + sumBuy + SEPARATOR
+                        + "result," + calculation;
 
-        return result;
+            return result;
     }
 
     private void writeToFail(String toFilePath, String result) {
         File file = new File(toFilePath);
         BufferedWriter writer = null;
-        try  {
+        try {
             writer = new BufferedWriter(new FileWriter(file));
             writer.write(result);
         } catch (IOException e) {
