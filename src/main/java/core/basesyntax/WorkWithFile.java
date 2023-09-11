@@ -1,11 +1,17 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class WorkWithFile {
     private static final String SEPARATOR = System.lineSeparator();
     private static final String SPASE = " ";
     private static final String SIGN = "\\W+";
+
     public void getStatistic(String fromFileName, String toFileName) {
         String[] splitArray = readLine(fromFileName);
         String calculateSolution = calculateStatistic(splitArray);
@@ -44,7 +50,6 @@ public class WorkWithFile {
                 i++;
             }
         }
-
         int calculation = sumSupply - sumBuy;
 
         String result = "supply," + sumSupply + SEPARATOR
