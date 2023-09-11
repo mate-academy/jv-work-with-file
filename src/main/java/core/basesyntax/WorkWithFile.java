@@ -29,8 +29,8 @@ public class WorkWithFile {
                 stringBuilder.append(value).append(SPASE);
                 value = reader.readLine();
             }
-
             splitArray = stringBuilder.toString().split(SIGN);
+
             return splitArray;
         } catch (IOException e) {
             throw new RuntimeException("Can`t read file", e);
