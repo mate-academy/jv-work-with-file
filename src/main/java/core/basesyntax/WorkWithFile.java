@@ -53,8 +53,8 @@ public class WorkWithFile {
         int calculation = sumSupply - sumBuy;
 
         String result = "supply," + sumSupply + SEPARATOR
-            + "buy," + sumBuy + SEPARATOR
-            + "result," + calculation;
+                + "buy," + sumBuy + SEPARATOR
+                + "result," + calculation;
 
         return result;
     }
