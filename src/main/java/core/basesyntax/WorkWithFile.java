@@ -10,12 +10,12 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final String SEPARATOR = System.lineSeparator();
     private static final String SPASE = " ";
-    private static final String SIGN = "\\W+";
+    private static final String REGEX = "\\W+";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] splitArray = readLine(fromFileName);
         String calculateSolution = calculateStatistic(splitArray);
-        writeToFail(toFileName, calculateSolution);
+        writeToFile(toFileName, calculateSolution);
     }
 
     private String[] readLine(String filePath) {
@@ -24,16 +24,16 @@ public class WorkWithFile {
         String[] splitArray;
 
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            String value = reader.readLine();
-            while (value != null) {
+            String value;
+            while ((value = reader.readLine()) != null) {
                 stringBuilder.append(value).append(SPASE);
-                value = reader.readLine();
             }
-            splitArray = stringBuilder.toString().split(SIGN);
+
+            splitArray = stringBuilder.toString().split(REGEX);
 
             return splitArray;
         } catch (IOException e) {
-            throw new RuntimeException("Can`t read file", e);
+            throw new RuntimeException("Can`t read file" + filePath, e);
         }
     }
 
@@ -42,37 +42,32 @@ public class WorkWithFile {
         int sumBuy = 0;
 
         for (int i = 0; i < splitArray.length; i++) {
-            if (splitArray[i].equals("supply")) {
-                sumSupply += Integer.parseInt(splitArray[i + 1]);
-                i++;
-            } else {
-                sumBuy += Integer.parseInt(splitArray[i + 1]);
-                i++;
+            switch (splitArray[i]) {
+                case "supply":
+                    sumSupply += Integer.parseInt(splitArray[i + 1]);
+                    i++;
+                    break;
+                default:
+                    sumBuy += Integer.parseInt(splitArray[i + 1]);
+                    i++;
+                    break;
             }
         }
         int calculation = sumSupply - sumBuy;
 
-        String result = "supply," + sumSupply + SEPARATOR
+        String s = "supply," + sumSupply + SEPARATOR
                 + "buy," + sumBuy + SEPARATOR
                 + "result," + calculation;
 
-        return result;
+        return s;
     }
 
-    private void writeToFail(String toFilePath, String result) {
+    private void writeToFile(String toFilePath, String result) {
         File file = new File(toFilePath);
-        BufferedWriter writer = null;
-        try {
-            writer = new BufferedWriter(new FileWriter(file));
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             writer.write(result);
         } catch (IOException e) {
-            throw new RuntimeException("Can`t read file", e);
-        } finally {
-            try {
-                writer.close();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            throw new RuntimeException("Can`t read file" + toFilePath, e);
         }
     }
 }
