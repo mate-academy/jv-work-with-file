@@ -62,12 +62,12 @@ public class WorkWithFile {
         return s;
     }
 
-    private void writeToFile(String toFilePath, String result) {
-        File file = new File(toFilePath);
+    private void writeToFile(String fileName, String content) {
+        File file = new File(fileName);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-            writer.write(result);
+            writer.write(content);
         } catch (IOException e) {
-            throw new RuntimeException("Can`t read file" + toFilePath, e);
+            throw new RuntimeException("Can`t read file" + fileName, e);
         }
     }
 }
