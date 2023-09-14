@@ -10,11 +10,15 @@ public class WorkWithFile {
     private static final String SUPPLY_NAME = "supply";
     private static final String BUY_NAME = "buy";
     private static final String RESULT_NAME = "result";
+    private static final int INDEX_OF_TYPE = 0;
+    private static final int INDEX_OF_VALUE = 1;
     private static final String LINE_SEPARATOR = System.lineSeparator();
     private static final String DELIMETER_COMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        writeReport(toFileName, generationReport(readFromFile(fromFileName)));
+        String data = readFromFile(fromFileName);
+        String report = generateReport(data);
+        writeToFile(toFileName, report);
     }
 
     private String readFromFile(String fromFileName) {
@@ -27,15 +31,15 @@ public class WorkWithFile {
         return fileData.toString();
     }
 
-    private String generationReport(String fileData) {
+    private String generateReport(String data) {
         StringBuilder report = new StringBuilder();
-        String[] allData = fileData.split(LINE_SEPARATOR);
+        String[] allData = data.split(LINE_SEPARATOR);
         int totalSupply = 0;
         int totalBuy = 0;
-        for (String data : allData) {
-            String[] operationData = data.split(DELIMETER_COMA);
-            String operationType = operationData[0];
-            String operationValue = operationData[1];
+        for (String curretData : allData) {
+            String[] operationData = curretData.split(DELIMETER_COMA);
+            String operationType = operationData[INDEX_OF_TYPE];
+            String operationValue = operationData[INDEX_OF_VALUE];
             if (operationType.equals(SUPPLY_NAME)) {
                 totalSupply += Integer.parseInt(operationValue);
             } else {
@@ -51,9 +55,9 @@ public class WorkWithFile {
                 .toString();
     }
 
-    private void writeReport(String toFileName, String report) {
+    private void writeToFile(String toFileName, String data) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write(report);
+            bufferedWriter.write(data);
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file " + toFileName, e);
         }
