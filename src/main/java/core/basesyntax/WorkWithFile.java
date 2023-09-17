@@ -8,58 +8,64 @@ import java.io.IOException;
 
 public class WorkWithFile {
     private static final String ROW_SEPARATOR = " ";
-    private static final String WORD_SEPARATOR = ",";
-    private String[] readData;
-    private String report;
+    private static final String DATA_FIELDS_SEPARATOR = ",";
+    private static final String SUPPLY_FIELD = "supply";
+    private static final String BUY_FIELD = "buy";
+    private static final String RESULT_FIELD = "result";
+    private static final int FIELD_NAME_INDEX = 0;
+    private static final int FIELD_VALUE_INDEX = 1;
+    private static StringBuilder BUILDER = new StringBuilder();
 
     public void getStatistic(String fromFileName, String toFileName) {
-        readData(fromFileName);
-        makeReport(readData);
-        writeData(toFileName);
+        String[] readData = readData(fromFileName);
+        String report = makeReport(readData);
+        writeData(report, toFileName);
     }
 
-    public void readData(String fromFileName) {
+    public String[] readData(String fromFileName) {
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
-            StringBuilder builder = new StringBuilder();
+            BUILDER = new StringBuilder();
             String value = reader.readLine();
             while (value != null) {
-                builder.append(value).append(ROW_SEPARATOR);
+                BUILDER.append(value).append(ROW_SEPARATOR);
                 value = reader.readLine();
             }
-            this.readData = builder.toString().split(ROW_SEPARATOR);
+            return BUILDER.toString().split(ROW_SEPARATOR);
         } catch (IOException e) {
-            throw new RuntimeException("Can't read data from the file", e);
+            throw new RuntimeException("Can't read data from the file " + fromFileName, e);
         }
     }
 
-    public void makeReport(String[] rodeData) {
-        int supply = 0;
-        int buy = 0;
+    public String makeReport(String[] readData) {
+        int supplyValue = 0;
+        int buyValue = 0;
         for (String row : readData) {
-            String[] splitedRow = row.split(WORD_SEPARATOR);
-            switch (splitedRow[0]) {
-                case "supply":
-                    supply += Integer.parseInt(splitedRow[1]);
+            String[] splitRow = row.split(DATA_FIELDS_SEPARATOR);
+            switch (splitRow[FIELD_NAME_INDEX]) {
+                case SUPPLY_FIELD:
+                    supplyValue += Integer.parseInt(splitRow[FIELD_VALUE_INDEX]);
                     break;
-                case "buy":
-                    buy += Integer.parseInt(splitedRow[1]);
+                case BUY_FIELD:
+                    buyValue += Integer.parseInt(splitRow[FIELD_VALUE_INDEX]);
                     break;
                 default:
                     break;
             }
         }
-        StringBuilder builder = new StringBuilder();
-        builder.append("supply,").append(supply).append(System.lineSeparator())
-                .append("buy,").append(buy).append(System.lineSeparator())
-                .append("result,").append(supply - buy);
-        this.report = builder.toString();
+        BUILDER = new StringBuilder();
+        BUILDER.append(SUPPLY_FIELD).append(DATA_FIELDS_SEPARATOR).append(supplyValue)
+                .append(System.lineSeparator())
+                .append(BUY_FIELD).append(DATA_FIELDS_SEPARATOR).append(buyValue)
+                .append(System.lineSeparator())
+                .append(RESULT_FIELD).append(DATA_FIELDS_SEPARATOR).append(supplyValue - buyValue);
+        return BUILDER.toString();
     }
 
-    public void writeData(String toFileName) {
+    public void writeData(String report, String toFileName) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data to the file", e);
+            throw new RuntimeException("Can't write data to the file " + toFileName, e);
         }
     }
 }
