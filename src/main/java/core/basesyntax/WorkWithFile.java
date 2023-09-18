@@ -28,7 +28,7 @@ public class WorkWithFile {
             return contentFile;
 
         } catch (IOException e) {
-            throw new RuntimeException("Can't read data");
+            throw new RuntimeException("Cannot read data");
         }
     }
 
