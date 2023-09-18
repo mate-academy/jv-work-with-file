@@ -11,10 +11,11 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
+    private static final String WORD_SPLIT_REGEX = "\\W+";
 
     public void getStatistic(String fromFileName, String toFileName) {
         File inputFile = new File(fromFileName);
-        String[] words = readFromFile(inputFile).split("\\W+");
+        String[] words = readFromFile(inputFile).split(WORD_SPLIT_REGEX);
 
         int supplySum = 0;
         int buySum = 0;
