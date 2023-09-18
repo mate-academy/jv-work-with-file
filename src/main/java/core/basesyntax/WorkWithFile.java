@@ -1,43 +1,36 @@
 package core.basesyntax;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
 
 public class WorkWithFile {
     private static final int NAME = 0;
     private static final int NUMBER = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String fileContent = readFile(fromFileName);
+        List<String> fileContent = readFile(fromFileName);
         String report = getResult(fileContent);
         writeToFile(toFileName, report);
     }
 
-    private static String readFile(String fromFileName) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
-            String value = reader.readLine();
-            StringBuilder builder = new StringBuilder();
-            while (value != null) {
-                builder.append(value).append(System.lineSeparator());
-                value = reader.readLine();
-            }
-            String contentFile = builder.toString().trim();
-            return contentFile;
-
+    private static List<String> readFile(String fromFileName) {
+        try {
+            List<String> lines = Files.readAllLines(Path.of(fromFileName));
+            return lines;
         } catch (IOException e) {
-            throw new RuntimeException("Cannot read data");
+            throw new RuntimeException("Can't read data");
         }
     }
 
-    private static String getResult(String contentFile) {
-        String [] inputValues = contentFile.split(System.lineSeparator());
+    private static String getResult(List<String> lines) {
         int supplySum = 0;
         int buySum = 0;
-        for (int i = 0;i < inputValues.length;i++) {
-            String [] parts = inputValues[i].split(",");
+        for (String line : lines) {
+            String [] parts = line.split(",");
             if (parts[NAME].equals("supply")) {
                 supplySum += Integer.parseInt(parts[NUMBER]);
             }
