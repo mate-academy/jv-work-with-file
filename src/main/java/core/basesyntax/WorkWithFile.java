@@ -13,18 +13,22 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         File file = new File(toFileName);
+        ArrayList<String[]> data = getDataFromFile(new File(fromFileName));
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
-            bufferedWriter.write("supply,"
-                    + amountSupplier.getTotalSupplyAmount(getDataFromFile(new File(fromFileName)))
-                    + System.lineSeparator());
-            bufferedWriter.write("buy,"
-                    + amountSupplier.getTotalBuyAmount(getDataFromFile(new File(fromFileName)))
-                    + System.lineSeparator());
-            bufferedWriter.write("result,"
-                    + amountSupplier.getResultAmount(getDataFromFile(new File(fromFileName))));
+            bufferedWriter.write(getStringWithStatistic(data));
         } catch (IOException ioException) {
             throw new RuntimeException("Cannot write data to file - " + file, ioException);
         }
+    }
+
+    public String getStringWithStatistic(ArrayList<String[]> data) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("supply,").append(amountSupplier.getTotalSupplyAmount(data))
+                .append(System.lineSeparator())
+                .append("buy,").append(amountSupplier.getTotalBuyAmount(data))
+                .append(System.lineSeparator())
+                .append("result,").append(amountSupplier.getResultAmount(data));
+        return stringBuilder.toString();
     }
 
     public ArrayList<String[]> getDataFromFile(File file) {
