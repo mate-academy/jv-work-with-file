@@ -21,7 +21,7 @@ public class WorkWithFile {
         }
     }
 
-    public String getStringWithStatistic(ArrayList<String[]> data) {
+    private String getStringWithStatistic(ArrayList<String[]> data) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("supply,").append(amountSupplier.getTotalSupplyAmount(data))
                 .append(System.lineSeparator())
@@ -31,7 +31,7 @@ public class WorkWithFile {
         return stringBuilder.toString();
     }
 
-    public ArrayList<String[]> getDataFromFile(File file) {
+    private ArrayList<String[]> getDataFromFile(File file) {
         ArrayList<String[]> data = new ArrayList<>();
         try {
             for (String datum : Files.readAllLines(file.toPath())) {
