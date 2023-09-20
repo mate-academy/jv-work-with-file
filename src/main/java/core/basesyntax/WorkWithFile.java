@@ -29,12 +29,7 @@ public class WorkWithFile {
         }
 
         String report = generateReport(supplySum, buySum);
-        File outputFile = new File(toFileName);
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(outputFile))) {
-            bufferedWriter.write(report);
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to create a file: " + outputFile.getName(), e);
-        }
+        writeToFile(toFileName, report);
     }
 
     private String generateReport(int supplySum, int buySum) {
@@ -61,5 +56,14 @@ public class WorkWithFile {
             throw new RuntimeException("Failed to read from a file: " + inputFile.getName(), e);
         }
         return stringBuilder.toString();
+    }
+
+    private void writeToFile(String toFileName, String report) {
+        File outputFile = new File(toFileName);
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(outputFile))) {
+            bufferedWriter.write(report);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to create a file: " + outputFile.getName(), e);
+        }
     }
 }
