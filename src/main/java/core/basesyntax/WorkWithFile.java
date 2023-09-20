@@ -12,6 +12,7 @@ public class WorkWithFile {
     private static final String BUY = "buy";
     private static final String RESULT = "result";
     private static final String WORD_SPLIT_REGEX = "\\W+";
+    private static final String SEPARATOR = " ";
 
     public void getStatistic(String fromFileName, String toFileName) {
         File inputFile = new File(fromFileName);
