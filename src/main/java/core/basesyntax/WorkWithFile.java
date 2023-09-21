@@ -10,9 +10,14 @@ import java.io.IOException;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
+        String[] namesOfArticles = {"supply", "buy", "result"};
+        int[] values = readStatistic(fromFileName, namesOfArticles);
+        writeStatistic(toFileName, namesOfArticles, values);
+    }
+
+    public int[] readStatistic(String fromFileName, String[] namesOfArticles) {
         File fromFile = new File(fromFileName);
         try (BufferedReader br = new BufferedReader(new FileReader(fromFile))) {
-            String[] namesOfArticles = {"supply", "buy", "result"};
             int indexOfResult = namesOfArticles.length - 1;
             int[] values = new int[namesOfArticles.length];
             String text = br.readLine();
@@ -26,17 +31,18 @@ public class WorkWithFile {
                 text = br.readLine();
             }
             values[indexOfResult] = values[0] - values[1];
-            writeStatistic(toFileName, namesOfArticles, values);
+            return values;
         } catch (FileNotFoundException ex) {
             throw new RuntimeException("FileNotFoundException has happened");
         } catch (IOException ex) {
             throw new RuntimeException("IOException has happened");
         }
+
     }
 
     public void writeStatistic(String toFileName, String[] namesOfArticles, int[] values) {
         File toFile = new File(toFileName);
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(toFile, true))) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(toFile, false))) {
             for (int i = 0; i < values.length; ++i) {
                 StringBuilder answer = new StringBuilder();
                 answer.append(namesOfArticles[i] + "," + values[i]);
