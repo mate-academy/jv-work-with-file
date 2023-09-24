@@ -1,6 +1,10 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,7 +27,7 @@ public class WorkWithFile {
     private Map<String, Integer> mapMethod(String fromFileName) {
         Map<String, Integer> operationAmountMap = new HashMap<>();
         fillMapWithKeys(operationAmountMap);
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))){
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String dataLine = bufferedReader.readLine();
             while (dataLine != null) {
                 String[] operationAmount = dataLine.split(DATA_SEPARATOR);
@@ -41,13 +45,16 @@ public class WorkWithFile {
         return operationAmountMap;
     }
 
-    private void writeStatisticReportIntoFile(String toFileName, Map<String, Integer> operationAmountMap) {
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))){
-            Report report = new Report(operationAmountMap.get("supply"), operationAmountMap.get("buy"));
+    private void writeStatisticReportIntoFile(String toFileName, Map<String,
+            Integer> operationAmountMap) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(
+                new FileWriter(toFileName))) {
+            Report report = new Report(operationAmountMap.get("supply"),
+                    operationAmountMap.get("buy"));
             String reportString = report.createReportString();
             bufferedWriter.write(reportString);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can't write data into the file", e);
         }
     }
 }
