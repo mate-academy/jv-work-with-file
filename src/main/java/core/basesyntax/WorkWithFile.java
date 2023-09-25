@@ -10,6 +10,7 @@ import java.util.Map;
 
 public class WorkWithFile {
 
+    private Report report;
     private static final String DATA_SEPARATOR = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
@@ -34,7 +35,7 @@ public class WorkWithFile {
                 String operation = operationAmount[0];
                 int amount = Integer.parseInt(operationAmount[1]);
                 int currentAmount = operationAmountMap.get(operation);
-                if (operationAmountMap.containsKey(operationAmount[0])) {
+                if (operationAmountMap.containsKey(operation)) {
                     operationAmountMap.put(operation, currentAmount + amount);
                 }
                 dataLine = bufferedReader.readLine();
@@ -49,7 +50,7 @@ public class WorkWithFile {
             Integer> operationAmountMap) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(
                 new FileWriter(toFileName))) {
-            Report report = new Report(operationAmountMap.get("supply"),
+             report = new Report(operationAmountMap.get("supply"),
                     operationAmountMap.get("buy"));
             String reportString = report.createReportString();
             bufferedWriter.write(reportString);
