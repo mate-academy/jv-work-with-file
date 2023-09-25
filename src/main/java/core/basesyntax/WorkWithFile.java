@@ -10,8 +10,8 @@ import java.util.Map;
 
 public class WorkWithFile {
 
-    private Report report;
     private static final String DATA_SEPARATOR = ",";
+    private Report report;
 
     public void getStatistic(String fromFileName, String toFileName) {
         Map<String, Integer> operationAmountMap = new HashMap<>();
@@ -50,7 +50,7 @@ public class WorkWithFile {
             Integer> operationAmountMap) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(
                 new FileWriter(toFileName))) {
-             report = new Report(operationAmountMap.get("supply"),
+            report = new Report(operationAmountMap.get("supply"),
                     operationAmountMap.get("buy"));
             String reportString = report.createReportString();
             bufferedWriter.write(reportString);
