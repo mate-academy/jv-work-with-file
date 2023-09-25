@@ -16,7 +16,7 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         Map<String, Integer> operationAmountMap = new HashMap<>();
         fillMapWithKeys(operationAmountMap);
-        operationAmountMap = mapMethod(fromFileName);
+        operationAmountMap = readDataFromFileIntoMap(fromFileName);
         writeStatisticReportIntoFile(toFileName, operationAmountMap);
     }
 
@@ -25,7 +25,7 @@ public class WorkWithFile {
         operationAmountMap.put("supply", 0);
     }
 
-    private Map<String, Integer> mapMethod(String fromFileName) {
+    private Map<String, Integer> readDataFromFileIntoMap(String fromFileName) {
         Map<String, Integer> operationAmountMap = new HashMap<>();
         fillMapWithKeys(operationAmountMap);
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
