@@ -52,8 +52,7 @@ public class WorkWithFile {
                 new FileWriter(toFileName))) {
             report = new Report(operationAmountMap.get("supply"),
                     operationAmountMap.get("buy"));
-            String reportString = report.createReportString();
-            bufferedWriter.write(reportString);
+            bufferedWriter.write(report.createReportString());
         } catch (IOException e) {
             throw new RuntimeException("Can't write data into the file", e);
         }
