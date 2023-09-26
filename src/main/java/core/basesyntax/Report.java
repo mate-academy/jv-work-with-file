@@ -12,8 +12,8 @@ public class Report {
 
     public String createReportString() {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("supply").append(DATA_SEPARATOR).append(supply).append('\n');
-        stringBuilder.append("buy").append(DATA_SEPARATOR).append(buy).append('\n');
+        stringBuilder.append("supply").append(DATA_SEPARATOR).append(supply).append(System.lineSeparator());
+        stringBuilder.append("buy").append(DATA_SEPARATOR).append(buy).append(System.lineSeparator());
         stringBuilder.append("result").append(DATA_SEPARATOR).append(supply - buy);
         return stringBuilder.toString();
     }
