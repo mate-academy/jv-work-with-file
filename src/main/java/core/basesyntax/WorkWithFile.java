@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -17,10 +16,12 @@ public class WorkWithFile {
     private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        writeReportToFile(makeReportFromData(readDataFromFile(fromFileName)), toFileName);
+        String dataFromFile = readDataFromFile(fromFileName);
+        String report = makeReportFromData(dataFromFile);
+        writeReportToFile(report, toFileName);
     }
 
-    public String readDataFromFile(String fileName) {
+    private String readDataFromFile(String fileName) {
         StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
             String line = bufferedReader.readLine();
@@ -29,12 +30,13 @@ public class WorkWithFile {
                 line = bufferedReader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read from file!", e);
+            System.err.println("Can't read data from " + fileName);
+            e.printStackTrace();
         }
         return stringBuilder.toString();
     }
 
-    public String makeReportFromData(String data) {
+    private String makeReportFromData(String data) {
         int supplyAmount = 0;
         int buyAmount = 0;
         int result = 0;
@@ -60,19 +62,12 @@ public class WorkWithFile {
         return stringBuilder.toString();
     }
 
-    public void writeReportToFile(String report, String toFileName) {
-        File fileReport = new File(toFileName);
+    private void writeReportToFile(String report, String fileName) {
         try {
-            fileReport.createNewFile();
+            Files.write(Path.of(fileName), report.getBytes());
         } catch (IOException e) {
-            throw new RuntimeException("Can't create file", e);
+            System.err.println("Can't write data to " + fileName);
+            e.printStackTrace();
         }
-
-        try {
-            Files.write(Path.of(toFileName), report.getBytes());
-        } catch (IOException e) {
-            throw new RuntimeException("Can't write data to file!", e);
-        }
-
     }
 }
