@@ -1,6 +1,6 @@
 package core.basesyntax;
 
-import java.io.BufferedReader;
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -15,6 +15,7 @@ public class WorkWithFile {
     private static final int INDEX_OF_VALUE = 1;
     private static final String LINE_SEPARATOR = System.lineSeparator();
     private static final String DELIMETER_COMA = ",";
+
     public void getStatistic(String fromFileName, String toFileName) {
 
         String data = readFromFileName(fromFileName);
