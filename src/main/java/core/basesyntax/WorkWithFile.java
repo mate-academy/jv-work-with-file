@@ -6,38 +6,16 @@ import java.io.FileReader;
 import java.io.FileWriter;
 
 public class WorkWithFile {
-    private int supply;
-    private int buy;
-    private int result;
     private StringBuilder stringBuilder = new StringBuilder();
-    private String fileLine = "";
-    private String[] splitFileLine;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        supply = 0;
-        buy = 0;
         stringBuilder.setLength(0);
-        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
-            fileLine = reader.readLine();
-            while (fileLine != null) {
-                splitFileLine = fileLine.split(",");
-                if (splitFileLine[0].equals("buy")) {
-                    buy += Integer.parseInt(splitFileLine[1]);
-                } else {
-                    supply += Integer.parseInt(splitFileLine[1]);
-                }
-                fileLine = reader.readLine();
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("can't read file" + e);
-        }
-        createReport();
-        File createFile = createFile(toFileName);
-        writeFile(createFile);
+        readCalculateFile(fromFileName);
+        writeFile(createFile(toFileName));
     }
 
-    private void createReport() {
-        result = supply - buy;
+    private void createReport(int supply,int buy) {
+        int result = supply - buy;
         stringBuilder.append("supply,").append(supply)
                 .append(System.lineSeparator())
                 .append("buy,").append(buy).append(System.lineSeparator())
@@ -62,4 +40,22 @@ public class WorkWithFile {
         }
     }
 
+    private void readCalculateFile(String fromFileName) {
+        int supply = 0;
+        int buy = 0;
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
+            String fileLine;
+            while ((fileLine = reader.readLine()) != null) {
+                String[] splitFileLine = fileLine.split(",");
+                if (splitFileLine[0].equals("buy")) {
+                    buy += Integer.parseInt(splitFileLine[1]);
+                } else {
+                    supply += Integer.parseInt(splitFileLine[1]);
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("can't read file" + e);
+        }
+        createReport(supply, buy);
+    }
 }
