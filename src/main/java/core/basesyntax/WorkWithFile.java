@@ -34,11 +34,11 @@ public class WorkWithFile {
             values[indexOfResult] = values[0] - values[1];
             StringBuilder answer = new StringBuilder();
             for (int i = 0; i < namesOfArticles.length; ++i) {
-                answer.append (namesOfArticles[i] + " ");
+                answer.append(namesOfArticles[i] + " ");
             }
             answer.append("\n");
             for (int i = 0; i < values.length; ++i) {
-                answer.append (values[i] + " ");
+                answer.append(values[i] + " ");
             }
             return answer.toString();
         } catch (FileNotFoundException ex) {
@@ -48,7 +48,7 @@ public class WorkWithFile {
         }
     }
 
-    public String makeReport (String information){
+    public String makeReport(String information) {
         StringBuilder report = new StringBuilder();
         String[] articles = information.split("\n")[0].split(" ");
         String[] values = information.split("\n")[1].split(" ");
