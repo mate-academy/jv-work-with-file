@@ -63,7 +63,7 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Can't create a file: " + toFileName, e);
+            throw new RuntimeException(" Can't create a file: " + toFileName, e);
         }
     }
 }
