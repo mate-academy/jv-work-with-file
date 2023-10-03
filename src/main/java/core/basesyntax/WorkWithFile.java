@@ -8,6 +8,10 @@ import java.nio.file.Files;
 import java.util.List;
 
 public class WorkWithFile {
+    private static final String SUPPLY_STRING = "supply";
+    private static final String BUY_STRING = "buy";
+    private static final String RESULT_STRING = "result";
+
     public void getStatistic(String fromFileName, String toFileName) {
         File file = new File(fromFileName);
         int totalSupply = 0;
@@ -18,9 +22,9 @@ public class WorkWithFile {
 
             for (String str : strings) {
                 String[] arr = str.split(",");
-                if (arr[0].equals("supply")) {
+                if (arr[0].equals(SUPPLY_STRING)) {
                     totalSupply += Integer.valueOf(arr[1]);
-                } else if (arr[0].equals("buy")) {
+                } else if (arr[0].equals(BUY_STRING)) {
                     totalBuy += Integer.valueOf(arr[1]);
                 }
             }
@@ -33,8 +37,10 @@ public class WorkWithFile {
     }
 
     private String createReport(int totalSupply, int totalBuy) {
-        return String.format("supply,%d%nbuy,%d%nresult,%d",
-                totalSupply, totalBuy, (totalSupply - totalBuy));
+        return String.format("%s,%d%n%s,%d%n%s,%d",
+                SUPPLY_STRING, totalSupply,
+                BUY_STRING, totalBuy,
+                RESULT_STRING, (totalSupply - totalBuy));
 
     }
 
