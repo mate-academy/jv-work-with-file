@@ -6,50 +6,60 @@ import java.io.FileReader;
 import java.io.FileWriter;
 
 public class WorkWithFile {
-    public void getStatistic(String fromFileName, String toFileName) {
-        int supply = 0;
-        int buy = 0;
-        int result = 0;
-        String fileLine = "";
-        StringBuilder stringBuilder = new StringBuilder();
-        File createFile = null;
+    private int supply;
+    private int buy;
+    private int result;
+    private StringBuilder stringBuilder = new StringBuilder();
+    private String fileLine = "";
+    private String[] splitFileLine;
 
+    public void getStatistic(String fromFileName, String toFileName) {
+        supply = 0;
+        buy = 0;
+        stringBuilder.setLength(0);
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             fileLine = reader.readLine();
-
             while (fileLine != null) {
-                String[] splitFileLine = fileLine.split(",");
-
+                splitFileLine = fileLine.split(",");
                 if (splitFileLine[0].equals("buy")) {
                     buy += Integer.parseInt(splitFileLine[1]);
                 } else {
                     supply += Integer.parseInt(splitFileLine[1]);
                 }
-
                 fileLine = reader.readLine();
             }
-
         } catch (Exception e) {
             throw new RuntimeException("can't read file" + e);
         }
+        createReport();
+        File createFile = createFile(toFileName);
+        writeFile(createFile);
+    }
 
+    private void createReport() {
         result = supply - buy;
         stringBuilder.append("supply,").append(supply)
                 .append(System.lineSeparator())
                 .append("buy,").append(buy).append(System.lineSeparator())
                 .append("result,").append(result);
+    }
 
+    private File createFile(String toFileName) {
         try {
-            createFile = new File(toFileName);
+            File createFile = new File(toFileName);
             createFile.createNewFile();
+            return createFile;
         } catch (Exception e) {
             throw new RuntimeException("can't create file" + e);
         }
+    }
 
-        try (FileWriter fileWriter = new FileWriter(createFile)) {
+    private void writeFile(File file) {
+        try (FileWriter fileWriter = new FileWriter(file, false)) {
             fileWriter.write(stringBuilder.toString());
         } catch (Exception e) {
-            throw new RuntimeException("Сan't write file" + e);
+            throw new RuntimeException("Can't write file" + e);
         }
     }
+
 }
