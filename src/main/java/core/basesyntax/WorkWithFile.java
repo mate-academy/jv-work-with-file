@@ -30,8 +30,7 @@ public class WorkWithFile {
                 line = bufferedReader.readLine();
             }
         } catch (IOException e) {
-            System.err.println("Can't read data from " + fileName);
-            e.printStackTrace();
+            throw new RuntimeException("Can't read data from the file" + fileName, e);
         }
         return stringBuilder.toString();
     }
@@ -66,8 +65,7 @@ public class WorkWithFile {
         try {
             Files.write(Path.of(fileName), report.getBytes());
         } catch (IOException e) {
-            System.err.println("Can't write data to " + fileName);
-            e.printStackTrace();
+            throw new RuntimeException("Can't write data to the file " + fileName, e);
         }
     }
 }
