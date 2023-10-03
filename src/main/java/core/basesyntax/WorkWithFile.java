@@ -16,8 +16,7 @@ public class WorkWithFile {
     private static final String SYMBOL_LINE_SEPARATOR = "\n";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        File myFile = new File(toFileName);
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(myFile))) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(calculateReport(readFile(fromFileName)));
         } catch (IOException e) {
             throw new RuntimeException("Cannot write data to the file " + toFileName, e);
@@ -42,11 +41,11 @@ public class WorkWithFile {
         int supply = 0;
         int buy = 0;
         int parsedValue;
-        String[] textSeparator = readFile.split(SYMBOL_LINE_SEPARATOR);
-        String[][] statisticTable = new String[textSeparator.length][DEFAULT_OPERATIONS_NUMBER];
-        for (int i = 0; i < textSeparator.length; i++) {
+        String[] separatedText = readFile.split(SYMBOL_LINE_SEPARATOR);
+        String[][] statisticTable = new String[separatedText.length][DEFAULT_OPERATIONS_NUMBER];
+        for (int i = 0; i < separatedText.length; i++) {
             for (int j = 0; j < DEFAULT_OPERATIONS_NUMBER; j++) {
-                statisticTable[i][j] = textSeparator[i].split(SYMBOL_COMMA)[j];
+                statisticTable[i][j] = separatedText[i].split(SYMBOL_COMMA)[j];
             }
         }
         for (int i = 0; i < statisticTable.length; i++) {
