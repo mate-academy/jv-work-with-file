@@ -19,57 +19,53 @@ public class WorkWithFile {
         String[] namesOfArticles = {"supply", "buy", "result"};
         File fromFile = new File(fromFileName);
         try (BufferedReader br = new BufferedReader(new FileReader(fromFile))) {
-            int indexOfResult = namesOfArticles.length - 1;
-            int[] values = new int[namesOfArticles.length];
+            StringBuilder answer = new StringBuilder();
             String text = br.readLine();
             while (text != null) {
-                String[] tempArray = text.split(",");
-                for (int i = 0; i < indexOfResult; ++i) {
-                    if (tempArray[0].equals(namesOfArticles[i])) {
-                        values[i] += Integer.valueOf(tempArray[1]);
-                    }
-                }
+                answer.append(text + "\n");
                 text = br.readLine();
-            }
-            values[indexOfResult] = values[0] - values[1];
-            StringBuilder answer = new StringBuilder();
-            for (int i = 0; i < namesOfArticles.length; ++i) {
-                answer.append(namesOfArticles[i] + " ");
-            }
-            answer.append("\n");
-            for (int i = 0; i < values.length; ++i) {
-                answer.append(values[i] + " ");
             }
             return answer.toString();
         } catch (FileNotFoundException ex) {
-            throw new RuntimeException("FileNotFoundException has happened");
+            throw new RuntimeException("Can't read data from file" + fromFileName, ex);
         } catch (IOException ex) {
-            throw new RuntimeException("IOException has happened");
+            throw new RuntimeException("IOException has happened in the file" + fromFileName, ex);
         }
     }
 
     public String makeReport(String information) {
         StringBuilder report = new StringBuilder();
-        String[] articles = information.split("\n")[0].split(" ");
-        String[] values = information.split("\n")[1].split(" ");
-        for (int i = 0; i < articles.length; i++) {
-            report.append(articles[i] + "," + values[i] + "\n");
+        String[] strings = information.split("\n");
+        String[] namesOfArticles = {"supply", "buy", "result"};
+        int[] values = new int[namesOfArticles.length];
+        int indexOfResult = namesOfArticles.length - 1;
+        for (int i = 0; i < strings.length; ++i) {
+            String[] tempArray = strings[i].split(",");
+            for (int c = 0; c < indexOfResult; ++c) {
+                if (tempArray[0].equals(namesOfArticles[c])) {
+                    values[c] += Integer.valueOf(tempArray[1]);
+                }
+            }
+        }
+        values[indexOfResult] = values[0] - values[1];
+        for (int i = 0; i < namesOfArticles.length; i++) {
+            report.append(namesOfArticles[i] + "," + values[i] + "\n");
         }
         return report.toString();
     }
 
     public void writeToFile(String toFileName, String report) {
         File toFile = new File(toFileName);
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(toFile, false))) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(toFile))) {
             String[] info = report.split("\n");
             for (int i = 0; i < info.length; ++i) {
                 bw.write(info[i]);
                 bw.newLine();
             }
         } catch (FileNotFoundException ex) {
-            throw new RuntimeException("FileNotFoundException has happened");
+            throw new RuntimeException("Can't write data to file" + toFileName, ex);
         } catch (IOException ex) {
-            throw new RuntimeException("IOException has happened");
+            throw new RuntimeException("IOException has happened in the file" + toFileName, ex);
         }
     }
 }
