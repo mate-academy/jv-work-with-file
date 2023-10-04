@@ -7,6 +7,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+
     public void getStatistic(String fromFileName, String toFileName) {
         int totalSupply = 0;
         int totalBuy = 0;
@@ -18,14 +21,10 @@ public class WorkWithFile {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] readCsvData = line.split(",");
-                switch (readCsvData[0]) {
-                    case "supply":
-                        totalSupply += Integer.parseInt(readCsvData[1]);
-                        break;
-                    case "buy":
-                        totalBuy += Integer.parseInt(readCsvData[1]);
-                        break;
-                    default:
+                if (readCsvData[0].equals(SUPPLY)) {
+                    totalSupply += Integer.parseInt(readCsvData[1]);
+                } else {
+                    totalBuy += Integer.parseInt(readCsvData[1]);
                 }
             }
         } catch (IOException e) {
@@ -43,8 +42,8 @@ public class WorkWithFile {
     }
 
     private void createReport(BufferedWriter bw, int[] statistics) throws IOException {
-        bw.write("supply," + statistics[0] + System.lineSeparator());
-        bw.write("buy," + statistics[1] + System.lineSeparator());
+        bw.write(SUPPLY + "," + statistics[0] + System.lineSeparator());
+        bw.write(BUY + "," + statistics[1] + System.lineSeparator());
         bw.write("result," + (statistics[0] - statistics[1]) + System.lineSeparator());
     }
 }
