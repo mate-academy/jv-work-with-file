@@ -62,18 +62,3 @@ public class WorkWithFile {
     }
 }
 
-    /*
-        public void writeData(String[] arrayWithData, String fileToWrite) {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (String data: arrayWithData) {
-            stringBuilder.append(data).append("\n");
-        }
-        File file = new File(fileToWrite);
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
-                bufferedWriter.write(stringBuilder.toString());
-            } catch (IOException e) {
-                throw new RuntimeException("The data hasn't been written");
-            }
-        }
-    }
-     */
