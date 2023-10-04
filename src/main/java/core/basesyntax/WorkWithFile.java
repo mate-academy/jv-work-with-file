@@ -16,7 +16,6 @@ public class WorkWithFile {
     }
 
     public String readFromFile(String fromFileName) {
-        String[] namesOfArticles = {"supply", "buy", "result"};
         File fromFile = new File(fromFileName);
         try (BufferedReader br = new BufferedReader(new FileReader(fromFile))) {
             StringBuilder answer = new StringBuilder();
