@@ -49,7 +49,10 @@ public class WorkWithFile {
         }
         values[indexOfResult] = values[0] - values[1];
         for (int i = 0; i < namesOfArticles.length; i++) {
-            report.append(namesOfArticles[i] + "," + values[i] + "\n");
+            report.append(namesOfArticles[i] + "," + values[i]);
+            if (i < namesOfArticles.length - 1) {
+                report.append(System.lineSeparator());
+            }
         }
         return report.toString();
     }
@@ -57,11 +60,7 @@ public class WorkWithFile {
     public void writeToFile(String toFileName, String report) {
         File toFile = new File(toFileName);
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(toFile))) {
-            String[] info = report.split("\n");
-            for (int i = 0; i < info.length; ++i) {
-                bw.write(info[i]);
-                bw.newLine();
-            }
+            bw.write(report);
         } catch (FileNotFoundException ex) {
             throw new RuntimeException("Can't write data to file" + toFileName, ex);
         } catch (IOException ex) {
