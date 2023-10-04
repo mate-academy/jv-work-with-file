@@ -6,39 +6,48 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String COMMA = ",";
+
     public void getStatistic(String fromFileName, String toFileName) {
-        String[] result = readFile(fromFileName);
+        writeFile(fromFileName, toFileName);
+    }
+
+    public void writeFile(String fromFileName, String toFileName) {
+        StringBuilder result = readFile(fromFileName);
         try (FileWriter fileWriter = new FileWriter(toFileName)) {
-            for (String line : result) {
-                fileWriter.write(line + System.lineSeparator());
-            }
+            fileWriter.write(result.toString());
         } catch (IOException e) {
             throw new RuntimeException("Can't write the file" + toFileName, e);
         }
     }
 
-    public static String[] readFile(String fromFileName) {
+    public StringBuilder readFile(String fromFileName) {
         StringBuilder stringBuilder = new StringBuilder();
         int numberOfPurchases = 0;
         int numberOfSupply = 0;
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String fileStr;
             while ((fileStr = bufferedReader.readLine()) != null) {
-                stringBuilder.append(fileStr).append(",");
+                stringBuilder.append(fileStr).append(COMMA);
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read the file " + fromFileName, e);
         }
-        String[] cloneBuilder = stringBuilder.toString().split(",");
-        for (int i = 0; i < cloneBuilder.length; i++) {
-            if (cloneBuilder[i].equalsIgnoreCase("supply")) {
-                numberOfSupply += Integer.parseInt(cloneBuilder[i + 1]);
+        String[] arrayFromFileName = stringBuilder.toString().split(",");
+        for (int i = 0; i < arrayFromFileName.length; i++) {
+            if (arrayFromFileName[i].equalsIgnoreCase("supply")) {
+                numberOfSupply += Integer.parseInt(arrayFromFileName[i + 1]);
             }
-            if (cloneBuilder[i].equalsIgnoreCase("buy")) {
-                numberOfPurchases += Integer.parseInt(cloneBuilder[i + 1]);
+            if (arrayFromFileName[i].equalsIgnoreCase("buy")) {
+                numberOfPurchases += Integer.parseInt(arrayFromFileName[i + 1]);
             }
         }
-        return new String[]{"supply," + numberOfSupply, "buy,"
-                + numberOfPurchases, "result," + (numberOfSupply - numberOfPurchases)};
+        stringBuilder.setLength(0);
+        return stringBuilder.append("supply,")
+                .append(numberOfSupply)
+                .append(System.lineSeparator())
+                .append("buy,").append(numberOfPurchases)
+                .append(System.lineSeparator())
+                .append("result,").append(numberOfSupply - numberOfPurchases);
     }
 }
