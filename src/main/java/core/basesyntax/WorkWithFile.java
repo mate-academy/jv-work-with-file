@@ -6,20 +6,22 @@ import java.io.FileReader;
 import java.io.FileWriter;
 
 public class WorkWithFile {
-    private StringBuilder stringBuilder = new StringBuilder();
 
     public void getStatistic(String fromFileName, String toFileName) {
-        stringBuilder.setLength(0);
-        readCalculateFile(fromFileName);
-        writeFile(createFile(toFileName));
+        StringBuilder stringBuilder = new StringBuilder();
+        readCalculateFile(fromFileName, stringBuilder);
+        writeFile(createFile(toFileName),stringBuilder);
     }
 
-    private void createReport(int supply,int buy) {
+    private void createReport(int supply,int buy, StringBuilder stringBuilder) {
+        String strSupply = "supply,";
+        String strBuy = "buy,";
+        String strResult = "result,";
         int result = supply - buy;
-        stringBuilder.append("supply,").append(supply)
+        stringBuilder.append(strSupply).append(supply)
                 .append(System.lineSeparator())
-                .append("buy,").append(buy).append(System.lineSeparator())
-                .append("result,").append(result);
+                .append(strBuy).append(buy).append(System.lineSeparator())
+                .append(strResult).append(result);
     }
 
     private File createFile(String toFileName) {
@@ -28,34 +30,36 @@ public class WorkWithFile {
             createFile.createNewFile();
             return createFile;
         } catch (Exception e) {
-            throw new RuntimeException("can't create file" + e);
+            throw new RuntimeException("can't create file " + toFileName, e);
         }
     }
 
-    private void writeFile(File file) {
+    private void writeFile(File file, StringBuilder stringBuilder) {
         try (FileWriter fileWriter = new FileWriter(file, false)) {
             fileWriter.write(stringBuilder.toString());
         } catch (Exception e) {
-            throw new RuntimeException("Can't write file" + e);
+            throw new RuntimeException("Can't write data to file " + file.getName(), e);
         }
     }
 
-    private void readCalculateFile(String fromFileName) {
+    private void readCalculateFile(String fromFileName, StringBuilder stringBuilder) {
         int supply = 0;
         int buy = 0;
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String fileLine;
             while ((fileLine = reader.readLine()) != null) {
                 String[] splitFileLine = fileLine.split(",");
-                if (splitFileLine[0].equals("buy")) {
-                    buy += Integer.parseInt(splitFileLine[1]);
+                String operation = splitFileLine[0];
+                int operationNumber = Integer.parseInt(splitFileLine[1]);
+                if (operation.equals("buy")) {
+                    buy += operationNumber;
                 } else {
-                    supply += Integer.parseInt(splitFileLine[1]);
+                    supply += operationNumber;
                 }
             }
         } catch (Exception e) {
-            throw new RuntimeException("can't read file" + e);
+            throw new RuntimeException("can't read file " + fromFileName, e);
         }
-        createReport(supply, buy);
+        createReport(supply, buy, stringBuilder);
     }
 }
