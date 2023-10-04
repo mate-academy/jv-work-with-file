@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,15 +19,11 @@ public class WorkWithFile {
     private static final int REQUIRED_PARTS_COUNT = 2;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        try {
-            Map<String, Integer> operationTotals = readData(fromFileName);
-            int supplyTotal = operationTotals.getOrDefault(SUPPLY, DEFAULT_AMOUNT);
-            int buyTotal = operationTotals.getOrDefault(BUY, DEFAULT_AMOUNT);
-            int result = supplyTotal - buyTotal;
-            writeReport(toFileName, supplyTotal, buyTotal, result);
-        } catch (Exception e) {
-            throw new RuntimeException("Error processing files " + fromFileName + toFileName, e);
-        }
+        Map<String, Integer> operationTotals = readData(fromFileName);
+        int supplyTotal = operationTotals.getOrDefault(SUPPLY, DEFAULT_AMOUNT);
+        int buyTotal = operationTotals.getOrDefault(BUY, DEFAULT_AMOUNT);
+        int result = supplyTotal - buyTotal;
+        writeReport(toFileName, supplyTotal, buyTotal, result);
     }
 
     private Map<String, Integer> readData(String fileName) {
@@ -41,14 +38,14 @@ public class WorkWithFile {
                         int amount = Integer.parseInt(parts[AMOUNT_INDEX].trim());
                         operationTotals.put(operation, operationTotals
                                 .getOrDefault(operation, DEFAULT_AMOUNT) + amount);
-                    } catch (Exception e) {
+                    } catch (NumberFormatException e) {
                         throw new RuntimeException("Error parsing amount in line: " + line, e);
                     }
                 } else {
                     System.err.println("Invalid line format: " + line);
                 }
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new RuntimeException("Can't read data from the file " + fileName, e);
         }
         return operationTotals;
@@ -62,7 +59,7 @@ public class WorkWithFile {
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             writer.write(reportData.toString());
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new RuntimeException("Can't write data to the file " + fileName, e);
         }
     }
