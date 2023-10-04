@@ -12,19 +12,22 @@ public class WorkWithFile {
     private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
+        String[] dataFromFile = readData(fromFileName);
+        String report = createReport(dataFromFile);
+        writeToFile(report, toFileName);
+    }
+
+    private String[] readData(String fileName) {
         int supplyTotal = 0;
         int buyTotal = 0;
-
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
+            BufferedReader reader = new BufferedReader(new FileReader(fileName));
             String line;
-
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(COMMA_SEPARATOR);
                 if (parts.length == 2) {
                     String operationType = parts[OPERATION_TYPE_INDEX];
                     int amount = Integer.parseInt(parts[AMOUNT_INDEX]);
-
                     if ("supply".equals(operationType)) {
                         supplyTotal += amount;
                     } else if ("buy".equals(operationType)) {
@@ -33,21 +36,26 @@ public class WorkWithFile {
                 }
             }
         } catch (IOException e) {
-            throw new RuntimeException("Error reading the file: " + fromFileName, e);
+            throw new RuntimeException("Error reading the file: " + fileName, e);
         }
 
         int result = supplyTotal - buyTotal;
-
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            writeLine(writer, "supply", supplyTotal);
-            writeLine(writer, "buy", buyTotal);
-            writeLine(writer, "result", result);
-        } catch (IOException e) {
-            throw new RuntimeException("Error writing to the file: " + toFileName, e);
-        }
+        return new String[]{
+                "supply," + supplyTotal,
+                "buy," + buyTotal,
+                "result," + result
+        };
     }
 
-    private void writeLine(BufferedWriter writer, String key, int value) throws IOException {
-        writer.write(key + COMMA_SEPARATOR + value + System.lineSeparator());
+    private String createReport(String[] data) {
+        return String.join(System.lineSeparator(), data);
+    }
+
+    private void writeToFile(String data, String fileName) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+            writer.write(data);
+        } catch (IOException e) {
+            throw new RuntimeException("Error writing to the file: " + fileName, e);
+        }
     }
 }
