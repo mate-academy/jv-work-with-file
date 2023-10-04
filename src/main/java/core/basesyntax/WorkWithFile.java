@@ -13,6 +13,7 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         readFromFileAndCount(fromFileName);
+        writeToFile(toFileName);
     }
 
     private void readFromFileAndCount(String fromFileName) {
