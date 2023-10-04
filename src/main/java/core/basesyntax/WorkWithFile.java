@@ -8,17 +8,20 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+
     public void getStatistic(String fromFileName, String toFileName) {
         String[] fileDataArray = readFile(fromFileName).split("\n");
-        String[] arrayToWrite = sortNums(fileDataArray);
+        String[] arrayToBeWritten = sortNums(fileDataArray);
         File file = new File(toFileName);
         file.delete();
         try {
             file.createNewFile();
         } catch (IOException e) {
-            throw new RuntimeException("Cannot create a new file");
+            throw new RuntimeException("Cannot create a new file", e);
         }
-        writeData(arrayToWrite, toFileName);
+        writeData(arrayToBeWritten, toFileName);
     }
 
     public String readFile(String fromFileName) {
@@ -29,7 +32,7 @@ public class WorkWithFile {
                 content.append(line).append("\n");
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read the file.");
+            throw new RuntimeException("Can't read the file.", e);
         }
         return content.toString();
     }
@@ -39,13 +42,13 @@ public class WorkWithFile {
         int buySum = 0;
         for (int i = 0; i < notGroupedArray.length; i++) {
             String[] splitedArray = notGroupedArray[i].split(",");
-            if (splitedArray[0].equals("supply")) {
+            if (splitedArray[0].equals(SUPPLY)) {
                 supplySum += Integer.parseInt(splitedArray[1]);
-            } else if (splitedArray[0].equals("buy")) {
+            } else if (splitedArray[0].equals(BUY)) {
                 buySum += Integer.parseInt(splitedArray[1]);
             }
         }
-        return new String[] {"supply," + supplySum, "buy,"
+        return new String[] {SUPPLY + "," + supplySum, BUY + ","
                 + buySum, "result," + (supplySum - buySum)};
     }
 
@@ -56,7 +59,7 @@ public class WorkWithFile {
                 bufferedWriter.write(data);
                 bufferedWriter.newLine();
             } catch (IOException e) {
-                throw new RuntimeException("The data hasn't been written");
+                throw new RuntimeException("The data hasn't been written", e);
             }
         }
     }
