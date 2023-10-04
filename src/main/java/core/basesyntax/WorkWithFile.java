@@ -21,21 +21,11 @@ public class WorkWithFile {
 
     private void saveReport(String toFileName, String report) {
         File file = new File(toFileName);
-        BufferedWriter bufferedWriter = null;
-        try {
-            bufferedWriter = new BufferedWriter(new FileWriter(file));
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
             bufferedWriter.write(report);
             bufferedWriter.flush();
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to file " + toFileName, e);
-        } finally {
-            if (bufferedWriter != null) {
-                try {
-                    bufferedWriter.close();
-                } catch (IOException e) {
-                    throw new RuntimeException("Can't close BufferedWriter", e);
-                }
-            }
         }
     }
 
@@ -61,10 +51,8 @@ public class WorkWithFile {
     }
 
     private String[] readLines(String fromFileName) {
-        try {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             StringBuilder builder = new StringBuilder();
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
-
             String value = bufferedReader.readLine();
             while (value != null) {
                 builder.append(value).append(System.lineSeparator());
@@ -72,7 +60,7 @@ public class WorkWithFile {
             }
             return builder.toString().split(System.lineSeparator());
         } catch (Exception e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't read file " + fromFileName, e);
         }
     }
 }
