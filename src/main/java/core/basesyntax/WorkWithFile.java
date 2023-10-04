@@ -27,7 +27,6 @@ public class WorkWithFile {
         writer.write("supply," + totalSupply + System.lineSeparator()
                 + "buy," + totalBuy + System.lineSeparator()
                 + "result," + result);
-        writer.close();
     }
 
     private int countResult(int totalSupply, int totalBuy) {
