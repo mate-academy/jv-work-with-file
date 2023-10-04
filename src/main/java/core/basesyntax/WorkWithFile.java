@@ -11,28 +11,14 @@ public class WorkWithFile {
     private static final String SUPPLY_STRING = "supply";
     private static final String BUY_STRING = "buy";
     private static final String RESULT_STRING = "result";
-    private static final int INDEX_OF_STRING = 0;
-    private static final int INDEX_OF_VALUE = 1;
+    private static final String COMMA = ",";
+    private static final int ARRAY_FIRST_ELEMENT = 0;
+    private static final int ARRAY_SECOND_ELEMENT = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         File file = new File(fromFileName);
-        int totalSupply = 0;
-        int totalBuy = 0;
-
-        try {
-            List<String> strings = Files.readAllLines(file.toPath());
-
-            for (String str : strings) {
-                String[] arr = str.split(",");
-                if (arr[INDEX_OF_STRING].equals(SUPPLY_STRING)) {
-                    totalSupply += Integer.valueOf(arr[INDEX_OF_VALUE]);
-                } else if (arr[INDEX_OF_STRING].equals(BUY_STRING)) {
-                    totalBuy += Integer.valueOf(arr[INDEX_OF_VALUE]);
-                }
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("Can't read from file" + fromFileName, e);
-        }
+        int totalSupply = calculateReport(file, fromFileName)[ARRAY_FIRST_ELEMENT];
+        int totalBuy = calculateReport(file, fromFileName)[ARRAY_SECOND_ELEMENT];
 
         String report = createReport(totalSupply, totalBuy);
         writeToFile(toFileName, report);
@@ -52,5 +38,30 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file" + toFileName, e);
         }
+    }
+
+    private int[] calculateReport(File file, String fromFileName) {
+        int totalSupply = 0;
+        int totalBuy = 0;
+
+        try {
+            List<String> strings = Files.readAllLines(file.toPath());
+
+            for (String str : strings) {
+                String[] arr = str.split(COMMA);
+                String stringFromFile = arr[ARRAY_FIRST_ELEMENT];
+                int valueFromFile = Integer.parseInt(arr[ARRAY_SECOND_ELEMENT]);
+
+                if (stringFromFile.equals(SUPPLY_STRING)) {
+                    totalSupply += valueFromFile;
+                } else if (stringFromFile.equals(BUY_STRING)) {
+                    totalBuy += valueFromFile;
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Can't read from file" + fromFileName, e);
+        }
+
+        return new int[]{totalSupply, totalBuy};
     }
 }
