@@ -1,6 +1,10 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
@@ -21,6 +25,7 @@ public class WorkWithFile {
                     case "buy":
                         totalBuy += Integer.parseInt(readCsvData[1]);
                         break;
+                    default:
                 }
             }
         } catch (IOException e) {
