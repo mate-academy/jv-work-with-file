@@ -39,10 +39,12 @@ public class WorkWithFile {
         String[] dataFile = readData.split(LINE_SEPARATOR);
         for (String datum : dataFile) {
             String[] data = datum.split(SEPARATOR);
-            if (datum.startsWith(BUY)) {
-                allBuy += Integer.parseInt(data[INDEX]);
+            int value = Integer.parseInt(data[INDEX]);
+            String operation = data[0];
+            if (operation.equals(BUY)) {
+                allBuy += value;
             } else {
-                allSupply += Integer.parseInt(data[INDEX]);
+                allSupply += value;
             }
         }
         return result.append(SUPPLY).append(SEPARATOR).append(allSupply).append(LINE_SEPARATOR)
