@@ -5,7 +5,7 @@ public class Report {
     private static final String SUPPLY_OPERATION = "supply";
     private static final String BUY_OPERATION = "buy";
     private static final String RESULT = "result";
-    private final int  supply;
+    private final int supply;
     private final int buy;
 
     public Report(int supply, int buy) {
