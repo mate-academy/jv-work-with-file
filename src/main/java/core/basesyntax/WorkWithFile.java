@@ -17,11 +17,13 @@ public class WorkWithFile {
 
             createReport(writer, totalSupply, totalBuy, result);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Something went wrong "
+                    + fromFileName + " or " + toFileName, e);
         }
     }
 
-    private void createReport(BufferedWriter writer, int totalSupply, int totalBuy, int result) throws IOException {
+    private void createReport(BufferedWriter writer,
+                              int totalSupply, int totalBuy, int result) throws IOException {
         writer.write("supply," + totalSupply + System.lineSeparator()
                 + "buy," + totalBuy + System.lineSeparator()
                 + "result," + result);
