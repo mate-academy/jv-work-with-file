@@ -1,8 +1,6 @@
 package core.basesyntax;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 
 public class WorkWithFile {
     private int supply;
@@ -28,6 +26,34 @@ public class WorkWithFile {
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read from file", e);
+        }
+    }
+
+    private void writeToFile(String toFileName) {
+        String supplyInfo = "supply," + supply;
+        String buyInfo = "buy," + buy;
+        String resultInfo = "result," + (supply - buy);
+        File file = new File(toFileName);
+        BufferedWriter bufferedWriter = null;
+        if (!file.exists()) {
+            try {
+                bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true));
+                bufferedWriter.write(supplyInfo);
+                bufferedWriter.write(System.lineSeparator());
+                bufferedWriter.write(buyInfo);
+                bufferedWriter.write(System.lineSeparator());
+                bufferedWriter.write(resultInfo);
+            } catch (IOException e) {
+                throw new RuntimeException("Can't write to file", e);
+            } finally {
+                if (bufferedWriter != null) {
+                    try {
+                        bufferedWriter.close();
+                    } catch (IOException e) {
+                        throw new RuntimeException("Can't close BufferedWriter", e);
+                    }
+                }
+            }
         }
     }
 
