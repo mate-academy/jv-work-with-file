@@ -12,11 +12,17 @@ public class WorkWithFile {
     private static final int OPERATION_TYPE_INDEX = 0;
     private static final int OPERATION_VALUE_INDEX = 1;
 
-    public void getStatistic(String fromFileName, String toFileName) {
-        File inputFile = new File(fromFileName);
-        int supplySum = 0;
-        int buySum = 0;
+    private int supplySum = 0;
+    private int buySum = 0;
 
+    public void getStatistic(String fromFileName, String toFileName) {
+        readFromFile(fromFileName);
+        writeToFile(toFileName, createReport());
+    }
+
+    private void readFromFile(String fromFileName) {
+        File inputFile = new File(fromFileName);
+        resetSums();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(inputFile))) {
             String line = bufferedReader.readLine();
             while (line != null) {
@@ -30,14 +36,24 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read from a file named: " + fromFileName, e);
         }
-        String report = "supply," + supplySum + System.lineSeparator()
+    }
+
+    private void writeToFile(String toFileName, String reportToWrite) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
+            bufferedWriter.write(reportToWrite);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write to a file named: " + toFileName, e);
+        }
+    }
+
+    private String createReport() {
+        return "supply," + supplySum + System.lineSeparator()
                 + "buy," + buySum + System.lineSeparator()
                 + "result," + (supplySum - buySum);
+    }
 
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write(report);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    private void resetSums() {
+        supplySum = 0;
+        buySum = 0;
     }
 }
