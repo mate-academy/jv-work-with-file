@@ -4,8 +4,13 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String strSupply = "supply,";
+    private static final String strBuy = "buy,";
+    private static final String strResult = "result,";
+    private static final String COMMA_SYMBOL = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         StringBuilder stringBuilder = new StringBuilder();
@@ -14,9 +19,6 @@ public class WorkWithFile {
     }
 
     private void createReport(int supply,int buy, StringBuilder stringBuilder) {
-        String strSupply = "supply,";
-        String strBuy = "buy,";
-        String strResult = "result,";
         int result = supply - buy;
         stringBuilder.append(strSupply).append(supply)
                 .append(System.lineSeparator())
@@ -29,7 +31,7 @@ public class WorkWithFile {
             File createFile = new File(toFileName);
             createFile.createNewFile();
             return createFile;
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new RuntimeException("can't create file " + toFileName, e);
         }
     }
@@ -37,7 +39,7 @@ public class WorkWithFile {
     private void writeFile(File file, StringBuilder stringBuilder) {
         try (FileWriter fileWriter = new FileWriter(file, false)) {
             fileWriter.write(stringBuilder.toString());
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new RuntimeException("Can't write data to file " + file.getName(), e);
         }
     }
@@ -46,9 +48,9 @@ public class WorkWithFile {
         int supply = 0;
         int buy = 0;
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
-            String fileLine;
-            while ((fileLine = reader.readLine()) != null) {
-                String[] splitFileLine = fileLine.split(",");
+            String currentLine;
+            while ((currentLine = reader.readLine()) != null) {
+                String[] splitFileLine = currentLine.split(COMMA_SYMBOL);
                 String operation = splitFileLine[0];
                 int operationNumber = Integer.parseInt(splitFileLine[1]);
                 if (operation.equals("buy")) {
