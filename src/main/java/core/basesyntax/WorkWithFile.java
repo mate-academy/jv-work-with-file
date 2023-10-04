@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,8 +25,7 @@ public class WorkWithFile {
             int result = supplyTotal - buyTotal;
             writeReport(toFileName, supplyTotal, buyTotal, result);
         } catch (Exception e) {
-            System.err.println("Error processing files: " + e.getMessage());
-            e.printStackTrace();
+            throw new RuntimeException("Error processing files " + fromFileName + toFileName, e);
         }
     }
 
@@ -43,31 +41,29 @@ public class WorkWithFile {
                         int amount = Integer.parseInt(parts[AMOUNT_INDEX].trim());
                         operationTotals.put(operation, operationTotals
                                 .getOrDefault(operation, DEFAULT_AMOUNT) + amount);
-                    } catch (NumberFormatException e) {
-                        System.err.println("Error parsing amount in line: " + line);
-                        e.printStackTrace();
+                    } catch (Exception e) {
+                        throw new RuntimeException("Error parsing amount in line: " + line, e);
                     }
                 } else {
                     System.err.println("Invalid line format: " + line);
                 }
             }
-        } catch (IOException e) {
-            System.err.println("Can't read data from " + fileName);
-            e.printStackTrace();
+        } catch (Exception e) {
+            throw new RuntimeException("Can't read data from the file " + fileName, e);
         }
         return operationTotals;
     }
 
     private void writeReport(String fileName, int supplyTotal, int buyTotal, int result) {
+        StringBuilder reportData = new StringBuilder();
+        reportData.append(SUPPLY).append(COMMA).append(supplyTotal).append(System.lineSeparator());
+        reportData.append(BUY).append(COMMA).append(buyTotal).append(System.lineSeparator());
+        reportData.append(RESULT).append(COMMA).append(result);
+
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
-            writer.write(SUPPLY + COMMA + supplyTotal);
-            writer.newLine();
-            writer.write(BUY + COMMA + buyTotal);
-            writer.newLine();
-            writer.write(RESULT + COMMA + result);
-        } catch (IOException e) {
-            System.err.println("Can't write data to " + fileName);
-            e.printStackTrace();
+            writer.write(reportData.toString());
+        } catch (Exception e) {
+            throw new RuntimeException("Can't write data to the file " + fileName, e);
         }
     }
 }
