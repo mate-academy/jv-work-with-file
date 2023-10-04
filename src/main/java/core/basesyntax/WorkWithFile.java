@@ -11,6 +11,8 @@ public class WorkWithFile {
     private static final String SUPPLY_STRING = "supply";
     private static final String BUY_STRING = "buy";
     private static final String RESULT_STRING = "result";
+    private static final int INDEX_OF_STRING = 0;
+    private static final int INDEX_OF_VALUE = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         File file = new File(fromFileName);
@@ -22,10 +24,10 @@ public class WorkWithFile {
 
             for (String str : strings) {
                 String[] arr = str.split(",");
-                if (arr[0].equals(SUPPLY_STRING)) {
-                    totalSupply += Integer.valueOf(arr[1]);
-                } else if (arr[0].equals(BUY_STRING)) {
-                    totalBuy += Integer.valueOf(arr[1]);
+                if (arr[INDEX_OF_STRING].equals(SUPPLY_STRING)) {
+                    totalSupply += Integer.valueOf(arr[INDEX_OF_VALUE]);
+                } else if (arr[INDEX_OF_STRING].equals(BUY_STRING)) {
+                    totalBuy += Integer.valueOf(arr[INDEX_OF_VALUE]);
                 }
             }
         } catch (IOException e) {
