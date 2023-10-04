@@ -7,7 +7,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final int DEFAULT_OPERATIONS_NUMBER = 2;
+    private static final int ASCII_NEGATIVE_INDEX = -1;
+    private static final int OPERATION_COLUMN = 0;
+    private static final int MONEY_COLUMN = 1;
     private static final String FIRST_OPERATION_NAME = "supply";
     private static final String SECOND_OPERATION_NAME = "buy";
     private static final String RESULT_OPERATION_NAME = "result";
@@ -26,7 +28,7 @@ public class WorkWithFile {
         StringBuilder readFileBuilder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             int charTextValue = bufferedReader.read();
-            while (charTextValue != -1) {
+            while (charTextValue != ASCII_NEGATIVE_INDEX) {
                 readFileBuilder.append((char) charTextValue);
                 charTextValue = bufferedReader.read();
             }
@@ -41,16 +43,14 @@ public class WorkWithFile {
         int buy = 0;
         int parsedValue;
         String[] separatedText = readFile.split(SYMBOL_LINE_SEPARATOR);
-        String[][] statisticTable = new String[separatedText.length][DEFAULT_OPERATIONS_NUMBER];
+        String[] separaredNote;
         for (int i = 0; i < separatedText.length; i++) {
-            for (int j = 0; j < DEFAULT_OPERATIONS_NUMBER; j++) {
-                statisticTable[i][j] = separatedText[i].split(SYMBOL_COMMA)[j];
-            }
-        }
-        for (int i = 0; i < statisticTable.length; i++) {
-            parsedValue = Integer.parseInt(statisticTable[i][1]);
-            supply += statisticTable[i][0].equals(FIRST_OPERATION_NAME) ? parsedValue : 0;
-            buy += statisticTable[i][0].equals(SECOND_OPERATION_NAME) ? parsedValue : 0;
+            separaredNote = separatedText[i].split(SYMBOL_COMMA);
+            parsedValue = Integer.parseInt(separaredNote[MONEY_COLUMN]);
+            supply += separaredNote[OPERATION_COLUMN]
+                    .equals(FIRST_OPERATION_NAME) ? parsedValue : 0;
+            buy += separaredNote[OPERATION_COLUMN]
+                    .equals(SECOND_OPERATION_NAME) ? parsedValue : 0;
         }
         StringBuilder statisticResultBuilder = new StringBuilder();
         statisticResultBuilder.append(FIRST_OPERATION_NAME).append(SYMBOL_COMMA)
