@@ -5,24 +5,20 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Arrays;
 
 public class WorkWithFile {
+    private static final int DEFAULT_AMOUNT_VALUE = 0;
     private static final int AMOUNT_OF_OPERATIONS = 2;
     private static final String DATA_SEPARATOR = ",";
-    private final String[] operationNames = new String[AMOUNT_OF_OPERATIONS];
+    private static final String BUY_OPERATION = "buy";
+
     private final int[] operationAmounts = new int[AMOUNT_OF_OPERATIONS];
 
     public void getStatistic(String fromFileName, String toFileName) {
-        fillArrayWithOperations();
         readDataFromFileIntoArray(fromFileName);
         writeStatisticReportIntoFile(toFileName);
-        clearNamesArray();
-        clearAmountsArray();
-    }
-
-    private void fillArrayWithOperations() {
-        operationNames[0] = "buy";
-        operationNames[1] = "supply";
+        clearArraysAfterReportCreating();
     }
 
     private void readDataFromFileIntoArray(String fromFileName) {
@@ -43,8 +39,8 @@ public class WorkWithFile {
     private void writeStatisticReportIntoFile(String toFileName) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(
                 new FileWriter(toFileName))) {
-            int supplyValue = operationAmounts[findValuePositionByOperationName("supply")];
-            int buyValue = operationAmounts[findValuePositionByOperationName("buy")];
+            int buyValue = operationAmounts[0];
+            int supplyValue = operationAmounts[1];
             Report report = new Report(supplyValue, buyValue);
             bufferedWriter.write(report.createReportString());
         } catch (IOException e) {
@@ -53,23 +49,10 @@ public class WorkWithFile {
     }
 
     private int findValuePositionByOperationName(String operationName) {
-        for (int i = 0; i < operationNames.length; i++) {
-            if (operationNames[i].equals(operationName)) {
-                return i;
-            }
-        }
-        return -1;
+        return operationName.equals(BUY_OPERATION) ? 0 : 1;
     }
 
-    private void clearNamesArray() {
-        for (int i = 0; i < operationNames.length; i++) {
-            operationNames[i] = null;
-        }
-    }
-
-    private void clearAmountsArray() {
-        for (int i = 0; i < operationAmounts.length; i++) {
-            operationAmounts[i] = 0;
-        }
+    public void clearArraysAfterReportCreating() {
+        Arrays.fill(operationAmounts, DEFAULT_AMOUNT_VALUE);
     }
 }
