@@ -6,28 +6,32 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import static java.lang.Integer.parseInt;
 
 public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
+    private static final String WORD_SPLIT_PATTERN = "\\W+";
+    private static final String COMMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         File mainFile = new File(fromFileName);
-        String[] words = readFromFile(mainFile).split("\\W+");
+        String[] words = readFromFile(mainFile).split(WORD_SPLIT_PATTERN);
 
-        int sumOSupply = 0;
-        int buyOSupply = 0;
+        int sumSupply = 0;
+        int buySupply = 0;
 
         for (int i = 0; i < words.length; i += 2) {
-            if (words[i].equals(SUPPLY)) {
-                sumOSupply += Integer.parseInt(words[i + 1]);
-            } else if (words[i].equals(BUY)) {
-                buyOSupply += Integer.parseInt(words[i + 1]);
+            String currentWord = words[i];
+            if (currentWord.equals(SUPPLY)) {
+                sumSupply += parseInt(words[i + 1]);
+            } else if (currentWord.equals(BUY)) {
+                buySupply += parseInt(words[i + 1]);
             }
         }
 
-        String report = generateReport(sumOSupply, buyOSupply);
+        String report = generateReport(sumSupply, buySupply);
         File outputFile = new File(toFileName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(outputFile))) {
             bufferedWriter.write(report);
@@ -38,21 +42,20 @@ public class WorkWithFile {
 
     private String generateReport(int supplySum, int buySum) {
         int resultSum = supplySum - buySum;
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(SUPPLY).append(",").append(supplySum).append(System.lineSeparator())
-                .append(BUY).append(",").append(buySum).append(System.lineSeparator())
-                .append(RESULT).append(",").append(resultSum);
-        return stringBuilder.toString();
+
+        return new StringBuilder()
+                .append(SUPPLY).append(COMMA).append(supplySum).append(System.lineSeparator())
+                .append(BUY).append(COMMA).append(buySum).append(System.lineSeparator())
+                .append(RESULT).append(COMMA).append(resultSum).toString();
+
     }
 
     private String readFromFile(File inputFile) {
         StringBuilder stringBuilder = new StringBuilder();
-        try {
-            FileReader fileReader = new FileReader(inputFile);
-            int value = fileReader.read();
-            while (value != -1) {
+        try (FileReader fileReader = new FileReader(inputFile)) {
+            int value;
+            while ((value = fileReader.read()) != -1) {
                 stringBuilder.append((char) value);
-                value = fileReader.read();
             }
         } catch (FileNotFoundException e) {
             throw new RuntimeException("Failed find a file: " + inputFile.getName(), e);
