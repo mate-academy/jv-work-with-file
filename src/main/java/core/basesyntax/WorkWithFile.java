@@ -6,7 +6,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import static java.lang.Integer.parseInt;
 
 public class WorkWithFile {
     private static final String SUPPLY = "supply";
@@ -25,9 +24,10 @@ public class WorkWithFile {
         for (int i = 0; i < words.length; i += 2) {
             String currentWord = words[i];
             if (currentWord.equals(SUPPLY)) {
-                sumSupply += parseInt(words[i + 1]);
-            } else if (currentWord.equals(BUY)) {
-                buySupply += parseInt(words[i + 1]);
+                sumSupply += Integer.parseInt(words[i + 1]);
+            }
+            if (currentWord.equals(BUY)) {
+                buySupply += Integer.parseInt(words[i + 1]);
             }
         }
 
