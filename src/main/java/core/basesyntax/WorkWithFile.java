@@ -7,6 +7,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
+    private static final String NEW_LINE = "\n";
+    private static final String COMMA = ",";
+
     public void getStatistic(String fromFileName, String toFileName) {
         String[] dataFromFile = readFromFile(fromFileName);
         String report = createReport(dataFromFile);
@@ -18,29 +24,28 @@ public class WorkWithFile {
         int supplyCounter = 0;
         int buyCounter = 0;
         for (String data : arrayWithData) {
-            String[] dataArray = data.split(",");
+            String[] dataArray = data.split(COMMA);
             String operation = dataArray[0].trim();
             String amountStr = dataArray[1].trim();
             int amount = Integer.parseInt(amountStr);
-            if ("supply".equals(operation)) {
+            if (SUPPLY.equals(operation)) {
                 supplyCounter += amount;
-            } else if ("buy".equals(operation)) {
+            } else if (BUY.equals(operation)) {
                 buyCounter += amount;
             }
         }
 
-        stringBuilder.append("supply,").append(supplyCounter).append(System.lineSeparator())
-                     .append("buy,").append(buyCounter).append(System.lineSeparator())
-                     .append("result,").append(supplyCounter - buyCounter);
-
-        return stringBuilder.toString();
+        return new StringBuilder()
+                .append(SUPPLY).append(",").append(supplyCounter).append(System.lineSeparator())
+                .append(BUY).append(",").append(buyCounter).append(System.lineSeparator())
+                .append(RESULT).append(",").append(supplyCounter - buyCounter).toString();
     }
 
     private void writeToFile(String toFileName, String report) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write to file", e);
+            throw new RuntimeException("Can't write to file" + toFileName, e);
         }
     }
 
@@ -54,9 +59,9 @@ public class WorkWithFile {
                 readLine = bufferedReader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read from file", e);
+            throw new RuntimeException("Can't read from file" + fromFileName, e);
         }
         String readedString = stringWithData.toString();
-        return readedString.split("\n");
+        return readedString.split(NEW_LINE);
     }
 }
