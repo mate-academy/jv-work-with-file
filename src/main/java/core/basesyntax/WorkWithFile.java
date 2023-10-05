@@ -5,30 +5,35 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Arrays;
 
 public class WorkWithFile {
-    private static final int DEFAULT_AMOUNT_VALUE = 0;
-    private static final int AMOUNT_OF_OPERATIONS = 2;
     private static final String DATA_SEPARATOR = ",";
     private static final String BUY_OPERATION = "buy";
+    private int buyAmount;
+    private int supplyAmount;
 
-    private final int[] operationAmounts = new int[AMOUNT_OF_OPERATIONS];
-
-    public void getStatistic(String fromFileName, String toFileName) {
-        readDataFromFileIntoArray(fromFileName);
-        writeStatisticReportIntoFile(toFileName);
-        clearArraysAfterReportCreating();
+    public WorkWithFile() {
+        buyAmount = 0;
+        supplyAmount = 0;
     }
 
-    private void readDataFromFileIntoArray(String fromFileName) {
+    public void getStatistic(String fromFileName, String toFileName) {
+        readDataFromFile(fromFileName);
+        writeStatisticReportIntoFile(toFileName);
+    }
+
+    private void readDataFromFile(String fromFileName) {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String dataLine = bufferedReader.readLine();
             while (dataLine != null) {
                 String[] operationAmountDataPair = dataLine.split(DATA_SEPARATOR);
                 String operation = operationAmountDataPair[0];
                 int amount = Integer.parseInt(operationAmountDataPair[1]);
-                operationAmounts[findValuePositionByOperationName(operation)] += amount;
+                if (operation.equals(BUY_OPERATION)) {
+                    buyAmount += amount;
+                } else {
+                    supplyAmount += amount;
+                }
                 dataLine = bufferedReader.readLine();
             }
         } catch (IOException e) {
@@ -37,22 +42,17 @@ public class WorkWithFile {
     }
 
     private void writeStatisticReportIntoFile(String toFileName) {
-        try (BufferedWriter bufferedWriter = new BufferedWriter(
-                new FileWriter(toFileName))) {
-            int buyValue = operationAmounts[0];
-            int supplyValue = operationAmounts[1];
-            Report report = new Report(supplyValue, buyValue);
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
+            Report report = new Report(supplyAmount, buyAmount);
             bufferedWriter.write(report.createReportString());
+            clearAmounts();
         } catch (IOException e) {
             throw new RuntimeException("Can't write data into the file:" + toFileName, e);
         }
     }
 
-    private int findValuePositionByOperationName(String operationName) {
-        return operationName.equals(BUY_OPERATION) ? 0 : 1;
-    }
-
-    public void clearArraysAfterReportCreating() {
-        Arrays.fill(operationAmounts, DEFAULT_AMOUNT_VALUE);
+    private void clearAmounts() {
+        buyAmount = 0;
+        supplyAmount = 0;
     }
 }
