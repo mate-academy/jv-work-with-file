@@ -35,10 +35,10 @@ public class WorkWithFile {
     }
 
     private String makeReport(String record) {
+        String[] recordArr = record.split(System.lineSeparator());
         int supply = 0;
         int buy = 0;
         int result = 0;
-        String[] recordArr = record.split(System.lineSeparator());
 
         for (String word: recordArr) {
             String[] recordArrParts = word.split(RECORD_DATA_DIVIDER);
