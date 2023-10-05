@@ -9,21 +9,16 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final String DATA_SEPARATOR = ",";
     private static final String BUY_OPERATION = "buy";
-    private int buyAmount;
-    private int supplyAmount;
-
-    public WorkWithFile() {
-        buyAmount = 0;
-        supplyAmount = 0;
-    }
 
     public void getStatistic(String fromFileName, String toFileName) {
-        readDataFromFile(fromFileName);
-        writeStatisticReportIntoFile(toFileName);
+        Report report = readDataFromFile(fromFileName);
+        writeStatisticReportIntoFile(toFileName, report);
     }
 
-    private void readDataFromFile(String fromFileName) {
+    private Report readDataFromFile(String fromFileName) {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
+            int buyAmount = 0;
+            int supplyAmount = 0;
             String dataLine = bufferedReader.readLine();
             while (dataLine != null) {
                 String[] operationAmountDataPair = dataLine.split(DATA_SEPARATOR);
@@ -36,23 +31,18 @@ public class WorkWithFile {
                 }
                 dataLine = bufferedReader.readLine();
             }
+            return new Report(supplyAmount, buyAmount);
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from file:" + fromFileName, e);
         }
     }
 
-    private void writeStatisticReportIntoFile(String toFileName) {
+    private void writeStatisticReportIntoFile(String toFileName, Report report) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            Report report = new Report(supplyAmount, buyAmount);
+
             bufferedWriter.write(report.createReportString());
-            clearAmounts();
         } catch (IOException e) {
             throw new RuntimeException("Can't write data into the file:" + toFileName, e);
         }
-    }
-
-    private void clearAmounts() {
-        buyAmount = 0;
-        supplyAmount = 0;
     }
 }
