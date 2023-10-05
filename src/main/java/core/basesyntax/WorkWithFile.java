@@ -12,11 +12,13 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String COMMA = ",";
     private static final String NEW_LINE = "\n";
+    private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String[] fileDataArray = readFile(fromFileName).split(NEW_LINE);
-        String[] arrayToBeWritten = prepareStingToWrite(fileDataArray);
-        writeData(arrayToBeWritten, clearFile(toFileName));
+        String[] fileData = readFile(fromFileName).split(NEW_LINE);
+        String[] resultData = prepareStingToWrite(fileData);
+        clearFile(toFileName);
+        writeData(resultData, toFileName);
     }
 
     private String readFile(String fromFileName) {
@@ -24,10 +26,10 @@ public class WorkWithFile {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
-                content += line + "\n";
+                content += line + NEW_LINE;
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read the file.", e);
+            throw new RuntimeException("Can't read the file: " + fromFileName, e);
         }
         return content;
     }
@@ -35,10 +37,9 @@ public class WorkWithFile {
     private String[] prepareStingToWrite(String[] notGroupedData) {
         int supplySum = 0;
         int buySum = 0;
-        String[] splitedArray = new String[2];
         int addition = 0;
         for (int i = 0; i < notGroupedData.length; i++) {
-            splitedArray = notGroupedData[i].split(COMMA);
+            String[] splitedArray = notGroupedData[i].split(COMMA);
             addition = Integer.parseInt(splitedArray[1]);
             if (splitedArray[0].equals(SUPPLY)) {
                 supplySum += addition;
@@ -47,31 +48,36 @@ public class WorkWithFile {
                 buySum += addition;
             }
         }
-        return new String[] {SUPPLY + COMMA + supplySum,
+        return new String[]{SUPPLY + COMMA + supplySum,
                 BUY + COMMA + buySum,
-                "result," + (supplySum - buySum)};
+                RESULT + COMMA + (supplySum - buySum)};
     }
 
-    private String clearFile(String fileName) {
+    private void clearFile(String fileName) {
         File file = new File(fileName);
         file.delete();
         try {
             file.createNewFile();
         } catch (IOException e) {
-            throw new RuntimeException("Cannot create a new file", e);
+            throw new RuntimeException("Cannot create a new file: " + fileName, e);
         }
-        return fileName;
     }
 
-    private void writeData(String[] arrayWithData, String fileToWrite) {
-        File file = new File(fileToWrite);
-        for (String data: arrayWithData) {
-            try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, true))) {
-                bufferedWriter.write(data);
-                bufferedWriter.newLine();
-            } catch (IOException e) {
-                throw new RuntimeException("The data hasn't been written", e);
+    private void writeData(String[] report, String fileName) {
+        File file = new File(fileName);
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, true))) {
+            for (String data : report) {
+                try {
+                    bufferedWriter.write(data);
+                    bufferedWriter.newLine();
+                } catch (IOException e) {
+                    throw new RuntimeException("The data hasn't been  written to file: "
+                            + fileName, e);
+                }
             }
+        } catch (IOException e) {
+            throw new RuntimeException("The data hasn't been  written to file: "
+                    + fileName, e);
         }
     }
 }
