@@ -14,12 +14,11 @@ public class Report {
     }
 
     public String createReportString() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(SUPPLY_OPERATION).append(DATA_SEPARATOR).append(supply)
-                .append(System.lineSeparator());
-        stringBuilder.append(BUY_OPERATION).append(DATA_SEPARATOR).append(buy)
-                .append(System.lineSeparator());
-        stringBuilder.append(RESULT).append(DATA_SEPARATOR).append(supply - buy);
-        return stringBuilder.toString();
+        return new StringBuilder()
+                .append(SUPPLY_OPERATION).append(DATA_SEPARATOR).append(supply)
+                .append(System.lineSeparator())
+                .append(BUY_OPERATION).append(DATA_SEPARATOR).append(buy)
+                .append(System.lineSeparator())
+                .append(RESULT).append(DATA_SEPARATOR).append(supply - buy).toString();
     }
 }
