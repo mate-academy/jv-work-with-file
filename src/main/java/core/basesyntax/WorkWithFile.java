@@ -8,9 +8,11 @@ import java.io.IOException;
 
 public class WorkWithFile {
     private static final String RECORD_DATA_DIVIDER = ",";
-    private static final String OPERATIONS_DIVIDER = " ";
     private static final int FIRST_PART = 0;
     private static final int SECOND_PART = 1;
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String dataFromFile = readData(fromFileName);
@@ -23,12 +25,12 @@ public class WorkWithFile {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String value = reader.readLine();
             while (value != null) {
-                fileRecord.append(value).append(RECORD_DATA_DIVIDER).append(OPERATIONS_DIVIDER);
+                fileRecord.append(value).append(System.lineSeparator());
                 value = reader.readLine();
             }
             return fileRecord.toString().trim();
         } catch (IOException e) {
-            throw new RuntimeException("Can't read data!", e);
+            throw new RuntimeException("Can't read data from a " + file + "file!", e);
         }
     }
 
@@ -36,31 +38,34 @@ public class WorkWithFile {
         int supply = 0;
         int buy = 0;
         int result = 0;
-        String[] recordArr = record.split(OPERATIONS_DIVIDER);
+        String[] recordArr = record.split(System.lineSeparator());
 
         for (String word: recordArr) {
             String[] recordArrParts = word.split(RECORD_DATA_DIVIDER);
-            if (recordArrParts[FIRST_PART].equals("supply")) {
-                supply += Integer.parseInt(recordArrParts[SECOND_PART]);
+            if (recordArrParts[FIRST_PART].equals(SUPPLY)) {
+                int quantity = Integer.parseInt(recordArrParts[SECOND_PART]);
+                supply += quantity;
             }
-            if (recordArrParts[FIRST_PART].equals("buy")) {
-                buy += Integer.parseInt(recordArrParts[SECOND_PART]);
+            if (recordArrParts[FIRST_PART].equals(BUY)) {
+                int quantity = Integer.parseInt(recordArrParts[SECOND_PART]);
+                buy += quantity;
             }
         }
         result = supply - buy;
 
-        StringBuilder finalReport = new StringBuilder();
-        finalReport.append("supply,").append(supply).append("\n")
-                .append("buy,").append(buy).append("\n")
-                .append("result,").append(result);
-        return finalReport.toString();
+        return new StringBuilder()
+                .append(SUPPLY).append(RECORD_DATA_DIVIDER)
+                .append(supply).append(System.lineSeparator())
+                .append(BUY).append(RECORD_DATA_DIVIDER).append(buy).append(System.lineSeparator())
+                .append(RESULT).append(RECORD_DATA_DIVIDER).append(result)
+                .toString();
     }
 
     private void recordReportToFile(String record, String file) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             writer.write(record);
         } catch (IOException e) {
-            throw new RuntimeException("Can't record report to a file", e);
+            throw new RuntimeException("Can't record report to a " + file + " file", e);
         }
     }
 }
