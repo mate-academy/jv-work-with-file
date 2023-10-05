@@ -13,7 +13,7 @@ public class WorkWithFile {
         writeToFile(toFileName, report);
     }
 
-    public String createReport(String[] arrayWithData) {
+    private String createReport(String[] arrayWithData) {
         StringBuilder stringBuilder = new StringBuilder();
         int supplyCounter = 0;
         int buyCounter = 0;
@@ -36,7 +36,7 @@ public class WorkWithFile {
         return stringBuilder.toString();
     }
 
-    public void writeToFile(String toFileName, String report) {
+    private void writeToFile(String toFileName, String report) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(report);
         } catch (IOException e) {
@@ -44,7 +44,7 @@ public class WorkWithFile {
         }
     }
 
-    public String[] readFromFile(String fromFileName) {
+    private String[] readFromFile(String fromFileName) {
         StringBuilder stringWithData = new StringBuilder();
         String readLine;
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
