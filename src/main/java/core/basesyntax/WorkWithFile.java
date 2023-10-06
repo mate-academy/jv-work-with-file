@@ -38,20 +38,18 @@ public class WorkWithFile {
         String[] recordArr = record.split(System.lineSeparator());
         int supply = 0;
         int buy = 0;
-        int result = 0;
 
         for (String word: recordArr) {
             String[] recordArrParts = word.split(RECORD_DATA_DIVIDER);
+            int quantity = Integer.parseInt(recordArrParts[SECOND_PART]);
             if (recordArrParts[FIRST_PART].equals(SUPPLY)) {
-                int quantity = Integer.parseInt(recordArrParts[SECOND_PART]);
                 supply += quantity;
             }
             if (recordArrParts[FIRST_PART].equals(BUY)) {
-                int quantity = Integer.parseInt(recordArrParts[SECOND_PART]);
                 buy += quantity;
             }
         }
-        result = supply - buy;
+        int result = supply - buy;
 
         return new StringBuilder()
                 .append(SUPPLY).append(RECORD_DATA_DIVIDER)
