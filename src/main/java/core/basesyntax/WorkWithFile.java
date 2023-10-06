@@ -5,28 +5,29 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.util.Arrays;
+import java.io.IOException;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         String[] data = readCsv(fromFileName);
-        String[] sortedData = calculateData(data);
-        writeCsv(toFileName, sortedData);
+        String[] resultData = processData(data);
+        writeCsv(toFileName, resultData);
     }
 
     private String[] readCsv(String fileName) {
         File file = new File(fileName);
         StringBuilder stringBuilder = new StringBuilder();
+        String separatingRegex = " ";
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
             String line = bufferedReader.readLine();
             while (line != null) {
-                stringBuilder.append(line).append(" ");
+                stringBuilder.append(line).append(separatingRegex);
                 line = bufferedReader.readLine();
             }
-        } catch (Exception e) {
-            throw new RuntimeException("Can't read file", e);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't read file" + fileName, e);
         }
-        return stringBuilder.toString().split(" ");
+        return stringBuilder.toString().split(separatingRegex);
     }
 
     private void writeCsv(String fileName, String[] strings) {
@@ -35,18 +36,18 @@ public class WorkWithFile {
             for (String str : strings) {
                 bufferedWriter.write(str + System.lineSeparator());
             }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write file" + fileName, e);
         }
     }
 
-    private String [] calculateData(String[] data) {
-        Arrays.sort(data);
+    private String [] processData(String[] data) {
         int supplyAmount = 0;
         int buyAmount = 0;
         for (String str : data) {
-            String inputData = str.split(",")[0];
-            int inputAmount = Integer.parseInt(str.split(",")[1]);
+            String [] splittedString = str.split(",");
+            String inputData = splittedString[0];
+            int inputAmount = Integer.parseInt(splittedString[1]);
             if (inputData.equals("supply")) {
                 supplyAmount += inputAmount;
             }
@@ -54,8 +55,9 @@ public class WorkWithFile {
                 buyAmount += inputAmount;
             }
         }
-        return new String []{"supply," + supplyAmount,
-                "buy," + buyAmount,
-                "result," + (supplyAmount - buyAmount)};
+        String supply = "supply," + supplyAmount;
+        String buy = "buy," + buyAmount;
+        String result = "result," + (supplyAmount - buyAmount);
+        return new String []{supply, buy, result};
     }
 }
