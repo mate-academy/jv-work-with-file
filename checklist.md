@@ -1,51 +1,55 @@
 ### Common mistakes
 
-#### Divide program logic
-Large methods is very difficult to read and understand. So methods should be short, between 5-15 lines.
-And it's important for you to remember that one method should be responsible for one task.
+#### Create variables with informative names.
 
-For example: "write to file" or "create report" - are a separate operations. So we should create separate methods for them.
+Bad naming:
+```java
+BufferedReader br = new BufferedReader(new FileReader(fileName))
+```  
 
-#### Stick to method naming convention
-Correct [method names](https://mate-academy.github.io/style-guides/java/java.html#s5.2.3-method-names) is first step to pure code.
+Good naming:
+```java
+BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))
+```  
 
-#### Remember about informative name of the variables
-
-#### Use StringBuilder instead of String to concat data in loops
-Keep in mind that String concatenation creates many new objects that take up a lot of memory if you use it inside 
-of a loop. Though it's safe to use it outside of a loop, because compiler will replace it with StringBuilder anyway  [java doc](https://docs.oracle.com/javase/7/docs/api/java/lang/String.html)
-
-#### Use split() instead of substring()
-`substring()` messes the code in this task.
-
-#### Use constants
-If you have strange strings or numbers in the code, it's better to declare them as constants.
+#### Use constants where applicable.
+If you have strange strings or numbers in the code it's better to declare them as constants.
 The name of the constant should display this object's purpose.
 
-#### Local variables
-If you are counting something in your method for example using some variable for the result, don't make this variable a class field.  
-The class fields should represent the state of the class objects otherwise they should be local variables.
-
-#### try-with-resources
-Remember, if you are using classes that implement an AutoCloseable interface,
-we should use it with try-with-resources.
-
-#### Don't open nested connection to files
-Avoid opening connection to file in try block inside of another try block. 
-We should keep opened connection to resource as short as possible. In code if you need to 
-read and write to different files - do this in separate try blocks that are not located inside each other.
-
-#### Pay attention to access modifiers, they should not always be `public`
-If the method has only a utility purpose and is used only inside the same class, it should not be 
-`public`. Keep your code as close as possible to follow the encapsulation principle.
-
-#### Don't ignore exceptions
-Leaving empty catch block or `e.printStackTrace` here is a bad practice. 
-Better re-throw `RuntimeException` with original exception and some message in the parameters:
+Bad practice:
+```java
+    public boolean startWithLetter(String word) {
+        return word.startsWith("d"); // why do we use 'd' here???
+    }
 ```
+
+Good practice:
+```java
+    private static final String SPECIFIED_CHARACTER = "d";
+    
+    public boolean startWithLetter(String word) {
+        return word.startsWith(SPECIFIED_CHARACTER); 
+    }
+```
+[Correct constant names](https://google.github.io/styleguide/javaguide.html#s5.2.4-constant-names)
+
+#### Close all resources.
+Connections, streams, files, and other classes that implement the `Closeable` or `AutoCloseable` interface, 
+needs to be closed after use. Furthermore, that close should be done in a `finally` block.
+Preferably, when class implements `AutoCloseable`, resource should be created using "try-with-resources" pattern 
+and will be closed automatically.
+
+#### Don't ignore exceptions.
+Leaving empty catch block or `e.printStackTrace` here is a bad practice. 
+Better re-throw `RuntimeException` with original exception in the parameters:
+```java
 catch (Exception e) {
-    throw new RuntimeException("Can't read data from the file " + fileName, e);
+    throw new RuntimeException(e);
 }
 ```
-#### Disable wildcard imports to always import single classes
-[How to do it.](https://www.jetbrains.com/help/idea/creating-and-optimizing-imports.html#disable-wildcards-for-class)
+
+#### Don't create redundant variables.
+Let's make your code simple and easy to read. So better avoid using redundant variables.
+
+#### Use System.lineSeparator() insted `\n`
+[explanation](https://www.geeksforgeeks.org/system-lineseparator-method-in-java-with-examples/)
