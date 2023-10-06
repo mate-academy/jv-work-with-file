@@ -8,10 +8,17 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String COMMA_SEPARATOR = ",";
+    private static final String READ_MESSAGE_ERROR = "Can't read from file";
+    private static final String WRITE_MESSAGE_ERROR = "Can't write to file";
+    private static final String SUPPLY_OPERATION_TYPE = "supply";
+    private static final String BUY_OPERATION_TYPE = "buy";
+    private static final String RESULT_OPERATION_TYPE = "result";
+
     public void getStatistic(String fromFileName, String toFileName) {
-        String dateFromFile = readFromFile(fromFileName);
-        String[] strings = dateFromFile.split(System.lineSeparator());
-        String dataReadyToWrite = sortDataFromFile(strings);
+        String dataFromFile = readFromFile(fromFileName);
+        String[] dataFromFileArray = dataFromFile.split(System.lineSeparator());
+        String dataReadyToWrite = sortDataFromFile(dataFromFileArray);
         writeToFile(toFileName, dataReadyToWrite);
     }
 
@@ -25,7 +32,7 @@ public class WorkWithFile {
                 value = bufferedReader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read from file", e);
+            throw new RuntimeException(READ_MESSAGE_ERROR, e);
         }
         return stringBuilder.toString();
     }
@@ -34,30 +41,33 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
             bufferedWriter.write(data);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write to file", e);
+            throw new RuntimeException(WRITE_MESSAGE_ERROR, e);
         }
     }
 
     private String sortDataFromFile(String[] data) {
         String[] dataUnit;
-        String supply = "supply";
         String buy = "buy";
         String result = "result";
         StringBuilder stringBuilder = new StringBuilder();
         int supplyAmount = 0;
         int buyAmount = 0;
         for (int i = 0; i < data.length; i++) {
-            dataUnit = data[i].split(",");
-            if (dataUnit[0].equals(supply)) {
+            dataUnit = data[i].split(COMMA_SEPARATOR);
+            if (dataUnit[0].equals(SUPPLY_OPERATION_TYPE)) {
                 supplyAmount += Integer.parseInt(dataUnit[1]);
             }
-            if (dataUnit[0].equals(buy)) {
+            if (dataUnit[0].equals(BUY_OPERATION_TYPE)) {
                 buyAmount += Integer.parseInt(dataUnit[1]);
             }
         }
-        stringBuilder.append(supply).append(',').append(supplyAmount).append(System.lineSeparator())
-                .append(buy).append(",").append(buyAmount).append(System.lineSeparator())
-                .append(result).append(",").append(supplyAmount - buyAmount);
+        stringBuilder
+                .append(SUPPLY_OPERATION_TYPE).append(COMMA_SEPARATOR)
+                .append(supplyAmount).append(System.lineSeparator())
+                .append(BUY_OPERATION_TYPE).append(COMMA_SEPARATOR)
+                .append(buyAmount).append(System.lineSeparator())
+                .append(RESULT_OPERATION_TYPE).append(COMMA_SEPARATOR)
+                .append(supplyAmount - buyAmount);
         return stringBuilder.toString();
     }
 }
