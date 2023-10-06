@@ -7,6 +7,8 @@ import java.io.IOException;
 
 public class WorkWithFile {
     private static final String COMMA = ",";
+    private final String SUPPLY = "supply";
+    private final String BUY = "buy";
 
     public void getStatistic(String fromFileName, String toFileName) {
         writeFile(fromFileName, toFileName);
@@ -35,10 +37,10 @@ public class WorkWithFile {
         }
         String[] arrayFromFileName = stringBuilder.toString().split(",");
         for (int i = 0; i < arrayFromFileName.length; i++) {
-            if (arrayFromFileName[i].equalsIgnoreCase("supply")) {
+            if (arrayFromFileName[i].equalsIgnoreCase(SUPPLY)) {
                 numberOfSupply += Integer.parseInt(arrayFromFileName[i + 1]);
             }
-            if (arrayFromFileName[i].equalsIgnoreCase("buy")) {
+            if (arrayFromFileName[i].equalsIgnoreCase(BUY)) {
                 numberOfPurchases += Integer.parseInt(arrayFromFileName[i + 1]);
             }
         }
