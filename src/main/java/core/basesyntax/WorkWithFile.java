@@ -16,35 +16,35 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] fileData = readFile(fromFileName).split(NEW_LINE);
-        String[] resultData = prepareStingToWrite(fileData);
+        String[] resultData = prepareStringToWrite(fileData);
         clearFile(toFileName);
         writeData(resultData, toFileName);
     }
 
     private String readFile(String fromFileName) {
-        String content = "";
+        StringBuilder content = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
-                content += line + NEW_LINE;
+                content.append(line).append(NEW_LINE);
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read the file: " + fromFileName, e);
         }
-        return content;
+        return content.toString();
     }
 
-    private String[] prepareStingToWrite(String[] notGroupedData) {
+    private String[] prepareStringToWrite(String[] notGroupedData) {
         int supplySum = 0;
         int buySum = 0;
         int addition = 0;
         for (int i = 0; i < notGroupedData.length; i++) {
-            String[] splitedArray = notGroupedData[i].split(COMMA);
-            addition = Integer.parseInt(splitedArray[1]);
-            if (splitedArray[0].equals(SUPPLY)) {
+            String[] splitArray = notGroupedData[i].split(COMMA);
+            addition = Integer.parseInt(splitArray[1]);
+            if (splitArray[0].equals(SUPPLY)) {
                 supplySum += addition;
             }
-            if (splitedArray[0].equals(BUY)) {
+            if (splitArray[0].equals(BUY)) {
                 buySum += addition;
             }
         }
@@ -55,11 +55,10 @@ public class WorkWithFile {
 
     private void clearFile(String fileName) {
         File file = new File(fileName);
-        file.delete();
-        try {
-            file.createNewFile();
+        try (FileWriter fileWriter = new FileWriter(file)) {
+            fileWriter.write("");
         } catch (IOException e) {
-            throw new RuntimeException("Cannot create a new file: " + fileName, e);
+            throw new RuntimeException("Cannot clear the file: " + fileName, e);
         }
     }
 
@@ -67,13 +66,8 @@ public class WorkWithFile {
         File file = new File(fileName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, true))) {
             for (String data : report) {
-                try {
-                    bufferedWriter.write(data);
-                    bufferedWriter.newLine();
-                } catch (IOException e) {
-                    throw new RuntimeException("The data hasn't been  written to file: "
-                            + fileName, e);
-                }
+                bufferedWriter.write(data);
+                bufferedWriter.newLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("The data hasn't been  written to file: "
