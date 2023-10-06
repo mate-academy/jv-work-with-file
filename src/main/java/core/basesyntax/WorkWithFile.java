@@ -7,8 +7,8 @@ import java.io.IOException;
 
 public class WorkWithFile {
     private static final String COMMA = ",";
-    private final String SUPPLY = "supply";
-    private final String BUY = "buy";
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
 
     public void getStatistic(String fromFileName, String toFileName) {
         writeFile(fromFileName, toFileName);
