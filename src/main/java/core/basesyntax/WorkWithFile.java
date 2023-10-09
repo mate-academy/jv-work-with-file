@@ -39,12 +39,12 @@ public class WorkWithFile {
         File destinationfile = new File(destinationFileName);
         int supplyCount = dataArray[0];
         int buyCount = dataArray[1];
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("supply,").append(supplyCount).append(System.lineSeparator());
+        stringBuilder.append("buy,").append(buyCount).append(System.lineSeparator());
+        stringBuilder.append("result,").append(supplyCount - buyCount);
+        String resultData = stringBuilder.toString();
         try {
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append("supply,").append(supplyCount).append(System.lineSeparator());
-            stringBuilder.append("buy,").append(buyCount).append(System.lineSeparator());
-            stringBuilder.append("result,").append(supplyCount - buyCount);
-            String resultData = stringBuilder.toString();
             Files.write(destinationfile.toPath(), resultData.getBytes());
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file" + destinationFileName, e);
