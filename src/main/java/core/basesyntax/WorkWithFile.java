@@ -7,36 +7,49 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String SUPPLY_LITERAL = "supply";
+    private static final String BUY_LITERAL = "buy";
+    private static final String SEPARATOR = ",";
+
     public void getStatistic(String fromFileName, String toFileName) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
-                BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
+        writeToFile(toFileName, readFromFile(fromFileName));
+    }
+
+    private String readFromFile(String fromFileName) {
+        StringBuilder stringBuilder = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             int supplyTotal = 0;
             int buyTotal = 0;
 
             String line;
             while ((line = reader.readLine()) != null) {
-                String[] fields = line.split(",");
+                String[] fields = line.split(SEPARATOR);
                 String operationType = fields[0];
                 int amount = Integer.parseInt(fields[1]);
 
-                if ("supply".equals(operationType)) {
+                if (SUPPLY_LITERAL.equals(operationType)) {
                     supplyTotal += amount;
-                } else if ("buy".equals(operationType)) {
+                } else if (BUY_LITERAL.equals(operationType)) {
                     buyTotal += amount;
                 }
 
             }
-
             int result = supplyTotal - buyTotal;
-
-            writer.write("supply," + supplyTotal);
-            writer.newLine();
-            writer.write("buy," + buyTotal);
-            writer.newLine();
-            writer.write("result," + result);
+            stringBuilder.append(SUPPLY_LITERAL).append(SEPARATOR).append(supplyTotal)
+                    .append(System.lineSeparator()).append(BUY_LITERAL).append(SEPARATOR)
+                    .append(buyTotal).append(System.lineSeparator()).append("result")
+                    .append(SEPARATOR).append(result);
         } catch (IOException e) {
             throw new RuntimeException();
         }
+        return stringBuilder.toString();
+    }
 
+    private void writeToFile(String toFileName, String data) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
+            bufferedWriter.write(String.valueOf(data));
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write to file", e);
+        }
     }
 }
