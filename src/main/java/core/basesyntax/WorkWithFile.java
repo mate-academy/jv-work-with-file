@@ -40,7 +40,7 @@ public class WorkWithFile {
                     .append(buyTotal).append(System.lineSeparator()).append("result")
                     .append(SEPARATOR).append(result);
         } catch (IOException e) {
-            throw new RuntimeException();
+            throw new RuntimeException("Can't read from file", e);
         }
         return stringBuilder.toString();
     }
