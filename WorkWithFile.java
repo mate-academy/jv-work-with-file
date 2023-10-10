@@ -26,13 +26,33 @@ public class WorkWithFile {
                 }
             }
             int result = supplyTotal - buyTotal;
-            writer.write("supply," + supplyTotal);
-            writer.newLine();
-            writer.write("buy," + buyTotal);
-            writer.newLine();
-            writer.write("result," + result);
+            writeToFile(writer, "supply", supplyTotal);
+            writeToFile(writer, "buy", buyTotal);
+            writeToFile(writer, "result", result);
         } catch (IOException e) {
             throw new RuntimeException("Error while processing files", e);
+        }
+    }
+
+    private void writeToFile(BufferedWriter writer, String operation, int amount) {
+        String lineToWrite = operation + "," + amount;
+        writeString(writer, lineToWrite);
+        writeNewLine(writer);
+    }
+
+    private void writeString(BufferedWriter writer, String text) {
+        try {
+            writer.write(text);
+        } catch (IOException e) {
+            throw new RuntimeException("Error while writing to the file", e);
+        }
+    }
+
+    private void writeNewLine(BufferedWriter writer) {
+        try {
+            writer.newLine();
+        } catch (IOException e) {
+            throw new RuntimeException("Error while writing to the file", e);
         }
     }
 }
