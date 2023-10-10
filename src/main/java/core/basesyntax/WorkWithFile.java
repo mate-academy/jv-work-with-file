@@ -31,8 +31,7 @@ public class WorkWithFile {
                 .append(System.lineSeparator());
         result.append("result")
                 .append(",")
-                .append(category.get("supply") - category.get("buy"))
-                .append(System.lineSeparator());
+                .append(category.get("supply") - category.get("buy"));
         writeDataToFile(toFileName, result.toString());
     }
 
