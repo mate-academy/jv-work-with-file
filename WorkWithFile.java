@@ -7,17 +7,27 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String COMMA_SEPARATOR = ",";
+    private static final int OPERATION_TYPE_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
+
     public void getStatistic(String fromFileName, String toFileName) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
-                BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            int supplyTotal = 0;
-            int buyTotal = 0;
+        String[] dataFromFile = readData(fromFileName);
+        String report = createReport(dataFromFile);
+        writeToFile(report, toFileName);
+    }
+
+    private String[] readData(String fileName) {
+        int supplyTotal = 0;
+        int buyTotal = 0;
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(fileName));
             String line;
             while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",");
+                String[] parts = line.split(COMMA_SEPARATOR);
                 if (parts.length == 2) {
-                    String operationType = parts[0];
-                    int amount = Integer.parseInt(parts[1]);
+                    String operationType = parts[OPERATION_TYPE_INDEX];
+                    int amount = Integer.parseInt(parts[AMOUNT_INDEX]);
                     if ("supply".equals(operationType)) {
                         supplyTotal += amount;
                     } else if ("buy".equals(operationType)) {
@@ -25,34 +35,27 @@ public class WorkWithFile {
                     }
                 }
             }
-            int result = supplyTotal - buyTotal;
-            writeToFile(writer, "supply", supplyTotal);
-            writeToFile(writer, "buy", buyTotal);
-            writeToFile(writer, "result", result);
         } catch (IOException e) {
-            throw new RuntimeException("Error while processing files", e);
+            throw new RuntimeException("Error reading the file: " + fileName, e);
         }
+
+        int result = supplyTotal - buyTotal;
+        return new String[]{
+                "supply," + supplyTotal,
+                "buy," + buyTotal,
+                "result," + result
+        };
     }
 
-    private void writeToFile(BufferedWriter writer, String operation, int amount) {
-        String lineToWrite = operation + "," + amount;
-        writeString(writer, lineToWrite);
-        writeNewLine(writer);
+    private String createReport(String[] data) {
+        return String.join(System.lineSeparator(), data);
     }
 
-    private void writeString(BufferedWriter writer, String text) {
-        try {
-            writer.write(text);
+    private void writeToFile(String data, String fileName) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+            writer.write(data);
         } catch (IOException e) {
-            throw new RuntimeException("Error while writing to the file", e);
-        }
-    }
-
-    private void writeNewLine(BufferedWriter writer) {
-        try {
-            writer.newLine();
-        } catch (IOException e) {
-            throw new RuntimeException("Error while writing to the file", e);
+            throw new RuntimeException("Error writing to the file: " + fileName, e);
         }
     }
 }
