@@ -15,12 +15,12 @@ public class WorkWithFile {
     private static final String COMMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        final File mainFile = new File(fromFileName);
+        File mainFile = new File(fromFileName);
         String[] words = readFromFile(mainFile).split(WORD_SPLIT_PATTERN);
         int sum = 0;
         int buy = 0;
         for (int i = 0; i < words.length; i += 2) {
-            String currentWord = words[i];
+            final String currentWord = words[i];
             final int quantity = Integer.parseInt(words[i + 1]);
             if (currentWord.equals(SUPPLY)) {
                 sum += quantity;
