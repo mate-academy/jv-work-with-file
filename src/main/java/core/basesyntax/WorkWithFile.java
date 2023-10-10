@@ -12,16 +12,16 @@ public class WorkWithFile {
     private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String[] dataFromFile = readData(fromFileName);
-        String report = createReport(dataFromFile);
+        String report = createReport(fromFileName);
         writeToFile(report, toFileName);
     }
 
-    private String[] readData(String fileName) {
+    private String createReport(String fileName) {
         int supplyTotal = 0;
         int buyTotal = 0;
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(fileName));
+        StringBuilder reportBuilder = new StringBuilder();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(COMMA_SEPARATOR);
@@ -35,20 +35,16 @@ public class WorkWithFile {
                     }
                 }
             }
+
+            int result = supplyTotal - buyTotal;
+            reportBuilder.append("supply,").append(supplyTotal).append(System.lineSeparator());
+            reportBuilder.append("buy,").append(buyTotal).append(System.lineSeparator());
+            reportBuilder.append("result,").append(result);
         } catch (IOException e) {
             throw new RuntimeException("Error reading the file: " + fileName, e);
         }
 
-        int result = supplyTotal - buyTotal;
-        return new String[]{
-                "supply," + supplyTotal,
-                "buy," + buyTotal,
-                "result," + result
-        };
-    }
-
-    private String createReport(String[] data) {
-        return String.join(System.lineSeparator(), data);
+        return reportBuilder.toString();
     }
 
     private void writeToFile(String data, String fileName) {
