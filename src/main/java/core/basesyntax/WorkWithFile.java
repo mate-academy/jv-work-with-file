@@ -7,25 +7,25 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final int SUPPLY_AMOUNT_INDEX = 0;
+    private static final int BUY_AMOUNT_INDEX = 1;
+    private static final int RESULT_INDEX = 2;
     private static final int OPERATION_TYPE_INDEX = 0;
     private static final int AMOUNT_INDEX = 1;
     private static final String OPERATION_BUY = "buy";
     private static final String OPERATION_SUPPLY = "supply";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int buyAmount = getBuyAmount(fromFileName);
-        int supplyAmount = getSupplyAmount(fromFileName);
-        int result = supplyAmount - buyAmount;
-        StringBuilder report = new StringBuilder();
-        report.append("supply,")
-                .append(supplyAmount)
-                .append(System.lineSeparator())
-                .append("buy,").append(buyAmount)
-                .append(System.lineSeparator())
-                .append("result,").append(result);
+        int[] dataFromFile = readFile(fromFileName);
+        String report = createReport(dataFromFile);
+        writeToFile(report, toFileName);
+    }
 
-        writeToFile(report.toString(), toFileName);
-        createReport(report.toString());
+    private int[] readFile(String fromFileName) {
+        int supplyAmount = getSupplyAmount(fromFileName);
+        int buyAmount = getBuyAmount(fromFileName);
+        int result = supplyAmount - buyAmount;
+        return new int[] {supplyAmount, buyAmount, result};
     }
 
     private int getBuyAmount(String fromFileName) {
@@ -70,7 +70,15 @@ public class WorkWithFile {
         }
     }
 
-    private void createReport(String report) {
-        System.out.println(report);
+    private String createReport(int[] dataFromFile) {
+        StringBuilder report = new StringBuilder();
+        report.append("supply,")
+                .append(dataFromFile[SUPPLY_AMOUNT_INDEX])
+                .append(System.lineSeparator())
+                .append("buy,").append(dataFromFile[BUY_AMOUNT_INDEX])
+                .append(System.lineSeparator())
+                .append("result,").append(dataFromFile[RESULT_INDEX]);
+        System.out.println(report.toString());
+        return report.toString();
     }
 }
