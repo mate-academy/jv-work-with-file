@@ -17,11 +17,11 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         String fileData = readFromFile(fromFileName);
-        String[][] report = createReport(fileData);
+        String report = createReport(fileData);
         writeToFile(toFileName, report);
     }
 
-    private String[][] createReport(String fileData) {
+    private String createReport(String fileData) {
         String[] lines = fileData.split(System.lineSeparator());
         int supply = 0;
         int buy = 0;
@@ -40,9 +40,17 @@ public class WorkWithFile {
             }
         }
         int result = supply - buy;
-        return new String[][]{{SUPPLY, Integer.toString(supply)},
-                {BUY, Integer.toString(buy)},
-                {RESULT, Integer.toString(result)}};
+        return SUPPLY
+                + COLUMN_SEPARATOR
+                + supply
+                + System.lineSeparator()
+                + BUY
+                + COLUMN_SEPARATOR
+                + buy
+                + System.lineSeparator()
+                + RESULT
+                + COLUMN_SEPARATOR
+                + result;
     }
 
     private String readFromFile(String fileName) {
@@ -59,23 +67,10 @@ public class WorkWithFile {
         }
     }
 
-    private void writeToFile(String fileName, String[][] data) {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < data.length; i++) {
-            String[] line = data[i];
-            for (int j = 0; j < line.length; j++) {
-                stringBuilder.append(line[j]);
-                if (j < line.length - 1) {
-                    stringBuilder.append(COLUMN_SEPARATOR);
-                }
-            }
-            if (i < data.length - 1) {
-                stringBuilder.append(System.lineSeparator());
-            }
-        }
+    private void writeToFile(String fileName, String data) {
         File myFile = new File(fileName);
         try (FileWriter fileWriter = new FileWriter(myFile)) {
-            fileWriter.write(stringBuilder.toString());
+            fileWriter.write(data);
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file", e);
         }
