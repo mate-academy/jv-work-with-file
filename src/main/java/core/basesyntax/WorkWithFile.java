@@ -10,13 +10,16 @@ import java.util.List;
 import java.util.Map;
 
 public class WorkWithFile {
+    private static final int INDEX_OPERATION_TYPE = 0;
+    private static final int INDEX_AMOUNT = 1;
     private Map<String, Integer> category;
 
     public void getStatistic(String fromFileName, String toFileName) {
         category = new HashMap<>();
         for (String line : getDataFromFile(fromFileName)) {
             String[] parts = line.split(",");
-            calculateTotalAmount(parts[0], Integer.parseInt(parts[1]));
+            calculateTotalAmount(parts[INDEX_OPERATION_TYPE],
+                    Integer.parseInt(parts[INDEX_AMOUNT]));
         }
         StringBuilder result = new StringBuilder();
         result.append("supply,")
