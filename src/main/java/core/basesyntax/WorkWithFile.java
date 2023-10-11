@@ -25,8 +25,9 @@ public class WorkWithFile {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileReader))) {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
-                String[] text = line.split(",");
-                if (text.length == 2) {
+                String[] text = line.split(COMA);
+                int textElements = 2;
+                if (text.length == textElements) {
                     String word = text[0];
                     int count = Integer.parseInt(text[1]);
                     if (word.equals(BUY)) {
@@ -39,7 +40,7 @@ public class WorkWithFile {
                 result = supplyCount - buyCount;
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can not read file", e);
+            throw new RuntimeException("Can not read fromFileName", e);
         }
         return new int[]{supplyCount, buyCount, result};
     }
@@ -53,9 +54,10 @@ public class WorkWithFile {
     }
 
     private void createReport(BufferedWriter bufferedWriter, int[] report) throws IOException {
-        bufferedWriter.write(SUPPLY + COMA + report[0] + System.lineSeparator());
-        bufferedWriter.write(BUY + COMA + report[1] + System.lineSeparator());
-        bufferedWriter.write(RESULT + COMA + report[2] + System.lineSeparator());
-
+        StringBuilder sb = new StringBuilder();
+        sb.append(SUPPLY).append(COMA).append(report[0]).append(System.lineSeparator());
+        sb.append(BUY).append(COMA).append(report[1]).append(System.lineSeparator());
+        sb.append(RESULT).append(COMA).append(report[2]).append(System.lineSeparator());
+        bufferedWriter.write(sb.toString());
     }
 }
