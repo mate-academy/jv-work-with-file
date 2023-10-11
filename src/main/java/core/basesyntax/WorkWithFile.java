@@ -7,9 +7,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class WorkWithFile {
-    private HashMap<String, Integer> category;
+    private Map<String, Integer> category;
 
     public void getStatistic(String fromFileName, String toFileName) {
         category = new HashMap<>();
