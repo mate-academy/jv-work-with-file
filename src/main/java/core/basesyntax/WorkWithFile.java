@@ -12,6 +12,7 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String RESULT = "result";
     private static final String COMA = ",";
+    private static final int TEXT_ELEMENTS = 2;
 
     public void getStatistic(String fromFileName, String toFileName) {
         int buyCount = 0;
@@ -26,8 +27,7 @@ public class WorkWithFile {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 String[] text = line.split(COMA);
-                int textElements = 2;
-                if (text.length == textElements) {
+                if (text.length == TEXT_ELEMENTS) {
                     String word = text[0];
                     int count = Integer.parseInt(text[1]);
                     if (word.equals(BUY)) {
@@ -40,7 +40,7 @@ public class WorkWithFile {
                 result = supplyCount - buyCount;
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can not read fromFileName", e);
+            throw new RuntimeException("Can not read file" + fromFileName, e);
         }
         return new int[]{supplyCount, buyCount, result};
     }
