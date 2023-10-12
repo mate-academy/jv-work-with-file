@@ -37,7 +37,7 @@ public class WorkWithFile {
         try {
             return Files.readAllLines(Path.of(fileName), StandardCharsets.UTF_8);
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't read data from the file " + fileName, e);
         }
     }
 
@@ -45,7 +45,7 @@ public class WorkWithFile {
         try (FileWriter fileWriter = new FileWriter(fileName)) {
             fileWriter.write(data);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write to file", e);
+            throw new RuntimeException("Can't write data to the file " + fileName, e);
         }
     }
 
