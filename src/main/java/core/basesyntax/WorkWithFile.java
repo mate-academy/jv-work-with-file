@@ -12,8 +12,24 @@ public class WorkWithFile {
     private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
+        String dataFromFile = readFile(fromFileName);
         String report = createReport(fromFileName);
         writeToFile(report, toFileName);
+    }
+
+    private String readFile(String fileName) {
+        StringBuilder content = new StringBuilder();
+        
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                content.append(line).append(System.lineSeparator());
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Error reading the file: " + fileName, e);
+        }
+        
+        return content.toString();
     }
 
     private String createReport(String fileName) {
