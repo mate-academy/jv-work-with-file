@@ -11,6 +11,12 @@ public class WorkWithFile {
     private static final int CONST_VALUE = 0;
     private static final int STEP_SIZE = 2;
 
+    public void getStatistic(String fromFileName, String toFileName) {
+        String data = readFile(fromFileName);
+        String report = createReport(data);
+        writeToFile(toFileName, report);
+    }
+
     public String readFile(String fromFileName) {
         StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
@@ -72,7 +78,8 @@ public class WorkWithFile {
         }
 
         for (int i = CONST_VALUE; i < size; i++) {
-            stringBuilder.append(names[i]).append(",").append(sums[i]).append("\n");
+            stringBuilder.append(names[i]).append(",").append(sums[i])
+                    .append(System.lineSeparator());
         }
 
         int sumResult = sums[CONST_VALUE];
