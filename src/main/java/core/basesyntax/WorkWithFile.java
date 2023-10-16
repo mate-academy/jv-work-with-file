@@ -9,6 +9,8 @@ import java.util.ArrayList;
 
 public class WorkWithFile {
     static final String SEPARATOR = ",";
+    static final int DESCRIPTION_OF_THE_LIST = 0;
+    static final int VALUE_OF_THE_LIST = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         writeToFile(makeReport(readFromFile(fromFileName)),toFileName);
@@ -32,10 +34,10 @@ public class WorkWithFile {
         int buy = 0;
         for (String s : arrayFromFile) {
             String[] split = s.split(SEPARATOR);
-            if (split[0].startsWith("s")) {
-                supply += Integer.parseInt(split[1]);
+            if (split[DESCRIPTION_OF_THE_LIST].startsWith("s")) {
+                supply += Integer.parseInt(split[VALUE_OF_THE_LIST]);
             } else {
-                buy += Integer.parseInt(split[1]);
+                buy += Integer.parseInt(split[VALUE_OF_THE_LIST]);
             }
         }
         return "supply," + supply + System.lineSeparator()
