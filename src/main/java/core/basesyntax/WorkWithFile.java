@@ -26,15 +26,24 @@ public class WorkWithFile {
         } catch (IOException exception) {
             throw new RuntimeException("I can't perform the operation!", exception);
         }
+        String report = createReport(sumSupply, sumBuy);
+        writeToFile(toFileName, report);
+    }
+
+    public String createReport(int sumSupply, int sumBuy) {
+        int result = sumSupply - sumBuy;
+        StringBuilder report = new StringBuilder();
+        report.append("supply,").append(sumSupply).append(System.lineSeparator());
+        report.append("buy,").append(sumBuy).append(System.lineSeparator());
+        report.append("result,").append(result).append(System.lineSeparator());
+        return report.toString();
+    }
+
+    public void writeToFile(String toFileName, String report) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            int result = sumSupply - sumBuy;
-            StringBuilder report = new StringBuilder();
-            report.append("supply,").append(sumSupply).append(System.lineSeparator());
-            report.append("buy,").append(sumBuy).append(System.lineSeparator());
-            report.append("result,").append(result).append(System.lineSeparator());
-            bufferedWriter.write(report.toString());
+            bufferedWriter.write(report);
         } catch (IOException exception) {
-            throw new RuntimeException("I can't perform the operation!", exception);
+            throw new RuntimeException("I can`t do this operation!", exception);
         }
     }
 }
