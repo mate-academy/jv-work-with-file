@@ -5,45 +5,47 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class WorkWithFile {
-    private BufferedReader bufferedReader;
-    private String[] arrayToWriteIntoFile = new String[3];
+    static final String SEPARATOR = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int supply = 0;
-        int buy = 0;
-        try {
-            bufferedReader = new BufferedReader(new FileReader(fromFileName));
-            String value = bufferedReader.readLine();
-            while (value != null) {
-                String[] counter = value.split(",");
-                if (counter[0].equals("supply")) {
-                    supply = supply + Integer.parseInt(counter[1]);
-                } else {
-                    buy = buy + Integer.parseInt(counter[1]);
-                }
-                value = bufferedReader.readLine();
+        writeToFile(makeReport(readFromFile(fromFileName)),toFileName);
+    }
+
+    private String[] readFromFile(String fromFileName) {
+        ArrayList<String> list = new ArrayList<>();
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
+            String value;
+            while ((value = bufferedReader.readLine()) != null) {
+                list.add(value);
             }
         } catch (IOException e) {
             throw new RuntimeException("Cant read from file" + fromFileName, e);
         }
-        arrayToWriteIntoFile[0] = "supply," + supply;
-        arrayToWriteIntoFile[1] = "buy," + buy;
-        arrayToWriteIntoFile[2] = "result," + (supply - buy);
-        writeToFile(arrayToWriteIntoFile, toFileName);
+        return list.toArray(new String[0]);
     }
 
-    private void writeToFile(String[] data, String toFileName) {
-        int count = 0;
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            for (String s : data) {
-                writer.write(s);
-                if (count < data.length - 1) {
-                    writer.newLine();
-                    count++;
-                }
+    private String makeReport(String[] arrayFromFile) {
+        int supply = 0;
+        int buy = 0;
+        for (String s : arrayFromFile) {
+            String[] split = s.split(SEPARATOR);
+            if (split[0].startsWith("s")) {
+                supply += Integer.parseInt(split[1]);
+            } else {
+                buy += Integer.parseInt(split[1]);
             }
+        }
+        return "supply," + supply + System.lineSeparator()
+                + "buy," + buy + System.lineSeparator()
+                + "result," + (supply - buy);
+    }
+
+    private void writeToFile(String dataToWrite, String toFileName) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
+            writer.write(dataToWrite);
         } catch (IOException e) {
             throw new RuntimeException("Cant write to file" + toFileName, e);
         }
