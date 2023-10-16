@@ -29,7 +29,7 @@ public class WorkWithFile {
                 stringBuilder.append(readedLine).append(LINE_SEPARATOR);
                 readedLine = bufferedReader.readLine();
             }
-            } catch (IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException("Can't read data from the file " + fromFileName, e);
         }
         return stringBuilder.toString();
@@ -50,7 +50,8 @@ public class WorkWithFile {
             }
         }
         return KEYWORD_TWO + SEPARATOR + supply + System.lineSeparator()
-                + KEYWORD_ONE + SEPARATOR + buy + System.lineSeparator() + "result," + (supply - buy);
+                + KEYWORD_ONE + SEPARATOR + buy + System.lineSeparator()
+                + "result," + (supply - buy);
     }
 
     public void writeToFile(String report, String toFileName) {
