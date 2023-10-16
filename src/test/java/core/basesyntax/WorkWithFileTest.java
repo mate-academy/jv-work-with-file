@@ -27,7 +27,7 @@ public class WorkWithFileTest {
     }
 
     @Test
-    public void getStatisticAboutApple(){
+    public void getStatisticAboutApple() {
         workWithFile.getStatistic("apple.csv", APPLE_RESULT_FILE);
 
         String actualResult = readFromFile(APPLE_RESULT_FILE).trim();
@@ -49,7 +49,7 @@ public class WorkWithFileTest {
     }
 
     @Test
-    public void getStatisticAboutGrape(){
+    public void getStatisticAboutGrape() {
         workWithFile.getStatistic("grape.csv", GRAPE_RESULT_FILE);
 
         String actualResult = readFromFile(GRAPE_RESULT_FILE).trim();
