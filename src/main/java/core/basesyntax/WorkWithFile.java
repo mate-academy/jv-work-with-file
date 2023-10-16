@@ -9,8 +9,19 @@ import java.io.IOException;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
+        String[] rows = readFile(fromFileName).split("\n");
+        int supply = calculation(rows, 0, 0)[0];
+        int buy = calculation(rows, 0, 0)[1];
+        int result = calculation(rows, 0, 0)[2];
+        String report = "supply," + supply + "\n"
+                + "buy," + buy + "\n"
+                + "result," + result;
+        writeToFile(toFileName, report);
+    }
+
+    public String readFile(String fromFile) {
         StringBuilder stringBuilder = new StringBuilder();
-        File file = new File(fromFileName);
+        File file = new File(fromFile);
         try {
             BufferedReader info = new BufferedReader(new FileReader(file));
             int digitInfo = info.read();
@@ -21,10 +32,19 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read file from file", e);
         }
+        return stringBuilder.toString();
+    }
 
-        String[] rows = stringBuilder.toString().split("\n");
-        int supply = 0;
-        int buy = 0;
+    public void writeToFile(String toFile, String report) {
+        File file2 = new File(toFile);
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file2))) {
+            bufferedWriter.write(report);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write data to file", e);
+        }
+    }
+
+    public int[] calculation(String[] rows, int supply, int buy) {
         for (String row : rows) {
             String[] values = row.split(",");
             if (values[0].equals("supply")) {
@@ -34,14 +54,6 @@ public class WorkWithFile {
             }
         }
         int result = supply - buy;
-        String report = "supply," + supply + "\n"
-                + "buy," + buy + "\n"
-                + "result," + result;
-        File file2 = new File(toFileName);
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file2))) {
-            bufferedWriter.write(report);
-        } catch (IOException e) {
-            throw new RuntimeException("Can't write data to file", e);
-        }
+        return new int[]{supply, buy, result};
     }
 }
