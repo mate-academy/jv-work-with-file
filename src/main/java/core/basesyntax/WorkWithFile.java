@@ -8,12 +8,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final int OPERATION = 0;
-    private static final int AMOUNT = 1;
+    private static final int OPERATION_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
     private static final String SEPARATOR = ",";
     private static final String LINE_SEPARATOR = "@";
-    private static final String KEYWORD_ONE = "buy";
-    private static final String KEYWORD_TWO = "supply";
+    private static final String KEYWORD_BUY = "buy";
+    private static final String KEYWORD_SUPPLY = "supply";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String data = readFile(fromFileName);
@@ -38,20 +38,19 @@ public class WorkWithFile {
     public String createReport(String data) {
         int buy = 0;
         int supply = 0;
-        String []line = data.split(LINE_SEPARATOR);
-        String [] keyWord;
-        for (String s : line) {
-            keyWord = s.split(SEPARATOR);
-            if (keyWord[OPERATION].equals(KEYWORD_ONE)) {
-                buy += Integer.parseInt(keyWord[AMOUNT]);
+        String[] pieses = data.split(LINE_SEPARATOR);
+        String[] keyWord;
+        for (String piece : pieses) {
+            keyWord = piece.split(SEPARATOR);
+            if (keyWord[OPERATION_INDEX].equals(KEYWORD_BUY)) {
+                buy += Integer.parseInt(keyWord[AMOUNT_INDEX]);
             }
-            if (keyWord[OPERATION].equals(KEYWORD_TWO)) {
-                supply += Integer.parseInt(keyWord[AMOUNT]);
+            if (keyWord[OPERATION_INDEX].equals(KEYWORD_SUPPLY)) {
+                supply += Integer.parseInt(keyWord[AMOUNT_INDEX]);
             }
         }
-        return KEYWORD_TWO + SEPARATOR + supply + System.lineSeparator()
-                + KEYWORD_ONE + SEPARATOR + buy + System.lineSeparator()
-                + "result," + (supply - buy);
+        return KEYWORD_SUPPLY + SEPARATOR + supply + System.lineSeparator() + KEYWORD_BUY
+                + SEPARATOR + buy + System.lineSeparator() + "result," + (supply - buy);
     }
 
     public void writeToFile(String report, String toFileName) {
