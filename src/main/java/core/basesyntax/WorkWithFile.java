@@ -11,8 +11,8 @@ public class WorkWithFile {
     private static final String TYPE_BUY = "buy";
     private static final String TYPE_RESULT = "result";
     private static final String SPECIFIC_CHARACTER = ",";
-    private static final int WORD = 0;
-    private static final int AMOUNT = 1;
+    private static final int OPERATION_TYPE_INDEX = 0;
+    private static final int SECOND_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String dataFromFile = readFromFile(fromFileName);
@@ -29,7 +29,7 @@ public class WorkWithFile {
                 value = bufferedReader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read the file", e);
+            throw new RuntimeException("Can't read the file" + fromFileName, e);
         }
         return stringBuilder.toString();
     }
@@ -40,11 +40,11 @@ public class WorkWithFile {
         int amountOfBuy = 0;
         for (int i = 0; i < dataFromFile.length; i++) {
             String[] dataOnLine = dataFromFile[i].split(SPECIFIC_CHARACTER);
-            if (dataOnLine[WORD].equals(TYPE_SUPPLY)) {
-                amountOfSupply += Integer.parseInt(dataOnLine[AMOUNT]);
+            if (dataOnLine[OPERATION_TYPE_INDEX].equals(TYPE_SUPPLY)) {
+                amountOfSupply += Integer.parseInt(dataOnLine[SECOND_INDEX]);
             }
-            if (dataOnLine[WORD].equals(TYPE_BUY)) {
-                amountOfBuy += Integer.parseInt(dataOnLine[AMOUNT]);
+            if (dataOnLine[OPERATION_TYPE_INDEX].equals(TYPE_BUY)) {
+                amountOfBuy += Integer.parseInt(dataOnLine[SECOND_INDEX]);
             }
         }
         int finalAmount = amountOfSupply - amountOfBuy;
@@ -60,7 +60,7 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(result);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write to file", e);
+            throw new RuntimeException("Can't write to file" + toFileName, e);
         }
     }
 
