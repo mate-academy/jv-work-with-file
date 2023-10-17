@@ -9,13 +9,8 @@ import java.io.IOException;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
-        String[] rows = readFile(fromFileName).split("\n");
-        int supply = calculation(rows, 0, 0)[0];
-        int buy = calculation(rows, 0, 0)[1];
-        int result = calculation(rows, 0, 0)[2];
-        String report = "supply," + supply + "\n"
-                + "buy," + buy + "\n"
-                + "result," + result;
+        String dataFromFile = readFile(fromFileName);
+        String report = createReport(dataFromFile);
         writeToFile(toFileName, report);
     }
 
@@ -30,21 +25,31 @@ public class WorkWithFile {
                 digitInfo = info.read();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file from file", e);
+            throw new RuntimeException("Can't read file from file" + fromFile, e);
         }
         return stringBuilder.toString();
     }
 
-    public void writeToFile(String toFile, String report) {
-        File file2 = new File(toFile);
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file2))) {
-            bufferedWriter.write(report);
+    public void writeToFile(String toFile, String text) {
+        File file = new File(toFile);
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
+            bufferedWriter.write(text);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data to file", e);
+            throw new RuntimeException("Can't write data to file" + toFile, e);
         }
     }
 
-    public int[] calculation(String[] rows, int supply, int buy) {
+    public String createReport(String dataFormFile) {
+        String[] rows = dataFormFile.split("\n");
+        int supply = calculation(rows, 0, 0)[0];
+        int buy = calculation(rows, 0, 0)[1];
+        int result = calculation(rows, 0, 0)[2];
+        return "supply," + supply + "\n"
+                + "buy," + buy + "\n"
+                + "result," + result;
+    }
+
+    private int[] calculation(String[] rows, int supply, int buy) {
         for (String row : rows) {
             String[] values = row.split(",");
             if (values[0].equals("supply")) {
