@@ -5,41 +5,39 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class WorkWithFile {
     static final String SEPARATOR = ",";
-    static final int DESCRIPTION_OF_THE_LIST = 0;
-    static final int VALUE_OF_THE_LIST = 1;
+    static final int OPERATION_TYPE_INDEX = 0;
+    static final int VALUE_INDEX = 1;
     static final String SUPPLY = "supply,";
     static final String BUY = "buy,";
     static final String RESULT = "result,";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        writeToFile(makeReport(readFromFile(fromFileName)), toFileName);
+        List<String> listFromFile = readFromFile(fromFileName);
+        String reportFromList = makeReport(listFromFile);
+        writeToFile(reportFromList, toFileName);
     }
 
     private List<String> readFromFile(String fromFileName) {
-        String content = null;
         try {
-            content = Files.readString(Paths.get(fromFileName));
+            return Files.readAllLines(Paths.get(fromFileName));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return new ArrayList<String>(Arrays.asList(content.split("\n")));
     }
 
     private String makeReport(List<String> listFromFile) {
         int supply = 0;
         int buy = 0;
-        for (String s : listFromFile) {
-            String[] split = s.split(SEPARATOR);
-            if (split[DESCRIPTION_OF_THE_LIST].startsWith("s")) {
-                supply += Integer.parseInt(split[VALUE_OF_THE_LIST]);
+        for (String line : listFromFile) {
+            String[] split = line.split(SEPARATOR);
+            if (split[OPERATION_TYPE_INDEX].equals("supply")) {
+                supply += Integer.parseInt(split[VALUE_INDEX]);
             } else {
-                buy += Integer.parseInt(split[VALUE_OF_THE_LIST]);
+                buy += Integer.parseInt(split[VALUE_INDEX]);
             }
         }
         return SUPPLY + supply + System.lineSeparator()
