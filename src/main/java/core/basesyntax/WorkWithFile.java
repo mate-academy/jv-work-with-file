@@ -9,11 +9,11 @@ import java.util.List;
 
 public class WorkWithFile {
     static final String SEPARATOR = ",";
-    static final int OPERATION_TYPE_INDEX = 0;
-    static final int VALUE_INDEX = 1;
     static final String SUPPLY = "supply,";
     static final String BUY = "buy,";
     static final String RESULT = "result,";
+    static final int OPERATION_TYPE_INDEX = 0;
+    static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         List<String> listFromFile = readFromFile(fromFileName);
@@ -25,7 +25,7 @@ public class WorkWithFile {
         try {
             return Files.readAllLines(Paths.get(fromFileName));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Cant read from file", e);
         }
     }
 
@@ -35,9 +35,9 @@ public class WorkWithFile {
         for (String line : listFromFile) {
             String[] split = line.split(SEPARATOR);
             if (split[OPERATION_TYPE_INDEX].equals("supply")) {
-                supply += Integer.parseInt(split[VALUE_INDEX]);
+                supply += Integer.parseInt(split[AMOUNT_INDEX]);
             } else {
-                buy += Integer.parseInt(split[VALUE_INDEX]);
+                buy += Integer.parseInt(split[AMOUNT_INDEX]);
             }
         }
         return SUPPLY + supply + System.lineSeparator()
