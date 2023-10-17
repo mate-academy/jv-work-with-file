@@ -1,38 +1,40 @@
 package core.basesyntax;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class WorkWithFile {
     static final String SEPARATOR = ",";
     static final int DESCRIPTION_OF_THE_LIST = 0;
     static final int VALUE_OF_THE_LIST = 1;
+    static final String SUPPLY = "supply,";
+    static final String BUY = "buy,";
+    static final String RESULT = "result,";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        writeToFile(makeReport(readFromFile(fromFileName)),toFileName);
+        writeToFile(makeReport(readFromFile(fromFileName)), toFileName);
     }
 
-    private String[] readFromFile(String fromFileName) {
-        ArrayList<String> list = new ArrayList<>();
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
-            String value;
-            while ((value = bufferedReader.readLine()) != null) {
-                list.add(value);
-            }
+    private List<String> readFromFile(String fromFileName) {
+        String content = null;
+        try {
+            content = Files.readString(Paths.get(fromFileName));
         } catch (IOException e) {
-            throw new RuntimeException("Cant read from file" + fromFileName, e);
+            throw new RuntimeException(e);
         }
-        return list.toArray(new String[0]);
+        return new ArrayList<String>(Arrays.asList(content.split("\n")));
     }
 
-    private String makeReport(String[] arrayFromFile) {
+    private String makeReport(List<String> listFromFile) {
         int supply = 0;
         int buy = 0;
-        for (String s : arrayFromFile) {
+        for (String s : listFromFile) {
             String[] split = s.split(SEPARATOR);
             if (split[DESCRIPTION_OF_THE_LIST].startsWith("s")) {
                 supply += Integer.parseInt(split[VALUE_OF_THE_LIST]);
@@ -40,9 +42,9 @@ public class WorkWithFile {
                 buy += Integer.parseInt(split[VALUE_OF_THE_LIST]);
             }
         }
-        return "supply," + supply + System.lineSeparator()
-                + "buy," + buy + System.lineSeparator()
-                + "result," + (supply - buy);
+        return SUPPLY + supply + System.lineSeparator()
+                + BUY + buy + System.lineSeparator()
+                + RESULT + (supply - buy);
     }
 
     private void writeToFile(String dataToWrite, String toFileName) {
