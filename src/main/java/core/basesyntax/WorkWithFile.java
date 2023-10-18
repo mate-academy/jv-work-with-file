@@ -7,6 +7,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String SPECIFIED_STRING_S = "supply";
+    private static final String SPECIFIED_STRING_B = "buy";
+
     public void getStatistic(String fromFileName, String toFileName) {
         try {
             String data = readFile(fromFileName);
@@ -37,9 +40,9 @@ public class WorkWithFile {
             if (values.length == 2) {
                 String operation = values[0];
                 int amount = Integer.parseInt(values[1]);
-                if ("supply".equals(operation)) {
+                if (SPECIFIED_STRING_S.equals(operation)) {
                     supplyTotal += amount;
-                } else if ("buy".equals(operation)) {
+                } else if (SPECIFIED_STRING_B.equals(operation)) {
                     buyTotal += amount;
                 }
             }
