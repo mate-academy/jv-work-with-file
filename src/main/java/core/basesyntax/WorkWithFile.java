@@ -9,13 +9,13 @@ import java.io.IOException;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
-        String dataFromFile = readFile(fromFileName);
-        String report = createReport(dataFromFile);
+        final String dataFromFile = readFile(fromFileName);
+        final String report = createReport(dataFromFile);
         writeToFile(toFileName, report);
     }
 
     public String readFile(String fromFile) {
-        StringBuilder stringBuilder = new StringBuilder();
+        final StringBuilder stringBuilder = new StringBuilder();
         File file = new File(fromFile);
         try {
             BufferedReader info = new BufferedReader(new FileReader(file));
@@ -40,25 +40,27 @@ public class WorkWithFile {
     }
 
     public String createReport(String dataFormFile) {
-        String[] rows = dataFormFile.split("\n");
-        int supply = calculation(rows, 0, 0)[0];
-        int buy = calculation(rows, 0, 0)[1];
-        int result = calculation(rows, 0, 0)[2];
-        return "supply," + supply + "\n"
-                + "buy," + buy + "\n"
+        final String empty = System.lineSeparator();
+        String[] rows = dataFormFile.split(empty);
+        final int supply = calculation(rows, 0, 0)[0];
+        final int buy = calculation(rows, 0, 0)[1];
+        final int result = calculation(rows, 0, 0)[2];
+        return "supply," + supply + empty
+                + "buy," + buy + empty
                 + "result," + result;
     }
 
     private int[] calculation(String[] rows, int supply, int buy) {
+        final String comma = ",";
         for (String row : rows) {
-            String[] values = row.split(",");
+            final String[] values = row.split(comma);
             if (values[0].equals("supply")) {
                 supply += Integer.parseInt(values[1]);
             } else {
                 buy += Integer.parseInt(values[1]);
             }
         }
-        int result = supply - buy;
+        final int result = supply - buy;
         return new int[]{supply, buy, result};
     }
 }
