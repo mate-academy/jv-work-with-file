@@ -42,15 +42,8 @@ public class WorkWithFile {
     public String createReport(String dataFormFile) {
         final String empty = System.lineSeparator();
         String[] rows = dataFormFile.split(empty);
-        final int supply = calculation(rows, 0, 0)[0];
-        final int buy = calculation(rows, 0, 0)[1];
-        final int result = calculation(rows, 0, 0)[2];
-        return "supply," + supply + empty
-                + "buy," + buy + empty
-                + "result," + result;
-    }
-
-    private int[] calculation(String[] rows, int supply, int buy) {
+        int supply = 0;
+        int buy = 0;
         final String comma = ",";
         for (String row : rows) {
             final String[] values = row.split(comma);
@@ -61,6 +54,8 @@ public class WorkWithFile {
             }
         }
         final int result = supply - buy;
-        return new int[]{supply, buy, result};
+        return "supply," + supply + empty
+                + "buy," + buy + empty
+                + "result," + result;
     }
 }
