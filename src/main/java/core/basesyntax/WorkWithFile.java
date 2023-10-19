@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
-        int[] totals = processLines(fromFileName);
+        int[] totals = processLines(readFile(fromFileName));
         int supplyTotal = totals[0];
         int buyTotal = totals[1];
 
@@ -19,30 +19,38 @@ public class WorkWithFile {
         }
     }
 
-    private int[] processLines(String fromFileName) {
+    private int[] processLines(String[] lines) {
         int supplyTotal = 0;
         int buyTotal = 0;
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
+        for (String line : lines) {
+            String[] parts = line.split(",");
+            if (parts.length == 2) {
+                String operationType = parts[0];
+                int amount = Integer.parseInt(parts[1]);
+
+                if (operationType.equals("supply")) {
+                    supplyTotal += amount;
+                } else if (operationType.equals("buy")) {
+                    buyTotal += amount;
+                }
+            }
+        }
+
+        return new int[]{supplyTotal, buyTotal};
+    }
+
+    private String[] readFile(String fileName) {
+        StringBuilder content = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",");
-                if (parts.length == 2) {
-                    String operationType = parts[0];
-                    int amount = Integer.parseInt(parts[1]);
-
-                    if (operationType.equals("supply")) {
-                        supplyTotal += amount;
-                    } else if (operationType.equals("buy")) {
-                        buyTotal += amount;
-                    }
-                }
+                content.append(line).append("\n");
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        return new int[]{supplyTotal, buyTotal};
+        return content.toString().split("\n");
     }
 
     private void writeResults(BufferedWriter writer, int supplyTotal, int buyTotal)
@@ -56,4 +64,3 @@ public class WorkWithFile {
         writer.write("result," + result);
     }
 }
-
