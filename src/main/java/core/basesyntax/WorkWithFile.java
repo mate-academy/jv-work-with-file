@@ -7,10 +7,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final int SUPPLY_INDEX = 0;
+    private static final int BUY_INDEX = 1;
+
     public void getStatistic(String fromFileName, String toFileName) {
         int[] totals = processLines(readFile(fromFileName));
-        int supplyTotal = totals[0];
-        int buyTotal = totals[1];
+        int supplyTotal = totals[SUPPLY_INDEX];
+        int buyTotal = totals[BUY_INDEX];
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writeResults(writer, supplyTotal, buyTotal);
