@@ -9,13 +9,14 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
-    private static final int FIRST_PART = 0;
-    private static final int SECOND_PART = 1;
+    private static final String RESULT = "result";
+    private static final int OPERATION_TYPE_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
     private static final String COMMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] dataFromFile = readFile(fromFileName);
-        int[] supplyAndBuy = infoProcess(dataFromFile);
+        int[] supplyAndBuy = getSumAndBuy(dataFromFile);
         String report = createReport(supplyAndBuy);
         writeToFile(toFileName, report);
     }
@@ -33,14 +34,14 @@ public class WorkWithFile {
         }
     }
 
-    private int[] infoProcess(String[] dataFromFile) {
+    private int[] getSumAndBuy(String[] dataFromFile) {
         int sumSupply = 0;
         int sumBuy = 0;
 
         for (String line : dataFromFile) {
             String[] split = line.split(COMMA);
-            String operation = split[FIRST_PART];
-            int digit = Integer.parseInt(split[SECOND_PART]);
+            String operation = split[OPERATION_TYPE_INDEX];
+            int digit = Integer.parseInt(split[AMOUNT_INDEX]);
 
             if (operation.equals(SUPPLY)) {
                 sumSupply += digit;
@@ -52,14 +53,14 @@ public class WorkWithFile {
     }
 
     private String createReport(int[] supplyAndBuy) {
-        int supply = supplyAndBuy[FIRST_PART];
-        int buy = supplyAndBuy[SECOND_PART];
+        int supply = supplyAndBuy[0];
+        int buy = supplyAndBuy[1];
         int result = supply - buy;
 
         return new StringBuilder()
                 .append(SUPPLY).append(",").append(supply).append(System.lineSeparator())
                 .append(BUY).append(",").append(buy).append(System.lineSeparator())
-                .append("result,").append(result).append(System.lineSeparator())
+                .append(RESULT).append(",").append(result).append(System.lineSeparator())
                 .toString();
     }
 
@@ -73,7 +74,7 @@ public class WorkWithFile {
 
     private String[] append(String[] data, String line) {
         String[] dataArray = new String[data.length + 1];
-        System.arraycopy(data, FIRST_PART, dataArray, FIRST_PART, data.length);
+        System.arraycopy(data, 0, dataArray, 0, data.length);
         dataArray[data.length] = line;
         return dataArray;
     }
