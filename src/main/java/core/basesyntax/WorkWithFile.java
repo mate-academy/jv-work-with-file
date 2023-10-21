@@ -44,19 +44,22 @@ public class WorkWithFile {
         int supply = 0;
         int buy = 0;
         final String comma = ",";
+        final String supplyText = "supply";
+        final String buyText = "buy";
+        final String resultText = "result";
         final int operationTypeIndex = 0;
         final int amountIndex = 1;
         for (String row : rows) {
             final String[] values = row.split(comma);
-            if (values[operationTypeIndex].equals("supply")) {
+            if (values[operationTypeIndex].equals(supplyText)) {
                 supply += Integer.parseInt(values[amountIndex]);
             } else {
                 buy += Integer.parseInt(values[amountIndex]);
             }
         }
         final int result = supply - buy;
-        return "supply," + supply + empty
-                + "buy," + buy + empty
-                + "result," + result;
+        return supplyText + comma + supply + empty
+                + buyText + comma + buy + empty
+                + resultText + comma + result;
     }
 }
