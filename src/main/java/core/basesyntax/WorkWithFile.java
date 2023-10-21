@@ -17,8 +17,7 @@ public class WorkWithFile {
     public String readFile(String fromFile) {
         final StringBuilder stringBuilder = new StringBuilder();
         File file = new File(fromFile);
-        try {
-            BufferedReader info = new BufferedReader(new FileReader(file));
+        try (BufferedReader info = new BufferedReader(new FileReader(file))) {
             int digitInfo = info.read();
             while (digitInfo != -1) {
                 stringBuilder.append((char) digitInfo);
@@ -45,12 +44,14 @@ public class WorkWithFile {
         int supply = 0;
         int buy = 0;
         final String comma = ",";
+        final int operationTypeIndex = 0;
+        final int amountIndex = 1;
         for (String row : rows) {
             final String[] values = row.split(comma);
-            if (values[0].equals("supply")) {
-                supply += Integer.parseInt(values[1]);
+            if (values[operationTypeIndex].equals("supply")) {
+                supply += Integer.parseInt(values[amountIndex]);
             } else {
-                buy += Integer.parseInt(values[1]);
+                buy += Integer.parseInt(values[amountIndex]);
             }
         }
         final int result = supply - buy;
