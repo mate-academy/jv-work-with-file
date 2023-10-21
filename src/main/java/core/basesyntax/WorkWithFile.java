@@ -19,7 +19,8 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         File inputFile = new File(fromFileName);
         int[] amounts = countAmounts(inputFile);
-        makeReport(toFileName,amounts);
+        byte[] report = makeReport(amounts);
+        writeReport(toFileName, report);
     }
 
     private int[] countAmounts(File inputFile) {
@@ -42,11 +43,12 @@ public class WorkWithFile {
         return new int[]{countSupplies,countOrders};
     }
 
-    private void makeReport(String toFileName, int [] amounts) {
+    private byte[] makeReport(int [] amounts) {
         final int indexOfSupplies = 0;
         final int indexOfOrders = 1;
         int countSupplies = amounts[indexOfSupplies];
         int countOrders = amounts[indexOfOrders];
+
         StringBuilder builder = new StringBuilder();
         builder.append(SUPPLY_OPERATION).append(DIVIDER).append(countSupplies);
         builder.append(System.lineSeparator());
@@ -54,8 +56,13 @@ public class WorkWithFile {
         builder.append(System.lineSeparator());
         builder.append(RESULT).append(DIVIDER).append(countSupplies - countOrders);
         String report = builder.toString();
+
+        return report.getBytes(StandardCharsets.UTF_8);
+    }
+
+    private void writeReport(String toFileName, byte[] report) {
         try {
-            Files.write(Paths.get(toFileName), report.getBytes(StandardCharsets.UTF_8));
+            Files.write(Paths.get(toFileName), report);
         } catch (IOException e) {
             throw new RuntimeException("Can't write to File",e);
         }
