@@ -37,59 +37,27 @@ public class WorkWithFile {
     }
 
     public String createReport(String report) {
-        StringBuilder stringBuilder = new StringBuilder();
+        int supplyCounter = 0;
+        int buyCounter = 0;
 
         String[] parts = report.split("\\W+");
-        String[] names = new String[parts.length / STEP_SIZE];
-        int[] sums = new int[parts.length / STEP_SIZE];
 
-        int size = CONST_VALUE;
-
-        for (int i = 0; i < parts.length; i += STEP_SIZE) {
-            String name = parts[i];
+        for (int i = 0; i < parts.length; i += 2) {
+            String operation = parts[i];
             int value = Integer.parseInt(parts[i + 1]);
 
-            boolean nameFound = false;
-            for (int j = CONST_VALUE; j < size; j++) {
-                if (names[j] != null && names[j].equals(name)) {
-                    sums[j] += value;
-                    nameFound = true;
-                    break;
-                }
-            }
-            if (!nameFound) {
-                names[size] = name;
-                sums[size] = value;
-                size++;
-            }
-        }
-        for (int i = CONST_VALUE; i < sums.length; i++) {
-            String contName = names[i];
-            int contSum = sums[i];
-            for (int j = i + 1; j < sums.length; j++) {
-                if (sums[i] < sums[j]) {
-                    names[i] = names[j];
-                    names[j] = contName;
-
-                    sums[i] = sums[j];
-                    sums[j] = contSum;
-                }
+            if (operation.equals("supply")) {
+                supplyCounter += value;
+            } else if (operation.equals("buy")) {
+                buyCounter += value;
             }
         }
 
-        for (int i = CONST_VALUE; i < size; i++) {
-            stringBuilder.append(names[i]).append(",").append(sums[i])
-                    .append(System.lineSeparator());
-        }
-
-        int sumResult = sums[CONST_VALUE];
-
-        for (int i = 1; i < sums.length; i++) {
-            sumResult -= sums[i];
-        }
-        stringBuilder.append("result,").append(sumResult);
-
-        return stringBuilder.toString();
+        return new StringBuilder()
+                .append("supply,").append(supplyCounter).append(System.lineSeparator())
+                .append("buy,").append(buyCounter).append(System.lineSeparator())
+                .append("result,").append(supplyCounter - buyCounter)
+                .toString();
     }
 
     public void writeToFile(String toFileName, String report) {
