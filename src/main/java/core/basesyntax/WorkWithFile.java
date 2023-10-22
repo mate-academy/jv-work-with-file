@@ -17,28 +17,38 @@ public class WorkWithFile {
     private static final String DIVIDER = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        File inputFile = new File(fromFileName);
-        int[] amounts = countAmounts(inputFile);
+        String inputString = readFile(fromFileName);
+        int[] amounts = countAmounts(inputString);
         byte[] report = makeReport(amounts);
         writeReport(toFileName, report);
     }
 
-    private int[] countAmounts(File inputFile) {
-        int countOrders = 0;
-        int countSupplies = 0;
+    private String readFile(String fromFileName) {
+        File inputFile = new File(fromFileName);
+        StringBuilder builder = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(inputFile))) {
             String value = reader.readLine();
             while (value != null) {
-                String[] splitValue = value.split(DIVIDER);
-                if (splitValue[INDEX_OF_OPERATION].equals(BUY_OPERATION)) {
-                    countOrders += Integer.parseInt(splitValue[INDEX_OF_AMOUNT]);
-                } else if (splitValue[INDEX_OF_OPERATION].equals(SUPPLY_OPERATION)) {
-                    countSupplies += Integer.parseInt(splitValue[INDEX_OF_AMOUNT]);
-                }
+                builder.append(value).append(System.lineSeparator());
                 value = reader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't find File!", e);
+        }
+        return builder.toString();
+    }
+
+    private int[] countAmounts(String inputString) {
+        int countOrders = 0;
+        int countSupplies = 0;
+        String[] splitLines = inputString.split(System.lineSeparator());
+        for (String line:splitLines) {
+            String[] splitValue = line.split(DIVIDER);
+            if (splitValue[INDEX_OF_OPERATION].equals(BUY_OPERATION)) {
+                countOrders += Integer.parseInt(splitValue[INDEX_OF_AMOUNT]);
+            } else if (splitValue[INDEX_OF_OPERATION].equals(SUPPLY_OPERATION)) {
+                countSupplies += Integer.parseInt(splitValue[INDEX_OF_AMOUNT]);
+            }
         }
         return new int[]{countSupplies,countOrders};
     }
