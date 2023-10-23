@@ -8,6 +8,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String delimiter = ",";
+    private static final String supplyText = "supply";
+    private static final String buyText = "buy";
+    private static final String resultText = "result";
+    private static final int operationTypeIndex = 0;
+    private static final int amountIndex = 1;
+
     public void getStatistic(String fromFileName, String toFileName) {
         final String dataFromFile = readFile(fromFileName);
         final String report = createReport(dataFromFile);
@@ -43,14 +50,8 @@ public class WorkWithFile {
         String[] rows = dataFormFile.split(empty);
         int supply = 0;
         int buy = 0;
-        final String comma = ",";
-        final String supplyText = "supply";
-        final String buyText = "buy";
-        final String resultText = "result";
-        final int operationTypeIndex = 0;
-        final int amountIndex = 1;
         for (String row : rows) {
-            final String[] values = row.split(comma);
+            final String[] values = row.split(delimiter);
             if (values[operationTypeIndex].equals(supplyText)) {
                 supply += Integer.parseInt(values[amountIndex]);
             } else {
@@ -58,8 +59,8 @@ public class WorkWithFile {
             }
         }
         final int result = supply - buy;
-        return supplyText + comma + supply + empty
-                + buyText + comma + buy + empty
-                + resultText + comma + result;
+        return supplyText + delimiter + supply + empty
+                + buyText + delimiter + buy + empty
+                + resultText + delimiter + result;
     }
 }
