@@ -40,11 +40,11 @@ public class WorkWithFile {
         return result;
     }
 
-    private String generateReport(int[] data){
+    private String generateReport(int[] data) {
         StringBuilder bilder = new StringBuilder();
         bilder.append(SUPPLY).append(SEPARATOR).append(data[FIRST]).append(System.lineSeparator())
                 .append(BUY).append(SEPARATOR).append(data[SECOND]).append(System.lineSeparator())
-                .append(RESULT).append(SEPARATOR).append(data[FIRST]-data[SECOND]);
+                .append(RESULT).append(SEPARATOR).append(data[FIRST] - data[SECOND]);
         return bilder.toString();
     }
 
