@@ -1,6 +1,11 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.File;
+import java.io.IOException;
+import java.io.BufferedWriter;
 
 public class WorkWithFile {
     private static final String SUPPLY = "supply";
@@ -17,15 +22,15 @@ public class WorkWithFile {
         writeToFile(toFileName, RESULT, data[FIRST] - data[SECOND], true);
     }
 
-    private int[] readFromFile(String fromFileName){
+    private int[] readFromFile(String fromFileName) {
         int[] result = new int[] {FIRST,FIRST};
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String value = reader.readLine();
             while (value != null) {
                 String [] option = value.split(",");
                 if (option[FIRST].equals(SUPPLY)) {
-                    result[FIRST] +=  Integer.valueOf(option[SECOND]);
-                } else if (option[FIRST].equals(BUY)){
+                    result[FIRST] += Integer.valueOf(option[SECOND]);
+                } else if (option[FIRST].equals(BUY)) {
                     result[SECOND] += Integer.valueOf(option[SECOND]);
                 }
                 value = reader.readLine();
@@ -36,7 +41,7 @@ public class WorkWithFile {
         return result;
     }
 
-    private void writeToFile(String toFileName, String name, int value, boolean append){
+    private void writeToFile(String toFileName, String name, int value, boolean append) {
         File writeFile = new File(toFileName);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(writeFile, append))) {
             writer.write(name + SEPARATOR + value + System.lineSeparator());
