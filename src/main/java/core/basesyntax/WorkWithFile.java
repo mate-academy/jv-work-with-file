@@ -12,7 +12,7 @@ public class WorkWithFile {
             String lineFromFile = reader.readLine();
             while (lineFromFile != null) {
                 String operationType = lineFromFile.substring(0,lineFromFile.indexOf(','));
-                int data = Integer.parseInt(lineFromFile.substring(lineFromFile.indexOf(',')+1));
+                int data = Integer.parseInt(lineFromFile.substring(lineFromFile.indexOf(',') + 1));
                 if (operationType.equals("buy")) {
                     sumOfBuying += data;
                 } else if (operationType.equals("supply")) {
