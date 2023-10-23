@@ -1,11 +1,6 @@
 package core.basesyntax;
 
-import java.io.FileReader;
-import java.io.BufferedReader;
-import java.io.FileWriter;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
