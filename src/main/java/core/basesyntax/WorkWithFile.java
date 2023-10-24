@@ -12,41 +12,48 @@ public class WorkWithFile {
     private static final String BUY = "buy";
     private static final String RESULT = "result";
     private static final String SEPARATOR = ",";
-    private static final int SUPPLY_DATA = 0;
-    private static final int BUY_DATA = 1;
+    private static final int DATA = 0;
+    private static final int COUNT = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int[] data = readFromFile(fromFileName);
-        String report = generateReport(data);
-        writeToFile(toFileName, report);
+        String data = readFromFile(fromFileName);
+        data = generateReport(data);
+        writeToFile(toFileName, data);
     }
 
-    private int[] readFromFile(String fromFileName) {
-        int[] result = new int[]{SUPPLY_DATA, SUPPLY_DATA};
+    private String readFromFile(String fromFileName) {
+        StringBuilder bilder = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String value = reader.readLine();
             while (value != null) {
-                String[] option = value.split(SEPARATOR);
-                if (option[SUPPLY_DATA].equals(SUPPLY)) {
-                    result[SUPPLY_DATA] += Integer.valueOf(option[BUY_DATA]);
-                } else if (option[SUPPLY_DATA].equals(BUY)) {
-                    result[BUY_DATA] += Integer.valueOf(option[BUY_DATA]);
-                }
+                bilder.append(value).append(System.lineSeparator());
                 value = reader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read file " + fromFileName, e);
         }
-        return result;
+        return bilder.toString();
     }
 
-    private String generateReport(int[] data) {
+    private String generateReport(String data) {
+        String[] strings = data.split(System.lineSeparator());
+        int supData = 0;
+        int buyData = 0;
+        for (String value : strings) {
+            String[] option = value.split(SEPARATOR);
+            if (option[DATA].equals(SUPPLY)) {
+                supData += Integer.valueOf(option[COUNT]);
+            } else if (option[DATA].equals(BUY)) {
+                buyData += Integer.valueOf(option[COUNT]);
+            }
+        }
+
         StringBuilder bilder = new StringBuilder();
-        bilder.append(SUPPLY).append(SEPARATOR).append(data[SUPPLY_DATA])
+        bilder.append(SUPPLY).append(SEPARATOR).append(supData)
                 .append(System.lineSeparator())
-                .append(BUY).append(SEPARATOR).append(data[BUY_DATA])
+                .append(BUY).append(SEPARATOR).append(buyData)
                 .append(System.lineSeparator())
-                .append(RESULT).append(SEPARATOR).append(data[SUPPLY_DATA] - data[BUY_DATA]);
+                .append(RESULT).append(SEPARATOR).append(supData - buyData);
         return bilder.toString();
     }
 
