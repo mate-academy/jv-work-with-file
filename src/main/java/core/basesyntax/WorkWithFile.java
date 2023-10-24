@@ -47,7 +47,6 @@ public class WorkWithFile {
                 buyData += Integer.valueOf(option[COUNT]);
             }
         }
-
         StringBuilder bilder = new StringBuilder();
         bilder.append(SUPPLY).append(SEPARATOR).append(supData)
                 .append(System.lineSeparator())
