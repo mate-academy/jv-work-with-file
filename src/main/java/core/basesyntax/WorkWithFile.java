@@ -42,8 +42,10 @@ public class WorkWithFile {
 
     private String generateReport(int[] data) {
         StringBuilder bilder = new StringBuilder();
-        bilder.append(SUPPLY).append(SEPARATOR).append(data[SUPPLY_DATA]).append(System.lineSeparator())
-                .append(BUY).append(SEPARATOR).append(data[BUY_DATA]).append(System.lineSeparator())
+        bilder.append(SUPPLY).append(SEPARATOR).append(data[SUPPLY_DATA])
+                .append(System.lineSeparator())
+                .append(BUY).append(SEPARATOR).append(data[BUY_DATA])
+                .append(System.lineSeparator())
                 .append(RESULT).append(SEPARATOR).append(data[SUPPLY_DATA] - data[BUY_DATA]);
         return bilder.toString();
     }
