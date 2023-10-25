@@ -11,32 +11,45 @@ public class WorkWithFile {
     private static final int BUY_TYPE = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
-            int supply = 0;
-            int buy = 0;
+        String dataFromFile = readFile(fromFileName);
+        String report = createReport(dataFromFile);
+        writeToFile(report, toFileName);
+    }
+
+    private String readFile(String fileName) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            StringBuilder data = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",");
-                int operationType = "supply".equals(parts[0]) ? SUPPLY_TYPE : BUY_TYPE;
-                int amount = Integer.parseInt(parts[1]);
-                if (operationType == SUPPLY_TYPE) {
-                    supply += amount;
-                } else if (operationType == BUY_TYPE) {
-                    buy += amount;
-                }
+                data.append(line).append("\n");
             }
-            int result = supply - buy;
-            writeResult(toFileName, supply, buy, result);
+            return data.toString();
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from the file", e);
         }
     }
 
-    private void writeResult(String fileName, int supply, int buy, int result) {
+    private String createReport(String data) {
+        int supply = 0;
+        int buy = 0;
+        String[] lines = data.split("\n");
+        for (String line : lines) {
+            String[] parts = line.split(",");
+            int operationType = "supply".equals(parts[0]) ? SUPPLY_TYPE : BUY_TYPE;
+            int amount = Integer.parseInt(parts[1]);
+            if (operationType == SUPPLY_TYPE) {
+                supply += amount;
+            } else if (operationType == BUY_TYPE) {
+                buy += amount;
+            }
+        }
+        int result = supply - buy;
+        return "supply," + supply + "\nbuy," + buy + "\nresult," + result + "\n";
+    }
+
+    private void writeToFile(String data, String fileName) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
-            writer.write("supply," + supply + "\n");
-            writer.write("buy," + buy + "\n");
-            writer.write("result," + result + "\n");
+            writer.write(data);
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to the file", e);
         }
