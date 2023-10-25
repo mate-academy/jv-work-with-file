@@ -9,6 +9,8 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final int SUPPLY_TYPE = 0;
     private static final int BUY_TYPE = 1;
+    private static final int OPERATION_TYPE_SUPPLY = 0;
+    private static final int OPERATION_TYPE_BUY = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String dataFromFile = readFile(fromFileName);
@@ -35,11 +37,12 @@ public class WorkWithFile {
         String[] lines = data.split("\n");
         for (String line : lines) {
             String[] parts = line.split(",");
-            int operationType = "supply".equals(parts[0]) ? SUPPLY_TYPE : BUY_TYPE;
+            int operationType = "supply".equals(parts[0]) ? OPERATION_TYPE_SUPPLY
+                                                          : OPERATION_TYPE_BUY;
             int amount = Integer.parseInt(parts[1]);
-            if (operationType == SUPPLY_TYPE) {
+            if (operationType == OPERATION_TYPE_SUPPLY) {
                 supply += amount;
-            } else if (operationType == BUY_TYPE) {
+            } else if (operationType == OPERATION_TYPE_BUY) {
                 buy += amount;
             }
         }
