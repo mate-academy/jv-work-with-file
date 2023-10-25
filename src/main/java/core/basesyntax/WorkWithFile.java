@@ -8,7 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final String DELIMITER = "\r\n";
+    private static final String DELIMITER = System.lineSeparator();
     private static final String BUY = "buy";
     private static final String SUPPLY = "supply";
     private static final String COMMA = ",";
