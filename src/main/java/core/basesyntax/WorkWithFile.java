@@ -15,19 +15,17 @@ public class WorkWithFile {
     private static final String OPERATION_RESULT_TITLE = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        File sourceFile = new File(fromFileName);
-        File destinationFile = new File(toFileName);
-
-        String statisticData = readStatisticData(sourceFile);
-        writeStatisticData(destinationFile, statisticData);
+        String statisticData = readStatisticData(fromFileName);
+        writeStatisticData(toFileName, statisticData);
     }
 
-    private String readStatisticData(File file) {
+    private String readStatisticData(String fromFileName) {
+        File sourceFile = new File(fromFileName);
         int supplyAmount = 0;
         int buyAmount = 0;
         String line;
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(sourceFile))) {
             do {
                 line = reader.readLine();
                 if (line != null) {
@@ -41,7 +39,7 @@ public class WorkWithFile {
                 }
             } while (line != null);
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file: " + file, e);
+            throw new RuntimeException("Can't read file: " + sourceFile, e);
         }
         return createReport(supplyAmount, buyAmount);
     }
@@ -63,11 +61,12 @@ public class WorkWithFile {
                     .toString();
     }
 
-    private void writeStatisticData(File file, String data) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+    private void writeStatisticData(String toFileName, String data) {
+        File destinationFile = new File(toFileName);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(destinationFile))) {
             writer.write(data);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data to file: " + file, e);
+            throw new RuntimeException("Can't write data to file: " + destinationFile, e);
         }
     }
 }
