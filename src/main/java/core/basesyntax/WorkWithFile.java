@@ -11,7 +11,7 @@ public class WorkWithFile {
     private static final String DELIMITER = System.lineSeparator();
     private static final String BUY = "buy";
     private static final String SUPPLY = "supply";
-    private static final String COMMA = ",";
+    private static final String SEPARATOR = ",";
     private static final String RESULT = "result";
     private static final int NAME_OF_ACTION = 0;
     private static final int VALUE_OF_ACTION = 1;
@@ -42,7 +42,7 @@ public class WorkWithFile {
         int sumSupply = 0;
         int sumBuy = 0;
         for (String name : names) {
-            String[] results = name.split(COMMA);
+            String[] results = name.split(SEPARATOR);
             if (results[NAME_OF_ACTION].equals(SUPPLY)) {
                 int sum = Integer.parseInt(results[VALUE_OF_ACTION]);
                 sumSupply += sum;
@@ -52,9 +52,9 @@ public class WorkWithFile {
                 sumBuy += sum;
             }
         }
-        return SUPPLY + COMMA + sumSupply + System.lineSeparator()
-                + BUY + COMMA + sumBuy + System.lineSeparator()
-                + RESULT + COMMA + (sumSupply - sumBuy);
+        return SUPPLY + SEPARATOR + sumSupply + System.lineSeparator()
+                + BUY + SEPARATOR + sumBuy + System.lineSeparator()
+                + RESULT + SEPARATOR + (sumSupply - sumBuy);
     }
 
     private void writeToFile(String toFileName, String report) {
