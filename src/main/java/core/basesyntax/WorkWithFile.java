@@ -11,27 +11,28 @@ public class WorkWithFile {
     private static final String RESULT = "result";
     private static final int FIELD_INDEX = 0;
     private static final int VALUE_INDEX = 1;
+    private static final String COMMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String[] dataFromFile = readFile(fromFileName);
+        String dataFromFile = readFile(fromFileName);
         String report = createReport(dataFromFile);
         writeToFile(report, toFileName);
     }
 
-    public String[] readFile(String fromFileName) {
+    public String readFile(String fromFileName) {
         File fromFile = new File(fromFileName);
         try {
-            return Files.readString(fromFile.toPath()).split("\n");
+            return Files.readString(fromFile.toPath());
         } catch (IOException e) {
             throw new RuntimeException("File doesn't exist " + fromFileName);
         }
     }
 
-    public String createReport(String[] dataArray) {
+    public String createReport(String dataFromFile) {
         int supplySum = 0;
         int buySum = 0;
-        for (String raw : dataArray) {
-            String[] temp = raw.split(",");
+        for (String raw : dataFromFile.split(System.lineSeparator())) {
+            String[] temp = raw.split(COMMA);
             if (temp[FIELD_INDEX].equals(SUPPLY)) {
                 supplySum += Integer.parseInt(temp[VALUE_INDEX]);
             } else {
@@ -39,11 +40,11 @@ public class WorkWithFile {
             }
         }
         return new StringBuilder()
-                .append(SUPPLY).append(",").append(supplySum)
+                .append(SUPPLY).append(COMMA).append(supplySum)
                 .append(System.lineSeparator())
-                .append(BUY).append(",").append(buySum)
+                .append(BUY).append(COMMA).append(buySum)
                 .append(System.lineSeparator())
-                .append(RESULT).append(",").append(supplySum - buySum)
+                .append(RESULT).append(COMMA).append(supplySum - buySum)
                 .toString();
     }
 
