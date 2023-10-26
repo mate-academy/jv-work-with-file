@@ -16,10 +16,10 @@ public class WorkWithFile {
     private static final String OPERATION_RESULT_TITLE = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String statisticDataString = readStatisticData(fromFileName);
-        int[] statisticData = parseSourceDataString(statisticDataString);
+        String fileData = readStatisticData(fromFileName);
+        int[] statisticData = parseSourceDataString(fileData);
         String report = createReport(statisticData);
-        writeStatisticData(toFileName, report);
+        writeFile(toFileName, report);
     }
 
     private String readStatisticData(String fromFileName) {
@@ -45,10 +45,10 @@ public class WorkWithFile {
         String[] lineArray = dataString.split(LINE_SEPARATOR);
         for (String line: lineArray) {
             String[] dataRow = line.split(SPECIFIED_CHARACTER);
-            if (dataRow[OPERATION_TYPE_INDEX].equals(OperationType.supply.name())) {
+            if (dataRow[OPERATION_TYPE_INDEX].equals(OperationType.SUPPLY.name().toLowerCase())) {
                 supplyAmount += Integer.parseInt(dataRow[AMOUNT_INDEX]);
             }
-            if (dataRow[OPERATION_TYPE_INDEX].equals(OperationType.buy.name())) {
+            if (dataRow[OPERATION_TYPE_INDEX].equals(OperationType.BUY.name().toLowerCase())) {
                 buyAmount += Integer.parseInt(dataRow[AMOUNT_INDEX]);
             }
         }
@@ -58,11 +58,11 @@ public class WorkWithFile {
     private String createReport(int[] statisticData) {
         StringBuilder builder = new StringBuilder();
         return builder
-                    .append(OperationType.supply.name())
+                    .append(OperationType.SUPPLY.name().toLowerCase())
                     .append(SPECIFIED_CHARACTER)
                     .append(statisticData[SUPPLY_AMOUNT_INDEX])
                     .append(LINE_SEPARATOR)
-                    .append(OperationType.buy)
+                    .append(OperationType.BUY.name().toLowerCase())
                     .append(SPECIFIED_CHARACTER)
                     .append(statisticData[BUY_AMOUNT_INDEX])
                     .append(LINE_SEPARATOR)
@@ -72,7 +72,7 @@ public class WorkWithFile {
                     .toString();
     }
 
-    private void writeStatisticData(String toFileName, String data) {
+    private void writeFile(String toFileName, String data) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write(data);
         } catch (IOException e) {
