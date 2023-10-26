@@ -13,8 +13,8 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String SEPARATOR = ",";
     private static final String RESULT = "result";
-    private static final int NAME_OF_ACTION = 0;
-    private static final int VALUE_OF_ACTION = 1;
+    private static final int ACTION_NAME_INDEX = 0;
+    private static final int ACTION_VALUE_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String data = readFile(fromFileName);
@@ -32,7 +32,7 @@ public class WorkWithFile {
                 value = bufferedReader.read();
             }
         } catch (IOException e) {
-            throw new RuntimeException("C`ant read file", e);
+            throw new RuntimeException("Can't read the file: " + fromFileName, e);
         }
         return data.toString();
     }
@@ -43,12 +43,12 @@ public class WorkWithFile {
         int sumBuy = 0;
         for (String name : names) {
             String[] results = name.split(SEPARATOR);
-            if (results[NAME_OF_ACTION].equals(SUPPLY)) {
-                int sum = Integer.parseInt(results[VALUE_OF_ACTION]);
+            if (results[ACTION_NAME_INDEX].equals(SUPPLY)) {
+                int sum = Integer.parseInt(results[ACTION_VALUE_INDEX]);
                 sumSupply += sum;
             }
-            if (results[NAME_OF_ACTION].equals(BUY)) {
-                int sum = Integer.parseInt(results[VALUE_OF_ACTION]);
+            if (results[ACTION_NAME_INDEX].equals(BUY)) {
+                int sum = Integer.parseInt(results[ACTION_VALUE_INDEX]);
                 sumBuy += sum;
             }
         }
@@ -62,7 +62,7 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
             bufferedWriter.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("C`ant write data to file", e);
+            throw new RuntimeException("Can't write data to file", e);
         }
     }
 }
