@@ -13,16 +13,9 @@ public class WorkWithFile {
     private static final int VALUE_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        File toFile = new File(toFileName);
-        if (isFileEmpty(toFile)) {
-            try (FileWriter fileWriter = new FileWriter(toFile)) {
-                fileWriter.write(prepareReport(readFile(fromFileName)));
-            } catch (IOException e) {
-                throw new RuntimeException("File doesn't exist " + toFileName);
-            }
-        } else {
-            System.out.println("File isn't empty. Delete data.");
-        }
+        String[] dataFromFile = readFile(fromFileName);
+        String report = createReport(dataFromFile);
+        writeToFile(report, toFileName);
     }
 
     public String[] readFile(String fromFileName) {
@@ -34,7 +27,7 @@ public class WorkWithFile {
         }
     }
 
-    public String prepareReport(String[] dataArray) {
+    public String createReport(String[] dataArray) {
         int supplySum = 0;
         int buySum = 0;
         for (String raw : dataArray) {
@@ -54,7 +47,12 @@ public class WorkWithFile {
                 .toString();
     }
 
-    public boolean isFileEmpty(File file) {
-        return file.getFreeSpace() == 0;
+    public void writeToFile(String report, String toFileName) {
+        File toFile = new File(toFileName);
+        try (FileWriter fileWriter = new FileWriter(toFile)) {
+            fileWriter.write(report);
+        } catch (IOException e) {
+            throw new RuntimeException("File doesn't exist " + toFileName);
+        }
     }
 }
