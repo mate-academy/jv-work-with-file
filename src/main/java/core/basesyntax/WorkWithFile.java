@@ -7,15 +7,16 @@ import java.util.List;
 
 public class WorkWithFile {
     private String[] readFromFile(String fileName) {
-             File file = new File(fileName);
-            try {
-                List<String> stringList = Files.readAllLines(file.toPath());
-                String[] inputFileToString = stringList.toString().split("\\W+");
-                return inputFileToString;
-            } catch (IOException e) {
-                throw new RuntimeException("Can`t read file " + fileName, e);
-            }
+        File file = new File(fileName);
+        try {
+            List<String> stringList = Files.readAllLines(file.toPath());
+            String[] inputFileToString = stringList.toString().split("\\W+");
+            return inputFileToString;
+        } catch (IOException e) {
+            throw new RuntimeException("Can`t read file " + fileName, e);
+        }
     }
+
     private String createReport(String[] strings) {
         int supply = 0;
         int buy = 0;
