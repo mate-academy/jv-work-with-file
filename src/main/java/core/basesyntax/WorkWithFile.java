@@ -27,8 +27,8 @@ public class WorkWithFile {
             } else if (strings[i].equals("buy")) {
                 buy += Integer.parseInt(strings[i + 1]);
             }
-            result = supply - buy;
         }
+        result = supply - buy;
         StringBuilder builder = new StringBuilder();
         builder.append("supply,").append(supply).append(System.lineSeparator()).append("buy,")
                 .append(buy).append(System.lineSeparator()).append("result,").append(result);
