@@ -14,8 +14,7 @@ public class WorkWithFile {
     private String readFromFile(String fileName) {
         File file = new File(fileName);
         try {
-            String string = Files.readAllLines(file.toPath()).toString();
-            return string;
+            return Files.readAllLines(file.toPath()).toString();
         } catch (IOException e) {
             throw new RuntimeException("Can`t read file " + fileName, e);
         }
