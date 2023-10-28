@@ -16,7 +16,7 @@ public class WorkWithFile {
     public String readFile(String fileName) {
         StringBuilder data = new StringBuilder();
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(fileName)) ) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 data.append(line).append(System.lineSeparator());
@@ -47,9 +47,9 @@ public class WorkWithFile {
             }
         }
 
-        return "supply," + supplyTotal + System.lineSeparator() +
-                "buy," + buyTotal + System.lineSeparator() +
-                "result," + (supplyTotal - buyTotal);
+        return "supply," + supplyTotal + System.lineSeparator()
+                + "buy," + buyTotal + System.lineSeparator()
+                + "result," + (supplyTotal - buyTotal);
     }
 
     public void writeReportToFile(String report, String fileName) {
