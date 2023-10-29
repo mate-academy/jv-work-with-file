@@ -54,9 +54,9 @@ public class WorkWithFile {
             }
         }
 
-        return SUPPLY + SEPARATOR + supplyTotal + NEW_LINE +
-                BUY + SEPARATOR + buyTotal + NEW_LINE +
-                "result" + SEPARATOR + (supplyTotal - buyTotal);
+        return SUPPLY + SEPARATOR + supplyTotal + NEW_LINE
+                + BUY + SEPARATOR + buyTotal + NEW_LINE
+                + "result" + SEPARATOR + (supplyTotal - buyTotal);
     }
 
     private void writeReportToFile(String report, String fileName) {
@@ -64,7 +64,8 @@ public class WorkWithFile {
             writer.write(report);
         } catch (IOException e) {
             e.printStackTrace();
-            throw new RuntimeException("Error occurred while writing report to file: " + fileName, e);
+            throw new RuntimeException("Error occurred while writing report to file: "
+                    + fileName, e);
         }
     }
 }
