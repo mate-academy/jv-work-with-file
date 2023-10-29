@@ -63,7 +63,6 @@ public class WorkWithFile {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             writer.write(report);
         } catch (IOException e) {
-            e.printStackTrace();
             throw new RuntimeException("Error occurred while writing report to file: "
                     + fileName, e);
         }
