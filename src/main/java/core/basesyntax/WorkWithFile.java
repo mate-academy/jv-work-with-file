@@ -14,21 +14,9 @@ public class WorkWithFile {
     private static final int OPERATION_AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String[] data = readFromFile(fromFileName);
-        StringBuilder stringBuilder = new StringBuilder();
-        int supply = getOperationAmount(readFromFile(fromFileName), "supply");
-        int buy = getOperationAmount(readFromFile(fromFileName), "buy");
-        stringBuilder.append("supply")
-                .append(",")
-                .append(supply)
-                .append(System.lineSeparator())
-                .append("buy")
-                .append(",")
-                .append(buy)
-                .append(System.lineSeparator())
-                .append("result,")
-                .append(supply - buy);
-        writeToFile(stringBuilder.toString(), toFileName);
+        String[] dataFromFile = readFromFile(fromFileName);
+        String report = createReport(dataFromFile);
+        writeToFile(report, toFileName);
     }
 
     private String[] readFromFile(String fileName) {
@@ -38,7 +26,7 @@ public class WorkWithFile {
                     .flatMap(line -> Arrays.stream(line.split(System.lineSeparator())))
                     .toArray(String[]::new);
         } catch (IOException e) {
-            throw new RuntimeException("Can't read the file", e);
+            throw new RuntimeException("Can't read data from the file" + fileName, e);
         }
     }
 
@@ -47,7 +35,7 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
             bufferedWriter.write(data);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write the file", e);
+            throw new RuntimeException("Can't write data to the file" + fileName, e);
         }
     }
 
@@ -62,5 +50,22 @@ public class WorkWithFile {
             }
         }
         return amount;
+    }
+
+    private String createReport(String[] data) {
+        StringBuilder stringBuilder = new StringBuilder();
+        int supply = getOperationAmount(data, "supply");
+        int buy = getOperationAmount(data, "buy");
+        stringBuilder.append("supply")
+                .append(",")
+                .append(supply)
+                .append(System.lineSeparator())
+                .append("buy")
+                .append(",")
+                .append(buy)
+                .append(System.lineSeparator())
+                .append("result,")
+                .append(supply - buy);
+        return stringBuilder.toString();
     }
 }
