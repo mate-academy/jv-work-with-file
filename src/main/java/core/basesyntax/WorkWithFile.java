@@ -9,39 +9,37 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final String stringSupply = "supply";
     private static final String stringBuy = "buy";
-    private static String readyToWrite;
     private static final char ch = ',';
     private static int intSupply = 0;
     private static int intBuy = 0;
     private static int result = 0;
 
-    private static String data;
+    private String report;
     private final StringBuilder builder = new StringBuilder();
 
     public void getStatistic(String fromFileName, String toFileName) {
         readFile(fromFileName);
-        createReport(data);
+        createReport(report);
         writeFile(toFileName);
     }
 
     private void readFile(String fromFileName) {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             while (bufferedReader.ready()) {
-                builder.append(bufferedReader.readLine());
                 builder.append(" ");
+                builder.append(bufferedReader.readLine());
             }
             System.out.println(builder);
-            data = builder.toString();
+            report = builder.toString();
         } catch (IOException e) {
             throw new RuntimeException("Can`t read from file", e);
         }
     }
 
-    private void createReport(String data) {
-//        intSupply = 0;
-//        intBuy = 0;
-//        result = 0;
-        String[] innerArray = data.split(" ");
+    private void createReport(String report) {
+        intSupply = 0;
+        intBuy = 0;
+        String[] innerArray = report.split(" ");
         for (String s : innerArray) {
             String[] inside = s.split(",");
 
@@ -53,11 +51,11 @@ public class WorkWithFile {
             }
         }
         result = intSupply - intBuy;
+
     }
 
     private void writeFile(String toFileName) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-//            bufferedWriter.write(readyToWrite);
             bufferedWriter.write(stringSupply + ch + intSupply);
             bufferedWriter.newLine();
             bufferedWriter.write(stringBuy + ch + intBuy);
