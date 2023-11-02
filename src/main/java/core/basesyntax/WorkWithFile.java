@@ -7,36 +7,62 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String stringSupply = "supply";
+    private static final String stringBuy = "buy";
+    private static String readyToWrite;
+    private static final char ch = ',';
+    private static int intSupply = 0;
+    private static int intBuy = 0;
+    private static int result = 0;
+
+    private static String data;
+    private final StringBuilder builder = new StringBuilder();
+
     public void getStatistic(String fromFileName, String toFileName) {
-        String[] innerArray;
-        String stringSupply = "supply";
-        String stringBuy = "buy";
-        int intSupply = 0;
-        int intBuy = 0;
-        int result;
+        readFile(fromFileName);
+        createReport(data);
+        writeFile(toFileName);
+    }
+
+    private void readFile(String fromFileName) {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
-            String innerFile = bufferedReader.readLine();
-            while (innerFile != null) {
-                innerArray = innerFile.split(",");
-                if (innerArray[0].equals(stringSupply)) {
-                    intSupply += Integer.parseInt(innerArray[1]);
-                }
-                if (innerArray[0].equals(stringBuy)) {
-                    intBuy += Integer.parseInt(innerArray[1]);
-                }
-                innerFile = bufferedReader.readLine();
+            while (bufferedReader.ready()) {
+                builder.append(bufferedReader.readLine());
+                builder.append(" ");
             }
-            result = intSupply - intBuy;
-            System.out.println(result);
+            System.out.println(builder);
+            data = builder.toString();
         } catch (IOException e) {
             throw new RuntimeException("Can`t read from file", e);
         }
+    }
+
+    private void createReport(String data) {
+//        intSupply = 0;
+//        intBuy = 0;
+//        result = 0;
+        String[] innerArray = data.split(" ");
+        for (String s : innerArray) {
+            String[] inside = s.split(",");
+
+            if (inside[0].equals(stringSupply)) {
+                intSupply += Integer.parseInt(inside[1]);
+            }
+            if (inside[0].equals(stringBuy)) {
+                intBuy += Integer.parseInt(inside[1]);
+            }
+        }
+        result = intSupply - intBuy;
+    }
+
+    private void writeFile(String toFileName) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write(stringSupply + "," + intSupply);
+//            bufferedWriter.write(readyToWrite);
+            bufferedWriter.write(stringSupply + ch + intSupply);
             bufferedWriter.newLine();
-            bufferedWriter.write(stringBuy + "," + intBuy);
+            bufferedWriter.write(stringBuy + ch + intBuy);
             bufferedWriter.newLine();
-            bufferedWriter.write("result" + "," + result);
+            bufferedWriter.write("result" + ch + result);
             bufferedWriter.newLine();
         } catch (IOException e) {
             throw new RuntimeException("Can`t write to file", e);
