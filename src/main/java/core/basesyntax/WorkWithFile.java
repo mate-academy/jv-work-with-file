@@ -7,20 +7,18 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final String stringSupply = "supply";
-    private static final String stringBuy = "buy";
-    private static final char ch = ',';
-    private static int intSupply = 0;
-    private static int intBuy = 0;
-    private static int result = 0;
-
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String COMMA = ",";
+    private static String res;
     private String report;
     private final StringBuilder builder = new StringBuilder();
 
     public void getStatistic(String fromFileName, String toFileName) {
+
         readFile(fromFileName);
         createReport(report);
-        writeFile(toFileName);
+        writeFile(res,toFileName);
     }
 
     private void readFile(String fromFileName) {
@@ -37,31 +35,30 @@ public class WorkWithFile {
     }
 
     private void createReport(String report) {
-        intSupply = 0;
-        intBuy = 0;
+        int intSupply = 0;
+        int intBuy = 0;
+        int result;
         String[] innerArray = report.split(" ");
         for (String s : innerArray) {
-            String[] inside = s.split(",");
 
-            if (inside[0].equals(stringSupply)) {
+            String[] inside = s.split(COMMA);
+
+            if (inside[0].equals(SUPPLY)) {
                 intSupply += Integer.parseInt(inside[1]);
             }
-            if (inside[0].equals(stringBuy)) {
+            if (inside[0].equals(BUY)) {
                 intBuy += Integer.parseInt(inside[1]);
             }
+            result = intSupply - intBuy;
+            res = SUPPLY + COMMA + intSupply + System.lineSeparator()
+                    + BUY + COMMA + intBuy + System.lineSeparator()
+                    + "result" + COMMA + result;
         }
-        result = intSupply - intBuy;
-
     }
 
-    private void writeFile(String toFileName) {
+    private void writeFile(String res,String toFileName) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write(stringSupply + ch + intSupply);
-            bufferedWriter.newLine();
-            bufferedWriter.write(stringBuy + ch + intBuy);
-            bufferedWriter.newLine();
-            bufferedWriter.write("result" + ch + result);
-            bufferedWriter.newLine();
+            bufferedWriter.write(res);
         } catch (IOException e) {
             throw new RuntimeException("Can`t write to file", e);
         }
