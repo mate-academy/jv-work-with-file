@@ -10,18 +10,18 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String COMMA = ",";
-    private static String res;
+    private static String resultString;
     private String report;
-    private final StringBuilder builder = new StringBuilder();
 
     public void getStatistic(String fromFileName, String toFileName) {
 
         readFile(fromFileName);
         createReport(report);
-        writeFile(res,toFileName);
+        writeFile(resultString,toFileName);
     }
 
     private void readFile(String fromFileName) {
+        StringBuilder builder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             while (bufferedReader.ready()) {
                 builder.append(" ");
@@ -50,7 +50,7 @@ public class WorkWithFile {
                 intBuy += Integer.parseInt(inside[1]);
             }
             result = intSupply - intBuy;
-            res = SUPPLY + COMMA + intSupply + System.lineSeparator()
+            resultString = SUPPLY + COMMA + intSupply + System.lineSeparator()
                     + BUY + COMMA + intBuy + System.lineSeparator()
                     + "result" + COMMA + result;
         }
@@ -58,7 +58,7 @@ public class WorkWithFile {
 
     private void writeFile(String res,String toFileName) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write(res);
+            bufferedWriter.write(resultString);
         } catch (IOException e) {
             throw new RuntimeException("Can`t write to file", e);
         }
