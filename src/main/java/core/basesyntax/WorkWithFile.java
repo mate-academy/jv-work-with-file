@@ -5,7 +5,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -16,7 +15,7 @@ public class WorkWithFile {
     private static final String resultingRowName = "result";
     private static final String buyRowName = "buy";
     private static final String supplyRowName = "supply";
-    HashMap<String, Integer> hashtable = new LinkedHashMap<>();
+    private LinkedHashMap<String, Integer> hashtable = new LinkedHashMap<>();
     private List<String> linesFromCsvFile;
 
     public void getStatistic(String fromFileName, String toFileName) {
