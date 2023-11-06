@@ -62,7 +62,7 @@ public class WorkWithFile {
         try {
             linesFromCsvFile = Files.readAllLines(Path.of(csvFilePath));
         } catch (IOException e) {
-            throw new RuntimeException("DevCaption: -- Exception while reading from CVS file --", e);
+            throw new RuntimeException("DevCap: Exception while reading from CVS file -- ", e);
         }
     }
 
@@ -70,13 +70,6 @@ public class WorkWithFile {
         hashtable.put(supplyRowName, 0);
         hashtable.put(buyRowName, 0);
         hashtable.put(resultingRowName, 0);
-
-//        for (String csvLine: linesFromCsvFile) {
-//            Operation operation = splitCvs(csvLine);
-//            if (!hashtable.contains(operation.type())) {
-//                hashtable.put(operation.type(), 0);
-//            }
-//        }
     }
 
     public String formCsvLine(String type, int amount) {
@@ -86,7 +79,8 @@ public class WorkWithFile {
 
     public Operation splitCvs(String csvLine) {
         String[] splitCvsLine = csvLine.split(csvSplitBy);
-        return new Operation(splitCvsLine[operationTypeIndex], Integer.parseInt(splitCvsLine[operationAmountIndex]));
+        return new Operation(splitCvsLine[operationTypeIndex],
+                Integer.parseInt(splitCvsLine[operationAmountIndex]));
     }
 
     public void calcResultRow() {
