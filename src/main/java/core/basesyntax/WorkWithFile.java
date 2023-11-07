@@ -12,7 +12,9 @@ public class WorkWithFile {
     private static final String COMMA = ",";
     private static final String DELIMITER = " ";
     private static String resultString;
-    private static final int ONE = 1;
+    private static final String LINE_SEPARATOR = System.lineSeparator();
+    private static final int OPERATION_NAME = 0;
+    private static final int OPERATION_VALUE = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
 
@@ -27,8 +29,8 @@ public class WorkWithFile {
             while (bufferedReader.ready()) {
                 builder.append(DELIMITER);
                 builder.append(bufferedReader.readLine());
+
             }
-            System.out.println(builder);
         } catch (IOException e) {
             throw new RuntimeException("Can`t read from file: " + fromFileName, e);
         }
@@ -39,20 +41,20 @@ public class WorkWithFile {
         int intSupply = 0;
         int intBuy = 0;
         int result;
-        String[] innerArray = report.split(DELIMITER);
-        for (String s : innerArray) {
+        String[] arrayFromFile = report.split(DELIMITER);
+        for (String operation : arrayFromFile) {
 
-            String[] inside = s.split(COMMA);
+            String[] infoByOperation = operation.split(COMMA);
 
-            if (inside[0].equals(SUPPLY)) {
-                intSupply += Integer.parseInt(inside[ONE]);
+            if (infoByOperation[OPERATION_NAME].equals(SUPPLY)) {
+                intSupply += Integer.parseInt(infoByOperation[OPERATION_VALUE]);
             }
-            if (inside[0].equals(BUY)) {
-                intBuy += Integer.parseInt(inside[ONE]);
+            if (infoByOperation[OPERATION_NAME].equals(BUY)) {
+                intBuy += Integer.parseInt(infoByOperation[OPERATION_VALUE]);
             }
             result = intSupply - intBuy;
-            resultString = SUPPLY + COMMA + intSupply + System.lineSeparator()
-                    + BUY + COMMA + intBuy + System.lineSeparator()
+            resultString = SUPPLY + COMMA + intSupply + LINE_SEPARATOR
+                    + BUY + COMMA + intBuy + LINE_SEPARATOR
                     + "result" + COMMA + result;
         }
         return resultString;
