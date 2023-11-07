@@ -7,8 +7,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private int supplyTotal = 0;
-    private int buyTotal = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
         try {
@@ -17,9 +15,6 @@ public class WorkWithFile {
             writeToFile(toFileName, report);
         } catch (IOException | NumberFormatException e) {
             e.printStackTrace();
-        } finally {
-            supplyTotal = 0;
-            buyTotal = 0;
         }
     }
 
@@ -36,6 +31,8 @@ public class WorkWithFile {
 
     private String generateReport(String fileContent) {
         String[] lines = fileContent.split("\n");
+        int supplyTotal = 0;
+        int buyTotal = 0;
         for (String line : lines) {
             String[] parts = line.split(",");
             if (parts.length == 2) {
