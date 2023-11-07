@@ -51,10 +51,10 @@ public class WorkWithFile {
 
         return "supply,"
                 + supplyTotal
-                + "\r\n"
+                + System.lineSeparator()
                 + "buy,"
                 + buyTotal
-                + "\r\n"
+                + System.lineSeparator()
                 + "result,"
                 + result;
     }
