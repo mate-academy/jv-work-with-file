@@ -15,36 +15,37 @@ public class WorkWithFile {
     private static final int VALUE_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String[] data = readFile(fromFileName);
+        String data = readFile(fromFileName);
         String report = generateReport(data);
         writeToFile(toFileName, report);
     }
 
-    private String [] readFile(String fromFileName) {
-
-        int valueSupply = 0;
-        int valueBuy = 0;
+    private String readFile(String fromFileName) {
+        String lines = "";
         try {
             BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
-            String value = reader.readLine();
-            while (value != null) {
-                String[] split = value.split(SEPARATOR);
-                value = reader.readLine();
-                if (split[OPERATION_INDEX].equals(SUPPLY)) {
-                    valueSupply += Integer.parseInt(split[VALUE_INDEX]);
-                } else if (split[OPERATION_INDEX].equals(BUY)) {
-                    valueBuy += Integer.parseInt(split[VALUE_INDEX]);
-                }
+            String value;
+            while ((value = reader.readLine()) != null) {
+                lines += value + System.lineSeparator();
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read file" + fromFileName, e);
         }
-        return new String[]{String.valueOf(valueSupply), String.valueOf(valueBuy)};
+        return lines;
     }
 
-    private String generateReport(String[] data) {
-        int valueSupply = Integer.parseInt(data[0]);
-        int valueBuy = Integer.parseInt(data[1]);
+    private String generateReport(String data) {
+        int valueSupply = 0;
+        int valueBuy = 0;
+        String[] lines = data.split(System.lineSeparator());
+        for (String value : lines) {
+            String[] split = value.split(SEPARATOR);
+            if (split[OPERATION_INDEX].equals(SUPPLY)) {
+                valueSupply += Integer.parseInt(split[VALUE_INDEX]);
+            } else if (split[OPERATION_INDEX].equals(BUY)) {
+                valueBuy += Integer.parseInt(split[VALUE_INDEX]);
+            }
+        }
         String supply = SUPPLY + SEPARATOR + valueSupply;
         String buy = BUY + SEPARATOR + valueBuy;
         String result = RESULT + SEPARATOR + (valueSupply - valueBuy);
