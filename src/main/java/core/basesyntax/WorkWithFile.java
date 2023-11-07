@@ -17,6 +17,9 @@ public class WorkWithFile {
             writeToFile(toFileName, report);
         } catch (IOException | NumberFormatException e) {
             e.printStackTrace();
+        } finally {
+            supplyTotal = 0;
+            buyTotal = 0;
         }
     }
 
