@@ -5,85 +5,69 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 public class WorkWithFile {
-    private static final String csvSplitBy = ",";
-    private static final int operationTypeIndex = 0;
-    private static final int operationAmountIndex = 1;
-    private static final String resultingRowName = "result";
-    private static final String buyRowName = "buy";
-    private static final String supplyRowName = "supply";
-    private LinkedHashMap<String, Integer> hashtable = new LinkedHashMap<>();
-    private List<String> linesFromCsvFile;
+    private static final String CSV_SPLIT_BY = ",";
+    private static final int OPERATION_TYPE_INDEX = 0;
+    private static final int OPERATION_AMOUNT_INDEX = 1;
+    private static final String RESULTING_ROW_NAME = "result";
+    private static final String BUY_ROW_NAME = "buy";
+    private static final String SUPPLY_ROW_NAME = "supply";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        fillHashTable(fromFileName);
-        calcResultRow();
-        writeStatToFile(toFileName);
+        var linesFromCsvFile = readLinesFromCsv(fromFileName);
+        String report = createReport(linesFromCsvFile);
+        writeStatToFile(report, toFileName);
     }
 
-    public void writeStatToFile(String toFile) {
+    private String createReport(List<String> linesFromCsvFile) {
+        int totalAmountSupply = 0;
+        int totalAmountBuy = 0;
+        for (String dataLine : linesFromCsvFile) {
+            Operation operation = splitCvs(dataLine);
+            if (SUPPLY_ROW_NAME.equals(operation.type())) {
+                totalAmountSupply += operation.amount();
+            } else if (BUY_ROW_NAME.equals(operation.type())) {
+                totalAmountBuy += operation.amount();
+            } else {
+                throw new RuntimeException("Error while reading field from CSV");
+            }
+        }
+        return formCsvLine(SUPPLY_ROW_NAME, totalAmountSupply)
+                + formCsvLine(BUY_ROW_NAME, totalAmountBuy)
+                + formCsvLine(RESULTING_ROW_NAME, totalAmountSupply - totalAmountBuy);
+    }
+
+    public void writeStatToFile(String report, String toFile) {
         try (FileWriter clearFileWriter = new FileWriter(toFile, false)) {
             clearFileWriter.write(""); // To clear file
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFile, true))) {
-            iterateThoughHashTableRecords(bufferedWriter);
+            bufferedWriter.write(report);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void iterateThoughHashTableRecords(BufferedWriter bufferedWriter) throws IOException {
-        for (String key : hashtable.keySet()) {
-            int value = hashtable.get(key);
-            String data = formCsvLine(key, value);
-            bufferedWriter.write(data);
-            bufferedWriter.newLine();
-        }
-    }
-
-    public void fillHashTable(String fromFile) {
-        readLinesFromCsv(fromFile);
-        constructHashTable();
-        for (String cvsLine : linesFromCsvFile) {
-            Operation operation = splitCvs(cvsLine);
-            int previousAmountInCell = hashtable.get(operation.type());
-            previousAmountInCell += operation.amount();
-            hashtable.put(operation.type(), previousAmountInCell);
-        }
-    }
-
-    public void readLinesFromCsv(String csvFilePath) {
+    public List<String> readLinesFromCsv(String csvFilePath) {
         try {
-            linesFromCsvFile = Files.readAllLines(Path.of(csvFilePath));
+            return Files.readAllLines(Path.of(csvFilePath));
         } catch (IOException e) {
             throw new RuntimeException("DevCap: Exception while reading from CVS file -- ", e);
         }
     }
 
-    public void constructHashTable() {
-        hashtable.put(supplyRowName, 0);
-        hashtable.put(buyRowName, 0);
-        hashtable.put(resultingRowName, 0);
-    }
-
     public String formCsvLine(String type, int amount) {
         // System.lineSeparator()
-        return type + csvSplitBy + amount;
+        return type + CSV_SPLIT_BY + amount + System.lineSeparator();
     }
 
     public Operation splitCvs(String csvLine) {
-        String[] splitCvsLine = csvLine.split(csvSplitBy);
-        return new Operation(splitCvsLine[operationTypeIndex],
-                Integer.parseInt(splitCvsLine[operationAmountIndex]));
-    }
-
-    public void calcResultRow() {
-        int buySupplyDiff = hashtable.get(supplyRowName) - hashtable.get(buyRowName);
-        hashtable.put(resultingRowName, buySupplyDiff);
+        String[] splitCvsLine = csvLine.split(CSV_SPLIT_BY);
+        return new Operation(splitCvsLine[OPERATION_TYPE_INDEX],
+                Integer.parseInt(splitCvsLine[OPERATION_AMOUNT_INDEX]));
     }
 }
