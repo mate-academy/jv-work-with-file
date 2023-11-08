@@ -2,7 +2,6 @@ package core.basesyntax;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -11,69 +10,48 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final String LINE_SEPARATOR = System.lineSeparator();
     private static final String DATA_SEPARATOR = ",";
-    private static final String KEY_S = "supply";
-    private static final String KEY_B = "buy";
-    private String report;
+    private static final int OPERATION_INDEX = 0;
+    private static final int SUM_INDEX = 1;
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String[] data = readingFromFile(fromFileName).toString().split(DATA_SEPARATOR);
-        createReport(data);
-        writeToFile(toFileName);
+        String report = readingFromFile(fromFileName);
+        writeToFile(toFileName, report);
     }
 
-    private StringBuilder readingFromFile(String fileName) {
-        File fileIn = new File(fileName);
-        StringBuilder stringBuilder = new StringBuilder();
+    private String readingFromFile(String fileName) {
+        int totalSupply = 0;
+        int totalBuy = 0;
 
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileIn))) {
-            String readLine = bufferedReader.readLine();
-            while (readLine != null) {
-                stringBuilder.append(readLine).append(DATA_SEPARATOR);
-                readLine = bufferedReader.readLine();
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            String value;
+            while ((value = reader.readLine()) != null) {
+                String[] split = value.split(DATA_SEPARATOR);
+                if (split[OPERATION_INDEX].equals(SUPPLY)) {
+                    totalSupply += Integer.parseInt(split[SUM_INDEX]);
+                } else {
+                    totalBuy += Integer.parseInt(split[SUM_INDEX]);
+                }
             }
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("File not found.", e);
+            throw new RuntimeException("File not found " + fileName, e);
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file.", e);
-        }
-        return stringBuilder;
-    }
-
-    private void createReport(String[] arrayData) {
-        int supply = 0;
-        int buy = 0;
-
-        for (int i = 0; i < arrayData.length; i += 2) {
-            if (arrayData[i].equals(KEY_S)) {
-                supply += getInt(arrayData[i + 1]);
-            } else {
-                buy += getInt(arrayData[i + 1]);
-            }
-        }
-
-        report = KEY_S + DATA_SEPARATOR + supply + LINE_SEPARATOR
-                + KEY_B + DATA_SEPARATOR + buy + LINE_SEPARATOR
-                + "result" + DATA_SEPARATOR + (supply - buy);
-    }
-
-    private int getInt(String stringNumber) {
-        int amount;
-
-        try {
-            amount = Integer.parseInt(stringNumber);
+            throw new RuntimeException("Can't read file " + fileName, e);
         } catch (NumberFormatException e) {
             throw new RuntimeException("Number Format is wrong", e);
         }
-        return amount;
+
+        return SUPPLY + DATA_SEPARATOR + totalSupply + LINE_SEPARATOR
+                + BUY + DATA_SEPARATOR + totalBuy + LINE_SEPARATOR
+                + "result" + DATA_SEPARATOR + (totalSupply - totalBuy);
     }
 
-    private void writeToFile(String fileName) {
-        File fileOut = new File(fileName);
-
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileOut))) {
+    private void writeToFile(String fileName, String report) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
             bufferedWriter.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data to file", e);
+            throw new RuntimeException("Can't write data to file " + fileName, e);
         }
     }
 }
