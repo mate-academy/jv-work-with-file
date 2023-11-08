@@ -9,30 +9,29 @@ import java.io.IOException;
 public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
-        try {
-            String fileContent = readFileContent(fromFileName);
-            String report = generateReport(fileContent);
-            writeToFile(toFileName, report);
-        } catch (IOException | NumberFormatException e) {
-            e.printStackTrace();
-        }
+        String fileContent = readFileContent(fromFileName);
+        String report = generateReport(fileContent);
+        writeToFile(toFileName, report);
     }
 
-    private String readFileContent(String fileName) throws IOException {
+    private String readFileContent(String fileName) {
         StringBuilder content = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 content.append(line).append("\n");
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return content.toString();
     }
 
     private String generateReport(String fileContent) {
-        String[] lines = fileContent.split("\n");
         int supplyTotal = 0;
         int buyTotal = 0;
+
+        String[] lines = fileContent.split("\n");
         for (String line : lines) {
             String[] parts = line.split(",");
             if (parts.length == 2) {
@@ -49,8 +48,7 @@ public class WorkWithFile {
 
         int result = supplyTotal - buyTotal;
 
-        return "supply,"
-                + supplyTotal
+        return "supply," + supplyTotal
                 + System.lineSeparator()
                 + "buy,"
                 + buyTotal
@@ -59,9 +57,11 @@ public class WorkWithFile {
                 + result;
     }
 
-    private void writeToFile(String fileName, String content) throws IOException {
+    private void writeToFile(String fileName, String content) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             writer.write(content);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
