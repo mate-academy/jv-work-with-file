@@ -16,30 +16,47 @@ public class WorkWithFile {
     private static final String BUY = "buy";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String report = readingFromFile(fromFileName);
+        String data = readingFromFile(fromFileName);
+        String report = createReport(data);
         writeToFile(toFileName, report);
     }
 
     private String readingFromFile(String fileName) {
-        int totalSupply = 0;
-        int totalBuy = 0;
+        StringBuilder stringBuilder = new StringBuilder();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             String value;
             while ((value = reader.readLine()) != null) {
-                String[] split = value.split(DATA_SEPARATOR);
-                if (split[OPERATION_INDEX].equals(SUPPLY)) {
-                    totalSupply += Integer.parseInt(split[SUM_INDEX]);
-                } else {
-                    totalBuy += Integer.parseInt(split[SUM_INDEX]);
-                }
+                stringBuilder.append(value).append(LINE_SEPARATOR);
             }
         } catch (FileNotFoundException e) {
             throw new RuntimeException("File not found " + fileName, e);
         } catch (IOException e) {
             throw new RuntimeException("Can't read file " + fileName, e);
-        } catch (NumberFormatException e) {
-            throw new RuntimeException("Number Format is wrong", e);
+        }
+        return stringBuilder.toString();
+    }
+
+    private String createReport(String data) {
+        String[] splitLine = data.split(LINE_SEPARATOR);
+        int totalSupply = 0;
+        int totalBuy = 0;
+
+        for (String value : splitLine) {
+            String[] splitData = value.split(DATA_SEPARATOR);
+            if (splitData[OPERATION_INDEX].equals(SUPPLY)) {
+                try {
+                    totalSupply += Integer.parseInt(splitData[SUM_INDEX]);
+                } catch (NumberFormatException e) {
+                    throw new RuntimeException("Number Format is wrong", e);
+                }
+            } else {
+                try {
+                    totalBuy += Integer.parseInt(splitData[SUM_INDEX]);
+                } catch (NumberFormatException e) {
+                    throw new RuntimeException("Number Format is wrong", e);
+                }
+            }
         }
 
         return SUPPLY + DATA_SEPARATOR + totalSupply + LINE_SEPARATOR
