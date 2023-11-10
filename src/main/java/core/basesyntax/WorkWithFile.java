@@ -7,6 +7,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final int OPERATION = 0;
+    private static final int AMOUNT = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
 
@@ -17,10 +19,10 @@ public class WorkWithFile {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 String[] files = line.split(",");
-                if (files[0].equals("supply")) {
-                    supply += Integer.parseInt(files[1]);
-                } else if (files[0].equals("buy")) {
-                    buy += Integer.parseInt(files[1]);
+                if (files[OPERATION].equals("supply")) {
+                    supply += Integer.parseInt(files[AMOUNT]);
+                } else if (files[OPERATION].equals("buy")) {
+                    buy += Integer.parseInt(files[AMOUNT]);
                 }
             }
             int result = supply - buy;
