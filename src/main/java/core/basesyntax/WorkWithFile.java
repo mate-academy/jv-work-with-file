@@ -9,7 +9,7 @@ import java.io.IOException;
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
-                BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName, false))) {
+                BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             String value;
             int supplySum = 0;
             int buySum = 0;
