@@ -11,38 +11,39 @@ public class WorkWithFile {
     private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        StringBuilder stringBuilder = new StringBuilder();
-        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
-            String value = reader.readLine();
-            while (value != null) {
-                stringBuilder.append(value).append(System.lineSeparator());
-                value = reader.readLine();
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("Can't read data from the file " + fromFileName);
-        }
-        String [] dataFromFileName = stringBuilder.toString().split(System.lineSeparator());
+        String[] dataFromFileName = readDataFromFile(fromFileName);
         int sumOfSupplies = 0;
         int sumOfBuying = 0;
         for (String row : dataFromFileName) {
-            String [] rowArray = row.split(",");
-            if (rowArray[OPERATION_TYPE_INDEX].equals("supply")) {
-                String supply = row.split(",")[AMOUNT_INDEX];
-                sumOfSupplies += Integer.parseInt(supply);
+            String[] operationData = row.split(",");
+            if (operationData[OPERATION_TYPE_INDEX].equals("supply")) {
+                sumOfSupplies += Integer.parseInt(operationData[AMOUNT_INDEX]);
             } else {
-                String buy = row.split(",")[AMOUNT_INDEX];
-                sumOfBuying += Integer.parseInt(buy);
+                sumOfBuying += Integer.parseInt(operationData[AMOUNT_INDEX]);
             }
         }
         int result = sumOfSupplies - sumOfBuying;
-        StringBuilder report = new StringBuilder();
-        report.append("supply,").append(sumOfSupplies).append(System.lineSeparator())
-                .append("buy,").append(sumOfBuying).append(System.lineSeparator())
-                .append("result,").append(result);
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            writer.write(report.toString());
+        String report = generateReport(sumOfSupplies, sumOfBuying, result);
+        writeReportToFile(toFileName, report);
+    }
+
+    private String[] readDataFromFile(String fileName) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            return reader.lines().toArray(String[]::new);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data to the file " + toFileName, e);
+            throw new RuntimeException("Can't read data from the file " + fileName);
+        }
+    }
+
+    private String generateReport(int sumOfSupplies, int sumOfBuying, int result) {
+        return String.format("supply,%d%nbuy,%d%nresult,%d", sumOfSupplies, sumOfBuying, result);
+    }
+
+    private void writeReportToFile(String fileName, String report) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+            writer.write(report);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write data to the file " + fileName, e);
         }
     }
 }
