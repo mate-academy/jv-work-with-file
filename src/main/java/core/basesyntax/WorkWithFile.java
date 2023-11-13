@@ -12,16 +12,16 @@ public class WorkWithFile {
     private static final String LABEL_SUPPLY = "supply";
     private static final String LABEL_BUY = "buy";
     private static final String LABEL_RESULT = "result";
+    private static final int VALUE_INDEX = 1;
+    private static final int LABEL_INDEX = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
         try {
             String fileContent = readFile(fromFileName);
-
             String report = generateReport(fileContent);
-
             writeToFile(report, toFileName);
         } catch (IOException e) {
-            throw new RuntimeException("Can't read data from the file ", e);
+            throw new RuntimeException("Error while processing the file ", e);
         }
     }
 
@@ -32,6 +32,8 @@ public class WorkWithFile {
             while ((line = bufferedReader.readLine()) != null) {
                 content.append(line).append(NEW_LINE);
             }
+        } catch (IOException e) {
+            throw new RuntimeException("Error while reading data from the file ", e);
         }
         return content.toString();
     }
@@ -46,8 +48,8 @@ public class WorkWithFile {
         for (String line : lines) {
             String[] parts = line.split(SEPARATOR);
             if (parts.length == 2) {
-                String label = parts[0];
-                int value = Integer.parseInt(parts[1]);
+                String label = parts[LABEL_INDEX];
+                int value = Integer.parseInt(parts[VALUE_INDEX]);
                 if (LABEL_SUPPLY.equals(label)) {
                     supplyTotal += value;
                 } else if (LABEL_BUY.equals(label)) {
@@ -67,9 +69,11 @@ public class WorkWithFile {
         return reportBuilder.toString();
     }
 
-    private void writeToFile(String report, String fileName) throws IOException {
+    private void writeToFile(String report, String fileName) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             writer.write(report);
+        } catch (IOException e) {
+            throw new RuntimeException("Error while writing data to the file ", e);
         }
     }
 }
