@@ -12,6 +12,7 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
+    private static final String COMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String statistic = readFromFile(fromFileName);
@@ -35,14 +36,14 @@ public class WorkWithFile {
         int buySum = 0;
         for (String line : text) {
             if (line.startsWith(SUPPLY)) {
-                supplySum += Integer.parseInt(line.split(",")[INDEX_OF_COUNT]);
+                supplySum += Integer.parseInt(line.split(COMA)[INDEX_OF_COUNT]);
             } else {
-                buySum += Integer.parseInt(line.split(",")[INDEX_OF_COUNT]);
+                buySum += Integer.parseInt(line.split(COMA)[INDEX_OF_COUNT]);
             }
         }
-        builder.append(SUPPLY).append(",").append(supplySum).append(System.lineSeparator());
-        builder.append(BUY).append(",").append(buySum).append(System.lineSeparator());
-        builder.append(RESULT).append(",").append(supplySum - buySum);
+        builder.append(SUPPLY).append(COMA).append(supplySum).append(System.lineSeparator());
+        builder.append(BUY).append(COMA).append(buySum).append(System.lineSeparator());
+        builder.append(RESULT).append(COMA).append(supplySum - buySum);
         return builder.toString();
     }
 
