@@ -16,16 +16,12 @@ public class WorkWithFile {
     private static final int LABEL_INDEX = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        try {
-            String fileContent = readFile(fromFileName);
-            String report = generateReport(fileContent);
-            writeToFile(report, toFileName);
-        } catch (IOException e) {
-            throw new RuntimeException("Error while processing the file ", e);
-        }
+        String fileContent = readFile(fromFileName);
+        String report = generateReport(fileContent);
+        writeToFile(report, toFileName);
     }
 
-    private String readFile(String fileName) throws IOException {
+    private String readFile(String fileName) {
         StringBuilder content = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
             String line;
