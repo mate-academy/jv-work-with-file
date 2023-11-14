@@ -7,7 +7,6 @@ import java.nio.file.Path;
 import java.util.List;
 
 public class WorkWithFile {
-
     private static final Integer INDEX_OF_COUNT = 1;
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
@@ -15,19 +14,20 @@ public class WorkWithFile {
     private static final String COMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String statistic = readFromFile(fromFileName);
+        List<String> text = readFromFile(fromFileName);
+        String statistic = calculateStatistic(text);
         writeToFile(toFileName, statistic);
     }
 
-    private String readFromFile(String fileName) {
+    private List<String> readFromFile(String fileName) {
         File file = new File(fileName);
         List<String> text;
         try {
             text = Files.readAllLines(Path.of(file.toURI()));
         } catch (IOException e) {
-            throw new RuntimeException("Can not read file", e);
+            throw new RuntimeException("Can not read file " + fileName, e);
         }
-        return calculateStatistic(text);
+        return text;
     }
 
     private String calculateStatistic(List<String> text) {
@@ -52,7 +52,7 @@ public class WorkWithFile {
         try {
             Files.write(Path.of(file.toURI()), report.getBytes());
         } catch (IOException e) {
-            throw new RuntimeException("Can not write to file", e);
+            throw new RuntimeException("Can not write to file " + fileName, e);
         }
     }
 }
