@@ -14,26 +14,36 @@ public class WorkWithFile {
     private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        File file = new File(fromFileName);
+        String statistic = readFromFile(fromFileName);
+        writeToFile(toFileName, statistic);
+    }
+
+    private String readFromFile(String fileName) {
+        File file = new File(fileName);
+        List<String> text;
         try {
-            List<String> text = Files.readAllLines(Path.of(file.toURI()));
-            StringBuilder builder = new StringBuilder();
-            int supplySum = 0;
-            int buySum = 0;
-            for (String line : text) {
-                if (line.startsWith(SUPPLY)) {
-                    supplySum += Integer.parseInt(line.split(",")[INDEX_OF_COUNT]);
-                } else {
-                    buySum += Integer.parseInt(line.split(",")[INDEX_OF_COUNT]);
-                }
-            }
-            builder.append(SUPPLY).append(",").append(supplySum).append(System.lineSeparator());
-            builder.append(BUY).append(",").append(buySum).append(System.lineSeparator());
-            builder.append(RESULT).append(",").append(supplySum - buySum);
-            writeToFile(toFileName, builder.toString());
+            text = Files.readAllLines(Path.of(file.toURI()));
         } catch (IOException e) {
             throw new RuntimeException("Can not read file", e);
         }
+        return calculateStatistic(text);
+    }
+
+    private String calculateStatistic(List<String> text) {
+        StringBuilder builder = new StringBuilder();
+        int supplySum = 0;
+        int buySum = 0;
+        for (String line : text) {
+            if (line.startsWith(SUPPLY)) {
+                supplySum += Integer.parseInt(line.split(",")[INDEX_OF_COUNT]);
+            } else {
+                buySum += Integer.parseInt(line.split(",")[INDEX_OF_COUNT]);
+            }
+        }
+        builder.append(SUPPLY).append(",").append(supplySum).append(System.lineSeparator());
+        builder.append(BUY).append(",").append(buySum).append(System.lineSeparator());
+        builder.append(RESULT).append(",").append(supplySum - buySum);
+        return builder.toString();
     }
 
     private void writeToFile(String fileName, String report) {
@@ -44,5 +54,4 @@ public class WorkWithFile {
             throw new RuntimeException("Can not write to file", e);
         }
     }
-
 }
