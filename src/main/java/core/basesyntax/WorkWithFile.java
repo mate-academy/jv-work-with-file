@@ -7,48 +7,80 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-
     public static final String SPLIT_DELIMITER_SCV = ",";
     public static final String DATA_FIRST = "supply";
     public static final String DATA_SECOND = "buy";
-    private static final String DATA_THIRD = "result";
+    public static final String DATA_THIRD = "result";
+    public static final int READ_FILE_DATA_INDEX_ONE = 0;
+    public static final int READ_FILE_DATA_INDEX_TWO = 1;
 
-    public void getStatistic(String fromFileName, String toFileName) {
-        int resultSupply = 0;
-        int resultBuy = 0;
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
+    public String[][] readeFile(String fileName) {
+        long counterReadLines = 0;
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
             String readOneLine = bufferedReader.readLine();
             while (readOneLine != null) {
-                String [] readFile = readOneLine.split(SPLIT_DELIMITER_SCV);
+                counterReadLines++;
                 readOneLine = bufferedReader.readLine();
-                int dataValue = Integer.parseInt(readFile[1]);
-                if (readFile[0].equals(DATA_FIRST)) {
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Can not read data from: " + fileName, e);
+        }
+        String[][] readAllLines = new String[(int) counterReadLines][];
+        int arrayIndex = 0;
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
+            String readOneLine = bufferedReader.readLine();
+            while (readOneLine != null) {
+                String[] arrayToSplit = readOneLine.split(SPLIT_DELIMITER_SCV);
+                readAllLines[arrayIndex] = arrayToSplit;
+                arrayIndex++;
+                readOneLine = bufferedReader.readLine();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Can not read data from: " + fileName, e);
+        }
+        return readAllLines;
+    }
+
+    public String generateReport(String [][] arrayFromReadFile) {
+        int resultSupply = 0;
+        int resultBuy = 0;
+
+        for (int i = 0; i < arrayFromReadFile.length; i++) {
+            int dataValue = Integer.parseInt(arrayFromReadFile[i][READ_FILE_DATA_INDEX_TWO]);
+            for (int j = 1; j < arrayFromReadFile[i].length; j++) {
+                if (arrayFromReadFile[i][READ_FILE_DATA_INDEX_ONE].equals(DATA_FIRST)) {
                     resultSupply += dataValue;
                 }
-                if (readFile[0].equals(DATA_SECOND)) {
+                if (arrayFromReadFile[i][READ_FILE_DATA_INDEX_ONE].equals(DATA_SECOND)) {
                     resultBuy += dataValue;
                 }
             }
-        } catch (IOException e) {
-            throw new RuntimeException("Can not read data from .csv file", e);
         }
-
         int resultWithSupplyAndBuy = resultSupply - resultBuy;
+        StringBuilder builder = new StringBuilder();
+        builder.append(DATA_FIRST + SPLIT_DELIMITER_SCV)
+                .append(resultSupply)
+                .append(System.lineSeparator())
+                .append(DATA_SECOND + SPLIT_DELIMITER_SCV)
+                .append(resultBuy)
+                .append(System.lineSeparator())
+                .append(DATA_THIRD + SPLIT_DELIMITER_SCV)
+                .append(resultWithSupplyAndBuy);
+        return builder.toString();
+    }
 
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write(DATA_FIRST
-                    + SPLIT_DELIMITER_SCV
-                    + resultSupply
-                    + System.lineSeparator());
-            bufferedWriter.write(DATA_SECOND
-                    + SPLIT_DELIMITER_SCV
-                    + resultBuy
-                    + System.lineSeparator());
-            bufferedWriter.write(DATA_THIRD
-                    + SPLIT_DELIMITER_SCV
-                    + resultWithSupplyAndBuy);
+    public void writeToFile(String writeFileName, String dataToWrite) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(writeFileName))) {
+            bufferedWriter.write(dataToWrite);
         } catch (IOException e) {
-            throw new RuntimeException("Can not write data from .csv file", e);
+            throw new RuntimeException("Can not write data to: " + writeFileName, e);
         }
+    }
+
+    public void getStatistic(String fromFileName, String toFileName) {
+
+        String[][] data = readeFile(fromFileName);
+        String report = generateReport(data);
+        writeToFile(toFileName,report);
     }
 }
