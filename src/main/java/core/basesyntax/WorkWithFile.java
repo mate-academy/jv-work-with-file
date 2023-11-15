@@ -30,10 +30,10 @@ public class WorkWithFile {
         String[] splitReadFile = readFile.split(DELIMITER_ARRAY);
         for (String rowSplitReadFile: splitReadFile) {
             String[] splitInto = rowSplitReadFile.split(SPLIT_DELIMITER_SCV);
-            if (splitInto[READ_FILE_DATA_INDEX_ONE].equals("buy")) {
+            if (splitInto[READ_FILE_DATA_INDEX_ONE].equals(DATA_SECOND)) {
                 resultBuy = resultBuy + Integer.parseInt(splitInto[READ_FILE_DATA_INDEX_TWO]);
             }
-            if (splitInto[READ_FILE_DATA_INDEX_ONE].equals("supply")) {
+            if (splitInto[READ_FILE_DATA_INDEX_ONE].equals(DATA_FIRST)) {
                 resultSupply = resultSupply + Integer.parseInt(splitInto[READ_FILE_DATA_INDEX_TWO]);
             }
         }
