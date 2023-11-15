@@ -6,8 +6,8 @@ import java.nio.file.Files;
 import java.util.List;
 
 public class WorkWithFile {
-    private static final int FIRST_ELEMENT = 0;
-    private static final int SECOND_ELEMENT = 1;
+    private static final int OPERATION_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
     private static final String BUY = "buy";
     private static final String SUPPLY = "supply";
     private static final String RESULT = "result";
@@ -41,10 +41,10 @@ public class WorkWithFile {
         int supplySum = 0;
         for (String item : data) {
             String[] splittedData = item.split(",");
-            if (BUY.equals(splittedData[FIRST_ELEMENT])) {
-                buySum += Integer.parseInt(splittedData[SECOND_ELEMENT]);
-            } else if (SUPPLY.equals(splittedData[FIRST_ELEMENT])) {
-                supplySum += Integer.parseInt(splittedData[SECOND_ELEMENT]);
+            if (BUY.equals(splittedData[OPERATION_INDEX])) {
+                buySum += Integer.parseInt(splittedData[AMOUNT_INDEX]);
+            } else if (SUPPLY.equals(splittedData[OPERATION_INDEX])) {
+                supplySum += Integer.parseInt(splittedData[AMOUNT_INDEX]);
             }
         }
         StringBuilder builder = new StringBuilder();
