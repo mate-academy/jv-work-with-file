@@ -1,72 +1,52 @@
 package core.basesyntax;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class WorkWithFile {
     public static final String SPLIT_DELIMITER_SCV = ",";
     public static final String DATA_FIRST = "supply";
     public static final String DATA_SECOND = "buy";
     public static final String DATA_THIRD = "result";
+    public static final String DELIMITER_ARRAY = System.lineSeparator();
     public static final int READ_FILE_DATA_INDEX_ONE = 0;
     public static final int READ_FILE_DATA_INDEX_TWO = 1;
 
-    public String[][] readeFile(String fileName) {
-        long counterReadLines = 0;
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
-            String readOneLine = bufferedReader.readLine();
-            while (readOneLine != null) {
-                counterReadLines++;
-                readOneLine = bufferedReader.readLine();
-            }
+    public String readFromFile(String fileName) {
+        try {
+            return Files.readString(Path.of(fileName));
         } catch (IOException e) {
             throw new RuntimeException("Can not read data from: " + fileName, e);
         }
-        String[][] readAllLines = new String[(int) counterReadLines][];
-        int arrayIndex = 0;
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
-            String readOneLine = bufferedReader.readLine();
-            while (readOneLine != null) {
-                String[] arrayToSplit = readOneLine.split(SPLIT_DELIMITER_SCV);
-                readAllLines[arrayIndex] = arrayToSplit;
-                arrayIndex++;
-                readOneLine = bufferedReader.readLine();
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("Can not read data from: " + fileName, e);
-        }
-        return readAllLines;
     }
 
-    public String generateReport(String [][] arrayFromReadFile) {
-        int resultSupply = 0;
+    public String generateReport(String readFile) {
         int resultBuy = 0;
-
-        for (int i = 0; i < arrayFromReadFile.length; i++) {
-            int dataValue = Integer.parseInt(arrayFromReadFile[i][READ_FILE_DATA_INDEX_TWO]);
-            for (int j = 1; j < arrayFromReadFile[i].length; j++) {
-                if (arrayFromReadFile[i][READ_FILE_DATA_INDEX_ONE].equals(DATA_FIRST)) {
-                    resultSupply += dataValue;
-                }
-                if (arrayFromReadFile[i][READ_FILE_DATA_INDEX_ONE].equals(DATA_SECOND)) {
-                    resultBuy += dataValue;
-                }
+        int resultSupply = 0;
+        StringBuilder builderWriteFile = new StringBuilder();
+        String[] splitReadFile = readFile.split(DELIMITER_ARRAY);
+        for (String rowSplitReadFile: splitReadFile) {
+            String[] splitInto = rowSplitReadFile.split(SPLIT_DELIMITER_SCV);
+            if (splitInto[READ_FILE_DATA_INDEX_ONE].equals("buy")) {
+                resultBuy = resultBuy + Integer.parseInt(splitInto[READ_FILE_DATA_INDEX_TWO]);
+            }
+            if (splitInto[READ_FILE_DATA_INDEX_ONE].equals("supply")) {
+                resultSupply = resultSupply + Integer.parseInt(splitInto[READ_FILE_DATA_INDEX_TWO]);
             }
         }
         int resultWithSupplyAndBuy = resultSupply - resultBuy;
-        StringBuilder builder = new StringBuilder();
-        builder.append(DATA_FIRST + SPLIT_DELIMITER_SCV)
+        builderWriteFile.append(DATA_FIRST + SPLIT_DELIMITER_SCV)
                 .append(resultSupply)
-                .append(System.lineSeparator())
+                .append(DELIMITER_ARRAY)
                 .append(DATA_SECOND + SPLIT_DELIMITER_SCV)
                 .append(resultBuy)
-                .append(System.lineSeparator())
+                .append(DELIMITER_ARRAY)
                 .append(DATA_THIRD + SPLIT_DELIMITER_SCV)
                 .append(resultWithSupplyAndBuy);
-        return builder.toString();
+        return builderWriteFile.toString();
     }
 
     public void writeToFile(String writeFileName, String dataToWrite) {
@@ -78,9 +58,8 @@ public class WorkWithFile {
     }
 
     public void getStatistic(String fromFileName, String toFileName) {
-
-        String[][] data = readeFile(fromFileName);
+        String data = readFromFile(fromFileName);
         String report = generateReport(data);
-        writeToFile(toFileName,report);
+        writeToFile(toFileName, report);
     }
 }
