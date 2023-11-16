@@ -8,6 +8,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    public static final int COLUMN_WITH_TYPE = 0;
+    public static final int COLUMN_WITH_SUM = 1;
+
     public void getStatistic(String fromFileName, String toFileName) {
         String stringFromFile = stringFromFile(fromFileName);
         String report = calculateReport(stringFromFile);
@@ -36,20 +39,20 @@ public class WorkWithFile {
         int buySum = 0;
         for (String line : linesArray) {
             String[] lineData = line.split(",");
-            int lineNumber = Integer.parseInt(lineData[1]);
-            if (lineData[0].equals("supply")) {
+            int lineNumber = Integer.parseInt(lineData[COLUMN_WITH_SUM]);
+            if (lineData[COLUMN_WITH_TYPE].equals("supply")) {
                 supplySum += lineNumber;
             } else {
                 buySum += lineNumber;
             }
         }
 
-        StringBuilder builder = new StringBuilder();
-        builder.append("supply,").append(supplySum).append(System.lineSeparator())
+        StringBuilder stringBuilder = new StringBuilder()
+                .append("supply,").append(supplySum).append(System.lineSeparator())
                 .append("buy,").append(buySum).append(System.lineSeparator())
                 .append("result,").append(supplySum - buySum);
 
-        return builder.toString();
+        return stringBuilder.toString();
     }
 
     private void writeToFile(String fileName, String stringToWrite) {
