@@ -9,6 +9,8 @@ import java.nio.file.Path;
 public class WorkWithFile {
     private static final String SUPPLIED = "supply";
     private static final String BOUGHT = "buy";
+    private static final int TYPE_OF_TRANSACTION = 0;
+    private static final int QUANTITIES = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String dataFromFile = readFile(fromFileName);
@@ -23,10 +25,10 @@ public class WorkWithFile {
             while ((line = reader.readLine()) != null) {
                 dataFromFile.append(line).append(System.lineSeparator());
             }
+            return dataFromFile.toString();
         } catch (IOException e) {
             throw new RuntimeException("Can't read file " + fromFileName, e);
         }
-        return dataFromFile.toString();
     }
 
     private String createReport(String dataFromFile) {
@@ -36,10 +38,10 @@ public class WorkWithFile {
         int buy = 0;
         for (String line : lines) {
             String[] words = line.split(",");
-            if (words[0].equals(SUPPLIED)) {
-                supply += Integer.parseInt(words[1]);
-            } else if (words[0].equals(BOUGHT)) {
-                buy += Integer.parseInt(words[1]);
+            if (words[TYPE_OF_TRANSACTION].equals(SUPPLIED)) {
+                supply += Integer.parseInt(words[QUANTITIES]);
+            } else if (words[TYPE_OF_TRANSACTION].equals(BOUGHT)) {
+                buy += Integer.parseInt(words[QUANTITIES]);
             }
         }
         return report.append("supply,").append(supply).append(System.lineSeparator())
