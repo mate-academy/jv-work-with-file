@@ -3,13 +3,17 @@ package core.basesyntax;
 import java.io.*;
 
 public class WorkWithFile {
-    private static final String SUPPLIY = "supply";
+    private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
-    private int supply = 0;
-    private int buy = 0;
     private static final String DATA_SEPARATOR = ",";
+    private static final int OPERATION_TYPE_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
+    private int supplyAmount;
+    private int buyAmount;
 
     public void getStatistic(String fromFileName, String toFileName) {
+        this.supplyAmount = 0;
+        this.buyAmount = 0;
         readFile(fromFileName);
         writeFile(toFileName);
 
@@ -20,17 +24,17 @@ public class WorkWithFile {
             String line = bufferedReader.readLine();
             while (line != null) {
                 String[] data = line.split(DATA_SEPARATOR);
-                if (data[0].equals(SUPPLIY)) {
-                    supply += Integer.parseInt(data[1]);
-                } else if (data[0].equals(BUY)) {
-                    buy += Integer.parseInt(data[1]);
+                if (data[OPERATION_TYPE_INDEX].equals(SUPPLY)) {
+                    supplyAmount += Integer.parseInt(data[AMOUNT_INDEX]);
+                } else if (data[OPERATION_TYPE_INDEX].equals(BUY)) {
+                    buyAmount += Integer.parseInt(data[AMOUNT_INDEX]);
                 }
                 line = bufferedReader.readLine();
             }
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("File not found", e);
+            throw new RuntimeException("File: " + fromFile + " not found", e);
         } catch (IOException e) {
-            throw new RuntimeException("Cannot read file", e);
+            throw new RuntimeException("Cannot read file: " + fromFile, e);
         }
     }
 
@@ -38,13 +42,11 @@ public class WorkWithFile {
         File file = new File(toFile);
         try (BufferedWriter bufferedWriter = new BufferedWriter(
                 new FileWriter(file))) {
-            bufferedWriter.write("supply,"+supply + System.lineSeparator());
-            bufferedWriter.write("buy,"+buy + System.lineSeparator());
-            bufferedWriter.write("result," + (supply - buy) + System.lineSeparator());
+            bufferedWriter.write("supply," + supplyAmount + System.lineSeparator());
+            bufferedWriter.write("buy," + buyAmount + System.lineSeparator());
+            bufferedWriter.write("result," + (supplyAmount - buyAmount) + System.lineSeparator());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Cannot write file: " + toFile, e);
         }
-        supply = 0;
-        buy = 0;
     }
 }
