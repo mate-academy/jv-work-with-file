@@ -15,28 +15,26 @@ public class WorkWithFile {
     private static final String LINE_RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        writeToFile(toFileName, readFromFile(fromFileName));
+        String dataFromFile = readFromFile(fromFileName);
+        String report = createReport(dataFromFile);
+        writeToFile(toFileName, report);
     }
 
-    public String readFromFile(String fromFileName) {
+    private String createReport(String dataFromFile) {
         StringBuilder report = new StringBuilder();
         int result = 0;
         int supply = 0;
         int buy = 0;
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                String[] words = line.split(LINE_COMMA);
-                if (words[AMOUNT_POSITION_IN_ARRAY].equals(LINE_SUPPLY)) {
-                    supply += Integer.parseInt(words[OPERATION_TYPE_POSITION_IN_ARRAY]);
-                    result += Integer.parseInt(words[OPERATION_TYPE_POSITION_IN_ARRAY]);
-                } else {
-                    buy += Integer.parseInt(words[OPERATION_TYPE_POSITION_IN_ARRAY]);
-                    result -= Integer.parseInt(words[OPERATION_TYPE_POSITION_IN_ARRAY]);
-                }
+        String[] lines = dataFromFile.split(System.lineSeparator());
+        for (String line : lines) {
+            String[] words = line.split(LINE_COMMA);
+            if (words[AMOUNT_POSITION_IN_ARRAY].equals(LINE_SUPPLY)) {
+                supply += Integer.parseInt(words[OPERATION_TYPE_POSITION_IN_ARRAY]);
+                result += Integer.parseInt(words[OPERATION_TYPE_POSITION_IN_ARRAY]);
+            } else {
+                buy += Integer.parseInt(words[OPERATION_TYPE_POSITION_IN_ARRAY]);
+                result -= Integer.parseInt(words[OPERATION_TYPE_POSITION_IN_ARRAY]);
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
         report.append(LINE_SUPPLY).append(LINE_COMMA).append(supply).append(System.lineSeparator())
                 .append(LINE_BUY).append(LINE_COMMA).append(buy).append(System.lineSeparator())
@@ -44,11 +42,25 @@ public class WorkWithFile {
         return report.toString();
     }
 
+    public String readFromFile(String fromFileName) {
+        StringBuilder dataFromFile = new StringBuilder();
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                dataFromFile.append(line).append(System.lineSeparator());
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Cant read data from file" + fromFileName, e);
+        }
+
+        return dataFromFile.toString();
+    }
+
     public void writeToFile(String toFileName, String report) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(report);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Cant write data to file" + toFileName, e);
         }
     }
 }
