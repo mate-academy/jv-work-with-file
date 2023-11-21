@@ -8,12 +8,13 @@ import java.io.IOException;
 
 public class WorkWithFile {
     private static final String SEPARATOR = ",";
-    private static final String NEW_LINE = "\n";
+    private static final String NEW_LINE = System.lineSeparator();
     private static final String LABEL_SUPPLY = "supply";
     private static final String LABEL_BUY = "buy";
     private static final String LABEL_RESULT = "result";
     private static final int VALUE_INDEX = 1;
     private static final int LABEL_INDEX = 0;
+    private static final int EXPECTED_PARTS_COUNT = 2;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String fileContent = readFile(fromFileName);
@@ -38,12 +39,10 @@ public class WorkWithFile {
         int supplyTotal = 0;
         int buyTotal = 0;
 
-        StringBuilder reportBuilder = new StringBuilder();
-
         String[] lines = fileContent.split(NEW_LINE);
         for (String line : lines) {
             String[] parts = line.split(SEPARATOR);
-            if (parts.length == 2) {
+            if (parts.length == EXPECTED_PARTS_COUNT) {
                 String label = parts[LABEL_INDEX];
                 int value = Integer.parseInt(parts[VALUE_INDEX]);
                 if (LABEL_SUPPLY.equals(label)) {
@@ -56,6 +55,7 @@ public class WorkWithFile {
 
         int result = supplyTotal - buyTotal;
 
+        StringBuilder reportBuilder = new StringBuilder();
         reportBuilder.append(LABEL_SUPPLY).append(SEPARATOR).append(supplyTotal)
                 .append(System.lineSeparator())
                 .append(LABEL_BUY).append(SEPARATOR).append(buyTotal)
