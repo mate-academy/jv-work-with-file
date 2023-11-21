@@ -38,4 +38,13 @@ public class WorkWithFile {
                 .toString()
                 .split(SPACE_SEPARATOR);
     }
+
+    private String generateReport(String[] fromFileDate) {
+        int buyCount = 0;
+        int supplyCount = 0;
+        for (String line: fromFileDate) {
+            String[] words = line.split(COMMA_SEPARATOR);
+
+        }
+    }
  }
