@@ -3,7 +3,6 @@ package core.basesyntax;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -14,43 +13,58 @@ public class WorkWithFile {
     private static final String DATA_SEPARATOR = ",";
     private static final int OPERATION_TYPE_INDEX = 0;
     private static final int AMOUNT_INDEX = 1;
-    private int supplyAmount;
-    private int buyAmount;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        this.supplyAmount = 0;
-        this.buyAmount = 0;
-        readFile(fromFileName);
-        writeFile(toFileName);
-
+        StringBuilder stringBuilder = new StringBuilder();
+        String[] readFileData = readFile(fromFileName, stringBuilder);
+        String report = createReport(readFileData, stringBuilder);
+        writeFile(toFileName, report);
     }
 
-    private void readFile(String fromFile) {
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFile))) {
-            String line = bufferedReader.readLine();
-            while (line != null) {
-                String[] data = line.split(DATA_SEPARATOR);
-                if (data[OPERATION_TYPE_INDEX].equals(SUPPLY)) {
-                    supplyAmount += Integer.parseInt(data[AMOUNT_INDEX]);
-                } else if (data[OPERATION_TYPE_INDEX].equals(BUY)) {
-                    buyAmount += Integer.parseInt(data[AMOUNT_INDEX]);
-                }
-                line = bufferedReader.readLine();
+    private String createReport(String[] readedData, StringBuilder stringBuilder) {
+        stringBuilder.setLength(0);
+        int supplyAmount = 0;
+        int buyAmount = 0;
+        for (String data : readedData) {
+            String[] splitData = data.split(DATA_SEPARATOR);
+            if (splitData[OPERATION_TYPE_INDEX].equals(SUPPLY)) {
+                supplyAmount += Integer.parseInt(splitData[AMOUNT_INDEX]);
+            } else if (splitData[OPERATION_TYPE_INDEX].equals(BUY)) {
+                buyAmount += Integer.parseInt(splitData[AMOUNT_INDEX]);
             }
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException("File: " + fromFile + " not found", e);
+        }
+        return stringBuilder
+                .append("supply,")
+                .append(supplyAmount)
+                .append(System.lineSeparator())
+                .append("buy,")
+                .append(buyAmount)
+                .append(System.lineSeparator())
+                .append("result,")
+                .append(supplyAmount - buyAmount)
+                .toString();
+    }
+
+    private String[] readFile(String fromFile, StringBuilder stringBuilder) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFile))) {
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                stringBuilder
+                        .append(line)
+                        .append(System.lineSeparator());
+            }
         } catch (IOException e) {
             throw new RuntimeException("Cannot read file: " + fromFile, e);
         }
+        return stringBuilder
+                .toString()
+                .split(System.lineSeparator());
     }
 
-    private void writeFile(String toFile) {
+    private void writeFile(String toFile, String report) {
         File file = new File(toFile);
-        try (BufferedWriter bufferedWriter = new BufferedWriter(
-                new FileWriter(file))) {
-            bufferedWriter.write("supply," + supplyAmount + System.lineSeparator());
-            bufferedWriter.write("buy," + buyAmount + System.lineSeparator());
-            bufferedWriter.write("result," + (supplyAmount - buyAmount) + System.lineSeparator());
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
+            bufferedWriter.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Cannot write file: " + toFile, e);
         }
