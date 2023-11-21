@@ -15,14 +15,13 @@ public class WorkWithFile {
     private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        StringBuilder stringBuilder = new StringBuilder();
-        String[] readFileData = readFile(fromFileName, stringBuilder);
-        String report = createReport(readFileData, stringBuilder);
+        String[] readFileData = readFile(fromFileName);
+        String report = createReport(readFileData);
         writeFile(toFileName, report);
     }
 
-    private String createReport(String[] readedData, StringBuilder stringBuilder) {
-        stringBuilder.setLength(0);
+    private String createReport(String[] readedData) {
+        StringBuilder stringBuilder = new StringBuilder();
         int supplyAmount = 0;
         int buyAmount = 0;
         for (String data : readedData) {
@@ -45,7 +44,8 @@ public class WorkWithFile {
                 .toString();
     }
 
-    private String[] readFile(String fromFile, StringBuilder stringBuilder) {
+    private String[] readFile(String fromFile) {
+        StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFile))) {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
@@ -70,3 +70,4 @@ public class WorkWithFile {
         }
     }
 }
+
