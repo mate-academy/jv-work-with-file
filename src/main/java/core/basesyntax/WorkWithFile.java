@@ -7,9 +7,9 @@ import java.io.BufferedWriter;
 import java.io.BufferedReader;
 
 public class WorkWithFile {
-    private static final String BUY_VALUE = "buy";
-    private static final String SUPPLY_VALUE = "supply";
-    private static final String RESULT_VALUE = "result";
+    private static final String BUY_INDEX = "buy";
+    private static final String SUPPLY_INDEX = "supply";
+    private static final String RESULT_INDEX = "result";
     private static final int NAME_INDEX = 0;
     private static final int NUMBER_INDEX = 1;
     private static final String SPACE_SEPARATOR = " ";
@@ -17,8 +17,8 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] dataFromFile = readFile(fromFileName);
-        String generatedReport = generateReport(dataFromFile);
-        writeToFile(toFileName, generatedReport);
+        String report = generateReport(dataFromFile);
+        writeToFile(toFileName);
     }
 
     public String[] readFile(String fromFileName) {
@@ -32,7 +32,7 @@ public class WorkWithFile {
                         .append(SPACE_SEPARATOR);
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read to file" + fromFileName, e);
+            throw new RuntimeException("Can't read to file", e);
         }
         return resultBuilder
                 .toString()
@@ -40,37 +40,11 @@ public class WorkWithFile {
     }
 
     private String generateReport(String[] fromFileDate) {
-        int buyValue = 0;
-        int supplyValue = 0;
+        int buyCount = 0;
+        int supplyCount = 0;
         for (String line: fromFileDate) {
             String[] words = line.split(COMMA_SEPARATOR);
-            if (words[NAME_INDEX].equals(BUY_VALUE)) {
-                buyValue += Integer
-                        .parseInt(words[NUMBER_INDEX]);
-            }
-            if (words[NAME_INDEX].equals(SUPPLY_VALUE)) {
-                supplyValue += Integer
-                        .parseInt(words[NUMBER_INDEX]);
-            }
-        }
-        return SUPPLY_VALUE +
-                COMMA_SEPARATOR +
-                supplyValue + System.lineSeparator() +
-                BUY_VALUE +
-                COMMA_SEPARATOR +
-                buyValue +
-                System.lineSeparator() +
-                RESULT_VALUE +
-                COMMA_SEPARATOR +
-                (supplyValue - buyValue) +
-                System.lineSeparator();
-    }
 
-    private void writeToFile(String toFileName, String reportString) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            writer.write(reportString);
-        } catch (IOException e) {
-            throw new RuntimeException("Can`t write the file: " + reportString, e);
         }
     }
  }
