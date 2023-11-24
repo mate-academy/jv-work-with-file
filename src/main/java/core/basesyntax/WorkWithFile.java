@@ -12,8 +12,6 @@ public class WorkWithFile {
     private static final String TO_BUY = "buy";
     private static final String TO_RESULT = "result";
     private static final String TO_CONST = ",";
-    private int countSupply = 0;
-    private int countBuy = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] array = readFile(fromFileName).split(TO_CONST);
@@ -40,8 +38,9 @@ public class WorkWithFile {
     }
 
     public void writeFile(String toFileName, String[] array) {
+        int countSupply = 0;
+        int countBuy = 0;
         File secondFile = new File(toFileName);
-        StringBuilder stringBuilder = new StringBuilder();
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(secondFile))) {
             for (int i = 0; i < array.length; i++) {
                 switch (array[i]) {
