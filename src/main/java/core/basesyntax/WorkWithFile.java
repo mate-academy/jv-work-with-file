@@ -19,9 +19,7 @@ public class WorkWithFile {
 
         String[] allLines = getAllLines(fromFileName);
 
-
         int result = processDataInFile(allLines);
-
 
         writeDataToFile(toFileName, this.supplyTotal, this.buyTotal, result);
         this.supplyTotal = 0;
