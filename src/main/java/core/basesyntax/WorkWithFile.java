@@ -12,44 +12,72 @@ public class WorkWithFile {
     private static final String CASE_SUPPLY = "supply";
     private static final String RESULT = "result";
     private static final String EXCEPTION_MESSAGE = "Key doesn't found";
-    private static final int SPECIFIC_FIRST_ELEMENT = 0;
-    private static final int SPECIFIC_SECOND_ELEMENT = 1;
-    private static final String SPLIT_BY_NEW_LINE = "\n";
+    private static final String PARSE_EXCEPTION_MESSAGE = "Something went wrong";
+    private static final int SUPPLY_VALUE = 1;
+    private static final int BUY_VALUE = 3;
+    private static final int KEY = 0;
+    private static final int KEY_VALUE = 1;
+    private static final String SPLIT_BY_NEW_LINE = System.lineSeparator();
     private static final int END_FILE_CODE = -1;
-    private static final int SET_LENGTH_TO_ZERO = 0;
-    private final StringBuilder textForSavingToFile = new StringBuilder();
-    private final StringBuilder constructTextFromFile = new StringBuilder();
 
     public void getStatistic(String fromFileName, String toFileName) {
         int sumForBuy = 0;
         int sumForSupply = 0;
+        StringBuilder textForSavingToFile = new StringBuilder();
+        StringBuilder constructTextFromFile = new StringBuilder();
         try (
-                FileWriter writer = new FileWriter(toFileName);
-                BufferedReader reader = new BufferedReader(new FileReader(fromFileName))
+                BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
+                FileWriter writer = new FileWriter(toFileName)
         ) {
             readFromFile(reader, constructTextFromFile);
-            String[] splitConstructTextFromFile = getSplitConstructTextFromFile();
+            String[] splitConstructTextFromFile =
+                    getSplitConstructTextFromFile(constructTextFromFile);
 
-            for (String s : splitConstructTextFromFile) {
-                String[] currentLine = s.split(SPLITERATOR);
-                switch (currentLine[SPECIFIC_FIRST_ELEMENT]) {
-                    case CASE_BUY ->
-                            sumForBuy += Integer.parseInt(currentLine[SPECIFIC_SECOND_ELEMENT]);
-                    case CASE_SUPPLY ->
-                            sumForSupply += Integer.parseInt(currentLine[SPECIFIC_SECOND_ELEMENT]);
-                    default -> throw new NoSuchElementException(EXCEPTION_MESSAGE);
-                }
-            }
-            String textForSavingFile = constructResultTextForSavingFile(sumForBuy, sumForSupply);
-            writer.write(textForSavingFile);
-            constructTextFromFile.setLength(SET_LENGTH_TO_ZERO);
-            textForSavingToFile.setLength(SET_LENGTH_TO_ZERO);
+            String[] processData = processData(splitConstructTextFromFile, sumForSupply, sumForBuy);
+
+            StringBuilder textForSavingFile =
+                    constructResultTextForSavingFile(
+                            Integer.parseInt(processData[BUY_VALUE]),
+                            Integer.parseInt(processData[SUPPLY_VALUE]),textForSavingToFile);
+            writeToFile(textForSavingFile.toString(), writer);
+
         } catch (IOException e) {
-            throw new NoSuchElementException(e);
+            throw new NoSuchElementException(PARSE_EXCEPTION_MESSAGE);
         }
     }
 
-    private String constructResultTextForSavingFile(int sumForBuy, int sumForSupply) {
+    private void writeToFile(String textForSavingFile, FileWriter writer) {
+        try {
+            writer.write(textForSavingFile);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private String[] processData(
+            String[] splitConstructTextFromFile,
+            int sumForSupply,
+            int sumForBuy) {
+        int copySumForSupply = sumForSupply;
+        int copySumForBuy = sumForBuy;
+        for (String s : splitConstructTextFromFile) {
+            String[] currentLine = s.split(SPLITERATOR);
+            switch (currentLine[KEY]) {
+                case CASE_BUY -> copySumForBuy += Integer.parseInt(currentLine[KEY_VALUE]);
+                case CASE_SUPPLY -> copySumForSupply += Integer.parseInt(currentLine[KEY_VALUE]);
+                default -> throw new NoSuchElementException(EXCEPTION_MESSAGE);
+            }
+        }
+        return new String[]{
+                CASE_SUPPLY,
+                String.valueOf(copySumForSupply),
+                CASE_BUY,
+                String.valueOf(copySumForBuy)
+        };
+    }
+
+    private StringBuilder constructResultTextForSavingFile(int sumForBuy, int sumForSupply,
+            StringBuilder textForSavingToFile) {
         return textForSavingToFile.append(CASE_SUPPLY).append(SPLITERATOR)
                 .append(sumForSupply)
                 .append(System.lineSeparator())
@@ -59,22 +87,29 @@ public class WorkWithFile {
                 .append(System.lineSeparator())
                 .append(RESULT)
                 .append(SPLITERATOR)
-                .append(sumForSupply - sumForBuy)
-                .toString();
+                .append(sumForSupply - sumForBuy);
     }
 
-    private String[] getSplitConstructTextFromFile() {
+    private String[] getSplitConstructTextFromFile(StringBuilder constructTextFromFile) {
         return constructTextFromFile.toString().split(SPLIT_BY_NEW_LINE);
     }
 
     private void readFromFile(
             BufferedReader reader,
-            StringBuilder constructTextFromFile)
-            throws IOException {
-        int value = reader.read();
+            StringBuilder constructTextFromFile) {
+        int value;
+        try {
+            value = reader.read();
+        } catch (IOException e) {
+            throw new RuntimeException(EXCEPTION_MESSAGE);
+        }
         while (value != END_FILE_CODE) {
             constructTextFromFile.append((char) value);
-            value = reader.read();
+            try {
+                value = reader.read();
+            } catch (IOException e) {
+                throw new RuntimeException(EXCEPTION_MESSAGE);
+            }
         }
     }
 }
