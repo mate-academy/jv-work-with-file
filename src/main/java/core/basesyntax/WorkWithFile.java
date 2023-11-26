@@ -33,7 +33,7 @@ public class WorkWithFile {
                 value = reader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Cannot read file:", e);
+            throw new RuntimeException("Cannot read data from file " + fileToRead, e);
         }
         return builder.toString();
     }
@@ -57,7 +57,7 @@ public class WorkWithFile {
             writer.write(BUY + "," + buyScore + System.lineSeparator());
             writer.write(RESULT + "," + resultScore + System.lineSeparator());
         } catch (IOException e) {
-            throw new RuntimeException("Cannot write in file:",e);
+            throw new RuntimeException("Cannot write data to file " + fileToWrite, e);
         }
     }
 }
