@@ -29,14 +29,14 @@ public class WorkWithFile {
                 BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
                 FileWriter writer = new FileWriter(toFileName)
         ) {
-            readFromFile(reader, constructTextFromFile);
+            readFile(reader, constructTextFromFile);
             String[] splitConstructTextFromFile =
                     getSplitConstructTextFromFile(constructTextFromFile);
 
             String[] processData = processData(splitConstructTextFromFile, sumForSupply, sumForBuy);
 
             StringBuilder textForSavingFile =
-                    constructResultTextForSavingFile(
+                    generateReport(
                             Integer.parseInt(processData[BUY_VALUE]),
                             Integer.parseInt(processData[SUPPLY_VALUE]),textForSavingToFile);
             writeToFile(textForSavingFile.toString(), writer);
@@ -76,7 +76,7 @@ public class WorkWithFile {
         };
     }
 
-    private StringBuilder constructResultTextForSavingFile(int sumForBuy, int sumForSupply,
+    private StringBuilder generateReport(int sumForBuy, int sumForSupply,
             StringBuilder textForSavingToFile) {
         return textForSavingToFile.append(CASE_SUPPLY).append(SPLITERATOR)
                 .append(sumForSupply)
@@ -94,7 +94,7 @@ public class WorkWithFile {
         return constructTextFromFile.toString().split(SPLIT_BY_NEW_LINE);
     }
 
-    private void readFromFile(
+    private void readFile(
             BufferedReader reader,
             StringBuilder constructTextFromFile) {
         int value;
