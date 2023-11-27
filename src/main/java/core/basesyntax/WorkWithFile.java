@@ -2,7 +2,6 @@ package core.basesyntax;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -13,29 +12,35 @@ public class WorkWithFile {
     private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        File fileToRead = new File(fromFileName);
-        File fileToWrite = new File(toFileName);
-        StringBuilder stringBuilder = new StringBuilder();
-        int buyScore = 0;
-        int supplyScore = 0;
-        String infoTostring = readToFile(fileToRead, stringBuilder);
-        buyScore = calculateCount(infoTostring, buyScore, BUY);
-        supplyScore = calculateCount(infoTostring, supplyScore, SUPPLY);
-        int resultScore = supplyScore - buyScore;
-        writeToFile(fileToWrite, buyScore,supplyScore,resultScore);
+        String dataFromFile = readFile(fromFileName);
+        String report = createReport(dataFromFile);
+        writeToFile(report, toFileName);
     }
 
-    private String readToFile(File fileToRead, StringBuilder builder) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(fileToRead))) {
+    private String readFile(String fromFileName) {
+        StringBuilder builder = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String value = reader.readLine();
             while (value != null) {
                 builder.append(value).append(',');
                 value = reader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Cannot read data from file " + fileToRead, e);
+            throw new RuntimeException("Cannot read data from file " + fromFileName, e);
         }
         return builder.toString();
+    }
+
+    private String createReport(String dataFromFile) {
+        int buyScore = 0;
+        int supplyScore = 0;
+        int resultScore = 0;
+        buyScore = calculateCount(dataFromFile, buyScore, BUY);
+        supplyScore = calculateCount(dataFromFile, supplyScore, SUPPLY);
+        resultScore = supplyScore - buyScore;
+        return SUPPLY + "," + supplyScore + System.lineSeparator()
+                + BUY + "," + buyScore + System.lineSeparator()
+                + RESULT + "," + resultScore + System.lineSeparator();
     }
 
     private int calculateCount(String stringAllLines, int score, String subtraction) {
@@ -51,13 +56,11 @@ public class WorkWithFile {
         return score;
     }
 
-    private void writeToFile(File fileToWrite, int buyScore, int supplyScore, int resultScore) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileToWrite))) {
-            writer.write(SUPPLY + "," + supplyScore + System.lineSeparator());
-            writer.write(BUY + "," + buyScore + System.lineSeparator());
-            writer.write(RESULT + "," + resultScore + System.lineSeparator());
+    private void writeToFile(String report, String toFileName) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
+            writer.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Cannot write data to file " + fileToWrite, e);
+            throw new RuntimeException("Cannot write data to file " + toFileName, e);
         }
     }
 }
