@@ -15,7 +15,8 @@ public class WorkWithFile {
     private static final int DATA_INDEX_AMOUNT = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String report = createReport(readDataFromFile(fromFileName));
+        List<String> dataFromFile = readDataFromFile(fromFileName);
+        String report = createReport(dataFromFile);
         writeReportToFile(toFileName, report);
     }
 
