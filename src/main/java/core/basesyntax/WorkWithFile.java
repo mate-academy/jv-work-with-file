@@ -15,7 +15,11 @@ public class WorkWithFile {
     private static final int DATA_INDEX_AMOUNT = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
+        String report = createAReport(fromFileName);
+        writeAReportToFile(toFileName, report);
+    }
 
+    public String createAReport(String fromFileName) {
         try {
             List<String> lines = Files.readAllLines(Path.of(fromFileName));
 
@@ -38,11 +42,19 @@ public class WorkWithFile {
                     + TO_BUY + "," + buyCounter + System.lineSeparator()
                     + RESULT + "," + result;
 
+            return report;
+        } catch (IOException e) {
+            throw new RuntimeException("Something went wrong..", e);
+        }
+    }
+
+    public void writeAReportToFile(String toFileName, String report) {
+        try {
             Files.write(Path.of(toFileName), report.getBytes(StandardCharsets.UTF_8),
                     StandardOpenOption.CREATE);
-
         } catch (IOException e) {
             throw new RuntimeException("Something went wrong..", e);
         }
     }
 }
+
