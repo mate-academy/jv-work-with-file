@@ -15,13 +15,13 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] allLines = getAllLines(fromFileName);
-        int[] result = processDataInFile(allLines);
+        String result = processDataInFile(allLines);
         writeDataToFile(toFileName, result);
     }
 
     private String[] getAllLines(String fromFileName) {
         if (fromFileName == null) {
-            throw new IllegalArgumentException("File name cannot be null " + fromFileName);
+            throw new IllegalArgumentException("File name cannot be null!");
         }
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             return reader.lines().toArray(String[]::new);
@@ -30,10 +30,10 @@ public class WorkWithFile {
         }
     }
 
-    private int[] processDataInFile(String[] file) {
+    private String processDataInFile(String[] lines) {
         int supplyTotal = 0;
         int buyTotal = 0;
-        for (String line : file) {
+        for (String line : lines) {
             String[] fields = line.split(SEPARATOR);
             if (fields.length == 2) {
                 String operationType = fields[OPERATION_INDEX].trim();
@@ -46,17 +46,20 @@ public class WorkWithFile {
                 }
             }
         }
-        return new int[]{supplyTotal, buyTotal, supplyTotal - buyTotal};
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(OPERATION_SUPPLY).append(SEPARATOR).append(supplyTotal)
+                .append(System.lineSeparator()).append(OPERATION_BUY).append(SEPARATOR)
+                .append(buyTotal).append(System.lineSeparator())
+                .append("result").append(SEPARATOR).append(supplyTotal - buyTotal);
+        return stringBuilder.toString();
     }
 
-    private void writeDataToFile(String toFileName, int[] result) {
+    private void writeDataToFile(String toFileName, String result) {
         if (toFileName == null) {
-            throw new IllegalArgumentException("File name cannot be null " + toFileName);
+            throw new IllegalArgumentException("File name cannot be null ");
         }
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            String output = "supply," + result[0] + System.lineSeparator()
-                    + "buy," + result[1] + System.lineSeparator() + "result," + result[2];
-            writer.write(output);
+            writer.write(result);
         } catch (IOException e) {
             throw new RuntimeException("Error writing to file " + toFileName, e);
         }
