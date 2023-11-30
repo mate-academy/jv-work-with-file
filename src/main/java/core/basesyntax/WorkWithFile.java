@@ -3,7 +3,6 @@ package core.basesyntax;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -12,6 +11,8 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
+    private static final int OPERATION_NUMBER = 0;
+    private static final int SECOND_OPERATION_NUMBER = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String dataFromFile = readFile(fromFileName);
@@ -20,16 +21,14 @@ public class WorkWithFile {
     }
 
     private String readFile(String fromFileName) {
-        StringBuilder dataFromFIle = new StringBuilder();
+        StringBuilder dataFromFile = new StringBuilder();
         String line;
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
             while ((line = bufferedReader.readLine()) != null) {
-                dataFromFIle.append(line).append(System.lineSeparator());
+                dataFromFile.append(line).append(System.lineSeparator());
             }
-            return dataFromFIle.toString();
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException("Cannot read from file" + fromFileName, e);
+            return dataFromFile.toString();
         } catch (IOException e) {
             throw new RuntimeException("Cannot read file" + fromFileName, e);
         }
@@ -42,10 +41,10 @@ public class WorkWithFile {
         int supplyTotal = 0;
         for (String info : data) {
             String[] words = info.split(",");
-            if (words[0].equals(BUY)) {
-                buyTotal += Integer.parseInt(words[1]);
+            if (words[OPERATION_NUMBER].equals(BUY)) {
+                buyTotal += Integer.parseInt(words[SECOND_OPERATION_NUMBER]);
             } else {
-                supplyTotal += Integer.parseInt(words[1]);
+                supplyTotal += Integer.parseInt(words[SECOND_OPERATION_NUMBER]);
             }
         }
         report.append(SUPPLY).append(",")
