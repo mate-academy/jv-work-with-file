@@ -57,9 +57,8 @@ public class WorkWithFile {
     }
 
     private void writeReportToFile(String report,String toFileName) {
-        BufferedWriter writer = null;
         try {
-            writer = new BufferedWriter(new FileWriter(toFileName));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName));
             writer.write(report);
             writer.close();
         } catch (IOException e) {
