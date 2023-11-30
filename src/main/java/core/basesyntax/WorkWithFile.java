@@ -10,12 +10,16 @@ import java.util.List;
 public class WorkWithFile {
     public static final int INDEX_OPERATION_TYPE = 0;
     public static final int INDEX_AMOUNT = 1;
+    public static final String SUPPLY = "supply";
+    public static final String BUY = "buy";
+    public static final String RESULT = "result";
+    public static final String SEPARATOR = ",";
     private int supplyAmount = 0;
     private int buyAmount = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
         readData(fromFileName);
-        generateReport(toFileName);
+        writeData(toFileName);
     }
 
     private void readData(String fromFileName) {
@@ -23,11 +27,11 @@ public class WorkWithFile {
         try {
             List<String> allDataLines = Files.readAllLines(fromFile.toPath());
             for (String line : allDataLines) {
-                String[] split = line.split(",");
-                if (split[INDEX_OPERATION_TYPE].equals("supply")) {
-                    supplyAmount += Integer.parseInt(split[1]);
+                String[] split = line.split(SEPARATOR);
+                if (split[INDEX_OPERATION_TYPE].equals(SUPPLY)) {
+                    supplyAmount += Integer.parseInt(split[INDEX_AMOUNT]);
                 }
-                if (split[0].equals("buy")) {
+                if (split[INDEX_OPERATION_TYPE].equals(BUY)) {
                     buyAmount += Integer.parseInt(split[INDEX_AMOUNT]);
                 }
             }
@@ -36,16 +40,20 @@ public class WorkWithFile {
         }
     }
 
-    private void generateReport(String toFileName) {
+    private void writeData(String toFileName) {
         File toFile = new File(toFileName);
         if (!toFile.exists()) {
             try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFile, true))) {
-                bufferedWriter.write("supply," + supplyAmount + System.lineSeparator()
-                        + "buy," + buyAmount + System.lineSeparator()
-                        + "result," + (supplyAmount - buyAmount) + System.lineSeparator());
+                bufferedWriter.write(createReport());
             } catch (IOException e) {
                 throw new RuntimeException("Can`t write file", e);
             }
         }
+    }
+
+    private String createReport() {
+        return SUPPLY + SEPARATOR + supplyAmount + System.lineSeparator()
+                + BUY + SEPARATOR + buyAmount + System.lineSeparator()
+                + RESULT + SEPARATOR + (supplyAmount - buyAmount) + System.lineSeparator();
     }
 }
