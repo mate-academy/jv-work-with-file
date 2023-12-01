@@ -7,30 +7,28 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final String supply_operation = "supply";
-    private static final String buy_operation = "buy";
-    private static final String result_header = "result";
-    private static final String comma = ",";
-    private static final int operation_type_ = 0;
-    private static final int amount_index = 1;
+    private static final String SUPPLY_OPERATION = "supply";
+    private static final String BUY_OPERATION = "buy";
+    private static final String RESULT_HEADER = "result";
+    private static final String SEPARATOR = ",";
+    private static final int OPERATION_TYPE_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        try {
-            String data = readFile(fromFileName);
-            String report = generateReport(data);
-            writeToFile(toFileName, report);
-        } catch (IOException e) {
-            handleException(e, fromFileName);
-        }
+        String data = readFile(fromFileName);
+        String report = generateReport(data);
+        writeToFile(toFileName, report);
     }
 
-    private String readFile(String fromFileName) throws IOException {
+    private String readFile(String fromFileName) {
         StringBuilder content = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 content.append(line).append(System.lineSeparator());
             }
+        } catch (IOException e) {
+            handleException(e, fromFileName);
         }
         return content.toString();
     }
@@ -44,30 +42,32 @@ public class WorkWithFile {
             processLine(line, totals);
         }
 
-        report.append(supply_operation).append(comma).append(totals[0])
+        report.append(SUPPLY_OPERATION).append(SEPARATOR).append(totals[0])
                 .append(System.lineSeparator());
-        report.append(buy_operation).append(comma).append(totals[1])
+        report.append(BUY_OPERATION).append(SEPARATOR).append(totals[1])
                 .append(System.lineSeparator());
-        report.append(result_header).append(comma)
+        report.append(RESULT_HEADER).append(SEPARATOR)
                 .append(totals[0] - totals[1]);
 
         return report.toString();
     }
 
-    private void writeToFile(String toFileName, String report) throws IOException {
+    private void writeToFile(String toFileName, String report) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write(report);
+        } catch (IOException e) {
+            handleException(e, toFileName);
         }
     }
 
     private void processLine(String line, int[] totals) {
-        String[] values = line.split(comma);
+        String[] values = line.split(SEPARATOR);
         if (values.length == 2) {
-            String operationType = values[operation_type_].trim();
-            int amount = Integer.parseInt(values[amount_index].trim());
-            if (supply_operation.equals(operationType)) {
+            String operationType = values[OPERATION_TYPE_INDEX].trim();
+            int amount = Integer.parseInt(values[AMOUNT_INDEX].trim());
+            if (SUPPLY_OPERATION.equals(operationType)) {
                 totals[0] += amount;
-            } else if (buy_operation.equals(operationType)) {
+            } else if (BUY_OPERATION.equals(operationType)) {
                 totals[1] += amount;
             }
         }
@@ -77,6 +77,3 @@ public class WorkWithFile {
         throw new RuntimeException("Can't read/write data to/from file " + fileName, e);
     }
 }
-
-
-
