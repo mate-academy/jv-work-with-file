@@ -20,20 +20,18 @@ public class WorkWithFile {
 
     private String readFile(String fromFileName) {
         StringBuilder data = new StringBuilder();
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String lineFromScV = reader.readLine();
 
             while (lineFromScV != null) {
                 data.append(lineFromScV).append(System.lineSeparator());
                 lineFromScV = reader.readLine();
             }
-
-            reader.close();
+            return data.toString();
         } catch (IOException e) {
             throw new RuntimeException("Can't read the data from " + fromFileName, e);
         }
-        return data.toString();
+
     }
 
     private String createReport(String dataFromFile) {
