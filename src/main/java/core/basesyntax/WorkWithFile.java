@@ -3,7 +3,6 @@ package core.basesyntax;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -12,6 +11,8 @@ public class WorkWithFile {
     private final String supply = "supply";
     private final String buy = "buy";
     private final String result = "result";
+    private final int indexOfName = 0;
+    private final int indexOfCount = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String dataFromFile = readFile(fromFileName);
@@ -20,41 +21,35 @@ public class WorkWithFile {
     }
 
     private String readFile(String fromFileName) {
-        int supplyCount = 0;
-        int buyCount = 0;
-        int indexOfName = 0;
-        int indexOfCount = 1;
         File file = new File(fromFileName);
-        String[] splittedData;
-
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(file));
-            String value = reader.readLine();
-
-            while (value != null) {
-                splittedData = value.split(",");
-                if (splittedData[indexOfName].equals(supply)) {
-                    supplyCount += Integer.parseInt(splittedData[indexOfCount]);
-                } else {
-                    buyCount += Integer.parseInt(splittedData[indexOfCount]);
-                }
-                value = reader.readLine();
+        StringBuilder builder = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                builder.append(line).append(" ");
             }
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException("Can't find such file", e);
         } catch (IOException e) {
             throw new RuntimeException("Can't read file", e);
         }
 
-        return supplyCount + " " + buyCount;
+        return builder.toString();
     }
 
     private String createReport(String dataFromFile) {
-        int indexOfSupply = 0;
-        int indexOfBuy = 1;
-        String[] splittedData = dataFromFile.split(" ");
-        int supplyCount = Integer.parseInt(splittedData[indexOfSupply]);
-        int buyCount = Integer.parseInt(splittedData[indexOfBuy]);
+        String[] splittedStrings = dataFromFile.split(" ");
+        String[] splittedData;
+        int supplyCount = 0;
+        int buyCount = 0;
+
+        for (String data: splittedStrings) {
+            splittedData = data.split(",");
+            if (splittedData[indexOfName].equals(supply)) {
+                supplyCount += Integer.parseInt(splittedData[indexOfCount]);
+            } else {
+                buyCount += Integer.parseInt(splittedData[indexOfCount]);
+            }
+        }
+
         int resultCount = supplyCount - buyCount;
         StringBuilder reportMessage = new StringBuilder();
         reportMessage.append(supply + "," + supplyCount).append(System.lineSeparator());
