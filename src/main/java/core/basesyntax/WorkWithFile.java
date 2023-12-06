@@ -38,7 +38,7 @@ public class WorkWithFile {
             bufferedWriter.flush();
 
         } catch (IOException e) {
-            throw new RuntimeException();
+            throw new RuntimeException("Can't read data from the file " + fromFileName, e);
         }
     }
 }
