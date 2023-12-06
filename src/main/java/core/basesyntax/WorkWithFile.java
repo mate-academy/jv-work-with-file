@@ -14,8 +14,8 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
 
-           try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
-             BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
+                BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
 
             int sumBuy = 0;
             int sumSupply = 0;
