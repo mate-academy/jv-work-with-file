@@ -7,63 +7,57 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String SEPARATOR = " ";
+    private static final String COMMA_SEPARATOR = ",";
+    private static final int OPERATION_TYPE_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
+
     public void getStatistic(String fromFileName, String toFileName) {
-        String fileGotRead = readFromFile(fromFileName);
-        String[] dividedByEmptySpace = fileGotRead.split(" ");
-        int supplySum = getSupplySum(dividedByEmptySpace);
-        int buySum = getBuySum(dividedByEmptySpace);
-        int benefit = supplySum - buySum;
-        writeToFile(toFileName, supplySum, buySum, benefit);
+        String data = readFromFile(fromFileName);
+        String report = generateReport(data);
+        writeToFile(toFileName, report);
     }
 
-    public int getSupplySum(String[] dividedByEmptySpace) {
+    private String generateReport(String data) {
+        String[] dividedByEmptySpace = data.split(SEPARATOR);
         int supplySum = 0;
-        for (String info : dividedByEmptySpace) {
-            String[] dividedByComma = info.split(",");
-            String firstElement = dividedByComma[0];
-            int amountOfMoney = Integer.parseInt(dividedByComma[1]);
-            if (firstElement.equals("supply")) {
-                supplySum += amountOfMoney;
-            }
-        }
-        return supplySum;
-    }
-
-    public int getBuySum(String[] dividedByEmptySpace) {
         int buySum = 0;
         for (String info : dividedByEmptySpace) {
-            String[] dividedByComma = info.split(",");
-            String firstElement = dividedByComma[0];
-            int amountOfMoney = Integer.parseInt(dividedByComma[1]);
-            if (firstElement.equals("buy")) {
-                buySum += amountOfMoney;
+            String[] dividedActionAndAmount = info.split(COMMA_SEPARATOR);
+            String action = dividedActionAndAmount[OPERATION_TYPE_INDEX];
+            int amount = Integer.parseInt(dividedActionAndAmount[AMOUNT_INDEX]);
+            if (action.equals("supply")) {
+                supplySum += amount;
+            } else {
+                buySum += amount;
             }
         }
-        return buySum;
+        int benefit = supplySum - buySum;
+        StringBuilder result = new StringBuilder("supply,").append(supplySum)
+                .append(System.lineSeparator()).append("buy,").append(buySum)
+                .append(System.lineSeparator()).append("result,").append(benefit);
+        return result.toString();
     }
 
-    public String readFromFile(String fromFileName) {
+    private String readFromFile(String fromFileName) {
         StringBuilder fullFileText = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String line = bufferedReader.readLine();
             while (line != null) {
-                fullFileText.append(line).append(" ");
+                fullFileText.append(line).append(SEPARATOR);
                 line = bufferedReader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("There is an exception at line 70 named ", e);
+            throw new RuntimeException("There is an exception in (WorkWithFile) file named ", e);
         }
         return fullFileText.toString();
     }
 
-    public void writeToFile(String toFileName, int supplySum, int buySum, int benefit) {
-        StringBuilder result = new StringBuilder("supply,").append(supplySum)
-                .append("\n").append("buy,").append(buySum)
-                .append("\n").append("result,").append(benefit);
+    private void writeToFile(String toFileName, String data) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write(result.toString());
+            bufferedWriter.write(data);
         } catch (IOException e) {
-            throw new RuntimeException("There is an exception at line 36 named ", e);
+            throw new RuntimeException("There is an exception in (WorkWithFile) file named ", e);
         }
     }
 }
