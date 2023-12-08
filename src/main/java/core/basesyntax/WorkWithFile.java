@@ -7,7 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final String SEPARATOR = " ";
+    private static final String DELIMETER = " ";
     private static final String COMMA_SEPARATOR = ",";
     private static final int OPERATION_TYPE_INDEX = 0;
     private static final int AMOUNT_INDEX = 1;
@@ -19,7 +19,7 @@ public class WorkWithFile {
     }
 
     private String generateReport(String data) {
-        String[] dividedByEmptySpace = data.split(SEPARATOR);
+        String[] dividedByEmptySpace = data.split(DELIMETER);
         int supplySum = 0;
         int buySum = 0;
         for (String info : dividedByEmptySpace) {
@@ -42,13 +42,12 @@ public class WorkWithFile {
     private String readFromFile(String fromFileName) {
         StringBuilder fullFileText = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
-            String line = bufferedReader.readLine();
-            while (line != null) {
-                fullFileText.append(line).append(SEPARATOR);
-                line = bufferedReader.readLine();
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                fullFileText.append(line).append(DELIMETER);
             }
         } catch (IOException e) {
-            throw new RuntimeException("There is an exception in (WorkWithFile) file named ", e);
+            throw new RuntimeException("Couldn't read data from file ", e);
         }
         return fullFileText.toString();
     }
@@ -57,7 +56,7 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(data);
         } catch (IOException e) {
-            throw new RuntimeException("There is an exception in (WorkWithFile) file named ", e);
+            throw new RuntimeException("Couldn't write data to file ", e);
         }
     }
 }
