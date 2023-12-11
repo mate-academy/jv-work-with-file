@@ -9,10 +9,11 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
-
-    private static final String GAP = " ";
+    private static final String LINE_SEPARATOR = " ";
     private static final String COMMA = ",";
     private static final String RESULT = "result";
+    private static final int OPERATION_TYPE_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String data = readFile(fromFileName);
@@ -25,7 +26,7 @@ public class WorkWithFile {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
-                builder.append(line).append(GAP);
+                builder.append(line).append(LINE_SEPARATOR);
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read file: " + fileName, e);
@@ -37,7 +38,7 @@ public class WorkWithFile {
         int supplyTotal = 0;
         int buyTotal = 0;
 
-        String[] lines = data.split(GAP);
+        String[] lines = data.split(LINE_SEPARATOR);
         StringBuilder reportBuilder = new StringBuilder();
 
         for (String line : lines) {
@@ -46,8 +47,8 @@ public class WorkWithFile {
                 System.out.println("Invalid data format: " + line);
                 continue;
             }
-            String operationType = parts[0];
-            int amount = Integer.parseInt(parts[1]);
+            String operationType = parts[OPERATION_TYPE_INDEX];
+            int amount = Integer.parseInt(parts[AMOUNT_INDEX]);
 
             if (operationType.equalsIgnoreCase(SUPPLY)) {
                 supplyTotal += amount;
