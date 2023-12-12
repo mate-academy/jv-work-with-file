@@ -60,7 +60,11 @@ public class WorkWithFile {
         int result = supplyTotal - buyTotal;
 
         StringBuilder reportBuilder = new StringBuilder();
-        reportBuilder.append(SUPPLY).append(COMMA).append(supplyTotal).append(System.lineSeparator());
+        reportBuilder
+                .append(SUPPLY)
+                .append(COMMA)
+                .append(supplyTotal)
+                .append(System.lineSeparator());
         reportBuilder.append(BUY).append(COMMA).append(buyTotal).append(System.lineSeparator());
         reportBuilder.append(RESULT).append(COMMA).append(result);
 
