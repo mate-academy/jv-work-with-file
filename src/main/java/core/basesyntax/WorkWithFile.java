@@ -14,6 +14,7 @@ public class WorkWithFile {
     private static final String RESULT = "result";
     private static final int OPERATION_TYPE_INDEX = 0;
     private static final int AMOUNT_INDEX = 1;
+    private static final int PARTS_LENGTH = 2;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String data = readFile(fromFileName);
@@ -39,11 +40,10 @@ public class WorkWithFile {
         int buyTotal = 0;
 
         String[] lines = data.split(LINE_SEPARATOR);
-        StringBuilder reportBuilder = new StringBuilder();
 
         for (String line : lines) {
             String[] parts = line.split(COMMA);
-            if (parts.length != 2) {
+            if (parts.length != PARTS_LENGTH) {
                 System.out.println("Invalid data format: " + line);
                 continue;
             }
@@ -59,8 +59,8 @@ public class WorkWithFile {
 
         int result = supplyTotal - buyTotal;
 
-        reportBuilder.append(SUPPLY).append(COMMA).append(supplyTotal)
-                .append(System.lineSeparator());
+        StringBuilder reportBuilder = new StringBuilder();
+        reportBuilder.append(SUPPLY).append(COMMA).append(supplyTotal).append(System.lineSeparator());
         reportBuilder.append(BUY).append(COMMA).append(buyTotal).append(System.lineSeparator());
         reportBuilder.append(RESULT).append(COMMA).append(result);
 
