@@ -14,40 +14,47 @@ public class WorkWithFile {
     public static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String report = createReport(fromFileName);
+        String dataFromFile = readFile(fromFileName);
+        String report = createReport(dataFromFile);
         writeDataToFile(toFileName, report);
     }
 
-    public String createReport(String fileName) {
+    private String readFile(String fileName) {
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
-            int supply = 0;
-            int buy = 0;
+            StringBuilder builder = new StringBuilder();
             String line = reader.readLine();
             while (line != null) {
-                String[] linePeaces = line.split(COMA_DELIMITER);
-                if (linePeaces[OPERATION_TYPE_INDEX].equals(OPERATION_TYPE_SUPPLY)) {
-                    supply += getIntFromString(linePeaces[AMOUNT_INDEX]);
-                }
-                if (linePeaces[OPERATION_TYPE_INDEX].equals(OPERATION_TYPE_BUY)) {
-                    buy += getIntFromString(linePeaces[AMOUNT_INDEX]);
-                }
+                builder.append(line).append(COMA_DELIMITER);
                 line = reader.readLine();
             }
-            return "supply," + supply + "\n" + "buy," + buy + "\n" + "result," + (supply - buy);
+            return builder.toString();
         } catch (IOException e) {
             throw new RuntimeException("Can not read fileName " + fileName, e);
         }
     }
 
-    public void writeDataToFile(String fileName, String data) {
+    private String createReport(String data) {
+        String[] dataPeaces = data.split(COMA_DELIMITER);
+        int supply = 0;
+        int buy = 0;
+        int peaceIndex = 0;
+        for (String peace: dataPeaces) {
+            if (peace.equals(OPERATION_TYPE_SUPPLY)) {
+                supply += Integer.parseInt(dataPeaces[peaceIndex + 1]);
+            }
+            if (peace.equals(OPERATION_TYPE_BUY)) {
+                buy += Integer.parseInt(dataPeaces[peaceIndex + 1]);
+            }
+            peaceIndex++;
+        }
+        return "supply," + supply + "\n" + "buy," + buy + "\n" + "result," + (supply - buy);
+    }
+
+    private void writeDataToFile(String fileName, String data) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             writer.write(data);
         } catch (IOException e) {
             throw new RuntimeException("Can not write data to file " + fileName, e);
         }
-    }
-
-    public int getIntFromString(String number) {
-        return Integer.parseInt(number);
     }
 }
