@@ -1,6 +1,6 @@
 package core.basesyntax;
 
-import org.junit.After;
+import georg.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 import java.io.IOException;
