@@ -9,6 +9,9 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final int SUPPLY_INDEX = 0;
     private static final int BUY_INDEX = 1;
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String dataFromFile = readFile(fromFileName);
@@ -31,9 +34,9 @@ public class WorkWithFile {
 
     private String createReport(String dataFromFile) {
         int[] statistics = calculateStatistics(dataFromFile);
-        return "supply," + statistics[SUPPLY_INDEX] + System.lineSeparator()
-                + "buy," + statistics[BUY_INDEX] + System.lineSeparator()
-                + "result," + (statistics[SUPPLY_INDEX] - statistics[BUY_INDEX]);
+        return SUPPLY + ',' + statistics[SUPPLY_INDEX] + System.lineSeparator()
+                + BUY + ',' + statistics[BUY_INDEX] + System.lineSeparator()
+                + RESULT + ',' + (statistics[SUPPLY_INDEX] - statistics[BUY_INDEX]);
     }
 
     private void writeReportToFile(String report, String toFileName) {
@@ -52,7 +55,7 @@ public class WorkWithFile {
         for (String line : lines) {
             String[] values = line.split(",");
             int amount = Integer.parseInt(values[1]);
-            if ("supply".equals(values[0])) {
+            if (SUPPLY.equals(values[0])) {
                 supply += amount;
             } else {
                 buy += amount;
