@@ -7,6 +7,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final int SUPPLY_INDEX = 0;
+    private static final int BUY_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String dataFromFile = readFile(fromFileName);
@@ -28,10 +30,10 @@ public class WorkWithFile {
     }
 
     private String createReport(String dataFromFile) {
-        final int[] STATISTICS = calculateStatistics(dataFromFile);
-        return "supply," + STATISTICS[0] + System.lineSeparator()
-                + "buy," + STATISTICS[1] + System.lineSeparator()
-                + "result," + (STATISTICS[0] - STATISTICS[1]);
+        int[] statistics = calculateStatistics(dataFromFile);
+        return "supply," + statistics[SUPPLY_INDEX] + System.lineSeparator()
+                + "buy," + statistics[BUY_INDEX] + System.lineSeparator()
+                + "result," + (statistics[SUPPLY_INDEX] - statistics[BUY_INDEX]);
     }
 
     private void writeReportToFile(String report, String toFileName) {
@@ -56,7 +58,6 @@ public class WorkWithFile {
                 buy += amount;
             }
         }
-
         return new int[]{supply, buy};
     }
 }
