@@ -22,7 +22,7 @@ public class WorkWithFile {
         writeToFile(report, toFileName);
     }
 
-    public String readFile(String fromFile) {
+    private String readFile(String fromFile) {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFile))) {
             StringBuilder stringBuilder = new StringBuilder();
             String line = bufferedReader.readLine();
@@ -49,7 +49,7 @@ public class WorkWithFile {
         return supplyAndBuy;
     }
 
-    public String createReport(int supply, int buy) {
+    private String createReport(int supply, int buy) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(STRING_SUPPLY).append(",")
                 .append(supply)
@@ -62,7 +62,7 @@ public class WorkWithFile {
         return stringBuilder.toString();
     }
 
-    public void writeToFile(String text, String toFileName) {
+    private void writeToFile(String text, String toFileName) {
         try {
             File file = new File(toFileName);
             Files.write(file.toPath(), text.getBytes());
