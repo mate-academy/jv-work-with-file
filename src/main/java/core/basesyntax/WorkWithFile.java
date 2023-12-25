@@ -7,18 +7,18 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 public class WorkWithFile {
-
     private static final String STRING_SUPPLY = "supply";
     private static final String STRING_BUY = "buy";
     private static final String STRING_RESULT = "result";
     private static final int SUPPLY_START_NUMBER = 7;
     private static final int BUY_START_NUMBER = 4;
+    private static final int SUPPLY_INDEX = 0;
+    private static final int BUY_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String data = readFile(fromFileName);
-        String[] tableFromFile = formatData(data);
-        int[] supplyAndBuy = parseStatistic(tableFromFile);
-        String report = createReport(supplyAndBuy[0], supplyAndBuy[1]);
+        int[] supplyAndBuy = parseStatistic(data);
+        String report = createReport(supplyAndBuy[SUPPLY_INDEX], supplyAndBuy[BUY_INDEX]);
         writeToFile(report, toFileName);
     }
 
@@ -36,18 +36,14 @@ public class WorkWithFile {
         }
     }
 
-    private String[] formatData(String data) {
-        String[] fileTable = data.split(System.lineSeparator());
-        return fileTable;
-    }
-
-    private int[] parseStatistic(String[] table) {
+    private int[] parseStatistic(String table) {
+        String[] fileTable = table.split(System.lineSeparator());
         int[] supplyAndBuy = new int[] {0, 0};
-        for (String line : table) {
+        for (String line : fileTable) {
             if (line.contains(STRING_SUPPLY)) {
-                supplyAndBuy[0] += Integer.parseInt(line.substring(SUPPLY_START_NUMBER));
+                supplyAndBuy[SUPPLY_INDEX] += Integer.parseInt(line.substring(SUPPLY_START_NUMBER));
             } else if (line.contains(STRING_BUY)) {
-                supplyAndBuy[1] += Integer.parseInt(line.substring(BUY_START_NUMBER));
+                supplyAndBuy[BUY_INDEX] += Integer.parseInt(line.substring(BUY_START_NUMBER));
             }
         }
         return supplyAndBuy;
