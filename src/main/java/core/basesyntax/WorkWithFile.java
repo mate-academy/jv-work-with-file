@@ -10,6 +10,8 @@ import java.io.IOException;
 public class WorkWithFile {
     private int totalSupply;
     private int totalBuy;
+    private int number;
+    private String event;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String fileData = readFile(fromFileName);
@@ -42,8 +44,8 @@ public class WorkWithFile {
         String[] splitLine = data.split(System.lineSeparator());
         for (String line : splitLine) {
             String[] splitData = line.split(",");
-            String event = splitData[0];
-            int number = Integer.parseInt(splitData[1]);
+            event = splitData[0];
+            number = Integer.parseInt(splitData[1]);
             if (event.equals("supply")) {
                 totalSupply += number;
             }
