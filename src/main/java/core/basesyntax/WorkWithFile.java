@@ -13,31 +13,42 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         String fileData = readFile(fromFileName);
+        String countData = countStatistic(fileData);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            writer.write(fileData);
+            writer.write(countData);
         } catch (IOException e) {
             throw new RuntimeException("Can`t write file", e);
         }
     }
 
     private String readFile(String fileName) {
-        totalSupply = 0;
-        totalBuy = 0;
+        StringBuilder builder = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                String[] splitLine = line.split(",");
-                if (splitLine[0].equals("supply")) {
-                    totalSupply += Integer.parseInt(splitLine[1]);
-                }
-                if (splitLine[0].equals("buy")) {
-                    totalBuy += Integer.parseInt(splitLine[1]);
-                }
+                builder.append(line).append(System.lineSeparator());
             }
         } catch (FileNotFoundException e) {
             throw new RuntimeException("Can`t find file " + fileName, e);
         } catch (IOException e) {
             throw new RuntimeException("Can`t read file " + fileName, e);
+        }
+
+        return builder.toString().strip();
+    }
+
+    private String countStatistic(String data) {
+        totalSupply = 0;
+        totalBuy = 0;
+        String[] splitLine = data.split(System.lineSeparator());
+        for (String line : splitLine) {
+            String[] splitData = line.split(",");
+            if (splitData[0].equals("supply")) {
+                totalSupply += Integer.parseInt(splitData[1]);
+            }
+            if (splitData[0].equals("buy")) {
+                totalBuy += Integer.parseInt(splitData[1]);
+            }
         }
         StringBuilder builderResult = new StringBuilder();
         builderResult.append("supply,").append(totalSupply).append(System.lineSeparator());
