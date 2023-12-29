@@ -8,6 +8,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private int totalSupply;
+    private int totalBuy;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String fileData = readFile(fromFileName);
@@ -15,7 +17,7 @@ public class WorkWithFile {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write(countData);
         } catch (IOException e) {
-            throw new RuntimeException("Can`t write file", e);
+            throw new RuntimeException("Can`t write file " + toFileName, e);
         }
     }
 
@@ -31,13 +33,12 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can`t read file " + fileName, e);
         }
-
         return builder.toString().strip();
     }
 
     private String countStatistic(String data) {
-        int totalSupply = 0;
-        int totalBuy = 0;
+        totalSupply = 0;
+        totalBuy = 0;
         String[] splitLine = data.split(System.lineSeparator());
         for (String line : splitLine) {
             String[] splitData = line.split(",");
