@@ -8,8 +8,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final int FIRST = 0;
-    private static final int SECOND = 1;
+    private static final int FIRST_INDEX = 0;
+    private static final int SECOND_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String fileData = readFile(fromFileName);
@@ -44,8 +44,8 @@ public class WorkWithFile {
         String[] splitLine = data.split(System.lineSeparator());
         for (String line : splitLine) {
             String[] splitData = line.split(",");
-            event = splitData[FIRST];
-            number = Integer.parseInt(splitData[SECOND]);
+            event = splitData[FIRST_INDEX];
+            number = Integer.parseInt(splitData[SECOND_INDEX]);
             if (event.equals("supply")) {
                 totalSupply += number;
             }
