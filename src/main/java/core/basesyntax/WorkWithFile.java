@@ -8,17 +8,16 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final int FIRST_INDEX = 0;
-    private static final int SECOND_INDEX = 1;
-    private StringBuilder builder;
+    private static final int ZERO = 0;
+    private static final int ONE = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String fileData = readFile(fromFileName);
         String countData = countStatistic(fileData);
-        writeToFile(countData, toFileName);
+        writeFile(countData, toFileName);
     }
 
-    private void writeToFile(String data, String fileName) {
+    private void writeFile(String data, String fileName) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             writer.write(data);
         } catch (IOException e) {
@@ -27,7 +26,7 @@ public class WorkWithFile {
     }
 
     private String readFile(String fileName) {
-        builder = new StringBuilder();
+        StringBuilder builder = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -42,7 +41,7 @@ public class WorkWithFile {
     }
 
     private String countStatistic(String data) {
-        builder = new StringBuilder();
+        StringBuilder builder = new StringBuilder();
         int totalSupply = 0;
         int totalBuy = 0;
         int number;
@@ -50,8 +49,8 @@ public class WorkWithFile {
         String[] splitLine = data.split(System.lineSeparator());
         for (String line : splitLine) {
             String[] splitData = line.split(",");
-            event = splitData[FIRST_INDEX];
-            number = Integer.parseInt(splitData[SECOND_INDEX]);
+            event = splitData[ZERO];
+            number = Integer.parseInt(splitData[ONE]);
             if (event.equals("supply")) {
                 totalSupply += number;
             }
