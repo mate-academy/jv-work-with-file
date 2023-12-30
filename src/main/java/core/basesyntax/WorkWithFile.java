@@ -10,19 +10,24 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final int FIRST_INDEX = 0;
     private static final int SECOND_INDEX = 1;
+    private StringBuilder builder;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String fileData = readFile(fromFileName);
         String countData = countStatistic(fileData);
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            writer.write(countData);
+        writeToFile(countData, toFileName);
+    }
+
+    private void writeToFile(String data, String fileName) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+            writer.write(data);
         } catch (IOException e) {
-            throw new RuntimeException("Can`t write file " + toFileName, e);
+            throw new RuntimeException("Can`t write file " + fileName, e);
         }
     }
 
     private String readFile(String fileName) {
-        StringBuilder builder = new StringBuilder();
+        builder = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -37,6 +42,7 @@ public class WorkWithFile {
     }
 
     private String countStatistic(String data) {
+        builder = new StringBuilder();
         int totalSupply = 0;
         int totalBuy = 0;
         int number;
@@ -53,10 +59,9 @@ public class WorkWithFile {
                 totalBuy += number;
             }
         }
-        StringBuilder builderResult = new StringBuilder();
-        builderResult.append("supply,").append(totalSupply).append(System.lineSeparator());
-        builderResult.append("buy,").append(totalBuy).append(System.lineSeparator());
-        builderResult.append("result,").append(totalSupply - totalBuy);
-        return builderResult.toString();
+        builder.append("supply,").append(totalSupply).append(System.lineSeparator());
+        builder.append("buy,").append(totalBuy).append(System.lineSeparator());
+        builder.append("result,").append(totalSupply - totalBuy);
+        return builder.toString();
     }
 }
