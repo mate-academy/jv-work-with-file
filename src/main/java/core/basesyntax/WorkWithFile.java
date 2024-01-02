@@ -16,7 +16,6 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         List<String> dataFromFile = readFromFile(fromFileName);
-        System.out.println(dataFromFile);
         String report = getReport(dataFromFile);
         writeToFile(toFileName, report);
     }
@@ -24,15 +23,14 @@ public class WorkWithFile {
     public List<String> readFromFile(String fileName) {
         File file = new File(fileName);
         List<String> result = new ArrayList<>();
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(file));
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line = reader.readLine();
             while (line != null) {
                 result.add(line);
                 line = reader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read data from file!", e);
+            throw new RuntimeException("Can't read data from file " + fileName, e);
         }
         return result;
     }
@@ -41,7 +39,7 @@ public class WorkWithFile {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             writer.write(data);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data to file!", e);
+            throw new RuntimeException("Can't write data to file " + fileName, e);
         }
     }
 
