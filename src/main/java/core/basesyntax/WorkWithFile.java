@@ -2,14 +2,13 @@ package core.basesyntax;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final int ZERO = 0;
-    private static final int ONE = 1;
+    private static final int OPERATION_TYPE_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String fileData = readFile(fromFileName);
@@ -32,8 +31,6 @@ public class WorkWithFile {
             while ((line = reader.readLine()) != null) {
                 builder.append(line).append(System.lineSeparator());
             }
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException("Can`t find file " + fileName, e);
         } catch (IOException e) {
             throw new RuntimeException("Can`t read file " + fileName, e);
         }
@@ -41,23 +38,21 @@ public class WorkWithFile {
     }
 
     private String countStatistic(String data) {
-        StringBuilder builder = new StringBuilder();
         int totalSupply = 0;
         int totalBuy = 0;
-        int number;
-        String event;
         String[] splitLine = data.split(System.lineSeparator());
         for (String line : splitLine) {
             String[] splitData = line.split(",");
-            event = splitData[ZERO];
-            number = Integer.parseInt(splitData[ONE]);
-            if (event.equals("supply")) {
-                totalSupply += number;
+            String operationType = splitData[OPERATION_TYPE_INDEX];
+            int amount = Integer.parseInt(splitData[AMOUNT_INDEX]);
+            if (operationType.equals("supply")) {
+                totalSupply += amount;
             }
-            if (event.equals("buy")) {
-                totalBuy += number;
+            if (operationType.equals("buy")) {
+                totalBuy += amount;
             }
         }
+        StringBuilder builder = new StringBuilder();
         builder.append("supply,").append(totalSupply).append(System.lineSeparator());
         builder.append("buy,").append(totalBuy).append(System.lineSeparator());
         builder.append("result,").append(totalSupply - totalBuy);
