@@ -17,12 +17,9 @@ public class WorkWithFile {
     private static final int AMOUNT_OF_BUY_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        try {
-            File file = new File(toFileName);
-            Files.write(file.toPath(), createReport(fromFileName).getBytes());
-        } catch (IOException e) {
-            throw new RuntimeException("Can't write data to the file " + toFileName, e);
-        }
+        int[]amounts = calculateAmounts(fromFileName);
+        String report = createReport(amounts);
+        writeToFile(toFileName, report);
     }
 
     private int[] calculateAmounts(String fromFileName) {
@@ -31,7 +28,7 @@ public class WorkWithFile {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String value = bufferedReader.readLine();
             while (value != null) {
-                String[] operationData = value.split(",");
+                String[] operationData = value.split(FIELD_SEPARATOR);
                 if (operationData[OPERATION_INDEX].equals(SUPPLY)) {
                     amountOfSupply += Integer.parseInt(operationData[AMOUNT_INDEX]);
                 } else {
@@ -45,12 +42,21 @@ public class WorkWithFile {
         return new int[]{amountOfSupply, amountOfBuy};
     }
 
-    private String createReport(String fromFileName) {
-        return SUPPLY + FIELD_SEPARATOR + calculateAmounts(fromFileName)[AMOUNT_OF_SUPPLY_INDEX]
+    private String createReport(int[] amounts) {
+        return SUPPLY + FIELD_SEPARATOR + amounts[AMOUNT_OF_SUPPLY_INDEX]
                 + System.lineSeparator()
-                + BUY + FIELD_SEPARATOR + calculateAmounts(fromFileName)[AMOUNT_OF_BUY_INDEX]
+                + BUY + FIELD_SEPARATOR + amounts[AMOUNT_OF_BUY_INDEX]
                 + System.lineSeparator()
-                + RESULT + FIELD_SEPARATOR + (calculateAmounts(fromFileName)[AMOUNT_OF_SUPPLY_INDEX]
-                - calculateAmounts(fromFileName)[AMOUNT_OF_BUY_INDEX]);
+                + RESULT + FIELD_SEPARATOR + (amounts[AMOUNT_OF_SUPPLY_INDEX]
+                - amounts[AMOUNT_OF_BUY_INDEX]);
+    }
+
+    private void writeToFile(String toFileName, String report) {
+        try {
+            File file = new File(toFileName);
+            Files.write(file.toPath(), report.getBytes());
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write data to the file " + toFileName, e);
+        }
     }
 }
