@@ -14,23 +14,29 @@ public class WorkWithFile {
     private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        try (
-                BufferedReader readerForSupplyType = new BufferedReader(
-                        new FileReader(fromFileName));
-                BufferedWriter writer = new BufferedWriter(
-                        new FileWriter(toFileName))
-        ) {
-            int supplyCount = processData(readerForSupplyType, SUPPLY_TYPE);
-            try (
-                    BufferedReader readerForBuyType = new BufferedReader(
-                            new FileReader(fromFileName))
-            ) {
-                int buyCount = processData(readerForBuyType, BUY_TYPE);
-                int result = supplyCount - buyCount;
-                writeReport(writer, supplyCount, buyCount, result);
-            }
+        int supplyCount = readData(fromFileName, SUPPLY_TYPE);
+        int buyCount = readData(fromFileName, BUY_TYPE);
+        int result = supplyCount - buyCount;
+        writeReport(toFileName, supplyCount, buyCount, result);
+    }
+
+    private int readData(String fileName, String operationType) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            return processData(reader, operationType);
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file ", e);
+            throw new RuntimeException("Can't read file " + fileName, e);
+        }
+    }
+
+    private void writeReport(String toFileName, int supplyCount, int buyCount, int result) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
+            writer.write(SUPPLY_TYPE + "," + supplyCount);
+            writer.newLine();
+            writer.write(BUY_TYPE + "," + buyCount);
+            writer.newLine();
+            writer.write("result," + result);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write data to file " + toFileName, e);
         }
     }
 
@@ -44,18 +50,5 @@ public class WorkWithFile {
             }
         }
         return count;
-    }
-
-    private void writeReport(BufferedWriter writer,
-                             int supplyCount, int buyCount, int result) {
-        try {
-            writer.write(SUPPLY_TYPE + "," + supplyCount);
-            writer.newLine();
-            writer.write(BUY_TYPE + "," + buyCount);
-            writer.newLine();
-            writer.write("result," + result);
-        } catch (IOException e) {
-            throw new RuntimeException("Can't write data to a file ", e);
-        }
     }
 }
