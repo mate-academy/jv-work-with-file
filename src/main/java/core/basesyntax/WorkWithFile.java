@@ -7,37 +7,55 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+
     private static final String SUPPLY_TYPE = "supply";
     private static final String BUY_TYPE = "buy";
+    private static final int OPERATION_TYPE_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         try (
-                BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
-                BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))
+                BufferedReader readerForSupplyType = new BufferedReader(
+                        new FileReader(fromFileName));
+                BufferedWriter writer = new BufferedWriter(
+                        new FileWriter(toFileName))
         ) {
-            int supplyCount = 0;
-            int buyCount = 0;
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",");
-                String operationType = parts[0];
-                int amount = Integer.parseInt(parts[1]);
-                if (operationType.equals(SUPPLY_TYPE)) {
-                    supplyCount += amount;
-                } else if (operationType.equals(BUY_TYPE)) {
-                    buyCount += amount;
-                }
+            int supplyCount = processData(readerForSupplyType, SUPPLY_TYPE);
+            try (
+                    BufferedReader readerForBuyType = new BufferedReader(
+                            new FileReader(fromFileName))
+            ) {
+                int buyCount = processData(readerForBuyType, BUY_TYPE);
+                int result = supplyCount - buyCount;
+                writeReport(writer, supplyCount, buyCount, result);
             }
-            int result = supplyCount - buyCount;
+        } catch (IOException e) {
+            throw new RuntimeException("Can't read file ", e);
+        }
+    }
+
+    private int processData(BufferedReader reader, String operationType) throws IOException {
+        int count = 0;
+        String line;
+        while ((line = reader.readLine()) != null) {
+            String[] parts = line.split(",");
+            if (parts[OPERATION_TYPE_INDEX].equals(operationType)) {
+                count += Integer.parseInt(parts[AMOUNT_INDEX]);
+            }
+        }
+        return count;
+    }
+
+    private void writeReport(BufferedWriter writer,
+                             int supplyCount, int buyCount, int result) {
+        try {
             writer.write(SUPPLY_TYPE + "," + supplyCount);
             writer.newLine();
             writer.write(BUY_TYPE + "," + buyCount);
             writer.newLine();
             writer.write("result," + result);
         } catch (IOException e) {
-            throw new RuntimeException("Error processing files: "
-                    + fromFileName + ", "
-                    + toFileName, e);
+            throw new RuntimeException("Can't write data to a file ", e);
         }
     }
 }
