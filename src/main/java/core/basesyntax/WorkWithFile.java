@@ -7,18 +7,15 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final String SPLIT_CHARACTER = ",";
-    private static final int WORD_INDEX = 0;
-    private static final int COUNT_INDEX = 1;
+    private static final String SEPARATOR = ",";
+    private static final int OPERATION_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
     private static String FROM_FILE_NAME;
     private static String TO_FILE_NAME;
-    private StringBuilder builder = new StringBuilder();
 
     public void getStatistic(String fromFileName, String toFileName) {
-        this.FROM_FILE_NAME = fromFileName;
-        this.TO_FILE_NAME = toFileName;
-
-        builder.setLength(0);
+        FROM_FILE_NAME = fromFileName;
+        TO_FILE_NAME = toFileName;
 
         String dataFromFile = readFromFile(fromFileName);
         String report = processData(dataFromFile);
@@ -27,6 +24,7 @@ public class WorkWithFile {
 
     private String readFromFile(String fromFile) {
         try (BufferedReader reader = new BufferedReader(new FileReader(FROM_FILE_NAME))) {
+            StringBuilder builder = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
                 builder.append(line).append(System.lineSeparator());
@@ -43,12 +41,12 @@ public class WorkWithFile {
         int buy = 0;
 
         for (String row : data) {
-            String[] info = row.split(SPLIT_CHARACTER);
-            if (info[WORD_INDEX].equals("supply")) {
-                supply += Integer.valueOf(info[COUNT_INDEX]);
+            String[] info = row.split(SEPARATOR);
+            if (info[OPERATION_INDEX].equals("supply")) {
+                supply += Integer.valueOf(info[AMOUNT_INDEX]);
             }
-            if (info[WORD_INDEX].equals("buy")) {
-                buy += Integer.valueOf(info[COUNT_INDEX]);
+            if (info[OPERATION_INDEX].equals("buy")) {
+                buy += Integer.valueOf(info[AMOUNT_INDEX]);
             }
         }
         return "supply," + supply + System.lineSeparator()
