@@ -2,49 +2,65 @@ package core.basesyntax;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
     private static final String SPLIT_CHARACTER = ",";
+    private static final int WORD_INDEX = 0;
+    private static final int COUNT_INDEX = 1;
+    private static String FROM_FILE_NAME;
+    private static String TO_FILE_NAME;
+    private StringBuilder builder = new StringBuilder();
 
     public void getStatistic(String fromFileName, String toFileName) {
-        File fromFile = new File(fromFileName);
-        File toFile = new File(toFileName);
-        StringBuilder builder = new StringBuilder();
+        this.FROM_FILE_NAME = fromFileName;
+        this.TO_FILE_NAME = toFileName;
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(fromFile))) {
-            String value = reader.readLine();
+        builder.setLength(0);
 
-            while (value != null) {
-                builder.append(value).append(SPLIT_CHARACTER);
-                value = reader.readLine();
+        String dataFromFile = readFromFile(fromFileName);
+        String report = processData(dataFromFile);
+        writeToFile(report, toFileName);
+    }
+
+    private String readFromFile(String fromFile) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(FROM_FILE_NAME))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                builder.append(line).append(System.lineSeparator());
             }
+            return builder.toString();
         } catch (IOException e) {
-            throw new RuntimeException("Can't read from file", e);
+            throw new RuntimeException("Can't read from file" + FROM_FILE_NAME, e);
         }
+    }
 
-        String[] data = builder.toString().split(SPLIT_CHARACTER);
+    private String processData(String fileData) {
+        String[] data = fileData.split(System.lineSeparator());
         int supply = 0;
         int buy = 0;
 
-        for (int i = 0; i < data.length; i++) {
-            if (data[i].equals("supply")) {
-                supply += Integer.valueOf(data[i + 1]);
+        for (String row : data) {
+            String[] info = row.split(SPLIT_CHARACTER);
+            if (info[WORD_INDEX].equals("supply")) {
+                supply += Integer.valueOf(info[COUNT_INDEX]);
             }
-            if (data[i].equals("buy")) {
-                buy += Integer.valueOf(data[i + 1]);
+            if (info[WORD_INDEX].equals("buy")) {
+                buy += Integer.valueOf(info[COUNT_INDEX]);
             }
         }
+        return "supply," + supply + System.lineSeparator()
+                + "buy," + buy + System.lineSeparator()
+                + "result," + (supply - buy);
+    }
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFile))) {
-            writer.write("supply," + supply + System.lineSeparator()
-                          + "buy," + buy + System.lineSeparator()
-                          + "result," + (supply - buy));
+    private void writeToFile(String data, String toFile) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(TO_FILE_NAME))) {
+            writer.write(data);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write to file", e);
+            throw new RuntimeException("Can't write to file" + TO_FILE_NAME, e);
         }
     }
 }
