@@ -14,9 +14,9 @@ public class WorkWithFile {
         String[] data = getStringFromFile(fromFileName);
         int supply = getAmount(data, SUPPLY);
         int buy = getAmount(data, BUY);
-        String result = SUPPLY + SEPARATOR + supply + System.lineSeparator() +
-                BUY + SEPARATOR + buy + System.lineSeparator() +
-                "result" + SEPARATOR + (supply - buy);
+        String result = SUPPLY + SEPARATOR + supply + System.lineSeparator()
+                + BUY + SEPARATOR + buy + System.lineSeparator()
+                + "result" + SEPARATOR + (supply - buy);
         writeStringToFile(result, toFileName);
     }
 
