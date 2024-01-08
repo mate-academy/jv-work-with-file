@@ -14,10 +14,11 @@ public class WorkWithFile {
         String[] data = getStringFromFile(fromFileName);
         int supply = getAmount(data, SUPPLY);
         int buy = getAmount(data, BUY);
-        String result = SUPPLY + "," + supply + System.lineSeparator()
-                + BUY + "," + buy + System.lineSeparator()
-                + "result" + "," + (supply - buy);
-        writeStringToFile(result, toFileName);
+        StringBuilder result = new StringBuilder();
+        result.append(SUPPLY).append(SEPARATOR).append(supply).append(System.lineSeparator())
+                .append(BUY).append(SEPARATOR).append(buy).append(System.lineSeparator())
+                .append("result").append(SEPARATOR).append(supply - buy);
+        writeStringToFile(result.toString(), toFileName);
     }
 
     private String[] getStringFromFile(String fromFile) {
