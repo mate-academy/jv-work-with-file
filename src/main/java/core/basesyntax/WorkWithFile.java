@@ -43,7 +43,7 @@ public class WorkWithFile {
         for (String line : data) {
             String[] forPars = line.split(SEPARATOR);
             if (forPars[0].equals(element)) {
-                amount += Integer.parseInt(forPars[1].trim());
+                amount += Integer.parseInt(forPars[1].replaceAll("[^0-9]", ""));
             }
         }
         return amount;
