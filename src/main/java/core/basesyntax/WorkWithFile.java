@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
+    private static final String SEPARATOR = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] data = getStringFromFile(fromFileName);
@@ -40,7 +41,7 @@ public class WorkWithFile {
     private int getAmount(String[] data, String element) {
         int amount = 0;
         for (String line : data) {
-            String[] forPars = line.split(",");
+            String[] forPars = line.split(SEPARATOR);
             if (forPars[0].equals(element)) {
                 amount += Integer.parseInt(forPars[1]);
             }
