@@ -24,7 +24,7 @@ public class WorkWithFile {
     private String[] getStringFromFile(String fromFile) {
         try {
             String str = Files.readString(Paths.get(fromFile));
-            return str.split("\r\n");
+            return str.split(System.lineSeparator());
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from the file " + fromFile, e);
         }
