@@ -34,7 +34,7 @@ public class WorkWithFile {
         try {
             Files.write(filePath, content.getBytes());
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data to the file " + toFileName, e);
+            throw new RuntimeException("Can't write data to the file: " + toFileName, e);
         }
     }
 
