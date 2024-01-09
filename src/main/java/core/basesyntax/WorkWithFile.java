@@ -10,21 +10,21 @@ public class WorkWithFile {
     private static final String BUY = "buy";
     private static final String RESULT = "result";
     private static final String SEPARATOR = ",";
+    private static final int AMOUND_INDEX = 1;
+    private static final int OPERATION_INDEX = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] data = getStringFromFile(fromFileName);
         int supply = getAmount(data, SUPPLY);
         int buy = getAmount(data, BUY);
-        String result = SUPPLY + SEPARATOR + supply + System.lineSeparator()
-                + BUY + SEPARATOR + buy + System.lineSeparator()
-                + RESULT + SEPARATOR + (supply - buy);
-        writeStringToFile(result, toFileName);
+        String report = generateReport(supply, buy);
+        writeStringToFile(report, toFileName);
     }
 
     private String[] getStringFromFile(String fromFile) {
         try {
-            String str = Files.readString(Paths.get(fromFile));
-            return str.split(System.lineSeparator());
+            String data = Files.readString(Paths.get(fromFile));
+            return data.split(System.lineSeparator());
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from the file " + fromFile, e);
         }
@@ -43,10 +43,16 @@ public class WorkWithFile {
         int amount = 0;
         for (String line : data) {
             String[] forPars = line.split(SEPARATOR);
-            if (forPars[0].equals(element)) {
-                amount += Integer.parseInt(forPars[1]);
+            if (forPars[OPERATION_INDEX].equals(element)) {
+                amount += Integer.parseInt(forPars[AMOUND_INDEX]);
             }
         }
         return amount;
+    }
+
+    private String generateReport(int supply, int buy) {
+        return SUPPLY + SEPARATOR + supply + System.lineSeparator()
+                + BUY + SEPARATOR + buy + System.lineSeparator()
+                + RESULT + SEPARATOR + (supply - buy);
     }
 }
