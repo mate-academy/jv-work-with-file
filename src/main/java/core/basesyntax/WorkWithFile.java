@@ -20,18 +20,45 @@ public class WorkWithFile {
     private static final String BUY = "buy";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int[] resultsInt = new int[ELEMENTS_TO_WRITE];
-        String[] operations = new String[]{SUPPLY, BUY, RESULT};
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
+        String dataFromFile = readFile(fromFileName);
+        String report = createReport(dataFromFile);
+        writeReportToFile(report, toFileName);
+    }
+
+    private String readFile(String fromFile) {
+        StringBuilder resultReader = new StringBuilder();
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFile))) {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
-                String[] datas = line.toLowerCase().split(SEPARATOR);
-                countForOperations(datas, resultsInt);
+                resultReader.append(line).append(System.lineSeparator());
             }
-            resultsInt[INDEX_RESULT] = resultsInt[INDEX_SUPPLY] - resultsInt[INDEX_BUY];
-            writeToFile(toFileName, operations, resultsInt);
         } catch (IOException e) {
-            throw new RuntimeException("Can't read the file " + fromFileName, e);
+            throw new RuntimeException("Can't read the file " + fromFile, e);
+        }
+        return resultReader.toString();
+    }
+
+    private String createReport(String dataFrom) {
+        int[] amountsByGroup = new int[ELEMENTS_TO_WRITE];
+        String[] groupName = new String[]{SUPPLY, BUY, RESULT};
+        StringBuilder reports = new StringBuilder();
+        String[] dataArray = dataFrom.split(System.lineSeparator());
+        for (String item : dataArray) {
+            countForOperations(item.split(SEPARATOR), amountsByGroup);
+        }
+        amountsByGroup[INDEX_RESULT] = amountsByGroup[INDEX_SUPPLY] - amountsByGroup[INDEX_BUY];
+        for (int i = 0; i < groupName.length; i++) {
+            reports.append(groupName[i]).append(SEPARATOR).append(amountsByGroup[i])
+                    .append(System.lineSeparator());
+        }
+        return reports.toString();
+    }
+
+    private void writeReportToFile(String result, String toFile) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFile))) {
+            bufferedWriter.write(result);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write data to the file " + toFile, e);
         }
     }
 
@@ -42,16 +69,5 @@ public class WorkWithFile {
         arrayForSum[INDEX_BUY] += (dataFromReader[OPERATION_INDEX].matches(BUY))
                 ? Integer.parseInt(dataFromReader[AMOUNT_INDEX])
                 : ZERO;
-    }
-
-    private void writeToFile(String toFileName,String[] names, int[] amounts) {
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            for (int i = 0; i < names.length; i++) {
-                bufferedWriter.write(names[i] + SEPARATOR + amounts[i]);
-                bufferedWriter.newLine();
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("Can't write to the file " + toFileName, e);
-        }
     }
 }
