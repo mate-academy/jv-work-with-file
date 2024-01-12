@@ -8,28 +8,27 @@ import java.io.IOException;
 
 public class WorkWithFile {
     private static final String SEPARATOR = "\\s*,\\s*";
-    private static final int TYPE = 0;
-    private static final int SIZE = 1;
+    private static final String REPORT_FORMAT = "supply,%d%sbuy,%d%sresult,%d%s";
+    private static final int OPERATION_TYPE_INDEX = 0;
+    private static final int QUANTITY_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        try {
-            String data = readFile(fromFileName);
-            String report = generateReport(data);
-            writeToFile(toFileName, report);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        String data = readFile(fromFileName);
+        String report = generateReport(data);
+        writeToFile(toFileName, report);
     }
 
-    private String readFile(String fromFileName) throws IOException {
-        StringBuilder content = new StringBuilder();
+    private String readFile(String fromFileName) {
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
+            StringBuilder content = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
                 content.append(line).append(System.lineSeparator());
             }
+            return content.toString();
+        } catch (IOException e) {
+            throw new RuntimeException("Error reading from file: " + fromFileName, e);
         }
-        return content.toString();
     }
 
     private String generateReport(String data) {
@@ -39,8 +38,8 @@ public class WorkWithFile {
         String[] lines = data.split(System.lineSeparator());
         for (String line : lines) {
             String[] parts = line.split(SEPARATOR);
-            String operationType = parts[TYPE];
-            int quantity = Integer.parseInt(parts[SIZE]);
+            String operationType = parts[OPERATION_TYPE_INDEX];
+            int quantity = Integer.parseInt(parts[QUANTITY_INDEX]);
 
             if ("supply".equals(operationType)) {
                 totalSupply += quantity;
@@ -49,13 +48,15 @@ public class WorkWithFile {
             }
         }
 
-        return String.format("supply,%d%nbuy,%d%nresult,%d%n",
-                totalSupply, totalBuy, (totalSupply - totalBuy));
+        return String.format(REPORT_FORMAT, totalSupply, System.lineSeparator(),
+                totalBuy, System.lineSeparator(), (totalSupply - totalBuy), System.lineSeparator());
     }
 
-    private void writeToFile(String toFileName, String report) throws IOException {
+    private void writeToFile(String toFileName, String report) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write(report);
+        } catch (IOException e) {
+            throw new RuntimeException("Error writing to file: " + toFileName, e);
         }
     }
 }
