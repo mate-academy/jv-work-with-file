@@ -12,30 +12,50 @@ public class WorkWithFile {
     private static final int SIZE = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
+        try {
+            String data = readFile(fromFileName);
+            String report = generateReport(data);
+            writeToFile(toFileName, report);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private String readFile(String fromFileName) throws IOException {
+        StringBuilder content = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                content.append(line).append(System.lineSeparator());
+            }
+        }
+        return content.toString();
+    }
+
+    private String generateReport(String data) {
         int totalSupply = 0;
         int totalBuy = 0;
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
-             BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
+        String[] lines = data.split(System.lineSeparator());
+        for (String line : lines) {
+            String[] parts = line.split(SEPARATOR);
+            String operationType = parts[TYPE];
+            int quantity = Integer.parseInt(parts[SIZE]);
 
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(SEPARATOR);
-                String operationType = parts[TYPE];
-                int quantity = Integer.parseInt(parts[SIZE]);
-
-                if ("supply".equals(operationType)) {
-                    totalSupply += quantity;
-                } else if ("buy".equals(operationType)) {
-                    totalBuy += quantity;
-                }
+            if ("supply".equals(operationType)) {
+                totalSupply += quantity;
+            } else if ("buy".equals(operationType)) {
+                totalBuy += quantity;
             }
+        }
 
-            writer.write("supply," + totalSupply + "\nbuy," + totalBuy + "\nresult,"
-                    + (totalSupply - totalBuy));
+        return String.format("supply,%d%nbuy,%d%nresult,%d%n",
+                totalSupply, totalBuy, (totalSupply - totalBuy));
+    }
 
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+    private void writeToFile(String toFileName, String report) throws IOException {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
+            writer.write(report);
         }
     }
 }
