@@ -6,7 +6,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
-
 public class WorkWithFile {
     private static final String SEPARATOR = "\\s*,\\s*";
     private static final int TYPE = 0;
