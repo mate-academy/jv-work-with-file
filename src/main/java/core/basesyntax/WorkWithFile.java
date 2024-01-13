@@ -1,47 +1,32 @@
 package core.basesyntax;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 
 public class WorkWithFile {
     private static final int WORD_INDEX = 0;
     private static final int NUMBER_INDEX = 1;
 
-    private static class Statistic {
-        private int supplySum;
-        private int buySum;
-        private int result;
-
-        public Statistic(int supplySum, int buySum, int result) {
-            this.supplySum = supplySum;
-            this.buySum = buySum;
-            this.result = result;
-        }
-    }
-
     public void getStatistic(String fromFileName, String toFileName) {
-        Statistic statistic = readStatistic(fromFileName);
-        List<String> report = generateReport(statistic);
-        writeReport(toFileName, report);
+        String data = readFile(fromFileName);
+        String report = generateReport(data);
+        writeToFile(toFileName, report);
     }
 
-    public Statistic readStatistic(String fromFileName) {
+    private String readFile(String fromFileName) {
         try {
-            List<String> lines = Files.readAllLines(Paths.get(fromFileName));
-            return processLines(lines);
+            return new String(Files.readAllBytes(Paths.get(fromFileName)));
         } catch (IOException e) {
-            throw new RuntimeException("Error while reading file: ", e);
+            throw new RuntimeException("Error while reading file: " + e.getMessage(), e);
         }
     }
 
-    private Statistic processLines(List<String> lines) {
+    private String generateReport(String data) {
         int supplySum = 0;
         int buySum = 0;
 
+        String[] lines = data.split(System.lineSeparator());
         for (String line : lines) {
             String[] parts = line.split(",");
             int extractedNumber = Integer.parseInt(parts[NUMBER_INDEX]);
@@ -54,24 +39,16 @@ public class WorkWithFile {
         }
 
         int result = supplySum - buySum;
-        return new Statistic(supplySum, buySum, result);
+        return "supply," + supplySum + System.lineSeparator()
+                + "buy," + buySum + System.lineSeparator()
+                + "result," + result;
     }
 
-    private List<String> generateReport(Statistic statistic) {
-        List<String> report = new ArrayList<>();
-        report.add("supply," + statistic.supplySum);
-        report.add("buy," + statistic.buySum);
-        report.add("result," + statistic.result);
-        return report;
-    }
-
-    private void writeReport(String toFileName, List<String> report) {
-        try (BufferedWriter bufferedWriter = Files.newBufferedWriter(Paths.get(toFileName))) {
-            for (String line : report) {
-                bufferedWriter.write(line + System.lineSeparator());
-            }
+    private void writeToFile(String toFileName, String report) {
+        try {
+            Files.write(Paths.get(toFileName), report.getBytes());
         } catch (IOException e) {
-            throw new RuntimeException("Error while writing report to file: ", e);
+            throw new RuntimeException("Error while writing report to file: " + e.getMessage(), e);
         }
     }
 }
