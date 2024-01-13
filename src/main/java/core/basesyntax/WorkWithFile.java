@@ -19,7 +19,7 @@ public class WorkWithFile {
         try {
             return new String(Files.readAllBytes(Paths.get(fromFileName)));
         } catch (IOException e) {
-            throw new RuntimeException("Error while reading file: " + e.getMessage(), e);
+            throw new RuntimeException("Error while reading file: " + fromFileName, e);
         }
     }
 
@@ -49,7 +49,7 @@ public class WorkWithFile {
         try {
             Files.write(Paths.get(toFileName), report.getBytes());
         } catch (IOException e) {
-            throw new RuntimeException("Error while writing report to file: " + e.getMessage(), e);
+            throw new RuntimeException("Error while writing report to file: " + toFileName, e);
         }
     }
 }
