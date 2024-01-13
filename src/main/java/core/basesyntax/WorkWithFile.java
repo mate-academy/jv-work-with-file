@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 public class WorkWithFile {
     private static final int WORD_INDEX = 0;
     private static final int NUMBER_INDEX = 1;
+    private static final String SEPARATOR = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String data = readFile(fromFileName);
@@ -28,7 +29,7 @@ public class WorkWithFile {
 
         String[] lines = data.split(System.lineSeparator());
         for (String line : lines) {
-            String[] parts = line.split(",");
+            String[] parts = line.split(SEPARATOR);
             int extractedNumber = Integer.parseInt(parts[NUMBER_INDEX]);
 
             if (parts[WORD_INDEX].equals("supply")) {
