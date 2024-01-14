@@ -8,6 +8,9 @@ public class WorkWithFile {
     private static final int WORD_INDEX = 0;
     private static final int NUMBER_INDEX = 1;
     private static final String SEPARATOR = ",";
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String data = readFile(fromFileName);
@@ -32,17 +35,17 @@ public class WorkWithFile {
             String[] parts = line.split(SEPARATOR);
             int extractedNumber = Integer.parseInt(parts[NUMBER_INDEX]);
 
-            if (parts[WORD_INDEX].equals("supply")) {
+            if (parts[WORD_INDEX].equals(SUPPLY)) {
                 supplySum += extractedNumber;
-            } else if (parts[WORD_INDEX].equals("buy")) {
+            } else if (parts[WORD_INDEX].equals(BUY)) {
                 buySum += extractedNumber;
             }
         }
 
         int result = supplySum - buySum;
-        return "supply," + supplySum + System.lineSeparator()
-                + "buy," + buySum + System.lineSeparator()
-                + "result," + result;
+        return SUPPLY + SEPARATOR + supplySum + System.lineSeparator()
+                + BUY + SEPARATOR + buySum + System.lineSeparator()
+                + RESULT + SEPARATOR + result;
     }
 
     private void writeToFile(String toFileName, String report) {
