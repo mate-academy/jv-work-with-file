@@ -8,14 +8,9 @@ import java.nio.file.Files;
 import java.util.List;
 
 public class WorkWithFile {
-
     public void getStatistic(String fromFileName, String toFileName) {
-        File file = new File(toFileName);
-        if (file.exists()) {
-            file.delete();
-        }
-        final String[] arrayToFile = calculatingArrayToFile(fromFileName);
-        writeToFile(arrayToFile, toFileName);
+        final String[] data = report(fromFileName);
+        writeToFile(data, toFileName);
     }
 
     private String[] readFromFile(String fileName) {
@@ -28,42 +23,42 @@ public class WorkWithFile {
             }
             return result;
         } catch (IOException e) {
-            throw new RuntimeException("can't read from the file", e);
+            throw new RuntimeException("can't read from the file" + fileName, e);
         }
     }
 
-    private void writeToFile(String[] fromArray, String toFileName) {
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true))) {
-            for (String array : fromArray) {
-                bufferedWriter.write(array + "\n");
+    private void writeToFile(String[] data, String toFileName) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
+            for (String array : data) {
+                bufferedWriter.write(array + System.lineSeparator());
             }
         } catch (IOException e) {
-            throw new RuntimeException("can't write to the file", e);
+            throw new RuntimeException("can't write to the " + toFileName, e);
         }
     }
 
-    private String[] calculatingArrayToFile(String fromFileName) {
+    private String[] report(String fromFileName) {
+        final String separator = ",";
+        final int valueIndex = 1;
+        final int operationIndex = 0;
         final String supply = "supply,";
         final String buy = "buy,";
         final String result = "result,";
         String[] arrayFromFile = readFromFile(fromFileName);
-        String[] arrayToFile = {supply, buy, result};
-        int tempForSupply = 0;
-        int tempForBuy = 0;
+        int totalSupply = 0;
+        int totalBuy = 0;
 
-        for (int i = 0; i < arrayFromFile.length; i++) {
-            if (arrayFromFile[i].substring(0, arrayFromFile[i].indexOf(",")).equals("supply")) {
-                tempForSupply += Integer.parseInt(arrayFromFile[i]
-                        .substring(arrayFromFile[i].indexOf(",") + 1, arrayFromFile[i].length()));
-            } else {
-                tempForBuy += Integer.parseInt(arrayFromFile[i]
-                        .substring(arrayFromFile[i].indexOf(",") + 1, arrayFromFile[i].length()));
+        for (String line : arrayFromFile) {
+            String[] parts = line.split(separator);
+            int value = Integer.parseInt(parts[valueIndex]);
+            if ("supply".equals(parts[operationIndex])) {
+                totalSupply += value;
+            } else if ("buy".equals(parts[operationIndex])) {
+                totalBuy += value;
             }
         }
-        arrayToFile[0] += String.valueOf(tempForSupply);
-        arrayToFile[1] += String.valueOf(tempForBuy);
-        arrayToFile[2] += String.valueOf(tempForSupply - tempForBuy);
 
-        return arrayToFile;
+        return new String[] {supply + totalSupply,
+                buy + totalBuy, result + (totalSupply - totalBuy)};
     }
 }
