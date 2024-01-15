@@ -5,7 +5,6 @@ import static java.lang.Integer.parseInt;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -21,11 +20,11 @@ public class WorkWithFile {
     private final String separator = System.lineSeparator();
 
     public void getStatistic(String fromFileName, String toFileName) {
-        StringBuilder report = countData(readFromFile(fromFileName));
+        String report = countData(readFromFile(fromFileName));
         writeToFile(report, toFileName);
     }
 
-    private StringBuilder readFromFile(String fileName) {
+    private String readFromFile(String fileName) {
         File file = new File(fileName);
         StringBuilder builder = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
@@ -34,16 +33,14 @@ public class WorkWithFile {
                 builder.append(value).append(LINES_SEPARATOR);
                 value = reader.readLine();
             }
-        } catch (FileNotFoundException e) {
+        } catch (Exception e) {
             throw new RuntimeException("Can't read file " + fileName, e);
-        } catch (IOException e1) {
-            throw new RuntimeException("Can't read file " + fileName, e1);
         }
-        return builder;
+        return builder.toString();
     }
 
-    private StringBuilder countData(StringBuilder data) {
-        String[] dataArray = data.toString().split(LINES_SEPARATOR);
+    private String countData(String data) {
+        String[] dataArray = data.split(LINES_SEPARATOR);
         int sumSupply = 0;
         int sumBuy = 0;
         for (String dataLine : dataArray) {
@@ -59,9 +56,9 @@ public class WorkWithFile {
         return writeReport(sumSupply, sumBuy, result);
     }
 
-    private StringBuilder writeReport(int sumSupply, int sumBuy, int result) {
-        StringBuilder builder = new StringBuilder();
-        builder.append(SUPPLY_FIELD)
+    private String writeReport(int sumSupply, int sumBuy, int result) {
+        StringBuilder report = new StringBuilder();
+        report.append(SUPPLY_FIELD)
                 .append(WORDS_SEPARATOR)
                 .append(sumSupply)
                 .append(separator)
@@ -72,10 +69,10 @@ public class WorkWithFile {
                 .append(RESULT_FIELD)
                 .append(WORDS_SEPARATOR)
                 .append(result);
-        return builder;
+        return report.toString();
     }
 
-    private void writeToFile(StringBuilder report, String toFileName) {
+    private void writeToFile(String report, String toFileName) {
         File file = new File(toFileName);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             writer.write(String.valueOf(report));
