@@ -10,11 +10,17 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final int OPTION = 0;
     private static final int VALUE = 1;
+    private static final int SUPPLY_IN_ARRAY = 0;
+    private static final int BUY_IN_ARRAY = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int buy = 0;
-        int supply = 0;
-        File file = new File(fromFileName);
+        String[] dataFromFile = readFromFile(fromFileName);
+        int[] report = createReport(dataFromFile);
+        writeReportToFile(report, toFileName);
+    }
+
+    private String[] readFromFile(String fileName) {
+        File file = new File(fileName);
         String[] fileContent = new String[(int) file.length()];
         if (file.length() != 0) {
             try {
@@ -29,27 +35,36 @@ public class WorkWithFile {
             } catch (IOException e) {
                 throw new RuntimeException("Can't read the file", e);
             }
-            for (String content : fileContent) {
-                if (content != null) {
-                    String[] currentLine = content.split(",");
-                    if (currentLine[OPTION].equals("supply")) {
-                        supply += Integer.parseInt(currentLine[VALUE]);
-                    }
-                    if (currentLine[OPTION].equals("buy")) {
-                        buy += Integer.parseInt(currentLine[VALUE]);
-                    }
+        }
+        return fileContent;
+    }
+
+    private int[] createReport(String[] fileContent) {
+        int buy = 0;
+        int supply = 0;
+        for (String content : fileContent) {
+            if (content != null) {
+                String[] currentLine = content.split(",");
+                if (currentLine[OPTION].equals("supply")) {
+                    supply += Integer.parseInt(currentLine[VALUE]);
+                }
+                if (currentLine[OPTION].equals("buy")) {
+                    buy += Integer.parseInt(currentLine[VALUE]);
                 }
             }
         }
-        String[] actualStatistic = new String[3];
+        return new int[]{supply, buy};
+    }
+
+    private void writeReportToFile(int[] report, String toFileName) {
         File resultFile = new File(toFileName);
         try (BufferedWriter bufferedWriter
                      = new BufferedWriter(new FileWriter(resultFile, false))) {
-            bufferedWriter.write("supply," + supply);
+            bufferedWriter.write("supply," + report[SUPPLY_IN_ARRAY]);
             bufferedWriter.newLine();
-            bufferedWriter.write("buy," + buy);
+            bufferedWriter.write("buy," + report[BUY_IN_ARRAY]);
             bufferedWriter.newLine();
-            bufferedWriter.write("result," + (supply - buy));
+            bufferedWriter.write("result," + (report[SUPPLY_IN_ARRAY] - report[BUY_IN_ARRAY]));
         } catch (IOException e) {
             throw new RuntimeException("Can't write the file", e);
         }
