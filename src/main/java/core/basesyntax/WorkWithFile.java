@@ -8,33 +8,56 @@ import java.nio.file.Path;
 
 public class WorkWithFile {
     private static final String SEPARATOR = ",";
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
+        String data = readFile(fromFileName);
+        String report = generateReport(data);
+        writeToFile(toFileName, report);
+    }
+
+    public String readFile(String fromFileName) {
         try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
-            StringBuilder stringBuilder = new StringBuilder();
-            String value = bufferedReader.readLine();
+            BufferedReader fromFileReader = new BufferedReader(new FileReader(fromFileName));
+            StringBuilder dataFromFileBuilder = new StringBuilder();
+            String value = fromFileReader.readLine();
             while (value != null) {
-                stringBuilder.append(value).append(SEPARATOR);
-                value = bufferedReader.readLine();
+                dataFromFileBuilder.append(value).append(SEPARATOR);
+                value = fromFileReader.readLine();
             }
-            String[] fromFileData = stringBuilder.toString().split(SEPARATOR);
-            int buyCount = 0;
-            int supplyCount = 0;
-            for (int i = 0; i < fromFileData.length; i++) {
-                if (fromFileData[i].equals("buy")) {
-                    buyCount += Integer.parseInt(fromFileData[i + 1]);
-                } else if (fromFileData[i].equals("supply")) {
-                    supplyCount += Integer.parseInt(fromFileData[i + 1]);
-                }
-            }
-            StringBuilder report = new StringBuilder();
-            report.append("supply,").append(supplyCount).append(System.lineSeparator())
-                    .append("buy,").append(buyCount).append(System.lineSeparator())
-                    .append("result,").append(supplyCount - buyCount);
-            Files.write(Path.of(toFileName), report.toString().getBytes());
+            return dataFromFileBuilder.toString();
         } catch (IOException e) {
-            throw new RuntimeException("Can`t create new file", e);
+            throw new RuntimeException("Can`t read data from file", e);
+        }
+    }
+
+    public String generateReport(String data) {
+        String[] fromFileData = data.split(SEPARATOR);
+        int buyCount = 0;
+        int supplyCount = 0;
+        for (int i = 0; i < fromFileData.length; i++) {
+            if (fromFileData[i].equals(BUY)) {
+                buyCount += Integer.parseInt(fromFileData[i + 1]);
+            } else if (fromFileData[i].equals(SUPPLY)) {
+                supplyCount += Integer.parseInt(fromFileData[i + 1]);
+            }
+        }
+        StringBuilder report = new StringBuilder();
+        report.append(SUPPLY).append(SEPARATOR)
+                .append(supplyCount).append(System.lineSeparator())
+                .append(BUY).append(SEPARATOR)
+                .append(buyCount).append(System.lineSeparator())
+                .append(RESULT).append(SEPARATOR).append(supplyCount - buyCount);
+        return report.toString();
+    }
+
+    public void writeToFile(String toFileName, String report) {
+        try {
+            Files.write(Path.of(toFileName), report.getBytes());
+        } catch (IOException e) {
+            throw new RuntimeException("Can`t write data to file", e);
         }
     }
 }
