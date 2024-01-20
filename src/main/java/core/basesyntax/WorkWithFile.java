@@ -8,15 +8,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    public static final String SEPARATOR = " ";
-    public static final String DELIMITER = ",";
-    public static final int NAME = 0;
-    public static final int VALUE = 1;
-    public static final int SUPPLY = 0;
-    public static final int BUY = 1;
-    public static final int RESULT = 2;
-    public static final int LINES_IN_REPORT = 3;
-    public static final String[] NAME_VALUES = {"supply", "buy", "result"};
+    private static final String SEPARATOR = " ";
+    private static final String DELIMITER = ",";
+    private static final int OPERATION_TYPE_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String data = readFile(fromFileName);
@@ -25,49 +20,59 @@ public class WorkWithFile {
     }
 
     private String readFile(String filePath) {
-        StringBuilder saveDataToStringFromExistFile = new StringBuilder();
+        StringBuilder content = new StringBuilder();
 
         try {
-            BufferedReader readerFromExistFile = new BufferedReader(new FileReader(filePath));
-            String value = readerFromExistFile.readLine();
+            BufferedReader reader = new BufferedReader(new FileReader(filePath));
+            String value = reader.readLine();
 
             while (value != null) {
-                saveDataToStringFromExistFile.append(value).append(SEPARATOR);
-                value = readerFromExistFile.readLine();
+                content.append(value).append(SEPARATOR);
+                value = reader.readLine();
             }
 
         } catch (IOException e) {
-            throw new RuntimeException("File is not found ",e);
+            throw new RuntimeException("File " + filePath + "is not found ",e);
         }
-        return saveDataToStringFromExistFile.toString();
+        return content.toString();
     }
 
     public String generateReport(String data) {
-        String[] splitSaveDatas = data.split("\\s+");
-        int [] resultData = new int[LINES_IN_REPORT];
+        int supply = 0;
+        int buy = 0;
+        String[] rows = data.split("\\s+");
 
-        for (String splitSaveData : splitSaveDatas) {
+        for (String splitSaveData : rows) {
             String[] splitValue = splitSaveData.split(DELIMITER);
-            String value = splitValue[NAME];
-            int valueCount = Integer.parseInt(splitValue[VALUE]);
+            String operationType = splitValue[OPERATION_TYPE_INDEX];
+            int amount = Integer.parseInt(splitValue[AMOUNT_INDEX]);
 
-            if (value.equals("supply")) {
-                resultData[SUPPLY] += valueCount;
-            } else {
-                resultData[BUY] += valueCount;
+            if (operationType.equals("supply")) {
+                supply += amount;
+            } else if (operationType.equals("buy")) {
+                buy += amount;
             }
         }
-        resultData[RESULT] = resultData[SUPPLY] - resultData[BUY];
-        StringBuilder resultValuesString = new StringBuilder();
 
-        for (int i = 0; i < NAME_VALUES.length; i++) {
-            resultValuesString
-                    .append(NAME_VALUES[i])
-                    .append(DELIMITER)
-                    .append(resultData[i])
-                    .append(System.lineSeparator());
-        }
-        return resultValuesString.toString();
+        StringBuilder reportBuilder = new StringBuilder();
+
+        reportBuilder
+                .append("supply")
+                .append(DELIMITER)
+                .append(supply)
+                .append(System.lineSeparator());
+        reportBuilder
+                .append("buy")
+                .append(DELIMITER)
+                .append(buy)
+                .append(System.lineSeparator());
+        reportBuilder
+                .append("result")
+                .append(DELIMITER)
+                .append(supply - buy)
+                .append(System.lineSeparator());
+
+        return reportBuilder.toString();
     }
 
     public void writeToFile(String toFileName, String report) {
