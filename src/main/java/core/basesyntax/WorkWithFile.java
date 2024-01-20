@@ -11,6 +11,8 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
+    private static final int OPERATION_INDEX = 0;
+    private static final int QUANTITY_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String data = readFile(fromFileName);
@@ -24,24 +26,27 @@ public class WorkWithFile {
             StringBuilder dataFromFileBuilder = new StringBuilder();
             String value = fromFileReader.readLine();
             while (value != null) {
-                dataFromFileBuilder.append(value).append(SEPARATOR);
+                dataFromFileBuilder.append(value).append(System.lineSeparator());
                 value = fromFileReader.readLine();
             }
             return dataFromFileBuilder.toString();
         } catch (IOException e) {
-            throw new RuntimeException("Can`t read data from file", e);
+            throw new RuntimeException("Can`t read data from file" + fromFileName, e);
         }
     }
 
     public String generateReport(String data) {
-        String[] fromFileData = data.split(SEPARATOR);
+        String[] rows = data.split(System.lineSeparator());
         int buyCount = 0;
         int supplyCount = 0;
-        for (int i = 0; i < fromFileData.length; i++) {
-            if (fromFileData[i].equals(BUY)) {
-                buyCount += Integer.parseInt(fromFileData[i + 1]);
-            } else if (fromFileData[i].equals(SUPPLY)) {
-                supplyCount += Integer.parseInt(fromFileData[i + 1]);
+        for (String row : rows) {
+            String[] splitedRow = row.split(SEPARATOR);
+            String operationType = splitedRow[OPERATION_INDEX];
+            int quantity = Integer.parseInt(splitedRow[QUANTITY_INDEX]);
+            if (BUY.equals(operationType)) {
+                buyCount += quantity;
+            } else if (SUPPLY.equals(operationType)) {
+                supplyCount += quantity;
             }
         }
         StringBuilder report = new StringBuilder();
@@ -57,7 +62,7 @@ public class WorkWithFile {
         try {
             Files.write(Path.of(toFileName), report.getBytes());
         } catch (IOException e) {
-            throw new RuntimeException("Can`t write data to file", e);
+            throw new RuntimeException("Can`t write data to file" + toFileName, e);
         }
     }
 }
