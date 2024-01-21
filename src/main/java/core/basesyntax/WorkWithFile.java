@@ -48,14 +48,10 @@ public class WorkWithFile {
                 amountBuy += Integer.parseInt(splitLine[AMOUNT_INDEX]);
             }
         }
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(SUPPLY).append(SEPARATOR);
-        stringBuilder.append(amountSupply).append(System.lineSeparator());
-        stringBuilder.append(BUY).append(SEPARATOR);
-        stringBuilder.append(amountBuy).append(System.lineSeparator());
-        stringBuilder.append(RESULT).append(SEPARATOR);
-        stringBuilder.append(amountSupply - amountBuy);
-        return stringBuilder.toString();
+        String result = SUPPLY + SEPARATOR + amountSupply + System.lineSeparator();
+        result += BUY + SEPARATOR + amountBuy + System.lineSeparator();
+        result += RESULT + SEPARATOR + (amountSupply - amountBuy);
+        return result;
     }
 
     private void writeToFile(String fileName, String result) {
