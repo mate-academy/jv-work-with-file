@@ -50,7 +50,7 @@ public class WorkWithFile {
 
         BufferedWriter bufferedWriter = null;
         try {
-            bufferedWriter = new BufferedWriter(new FileWriter(fileTwo, true));
+            bufferedWriter = new BufferedWriter(new FileWriter(fileTwo, false));
             for (String result : results) {
                 bufferedWriter.write(result + System.lineSeparator());
             }
