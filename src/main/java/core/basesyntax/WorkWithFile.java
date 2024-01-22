@@ -38,7 +38,7 @@ public class WorkWithFile {
             }
 
         } catch (IOException e) {
-            throw new RuntimeException("Can't read from file", e);
+            throw new RuntimeException("Can't read from file " + fromFileName, e);
         }
         return readData.toString();
     }
@@ -47,7 +47,7 @@ public class WorkWithFile {
         try (FileWriter myWriter = new FileWriter(toFileName)) {
             myWriter.write(data);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write to file", e);
+            throw new RuntimeException("Can't write to file " + toFileName, e);
         }
     }
 
