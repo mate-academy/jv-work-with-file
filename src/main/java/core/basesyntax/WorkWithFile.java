@@ -49,7 +49,9 @@ public class WorkWithFile {
         int buySum = getCalculations(data, BUY_TYPE);
         int result = supplySum - buySum;
 
-        return String.format("%s%d%n%s%d%n%s%d", SUPPLY_TYPE, supplySum, BUY_TYPE, buySum, RESULT_TYPE, result);
+        return String.format("%s%d%n%s%d%n%s%d", SUPPLY_TYPE, supplySum,
+                BUY_TYPE, buySum,
+                RESULT_TYPE, result);
     }
 
     public int getCalculations(String data, String type) {
