@@ -10,10 +10,10 @@ import java.io.IOException;
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
-                BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName, true))) {
+                BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName, false))) {
 
             int buyTotal = 0;
-            int sellTotal = 0;
+            int supplyTotal = 0;
 
             String line;
             while ((line = reader.readLine()) != null) {
@@ -24,15 +24,16 @@ public class WorkWithFile {
 
                     if ("buy".equals(operationType)) {
                         buyTotal += amount;
-                    } else if ("sell".equals(operationType)) {
-                        sellTotal += amount;
+                    } else if ("supply".equals(operationType)) {
+                        supplyTotal += amount;
                     }
                 }
             }
 
-            final int result = sellTotal - buyTotal;
+            final int result = supplyTotal - buyTotal;
 
-            writer.write("sell," + sellTotal);
+            // Измененные строки записи в файл
+            writer.write("supply," + supplyTotal);
             writer.newLine();
             writer.write("buy," + buyTotal);
             writer.newLine();
