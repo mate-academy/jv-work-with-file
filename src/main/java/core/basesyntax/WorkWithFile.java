@@ -27,20 +27,20 @@ public class WorkWithFile {
     }
 
     public String readFromFile(String fromFileName) {
-        StringBuilder stringBuilder = new StringBuilder();
+        StringBuilder readData = new StringBuilder();
 
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             int value = bufferedReader.read();
             while (value != MINUS_ONE_INDEX) {
                 char c = (char) value;
-                stringBuilder.append(c);
+                readData.append(c);
                 value = bufferedReader.read();
             }
 
         } catch (IOException e) {
             throw new RuntimeException("Can't read from file", e);
         }
-        return stringBuilder.toString();
+        return readData.toString();
     }
 
     public void writeToFile(String toFileName, String data) {
@@ -64,5 +64,4 @@ public class WorkWithFile {
         }
         return calculatedSum;
     }
-
 }
