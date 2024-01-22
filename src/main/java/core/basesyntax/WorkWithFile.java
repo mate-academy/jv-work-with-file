@@ -12,10 +12,13 @@ public class WorkWithFile {
     private static final String BUY = "buy";
     private static final String RESULT = "result";
     private static final char COMMA = ',';
-    private int countSupply = 0;
-    private int countBuy = 0;
+    private int countSupply;
+    private int countBuy;
 
     public void getStatistic(String fromFileName, String toFileName) {
+        setCountSupply(0);
+        setCountBuy(0);
+
         File file = new File(fromFileName);
         try {
             List<String> content = Files.readAllLines(file.toPath());
@@ -44,8 +47,8 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can`t create file", e);
         }
-        BufferedWriter bufferedWriter = null;
 
+        BufferedWriter bufferedWriter = null;
         try {
             bufferedWriter = new BufferedWriter(new FileWriter(fileTwo, true));
             for (String result : results) {
@@ -62,9 +65,6 @@ public class WorkWithFile {
                 }
             }
         }
-
-        setCountSupply(0);
-        setCountBuy(0);
     }
 
     public int getCountBuy() {
