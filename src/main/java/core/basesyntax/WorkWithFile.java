@@ -11,7 +11,7 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
-    private static final char COMMA = ',';
+    private static final String COMMA = ",";
     private static final String SEPARATOR = System.lineSeparator();
     private static final int FIRST_MEMBER = 0;
     private static final int SECOND_MEMBER = 1;
@@ -42,10 +42,10 @@ public class WorkWithFile {
         String[] fields = data.split(" ");
         for (String field : fields) {
             String[] temporaryArray = field.split(COMMA);
-            if (temporaryArray[0].equals(SUPPLY)) {
-                String number = temporaryArray[FIRST_MEMBER];
+            if (temporaryArray[FIRST_MEMBER].equals(SUPPLY)) {
+                String number = temporaryArray[SECOND_MEMBER];
                 countSupply = countSupply + Integer.parseInt(number);
-            } else if (temporaryArray[0].equals(BUY)) {
+            } else if (temporaryArray[FIRST_MEMBER].equals(BUY)) {
                 String number = temporaryArray[SECOND_MEMBER];
                 countBuy = countBuy + Integer.parseInt(number);
             }
