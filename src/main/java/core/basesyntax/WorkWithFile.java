@@ -13,6 +13,8 @@ public class WorkWithFile {
     private static final String RESULT = "result";
     private static final char COMMA = ',';
     private static final String SEPARATOR = System.lineSeparator();
+    private static final int FIRST_MEMBER = 0;
+    private static final int SECOND_MEMBER = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String data = readFromFile(fromFileName);
@@ -29,7 +31,7 @@ public class WorkWithFile {
             }
             return sb.toString();
         } catch (IOException e) {
-            throw new RuntimeException("Can`t exist file", e);
+            throw new RuntimeException("Can`t read file: " + fileName, e);
         }
     }
 
@@ -39,12 +41,12 @@ public class WorkWithFile {
 
         String[] fields = data.split(" ");
         for (String field : fields) {
-            String[] temporaryArray = field.split(",");
+            String[] temporaryArray = field.split(COMMA);
             if (temporaryArray[0].equals(SUPPLY)) {
-                String number = temporaryArray[1];
+                String number = temporaryArray[FIRST_MEMBER];
                 countSupply = countSupply + Integer.parseInt(number);
             } else if (temporaryArray[0].equals(BUY)) {
-                String number = temporaryArray[1];
+                String number = temporaryArray[SECOND_MEMBER];
                 countBuy = countBuy + Integer.parseInt(number);
             }
         }
@@ -58,17 +60,17 @@ public class WorkWithFile {
     }
 
     private void writeToFile(String fileName, String result) {
-        File fileTwo = new File(fileName);
+        File fileTo = new File(fileName);
         try {
-            fileTwo.createNewFile();
+            fileTo.createNewFile();
         } catch (IOException e) {
-            throw new RuntimeException("Can`t create file", e);
+            throw new RuntimeException("Can`t create file: " + fileName, e);
         }
 
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileTwo, false))) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileTo, false))) {
             bufferedWriter.write(result);
         } catch (IOException e) {
-            throw new RuntimeException("Don`t write data to file", e);
+            throw new RuntimeException("Don`t write data to file: " + fileTo, e);
         }
     }
 }
