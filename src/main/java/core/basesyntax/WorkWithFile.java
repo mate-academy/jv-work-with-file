@@ -7,37 +7,65 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String LINE_SEPARATOR = System.lineSeparator();
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final int INDEX_ZERO = 0;
+    private static final int INDEX_ONE = 1;
+    private static final int TWO = 2;
+
     public void getStatistic(String fromFileName, String toFileName) {
+        String dataFromFile = readFromFile(fromFileName);
+        String report = processData(dataFromFile);
+        writeToFile(report, toFileName);
+    }
+
+    private String readFromFile(String fromFileName) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
+            StringBuilder data = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                data.append(line).append(LINE_SEPARATOR);
+            }
+            return data.toString();
+        } catch (IOException ex) {
+            throw new RuntimeException("Error reading file", ex);
+        }
+    }
+
+    private String processData(String dataFromFile) {
         int supplyTotal = 0;
         int buyTotal = 0;
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",");
-                if (parts.length == 2) {
-                    int quantity = Integer.parseInt(parts[1].trim());
-                    if ("supply".equals(parts[0].trim())) {
-                        supplyTotal += quantity;
-                    } else if ("buy".equals(parts[0].trim())) {
-                        buyTotal += quantity;
-                    }
+        String[] lines = dataFromFile.split(LINE_SEPARATOR);
+        for (String line : lines) {
+            String[] parts = line.split(",");
+            if (parts.length == TWO) {
+                int quantity = Integer.parseInt(parts[INDEX_ONE].trim());
+                if (SUPPLY.equals(parts[INDEX_ZERO].trim())) {
+                    supplyTotal += quantity;
+                } else if (BUY.equals(parts[INDEX_ZERO].trim())) {
+                    buyTotal += quantity;
                 }
             }
-        } catch (IOException ex) {
-            throw new RuntimeException("Error reading file", ex);
         }
 
         int result = supplyTotal - buyTotal;
 
+        StringBuilder report = new StringBuilder();
+        report.append(SUPPLY + "," + supplyTotal).append(LINE_SEPARATOR);
+        report.append(BUY).append(",").append(buyTotal).append(LINE_SEPARATOR);
+        report.append("result").append(",").append(result);
+
+        return report.toString();
+    }
+
+    public void writeToFile(String report, String toFileName) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            writer.write("supply," + supplyTotal);
+            writer.write(report);
             writer.newLine();
-            writer.write("buy," + buyTotal);
-            writer.newLine();
-            writer.write("result," + result);
-        } catch (IOException ex) {
-            throw new RuntimeException("Error writing to file", ex);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write file", e);
         }
     }
 }
