@@ -11,7 +11,13 @@ public class WorkWithFile {
     private static final int FILE_NAME = 0;
     private static final int RESULT_NAME = 1;
 
-    public String readFile(String fileName) {
+    public void getStatistic(String fromFileName, String toFileName) {
+        String data = readFile(fromFileName);
+        String result = calculateDate(data);
+        writeDateToFile(toFileName, result);
+    }
+
+    private String readFile(String fileName) {
         StringBuilder builder = new StringBuilder();
         File file = new File(fileName);
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
@@ -26,26 +32,31 @@ public class WorkWithFile {
         return builder.toString();
     }
 
-    public void getStatistic(String fromFileName, String toFileName) {
+    private String calculateDate(String data) {
+        StringBuilder builder = new StringBuilder();
+        String[] line = data.split(System.lineSeparator());
         int supplySum = 0;
         int buySum = 0;
-        String value = readFile(fromFileName);
-        String[] line = value.split(System.lineSeparator());
         for (String lines : line) {
             String[] parts = lines.split(",");
             if (parts[FILE_NAME].equals("supply")) {
-                supplySum = supplySum + Integer.parseInt(parts[RESULT_NAME]);
+                supplySum += Integer.parseInt(parts[RESULT_NAME]);
             } else if (parts[FILE_NAME].equals("buy")) {
                 buySum += Integer.parseInt(parts[RESULT_NAME]);
             }
         }
-        File newFile = new File(toFileName);
+        builder.append("supply,").append(supplySum)
+                .append(System.lineSeparator())
+                .append("buy,").append(buySum)
+                .append(System.lineSeparator())
+                .append("result,").append(supplySum - buySum);
+        return builder.toString();
+    }
+
+    private void writeDateToFile(String toFile, String result) {
+        File newFile = new File(toFile);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(newFile))) {
-            writer.write("supply," + supplySum);
-            writer.newLine();
-            writer.write("buy," + buySum);
-            writer.newLine();
-            writer.write("result," + (supplySum - buySum));
+            writer.write(result);
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file", e);
         }
