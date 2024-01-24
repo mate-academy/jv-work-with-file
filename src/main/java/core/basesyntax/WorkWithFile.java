@@ -8,8 +8,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final int FILE_NAME = 0;
-    private static final int RESULT_NAME = 1;
+    private static final int OPERATION_TYPE_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
+    private static final String NEW_LINE = System.lineSeparator();
+    private static final String VARIABLE1 = "supply";
+    private static final String VARIABLE2 = "buy";
+    private static final String RESULT_VARIABLES = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String data = readFile(fromFileName);
@@ -23,7 +27,7 @@ public class WorkWithFile {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String value = reader.readLine();
             while (value != null) {
-                builder.append(value).append(System.lineSeparator());
+                builder.append(value).append(NEW_LINE);
                 value = reader.readLine();
             }
         } catch (IOException e) {
@@ -34,22 +38,23 @@ public class WorkWithFile {
 
     private String calculateDate(String data) {
         StringBuilder builder = new StringBuilder();
-        String[] line = data.split(System.lineSeparator());
+        String[] line = data.split(NEW_LINE);
         int supplySum = 0;
         int buySum = 0;
         for (String lines : line) {
             String[] parts = lines.split(",");
-            if (parts[FILE_NAME].equals("supply")) {
-                supplySum += Integer.parseInt(parts[RESULT_NAME]);
-            } else if (parts[FILE_NAME].equals("buy")) {
-                buySum += Integer.parseInt(parts[RESULT_NAME]);
+            if (parts[OPERATION_TYPE_INDEX].equals(VARIABLE1)) {
+                supplySum += Integer.parseInt(parts[AMOUNT_INDEX]);
+            } else if (parts[OPERATION_TYPE_INDEX].equals(VARIABLE2)) {
+                buySum += Integer.parseInt(parts[AMOUNT_INDEX]);
             }
         }
-        builder.append("supply,").append(supplySum)
-                .append(System.lineSeparator())
-                .append("buy,").append(buySum)
-                .append(System.lineSeparator())
-                .append("result,").append(supplySum - buySum);
+        builder.append(VARIABLE1).append(",").append(supplySum)
+                .append(NEW_LINE)
+                .append(VARIABLE2).append(",").append(buySum)
+                .append(NEW_LINE)
+                .append(RESULT_VARIABLES)
+                .append(",").append(supplySum - buySum);
         return builder.toString();
     }
 
