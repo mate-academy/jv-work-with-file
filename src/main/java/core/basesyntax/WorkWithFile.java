@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -9,7 +8,7 @@ import java.util.List;
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         String[] readData = readData(fromFileName);
-        String[] report = generateReport(readData);
+        String report = generateReport(readData);
         writeReportToFile(report, toFileName);
     }
 
@@ -23,18 +22,14 @@ public class WorkWithFile {
         }
     }
 
-    private String[] generateReport(String[] statisticData) {
+    private String generateReport(String[] statisticData) {
         int supply = 0;
         int buy = 0;
-        int result;
-        int valueOfOperation;
-        String[] separatedRow;
-        String operation;
 
         for (String row : statisticData) {
-            separatedRow = row.split(",");
-            operation = separatedRow[0];
-            valueOfOperation = Integer.parseInt(separatedRow[1]);
+            String[] separatedRow = row.split(",");
+            String operation = separatedRow[0];
+            int valueOfOperation = Integer.parseInt(separatedRow[1]);
 
             if (operation.equals("supply")) {
                 supply += valueOfOperation;
@@ -43,28 +38,20 @@ public class WorkWithFile {
             }
         }
 
-        result = supply - buy;
+        int result = supply - buy;
+        String[] preFormat = new String[] {"supply," + supply, "buy," + buy,"result," + result};
+        StringBuilder formattedReport = new StringBuilder();
 
-        return new String[] {"supply," + supply, "buy," + buy,"result," + result};
+        for (String row : preFormat) {
+            formattedReport.append(row).append(System.lineSeparator());
+        }
+
+        return formattedReport.toString();
     }
 
-    private void writeReportToFile(String[] report, String fileName) {
-        File file = new File(fileName);
-        Path pathOfFile = file.toPath();
-
+    private void writeReportToFile(String report, String fileName) {
         try {
-            file.createNewFile();
-        } catch (IOException e) {
-            throw new RuntimeException("Can't create a file: " + fileName, e);
-        }
-
-        StringBuilder formattedData = new StringBuilder();
-        for (String row : report) {
-            formattedData.append(row).append(System.lineSeparator());
-        }
-
-        try {
-            Files.write(pathOfFile, formattedData.toString().getBytes());
+            Files.write(Path.of(fileName), report.getBytes());
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file: " + fileName, e);
         }
