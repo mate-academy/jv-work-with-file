@@ -15,6 +15,7 @@ public class WorkWithFile {
     private static final String SEPARATOR = System.lineSeparator();
     private static final int FIRST_MEMBER = 0;
     private static final int SECOND_MEMBER = 1;
+    private static final int DELIMITER = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String data = readFromFile(fromFileName);
@@ -24,20 +25,20 @@ public class WorkWithFile {
 
     private String readFromFile(String fileName) {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder inLine = new StringBuilder();
             String field;
             while ((field = bufferedReader.readLine()) != null) {
-                sb.append(field).append(" ");
+                inLine.append(field).append(" ");
             }
-            return sb.toString();
+            return inLine.toString();
         } catch (IOException e) {
             throw new RuntimeException("Can`t read file: " + fileName, e);
         }
     }
 
     private String getFormatReport(String data) {
-        int countSupply = 0;
-        int countBuy = 0;
+        int countSupply = DELIMITER;
+        int countBuy = DELIMITER;
 
         String[] fields = data.split(" ");
         for (String field : fields) {
@@ -50,24 +51,22 @@ public class WorkWithFile {
                 countBuy = countBuy + Integer.parseInt(number);
             }
         }
-
-        String supplyResult = SUPPLY + COMMA + countSupply;
-        String buyResult = BUY + COMMA + countBuy;
-        String lastResult = RESULT + COMMA + (countSupply - countBuy);
-        return supplyResult + SEPARATOR
-                + buyResult + SEPARATOR
-                + lastResult + SEPARATOR;
+        StringBuilder finalResult = new StringBuilder();
+        finalResult.append(SUPPLY).append(COMMA).append(countSupply).append(SEPARATOR)
+                .append(BUY).append(COMMA).append(countBuy).append(SEPARATOR)
+                .append(RESULT).append(COMMA).append(countSupply - countBuy).append(SEPARATOR);
+        return finalResult.toString();
     }
 
     private void writeToFile(String fileName, String result) {
         File fileTo = new File(fileName);
-        try {
-            fileTo.createNewFile();
-        } catch (IOException e) {
-            throw new RuntimeException("Can`t create file: " + fileName, e);
-        }
-
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileTo, false))) {
+            try {
+                fileTo.createNewFile();
+            } catch (IOException e) {
+                throw new RuntimeException("Can`t create file: " + fileName, e);
+            }
+
             bufferedWriter.write(result);
         } catch (IOException e) {
             throw new RuntimeException("Don`t write data to file: " + fileTo, e);
