@@ -1,6 +1,8 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -11,7 +13,6 @@ public class WorkWithFile {
     private static final String RESULT = "result";
     private static final int OPERATION_NAME = 0;
     private static final int OPERATION_VALUE = 1;
-
 
     public void getStatistic(String fromFileName, String toFileName) {
         String data = readFile(fromFileName);
@@ -49,8 +50,10 @@ public class WorkWithFile {
             }
         }
         result = supplyTotal - buyTotal;
-        report.append(OPPERATION_SUPPLY).append(DIVIDER).append(supplyTotal).append(System.lineSeparator())
-                .append(OPPERATION_BUY).append(DIVIDER).append(buyTotal).append(System.lineSeparator())
+        report.append(OPPERATION_SUPPLY).append(DIVIDER).append(supplyTotal)
+                .append(System.lineSeparator())
+                .append(OPPERATION_BUY).append(DIVIDER).append(buyTotal)
+                .append(System.lineSeparator())
                 .append(RESULT).append(DIVIDER).append(result);
         return report.toString();
     }
