@@ -15,7 +15,8 @@ public class WorkWithFile {
     private static final String SEPARATOR = System.lineSeparator();
     private static final int FIRST_MEMBER = 0;
     private static final int SECOND_MEMBER = 1;
-    private static final int DELIMITER = 0;
+    private static final String DELIMITER = " ";
+    private static final int INITIAL_VALUE = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String data = readFromFile(fromFileName);
@@ -28,7 +29,7 @@ public class WorkWithFile {
             StringBuilder inLine = new StringBuilder();
             String field;
             while ((field = bufferedReader.readLine()) != null) {
-                inLine.append(field).append(" ");
+                inLine.append(field).append(DELIMITER);
             }
             return inLine.toString();
         } catch (IOException e) {
@@ -37,10 +38,10 @@ public class WorkWithFile {
     }
 
     private String getFormatReport(String data) {
-        int countSupply = DELIMITER;
-        int countBuy = DELIMITER;
+        int countSupply = INITIAL_VALUE;
+        int countBuy = INITIAL_VALUE;
 
-        String[] fields = data.split(" ");
+        String[] fields = data.split(DELIMITER);
         for (String field : fields) {
             String[] temporaryArray = field.split(COMMA);
             if (temporaryArray[FIRST_MEMBER].equals(SUPPLY)) {
