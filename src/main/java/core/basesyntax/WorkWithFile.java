@@ -17,12 +17,10 @@ public class WorkWithFile {
             String fileString = reader.readLine();
             while (fileString != null) {
                 String[] lineValues = fileString.split(",");
-                switch (lineValues[0]) {
-                    case "supply":
-                        supplyCount += Integer.parseInt(lineValues[1]);
-                        break;
-                    default:
-                        buyCount += Integer.parseInt((lineValues[1]));
+                if (lineValues[0].equals("supply")) {
+                    supplyCount += Integer.parseInt(lineValues[1]);
+                } else {
+                    buyCount += Integer.parseInt((lineValues[1]));
                 }
                 fileString = reader.readLine();
             }
