@@ -10,21 +10,9 @@ public class WorkWithFile {
     public static final String RESULT_STR = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String[] input = readStringsFromFile(fromFileName);
-
-        int supplyAmount = 0;
-        int buyAmount = 0;
-        for (String inputEntry : input) {
-            String[] inputEntrySplited = inputEntry.split(",");
-            if (inputEntrySplited[0].equals("supply")) {
-                supplyAmount += Integer.valueOf(inputEntrySplited[1]);
-            } else {
-                buyAmount += Integer.valueOf(inputEntrySplited[1]);
-            }
-        }
-
-        File toFile = createFile(toFileName);
-        writeToFile(toFile, createAReport(supplyAmount, buyAmount).getBytes());
+        String[] inputData = readStringsFromFile(fromFileName);
+        String report = createReport(inputData);
+        writeToFile(toFileName, report);
     }
 
     private String[] readStringsFromFile(String filePath) {
@@ -36,25 +24,27 @@ public class WorkWithFile {
         }
     }
 
-    private File createFile(String filePath) {
-        File file = new File(filePath);
+    private void writeToFile(String filePath, String data) {
         try {
-            file.createNewFile();
-        } catch (IOException e) {
-            throw new RuntimeException("Can't create file", e);
-        }
-        return file;
-    }
-
-    private void writeToFile(File file, byte[] data) {
-        try {
-            Files.write(file.toPath(), data);
+            Files.write(new File(filePath).toPath(), data.getBytes());
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file", e);
         }
     }
 
-    private String createAReport(int supplyAmount, int buyAmount) {
+    private String createReport(String[] inputData) {
+        int supplyAmount = 0;
+        int buyAmount = 0;
+
+        for (String inputEntry : inputData) {
+            String[] inputEntrySplited = inputEntry.split(",");
+            if (inputEntrySplited[0].equals(SUPPLY_STR)) {
+                supplyAmount += Integer.valueOf(inputEntrySplited[1]);
+            } else {
+                buyAmount += Integer.valueOf(inputEntrySplited[1]);
+            }
+        }
+
         StringBuilder sb = new StringBuilder();
         return sb.append(SUPPLY_STR).append(",").append(supplyAmount)
                 .append(System.lineSeparator()).append(BUY_STR).append(",").append(buyAmount)
