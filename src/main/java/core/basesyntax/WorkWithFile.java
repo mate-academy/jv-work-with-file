@@ -8,6 +8,9 @@ public class WorkWithFile {
     public static final String SUPPLY_STR = "supply";
     public static final String BUY_STR = "buy";
     public static final String RESULT_STR = "result";
+    public static final String SEPARATOR = ",";
+    public static final int STRING_VALUE_INDEX = 0;
+    public static final int NUMBER_VALUE_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] inputData = readStringsFromFile(fromFileName);
@@ -20,7 +23,7 @@ public class WorkWithFile {
             return Files.readAllLines(new File(filePath).toPath())
                     .toArray(new String[0]);
         } catch (IOException e) {
-            throw new RuntimeException("Can't read from file", e);
+            throw new RuntimeException("Can't read from file " + filePath, e);
         }
     }
 
@@ -28,7 +31,7 @@ public class WorkWithFile {
         try {
             Files.write(new File(filePath).toPath(), data.getBytes());
         } catch (IOException e) {
-            throw new RuntimeException("Can't write to file", e);
+            throw new RuntimeException("Can't write to file " + filePath, e);
         }
     }
 
@@ -37,18 +40,17 @@ public class WorkWithFile {
         int buyAmount = 0;
 
         for (String inputEntry : inputData) {
-            String[] inputEntrySplited = inputEntry.split(",");
-            if (inputEntrySplited[0].equals(SUPPLY_STR)) {
-                supplyAmount += Integer.valueOf(inputEntrySplited[1]);
+            String[] inputEntrySplited = inputEntry.split(SEPARATOR);
+            if (inputEntrySplited[STRING_VALUE_INDEX].equals(SUPPLY_STR)) {
+                supplyAmount += Integer.valueOf(inputEntrySplited[NUMBER_VALUE_INDEX]);
             } else {
-                buyAmount += Integer.valueOf(inputEntrySplited[1]);
+                buyAmount += Integer.valueOf(inputEntrySplited[NUMBER_VALUE_INDEX]);
             }
         }
-
-        StringBuilder sb = new StringBuilder();
-        return sb.append(SUPPLY_STR).append(",").append(supplyAmount)
-                .append(System.lineSeparator()).append(BUY_STR).append(",").append(buyAmount)
-                .append(System.lineSeparator()).append(RESULT_STR).append(",")
+        StringBuilder report = new StringBuilder();
+        return report.append(SUPPLY_STR).append(SEPARATOR).append(supplyAmount)
+                .append(System.lineSeparator()).append(BUY_STR).append(SEPARATOR).append(buyAmount)
+                .append(System.lineSeparator()).append(RESULT_STR).append(SEPARATOR)
                 .append(supplyAmount - buyAmount).toString();
     }
 }
