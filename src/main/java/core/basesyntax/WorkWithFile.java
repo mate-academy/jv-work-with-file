@@ -6,6 +6,10 @@ import java.nio.file.Path;
 import java.util.List;
 
 public class WorkWithFile {
+    static final String SEPARATOR = ",";
+    static final int OPERATION_INDEX = 0;
+    static final int VALUE_INDEX = 1;
+
     public void getStatistic(String fromFileName, String toFileName) {
         String[] readData = readData(fromFileName);
         String report = generateReport(readData);
@@ -27,9 +31,9 @@ public class WorkWithFile {
         int buy = 0;
 
         for (String row : statisticData) {
-            String[] separatedRow = row.split(",");
-            String operation = separatedRow[0];
-            int valueOfOperation = Integer.parseInt(separatedRow[1]);
+            String[] separatedRow = row.split(SEPARATOR);
+            String operation = separatedRow[OPERATION_INDEX];
+            int valueOfOperation = Integer.parseInt(separatedRow[VALUE_INDEX]);
 
             if (operation.equals("supply")) {
                 supply += valueOfOperation;
