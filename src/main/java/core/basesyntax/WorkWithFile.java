@@ -13,7 +13,7 @@ public class WorkWithFile {
         int supply = 0;
         int buy = 0;
         int result = 0;
-        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName));) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             StringBuilder builder = new StringBuilder();
             int value = reader.read();
             while (value != -1) {
@@ -21,9 +21,6 @@ public class WorkWithFile {
                 value = reader.read();
             }
             String[] smth = builder.toString().split("\r\n");
-            for (String line : smth) {
-                line.split(",");
-            }
             for (int i = 0; i < smth.length; i++) {
                 String[][] data = new String[][] {smth[i].split(",")};
                 if (data[0][0].equals("supply")) {
