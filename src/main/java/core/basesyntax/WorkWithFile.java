@@ -11,7 +11,7 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
 
-        writeResultToFile(toFileName, generateReport(readFile(fromFileName), fromFileName));
+        writeResultToFile(toFileName, generateReport(readFile(fromFileName)));
     }
 
     private static String[] readFile(String fromFileName) {
@@ -30,12 +30,10 @@ public class WorkWithFile {
         }
     }
 
-    private String generateReport(String[] data, String fromFileName) {
+    private String generateReport(String[] data) {
         int supply = 0;
         int buy = 0;
-        int result = 0;
-        String[] dataFromFile = readFile(fromFileName);
-        for (String line : dataFromFile) {
+        for (String line : data) {
             String[] splittedLine = line.split(",");
             if (splittedLine[0].equals("supply")) {
                 supply += Integer.parseInt(splittedLine[1]);
@@ -44,7 +42,7 @@ public class WorkWithFile {
                 buy += Integer.parseInt(splittedLine[1]);
             }
         }
-        result = supply - buy;
+        int result = supply - buy;
 
         String report = new StringBuilder("supply,")
                 .append(supply)
