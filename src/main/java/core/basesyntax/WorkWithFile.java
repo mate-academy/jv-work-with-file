@@ -20,7 +20,7 @@ public class WorkWithFile {
                 builder.append((char) value);
                 value = reader.read();
             }
-            String[] smth = builder.toString().split("\r\n");
+            String[] smth = builder.toString().split(System.lineSeparator());
             for (int i = 0; i < smth.length; i++) {
                 String[][] data = new String[][] {smth[i].split(",")};
                 if (data[0][0].equals("supply")) {
