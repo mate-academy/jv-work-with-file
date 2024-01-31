@@ -27,7 +27,7 @@ public class WorkWithFile {
 
     private static void createMapOfDataFromFile(StringBuilder stringBuilder,
                                                 Map<String, Integer> map) {
-        String[] split = stringBuilder.toString().split("\r\n");
+        String[] split = stringBuilder.toString().split("\n");
         for (String string : split) {
             String[] subString = string.split(",");
             map.merge(subString[0], Integer.parseInt(subString[1]), Integer::sum);
@@ -39,7 +39,7 @@ public class WorkWithFile {
             BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileTo));
             for (Map.Entry<String, Integer> stringIntegerEntry : map.entrySet()) {
                 bufferedWriter.write(stringIntegerEntry.getKey() + ","
-                        + stringIntegerEntry.getValue() + "\r\n");
+                        + stringIntegerEntry.getValue() + "\n");
             }
             bufferedWriter.write("result," + result);
             bufferedWriter.close();
