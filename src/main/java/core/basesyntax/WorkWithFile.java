@@ -7,6 +7,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String SUPPLY_OPERATION = "supply";
+    private static final String BUY_OPERATION = "buy";
+
     public static void getStatistic(String fromFileName, String toFileName) {
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
                 BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
@@ -22,24 +25,25 @@ public class WorkWithFile {
                     String operationType = fields[0].trim();
                     int amount = Integer.parseInt(fields[1].trim());
 
-                    if ("supply".equals(operationType)) {
+                    if (SUPPLY_OPERATION.equals(operationType)) {
                         supplyTotal += amount;
-                    } else if ("buy".equals(operationType)) {
+                    } else if (BUY_OPERATION.equals(operationType)) {
                         buyTotal += amount;
                     }
                 }
             }
 
-            // Write the report to the output file
-            writer.write("supply," + supplyTotal);
-            writer.newLine();
-            writer.write("buy," + buyTotal);
-            writer.newLine();
-            writer.write("result," + (supplyTotal - buyTotal));
+            String report = String.format("supply,%d%nbuy,%d%nresult,%d", supplyTotal,
+                    buyTotal, (supplyTotal - buyTotal));
+
+            writer.write(report);
 
         } catch (IOException e) {
-            e.printStackTrace(); // Handle the exception based on your application's needs
+            handleException(e, fromFileName);
         }
     }
 
+    private static void handleException(IOException e, String fileName) {
+        throw new RuntimeException("Error processing file: " + fileName, e);
+    }
 }
