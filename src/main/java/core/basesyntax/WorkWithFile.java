@@ -6,93 +6,108 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class WorkWithFile {
 
-    private static final String ERROR_MSG = "Can't read from file.";
+    private static final String READ_ERROR_MSG = "Can't read from this file: ";
+    private static final String WRITE_ERROR_MSG = "Can't write to this file: ";
     private static final String SEPARATOR_REGEX = ",";
-    private static final int VALUE_INDEX = 0;
-    private static final int KEY_INDEX = 1;
     private static final String RESULT_LINE = "result,%s";
     private static final String SUPPLY_ALWAYS_FIRST = "supply";
-    private List<String[]> linesArrays;
-    private String[] values;
-    private int[] keys;
-    private StringBuilder finalResults;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        linesArrays = new ArrayList<>();
-        finalResults = new StringBuilder();
+        String dataFromFile = readFile(fromFileName);
+        String report = createReport(dataFromFile);
+        writeToFile(report, toFileName);
+    }
+
+    private String readFile(String fromFileName) {
+        StringBuilder dataFromFile = new StringBuilder();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String value = reader.readLine();
 
             while (value != null) {
-                linesArrays.add(value.split(SEPARATOR_REGEX));
+                String[] parts = value.split(SEPARATOR_REGEX);
+                for (String part : parts) {
+                    dataFromFile.append(part).append(SEPARATOR_REGEX);
+                }
                 value = reader.readLine();
             }
-            values = mergeValues(linesArrays);
-            keys = mergeKeys(linesArrays, values);
-            finalResults = calculateResults(values, keys);
+
         } catch (IOException e) {
-            throw new RuntimeException(ERROR_MSG + e);
+            throw new RuntimeException(READ_ERROR_MSG + fromFileName + e);
         }
 
-        writeToFile(finalResults, toFileName);
+        return dataFromFile.toString();
     }
 
-    private String[] mergeValues(List<String[]> linesArrays) {
-        List<String> mergedValues = new ArrayList<>();
+    private String createReport(String dataFromFile) {
+        String[] parts = dataFromFile.split(SEPARATOR_REGEX);
+        String[] keys = mergeKeys(parts);
+        int[] values = mergeValues(parts, keys);
+        String totalSubtraction = String.valueOf(Math.abs(values[0] - values[1]));
+        StringBuilder report = new StringBuilder();
 
-        for (String[] line : linesArrays) {
-            if (!mergedValues.contains(line[VALUE_INDEX])) {
-                mergedValues.add(line[VALUE_INDEX]);
+        for (int i = 0; i < keys.length; i++) {
+            report.append(keys[i]).append(SEPARATOR_REGEX)
+                    .append(values[i]).append(System.lineSeparator());
+        }
+
+        report.append(String.format(RESULT_LINE, totalSubtraction));
+        return report.toString();
+    }
+
+    private String[] mergeKeys(String[] parts) {
+        StringBuilder keysBuilder = new StringBuilder();
+        String[] keysArray;
+
+        for (String part : parts) {
+            if (isWord(part)) {
+                if (keysBuilder.indexOf(part) == -1) {
+                    keysBuilder.append(part).append(SEPARATOR_REGEX);
+                }
             }
         }
 
-        String temp = mergedValues.get(0); // Getting temp to reverse if needed
-        if (!temp.equals(SUPPLY_ALWAYS_FIRST)) {
-            mergedValues.set(0, mergedValues.get(1));
-            mergedValues.set(1, temp);
-        }
-        return mergedValues.toArray(new String[]{});
+        keysArray = keysBuilder.toString().split(SEPARATOR_REGEX);
+        return keysArray[0].equals(SUPPLY_ALWAYS_FIRST) ? keysArray : reverseKeys(keysArray);
     }
 
-    private int[] mergeKeys(List<String[]> linesArrays, String[] values) {
-        int[] mergedKeys = new int[values.length];
-
-        for (String[] line : linesArrays) {
-            int key = Integer.parseInt(line[KEY_INDEX]);
-            int index = line[VALUE_INDEX].equals(values[VALUE_INDEX]) ? 0 : 1;
-            mergedKeys[index] += key;
-        }
-
-        return mergedKeys;
+    private String[] reverseKeys(String[] arrayToReverse) {
+        String temp = arrayToReverse[0];
+        arrayToReverse[0] = arrayToReverse[1];
+        arrayToReverse[1] = temp;
+        return arrayToReverse;
     }
 
-    private StringBuilder calculateResults(String[] values, int[] keys) {
-        StringBuilder builder = new StringBuilder();
-        String totalSubtraction = "";
-        totalSubtraction = String.valueOf(Math.abs(keys[0] - keys[1]));
+    private int[] mergeValues(String[] parts, String[] keys) {
+        int[] valuesArray = new int[]{0, 0};
 
-        for (int i = 0; i < values.length; i++) {
-            builder.append(values[i]).append(SEPARATOR_REGEX)
-                    .append(keys[i]).append(System.lineSeparator());
+        for (int i = 0; i < parts.length; i++) {
+            if (!isWord(parts[i])) {
+                if (parts[i - 1].equals(keys[0])) {
+                    valuesArray[0] += Integer.parseInt(parts[i]);
+                    continue;
+                }
+                valuesArray[1] += Integer.parseInt(parts[i]);
+            }
         }
 
-        builder.append(String.format(RESULT_LINE, totalSubtraction));
-        return builder;
+        return valuesArray;
     }
 
-    private void writeToFile(StringBuilder builder, String toFileName) {
+    private boolean isWord(String part) {
+        return Character.isLetter(part.charAt(0));
+    }
+
+    private void writeToFile(String text, String toFileName) {
         File file = new File(toFileName);
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-            writer.write(builder.toString());
+            writer.write(text);
         } catch (IOException e) {
-            throw new RuntimeException(ERROR_MSG + e);
+            throw new RuntimeException(WRITE_ERROR_MSG + toFileName + e);
         }
     }
 }
