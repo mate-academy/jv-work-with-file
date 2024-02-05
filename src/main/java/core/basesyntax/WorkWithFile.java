@@ -1,67 +1,77 @@
 package core.basesyntax;
 
-import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final int TYPE_OPERATION = 0;
+    private static final int INDEX = 1;
 
-    public void getStatistic(String fromFileName, String toFileName) {
-        List<String> newReport = new ArrayList<>();
+    private String readToFile(String fromFileName) {
+        StringBuilder builder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
-                newReport.add(line);
+                builder.append(line).append(System.lineSeparator());
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can`t to open this file", e);
+            throw new RuntimeException("Can`t to open this file!", e);
         }
-
-        List<String> result = statisticReport(newReport);
-        totalReport(result, toFileName);
+        return builder.toString();
     }
 
-    private List<String> statisticReport(List<String> internalReport) {
+    public void getStatistic(String fromFileName, String toFileName) {
+        String dataFromFile = readToFile(fromFileName);
+        String processFromFile = processData(dataFromFile);
+        writeToFile(processFromFile, toFileName);
+    }
+
+    private String processData(String internalReport) {
         int totalPurchase = 0;
         int totalSupply = 0;
-
-        for (String line : internalReport) {
+        StringBuilder builder = new StringBuilder();
+        String[] array = internalReport.split(System.lineSeparator());
+        for (String line : array) {
             String[] list = line.split(",");
             if (list.length == 2) {
-                String word = list[0].trim();
-                int amount = Integer.parseInt(list[1].trim());
+                String word = list[TYPE_OPERATION].trim().toLowerCase();
+                int amount = Integer.parseInt(list[INDEX].trim());
 
-                if ("купити".equals(word)) {
+                if (BUY.equals(word)) {
                     totalPurchase += amount;
-                } else if ("поставка".equals(word)) {
+                } else if (SUPPLY.equals(word)) {
                     totalSupply += amount;
                 }
             }
         }
-
-        List<String> outReport = new ArrayList<>();
-        outReport.add("постачання," + totalSupply);
-        outReport.add("купівля," + totalPurchase);
-        outReport.add("результат," + (totalSupply - totalPurchase));
-
-        return outReport;
+        builder.append("supply,").append(totalSupply).append(System.lineSeparator());
+        builder.append("buy,").append(totalPurchase).append(System.lineSeparator());
+        builder.append("result,").append(totalSupply - totalPurchase);
+        System.out.println(builder);
+        return builder.toString();
     }
 
-    public void totalReport(List<String> report, String toFileName) {
+    private void writeToFile(String report, String toFileName) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            for (String lines : report) {
-                bufferedWriter.write(lines);
-                bufferedWriter.newLine();
-                System.out.println(lines);
-            }
+            bufferedWriter.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Can`t to write", e);
+            throw new RuntimeException("Can`t to write into the file!", e);
         }
     }
 
     public static void main(String[] args) {
         WorkWithFile workWithFile = new WorkWithFile();
-        workWithFile.getStatistic("apple.csv", "grape.csv");
-
+        workWithFile.getStatistic("apple.csv", "apple_report.csv");
+        System.out.println(System.lineSeparator());
+        workWithFile.getStatistic("banana.csv", "banana_report.csv");
+        System.out.println(System.lineSeparator());
+        workWithFile.getStatistic("grape.csv", "grape_report.csv");
+        System.out.println(System.lineSeparator());
+        workWithFile.getStatistic("orange.csv", "orange_report.csv");
     }
 }
