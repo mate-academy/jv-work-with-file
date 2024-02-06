@@ -57,5 +57,3 @@ public class WorkWithFile {
         return new int[]{supplyAmount, buyAmount};
     }
 }
-
-
