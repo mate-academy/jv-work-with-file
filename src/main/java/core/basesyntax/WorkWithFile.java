@@ -12,7 +12,7 @@ public class WorkWithFile {
 
     public static void getStatistic(String fromFileName, String toFileName) {
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
-             BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
+                BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
 
             int supplyTotal = 0;
             int buyTotal = 0;
