@@ -9,49 +9,57 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final String OPERATION_SUPPLY = "supply";
     private static final String OPERATION_BUY = "buy";
+    private static final String DELIMITER = ",";
+    private static final int OPERATION_TYPE_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int supplySum = readFromFile(fromFileName)[0];
-        int buySum = readFromFile(fromFileName)[1];
-        writeReport(createReport(supplySum, buySum), toFileName);
+        String data = readFromFile(fromFileName);
+        String report = createReport(data);
+        writeReport(report, toFileName);
     }
 
-    private int[] readFromFile(String fromFileName) {
-        int supplySum = 0;
-        int buySum = 0;
+    private String readFromFile(String fromFileName) {
+        StringBuilder data = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",");
-                String operationType = parts[0];
-                int amount = Integer.parseInt(parts[1]);
-                if (operationType.equals(OPERATION_SUPPLY)) {
-                    supplySum += amount;
-                } else if (operationType.equals(OPERATION_BUY)) {
-                    buySum += amount;
-                }
+                data.append(line).append(System.lineSeparator());
             }
         } catch (IOException e) {
-            throw new RuntimeException("File cannot be found");
+            throw new RuntimeException("File " + fromFileName + " cannot be found");
         }
-        return new int[] {supplySum, buySum};
+        return data.toString();
     }
 
-    private String createReport(int supplySum, int buySum) {
-        StringBuilder builder = new StringBuilder();
-        builder.append(OPERATION_SUPPLY).append(",").append(supplySum)
+    private String createReport(String data) {
+        int supplySum = 0;
+        int buySum = 0;
+        StringBuilder stringBuilder = new StringBuilder();
+        String[] lines = data.split(System.lineSeparator());
+        for (String line : lines) {
+            String[] parts = line.split(DELIMITER);
+            String operationType = parts[OPERATION_TYPE_INDEX];
+            int amount = Integer.parseInt(parts[AMOUNT_INDEX]);
+            if (operationType.equals(OPERATION_SUPPLY)) {
+                supplySum += amount;
+            } else if (operationType.equals(OPERATION_BUY)) {
+                buySum += amount;
+            }
+        }
+        stringBuilder.append(OPERATION_SUPPLY).append(DELIMITER).append(supplySum)
                 .append(System.lineSeparator())
-                .append(OPERATION_BUY).append(",").append(buySum)
+                .append(OPERATION_BUY).append(DELIMITER).append(buySum)
                 .append(System.lineSeparator())
-                .append("result").append(",").append(supplySum - buySum);
-        return builder.toString();
+                .append("result").append(DELIMITER).append(supplySum - buySum);
+        return stringBuilder.toString();
     }
 
     private void writeReport(String data, String toFileName) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write(data);
         } catch (IOException e) {
-            throw new RuntimeException("Cannot write on file");
+            throw new RuntimeException("Cannot write on file " + toFileName);
         }
     }
 }
