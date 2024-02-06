@@ -12,13 +12,13 @@ public class WorkWithFile {
 
     public static void getStatistic(String fromFileName, String toFileName) {
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
-                BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
+             BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
 
             int supplyTotal = 0;
             int buyTotal = 0;
 
             String line;
-            while ((line = reader.readLine()) != null) {
+            while ((line = readFile(reader)) != null) {
                 String[] fields = line.split(",");
 
                 if (fields.length == 2) {
@@ -33,14 +33,25 @@ public class WorkWithFile {
                 }
             }
 
-            String report = String.format("supply,%d%nbuy,%d%nresult,%d", supplyTotal,
-                    buyTotal, (supplyTotal - buyTotal));
-
-            writer.write(report);
+            String report = formReport(supplyTotal, buyTotal);
+            writeToFile(writer, report);
 
         } catch (IOException e) {
             handleException(e, fromFileName);
         }
+    }
+
+    private static String readFile(BufferedReader reader) throws IOException {
+        return reader.readLine();
+    }
+
+    private static String formReport(int supplyTotal, int buyTotal) {
+        return String.format("supply,%d%nbuy,%d%nresult,%d", supplyTotal,
+                buyTotal, (supplyTotal - buyTotal));
+    }
+
+    private static void writeToFile(BufferedWriter writer, String report) throws IOException {
+        writer.write(report);
     }
 
     private static void handleException(IOException e, String fileName) {
