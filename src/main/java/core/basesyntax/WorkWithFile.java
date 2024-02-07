@@ -14,26 +14,19 @@ public class WorkWithFile {
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
                 BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
 
-            int supplyTotal = 0;
-            int buyTotal = 0;
+            int[] totals = {0, 0};
 
             String line;
-            while ((line = readFile(reader)) != null) {
-                String[] fields = line.split(",");
-
+            while ((line = readLine(reader)) != null) {
+                String[] fields = parseFields(line);
                 if (fields.length == 2) {
                     String operationType = fields[0].trim();
                     int amount = Integer.parseInt(fields[1].trim());
-
-                    if (SUPPLY_OPERATION.equals(operationType)) {
-                        supplyTotal += amount;
-                    } else if (BUY_OPERATION.equals(operationType)) {
-                        buyTotal += amount;
-                    }
+                    updateTotals(operationType, amount, totals);
                 }
             }
 
-            String report = formReport(supplyTotal, buyTotal);
+            String report = formReport(totals[0], totals[1]);
             writeToFile(writer, report);
 
         } catch (IOException e) {
@@ -41,8 +34,20 @@ public class WorkWithFile {
         }
     }
 
-    private static String readFile(BufferedReader reader) throws IOException {
+    private static String readLine(BufferedReader reader) throws IOException {
         return reader.readLine();
+    }
+
+    private static String[] parseFields(String line) {
+        return line.split(",");
+    }
+
+    private static void updateTotals(String operationType, int amount, int[] totals) {
+        if (SUPPLY_OPERATION.equals(operationType)) {
+            totals[0] += amount; // Update supplyTotal
+        } else if (BUY_OPERATION.equals(operationType)) {
+            totals[1] += amount; // Update buyTotal
+        }
     }
 
     private static String formReport(int supplyTotal, int buyTotal) {
