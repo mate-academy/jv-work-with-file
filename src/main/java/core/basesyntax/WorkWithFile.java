@@ -1,16 +1,18 @@
 package core.basesyntax;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 
 public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final int TYPE_OPERATION = 0;
     private static final int INDEX = 1;
+
+    public void getStatistic(String fromFileName, String toFileName) {
+        String dataFromFile = readToFile(fromFileName);
+        String processFromFile = processData(dataFromFile);
+        writeToFile(processFromFile, toFileName);
+    }
 
     private String readToFile(String fromFileName) {
         StringBuilder builder = new StringBuilder();
@@ -20,15 +22,9 @@ public class WorkWithFile {
                 builder.append(line).append(System.lineSeparator());
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can`t to open this file!", e);
+            throw new RuntimeException("Can`t to open this file!" + fromFileName, e);
         }
         return builder.toString();
-    }
-
-    public void getStatistic(String fromFileName, String toFileName) {
-        String dataFromFile = readToFile(fromFileName);
-        String processFromFile = processData(dataFromFile);
-        writeToFile(processFromFile, toFileName);
     }
 
     private String processData(String internalReport) {
@@ -38,15 +34,13 @@ public class WorkWithFile {
         String[] array = internalReport.split(System.lineSeparator());
         for (String line : array) {
             String[] list = line.split(",");
-            if (list.length == 2) {
-                String word = list[TYPE_OPERATION].trim().toLowerCase();
-                int amount = Integer.parseInt(list[INDEX].trim());
+            String word = list[TYPE_OPERATION].trim().toLowerCase();
+            int amount = Integer.parseInt(list[INDEX].trim());
 
-                if (BUY.equals(word)) {
-                    totalPurchase += amount;
-                } else if (SUPPLY.equals(word)) {
-                    totalSupply += amount;
-                }
+            if (BUY.equals(word)) {
+                totalPurchase += amount;
+            } else if (SUPPLY.equals(word)) {
+                totalSupply += amount;
             }
         }
         builder.append("supply,").append(totalSupply).append(System.lineSeparator());
@@ -60,7 +54,7 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Can`t to write into the file!", e);
+            throw new RuntimeException("Can`t to write into the file!" + toFileName, e);
         }
     }
 }
