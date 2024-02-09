@@ -10,6 +10,7 @@ public class WorkWithFile {
     private static final int OPERATION_INDEX = 0;
     private static final int AMOUNT_INDEX = 1;
     private static final String LINE_SEPARATOR = System.lineSeparator();
+    private static final String DELIMITER = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String data = readFromFile(fromFileName);
@@ -19,15 +20,15 @@ public class WorkWithFile {
 
     private String readFromFile(String fileName) {
         String line;
-        StringBuilder stringBuilder = new StringBuilder();
+        StringBuilder fileContent = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
             while ((line = bufferedReader.readLine()) != null) {
-                stringBuilder.append(line).append(LINE_SEPARATOR);
+                fileContent.append(line).append(LINE_SEPARATOR);
             }
         } catch (IOException e) {
             throw new RuntimeException("Problems with file: " + fileName, e);
         }
-        return stringBuilder.toString();
+        return fileContent.toString();
     }
 
     private String createReport(String data) {
@@ -35,7 +36,7 @@ public class WorkWithFile {
         int buyCount = 0;
         String [] lines = data.split(LINE_SEPARATOR);
         for (String line : lines) {
-            String [] input = line.split(",");
+            String [] input = line.split(DELIMITER);
             switch (input[OPERATION_INDEX]) {
                 case "supply":
                     supplyCount += Integer.parseInt(input[AMOUNT_INDEX]);
@@ -47,9 +48,9 @@ public class WorkWithFile {
                     break;
             }
         }
-        return "supply," + supplyCount + LINE_SEPARATOR
-                + "buy," + buyCount + LINE_SEPARATOR
-                + "result," + (supplyCount - buyCount);
+        return "supply" + DELIMITER + supplyCount + LINE_SEPARATOR
+                + "buy" + DELIMITER + buyCount + LINE_SEPARATOR
+                + "result" + DELIMITER + (supplyCount - buyCount);
     }
 
     private void writeToFile(String report, String fileName) {
