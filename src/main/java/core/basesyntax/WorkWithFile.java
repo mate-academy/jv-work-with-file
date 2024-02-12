@@ -42,11 +42,11 @@ public class WorkWithFile {
 
     private static void writeReport (String toFileName, int supplyTotal, int buyTotal, int result) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            writer.write("supply, " + supplyTotal);
+            writer.write("supply," + supplyTotal);
             writer.newLine();
-            writer.write("buy, " + buyTotal);
+            writer.write("buy," + buyTotal);
             writer.newLine();
-            writer.write("result, " + result);
+            writer.write("result," + result);
         } catch (IOException e) {
             throw new RuntimeException("Error wtiting to file " + toFileName, e);
         }
