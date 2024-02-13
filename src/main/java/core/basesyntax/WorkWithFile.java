@@ -15,6 +15,9 @@ public class WorkWithFile {
     private static final String RESULT = "result";
     private static final String COMMA = ",";
     private static final String NEW_LINE = System.lineSeparator();
+    private static final int KEY_INDEX = 0;
+    private static final int VALUE_INDEX = 1;
+    private static final int DEFAULT_VALUE = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
         Map<String, Integer> map = new TreeMap<>(Comparator.reverseOrder());
@@ -35,8 +38,8 @@ public class WorkWithFile {
 
     private void updateMapWithLine(Map<String, Integer> map, String line) {
         String[] parts = line.split(COMMA);
-        String key = parts[0];
-        Integer value = Integer.parseInt(parts[1]);
+        String key = parts[KEY_INDEX];
+        Integer value = Integer.parseInt(parts[VALUE_INDEX]);
         map.merge(key, value, Integer::sum);
     }
 
@@ -52,8 +55,8 @@ public class WorkWithFile {
     }
 
     private int calculateResult(Map<String, Integer> map) {
-        int resultSupply = map.getOrDefault(SUPPLY, 0);
-        int resultBuy = map.getOrDefault(BUY, 0);
+        int resultSupply = map.getOrDefault(SUPPLY, DEFAULT_VALUE);
+        int resultBuy = map.getOrDefault(BUY, DEFAULT_VALUE);
         return resultSupply - resultBuy;
     }
 }
