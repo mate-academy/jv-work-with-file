@@ -11,13 +11,9 @@ public class WorkWithFile {
     private static final String BUY = "buy";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int supply = 0;
-        int buy = 0;
-
-        String allTextFile = readFile(fromFileName);
-        supply = calculetedSupplyForReport(allTextFile);
-        buy = calculetedBuyForReport(allTextFile);
-        writeToFile(supply,buy,toFileName);
+        String fileContent = readFile(fromFileName);
+        String report = generateReport(fileContent);
+        writeToFile(report, toFileName);
     }
 
     private String readFile(String fromFileName) {
@@ -29,42 +25,39 @@ public class WorkWithFile {
                 data = reader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Error with read file",e);
+            throw new RuntimeException("Error with read file", e);
         }
         return stringBuilder.toString();
     }
 
-    private int calculetedSupplyForReport(String allTextFile) {
+    private String generateReport(String allTextFile) {
         int intSupply = 0;
+        int intBuy = 0;
+        StringBuilder resultBuilder = new StringBuilder();
         String[] values = allTextFile.split("\\s+");
         for (String value : values) {
             String[] eachValue = value.split(",");
             if (eachValue[0].equals(SUPPLY)) {
                 intSupply += Integer.parseInt(eachValue[1]);
-            }
-        }
-        return intSupply;
-    }
-
-    private int calculetedBuyForReport(String allTextFile) {
-        int intBuy = 0;
-        String[] values = allTextFile.split("\\s+");
-        for (String value : values) {
-            String[] eachValue = value.split(",");
-            if (eachValue[0].equals(BUY)) {
+            } else if (eachValue[0].equals(BUY)) {
                 intBuy += Integer.parseInt(eachValue[1]);
             }
         }
-        return intBuy;
+        resultBuilder.append(intSupply).append(',').append(intBuy);
+        return resultBuilder.toString();
     }
 
-    private void writeToFile(int supply, int buy, String toFileName) {
+    private void writeToFile(String report, String toFileName) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write(SUPPLY + "," + supply);
-            bufferedWriter.newLine();
-            bufferedWriter.write(BUY + "," + buy);
-            bufferedWriter.newLine();
-            bufferedWriter.write("result," + (supply - buy));
+            if (report != null) {
+                String[] reportData = report.split(",");
+                bufferedWriter.write(SUPPLY + "," + reportData[0]);
+                bufferedWriter.newLine();
+                bufferedWriter.write(BUY + "," + reportData[1]);
+                bufferedWriter.newLine();
+                bufferedWriter.write("result," + (Integer.parseInt(reportData[0])
+                        - Integer.parseInt(reportData[1])));
+            }
         } catch (IOException e) {
             throw new RuntimeException("Error with record to file", e);
         }
