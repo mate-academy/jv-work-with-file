@@ -10,55 +10,50 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class WorkWithFile {
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
+    private static final String COMMA = ",";
+    private static final String NEW_LINE = "\r\n";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        StringBuilder stringBuilder = new StringBuilder();
         Map<String, Integer> map = new TreeMap<>(Comparator.reverseOrder());
-        readFile(fromFileName, stringBuilder);
-        createMapOfDataFromFile(stringBuilder, map);
-        writeFile(toFileName, map, getResultFromMap(map));
+        readDataIntoMap(fromFileName, map);
+        writeDataToFile(toFileName, map);
     }
 
-    private static int getResultFromMap(Map<String, Integer> map) {
-        int resultSupply = map.get("supply");
-        int resultBuy = map.get("buy");
+    private void readDataIntoMap(String fileName, Map<String, Integer> map) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                updateMapWithLine(map, line);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Can't read data from the file " + fileName, e);
+        }
+    }
+
+    private void updateMapWithLine(Map<String, Integer> map, String line) {
+        String[] parts = line.split(COMMA);
+        String key = parts[0];
+        Integer value = Integer.parseInt(parts[1]);
+        map.merge(key, value, Integer::sum);
+    }
+
+    private void writeDataToFile(String fileName, Map<String, Integer> map) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+            for (Map.Entry<String, Integer> entry : map.entrySet()) {
+                writer.write(entry.getKey() + COMMA + entry.getValue() + NEW_LINE);
+            }
+            writer.write(RESULT + COMMA + calculateResult(map));
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write to the file " + fileName, e);
+        }
+    }
+
+    private int calculateResult(Map<String, Integer> map) {
+        int resultSupply = map.getOrDefault(SUPPLY, 0);
+        int resultBuy = map.getOrDefault(BUY, 0);
         return resultSupply - resultBuy;
     }
-
-    private static void createMapOfDataFromFile(StringBuilder stringBuilder,
-                                                Map<String, Integer> map) {
-        String[] split = stringBuilder.toString().split("\n");
-        for (String string : split) {
-            String[] subString = string.split(",");
-            map.merge(subString[0], Integer.parseInt(subString[1]), Integer::sum);
-        }
-    }
-
-    private static void writeFile(String fileTo, Map<String, Integer> map, int result) {
-        try {
-            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileTo));
-            for (Map.Entry<String, Integer> stringIntegerEntry : map.entrySet()) {
-                bufferedWriter.write(stringIntegerEntry.getKey() + ","
-                        + stringIntegerEntry.getValue() + "\n");
-            }
-            bufferedWriter.write("result," + result);
-            bufferedWriter.close();
-        } catch (IOException e) {
-            throw new RuntimeException("Can`t write the file", e);
-        }
-    }
-
-    private static void readFile(String fileFrom, StringBuilder stringBuilder) {
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(fileFrom));
-            int value = reader.read();
-            while (value != -1) {
-                stringBuilder.append((char) value);
-                value = reader.read();
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("Can`t find the file", e);
-        }
-    }
 }
-
