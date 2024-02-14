@@ -43,7 +43,7 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName, true))) {
             bufferedWriter.write(reportString);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data to file", e);
+            throw new RuntimeException("Can't write data to file" + fileName, e);
         }
     }
 
@@ -57,7 +57,7 @@ public class WorkWithFile {
                 value = reader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't read file" + fileName, e);
         }
         return fileDataString.toString();
     }
