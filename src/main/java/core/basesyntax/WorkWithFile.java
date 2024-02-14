@@ -3,8 +3,16 @@ package core.basesyntax;
 import java.io.*;
 
 public class WorkWithFile {
-    int supplyTotal;
-    int buyTotal;
+    private int supplyTotal;
+    private int buyTotal;
+
+    public int getSupplyTotal() {
+        return supplyTotal;
+    }
+
+    public int getBuyTotal() {
+        return buyTotal;
+    }
 
     public void getStatistic(String fromFileName, String toFileName) {
         try {
@@ -24,6 +32,7 @@ public class WorkWithFile {
         supplyTotal = 0;
         buyTotal = 0;
     }
+
     private void processFile(String line, int supplyTotal, int buyTotal) {
         String[] lines = line.split(",");
         if (lines.length == 2) {
@@ -42,7 +51,7 @@ public class WorkWithFile {
         }
     }
 
-    private static void writeReport (String toFileName, int supplyTotal, int buyTotal, int result) {
+    private static void writeReport(String toFileName, int supplyTotal, int buyTotal, int result) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write("supply," + supplyTotal);
             writer.newLine();
