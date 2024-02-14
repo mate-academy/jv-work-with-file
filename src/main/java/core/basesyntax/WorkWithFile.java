@@ -3,8 +3,8 @@ package core.basesyntax;
 import java.io.*;
 
 public class WorkWithFile {
-    int supplyTotal = 0;
-    int buyTotal = 0;
+    int supplyTotal;
+    int buyTotal;
 
     public void getStatistic(String fromFileName, String toFileName) {
         try {
@@ -21,6 +21,8 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Error processing file", e);
         }
+        supplyTotal = 0;
+        buyTotal = 0;
     }
     private void processFile(String line, int supplyTotal, int buyTotal) {
         String[] lines = line.split(",");
