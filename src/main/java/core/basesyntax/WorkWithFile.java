@@ -8,13 +8,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private final String[] HEADERS = {"supply", "buy", "result"};
+    private final String[] headers = {"supply", "buy", "result"};
 
     public void getStatistic(String fromFileName, String toFileName) {
         int[] result = formatData(readFromFile(fromFileName));
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < 3; i++) {
-            builder.append(HEADERS[i])
+            builder.append(headers[i])
                     .append(",")
                     .append(result[i])
                     .append(System.lineSeparator());
@@ -52,9 +52,9 @@ public class WorkWithFile {
         int[] result = {0, 0, 0};
         String[] data = text.split("\\W+");
         for (int i = 0; i < data.length; i++) {
-            if (data[i].equals(HEADERS[0])) {
+            if (data[i].equals(headers[0])) {
                 result[0] += Integer.parseInt(data[i + 1]);
-            } else if (data[i].equals(HEADERS[1])) {
+            } else if (data[i].equals(headers[1])) {
                 result[1] += Integer.parseInt(data[i + 1]);
             }
         }
