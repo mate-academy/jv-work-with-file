@@ -5,8 +5,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class WorkWithFile {
-    private static final int FIRST_COLUMN = 0;
-    private static final int SECOND_COLUMN = 1;
+    private static final int OPERATION_TYPE = 0;
+    private static final int AMOUNT = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] dataFromFile = readFromFile(fromFileName);
@@ -29,12 +29,12 @@ public class WorkWithFile {
         int buyAmount = 0;
         for (String lineFromFile : dataFromFile) {
             String[] lineData = lineFromFile.split(",");
-            int amount = Integer.parseInt(lineData[SECOND_COLUMN]);
-            switch (lineData[FIRST_COLUMN]) {
+            int amount = Integer.parseInt(lineData[AMOUNT]);
+            switch (lineData[OPERATION_TYPE]) {
                 case "buy" -> buyAmount += amount;
                 case "supply" -> supplyAmount += amount;
-                default -> System.err.println("Unknown operation type: "
-                        + lineData[FIRST_COLUMN]);
+                default -> throw new RuntimeException("Unknown operation type: "
+                        + lineData[OPERATION_TYPE]);
             }
         }
         return "supply," + supplyAmount + System.lineSeparator()
