@@ -12,21 +12,14 @@ public class WorkWithFile {
     private static final String BUY_KEY = "buy";
     private static final int KEY_INDEX = 0;
     private static final int VALUE_INDEX = 1;
-    private int supplyValue = 0;
-    private int buyValue = 0;
-
-    public WorkWithFile() {
-        this.supplyValue = 0;
-        this.buyValue = 0;
-    }
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String inputContent = getReadString(fromFileName);
+        String inputContent = readData(fromFileName);
         String report = makeReport(inputContent);
         writeReport(report, toFileName);
     }
 
-    private String getReadString(String filePath) {
+    private String readData(String filePath) {
         File inputFile = new File(filePath);
         try {
             BufferedReader reader = new BufferedReader(new FileReader(inputFile));
@@ -43,29 +36,20 @@ public class WorkWithFile {
     }
 
     private String makeReport(String inputContent) {
-        StringBuilder supplyBuilder = new StringBuilder();
-        StringBuilder buyBuilder = new StringBuilder();
-        StringBuilder resultBuilder = new StringBuilder();
+        int supplyValue = 0;
+        int buyValue = 0;
         String[] contentParts = inputContent.split(System.lineSeparator());
         for (String input : contentParts) {
-            handleInputPart(input);
+            String[] inputParts = input.split(",");
+            if (inputParts[KEY_INDEX].equals(SUPPLY_KEY)) {
+                supplyValue += Integer.parseInt(inputParts[VALUE_INDEX]);
+            } else if (inputParts[KEY_INDEX].equals(BUY_KEY)) {
+                buyValue += Integer.parseInt(inputParts[VALUE_INDEX]);
+            }
         }
-        String supply = supplyBuilder.append("supply,").append(supplyValue).toString();
-        String buy = buyBuilder.append("buy,").append(buyValue).toString();
-        String result = resultBuilder.append("result,").append(supplyValue - buyValue).toString();
-        this.supplyValue = 0;
-        this.buyValue = 0;
-        System.out.println(supply + System.lineSeparator() + buy + System.lineSeparator() + result);
-        return supply + System.lineSeparator() + buy + System.lineSeparator() + result;
-    }
-
-    private void handleInputPart(String inputPart) {
-        String[] inputParts = inputPart.split(",");
-        if (inputParts[KEY_INDEX].equals(SUPPLY_KEY)) {
-            supplyValue += Integer.parseInt(inputParts[VALUE_INDEX]);
-        } else if (inputParts[KEY_INDEX].equals(BUY_KEY)) {
-            buyValue += Integer.parseInt(inputParts[VALUE_INDEX]);
-        }
+        return "supply," + supplyValue + System.lineSeparator()
+                + "buy," + buyValue + System.lineSeparator()
+                + "result," + (supplyValue - buyValue);
     }
 
     private void writeReport(String report, String fileName) {
