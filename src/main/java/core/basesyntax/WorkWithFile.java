@@ -14,8 +14,8 @@ public class WorkWithFile {
 
             int supplyTotal = 0;
             int buyTotal = 0;
-
             String line;
+
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
                 if (parts.length == 2) {
