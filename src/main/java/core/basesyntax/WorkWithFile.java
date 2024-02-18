@@ -7,6 +7,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String OPERATION_SUPPLY = "supply";
+    private static final String OPERATION_BUY = "buy";
+    private static final String OPERATION_RESULT = "result";
+    private String lineSeparator = System.lineSeparator();
+
     public void getStatistic(String fromFileName, String toFileName) {
         String dataFromFile = readFile(fromFileName);
         String report = createReport(dataFromFile);
@@ -18,10 +23,9 @@ public class WorkWithFile {
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                data.append(line).append("\n");
+                data.append(line).append(lineSeparator);
             }
         } catch (IOException e) {
-            e.printStackTrace();
             throw new RuntimeException("Error reading file", e);
         }
         return data.toString();
@@ -30,7 +34,7 @@ public class WorkWithFile {
     private String createReport(String dataFromFile) {
         int supplyTotal = 0;
         int buyTotal = 0;
-        String[] lines = dataFromFile.split("\n");
+        String[] lines = dataFromFile.split(lineSeparator);
         for (String line : lines) {
             String[] wordsAndValues = line.split(",");
             String operationType = wordsAndValues[0];
@@ -42,14 +46,15 @@ public class WorkWithFile {
             }
         }
         int result = supplyTotal - buyTotal;
-        return "supply," + supplyTotal + "\nbuy," + buyTotal + "\nresult," + result;
+        return OPERATION_SUPPLY + "," + supplyTotal + lineSeparator
+                + OPERATION_BUY + "," + buyTotal + lineSeparator
+                + OPERATION_RESULT + "," + result;
     }
 
     private void writeReportToFile(String report, String fileName) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             writer.write(report);
         } catch (IOException e) {
-            e.printStackTrace();
             throw new RuntimeException("Error writing report to file", e);
         }
     }
