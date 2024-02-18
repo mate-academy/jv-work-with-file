@@ -10,6 +10,8 @@ public class WorkWithFile {
     private static final String OPERATION_SUPPLY = "supply";
     private static final String OPERATION_BUY = "buy";
     private static final String OPERATION_RESULT = "result";
+    private static final int INDEX_OPERATION_TYPE = 0;
+    private static final int INDEX_AMOUNT = 1;
     private String lineSeparator = System.lineSeparator();
 
     public void getStatistic(String fromFileName, String toFileName) {
@@ -37,8 +39,8 @@ public class WorkWithFile {
         String[] lines = dataFromFile.split(lineSeparator);
         for (String line : lines) {
             String[] wordsAndValues = line.split(",");
-            String operationType = wordsAndValues[0];
-            int amount = Integer.parseInt(wordsAndValues[1]);
+            String operationType = wordsAndValues[INDEX_OPERATION_TYPE];
+            int amount = Integer.parseInt(wordsAndValues[INDEX_AMOUNT]);
             if ("supply".equals(operationType)) {
                 supplyTotal += amount;
             } else if ("buy".equals(operationType)) {
