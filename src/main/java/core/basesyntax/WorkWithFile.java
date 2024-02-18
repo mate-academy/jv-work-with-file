@@ -21,8 +21,7 @@ public class WorkWithFile {
 
     private String readData(String filePath) {
         File inputFile = new File(filePath);
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+        try (BufferedReader reader = new BufferedReader(new FileReader(inputFile));) {
             StringBuilder readBuilder = new StringBuilder();
             String readValue = reader.readLine();
             while (readValue != null) {
