@@ -32,7 +32,7 @@ public class WorkWithFile {
                 lineOfFileName = bufferedReader.readLine();
             }
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can't read from file" + fromFileName, e);
         }
         return buyAndSupplyArray;
     }
@@ -44,7 +44,7 @@ public class WorkWithFile {
             writeToFileName.write(SUPPLY + supply + System.lineSeparator()
                     + BUY + bye + System.lineSeparator() + RESULT + (supply - bye));
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can't write to file" + toFileName, e);
         }
     }
 
