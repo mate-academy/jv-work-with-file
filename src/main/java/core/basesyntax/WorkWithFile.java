@@ -16,27 +16,27 @@ public class WorkWithFile {
     private static final String SEPARATOR = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int[] dataFromFile = readFile(fromFileName);
+        String dataFromFile = readFile(fromFileName);
         String report = createReport(dataFromFile);
         writeToFile(report, toFileName);
     }
 
-    private int[] readFile(String fromFileName) {
-        int[] buyAndSupplyArray = new int[BUY_AND_SUPPLY_ARRAY_SIZE];
+    private String readFile(String fromFileName) {
+        StringBuilder buyAndSupplyString = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String lineOfFileName = bufferedReader.readLine();
+            buyAndSupplyString.append(lineOfFileName);
             while (lineOfFileName != null) {
-                if (lineOfFileName.contains(BUY)) {
-                    buyAndSupplyArray[BUY_ARRAY_INDEX] += parseBuyOrSupply(lineOfFileName);
-                } else {
-                    buyAndSupplyArray[SUPPLY_ARRAY_INDEX] += parseBuyOrSupply(lineOfFileName);
-                }
                 lineOfFileName = bufferedReader.readLine();
+                if (lineOfFileName == null) {
+                    break;
+                }
+                buyAndSupplyString.append(System.lineSeparator()).append(lineOfFileName);
             }
         } catch (Exception e) {
             throw new RuntimeException("Can't read from file" + fromFileName, e);
         }
-        return buyAndSupplyArray;
+        return buyAndSupplyString.toString();
     }
 
     private void writeToFile(String report, String toFileName) {
@@ -51,9 +51,17 @@ public class WorkWithFile {
         return Integer.parseInt(lineOfFileName.split(SEPARATOR)[BUY_OR_SUPPLY_INDEX]);
     }
 
-    private String createReport(int[] buyAndSupplyArray) {
-        int bye = buyAndSupplyArray[BUY_ARRAY_INDEX];
-        int supply = buyAndSupplyArray[SUPPLY_ARRAY_INDEX];
+    private String createReport(String buyAndSupplyString) {
+        int bye = 0;
+        int supply = 0;
+        String[] buyAndSupplyArray = buyAndSupplyString.split(System.lineSeparator());
+        for (String buyOrSupply : buyAndSupplyArray) {
+            if (buyOrSupply.contains(BUY)) {
+                bye += parseBuyOrSupply(buyOrSupply);
+            } else {
+                supply += parseBuyOrSupply(buyOrSupply);
+            }
+        }
         return SUPPLY + supply + System.lineSeparator()
                 + BUY + bye + System.lineSeparator() + RESULT + (supply - bye);
     }
