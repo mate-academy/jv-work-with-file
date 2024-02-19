@@ -9,34 +9,61 @@ import java.io.IOException;
 public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
-                 BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
+        String dataFromFile = readFile(fromFileName);
+        String report = createReport(dataFromFile);
+        writeToFile(report, toFileName);
+    }
 
-            int supplyTotal = 0;
-            int buyTotal = 0;
+    private String readFile(String fromFileName) {
+        StringBuilder data = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String line;
-
             while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",");
-                if (parts.length == 2) {
-                    String operationType = parts[0];
-                    int amount = Integer.parseInt(parts[1]);
-                    if ("supply".equals(operationType)) {
-                        supplyTotal += amount;
-                    } else if ("buy".equals(operationType)) {
-                        buyTotal += amount;
-                    }
+                data.append(line)
+                        .append(System.lineSeparator());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return data.toString();
+    }
+
+    private String createReport(String dataFromFile) {
+        int supplyTotal = 0;
+        int buyTotal = 0;
+        StringBuilder reportBuilder = new StringBuilder();
+
+        String[] lines = dataFromFile.split(System.lineSeparator());
+        for (String line : lines) {
+            String[] parts = line.split(",");
+            if (parts.length == 2) {
+                String operationType = parts[0];
+                int amount = Integer.parseInt(parts[1]);
+                if ("supply".equals(operationType)) {
+                    supplyTotal += amount;
+                } else if ("buy".equals(operationType)) {
+                    buyTotal += amount;
                 }
             }
+        }
 
-            int result = supplyTotal - buyTotal;
+        int result = supplyTotal - buyTotal;
 
-            writer.write("supply," + supplyTotal);
-            writer.newLine();
-            writer.write("buy," + buyTotal);
-            writer.newLine();
-            writer.write("result," + result);
+        reportBuilder.append("supply,")
+                .append(supplyTotal)
+                .append(System.lineSeparator());
+        reportBuilder.append("buy,")
+                .append(buyTotal)
+                .append(System.lineSeparator());
+        reportBuilder.append("result,")
+                .append(result);
 
+        return reportBuilder.toString();
+    }
+
+    private void writeToFile(String report, String toFileName) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
+            writer.write(report);
         } catch (IOException e) {
             e.printStackTrace();
         }
