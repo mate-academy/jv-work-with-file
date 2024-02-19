@@ -16,10 +16,12 @@ public class WorkWithFile {
     private static final String SEPARATOR = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        writeToFile(toFileName, readFromFile(fromFileName));
+        int[] dataFromFile = readFile(fromFileName);
+        String report = createReport(dataFromFile);
+        writeToFile(report, toFileName);
     }
 
-    private int[] readFromFile(String fromFileName) {
+    private int[] readFile(String fromFileName) {
         int[] buyAndSupplyArray = new int[BUY_AND_SUPPLY_ARRAY_SIZE];
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String lineOfFileName = bufferedReader.readLine();
@@ -37,12 +39,9 @@ public class WorkWithFile {
         return buyAndSupplyArray;
     }
 
-    private void writeToFile(String toFileName, int[] buyAndSupplyArray) {
-        int bye = buyAndSupplyArray[BUY_ARRAY_INDEX];
-        int supply = buyAndSupplyArray[SUPPLY_ARRAY_INDEX];
+    private void writeToFile(String report, String toFileName) {
         try (BufferedWriter writeToFileName = new BufferedWriter(new FileWriter(toFileName))) {
-            writeToFileName.write(SUPPLY + supply + System.lineSeparator()
-                    + BUY + bye + System.lineSeparator() + RESULT + (supply - bye));
+            writeToFileName.write(report);
         } catch (Exception e) {
             throw new RuntimeException("Can't write to file" + toFileName, e);
         }
@@ -50,5 +49,12 @@ public class WorkWithFile {
 
     private int parseBuyOrSupply(String lineOfFileName) {
         return Integer.parseInt(lineOfFileName.split(SEPARATOR)[BUY_OR_SUPPLY_INDEX]);
+    }
+
+    private String createReport(int[] buyAndSupplyArray) {
+        int bye = buyAndSupplyArray[BUY_ARRAY_INDEX];
+        int supply = buyAndSupplyArray[SUPPLY_ARRAY_INDEX];
+        return SUPPLY + supply + System.lineSeparator()
+                + BUY + bye + System.lineSeparator() + RESULT + (supply - bye);
     }
 }
