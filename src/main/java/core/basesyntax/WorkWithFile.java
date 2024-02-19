@@ -8,11 +8,19 @@ import java.io.IOException;
 
 public class WorkWithFile {
     private static final String SEPARATOR = ",";
+    private static final String SUPPLY_OPERATION_TYPE = "supply";
+    private static final String BUY_OPERATION_TYPE = "buy";
+    private static final String RESULT_OPERATION_TYPE = "result";
     private static final int OPERATION_TYPE_INDEX = 0;
     private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         writeToFile(toFileName, getSumOperationType(fromFileName));
+
+        String[] dataFromFile = readFromFile(fromFileName);
+        String[] result = getSumOperationType(fromFileName);
+        writeToFile(toFileName, result);
+
     }
 
     private String[] readFromFile(String fileName) {
@@ -36,7 +44,7 @@ public class WorkWithFile {
         String[] readFromFile = readFromFile(fromFileName);
         for (String s : readFromFile) {
             String[] splitNameSum = s.split(",");
-            if (splitNameSum[OPERATION_TYPE_INDEX].equals("supply")) {
+            if (splitNameSum[OPERATION_TYPE_INDEX].equals(SUPPLY_OPERATION_TYPE)) {
                 sumSupply += Integer.parseInt(splitNameSum[AMOUNT_INDEX]);
             } else {
                 sumBuy += Integer.parseInt(splitNameSum[AMOUNT_INDEX]);
@@ -48,15 +56,32 @@ public class WorkWithFile {
     private void writeToFile(String toFileWrite, String[] sumOperationType) {
         int sumSupply = Integer.parseInt(sumOperationType[OPERATION_TYPE_INDEX]);
         int sumBuy = Integer.parseInt(sumOperationType[AMOUNT_INDEX]);
+
         try (BufferedWriter bufferedWriter = new BufferedWriter(
                 new FileWriter(toFileWrite))) {
-            bufferedWriter.write("supply" + SEPARATOR + sumSupply);
-            bufferedWriter.newLine();
-            bufferedWriter.write("buy" + SEPARATOR + sumBuy);
-            bufferedWriter.newLine();
-            bufferedWriter.write("result" + SEPARATOR + (sumSupply - sumBuy));
+            String report = generateReport(sumSupply, sumBuy);
+            bufferedWriter.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file", e);
         }
+    }
+
+    private String generateReport(int sumSupply, int sumBuy) {
+        StringBuilder reportBuilder = new StringBuilder();
+        reportBuilder.append(SUPPLY_OPERATION_TYPE)
+                .append(SEPARATOR)
+                .append(sumSupply)
+                .append(System.lineSeparator());
+
+        reportBuilder.append(BUY_OPERATION_TYPE)
+                .append(SEPARATOR)
+                .append(sumBuy)
+                .append(System.lineSeparator());
+
+        reportBuilder.append(RESULT_OPERATION_TYPE)
+                .append(SEPARATOR)
+                .append(sumSupply - sumBuy);
+
+        return reportBuilder.toString();
     }
 }
