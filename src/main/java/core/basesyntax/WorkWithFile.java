@@ -19,15 +19,13 @@ public class WorkWithFile {
                     .append(result[i])
                     .append(System.lineSeparator());
         }
+        writeToFile(toFileName,builder.toString().trim());
+    }
+
+    private void writeToFile(String toFileName, String result) {
         File file = new File(toFileName);
-        try {
-            file.createNewFile();
-        } catch (IOException e) {
-            throw new RuntimeException("Can`t create file " + toFileName, e);
-        }
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, false))) {
-            writer.write(builder.toString().trim());
-            writer.flush();
+            writer.write(result);
         } catch (IOException e) {
             throw new RuntimeException("Can`t write file " + toFileName, e);
         }
@@ -35,8 +33,7 @@ public class WorkWithFile {
 
     private String readFromFile(String fromFileName) {
         StringBuilder builder = new StringBuilder();
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             int value = reader.read();
             while (value != -1) {
                 builder.append((char) value);
