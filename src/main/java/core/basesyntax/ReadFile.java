@@ -12,7 +12,7 @@ public class ReadFile {
             Files.readAllLines(file.toPath()).forEach(line
                     -> contentOfFile.append(line).append(System.lineSeparator()));
         } catch (IOException e) {
-            throw new RuntimeException("cant read the content of the file");
+            throw new RuntimeException("cant read the content of the file" + file, e);
         }
         return contentOfFile.toString();
     }

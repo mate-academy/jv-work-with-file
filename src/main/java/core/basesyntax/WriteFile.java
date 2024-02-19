@@ -9,7 +9,7 @@ public class WriteFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(content);
         } catch (IOException e) {
-            throw new RuntimeException("can`t write data to file");
+            throw new RuntimeException("can`t write data to file" + toFileName, e);
         }
     }
 }
