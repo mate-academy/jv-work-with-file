@@ -9,6 +9,9 @@ import java.io.IOException;
 
 public class WorkWithFile {
 
+    private static final String SPACE = " ";
+    private static final String REGEX = "\\W+";
+
     public void getStatistic(String fromFileName, String toFileName) {
         WorkWithFile workWithFile = new WorkWithFile();
         workWithFile.writeToFile(toFileName, workWithFile.getResultString(fromFileName));
@@ -17,9 +20,7 @@ public class WorkWithFile {
 
     private String getResultString(String fileName) {
         WorkWithFile workWithFile = new WorkWithFile();
-        String stringOfData = workWithFile.readFile(fileName);
-        String[] dataArray = stringOfData.split("\\W+");
-        StringBuilder outputString = new StringBuilder();
+        String[] dataArray = workWithFile.readFile(fileName);
         int supply = 0;
         int buy = 0;
         for (int i = 0; i < dataArray.length; i += 2) {
@@ -35,30 +36,26 @@ public class WorkWithFile {
     }
 
     private void writeToFile(String fileName, String reportString) {
-        WorkWithFile workWithFile = new WorkWithFile();
         File file = new File(fileName);
-        if (file.exists() && file.length() != 0) {
-            return;
-        }
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName, true))) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName, false))) {
             bufferedWriter.write(reportString);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data to file" + fileName, e);
+            throw new RuntimeException("Can't write data to file: " + fileName, e);
         }
     }
 
-    private String readFile(String fileName) {
+    private String[] readFile(String fileName) {
         StringBuilder fileDataString = new StringBuilder();
         try {
             BufferedReader reader = new BufferedReader(new FileReader(fileName));
             String value = reader.readLine();
             while (value != null) {
-                fileDataString.append(value).append(" ");
+                fileDataString.append(value).append(SPACE);
                 value = reader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read file" + fileName, e);
         }
-        return fileDataString.toString();
+        return fileDataString.toString().split(REGEX);
     }
 }
