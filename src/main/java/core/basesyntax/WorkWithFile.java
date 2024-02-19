@@ -11,14 +11,17 @@ import java.util.List;
 public class WorkWithFile {
     private static final String SPLITTER = ",";
     private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
     private static final int STEP_COUNT = 2;
 
     public void getStatistic(String fromFileName, String toFileName) {
-
-        writeToFile(toFileName, collectStatistics(readFromFile(fromFileName)));
+        String statistic = collectStatistics(readFromFile(fromFileName));
+        writeToFile(toFileName, statistic);
     }
 
-    public String collectStatistics(List<String> statistic) {
+    private String collectStatistics(List<String> statistic) {
+        StringBuilder result = new StringBuilder();
         int supplySum = 0;
         int buySum = 0;
         for (String dataString : statistic) {
@@ -31,12 +34,13 @@ public class WorkWithFile {
                 }
             }
         }
-        return "supply," + supplySum + "\n" + "buy,"
-                + buySum + "\n" + "result,"
-                + (supplySum - buySum);
+        result.append(SUPPLY).append(SPLITTER).append(supplySum).append(System.lineSeparator())
+                .append(BUY).append(SPLITTER).append(buySum).append(System.lineSeparator())
+                .append(RESULT).append(SPLITTER).append(supplySum - buySum);
+        return result.toString();
     }
 
-    public List<String> readFromFile(String fromFileName) {
+    private List<String> readFromFile(String fromFileName) {
         ArrayList<String> dataList = new ArrayList<>();
         String readString = null;
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
@@ -44,16 +48,16 @@ public class WorkWithFile {
                 dataList.add(readString);
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't open file to read", e);
+            throw new RuntimeException("Can't read the data from the file " + fromFileName, e);
         }
         return dataList;
     }
 
-    public void writeToFile(String toFileName, String statistic) {
+    private void writeToFile(String toFileName, String statistic) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write(statistic);
         } catch (IOException e) {
-            throw new RuntimeException("Can't open file to write", e);
+            throw new RuntimeException("Can't write data to the file " + toFileName, e);
         }
     }
 }
