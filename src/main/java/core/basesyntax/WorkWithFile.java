@@ -9,22 +9,15 @@ import java.nio.file.StandardOpenOption;
 public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
+    private static final String RESULT = "result";
     private static final String SYMBOL_SEPARATOR = ",";
-    private static final int NUMBER_OPERATION_TYPE_COLUMN = 0;
-    private static final int NUMBER_AMOUNT_COLUMN = 1;
+    private static final int OPERATION_TYPE = 0;
+    private static final int AMOUNT = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String fileContent = getStringFromFile(fromFileName);
-        String[] rowsTable = getArrayFromString(fileContent);
-
-        int supply = getAmountOfElement(rowsTable, SUPPLY);
-        int buy = getAmountOfElement(rowsTable, BUY);
-
-        String result = "supply," + supply + System.lineSeparator()
-                + "buy," + buy + System.lineSeparator()
-                + "result," + (supply - buy);
-
-        writeStringToFile(result, toFileName);
+        String[] rowsTable = readAndTransformToArray(fromFileName);
+        String report = createReport(countSupply(rowsTable), countBuy(rowsTable));
+        writeStringToFile(report, toFileName);
     }
 
     private String getStringFromFile(String fromFile) {
@@ -43,8 +36,8 @@ public class WorkWithFile {
         int amount = 0;
         for (String line : strings) {
             String[] dividedIntoColumnsRow = line.split(SYMBOL_SEPARATOR);
-            if (element.equals(dividedIntoColumnsRow[NUMBER_OPERATION_TYPE_COLUMN])) {
-                amount += Integer.parseInt(dividedIntoColumnsRow[NUMBER_AMOUNT_COLUMN]);
+            if (element.equals(dividedIntoColumnsRow[OPERATION_TYPE])) {
+                amount += Integer.parseInt(dividedIntoColumnsRow[AMOUNT]);
             }
         }
         return amount;
@@ -57,5 +50,26 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to the file " + toFileName, e);
         }
+    }
+
+    private String createReport(int supply, int buy) {
+        StringBuilder builder = new StringBuilder();
+        builder.append(SUPPLY + SYMBOL_SEPARATOR + supply + System.lineSeparator());
+        builder.append(BUY + SYMBOL_SEPARATOR + buy + System.lineSeparator());
+        builder.append(RESULT + SYMBOL_SEPARATOR + (supply - buy));
+        return builder.toString();
+    }
+
+    private String[] readAndTransformToArray(String fromFileName) {
+        String fileContent = getStringFromFile(fromFileName);
+        return getArrayFromString(fileContent);
+    }
+
+    private int countSupply(String[] rowsTable) {
+        return getAmountOfElement(rowsTable, SUPPLY);
+    }
+
+    private int countBuy(String[] rowsTable) {
+        return getAmountOfElement(rowsTable, BUY);
     }
 }
