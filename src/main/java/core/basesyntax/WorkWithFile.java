@@ -18,12 +18,12 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        List<String> content = getListFromFile(fromFileName);
+        List<String> content = getFileContent(fromFileName);
         String report = createReport(content);
         writeToFile(toFileName, report);
     }
 
-    private List<String> getListFromFile(String fileName) {
+    private List<String> getFileContent(String fileName) {
         try {
             return Files.readAllLines(Path.of(fileName));
         } catch (IOException e) {
