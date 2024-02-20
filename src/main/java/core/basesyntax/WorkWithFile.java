@@ -28,15 +28,15 @@ public class WorkWithFile {
             bufferedWriter.write(data);
             bufferedWriter.flush();
         } catch (IOException e) {
-            throw new RuntimeException("Cant write data to file", e);
+            throw new RuntimeException("Cant write data to file" + toFileName, e);
         }
     }
 
     private int[] readFromFile(String fromFileName) {
-        int suppliesSummary = 0;
-        int boughtSummary = 0;
-        String[] arrayForCalc;
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
+            int suppliesSummary = 0;
+            int boughtSummary = 0;
+            String[] arrayForCalc;
             String value = bufferedReader.readLine();
             while (value != null) {
                 arrayForCalc = value.split(DIVIDER);
@@ -47,21 +47,20 @@ public class WorkWithFile {
                 }
                 value = bufferedReader.readLine();
             }
+            return new int[]{suppliesSummary, boughtSummary};
         } catch (IOException e) {
-            throw new RuntimeException("Cant write data to file", e);
+            throw new RuntimeException("Can't read data from file" + fromFileName, e);
         }
-        return new int[]{suppliesSummary, boughtSummary};
     }
 
     private String makeReport(int suppliesSummary, int boughtSummary) {
-        String result;
         StringBuilder stringBuilder = new StringBuilder();
-        result = stringBuilder
+        stringBuilder
                 .append(SUPPLY).append(DIVIDER).append(suppliesSummary)
                 .append(LINE_SEPARATOR)
                 .append(BUY).append(DIVIDER).append(boughtSummary)
                 .append(LINE_SEPARATOR)
                 .append(RESULT).append(DIVIDER).append(suppliesSummary - boughtSummary).toString();
-        return result;
+        return stringBuilder.toString();
     }
 }
