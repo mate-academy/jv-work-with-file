@@ -7,9 +7,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final String SEPARATOR = ",";
+    private static final String COMMA = ",";
+    private static final String SEPARATOR = System.lineSeparator();
     private static final String BUYING_OPERATION = "buy";
     private static final String SUPPLY_OPERATION = "supply";
+    private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String readData = readFromFile(fromFileName);
@@ -35,7 +37,7 @@ public class WorkWithFile {
         int buyTotal = 0;
         String[] lines = data.split(System.lineSeparator());
         for (String line : lines) {
-            String[] parts = line.split(SEPARATOR);
+            String[] parts = line.split(COMMA);
             if (parts.length == 2) {
                 String operationType = parts[0];
                 int amount = Integer.parseInt(parts[1]);
@@ -47,9 +49,9 @@ public class WorkWithFile {
             }
         }
         int result = supplyTotal - buyTotal;
-        return "supply," + supplyTotal + System.lineSeparator()
-                + "buy," + buyTotal + System.lineSeparator()
-                + "result," + result;
+        return SUPPLY_OPERATION + COMMA + supplyTotal + SEPARATOR +
+                BUYING_OPERATION + COMMA + buyTotal + SEPARATOR + RESULT +
+                COMMA + result;
     }
 
     private void writeToFile(String toFile,String data) {
