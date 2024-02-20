@@ -22,7 +22,7 @@ public class WorkWithFile {
         try (FileWriter writer = new FileWriter(toFileName)) {
             writer.write(data);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write into file" + e);
+            throw new RuntimeException("Can't write into file: " + toFileName + e);
         }
     }
 
@@ -37,7 +37,7 @@ public class WorkWithFile {
             }
             return stringBuilder.toString();
         } catch (IOException e) {
-            throw new RuntimeException("Can't read the data from file" + e);
+            throw new RuntimeException("Can't read the data from file: " + fromFileName + e);
         }
     }
 
