@@ -20,6 +20,11 @@ public class WorkWithFile {
         writeStringToFile(report, toFileName);
     }
 
+    private String[] readAndTransformToArray(String fromFileName) {
+        String fileContent = getStringFromFile(fromFileName);
+        return fileContent.split("\\n");
+    }
+
     private String getStringFromFile(String fromFile) {
         try {
             return Files.readString(Paths.get(fromFile));
@@ -28,8 +33,20 @@ public class WorkWithFile {
         }
     }
 
-    private String[] getArrayFromString(String string) {
-        return string.split("\\n");
+    private String createReport(int supply, int buy) {
+        StringBuilder builder = new StringBuilder();
+        builder.append(SUPPLY + SYMBOL_SEPARATOR + supply + System.lineSeparator());
+        builder.append(BUY + SYMBOL_SEPARATOR + buy + System.lineSeparator());
+        builder.append(RESULT + SYMBOL_SEPARATOR + (supply - buy));
+        return builder.toString();
+    }
+
+    private int countSupply(String[] rowsTable) {
+        return getAmountOfElement(rowsTable, SUPPLY);
+    }
+
+    private int countBuy(String[] rowsTable) {
+        return getAmountOfElement(rowsTable, BUY);
     }
 
     private int getAmountOfElement(String[] strings, String element) {
@@ -50,26 +67,5 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to the file " + toFileName, e);
         }
-    }
-
-    private String createReport(int supply, int buy) {
-        StringBuilder builder = new StringBuilder();
-        builder.append(SUPPLY + SYMBOL_SEPARATOR + supply + System.lineSeparator());
-        builder.append(BUY + SYMBOL_SEPARATOR + buy + System.lineSeparator());
-        builder.append(RESULT + SYMBOL_SEPARATOR + (supply - buy));
-        return builder.toString();
-    }
-
-    private String[] readAndTransformToArray(String fromFileName) {
-        String fileContent = getStringFromFile(fromFileName);
-        return getArrayFromString(fileContent);
-    }
-
-    private int countSupply(String[] rowsTable) {
-        return getAmountOfElement(rowsTable, SUPPLY);
-    }
-
-    private int countBuy(String[] rowsTable) {
-        return getAmountOfElement(rowsTable, BUY);
     }
 }
