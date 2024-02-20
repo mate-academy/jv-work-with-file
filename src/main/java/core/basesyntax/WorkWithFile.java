@@ -11,16 +11,19 @@ public class WorkWithFile {
     public static final String BUY = "buy";
     public static final String RESULT = "result";
     public static final String DIVIDER = ",";
-    public static final String C_R_L_F = System.lineSeparator();
-    public static final int POS_OF_AMOUNT = 1;
-    public static final int POS_OF_NAME = 0;
+    public static final String LINE_SEPARATOR = System.lineSeparator();
+    public static final int AMOUNT = 1;
+    public static final int OPERATION_TYPE = 0;
+    public static final int SUPPLY_INDEX = 0;
+    public static final int BOUGHT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String input = getFromFile(fromFileName);
-        writeToFile(input, toFileName);
+        int[] readingResult = readFromFile(fromFileName);
+        String report = makeReport(readingResult[SUPPLY_INDEX], readingResult[BOUGHT_INDEX]);
+        writeToFile(report, toFileName);
     }
 
-    public void writeToFile(String data, String toFileName) {
+    private void writeToFile(String data, String toFileName) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(data);
             bufferedWriter.flush();
@@ -29,30 +32,36 @@ public class WorkWithFile {
         }
     }
 
-    private String getFromFile(String fromFileName) {
+    private int[] readFromFile(String fromFileName) {
         int suppliesSummary = 0;
-        int buySummary = 0;
-        String output;
-        String[] arrayForCalc = new String[2];
-        StringBuilder stringBuilder = new StringBuilder();
+        int boughtSummary = 0;
+        String[] arrayForCalc;
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String value = bufferedReader.readLine();
             while (value != null) {
                 arrayForCalc = value.split(DIVIDER);
-                if (arrayForCalc[POS_OF_NAME].equals(SUPPLY)) {
-                    suppliesSummary += Integer.parseInt(arrayForCalc[POS_OF_AMOUNT]);
-                } else if (arrayForCalc[POS_OF_NAME].equals(BUY)) {
-                    buySummary += Integer.parseInt(arrayForCalc[POS_OF_AMOUNT]);
+                if (arrayForCalc[OPERATION_TYPE].equals(SUPPLY)) {
+                    suppliesSummary += Integer.parseInt(arrayForCalc[AMOUNT]);
+                } else if (arrayForCalc[OPERATION_TYPE].equals(BUY)) {
+                    boughtSummary += Integer.parseInt(arrayForCalc[AMOUNT]);
                 }
                 value = bufferedReader.readLine();
             }
-            output = stringBuilder
-                    .append(SUPPLY).append(DIVIDER).append(suppliesSummary).append(C_R_L_F)
-                    .append(BUY).append(DIVIDER).append(buySummary).append(C_R_L_F)
-                    .append(RESULT).append(DIVIDER).append(suppliesSummary - buySummary).toString();
         } catch (IOException e) {
             throw new RuntimeException("Cant write data to file", e);
         }
-        return output;
+        return new int[]{suppliesSummary, boughtSummary};
+    }
+
+    private String makeReport(int suppliesSummary, int boughtSummary) {
+        String result;
+        StringBuilder stringBuilder = new StringBuilder();
+        result = stringBuilder
+                .append(SUPPLY).append(DIVIDER).append(suppliesSummary)
+                .append(LINE_SEPARATOR)
+                .append(BUY).append(DIVIDER).append(boughtSummary)
+                .append(LINE_SEPARATOR)
+                .append(RESULT).append(DIVIDER).append(suppliesSummary - boughtSummary).toString();
+        return result;
     }
 }
