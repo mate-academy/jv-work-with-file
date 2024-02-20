@@ -8,40 +8,47 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String BUY_PREFIX = "buy,";
+    private static final String SUPPLY_PREFIX = "supply,";
+    private static final String BUY = "buy";
+    private static final String SUPPLY = "supply";
+    private static final String RESULT = "result";
+    private static final String COMMA = ",";
+    private static final int INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         File readFile = new File(fromFileName);
         File writeFile = new File(toFileName);
 
-        String[] infoArr = readFromFile(readFile).toString().split("[\\r\\n\\s]+");
+        calculateReport(readFile, writeFile);
+    }
 
+    private void calculateReport(File readFile, File writeFile) {
         int buy = 0;
         int supply = 0;
-        String buyPrefix = "buy,";
-        String supplyPrefix = "supply,";
-        int buyIndex;
-        int supplyIndex;
+        String[] fileInfoArr = readFromFile(readFile).split("[\\r\\n\\s]+");
+        String[] infoArrCurrentIndex;
 
-        for (String info : infoArr) {
-
-            if (info.startsWith(buyPrefix)) {
-                buyIndex = Integer.parseInt(info.substring(buyPrefix.length()));
+        for (String info : fileInfoArr) {
+            infoArrCurrentIndex = info.split(",");
+            if (info.startsWith(BUY_PREFIX)) {
+                int buyIndex = Integer.parseInt(infoArrCurrentIndex[INDEX]);
                 buy += buyIndex;
-            } else if (info.startsWith(supplyPrefix)) {
-                supplyIndex = Integer.parseInt(info.substring(supplyPrefix.length()));
+            } else if (info.startsWith(SUPPLY_PREFIX)) {
+                int supplyIndex = Integer.parseInt(infoArrCurrentIndex[INDEX]);
                 supply += supplyIndex;
             }
         }
+        int result = supply - buy;
 
         StringBuilder reportBuilder = new StringBuilder();
-        reportBuilder.append("supply,").append(supply).append(System.lineSeparator())
-                .append("buy,").append(buy).append(System.lineSeparator()).append("result,")
-                .append(supply - buy);
-
+        reportBuilder.append(SUPPLY).append(COMMA).append(supply).append(System.lineSeparator())
+                .append(BUY).append(COMMA).append(buy).append(System.lineSeparator())
+                .append(RESULT).append(COMMA).append(result);
         writeToFile(reportBuilder, writeFile);
     }
 
-    private StringBuilder readFromFile(File readFile) {
+    private String readFromFile(File readFile) {
         StringBuilder builder = new StringBuilder();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(readFile))) {
@@ -52,7 +59,7 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("can't read the file", e);
         }
-        return builder;
+        return builder.toString();
     }
 
     private void writeToFile(StringBuilder reportBuilder, File writeFile) {
