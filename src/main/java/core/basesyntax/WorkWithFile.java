@@ -12,6 +12,7 @@ public class WorkWithFile {
     private static final String BUYING_OPERATION = "buy";
     private static final String SUPPLY_OPERATION = "supply";
     private static final String RESULT = "result";
+    private static final int NUMBER_OF_PARTS = 2;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String readData = readFromFile(fromFileName);
@@ -38,7 +39,7 @@ public class WorkWithFile {
         String[] lines = data.split(System.lineSeparator());
         for (String line : lines) {
             String[] parts = line.split(COMMA);
-            if (parts.length == 2) {
+            if (parts.length == NUMBER_OF_PARTS) {
                 String operationType = parts[0];
                 int amount = Integer.parseInt(parts[1]);
                 if (operationType.equals(BUYING_OPERATION)) {
@@ -58,7 +59,7 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFile))) {
             bufferedWriter.write(data);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write to file", e);
+            throw new RuntimeException("Can't write to file: " + toFile, e);
         }
     }
 }
