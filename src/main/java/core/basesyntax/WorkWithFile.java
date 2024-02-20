@@ -18,16 +18,16 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        List<String> listFromFile = getListFromFile(fromFileName);
-        String data = createReport(listFromFile);
-        writeToFile(toFileName, data);
+        List<String> content = getListFromFile(fromFileName);
+        String report = createReport(content);
+        writeToFile(toFileName, report);
     }
 
     private List<String> getListFromFile(String fileName) {
         try {
             return Files.readAllLines(Path.of(fileName));
         } catch (IOException e) {
-            throw new RuntimeException("Can't read from file", e);
+            throw new RuntimeException("Can't read from file " + fileName, e);
         }
     }
 
@@ -49,7 +49,7 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
             bufferedWriter.write(data);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write to file", e);
+            throw new RuntimeException("Can't write to file " + fileName, e);
         }
     }
 }
