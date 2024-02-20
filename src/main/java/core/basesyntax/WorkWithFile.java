@@ -23,24 +23,20 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         List<String[]> parsedCsv = parseCsv(fromFileName);
         calculateTotals(parsedCsv);
-
         saveReport(generateReport(), toFileName);
     }
 
     private List<String[]> parseCsv(String fromFileName) {
         List<String[]> parsedCsv = new ArrayList<>();
-
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String line = reader.readLine();
-
             while (line != null) {
                 parsedCsv.add(line.split(CSV_SEPARATOR));
                 line = reader.readLine();
             }
         } catch (IOException e) {
-            System.out.println("Error: Can't read file " + fromFileName + ".");
+            throw new RuntimeException("Error: Can't read file " + fromFileName + ".", e);
         }
-
         return parsedCsv;
     }
 
@@ -60,9 +56,17 @@ public class WorkWithFile {
     private String generateReport() {
         StringBuilder reportBuilder = new StringBuilder();
 
-        reportBuilder.append(SUPPLY_KEY + CSV_SEPARATOR + supplyTotal + NEW_LINE);
-        reportBuilder.append(BUY_KEY + CSV_SEPARATOR + buyTotal + NEW_LINE);
-        reportBuilder.append(RESULT_KEY + CSV_SEPARATOR + (supplyTotal - buyTotal));
+        reportBuilder.append(SUPPLY_KEY)
+                .append(CSV_SEPARATOR)
+                .append(supplyTotal)
+                .append(NEW_LINE);
+        reportBuilder.append(BUY_KEY)
+                .append(CSV_SEPARATOR)
+                .append(buyTotal)
+                .append(NEW_LINE);
+        reportBuilder.append(RESULT_KEY)
+                .append(CSV_SEPARATOR)
+                .append(supplyTotal - buyTotal);
 
         return reportBuilder.toString();
     }
@@ -71,7 +75,7 @@ public class WorkWithFile {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write(report);
         } catch (IOException e) {
-            System.out.println("Error: Can't write to file " + toFileName + ".");
+            throw new RuntimeException("Error: Can't write to file " + toFileName + ".", e);
         }
     }
 }
