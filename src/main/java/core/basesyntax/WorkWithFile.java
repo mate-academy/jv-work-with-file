@@ -13,6 +13,8 @@ public class WorkWithFile {
     private static final String SUPPLY_OPERATION = "supply";
     private static final String RESULT = "result";
     private static final int NUMBER_OF_PARTS = 2;
+    private static final int INDEX_OF_FIRST_POSITION = 0;
+    private static final int INDEX_OF_SECOND_POSITION = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String fileContent = readFromFile(fromFileName);
@@ -40,8 +42,8 @@ public class WorkWithFile {
         for (String line : lines) {
             String[] parts = line.split(COMMA);
             if (parts.length == NUMBER_OF_PARTS) {
-                String operationType = parts[0];
-                int amount = Integer.parseInt(parts[1]);
+                String operationType = parts[INDEX_OF_FIRST_POSITION];
+                int amount = Integer.parseInt(parts[INDEX_OF_SECOND_POSITION]);
                 if (operationType.equals(BUYING_OPERATION)) {
                     buyTotal += amount;
                 } else if (operationType.equals(SUPPLY_OPERATION)) {

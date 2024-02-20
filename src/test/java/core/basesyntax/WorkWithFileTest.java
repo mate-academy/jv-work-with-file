@@ -90,5 +90,4 @@ public class WorkWithFileTest {
             throw new RuntimeException("Can't correctly read data from file " + fileName, e);
         }
     }
-
 }
