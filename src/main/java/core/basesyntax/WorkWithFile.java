@@ -8,31 +8,31 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-
-    private static final String SPACE = " ";
-    private static final String REGEX = "\\W+";
+    private static final String WORD_SEPARATOR = " ";
+    private static final String BY_WORD_BOUNDARIES = "\\W+";
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
+    private static final String COMMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        WorkWithFile workWithFile = new WorkWithFile();
-        workWithFile.writeToFile(toFileName, workWithFile.getResultString(fromFileName));
-
+        writeToFile(toFileName, getResultString(fromFileName));
     }
 
     private String getResultString(String fileName) {
-        WorkWithFile workWithFile = new WorkWithFile();
-        String[] dataArray = workWithFile.readFile(fileName);
+        String[] dataArray = readFile(fileName);
         int supply = 0;
         int buy = 0;
         for (int i = 0; i < dataArray.length; i += 2) {
-            if (dataArray[i].equals("supply")) {
+            if (dataArray[i].equals(SUPPLY)) {
                 supply += Integer.parseInt(dataArray[i + 1]);
-            } else if (dataArray[i].equals("buy")) {
+            } else if (dataArray[i].equals(BUY)) {
                 buy += Integer.parseInt(dataArray[i + 1]);
             }
         }
-        return "supply," + supply + System.lineSeparator()
-                + "buy," + buy + System.lineSeparator()
-                + "result," + (supply - buy);
+        return SUPPLY + COMMA + supply + System.lineSeparator()
+                + BUY + COMMA + buy + System.lineSeparator()
+                + RESULT + COMMA + (supply - buy);
     }
 
     private void writeToFile(String fileName, String reportString) {
@@ -50,12 +50,12 @@ public class WorkWithFile {
             BufferedReader reader = new BufferedReader(new FileReader(fileName));
             String value = reader.readLine();
             while (value != null) {
-                fileDataString.append(value).append(SPACE);
+                fileDataString.append(value).append(WORD_SEPARATOR);
                 value = reader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read file" + fileName, e);
         }
-        return fileDataString.toString().split(REGEX);
+        return fileDataString.toString().split(BY_WORD_BOUNDARIES);
     }
 }
