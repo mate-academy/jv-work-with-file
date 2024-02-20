@@ -1,27 +1,23 @@
 package core.basesyntax;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 public class WorkWithFile {
+    private static final String LINE_SEPARATOR = System.lineSeparator();
+    private static final String OPERATION_TYPE_SUPPLY = "supply";
+    private static final String OPERATION_TYPE_BUY = "buy";
+    private static final String COMMA = ",";
+    private static final String RESULT = "result";
+    private static final int OPERATION_AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        List<String> lines = readFromFile(fromFileName);
-        Map<String, Integer> map = new TreeMap<>(Comparator.reverseOrder());
-
-        for (String line : lines) {
-            String[] splitLine = line.split(",");
-            map.merge(splitLine[0], Integer.parseInt(splitLine[1]), Integer::sum);
-        }
-
-        writeToFile(map, toFileName);
+        var dataFromFile = readFromFile(fromFileName);
+        var report = createReport(dataFromFile);
+        writeToFile(report, toFileName);
     }
 
     private List<String> readFromFile(String fromFileName) {
@@ -33,28 +29,39 @@ public class WorkWithFile {
         }
     }
 
-    private void writeToFile(Map<String, Integer> map, String toFileName) {
-        try (BufferedWriter bufferedWriter = Files.newBufferedWriter(Paths.get(toFileName),
-                StandardCharsets.UTF_8)) {
-            map.forEach((key, value) -> {
-                try {
-                    bufferedWriter.write(key + "," + value);
-                    bufferedWriter.write(System.lineSeparator());
-                } catch (IOException ex) {
-                    throw new RuntimeException("Can`t write entry with key = " + key
-                            + " and value = " + value, ex);
-                }
-            });
+    private String createReport(List<String> data) {
+        var report = new StringBuilder();
+        var supplyAmount = countTotalAmount(data, OPERATION_TYPE_SUPPLY);
+        var buyAmount = countTotalAmount(data, OPERATION_TYPE_BUY);
+        report.append(OPERATION_TYPE_SUPPLY)
+                .append(COMMA)
+                .append(supplyAmount)
+                .append(LINE_SEPARATOR)
+                .append(OPERATION_TYPE_BUY)
+                .append(COMMA)
+                .append(buyAmount)
+                .append(LINE_SEPARATOR)
+                .append(RESULT)
+                .append(COMMA)
+                .append(supplyAmount - buyAmount);
+        return report.toString();
+    }
 
-            bufferedWriter.write("result," + getDifferenceBetweenSupplierAndBuy(map.get("supply"),
-                    map.get("buy")));
+    private int countTotalAmount(List<String> data, String operationType) {
+        return data.stream()
+                .filter(s -> s.contains(operationType))
+                .map(s -> s.split(COMMA))
+                .mapToInt(strings -> Integer.parseInt(strings[OPERATION_AMOUNT_INDEX]))
+                .sum();
+    }
+
+    private void writeToFile(String report, String toFileName) {
+        try (var bufferedWriter = Files.newBufferedWriter(Paths.get(toFileName),
+                StandardCharsets.UTF_8)) {
+            bufferedWriter.write(report);
         } catch (IOException ex) {
             throw new RuntimeException("Can`t write data to the file "
                     + toFileName, ex);
         }
-    }
-
-    private Integer getDifferenceBetweenSupplierAndBuy(Integer supply, Integer buy) {
-        return supply - buy;
     }
 }
