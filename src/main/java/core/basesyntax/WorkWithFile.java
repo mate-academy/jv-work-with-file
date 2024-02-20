@@ -15,8 +15,8 @@ public class WorkWithFile {
     private static final int NUMBER_OF_PARTS = 2;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String readData = readFromFile(fromFileName);
-        String report = makeReport(readData);
+        String fileContent = readFromFile(fromFileName);
+        String report = makeReport(fileContent);
         writeToFile(toFileName,report);
     }
 
