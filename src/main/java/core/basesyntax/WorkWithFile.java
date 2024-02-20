@@ -28,7 +28,7 @@ public class WorkWithFile {
                 stringBuilder.append(value).append(System.lineSeparator());
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read data from file", e);
+            throw new RuntimeException("Can't read data from file" + fileName, e);
         }
         return stringBuilder.toString();
     }
