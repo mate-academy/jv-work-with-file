@@ -12,6 +12,9 @@ public class WorkWithFile {
     private static final int VALUE_INDEX = 1;
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
+    private static final String RESULT = "result";
+    private static final String COMMA = ",";
+    private static final String SEPARATOR = System.lineSeparator();
 
     public void getStatistic(String fromFileName, String toFileName) {
         String data = getDataFromFile(fromFileName);
@@ -29,7 +32,7 @@ public class WorkWithFile {
                 value = bufferedReader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file fromFileName", e);
+            throw new RuntimeException("Can't read the data from the file " + fromFileName, e);
         }
         return builder.toString();
     }
@@ -49,11 +52,9 @@ public class WorkWithFile {
             }
         }
         int result = supply - buy;
-        StringBuilder report = new StringBuilder();
-        String stringReport = report.append("supply,").append(supply).append(System.lineSeparator())
-                .append("buy,").append(buy).append(System.lineSeparator())
-                .append("result,").append(result).toString();
-        return stringReport;
+        return new StringBuilder().append(SUPPLY).append(COMMA).append(supply).append(SEPARATOR)
+                .append(BUY).append(COMMA).append(buy).append(SEPARATOR)
+                .append(RESULT).append(COMMA).append(result).toString();
     }
 
     private void writeToFile(String toFileName, String report) {
@@ -61,7 +62,7 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileReport))) {
             bufferedWriter.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write report to file: toFileName ", e);
+            throw new RuntimeException("Can't write into the file" + toFileName, e);
         }
     }
 }
