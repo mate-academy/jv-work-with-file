@@ -49,9 +49,9 @@ public class WorkWithFile {
             }
         }
         int result = supplyTotal - buyTotal;
-        return SUPPLY_OPERATION + COMMA + supplyTotal + SEPARATOR +
-                BUYING_OPERATION + COMMA + buyTotal + SEPARATOR + RESULT +
-                COMMA + result;
+        return SUPPLY_OPERATION + COMMA + supplyTotal + SEPARATOR
+                + BUYING_OPERATION + COMMA + buyTotal + SEPARATOR + RESULT
+                + COMMA + result;
     }
 
     private void writeToFile(String toFile,String data) {
