@@ -60,7 +60,7 @@ public class WorkWithFile {
                 .append(LINE_SEPARATOR)
                 .append(BUY).append(DIVIDER).append(boughtSummary)
                 .append(LINE_SEPARATOR)
-                .append(RESULT).append(DIVIDER).append(suppliesSummary - boughtSummary).toString();
+                .append(RESULT).append(DIVIDER).append(suppliesSummary - boughtSummary);
         return stringBuilder.toString();
     }
 }
