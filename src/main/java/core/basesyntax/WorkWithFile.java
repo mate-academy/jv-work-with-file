@@ -16,11 +16,13 @@ public class WorkWithFile {
     private static final String COMMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        writeToFile(toFileName, getResultString(fromFileName));
+        String fileContent = readFile(fromFileName);
+        String report = createReport(fileContent);
+        writeToFile(toFileName, report);
     }
 
-    private String getResultString(String fileName) {
-        String[] dataArray = readFile(fileName);
+    private String createReport(String fileContent) {
+        String[] dataArray = fileContent.split(BY_WORD_BOUNDARIES);
         int supply = 0;
         int buy = 0;
         for (int i = 0; i < dataArray.length; i += 2) {
@@ -44,7 +46,7 @@ public class WorkWithFile {
         }
     }
 
-    private String[] readFile(String fileName) {
+    private String readFile(String fileName) {
         StringBuilder fileDataString = new StringBuilder();
         try {
             BufferedReader reader = new BufferedReader(new FileReader(fileName));
@@ -56,6 +58,6 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read file" + fileName, e);
         }
-        return fileDataString.toString().split(BY_WORD_BOUNDARIES);
+        return fileDataString.toString();
     }
 }
