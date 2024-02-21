@@ -22,16 +22,16 @@ public class WorkWithFile {
         int totalResult = 0;
         StringBuilder builder = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(incomingFile))) {
-            String i = reader.readLine();
-            while (i != null) {
-                String[] separatedItems = i.split(",");
+            String fileLine = reader.readLine();
+            while (fileLine != null) {
+                String[] separatedItems = fileLine.split(",");
                 operation = separatedItems[0].trim();
                 if (operation.equals("supply")) {
                     totalSupply += Integer.parseInt(separatedItems[1]);
                 } else if (operation.equals("buy")) {
                     totalBuy += Integer.parseInt(separatedItems[1]);
                 }
-                i = reader.readLine();
+                fileLine = reader.readLine();
             }
             totalResult = totalSupply - totalBuy;
         } catch (IOException b) {
