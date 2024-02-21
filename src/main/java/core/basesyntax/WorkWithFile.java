@@ -10,38 +10,47 @@ import java.io.IOException;
 public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int[] amount = createReport(fromFileName);
+        String amount = createReport(fromFileName);
         writeToFile(toFileName, amount);
     }
 
-    public int[] createReport(String fromFileName) {
+    public String createReport(String fromFileName) {
         String operation = "";
         File incomingFile = new File(fromFileName);
-        int[] amount = new int[3];
+        int totalSupply = 0;
+        int totalBuy = 0;
+        int totalResult = 0;
+        StringBuilder builder = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(incomingFile))) {
             String i = reader.readLine();
             while (i != null) {
-                String[] separatelines = i.split(",");
-                operation = separatelines[0].trim();
+                String[] separatedItems = i.split(",");
+                operation = separatedItems[0].trim();
                 if (operation.equals("supply")) {
-                    amount[0] += Integer.parseInt(separatelines[1].trim());
+                    totalSupply += Integer.parseInt(separatedItems[1]);
                 } else if (operation.equals("buy")) {
-                    amount[1] += Integer.parseInt(separatelines[1].trim());
+                    totalBuy += Integer.parseInt(separatedItems[1]);
                 }
                 i = reader.readLine();
             }
-            amount[2] = amount[0] - amount[1];
+            totalResult = totalSupply - totalBuy;
         } catch (IOException b) {
             throw new RuntimeException("Cannot read from file" + b.getMessage());
         }
-        return amount;
+        return builder.append(totalSupply)
+                .append(",")
+                .append(totalBuy)
+                .append(",")
+                .append(totalResult)
+                .toString();
     }
 
-    public void writeToFile(String toFileName, int[] amount) {
+    public void writeToFile(String toFileName, String amount) {
+        String[] count = amount.split(",");
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            writer.write("supply," + amount[0] + System.lineSeparator());
-            writer.write("buy," + amount[1] + System.lineSeparator());
-            writer.write("result," + amount[2]);
+            writer.write("supply," + count[0] + System.lineSeparator());
+            writer.write("buy," + count[1] + System.lineSeparator());
+            writer.write("result," + count[2]);
         } catch (IOException e) {
             throw new RuntimeException("Cannot write to file" + e.getMessage());
         }
