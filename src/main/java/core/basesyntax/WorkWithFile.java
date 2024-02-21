@@ -52,9 +52,12 @@ public class WorkWithFile {
             }
         }
         int result = supplyTotal - buyTotal;
-        return SUPPLY_OPERATION + COMMA + supplyTotal + SEPARATOR
-                + BUYING_OPERATION + COMMA + buyTotal + SEPARATOR + RESULT
-                + COMMA + result;
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(SUPPLY_OPERATION).append(COMMA).append(supplyTotal).append(SEPARATOR)
+                .append(BUYING_OPERATION).append(COMMA).append(buyTotal)
+                .append(SEPARATOR).append(RESULT)
+                .append(COMMA).append(result);
+        return stringBuilder.toString();
     }
 
     private void writeToFile(String toFile,String data) {
