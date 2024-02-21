@@ -18,7 +18,9 @@ public class WorkWithFile {
         String operation = "";
         String fileLine = "";
         File incomingFile = new File(fromFileName);
-        int [] totalResults = new int[3]{0,0,0};
+        int totalSupply = 0;
+        int totalBuy = 0;
+        int totalResult = 0;
         StringBuilder builder = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(incomingFile))) {
             fileLine = reader.readLine();
@@ -26,21 +28,21 @@ public class WorkWithFile {
                 String[] separatedItems = fileLine.split(",");
                 operation = separatedItems[0].trim();
                 if (operation.equals("supply")) {
-                    totalResults[0] += Integer.parseInt(separatedItems[1]);
+                    totalSupply += Integer.parseInt(separatedItems[1]);
                 } else if (operation.equals("buy")) {
-                    totalResults[1] += Integer.parseInt(separatedItems[1]);
+                    totalBuy += Integer.parseInt(separatedItems[1]);
                 }
                 fileLine = reader.readLine();
             }
-            totalResults[2] = totalResults[[0]] - totalResults[1];
+            totalResult = totalSupply - totalBuy;
         } catch (IOException b) {
             throw new RuntimeException("Cannot read from file" + b.getMessage());
         }
-        return builder.append(totalResults[0])
+        return builder.append(totalSupply)
                 .append(",")
-                .append(totalResults[1])
+                .append(totalBuy)
                 .append(",")
-                .append(totalResults[2])
+                .append(totalResult)
                 .toString();
     }
 
