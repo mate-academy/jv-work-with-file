@@ -30,14 +30,12 @@ public class WorkWithFile {
             }
             totalResult = totalSupply - totalBuy;
         } catch (IOException b) {
-            throw new RuntimeException(b.getMessage());
+            throw new RuntimeException("Cannot read from file" + b.getMessage());
         }
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(outgoingFile))) {
-            writer.write("supply," + totalSupply);
-            writer.newLine();
-            writer.write("buy," + totalBuy);
-            writer.newLine();
+            writer.write("supply," + totalSupply + System.lineSeparator());
+            writer.write("buy," + totalBuy + System.lineSeparator());
             writer.write("result," + totalResult);
         } catch (IOException e) {
             throw new RuntimeException("Cannot write to file" + e.getMessage());
