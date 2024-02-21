@@ -12,56 +12,55 @@ public class WorkWithFile {
     private static final String BUY = "buy";
     private static final String SUPPLY = "supply";
     private static final String RESULT = "result";
+    private static final int OPERATION_TYPE_INDEX = 0;
+    private static final int OPERATION_VALUE_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int buy = 0;
-        int supply = 0;
-
-        StringBuilder builder = new StringBuilder();
-        readFromFile(fromFileName, builder);
-        String[] dataFromFile = builder.toString().split(System.lineSeparator());
-        createReport(buy, supply, builder, dataFromFile);
-        writeToFile(toFileName, builder);
-
+        String[] dataFromFile = readFromFile(fromFileName).split(System.lineSeparator());
+        writeToFile(toFileName, createReport(dataFromFile));
     }
 
-    private void createReport(int buy, int supply, StringBuilder builder, String[] dataFromFile) {
-        builder.setLength(0);
+    private String createReport(String[] dataFromFile) {
+        int buy = 0;
+        int supply = 0;
+        StringBuilder builder = new StringBuilder();
         for (String line : dataFromFile) {
             String[] records = line.split(COMMA);
-            if (records[0].equals(BUY)) {
-                buy += Integer.valueOf(records[1]);
+            if (records[OPERATION_TYPE_INDEX].equals(BUY)) {
+                buy += Integer.valueOf(records[OPERATION_VALUE_INDEX]);
             }
-            if (records[0].equals(SUPPLY)) {
-                supply += Integer.valueOf(records[1]);
+            if (records[OPERATION_TYPE_INDEX].equals(SUPPLY)) {
+                supply += Integer.valueOf(records[OPERATION_VALUE_INDEX]);
             }
         }
         int result;
         result = supply - buy;
-        builder.append(SUPPLY + COMMA).append(supply).append(System.lineSeparator())
+        return builder.append(SUPPLY + COMMA).append(supply).append(System.lineSeparator())
                 .append(BUY + COMMA).append(buy).append(System.lineSeparator())
-                .append(RESULT + COMMA).append(result);
+                .append(RESULT + COMMA).append(result).toString();
     }
 
-    private void readFromFile(String fromFileName, StringBuilder builder) {
+    private String readFromFile(String fromFileName) {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
+            StringBuilder builder = new StringBuilder();
             int value = bufferedReader.read();
             while (value != -1) {
                 builder.append((char) value);
                 value = bufferedReader.read();
             }
+            return builder.toString();
         } catch (FileNotFoundException e) {
-            System.out.println("File not found " + e);
+            throw new RuntimeException("Can't find file with name " + fromFileName, e);
         } catch (IOException e) {
-            System.out.println("IOException " + e);
+            throw new RuntimeException("IOException occurred", e);
         }
     }
 
-    private void writeToFile(String toFileName, StringBuilder builder) {
+    private void writeToFile(String toFileName, String report) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write(builder.toString());
+            bufferedWriter.write(report);
         } catch (IOException e) {
-            System.out.println("IOException " + e);
+            throw new RuntimeException("IOException occurred", e);
         }
     }
 }
