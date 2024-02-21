@@ -2,7 +2,6 @@ package core.basesyntax;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -16,8 +15,9 @@ public class WorkWithFile {
     private static final int OPERATION_VALUE_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String[] dataFromFile = readFromFile(fromFileName).split(System.lineSeparator());
-        writeToFile(toFileName, createReport(dataFromFile));
+        String[] dataFromFile = readFromFile(fromFileName);
+        String report = createReport(dataFromFile);
+        writeToFile(toFileName, report);
     }
 
     private String createReport(String[] dataFromFile) {
@@ -33,14 +33,13 @@ public class WorkWithFile {
                 supply += Integer.valueOf(records[OPERATION_VALUE_INDEX]);
             }
         }
-        int result;
-        result = supply - buy;
+        int result = supply - buy;
         return builder.append(SUPPLY + COMMA).append(supply).append(System.lineSeparator())
                 .append(BUY + COMMA).append(buy).append(System.lineSeparator())
                 .append(RESULT + COMMA).append(result).toString();
     }
 
-    private String readFromFile(String fromFileName) {
+    private String[] readFromFile(String fromFileName) {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             StringBuilder builder = new StringBuilder();
             int value = bufferedReader.read();
@@ -48,11 +47,9 @@ public class WorkWithFile {
                 builder.append((char) value);
                 value = bufferedReader.read();
             }
-            return builder.toString();
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException("Can't find file with name " + fromFileName, e);
+            return builder.toString().split(System.lineSeparator());
         } catch (IOException e) {
-            throw new RuntimeException("IOException occurred", e);
+            throw new RuntimeException("Error during reading file: " + fromFileName, e);
         }
     }
 
@@ -60,7 +57,7 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("IOException occurred", e);
+            throw new RuntimeException("Unable to write content to file: " + toFileName, e);
         }
     }
 }
