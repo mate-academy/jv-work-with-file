@@ -6,7 +6,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -14,10 +13,9 @@ import java.util.Set;
  * results to another file.
  */
 public class WorkWithFile {
-    private static final String READ_DATA_EXCEPTION = "Can't read data from the file ";
-    private static final String WRITE_DATA_EXCEPTION = "Can't write data to the file ";
     private static final String SUPPLY = "supply";
-    private static final String RESULT = "result,";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
     private static final String COMMA = ",";
     private static final String SPACE = " ";
     private static final int INDEX_ONE = 1;
@@ -32,7 +30,8 @@ public class WorkWithFile {
      */
     public void getStatistic(String fromFileName, String toFileName) {
         String[] content = readFromFile(fromFileName);
-        writeToFile(content, toFileName);
+        String[] report = generateReport(content);
+        writeToFile(report, toFileName);
     }
 
     /**
@@ -51,9 +50,9 @@ public class WorkWithFile {
                 stringBuilder.append(value).append(SPACE);
                 value = reader.readLine();
             }
-            return prepareStatistic(stringBuilder.toString().split(SPACE));
+            return stringBuilder.toString().split(SPACE);
         } catch (IOException e) {
-            throw new RuntimeException(READ_DATA_EXCEPTION + fileName, e);
+            throw new RuntimeException("Can't read data from the file " + fileName, e);
         }
     }
 
@@ -71,90 +70,47 @@ public class WorkWithFile {
                 writer.newLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException(WRITE_DATA_EXCEPTION + fileName, e);
+            throw new RuntimeException("Can't write data to the file " + fileName, e);
         }
     }
 
     /**
-     * Processes the raw data array and returns an array containing statistics.
+     * Generates a report based on the input array containing supply and buy data.
+     * <p>
+     * This method takes an array of strings, where each string represents a data entry
+     * in the format "TYPE, VALUE". It calculates the total supply, total buy, and the
+     * resulting difference between supply and buy. The generated report is returned as
+     * an array of strings in the format:
+     *  - "SUPPLY, totalSupply"
+     *  - "BUY, totalBuy"
+     *  - "RESULT, totalSupply - totalBuy"
      *
-     * @param array The raw data array to process.
-     * @return An array containing processed statistics.
+     * @param array The input array containing supply and buy data in the format "TYPE, VALUE".
+     * @return An array of strings representing the generated report.
+     * @throws NumberFormatException If the numeric values in the input array cannot be parsed.
      */
-    private String[] prepareStatistic(String[] array) {
+    private String[] generateReport(String[] array) {
         int length = countUnicElements(array);
-        String[] operationList = new String[length];
-        int[] amountList = new int[length];
+        String[] result = new String[length + INDEX_ONE];
+        int totalSupply = 0;
+        int totalBuy = 0;
 
-        for (String row : array) {
-            String[] arrayElement = row.split(COMMA);
-            String operation = arrayElement[INDEX_ZERO];
-            int amount = Integer.parseInt(arrayElement[INDEX_ONE]);
-            int elementIndex = findMatch(operationList, operation);
+        for (String value : array) {
+            String[] splitData = value.split(COMMA);
+            int amount = Integer.parseInt(splitData[INDEX_ONE]);
 
-            if (elementIndex != -1) {
-                amountList[elementIndex] += amount;
+            if (splitData[INDEX_ZERO].equals(SUPPLY)) {
+                totalSupply += amount;
             } else {
-                if (SUPPLY.equals(operation)) {
-                    System.arraycopy(operationList, INDEX_ZERO, operationList,
-                            INDEX_ONE, length - INDEX_ONE);
-                    System.arraycopy(amountList, INDEX_ZERO, amountList,
-                            INDEX_ONE, length - INDEX_ONE);
-                    operationList[0] = operation;
-                    amountList[0] = amount;
-                } else {
-                    int emptyIndex = findMatch(operationList, null);
-                    operationList[emptyIndex] = operation;
-                    amountList[emptyIndex] = amount;
-                }
+                totalBuy += amount;
             }
         }
-        return concatArrays(operationList, amountList);
-    }
 
-    /**
-     * Calculates and returns the result based on the given array of statistics.
-     *
-     * @param array An array containing statistics.
-     * @return The calculated result.
-     */
-    private int getResult(String[] array) {
-        int supply = Integer.parseInt(array[INDEX_ZERO].split(COMMA)[INDEX_ONE]);
-        int buy = Integer.parseInt(array[INDEX_ONE].split(COMMA)[INDEX_ONE]);
-        return supply - buy;
-    }
+        result[0] = SUPPLY + COMMA + totalSupply;
+        result[1] = BUY + COMMA + totalBuy;
+        result[2] = RESULT + COMMA + (totalSupply - totalBuy);
 
-    /**
-     * Concatenates arrays of keys and values into a single array.
-     *
-     * @param keys   An array of keys.
-     * @param values An array of values.
-     * @return A joined array of keys and values.
-     */
-    private String[] concatArrays(String[] keys, int[] values) {
-        String[] joinedArray = new String[keys.length + INDEX_ONE];
-        for (int i = 0; i < keys.length; i++) {
-            joinedArray[i] = keys[i] + COMMA + values[i];
-        }
-        int lastSlot = joinedArray.length - INDEX_ONE;
-        joinedArray[lastSlot] = RESULT + getResult(joinedArray);
-        return joinedArray;
-    }
-
-    /**
-     * Finds the index of the first occurrence of a given match in the array.
-     *
-     * @param list  The array to search for the match.
-     * @param match The value to find in the array.
-     * @return The index of the first occurrence of the match, or -1 if not found.
-     */
-    private int findMatch(String[] list, String match) {
-        for (int i = 0; i < list.length; i++) {
-            if (Objects.equals(list[i], match)) {
-                return i;
-            }
-        }
-        return -1;
+        return result;
     }
 
     /**
