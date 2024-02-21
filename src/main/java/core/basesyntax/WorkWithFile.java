@@ -17,10 +17,10 @@ public class WorkWithFile {
     public String createReport(String fromFileName) {
         String operation = "";
         String fileLine = "";
-        File incomingFile = new File(fromFileName);
         int totalSupply = 0;
         int totalBuy = 0;
         int totalResult = 0;
+        File incomingFile = new File(fromFileName);
         StringBuilder builder = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(incomingFile))) {
             fileLine = reader.readLine();
