@@ -18,8 +18,13 @@ public class WorkWithFile {
     private static final int COLUMNS_COUNT = 2;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String[][] table = readFromCsvFile(fromFileName);
+        String fileContent = readFromCsvFile(fromFileName);
+        String[][] table = createTable(fileContent);
+        String data = generateReport(table);
+        writeToFile(toFileName, data);
+    }
 
+    private static String generateReport(String[][] table) {
         int totalBuy = 0;
         int totalSupply = 0;
 
@@ -33,21 +38,29 @@ public class WorkWithFile {
                 totalBuy = totalBuy + value;
             }
         }
-
+        
         int total = totalSupply - totalBuy;
 
-        String data = buildDataRow(SUPPLY, totalSupply) + System.lineSeparator()
+        return buildDataRow(SUPPLY, totalSupply) + System.lineSeparator()
                 + buildDataRow(BUY, totalBuy) + System.lineSeparator()
                 + buildDataRow(RESULT, total);
-
-        writeToFile(toFileName, data);
     }
 
     private static String buildDataRow(String operationType, int value) {
         return operationType + COMMA + value;
     }
 
-    private static String[][] readFromCsvFile(String filename) {
+    private static String[][] createTable(String string) {
+        String[] rows = string.split(SEMICOLON);
+        String[][] table = new String[rows.length][COLUMNS_COUNT];
+        for (int i = 0; i < rows.length; i++) {
+            table[i] = rows[i].split(COMMA);
+        }
+
+        return table;
+    }
+
+    private static String readFromCsvFile(String filename) {
         File file = new File(filename);
         StringBuilder stringBuilder = new StringBuilder();
 
@@ -62,13 +75,7 @@ public class WorkWithFile {
             throw new RuntimeException("Can't read file", ex);
         }
 
-        String[] rows = stringBuilder.toString().split(SEMICOLON);
-        String[][] table = new String[rows.length][COLUMNS_COUNT];
-        for (int i = 0; i < rows.length; i++) {
-            table[i] = rows[i].split(COMMA);
-        }
-
-        return table;
+        return stringBuilder.toString();
     }
 
     private static void writeToFile(String filename, String data) {
