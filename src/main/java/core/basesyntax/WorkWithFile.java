@@ -49,7 +49,8 @@ public class WorkWithFile {
                 .append(System.lineSeparator())
                 .append("buy").append(COMMA).append(totalBuy)
                 .append(System.lineSeparator())
-                .append("result").append(totalSupply - totalBuy);
+                .append("result").append(COMMA)
+                .append(totalSupply - totalBuy);
         return stringBuilder.toString();
     }
 
