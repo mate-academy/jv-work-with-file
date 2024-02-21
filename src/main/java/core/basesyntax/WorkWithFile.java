@@ -16,32 +16,31 @@ public class WorkWithFile {
 
     public String createReport(String fromFileName) {
         String operation = "";
+        String fileLine = "";
         File incomingFile = new File(fromFileName);
-        int totalSupply = 0;
-        int totalBuy = 0;
-        int totalResult = 0;
+        int [] totalResults = new int[3]{0,0,0};
         StringBuilder builder = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(incomingFile))) {
-            String fileLine = reader.readLine();
+            fileLine = reader.readLine();
             while (fileLine != null) {
                 String[] separatedItems = fileLine.split(",");
                 operation = separatedItems[0].trim();
                 if (operation.equals("supply")) {
-                    totalSupply += Integer.parseInt(separatedItems[1]);
+                    totalResults[0] += Integer.parseInt(separatedItems[1]);
                 } else if (operation.equals("buy")) {
-                    totalBuy += Integer.parseInt(separatedItems[1]);
+                    totalResults[1] += Integer.parseInt(separatedItems[1]);
                 }
                 fileLine = reader.readLine();
             }
-            totalResult = totalSupply - totalBuy;
+            totalResults[2] = totalResults[[0]] - totalResults[1];
         } catch (IOException b) {
             throw new RuntimeException("Cannot read from file" + b.getMessage());
         }
-        return builder.append(totalSupply)
+        return builder.append(totalResults[0])
                 .append(",")
-                .append(totalBuy)
+                .append(totalResults[1])
                 .append(",")
-                .append(totalResult)
+                .append(totalResults[2])
                 .toString();
     }
 
