@@ -12,7 +12,7 @@ public class WorkWithFile {
         int totalBuy = 0;
         String[] parts = new String[] {};
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
-             BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
+                BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             String line = "";
             while ((line = bufferedReader.readLine()) != null) {
                 parts = line.split(",");
