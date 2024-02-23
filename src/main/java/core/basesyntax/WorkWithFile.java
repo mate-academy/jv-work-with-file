@@ -15,8 +15,11 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         String fileContent = readFileContent(fromFileName);
-        String[] arrayFromFile = fileContent.split("[,\\s]");
+        writeToFile(toFileName, calculateStatistic(fileContent));
+    }
 
+    private String calculateStatistic(String fileContent) {
+        String[] arrayFromFile = fileContent.split("[,\\s]");
         int supply = 0;
         int buy = 0;
         for (int i = 0; i < arrayFromFile.length; i = i + 2) {
@@ -29,10 +32,9 @@ public class WorkWithFile {
         }
         int result = supply - buy;
 
-        String data = SUPPLY + COMA + supply + System.lineSeparator()
+        return SUPPLY + COMA + supply + System.lineSeparator()
                 + BUY + COMA + buy + System.lineSeparator()
                 + RESULT + COMA + result;
-        writeToFile(toFileName, data);
     }
 
     private String readFileContent(String fileName) {
@@ -48,7 +50,6 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read from file!" + e);
         }
-
         return stringBuilder.toString();
     }
 
