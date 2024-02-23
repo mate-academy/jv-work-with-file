@@ -10,27 +10,32 @@ public class WorkWithFile {
     public static final String SEPARATOR = ",";
     public static final String NEW_LINE = System.lineSeparator();
     public static final String RESULT_HEADER = "result";
+    public static final int OPERATION_INDEX = 0;
+    public static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
-                BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-
-            String fileContent = readFileContent(reader);
+        try {
+            String fileContent = readFileContent(fromFileName);
             String report = formReport(fileContent);
-            writeReportToFile(writer, report);
-
+            writeReportToFile(toFileName, report);
         } catch (IOException e) {
-            throw new RuntimeException("Error reading from or writing to file", e);
+            throw new RuntimeException("Error reading from or writing to file: "
+                    + e.getMessage(), e);
         }
     }
 
-    private String readFileContent(BufferedReader reader) throws IOException {
+    private String readFileContent(String fileName) {
         StringBuilder contentBuilder = new StringBuilder();
-        String line;
-        while ((line = reader.readLine()) != null) {
-            contentBuilder.append(line).append(NEW_LINE);
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                contentBuilder.append(line).append(NEW_LINE);
+            }
+            return contentBuilder.toString().trim();
+        } catch (IOException e) {
+            throw new RuntimeException("Error reading from file " + fileName + ": "
+                    + e.getMessage(), e);
         }
-        return contentBuilder.toString().trim();
     }
 
     private String formReport(String fileContent) {
@@ -42,8 +47,8 @@ public class WorkWithFile {
         for (String line : lines) {
             String[] parts = line.split(SEPARATOR);
             if (parts.length == 2) {
-                String operation = parts[0];
-                int amount = Integer.parseInt(parts[1]);
+                String operation = parts[OPERATION_INDEX];
+                int amount = Integer.parseInt(parts[AMOUNT_INDEX]);
 
                 if ("supply".equals(operation)) {
                     supplyTotal += amount;
@@ -60,7 +65,11 @@ public class WorkWithFile {
         return reportBuilder.toString();
     }
 
-    private void writeReportToFile(BufferedWriter writer, String report) throws IOException {
-        writer.write(report);
+    private void writeReportToFile(String fileName, String report) throws IOException {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+            writer.write(report);
+        } catch (IOException e) {
+            throw new IOException("Error writing to file " + fileName + ": " + e.getMessage(), e);
+        }
     }
 }
