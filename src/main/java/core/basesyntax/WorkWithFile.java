@@ -12,14 +12,16 @@ public class WorkWithFile {
     private static final String BUY = "buy";
     private static final String RESULT = "result";
     private static final String COMA = ",";
+    private static final String WHITESPACE_COMA_SPLIT = "[,\\s]";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String fileContent = readFileContent(fromFileName);
-        writeToFile(toFileName, calculateStatistic(fileContent));
+        String statisticReport = calculateStatistic(fileContent);
+        writeToFile(toFileName, statisticReport);
     }
 
     private String calculateStatistic(String fileContent) {
-        String[] arrayFromFile = fileContent.split("[,\\s]");
+        String[] arrayFromFile = fileContent.split(WHITESPACE_COMA_SPLIT);
         int supply = 0;
         int buy = 0;
         for (int i = 0; i < arrayFromFile.length; i = i + 2) {
@@ -48,7 +50,7 @@ public class WorkWithFile {
                 value = reader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read from file!" + e);
+            throw new RuntimeException("Can't read from file: " + fileName + e);
         }
         return stringBuilder.toString();
     }
@@ -58,9 +60,7 @@ public class WorkWithFile {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             writer.write(data);
         } catch (IOException e) {
-            System.out.println("Can't write to file" + e);
+            System.out.println("Can't write to file " + fileName + e);
         }
     }
 }
-
-
