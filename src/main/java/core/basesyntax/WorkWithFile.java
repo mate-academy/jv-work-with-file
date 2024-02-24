@@ -24,7 +24,7 @@ public class WorkWithFile {
     public String readFromFile(String fromFileName) {
         File file = new File(fromFileName);
         try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
             StringBuilder builder = new StringBuilder();
             String value = bufferedReader.readLine();
             while (value != null) {
@@ -72,4 +72,3 @@ public class WorkWithFile {
         }
     }
 }
-
