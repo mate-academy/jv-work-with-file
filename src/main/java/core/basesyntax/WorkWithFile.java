@@ -8,6 +8,8 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
+    private static final int ACTION_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String dataFromFile = readFile(fromFileName);
@@ -30,10 +32,10 @@ public class WorkWithFile {
         String[] lines = dataFromFile.split(System.lineSeparator());
         for (String line : lines) {
             String[] parts = line.split(",");
-            if (parts[0].equals(SUPPLY)) {
-                supply += Integer.parseInt(parts[1]);
-            } else if (parts[0].equals(BUY)) {
-                buy += Integer.parseInt(parts[1]);
+            if (parts[ACTION_INDEX].equals(SUPPLY)) {
+                supply += Integer.parseInt(parts[AMOUNT_INDEX]);
+            } else if (parts[ACTION_INDEX].equals(BUY)) {
+                buy += Integer.parseInt(parts[AMOUNT_INDEX]);
             }
         }
 
