@@ -43,7 +43,7 @@ public class WorkWithFile {
             }
             return new int[] {supplyResult, buyResult};
         } catch (IOException e) {
-            throw new RuntimeException("Can`t read data from file", e);
+            throw new RuntimeException("Can`t read data from file" + fromFileName, e);
         }
     }
 
@@ -70,7 +70,7 @@ public class WorkWithFile {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Can`t write result to file", e);
+            throw new RuntimeException("Can`t write result to file" + toFileName, e);
         }
     }
 }
