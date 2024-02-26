@@ -15,6 +15,8 @@ public class WorkWithFile {
     private StringBuilder reportBuilder = new StringBuilder();
     private int totalAmount;
     private int amountNumber;
+    private int totalSupply;
+    private int totalBuy;
     private String operation;
     private String[] separatedItems;
 
@@ -39,8 +41,8 @@ public class WorkWithFile {
     }
 
     public String createReport(String line) {
-        int totalSupply = 0;
-        int totalBuy = 0;
+        totalSupply = 0;
+        totalBuy = 0;
         separatedItems = line.split(",");
         for (int i = 0; i < separatedItems.length; i += 2) {
             operation = separatedItems[i].trim();
