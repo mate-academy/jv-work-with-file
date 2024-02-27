@@ -24,14 +24,12 @@ public class WorkWithFile {
     public String readFromFile(String fromFileName) {
         File file = new File(fromFileName);
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
-            StringBuilder builder = new StringBuilder();
-            String value = bufferedReader.readLine();
-            while (value != null) {
-                builder.append(value).append(System.lineSeparator());
-                value = bufferedReader.readLine();
+            StringBuilder fileContentBuilder = new StringBuilder();
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                fileContentBuilder.append(line).append(System.lineSeparator());
             }
-            String readd = builder.toString();
-            return readd;
+            return fileContentBuilder.toString();
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from file " + fromFileName, e);
         }
@@ -52,6 +50,7 @@ public class WorkWithFile {
             }
         }
         int totalAmount = amountSupply - amountBuy;
+
         return value.append(SUPPLY)
                 .append(COMMA)
                 .append(amountSupply)
