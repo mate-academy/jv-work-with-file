@@ -11,8 +11,9 @@ public class WorkWithFile {
     private static final String SEPARATOR = System.lineSeparator();
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
-    private static final int DATA = 0;
-    private static final int MONEY = 1;
+
+    private static final int DATA_INDEX = 0;
+    private static final int MONEY_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String data = readFromFile(fromFileName);
@@ -22,8 +23,7 @@ public class WorkWithFile {
 
     public String readFromFile(String fromFileName) {
         File file = new File(fromFileName);
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
             StringBuilder builder = new StringBuilder();
             String value = bufferedReader.readLine();
             while (value != null) {
@@ -33,7 +33,7 @@ public class WorkWithFile {
             String readd = builder.toString();
             return readd;
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't read data from file " + fromFileName, e);
         }
     }
 
@@ -44,11 +44,11 @@ public class WorkWithFile {
         String[] firstSplitFile = data.split(SEPARATOR);
         for (String element : firstSplitFile) {
             String[] splitFile = element.split(COMMA);
-            if (splitFile[DATA].equals(SUPPLY)) {
-                amountSupply += Integer.parseInt(splitFile[MONEY]);
+            if (splitFile[DATA_INDEX].equals(SUPPLY)) {
+                amountSupply += Integer.parseInt(splitFile[MONEY_INDEX]);
             }
-            if (splitFile[DATA].equals(BUY)) {
-                amountBuy += Integer.parseInt(splitFile[MONEY]);
+            if (splitFile[DATA_INDEX].equals(BUY)) {
+                amountBuy += Integer.parseInt(splitFile[MONEY_INDEX]);
             }
         }
         int totalAmount = amountSupply - amountBuy;
@@ -69,7 +69,7 @@ public class WorkWithFile {
         try {
             Files.write(writeFile.toPath(), report.getBytes());
         } catch (IOException e) {
-            throw new RuntimeException("Can't write file");
+            throw new RuntimeException("Can't write data to file " + toFileName);
         }
     }
 }
