@@ -8,28 +8,19 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static String fileLine;
-    private static String line;
-    private static String report;
     private StringBuilder readerBuilder = new StringBuilder();
     private StringBuilder reportBuilder = new StringBuilder();
-    private int totalAmount;
-    private int amountNumber;
-    private int totalSupply;
-    private int totalBuy;
-    private String operation;
-    private String[] separatedItems;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        line = readFromFile(fromFileName);
-        report = createReport(line);
+        String line = readFromFile(fromFileName);
+        String report = createReport(line);
         writeToFile(toFileName, report);
     }
 
     public String readFromFile(String fromFileName) {
         File incomingFile = new File(fromFileName);
         try (BufferedReader reader = new BufferedReader(new FileReader(incomingFile))) {
-            fileLine = reader.readLine();
+            String fileLine = reader.readLine();
             while (fileLine != null) {
                 readerBuilder.append(fileLine).append(",");
                 fileLine = reader.readLine();
@@ -41,9 +32,12 @@ public class WorkWithFile {
     }
 
     public String createReport(String line) {
-        totalSupply = 0;
-        totalBuy = 0;
-        separatedItems = line.split(",");
+        int totalSupply = 0;
+        int totalBuy = 0;
+        int amountNumber;
+        int totalAmount;
+        String operation = " ";
+        String[] separatedItems = line.split(",");
         for (int i = 0; i < separatedItems.length; i += 2) {
             operation = separatedItems[i].trim();
             amountNumber = Integer.parseInt(separatedItems[i + 1].trim());
