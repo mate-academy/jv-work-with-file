@@ -40,9 +40,9 @@ public class WorkWithFile {
             }
         }
         int result = supplyTotal - buyTotal;
-        return "supply," + supplyTotal + System.lineSeparator() +
-               "buy," + buyTotal + System.lineSeparator() +
-               "result," + result;
+        return "supply," + supplyTotal + System.lineSeparator()
+               + "buy," + buyTotal + System.lineSeparator()
+               + "result," + result;
     }
 
     private void writeToFile(String report, String fileName) {
