@@ -8,6 +8,10 @@ import java.io.IOException;
 
 public class WorkWithFile {
 
+    private static final int OPERATION_TYPE_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
+    private static final String LINE_SEPARATOR = System.lineSeparator();
+
     public void getStatistic(String fromFileName, String toFileName) {
         String dataFromFile = readFile(fromFileName);
         String report = createReport(dataFromFile);
@@ -19,7 +23,7 @@ public class WorkWithFile {
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                data.append(line).append(System.lineSeparator());
+                data.append(line).append(LINE_SEPARATOR);
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from the file " + fileName, e);
@@ -30,18 +34,18 @@ public class WorkWithFile {
     private String createReport(String data) {
         int supplyTotal = 0;
         int buyTotal = 0;
-        String[] lines = data.split(System.lineSeparator());
+        String[] lines = data.split(LINE_SEPARATOR);
         for (String line : lines) {
             String[] parts = line.split(",");
-            if ("supply".equals(parts[0])) {
-                supplyTotal += Integer.parseInt(parts[1]);
-            } else if ("buy".equals(parts[0])) {
-                buyTotal += Integer.parseInt(parts[1]);
+            if ("supply".equals(parts[OPERATION_TYPE_INDEX])) {
+                supplyTotal += Integer.parseInt(parts[AMOUNT_INDEX]);
+            } else if ("buy".equals(parts[OPERATION_TYPE_INDEX])) {
+                buyTotal += Integer.parseInt(parts[AMOUNT_INDEX]);
             }
         }
         int result = supplyTotal - buyTotal;
-        return "supply," + supplyTotal + System.lineSeparator()
-               + "buy," + buyTotal + System.lineSeparator()
+        return "supply," + supplyTotal + LINE_SEPARATOR
+               + "buy," + buyTotal + LINE_SEPARATOR
                + "result," + result;
     }
 
