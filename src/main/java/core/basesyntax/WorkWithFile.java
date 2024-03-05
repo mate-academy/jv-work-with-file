@@ -13,14 +13,13 @@ public class WorkWithFile {
     private static final String RESULT_OPERATION = "result";
     private static final String COMMA_SEPARATOR = ",";
     private static final String NEW_LINE_SEPARATOR = System.lineSeparator();
-    private static final int OPERATOR_TYPE_INDEX = 0;
+    private static final int OPERATION_TYPE_INDEX = 0;
     private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-
         String content = readFromFile(fromFileName);
         String report = generateReport(content);
-        writeToFile(toFileName,report);
+        writeToFile(toFileName, report);
     }
 
     private String readFromFile(String fromFileName) {
@@ -54,7 +53,7 @@ public class WorkWithFile {
         for (String entry : lines) {
             String[] parts = entry.split(COMMA_SEPARATOR);
             if (parts.length == 2) {
-                String operationType = parts[OPERATOR_TYPE_INDEX];
+                String operationType = parts[OPERATION_TYPE_INDEX];
                 int amount = Integer.parseInt(parts[AMOUNT_INDEX]);
                 if (operationType.equals(SUPPLY_OPERATION)) {
                     supplyTotal += amount;
