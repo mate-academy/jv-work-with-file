@@ -11,19 +11,18 @@ public class WorkWithFile {
     private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        StringBuilder text = new StringBuilder();
-        String statistics = readFromFile(fromFileName, text);
-        String[] statisticsArray = statistics.split(System.lineSeparator());
+        String[] statisticsArray = readFromFile(fromFileName)
+                .split(System.lineSeparator());
         int sumBuy = 0;
         int sumSupply = 0;
         for (String statistic : statisticsArray) {
             String[] splittedArray = statistic.split(",");
             if (splittedArray[OPERATION_TYPE_INDEX].equals("buy")) {
                 int buy = Integer.parseInt(splittedArray[AMOUNT_INDEX]);
-                sumBuy = sumBuy + buy;
+                sumBuy += buy;
             } else if (splittedArray[OPERATION_TYPE_INDEX].equals("supply")) {
                 int supply = Integer.parseInt(splittedArray[AMOUNT_INDEX]);
-                sumSupply = sumSupply + supply;
+                sumSupply += supply;
             }
         }
         int result = sumSupply - sumBuy;
@@ -39,7 +38,8 @@ public class WorkWithFile {
         writeTofile(toFileName, textToWrite.toString());
     }
 
-    public String readFromFile(String fileToRead, StringBuilder text) {
+    public String readFromFile(String fileToRead) {
+        StringBuilder text = new StringBuilder();
         String line;
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileToRead))) {
             while ((line = bufferedReader.readLine()) != null) {
