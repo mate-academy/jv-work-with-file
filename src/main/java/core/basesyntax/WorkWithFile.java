@@ -1,6 +1,12 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) throws RuntimeException {
@@ -39,13 +45,14 @@ public class WorkWithFile {
             for (int i = 0;i < names.length;i++) {
                 if (names[i].equals("supply")) {
                     supplyCounter += Integer.parseInt(number[i]);
-                }else {
+                } else {
                     buyCounter += Integer.parseInt(number[i]);
                 }
             }
             writeToFile.append("supply").append(",").append(supplyCounter).append(Separator);
             writeToFile.append("buy").append(",").append(buyCounter).append(Separator);
-            writeToFile.append("result").append(",").append(supplyCounter - buyCounter).append(Separator);
+            writeToFile.append("result").append(",")
+                    .append(supplyCounter - buyCounter).append(Separator);
             bufferedWriter.write(writeToFile.toString());
         } catch (IOException e) {
             throw new RuntimeException("Can't write in file",e);
