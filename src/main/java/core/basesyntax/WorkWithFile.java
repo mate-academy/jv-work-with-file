@@ -8,29 +8,32 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String DATA_SPLITTER = " ";
+    private static final String COMMA_SPLITTER = ",";
+    private static final int NAME_INDEX = 0;
+    private static final int COUNT_INDEX = 1;
+    private static final String SEPARATOR = System.lineSeparator();
+
     public void getStatistic(String fromFileName, String toFileName) throws RuntimeException {
         StringBuilder stringBuilder = new StringBuilder();
-        final int NameIndex = 0;
-        final int CountIndex = 1;
-        final String Separator = System.lineSeparator();
         try {
             File file = new File(fromFileName);
             BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
             String input = bufferedReader.readLine();
             while (input != null) {
-                stringBuilder.append(input).append(" ");
+                stringBuilder.append(input).append(DATA_SPLITTER);
                 input = bufferedReader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read the file", e);
         }
-        String[] dataInFile = stringBuilder.toString().split(" ");
+        String[] dataInFile = stringBuilder.toString().split(DATA_SPLITTER);
         String[] names = new String[dataInFile.length];
         String[] number = new String[dataInFile.length];
         for (int i = 0;i < dataInFile.length;i++) {
-            String[] curent = dataInFile[i].split(",");
-            names[i] = curent[NameIndex];
-            number[i] = curent[CountIndex];
+            String[] curent = dataInFile[i].split(COMMA_SPLITTER);
+            names[i] = curent[NAME_INDEX];
+            number[i] = curent[COUNT_INDEX];
         }
         StringBuilder writeToFile = new StringBuilder();
         int supplyCounter = 0;
@@ -46,10 +49,10 @@ public class WorkWithFile {
                     buyCounter += Integer.parseInt(number[i]);
                 }
             }
-            writeToFile.append("supply").append(",").append(supplyCounter).append(Separator);
-            writeToFile.append("buy").append(",").append(buyCounter).append(Separator);
+            writeToFile.append("supply").append(",").append(supplyCounter).append(SEPARATOR);
+            writeToFile.append("buy").append(",").append(buyCounter).append(SEPARATOR);
             writeToFile.append("result").append(",")
-                    .append(supplyCounter - buyCounter).append(Separator);
+                    .append(supplyCounter - buyCounter).append(SEPARATOR);
             bufferedWriter.write(writeToFile.toString());
         } catch (IOException e) {
             throw new RuntimeException("Can't write in file",e);
