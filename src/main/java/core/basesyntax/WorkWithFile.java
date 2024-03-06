@@ -27,15 +27,11 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read the file", e);
         }
-        String[] dataInFile = stringBuilder.toString().split(DATA_SPLITTER);
-        String[] names = new String[dataInFile.length];
-        String[] number = new String[dataInFile.length];
-        for (int i = 0;i < dataInFile.length;i++) {
-            String[] curent = dataInFile[i].split(COMMA_SPLITTER);
-            names[i] = curent[NAME_INDEX];
-            number[i] = curent[COUNT_INDEX];
-        }
-        StringBuilder writeToFile = new StringBuilder();
+        String strInFile = stringBuilder.toString();
+        String[] names = splitNames(strInFile);
+        String[] number = splitNumber(strInFile);
+
+
         int supplyCounter = 0;
         int buyCounter = 0;
         File file1 = new File(toFileName);
@@ -49,11 +45,8 @@ public class WorkWithFile {
                     buyCounter += Integer.parseInt(number[i]);
                 }
             }
-            writeToFile.append("supply").append(",").append(supplyCounter).append(SEPARATOR);
-            writeToFile.append("buy").append(",").append(buyCounter).append(SEPARATOR);
-            writeToFile.append("result").append(",")
-                    .append(supplyCounter - buyCounter).append(SEPARATOR);
-            bufferedWriter.write(writeToFile.toString());
+            bufferedWriter.write(writeInFile(supplyCounter,buyCounter));
+
         } catch (IOException e) {
             throw new RuntimeException("Can't write in file",e);
         } finally {
@@ -65,5 +58,34 @@ public class WorkWithFile {
                 throw new RuntimeException("Can't close file",e);
             }
         }
+    }
+
+    public String[] splitNames(String input) {
+        String[] dataInFile = input.split(DATA_SPLITTER);
+        String[] names = new String[dataInFile.length];
+        for (int i = 0;i < dataInFile.length;i++) {
+            String[] curent = dataInFile[i].split(COMMA_SPLITTER);
+            names[i] = curent[NAME_INDEX];
+        }
+        return names;
+    }
+
+    public String[] splitNumber(String input) {
+        String[] dataInFile = input.split(DATA_SPLITTER);
+        String[] number = new String[dataInFile.length];
+        for (int i = 0;i < dataInFile.length;i++) {
+            String[] curent = dataInFile[i].split(COMMA_SPLITTER);
+            number[i] = curent[COUNT_INDEX];
+        }
+        return number;
+    }
+
+    public String writeInFile (int supplyCount, int buyCount) {
+        StringBuilder writeToFile = new StringBuilder();
+        writeToFile.append("supply").append(",").append(supplyCount).append(SEPARATOR);
+        writeToFile.append("buy").append(",").append(buyCount).append(SEPARATOR);
+        writeToFile.append("result").append(",")
+                .append(supplyCount - buyCount).append(SEPARATOR);
+        return writeToFile.toString();
     }
 }
