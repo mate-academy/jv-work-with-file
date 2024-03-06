@@ -30,8 +30,6 @@ public class WorkWithFile {
         String strInFile = stringBuilder.toString();
         String[] names = splitNames(strInFile);
         String[] number = splitNumber(strInFile);
-
-
         int supplyCounter = 0;
         int buyCounter = 0;
         File file1 = new File(toFileName);
@@ -80,7 +78,7 @@ public class WorkWithFile {
         return number;
     }
 
-    public String writeInFile (int supplyCount, int buyCount) {
+    public String writeInFile(int supplyCount, int buyCount) {
         StringBuilder writeToFile = new StringBuilder();
         writeToFile.append("supply").append(",").append(supplyCount).append(SEPARATOR);
         writeToFile.append("buy").append(",").append(buyCount).append(SEPARATOR);
