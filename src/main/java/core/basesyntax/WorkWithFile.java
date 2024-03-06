@@ -7,6 +7,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final int OPERATION_TYPE_PART = 0;
+    private static final int AMOUNT_PART = 1;
+    private static final String SUPPLY_OPERATION = "supply";
+    private static final String BUY_OPERATION = "buy";
+
     public void getStatistic(String fromFileName, String toFileName) {
         String data = readFile(fromFileName);
         String report = generateReport(data);
@@ -31,19 +36,19 @@ public class WorkWithFile {
         String[] lines = rawData.split(System.lineSeparator());
         for (String line : lines) {
             String[] parts = line.split(",");
-            if (parts[0].equals(operationType)) {
-                amount += Integer.parseInt(parts[1]);
+            if (parts[OPERATION_TYPE_PART].equals(operationType)) {
+                amount += Integer.parseInt(parts[AMOUNT_PART]);
             }
         }
         return amount;
     }
 
     private String generateReport(String rawData) {
-        int supplyAmount = parseAmount(rawData, "supply");
-        int buyAmount = parseAmount(rawData, "buy");
+        int supplyAmount = parseAmount(rawData, SUPPLY_OPERATION);
+        int buyAmount = parseAmount(rawData, BUY_OPERATION);
         int resultAmount = supplyAmount - buyAmount;
-        return "supply," + supplyAmount + System.lineSeparator()
-                + "buy," + buyAmount + System.lineSeparator()
+        return SUPPLY_OPERATION + "," + supplyAmount + System.lineSeparator()
+                + BUY_OPERATION + "," + buyAmount + System.lineSeparator()
                 + "result," + resultAmount;
     }
 
