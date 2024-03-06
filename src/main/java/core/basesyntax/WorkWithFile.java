@@ -7,12 +7,14 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
+
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) throws RuntimeException {
         StringBuilder stringBuilder = new StringBuilder();
         final int NameIndex = 0;
         final int CountIndex = 1;
         final String Separator = System.lineSeparator();
+
         try {
             File file = new File(fromFileName);
             BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
@@ -24,6 +26,7 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read the file", e);
         }
+
         String[] dataInFile = stringBuilder.toString().split(" ");
         String[] names = new String[dataInFile.length];
         String[] number = new String[dataInFile.length];
