@@ -13,49 +13,15 @@ public class WorkWithFile {
     private static final int NAME_INDEX = 0;
     private static final int COUNT_INDEX = 1;
     private static final String SEPARATOR = System.lineSeparator();
+    private static final int SUPLLY_INDEX = 0;
+    private static final int BUY_INDEX = 1;
 
-    public void getStatistic(String fromFileName, String toFileName) throws RuntimeException {
-        StringBuilder stringBuilder = new StringBuilder();
-        try {
-            File file = new File(fromFileName);
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
-            String input = bufferedReader.readLine();
-            while (input != null) {
-                stringBuilder.append(input).append(DATA_SPLITTER);
-                input = bufferedReader.readLine();
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("Can't read the file", e);
-        }
-        String strInFile = stringBuilder.toString();
+    public void getStatistic(String fromFileName, String toFileName) {
+        String strInFile = readFile(fromFileName);
         String[] names = splitNames(strInFile);
         String[] number = splitNumber(strInFile);
-        int supplyCounter = 0;
-        int buyCounter = 0;
-        File file1 = new File(toFileName);
-        BufferedWriter bufferedWriter = null;
-        try {
-            bufferedWriter = new BufferedWriter(new FileWriter(file1));
-            for (int i = 0;i < names.length;i++) {
-                if (names[i].equals("supply")) {
-                    supplyCounter += Integer.parseInt(number[i]);
-                } else {
-                    buyCounter += Integer.parseInt(number[i]);
-                }
-            }
-            bufferedWriter.write(writeInFile(supplyCounter,buyCounter));
-
-        } catch (IOException e) {
-            throw new RuntimeException("Can't write in file",e);
-        } finally {
-            try {
-                if (bufferedWriter != null) {
-                    bufferedWriter.close();
-                }
-            } catch (IOException e) {
-                throw new RuntimeException("Can't close file",e);
-            }
-        }
+        int[] report = report(names,number);
+        writeReportToFile(report,toFileName);
     }
 
     public String[] splitNames(String input) {
@@ -72,8 +38,8 @@ public class WorkWithFile {
         String[] dataInFile = input.split(DATA_SPLITTER);
         String[] number = new String[dataInFile.length];
         for (int i = 0;i < dataInFile.length;i++) {
-            String[] curent = dataInFile[i].split(COMMA_SPLITTER);
-            number[i] = curent[COUNT_INDEX];
+            String[] current = dataInFile[i].split(COMMA_SPLITTER);
+            number[i] = current[COUNT_INDEX];
         }
         return number;
     }
@@ -85,5 +51,53 @@ public class WorkWithFile {
         writeToFile.append("result").append(",")
                 .append(supplyCount - buyCount).append(SEPARATOR);
         return writeToFile.toString();
+    }
+
+    public String readFile(String FileName) {
+        StringBuilder stringBuilder = new StringBuilder();
+        try {
+            File file = new File(FileName);
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+            String input = bufferedReader.readLine();
+            while (input != null) {
+                stringBuilder.append(input).append(DATA_SPLITTER);
+                input = bufferedReader.readLine();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Can't read the file", e);
+        }
+        return stringBuilder.toString();
+    }
+
+    public int[] report(String[] names, String[] number) {
+        int[] reportCount = new int[2];
+        for (int i = 0;i < names.length;i++) {
+            if (names[i].equals("supply")) {
+                reportCount[SUPLLY_INDEX] += Integer.parseInt(number[i]);
+            } else {
+                reportCount[BUY_INDEX] += Integer.parseInt(number[i]);
+            }
+        }
+        return reportCount;
+    }
+
+    public void writeReportToFile(int[] report, String FileName) {
+        File file1 = new File(FileName);
+        BufferedWriter bufferedWriter = null;
+        try {
+            bufferedWriter = new BufferedWriter(new FileWriter(file1));
+            bufferedWriter.write(writeInFile(report[SUPLLY_INDEX],report[BUY_INDEX]));
+
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write in file",e);
+        } finally {
+            try {
+                if (bufferedWriter != null) {
+                    bufferedWriter.close();
+                }
+            } catch (IOException e) {
+                throw new RuntimeException("Can't close file",e);
+            }
+        }
     }
 }
