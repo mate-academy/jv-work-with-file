@@ -15,12 +15,15 @@ public class WorkWithFile {
     private static final String SEPARATOR = System.lineSeparator();
     private static final int SUPLLY_INDEX = 0;
     private static final int BUY_INDEX = 1;
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String strInFile = readFile(fromFileName);
         String[] names = splitNames(strInFile);
         String[] number = splitNumber(strInFile);
-        int[] report = report(names,number);
+        String report = report(names,number);
         writeReportToFile(report,toFileName);
     }
 
@@ -44,12 +47,13 @@ public class WorkWithFile {
         return number;
     }
 
-    public String writeInFile(int supplyCount, int buyCount) {
+    public String writeInFile(String supplyCount, String buyCount) {
         StringBuilder writeToFile = new StringBuilder();
-        writeToFile.append("supply").append(",").append(supplyCount).append(SEPARATOR);
-        writeToFile.append("buy").append(",").append(buyCount).append(SEPARATOR);
-        writeToFile.append("result").append(",")
-                .append(supplyCount - buyCount).append(SEPARATOR);
+        int result = Integer.parseInt(supplyCount) - Integer.parseInt(buyCount);
+        writeToFile.append(SUPPLY).append(COMMA_SPLITTER).append(supplyCount).append(SEPARATOR);
+        writeToFile.append(BUY).append(COMMA_SPLITTER).append(buyCount).append(SEPARATOR);
+        writeToFile.append(RESULT).append(COMMA_SPLITTER)
+                .append(result).append(SEPARATOR);
         return writeToFile.toString();
     }
 
@@ -69,24 +73,28 @@ public class WorkWithFile {
         return stringBuilder.toString();
     }
 
-    public int[] report(String[] names, String[] number) {
-        int[] reportCount = new int[2];
+    public String report(String[] names, String[] number) {
+        StringBuilder report = new StringBuilder();
+        int countSupply = 0;
+        int countBuy = 0;
         for (int i = 0;i < names.length;i++) {
-            if (names[i].equals("supply")) {
-                reportCount[SUPLLY_INDEX] += Integer.parseInt(number[i]);
+            if (names[i].equals(SUPPLY)) {
+                countSupply += Integer.parseInt(number[i]);
             } else {
-                reportCount[BUY_INDEX] += Integer.parseInt(number[i]);
+                countBuy += Integer.parseInt(number[i]);
             }
         }
-        return reportCount;
+        report.append(countSupply).append(DATA_SPLITTER).append(countBuy);
+        return  report.toString();
     }
 
-    public void writeReportToFile(int[] report, String fileName) {
+    public void writeReportToFile(String report, String fileName) {
         File file1 = new File(fileName);
+        String[] splitReport = report.split(DATA_SPLITTER);
         BufferedWriter bufferedWriter = null;
         try {
             bufferedWriter = new BufferedWriter(new FileWriter(file1));
-            bufferedWriter.write(writeInFile(report[SUPLLY_INDEX],report[BUY_INDEX]));
+            bufferedWriter.write(writeInFile(splitReport[SUPLLY_INDEX],splitReport[BUY_INDEX]));
 
         } catch (IOException e) {
             throw new RuntimeException("Can't write in file",e);
