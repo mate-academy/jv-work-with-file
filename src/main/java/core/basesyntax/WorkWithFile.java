@@ -53,10 +53,10 @@ public class WorkWithFile {
         return writeToFile.toString();
     }
 
-    public String readFile(String FileName) {
+    public String readFile(String fileName) {
         StringBuilder stringBuilder = new StringBuilder();
         try {
-            File file = new File(FileName);
+            File file = new File(fileName);
             BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
             String input = bufferedReader.readLine();
             while (input != null) {
@@ -81,8 +81,8 @@ public class WorkWithFile {
         return reportCount;
     }
 
-    public void writeReportToFile(int[] report, String FileName) {
-        File file1 = new File(FileName);
+    public void writeReportToFile(int[] report, String fileName) {
+        File file1 = new File(fileName);
         BufferedWriter bufferedWriter = null;
         try {
             bufferedWriter = new BufferedWriter(new FileWriter(file1));
