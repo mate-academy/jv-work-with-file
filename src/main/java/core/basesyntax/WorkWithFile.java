@@ -85,7 +85,7 @@ public class WorkWithFile {
             }
         }
         report.append(countSupply).append(DATA_SPLITTER).append(countBuy);
-        return  report.toString();
+        return report.toString();
     }
 
     public void writeReportToFile(String report, String fileName) {
