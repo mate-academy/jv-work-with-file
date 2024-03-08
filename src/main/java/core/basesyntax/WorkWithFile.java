@@ -19,7 +19,6 @@ public class WorkWithFile {
     private static final String BUY = "buy";
     private static final String RESULT = "result";
 
-
     public void getStatistic(String fromFileName, String toFileName) {
         String strInFile = readFile(fromFileName);
         String[] statistic = strInFile.split(DATA_SPLITTER);
@@ -79,7 +78,8 @@ public class WorkWithFile {
         BufferedWriter bufferedWriter = null;
         try {
             bufferedWriter = new BufferedWriter(new FileWriter(file1));
-            bufferedWriter.write(infThatNeedToWrite(splitReport[SUPLLY_INDEX],splitReport[BUY_INDEX]));
+            bufferedWriter.write(infThatNeedToWrite(splitReport[SUPLLY_INDEX],
+                    splitReport[BUY_INDEX]));
 
         } catch (IOException e) {
             throw new RuntimeException("Can't write in file",e);
