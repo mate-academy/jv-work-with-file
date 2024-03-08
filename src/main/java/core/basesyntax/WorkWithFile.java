@@ -19,35 +19,15 @@ public class WorkWithFile {
     private static final String BUY = "buy";
     private static final String RESULT = "result";
 
+
     public void getStatistic(String fromFileName, String toFileName) {
         String strInFile = readFile(fromFileName);
-        String[] names = splitNames(strInFile);
-        String[] number = splitNumber(strInFile);
-        String report = report(names,number);
-        writeReportToFile(report,toFileName);
+        String[] statistic = strInFile.split(DATA_SPLITTER);
+        String report = report(statistic);
+        writeReportToFile(report, toFileName);
     }
 
-    public String[] splitNames(String input) {
-        String[] dataInFile = input.split(DATA_SPLITTER);
-        String[] names = new String[dataInFile.length];
-        for (int i = 0;i < dataInFile.length;i++) {
-            String[] curent = dataInFile[i].split(COMMA_SPLITTER);
-            names[i] = curent[NAME_INDEX];
-        }
-        return names;
-    }
-
-    public String[] splitNumber(String input) {
-        String[] dataInFile = input.split(DATA_SPLITTER);
-        String[] number = new String[dataInFile.length];
-        for (int i = 0;i < dataInFile.length;i++) {
-            String[] current = dataInFile[i].split(COMMA_SPLITTER);
-            number[i] = current[COUNT_INDEX];
-        }
-        return number;
-    }
-
-    public String writeInFile(String supplyCount, String buyCount) {
+    public String infThatNeedToWrite(String supplyCount, String buyCount) {
         StringBuilder writeToFile = new StringBuilder();
         int result = Integer.parseInt(supplyCount) - Integer.parseInt(buyCount);
         writeToFile.append(SUPPLY).append(COMMA_SPLITTER).append(supplyCount).append(SEPARATOR);
@@ -59,13 +39,10 @@ public class WorkWithFile {
 
     public String readFile(String fileName) {
         StringBuilder stringBuilder = new StringBuilder();
-        try {
-            File file = new File(fileName);
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
-            String input = bufferedReader.readLine();
-            while (input != null) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
+            String input;
+            while ((input = bufferedReader.readLine()) != null) {
                 stringBuilder.append(input).append(DATA_SPLITTER);
-                input = bufferedReader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read the file", e);
@@ -73,8 +50,16 @@ public class WorkWithFile {
         return stringBuilder.toString();
     }
 
-    public String report(String[] names, String[] number) {
+    public String report(String[] statistic) {
         StringBuilder report = new StringBuilder();
+        String[] names = new String[statistic.length];
+        String[] number = new String[statistic.length];
+        for (int i = 0;i < statistic.length;i++) {
+            String[] current = statistic[i].split(COMMA_SPLITTER);
+            names[i] = current[NAME_INDEX];
+            number[i] = current[COUNT_INDEX];
+        }
+
         int countSupply = 0;
         int countBuy = 0;
         for (int i = 0;i < names.length;i++) {
@@ -94,7 +79,7 @@ public class WorkWithFile {
         BufferedWriter bufferedWriter = null;
         try {
             bufferedWriter = new BufferedWriter(new FileWriter(file1));
-            bufferedWriter.write(writeInFile(splitReport[SUPLLY_INDEX],splitReport[BUY_INDEX]));
+            bufferedWriter.write(infThatNeedToWrite(splitReport[SUPLLY_INDEX],splitReport[BUY_INDEX]));
 
         } catch (IOException e) {
             throw new RuntimeException("Can't write in file",e);
