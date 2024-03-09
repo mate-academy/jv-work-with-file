@@ -20,9 +20,7 @@ public class WorkWithFile {
     private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String strInFile = readFile(fromFileName);
-        String[] statistic = strInFile.split(DATA_SPLITTER);
-        String report = processData(statistic);
+        String report = processData(fromFileName);
         writeReportToFile(report, toFileName);
     }
 
@@ -44,12 +42,14 @@ public class WorkWithFile {
                 stringBuilder.append(input).append(DATA_SPLITTER);
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read the file" + fileName, e);
+            throw new RuntimeException("Can't read the file " + fileName, e);
         }
         return stringBuilder.toString();
     }
 
-    public String processData(String[] statistic) {
+    public String processData(String fromFileName) {
+        String fileContent = readFile(fromFileName);
+        String[] statistic = fileContent.split(DATA_SPLITTER);
         StringBuilder report = new StringBuilder();
         String[] names = new String[statistic.length];
         String[] number = new String[statistic.length];
@@ -82,14 +82,14 @@ public class WorkWithFile {
                     splitReport[BUY_INDEX]));
 
         } catch (IOException e) {
-            throw new RuntimeException("Can't write in file",e);
+            throw new RuntimeException("Can't write in file " + fileName, e);
         } finally {
             try {
                 if (bufferedWriter != null) {
                     bufferedWriter.close();
                 }
             } catch (IOException e) {
-                throw new RuntimeException("Can't close file" + fileName,e);
+                throw new RuntimeException("Can't close file " + fileName, e);
             }
         }
     }
