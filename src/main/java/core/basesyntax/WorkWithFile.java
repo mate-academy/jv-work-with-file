@@ -22,21 +22,21 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         String strInFile = readFile(fromFileName);
         String[] statistic = strInFile.split(DATA_SPLITTER);
-        String report = report(statistic);
+        String report = processData(statistic);
         writeReportToFile(report, toFileName);
     }
 
-    public String infThatNeedToWrite(String supplyCount, String buyCount) {
-        StringBuilder writeToFile = new StringBuilder();
+    private String createReport(String supplyCount, String buyCount) {
+        StringBuilder report = new StringBuilder();
         int result = Integer.parseInt(supplyCount) - Integer.parseInt(buyCount);
-        writeToFile.append(SUPPLY).append(COMMA_SPLITTER).append(supplyCount).append(SEPARATOR);
-        writeToFile.append(BUY).append(COMMA_SPLITTER).append(buyCount).append(SEPARATOR);
-        writeToFile.append(RESULT).append(COMMA_SPLITTER)
+        report.append(SUPPLY).append(COMMA_SPLITTER).append(supplyCount).append(SEPARATOR);
+        report.append(BUY).append(COMMA_SPLITTER).append(buyCount).append(SEPARATOR);
+        report.append(RESULT).append(COMMA_SPLITTER)
                 .append(result).append(SEPARATOR);
-        return writeToFile.toString();
+        return report.toString();
     }
 
-    public String readFile(String fileName) {
+    private String readFile(String fileName) {
         StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
             String input;
@@ -44,16 +44,16 @@ public class WorkWithFile {
                 stringBuilder.append(input).append(DATA_SPLITTER);
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read the file", e);
+            throw new RuntimeException("Can't read the file" + fileName, e);
         }
         return stringBuilder.toString();
     }
 
-    public String report(String[] statistic) {
+    public String processData(String[] statistic) {
         StringBuilder report = new StringBuilder();
         String[] names = new String[statistic.length];
         String[] number = new String[statistic.length];
-        for (int i = 0;i < statistic.length;i++) {
+        for (int i = 0; i < statistic.length; i++) {
             String[] current = statistic[i].split(COMMA_SPLITTER);
             names[i] = current[NAME_INDEX];
             number[i] = current[COUNT_INDEX];
@@ -61,7 +61,7 @@ public class WorkWithFile {
 
         int countSupply = 0;
         int countBuy = 0;
-        for (int i = 0;i < names.length;i++) {
+        for (int i = 0; i < names.length; i++) {
             if (names[i].equals(SUPPLY)) {
                 countSupply += Integer.parseInt(number[i]);
             } else {
@@ -73,12 +73,12 @@ public class WorkWithFile {
     }
 
     public void writeReportToFile(String report, String fileName) {
-        File file1 = new File(fileName);
+        File file = new File(fileName);
         String[] splitReport = report.split(DATA_SPLITTER);
         BufferedWriter bufferedWriter = null;
         try {
-            bufferedWriter = new BufferedWriter(new FileWriter(file1));
-            bufferedWriter.write(infThatNeedToWrite(splitReport[SUPLLY_INDEX],
+            bufferedWriter = new BufferedWriter(new FileWriter(file));
+            bufferedWriter.write(createReport(splitReport[SUPLLY_INDEX],
                     splitReport[BUY_INDEX]));
 
         } catch (IOException e) {
@@ -89,7 +89,7 @@ public class WorkWithFile {
                     bufferedWriter.close();
                 }
             } catch (IOException e) {
-                throw new RuntimeException("Can't close file",e);
+                throw new RuntimeException("Can't close file" + fileName,e);
             }
         }
     }
