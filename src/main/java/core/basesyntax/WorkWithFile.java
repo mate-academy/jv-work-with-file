@@ -20,11 +20,16 @@ public class WorkWithFile {
     private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String report = processData(fromFileName);
+        String dataFromFile = readFile(fromFileName);
+        String report = createReport(dataFromFile);
         writeReportToFile(report, toFileName);
     }
 
-    private String createReport(String supplyCount, String buyCount) {
+    private String createReport(String dataFromFile) {
+        String fileContent = processData(dataFromFile);
+        String[] countElementsInFile = fileContent.split(DATA_SPLITTER);
+        String supplyCount = countElementsInFile[SUPLLY_INDEX];
+        String buyCount = countElementsInFile[BUY_INDEX];
         StringBuilder report = new StringBuilder();
         int result = Integer.parseInt(supplyCount) - Integer.parseInt(buyCount);
         report.append(SUPPLY).append(COMMA_SPLITTER).append(supplyCount).append(SEPARATOR);
@@ -47,9 +52,8 @@ public class WorkWithFile {
         return stringBuilder.toString();
     }
 
-    public String processData(String fromFileName) {
-        String fileContent = readFile(fromFileName);
-        String[] statistic = fileContent.split(DATA_SPLITTER);
+    private String processData(String fileContant) {
+        String[] statistic = fileContant.split(DATA_SPLITTER);
         StringBuilder report = new StringBuilder();
         String[] names = new String[statistic.length];
         String[] number = new String[statistic.length];
@@ -72,15 +76,12 @@ public class WorkWithFile {
         return report.toString();
     }
 
-    public void writeReportToFile(String report, String fileName) {
+    private void writeReportToFile(String report, String fileName) {
         File file = new File(fileName);
-        String[] splitReport = report.split(DATA_SPLITTER);
         BufferedWriter bufferedWriter = null;
         try {
             bufferedWriter = new BufferedWriter(new FileWriter(file));
-            bufferedWriter.write(createReport(splitReport[SUPLLY_INDEX],
-                    splitReport[BUY_INDEX]));
-
+            bufferedWriter.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Can't write in file " + fileName, e);
         } finally {
