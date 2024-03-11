@@ -11,6 +11,7 @@ public class WorkWithFile {
     private static final String DIVIDE_CHARACTER = ",";
     private static final String FIRST_COLUMN_WORD = "supply";
     private static final String SECOND_COLUMN_WORD = "buy";
+    private static final String THIRD_COLUMN_WORD = "result";
     private static final String SEPARATOR = System.lineSeparator();
 
     public void getStatistic(String fromFileName, String toFileName) {
@@ -53,7 +54,9 @@ public class WorkWithFile {
             }
         }
         int result = supply - buy;
-        return "supply," + supply + SEPARATOR + "buy," + buy + SEPARATOR + "result," + result;
+        return FIRST_COLUMN_WORD + DIVIDE_CHARACTER + supply + SEPARATOR
+                + SECOND_COLUMN_WORD + DIVIDE_CHARACTER + buy + SEPARATOR
+                + THIRD_COLUMN_WORD + DIVIDE_CHARACTER + result;
     }
 
     private void writeToFile(String report, String toFileName) {
