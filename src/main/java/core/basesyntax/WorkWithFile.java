@@ -1,8 +1,10 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.StandardOpenOption;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
@@ -12,7 +14,8 @@ public class WorkWithFile {
         int result;
         StringBuilder builder = new StringBuilder();
 
-        try {BufferedReader reader = new BufferedReader(new FileReader(fileFrom));
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(fileFrom));
             String value = reader.readLine();
             while (value != null) {
                 builder.append(value).append(System.lineSeparator());
@@ -38,6 +41,7 @@ public class WorkWithFile {
                 .append("buy,").append(buy).append(System.lineSeparator())
                 .append("result,").append(result);
         File file = new File(toFileName);
+
         try {
             file.createNewFile();
         } catch (IOException e) {
