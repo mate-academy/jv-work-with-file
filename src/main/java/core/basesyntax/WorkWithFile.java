@@ -8,11 +8,13 @@ import java.nio.file.Files;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
+        String[] inputArray = readingFromFile(fromFileName).split(",");
+        writingInToNewFile(toFileName, inputArray);
+    }
+    private static String readingFromFile(String fromFileName) {
         File fileFrom = new File(fromFileName);
-        int buy = 0;
-        int supply = 0;
-        int result;
         StringBuilder builder = new StringBuilder();
+        String inputString;
 
         try {
             BufferedReader reader = new BufferedReader(new FileReader(fileFrom));
@@ -25,8 +27,13 @@ public class WorkWithFile {
             throw new RuntimeException(e);
         }
 
-        String inputString = builder.toString().replace(System.lineSeparator(), ",");
-        String[] inputArray = inputString.split(",");
+        return inputString = builder.toString().replace(System.lineSeparator(), ",");
+    }
+
+    private static String editingFile(String[] inputArray) {
+        int buy = 0;
+        int supply = 0;
+        int result;
 
         for (int i = 0; i < inputArray.length; i++) {
             if (inputArray[i].equals("buy")) {
@@ -36,10 +43,13 @@ public class WorkWithFile {
             }
         }
         result = supply - buy;
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("supply,").append(supply).append(System.lineSeparator())
-                .append("buy,").append(buy).append(System.lineSeparator())
-                .append("result,").append(result);
+        StringBuilder stringBuilder = new StringBuilder().append("supply,").append(supply)
+                .append(System.lineSeparator()).append("buy,").append(buy)
+                .append(System.lineSeparator()).append("result,").append(result);
+        return stringBuilder.toString();
+    }
+    private static void writingInToNewFile(String toFileName, String[] inputArray) {
+
         File file = new File(toFileName);
 
         try {
@@ -49,7 +59,7 @@ public class WorkWithFile {
         }
 
         try {
-            Files.write(file.toPath(),stringBuilder.toString().getBytes());
+            Files.write(file.toPath(),editingFile(inputArray).getBytes());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
