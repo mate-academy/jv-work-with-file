@@ -11,6 +11,7 @@ public class WorkWithFile {
         String[] inputArray = readingFromFile(fromFileName).split(",");
         writingInToNewFile(toFileName, inputArray);
     }
+
     private static String readingFromFile(String fromFileName) {
         File fileFrom = new File(fromFileName);
         StringBuilder builder = new StringBuilder();
@@ -48,6 +49,7 @@ public class WorkWithFile {
                 .append(System.lineSeparator()).append("result,").append(result);
         return stringBuilder.toString();
     }
+
     private static void writingInToNewFile(String toFileName, String[] inputArray) {
 
         File file = new File(toFileName);
