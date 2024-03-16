@@ -8,30 +8,7 @@ import java.nio.file.Files;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
-        String[] inputArray = readingFromFile(fromFileName).split(",");
-        writingInToNewFile(toFileName, inputArray);
-    }
-
-    private static String readingFromFile(String fromFileName) {
-        File fileFrom = new File(fromFileName);
-        StringBuilder builder = new StringBuilder();
-        String inputString;
-
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(fileFrom));
-            String value = reader.readLine();
-            while (value != null) {
-                builder.append(value).append(System.lineSeparator());
-                value = reader.readLine();
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        return inputString = builder.toString().replace(System.lineSeparator(), ",");
-    }
-
-    private static String editingFile(String[] inputArray) {
+        String[] inputArray = readFromFile(fromFileName).split(",");
         int buy = 0;
         int supply = 0;
         int result;
@@ -47,11 +24,30 @@ public class WorkWithFile {
         StringBuilder stringBuilder = new StringBuilder().append("supply,").append(supply)
                 .append(System.lineSeparator()).append("buy,").append(buy)
                 .append(System.lineSeparator()).append("result,").append(result);
-        return stringBuilder.toString();
+        String calculateResult = stringBuilder.toString();
+
+        writeToNewFile(toFileName, calculateResult);
     }
 
-    private static void writingInToNewFile(String toFileName, String[] inputArray) {
+    private String readFromFile(String fromFileName) {
+        File fileFrom = new File(fromFileName);
+        StringBuilder builder = new StringBuilder();
 
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(fileFrom));
+            String value = reader.readLine();
+            while (value != null) {
+                builder.append(value).append(System.lineSeparator());
+                value = reader.readLine();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return builder.toString().replace(System.lineSeparator(), ",");
+    }
+
+    private void writeToNewFile(String toFileName, String calculateResult) {
         File file = new File(toFileName);
 
         try {
@@ -61,7 +57,7 @@ public class WorkWithFile {
         }
 
         try {
-            Files.write(file.toPath(),editingFile(inputArray).getBytes());
+            Files.write(file.toPath(),calculateResult.getBytes());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
