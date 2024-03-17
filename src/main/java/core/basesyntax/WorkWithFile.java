@@ -9,23 +9,7 @@ import java.nio.file.Files;
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         String[] inputArray = readFromFile(fromFileName).split(",");
-        int buy = 0;
-        int supply = 0;
-        int result;
-
-        for (int i = 0; i < inputArray.length; i++) {
-            if (inputArray[i].equals("buy")) {
-                buy += Integer.parseInt(inputArray[i + 1]);
-            } else if (inputArray[i].equals("supply")) {
-                supply += Integer.parseInt(inputArray[i + 1]);
-            }
-        }
-        result = supply - buy;
-        StringBuilder stringBuilder = new StringBuilder().append("supply,").append(supply)
-                .append(System.lineSeparator()).append("buy,").append(buy)
-                .append(System.lineSeparator()).append("result,").append(result);
-        String calculateResult = stringBuilder.toString();
-
+        String calculateResult = editFile(inputArray);
         writeToNewFile(toFileName, calculateResult);
     }
 
@@ -45,21 +29,34 @@ public class WorkWithFile {
         }
 
         return builder.toString().replace(System.lineSeparator(), ",");
+
+    }
+
+    private String editFile(String[] inputArray) {
+        int buy = 0;
+        int supply = 0;
+        int result;
+
+        for (int i = 0; i < inputArray.length; i++) {
+            if (inputArray[i].equals("buy")) {
+                buy += Integer.parseInt(inputArray[i + 1]);
+            } else if (inputArray[i].equals("supply")) {
+                supply += Integer.parseInt(inputArray[i + 1]);
+            }
+        }
+        result = supply - buy;
+        return "supply," + supply +
+                System.lineSeparator() + "buy," + buy +
+                System.lineSeparator() + "result," + result;
     }
 
     private void writeToNewFile(String toFileName, String calculateResult) {
         File file = new File(toFileName);
-
         try {
-            file.createNewFile();
+            Files.write(file.toPath(),
+                    calculateResult.getBytes());
         } catch (IOException e) {
-            throw new RuntimeException("Can't create a file", e);
-        }
-
-        try {
-            Files.write(file.toPath(),calculateResult.getBytes());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can't create " + toFileName,e);
         }
     }
 }
