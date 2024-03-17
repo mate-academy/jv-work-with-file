@@ -13,13 +13,16 @@ public class WorkWithFile {
     public static final int BUY_COUNT = 1;
     public static final int ACTION_INFO = 0;
     public static final int ACTION_PRICE_INFO = 1;
+    public static final int SIZE_OF_COUNT_ARRAY = 2;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        writeReport(getReport(readFile(fromFileName)), toFileName);
+        String incomingData = readFile(fromFileName);
+        String report = getReport(incomingData);
+        writeReport(report, toFileName);
     }
 
     private String getReport(String data) {
-        int[] actionCount = new int[2];
+        int[] actionCount = new int[SIZE_OF_COUNT_ARRAY];
         String[] dataArray = data.split(" ");
         for (String lineInfo : dataArray) {
             String[] itemInfo = lineInfo.split(",");
