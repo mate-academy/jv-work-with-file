@@ -9,7 +9,7 @@ import java.nio.file.Path;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
-        writeToFile(createReport(fromFileName), toFileName);
+        writeToFile(createReport(readFromFile(fromFileName)), toFileName);
     }
 
     private String readFromFile(String fileName) {
@@ -26,7 +26,7 @@ public class WorkWithFile {
         int supplySum = 0;
         int buySum = 0;
 
-        String[] arrayFromFile = readFromFile(dataFromFile).split("\\W+");
+        String[] arrayFromFile = dataFromFile.split("\\W+");
 
         for (int i = 0; i < arrayFromFile.length; i++) {
             if (arrayFromFile[i].equals(supply)) {
@@ -46,10 +46,10 @@ public class WorkWithFile {
     private void writeToFile(String report, String toFileName) {
         File file = new File(toFileName);
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, false))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             writer.write(report);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can't write to the file " + toFileName, e);
         }
     }
 }
