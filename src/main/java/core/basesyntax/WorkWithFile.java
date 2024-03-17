@@ -45,9 +45,9 @@ public class WorkWithFile {
             }
         }
         result = supply - buy;
-        return "supply," + supply +
-                System.lineSeparator() + "buy," + buy +
-                System.lineSeparator() + "result," + result;
+        return "supply," + supply
+                + System.lineSeparator() + "buy," + buy
+                + System.lineSeparator() + "result," + result;
     }
 
     private void writeToNewFile(String toFileName, String calculateResult) {
@@ -56,7 +56,7 @@ public class WorkWithFile {
             Files.write(file.toPath(),
                     calculateResult.getBytes());
         } catch (IOException e) {
-            throw new RuntimeException("Can't create " + toFileName,e);
+            throw new RuntimeException("Can't create " + toFileName, e);
         }
     }
 }
