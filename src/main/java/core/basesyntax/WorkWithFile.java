@@ -27,7 +27,7 @@ public class WorkWithFile {
             }
             result = supply - buy;
             writer.write("supply," + supply + "\n");
-            writer.write("buy," + buy+ "\n");
+            writer.write("buy," + buy + "\n");
             writer.write("result," + result);
         } catch (IOException e) {
             throw new RuntimeException(e);
