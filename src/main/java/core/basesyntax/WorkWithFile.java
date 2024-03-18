@@ -13,7 +13,7 @@ public class WorkWithFile {
         int buy = 0;
         int result = 0;
         try (BufferedReader reader = new BufferedReader(new FileReader(new File(fromFileName)));
-             BufferedWriter writer = new BufferedWriter(new FileWriter(new File(toFileName)))) {
+                BufferedWriter writer = new BufferedWriter(new FileWriter(new File(toFileName)))) {
             String line = reader.readLine();
             while (line != null) {
                 System.out.println(line);
