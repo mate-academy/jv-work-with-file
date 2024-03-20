@@ -8,7 +8,12 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class WorkWithFile {
-    public void getStatistic(String fromFileName, String toFileName) {
+    private static final int ARRAY_VALUE_INDEX = 1;
+    private static final int ARRAY_NAME_INDEX = 0;
+    private static final int ARRAY_SUPPLY_INDEX = 0;
+    private static final int ARRAY_BUY_INDEX = 1;
+
+    public static void getStatistic(String fromFileName, String toFileName) {
         File fileCopy = new File(fromFileName);
         File fileWrite = new File(toFileName);
         int[] arrayResultSupply = new int[2];
@@ -18,10 +23,12 @@ public class WorkWithFile {
             while (scanner.hasNext()) {
                 String str = scanner.next();
                 array = str.split(",");
-                if (array[0].equals("supply")) {
-                    arrayResultSupply[0] += Integer.parseInt(array[1]);
+                if (array[ARRAY_NAME_INDEX].equals("supply")) {
+                    arrayResultSupply[ARRAY_SUPPLY_INDEX]
+                            += Integer.parseInt(array[ARRAY_VALUE_INDEX]);
                 } else {
-                    arrayResultSupply[1] += Integer.parseInt(array[1]);
+                    arrayResultSupply[ARRAY_BUY_INDEX]
+                            += Integer.parseInt(array[ARRAY_VALUE_INDEX]);
                 }
             }
         } catch (FileNotFoundException e) {
@@ -29,9 +36,12 @@ public class WorkWithFile {
         }
 
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileWrite))) {
-            bufferedWriter.write("supply," + arrayResultSupply[0] + System.lineSeparator());
-            bufferedWriter.write("buy," + arrayResultSupply[1] + System.lineSeparator());
-            bufferedWriter.write("result," + (arrayResultSupply[0] - arrayResultSupply[1])
+            bufferedWriter.write("supply," + arrayResultSupply[ARRAY_SUPPLY_INDEX]
+                    + System.lineSeparator());
+            bufferedWriter.write("buy," + arrayResultSupply[ARRAY_BUY_INDEX]
+                    + System.lineSeparator());
+            bufferedWriter.write("result," + (arrayResultSupply[ARRAY_SUPPLY_INDEX]
+                    - arrayResultSupply[ARRAY_BUY_INDEX])
                     + System.lineSeparator());
         } catch (IOException e) {
             throw new RuntimeException(e);
