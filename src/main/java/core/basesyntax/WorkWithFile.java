@@ -7,9 +7,16 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final int INDEX_OF_REPORT_KEY = 0;
+    private static final int INDEX_OF_REPORT_VALUE = 1;
+    private static final String BUY_KEY = "buy";
+    private static final String SUPPLY_KEY = "supply";
+    private static final String RESULT_KEY = "result";
+    private static final String COMMA = ",";
+
     public void getStatistic(String fromFileName, String toFileName) {
-        String readedFileData = readFile(fromFileName);
-        String report = new ReportCsvSupplier(readedFileData).createSummeryReport();
+        String readFileData = readFile(fromFileName);
+        String report = parseAndSummariseReport(readFileData);
         writeToFile(toFileName, report);
     }
 
@@ -33,5 +40,31 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Cannot write to the file", e);
         }
+    }
+
+    private String parseAndSummariseReport(String fileDataWithReport) {
+        int buyAmount = 0;
+        int supplyAmount = 0;
+        for (String reportLine : fileDataWithReport.split(System.lineSeparator())) {
+            String[] splittedLine = reportLine.split(COMMA);
+            String key = splittedLine[INDEX_OF_REPORT_KEY];
+            int value = Integer.parseInt(splittedLine[INDEX_OF_REPORT_VALUE]);
+            switch (key) {
+                case BUY_KEY: {
+                    buyAmount += value;
+                    break;
+                }
+                case SUPPLY_KEY: {
+                    supplyAmount += value;
+                    break;
+                }
+                default: {
+                    break;
+                }
+            }
+        }
+        return SUPPLY_KEY + COMMA + supplyAmount + System.lineSeparator()
+                + BUY_KEY + COMMA + buyAmount + System.lineSeparator()
+                + RESULT_KEY + COMMA + (supplyAmount - buyAmount);
     }
 }
