@@ -1,6 +1,6 @@
 package core.basesyntax;
 
-public class ReportCSVSupplier {
+public class ReportCsvSupplier {
     private static final String BUY_KEY = "buy";
     private static final String SUPPLY_KEY = "supply";
     private static final String RESULT_KEY = "result";
@@ -8,7 +8,7 @@ public class ReportCSVSupplier {
     private static final int INDEX_OF_VALUE = 1;
     private final String data;
 
-    public ReportCSVSupplier(String data) {
+    public ReportCsvSupplier(String data) {
         this.data = data;
     }
 
@@ -30,20 +30,26 @@ public class ReportCSVSupplier {
                 }
             }
         }
-        return SUPPLY_KEY + "," + report.getSupply() + System.lineSeparator() +
-                BUY_KEY + "," + report.getBuy() + System.lineSeparator() +
-                RESULT_KEY + "," + (report.getSupply() - report.getBuy());
+        return SUPPLY_KEY + "," + report.getSupply() + System.lineSeparator()
+                + BUY_KEY + "," + report.getBuy() + System.lineSeparator()
+                + RESULT_KEY + "," + (report.getSupply() - report.getBuy());
 
     }
 
     private static ReportLine parseReportLine(String reportLine) {
         String[] splittedLine = reportLine.split(",");
-        return new ReportLine(splittedLine[INDEX_OF_KEY], Integer.parseInt(splittedLine[INDEX_OF_VALUE]));
+        return new ReportLine(splittedLine[INDEX_OF_KEY],
+                Integer.parseInt(splittedLine[INDEX_OF_VALUE]));
     }
 
     static class ReportLine {
         private final String key;
         private final int value;
+
+        public ReportLine(String key, int value) {
+            this.key = key;
+            this.value = value;
+        }
 
         public String getKey() {
             return key;
@@ -51,11 +57,6 @@ public class ReportCSVSupplier {
 
         public int getValue() {
             return value;
-        }
-
-        public ReportLine(String key, int value) {
-            this.key = key;
-            this.value = value;
         }
     }
 }

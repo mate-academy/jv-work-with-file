@@ -9,9 +9,10 @@ class Report {
         this.buy = buy;
     }
 
-    public Report() {}
+    public Report() {
 
-
+    }
+    
     public int getSupply() {
         return supply;
     }
