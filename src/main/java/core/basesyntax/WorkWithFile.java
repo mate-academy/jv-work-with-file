@@ -10,39 +10,51 @@ import java.util.Scanner;
 public class WorkWithFile {
     private static final int ARRAY_VALUE_INDEX = 1;
     private static final int ARRAY_NAME_INDEX = 0;
-    private static final int ARRAY_SUPPLY_INDEX = 0;
-    private static final int ARRAY_BUY_INDEX = 1;
 
-    public static void getStatistic(String fromFileName, String toFileName) {
+    public void getStatistic(String fromFileName, String toFileName) {
+        String data = readFile(fromFileName);
+        String report = generateReport(data);
+        writeToFile(toFileName, report);
+    }
+
+    private String readFile(String fromFileName) {
         File fileCopy = new File(fromFileName);
-        File fileWrite = new File(toFileName);
-        int[] arrayResultSupply = new int[2];
-        String[] array;
+        StringBuilder stringBuilder = new StringBuilder();
 
         try (Scanner scanner = new Scanner(fileCopy)) {
             while (scanner.hasNext()) {
-                String str = scanner.next();
-                array = str.split(",");
-                if (array[ARRAY_NAME_INDEX].equals("supply")) {
-                    arrayResultSupply[ARRAY_SUPPLY_INDEX]
-                            += Integer.parseInt(array[ARRAY_VALUE_INDEX]);
-                } else {
-                    arrayResultSupply[ARRAY_BUY_INDEX]
-                            += Integer.parseInt(array[ARRAY_VALUE_INDEX]);
-                }
+                stringBuilder.append(scanner.next()).append(System.lineSeparator());
             }
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
+        return stringBuilder.toString();
+    }
 
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileWrite))) {
-            bufferedWriter.write("supply," + arrayResultSupply[ARRAY_SUPPLY_INDEX]
-                    + System.lineSeparator());
-            bufferedWriter.write("buy," + arrayResultSupply[ARRAY_BUY_INDEX]
-                    + System.lineSeparator());
-            bufferedWriter.write("result," + (arrayResultSupply[ARRAY_SUPPLY_INDEX]
-                    - arrayResultSupply[ARRAY_BUY_INDEX])
-                    + System.lineSeparator());
+    private String generateReport(String string) {
+        int totalSupply = 0;
+        int totalBuy = 0;
+        String[] lines = string.split(System.lineSeparator());
+        for (String item : lines) {
+            String[] array = item.split(",");
+            if (array[ARRAY_NAME_INDEX].equals("supply")) {
+                totalSupply += Integer.parseInt(array[ARRAY_VALUE_INDEX]);
+            } else {
+                totalBuy += Integer.parseInt(array[ARRAY_VALUE_INDEX]);
+            }
+        }
+
+        StringBuilder reportBuilder = new StringBuilder();
+        reportBuilder.append("supply,").append(totalSupply).append(System.lineSeparator());
+        reportBuilder.append("buy,").append(totalBuy).append(System.lineSeparator());
+        reportBuilder.append("result,").append(totalSupply - totalBuy)
+                .append(System.lineSeparator());
+        return reportBuilder.toString();
+    }
+
+    private void writeToFile(String fileName, String report) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
+            bufferedWriter.write(report);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
