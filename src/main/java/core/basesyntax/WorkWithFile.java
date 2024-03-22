@@ -38,7 +38,7 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
             bufferedWriter.write(data);
         } catch (IOException e) {
-            throw new RuntimeException("Cannot write to the file", e);
+            throw new RuntimeException("Error while reading file", e);
         }
     }
 
