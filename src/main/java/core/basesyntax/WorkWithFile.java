@@ -16,7 +16,7 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         String readFileData = readFile(fromFileName);
-        String report = parseAndSummariseReport(readFileData);
+        String report = createReport(readFileData);
         writeToFile(toFileName, report);
     }
 
@@ -42,25 +42,17 @@ public class WorkWithFile {
         }
     }
 
-    private String parseAndSummariseReport(String fileDataWithReport) {
+    private String createReport(String fileDataWithReport) {
         int buyAmount = 0;
         int supplyAmount = 0;
         for (String reportLine : fileDataWithReport.split(System.lineSeparator())) {
             String[] splittedLine = reportLine.split(COMMA);
             String key = splittedLine[INDEX_OF_REPORT_KEY];
             int value = Integer.parseInt(splittedLine[INDEX_OF_REPORT_VALUE]);
-            switch (key) {
-                case BUY_KEY: {
-                    buyAmount += value;
-                    break;
-                }
-                case SUPPLY_KEY: {
-                    supplyAmount += value;
-                    break;
-                }
-                default: {
-                    break;
-                }
+            if (key.equals(BUY_KEY)) {
+                buyAmount += value;
+            } else {
+                supplyAmount += value;
             }
         }
         return SUPPLY_KEY + COMMA + supplyAmount + System.lineSeparator()
