@@ -19,16 +19,15 @@ public class WorkWithFile {
     private static final String DATA_FIELD_SEPARATOR_IN_THE_FILE = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        Operation[] operationData = readFile(fromFileName);
-        writeFile(toFileName, operationData);
+        String dataFromFile = readFile(fromFileName);
+        Operation[] operationData = getOperationData(dataFromFile);
+        String reportData = getResultData(operationData);
+        writeFile(toFileName, reportData);
     }
 
-    private Operation[] readFile(String fromFileName) {
+    private String readFile(String fromFileName) {
         File fileFrom = new File(fromFileName);
-        if (!fileFrom.exists()) {
-            throw new FileNotExistsException(FILE_DOES_NOT_EXIST_ERROR_MESSAGE
-                    + fileFrom.getName());
-        }
+        checkExistsFile(fileFrom);
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileFrom))) {
             StringBuilder stringOperation = new StringBuilder();
             String stringValue = bufferedReader.readLine();
@@ -36,13 +35,20 @@ public class WorkWithFile {
                 stringOperation.append(stringValue).append(System.lineSeparator());
                 stringValue = bufferedReader.readLine();
             }
-            return getOperationArray(stringOperation.toString());
+            return stringOperation.toString();
         } catch (IOException e) {
             throw new FileNotOpenedException(FILE_NOT_OPENED_ERROR_MESSAGE + fileFrom.getName(), e);
         }
     }
 
-    private Operation[] getOperationArray(String operationData) {
+    private void checkExistsFile(File fileFrom) {
+        if (!fileFrom.exists()) {
+            throw new FileNotExistsException(FILE_DOES_NOT_EXIST_ERROR_MESSAGE
+                    + fileFrom.getName());
+        }
+    }
+
+    private Operation[] getOperationData(String operationData) {
         String[] operationDataArray = operationData.split(System.lineSeparator());
         Operation[] operationArray = new Operation[operationDataArray.length];
         for (int i = 0; i < operationDataArray.length; i++) {
@@ -52,15 +58,15 @@ public class WorkWithFile {
         return operationArray;
     }
 
-    private void writeFile(String toFileName, Operation[] operationData) {
+    private String getResultData(Operation[] operationData) {
+        return new OperationDataResult(operationData, DATA_FIELD_SEPARATOR_IN_THE_FILE).toString();
+    }
+
+    private void writeFile(String toFileName, String reportData) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write(getResultData(operationData).toString());
+            bufferedWriter.write(reportData);
         } catch (IOException e) {
             throw new FileNotWrittenException(FILE_NOT_WRITTEN_ERROR_MESSAGE + toFileName, e);
         }
-    }
-
-    private OperationDataResult getResultData(Operation[] operationData) {
-        return new OperationDataResult(operationData);
     }
 }
