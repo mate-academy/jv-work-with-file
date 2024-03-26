@@ -14,46 +14,49 @@ public class WorkWithFile {
     private static final String BUY_LINE = "buy,";
     private static final String RESULT_LINE = "result,";
 
-    private int supplySum = 0;
-    private int buySum = 0;
-    private int result = 0;
+    public void getStatistic(String fromFileName, String toFileName) {
+        String dataFromFile = readFile(fromFileName);
+        String report = createReport(dataFromFile);
+        writeReportToFile(report, toFileName);
+    }
 
-    public void readData(String fileNameToRead) {
+    private String readFile(String fileNameToRead) {
+        StringBuilder builder = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(fileNameToRead))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                processLine(line);
+                builder.append(line).append(System.lineSeparator());
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read the file", e);
         }
+        return builder.toString();
     }
 
-    public void processLine(String line) {
-        String[] parts = line.split(",");
-
-        if (parts[OPERATION_TYPE_INDEX].equals(SUPPLY_OPERATION)) {
-            supplySum += Integer.parseInt(parts[DATA_INDEX]);
-        } else {
-            buySum += Integer.parseInt(parts[DATA_INDEX]);
+    private String createReport(String data) {
+        int supplySum = 0;
+        int buySum = 0;
+        int result;
+        String[] lines = data.split(System.lineSeparator());
+        for (String line : lines) {
+            String[] parts = line.split(",");
+            if (parts[OPERATION_TYPE_INDEX].equals(SUPPLY_OPERATION)) {
+                supplySum += Integer.parseInt(parts[DATA_INDEX]);
+            } else {
+                buySum += Integer.parseInt(parts[DATA_INDEX]);
+            }
         }
+        result = supplySum - buySum;
+        return SUPPLY_LINE + supplySum + System.lineSeparator()
+                + BUY_LINE + buySum + System.lineSeparator()
+                + RESULT_LINE + result;
     }
 
-    public void writeData(String fileNameToWrite) {
+    private void writeReportToFile(String report, String fileNameToWrite) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileNameToWrite))) {
-            writer.write(SUPPLY_LINE + supplySum + System.lineSeparator());
-            writer.write(BUY_LINE + buySum + System.lineSeparator());
-            result = supplySum - buySum;
-            writer.write(RESULT_LINE + result);
+            writer.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Can`t write the file", e);
         }
-    }
-
-    public void getStatistic(String fromFileName, String toFileName) {
-        readData(fromFileName);
-        writeData(toFileName);
-        supplySum = 0;
-        buySum = 0;
     }
 }
