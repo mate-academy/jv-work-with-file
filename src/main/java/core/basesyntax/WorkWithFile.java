@@ -7,10 +7,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    public static final int OPERATION_TYPE = 0;
+    public static final int AMOUNT = 1;
+
     public void getStatistic(String fromFileName, String toFileName) {
         StringBuilder fromFileContent = new StringBuilder();
         StringBuilder toFileContent = new StringBuilder();
-        String[] operationTypes = new String[]{"supply", "buy"};
 
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String value = reader.readLine();
@@ -20,40 +22,37 @@ public class WorkWithFile {
                 value = reader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("cannot read fromFileName", e);
+            throw new RuntimeException("cannot read fromFileName: " + fromFileName, e);
         }
 
-        String[] fromFileLines = fromFileContent.toString().split(System.lineSeparator());
-        int result = 0;
-        for (String operationType : operationTypes) {
-            int amount = 0;
-            toFileContent.append(operationType)
-                    .append(",");
-
-            for (String fromFileLine : fromFileLines) {
-                String[] separatedLine = fromFileLine.split(",");
-                if (separatedLine[0].equals(operationType)) {
-                    amount += Integer.parseInt(separatedLine[1]);
-                }
-            }
-
-            if (operationType.equals("supply")) {
-                result += amount;
-            } else {
-                result -= amount;
-            }
-
-            toFileContent.append(amount)
-                    .append(System.lineSeparator());
-        }
-
-        toFileContent.append("result,")
-                .append(String.valueOf(result));
+        toFileContent = makeReport(fromFileContent.toString().split(System.lineSeparator()));
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write(toFileContent.toString());
         } catch (IOException e) {
-            throw new RuntimeException("cannot write toFileName", e);
+            throw new RuntimeException("cannot write toFileName: " + toFileName, e);
         }
+    }
+
+    public StringBuilder makeReport(String[] fromFileLines) {
+        int supplyAmount = 0;
+        int buyAmount = 0;
+        for (String fromFileLine : fromFileLines) {
+            String[] separatedLine = fromFileLine.split(",");
+            if (separatedLine[OPERATION_TYPE].equals(OperationTypes.SUPPLY.toString())) {
+                supplyAmount += Integer.parseInt(separatedLine[AMOUNT]);
+            } else {
+                buyAmount += Integer.parseInt(separatedLine[AMOUNT]);
+            }
+        }
+
+        return new StringBuilder("supply,")
+                .append(supplyAmount)
+                .append(System.lineSeparator())
+                .append("buy,")
+                .append(buyAmount)
+                .append(System.lineSeparator())
+                .append("result,")
+                .append(supplyAmount - buyAmount);
     }
 }
