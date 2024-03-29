@@ -9,6 +9,8 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final int OPERATOR_TYPE_INDEX = 0;
     private static final int OPERATOR_SUM_INDEX = 1;
+    private static final String OPERATION_SUPPLY = "supply";
+    private static final String REPORT_TEMPLATE = "%s,%d%n%s,%d%n%s,%d";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String fileContent = readFile(fromFileName);
@@ -24,10 +26,9 @@ public class WorkWithFile {
                 builder.append(value).append(System.lineSeparator());
                 value = reader.readLine();
             }
-            return builder.toString();
-
+            return builder.toString().trim();
         } catch (IOException e) {
-            throw new RuntimeException("Can`t read file", e);
+            throw new RuntimeException("Не удалось прочитать файл", e);
         }
     }
 
@@ -39,23 +40,21 @@ public class WorkWithFile {
             String[] words = line.split(",");
             String operatorType = words[OPERATOR_TYPE_INDEX];
             int operatorSum = Integer.parseInt(words[OPERATOR_SUM_INDEX]);
-            if (operatorType.equals("supply")) {
+            if (operatorType.equals(OPERATION_SUPPLY)) {
                 totalSupply += operatorSum;
             } else {
                 totalBuy += operatorSum;
             }
         }
-        String template = "supply,%d" + System.lineSeparator()
-                + "buy,%d" + System.lineSeparator()
-                + "result,%d";
-        return String.format(template, totalSupply, totalBuy, totalSupply - totalBuy);
+        return String.format(REPORT_TEMPLATE, OPERATION_SUPPLY, totalSupply, "buy", totalBuy,
+                "result", totalSupply - totalBuy);
     }
 
     private void writeReportToFile(String toFileName, String report) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Can`t write file", e);
+            throw new RuntimeException("Не удалось записать файл", e);
         }
     }
 }
