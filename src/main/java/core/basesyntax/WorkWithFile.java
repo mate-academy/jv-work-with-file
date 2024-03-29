@@ -11,8 +11,13 @@ public class WorkWithFile {
     public static final int AMOUNT = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
+        String[] fileContent = readFileContent(fromFileName);
+        String report = makeReport(fileContent);
+        writeToFile(toFileName, report);
+    }
+
+    private String[] readFileContent(String fromFileName) {
         StringBuilder fromFileContent = new StringBuilder();
-        StringBuilder toFileContent = new StringBuilder();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String value = reader.readLine();
@@ -25,16 +30,10 @@ public class WorkWithFile {
             throw new RuntimeException("cannot read fromFileName: " + fromFileName, e);
         }
 
-        toFileContent = makeReport(fromFileContent.toString().split(System.lineSeparator()));
-
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            writer.write(toFileContent.toString());
-        } catch (IOException e) {
-            throw new RuntimeException("cannot write toFileName: " + toFileName, e);
-        }
+        return fromFileContent.toString().split(System.lineSeparator());
     }
 
-    public StringBuilder makeReport(String[] fromFileLines) {
+    private String makeReport(String[] fromFileLines) {
         int supplyAmount = 0;
         int buyAmount = 0;
         for (String fromFileLine : fromFileLines) {
@@ -53,6 +52,15 @@ public class WorkWithFile {
                 .append(buyAmount)
                 .append(System.lineSeparator())
                 .append("result,")
-                .append(supplyAmount - buyAmount);
+                .append(supplyAmount - buyAmount)
+                .toString();
+    }
+
+    private void writeToFile(String toFileName, String report) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
+            writer.write(report);
+        } catch (IOException e) {
+            throw new RuntimeException("cannot write toFileName: " + toFileName, e);
+        }
     }
 }
