@@ -7,8 +7,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    public static final int OPERATION_TYPE = 0;
-    public static final int AMOUNT = 1;
+    public static final int OPERATION_TYPE_INDEX = 0;
+    public static final int AMOUNT_INDEX = 1;
+    public static final String TYPE_AND_DATA_SEPARATOR = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] fileContent = readFileContent(fromFileName);
@@ -27,7 +28,7 @@ public class WorkWithFile {
                 value = reader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("cannot read fromFileName: " + fromFileName, e);
+            throw new RuntimeException("Cannot read fromFileName: " + fromFileName, e);
         }
 
         return fromFileContent.toString().split(System.lineSeparator());
@@ -38,20 +39,23 @@ public class WorkWithFile {
         int buyAmount = 0;
         for (String fromFileLine : fromFileLines) {
             String[] separatedLine = fromFileLine.split(",");
-            if (separatedLine[OPERATION_TYPE].equals(OperationTypes.SUPPLY.toString())) {
-                supplyAmount += Integer.parseInt(separatedLine[AMOUNT]);
+            if (separatedLine[OPERATION_TYPE_INDEX].equals(OperationTypes.SUPPLY.toString())) {
+                supplyAmount += Integer.parseInt(separatedLine[AMOUNT_INDEX]);
             } else {
-                buyAmount += Integer.parseInt(separatedLine[AMOUNT]);
+                buyAmount += Integer.parseInt(separatedLine[AMOUNT_INDEX]);
             }
         }
 
-        return new StringBuilder("supply,")
+        return new StringBuilder(OperationTypes.SUPPLY.toString())
+                .append(TYPE_AND_DATA_SEPARATOR)
                 .append(supplyAmount)
                 .append(System.lineSeparator())
-                .append("buy,")
+                .append(OperationTypes.BUY)
+                .append(TYPE_AND_DATA_SEPARATOR)
                 .append(buyAmount)
                 .append(System.lineSeparator())
-                .append("result,")
+                .append(OperationTypes.RESULT)
+                .append(TYPE_AND_DATA_SEPARATOR)
                 .append(supplyAmount - buyAmount)
                 .toString();
     }
@@ -60,7 +64,7 @@ public class WorkWithFile {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("cannot write toFileName: " + toFileName, e);
+            throw new RuntimeException("Cannot write toFileName: " + toFileName, e);
         }
     }
 }
