@@ -10,6 +10,12 @@ public class WorkWithFile {
     private static final int TYPE_INDEX = 0;
     private static final int SUM_INDEX = 1;
 
+    private static final String SUPPLY_LABEL = "supply";
+    private static final String BUY_LABEL = "buy";
+    private static final String RESULT_LABEL = "result";
+
+    private static final String NEW_LINE = System.lineSeparator();
+
     public void getStatistic(String fromFileName, String toFileName) {
         String fileContent = readFile(fromFileName);
         String report = createReport(fileContent);
@@ -21,33 +27,33 @@ public class WorkWithFile {
             StringBuilder builder = new StringBuilder();
             String value = reader.readLine();
             while (value != null) {
-                builder.append(value).append(System.lineSeparator());
+                builder.append(value).append(NEW_LINE);
                 value = reader.readLine();
             }
             return builder.toString();
 
         } catch (IOException e) {
-            throw new RuntimeException("Can`t read file", e);
+            throw new RuntimeException("Can't read file", e);
         }
     }
 
     private String createReport(String fileContent) {
-        String[] lines = fileContent.split(System.lineSeparator());
+        String[] lines = fileContent.split(NEW_LINE);
         int totalSupply = 0;
         int totalBuy = 0;
         for (String line : lines) {
             String[] words = line.split(",");
             String operatorType = words[TYPE_INDEX];
             int operatorSum = Integer.parseInt(words[SUM_INDEX]);
-            if (operatorType.equals("supply")) {
+            if (operatorType.equals(SUPPLY_LABEL)) {
                 totalSupply += operatorSum;
             } else {
                 totalBuy += operatorSum;
             }
         }
-        String template = "supply,%d" + System.lineSeparator()
-                + "buy,%d" + System.lineSeparator()
-                + "result,%d";
+        String template = SUPPLY_LABEL + ",%d" + NEW_LINE
+                + BUY_LABEL + ",%d" + NEW_LINE
+                + RESULT_LABEL + ",%d";
         return String.format(template, totalSupply, totalBuy, totalSupply - totalBuy);
     }
 
@@ -55,7 +61,7 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Can`t write file", e);
+            throw new RuntimeException("Can't write file", e);
         }
     }
 }
