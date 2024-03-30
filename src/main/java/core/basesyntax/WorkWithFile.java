@@ -25,15 +25,14 @@ public class WorkWithFile {
     private String readFile(String fromFileName) {
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             StringBuilder builder = new StringBuilder();
-            String value = reader.readLine();
-            while (value != null) {
+            String value;
+            while ((value = reader.readLine()) != null) {
                 builder.append(value).append(NEW_LINE);
-                value = reader.readLine();
             }
             return builder.toString();
 
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't read file " + fromFileName, e);
         }
     }
 
@@ -61,7 +60,7 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write file", e);
+            throw new RuntimeException("Can't write file " + toFileName, e);
         }
     }
 }
