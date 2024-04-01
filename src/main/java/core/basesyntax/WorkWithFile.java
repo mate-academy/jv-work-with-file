@@ -7,11 +7,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final int KEY_INDEX = 0;
+    private static final int VALUE_INDEX = 1;
+
     public void getStatistic(String fromFileName, String toFileName) {
         String data = read(fromFileName);
         String[] report = createReport(data);
         write(toFileName, report);
-
     }
 
     private String read(String fromFileName) {
@@ -25,7 +27,7 @@ public class WorkWithFile {
                 data.append(s).append(" ");
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can't read data from the file " + fromFileName, e);
         }
         return data.toString();
     }
@@ -39,10 +41,10 @@ public class WorkWithFile {
             if (element.trim().isEmpty()) {
                 continue;
             }
-            if (keyValuePairs[0].equals("supply")) {
-                supply += Integer.parseInt(keyValuePairs[1]);
+            if (keyValuePairs[KEY_INDEX].equals("supply")) {
+                supply += Integer.parseInt(keyValuePairs[VALUE_INDEX]);
             } else {
-                buy += Integer.parseInt(keyValuePairs[1]);
+                buy += Integer.parseInt(keyValuePairs[VALUE_INDEX]);
             }
         }
         int result = supply - buy;
@@ -59,7 +61,7 @@ public class WorkWithFile {
                 bufferedWriter.newLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can't write data to the file " + toFileName, e);
         }
     }
 }
