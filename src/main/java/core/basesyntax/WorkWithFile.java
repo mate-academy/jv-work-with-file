@@ -1,6 +1,10 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
@@ -23,8 +27,6 @@ public class WorkWithFile {
                     throw new IllegalArgumentException("Unknown type: " + temp);
                 }
             }
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException("File not found: " + fromFileName, e);
         } catch (IOException e) {
             throw new RuntimeException("Error reading file: " + fromFileName, e);
         }
