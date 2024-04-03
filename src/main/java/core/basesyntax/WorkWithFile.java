@@ -34,7 +34,7 @@ public class WorkWithFile {
 
         result = supply - buy;
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName, true));) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write("supply" + "," + supply + "\n");
             writer.write("buy" + "," + buy + "\n");
             writer.write("result" + "," + result + "\n");
