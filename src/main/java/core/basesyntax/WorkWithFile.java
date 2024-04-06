@@ -2,7 +2,6 @@ package core.basesyntax;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -10,29 +9,32 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final int NAME_POSITION = 0;
     private static final int NUMBER_POSITION = 1;
-
     private static final int STARTING_NUMBER = 0;
-    private int suplyTotal = 0;
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
+    private int supplyTotal = 0;
     private int buyTotal = 0;
+    private String report = "";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        suplyTotal = STARTING_NUMBER;
+        supplyTotal = STARTING_NUMBER;
         buyTotal = STARTING_NUMBER;
 
         readFile(fromFileName);
-        createReport(toFileName);
+        createReport();
+        writeFile(toFileName);
     }
 
     private void readFile(String fileName) {
-        File readingFile = new File(fileName);
-        try (BufferedReader reader = new BufferedReader(new FileReader(readingFile))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             String value = reader.readLine();
             while (value != null) {
-                String[] divider = value.split(",");
-                if (divider[NAME_POSITION].equals("supply")) {
-                    suplyTotal += Integer.parseInt(divider[NUMBER_POSITION]);
-                } else if (divider[NAME_POSITION].equals("buy")) {
-                    buyTotal += Integer.parseInt(divider[NUMBER_POSITION]);
+                String[] split = value.split(",");
+                if (split[NAME_POSITION].equals(SUPPLY)) {
+                    supplyTotal += Integer.parseInt(split[NUMBER_POSITION]);
+                } else if (split[NAME_POSITION].equals(BUY)) {
+                    buyTotal += Integer.parseInt(split[NUMBER_POSITION]);
                 }
                 value = reader.readLine();
             }
@@ -41,18 +43,19 @@ public class WorkWithFile {
         }
     }
 
-    private void createReport(String fileName) {
-        StringBuilder report = new StringBuilder();
-        File reportFile = new File(fileName);
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(reportFile))) {
-            report.append("supply,").append(suplyTotal).append(System.lineSeparator());
-            report.append("buy,").append(buyTotal).append(System.lineSeparator());
-            report.append("result,").append(suplyTotal - buyTotal);
-            writer.write(report.toString());
+    private void createReport() {
+        StringBuilder builder = new StringBuilder();
+        builder.append(SUPPLY).append(",").append(supplyTotal).append(System.lineSeparator())
+                    .append(BUY).append(",").append(buyTotal).append(System.lineSeparator())
+                    .append(RESULT).append(",").append(supplyTotal - buyTotal);
+        report = builder.toString();
+    }
 
+    private void writeFile(String fileName) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+            writer.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Couldn't write to the file", e);
         }
-
     }
 }
