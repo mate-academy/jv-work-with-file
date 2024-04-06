@@ -36,7 +36,7 @@ public class WorkWithFile {
             throw new RuntimeException("Can't read data from file", e);
         }
 
-        return ("" + supply + "," + buy + "");
+        return (supply + "," + buy);
     }
 
     public static String createReport(String dataFromFile) {
