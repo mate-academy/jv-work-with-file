@@ -1,10 +1,10 @@
 package core.basesyntax;
 
 import java.io.BufferedReader;
-import java.io.File;
+import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
 
 public class WorkWithFile {
     private static final String NAME_SUPPLY = "supply";
@@ -16,49 +16,34 @@ public class WorkWithFile {
     private static final int INDEX_INT = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int[] values = getValues(fromFileName);
-        StringBuilder finalStatistic = new StringBuilder();
-        finalStatistic.append(NAME_SUPPLY)
-                .append(",")
-                .append(values[INDEX_SUPPLY])
-                .append(System.lineSeparator())
-                .append(NAME_BUY)
-                .append(",")
-                .append(values[INDEX_BUY])
-                .append(System.lineSeparator())
-                .append("result")
-                .append(",")
-                .append(values[INDEX_TOTAL]);
-        String recordToFile = finalStatistic.toString();
-        writeFile(recordToFile, toFileName);
+        String fileContent = readFile(fromFileName);
+        int[] values = getValues(fileContent);
+        String report = createReport(values);
+        writeFile(report, toFileName);
     }
 
     private static String readFile(String fromFileName) {
-        File allData = new File(fromFileName);
-        String fileToString;
+        StringBuilder dataContainer = new StringBuilder();
         try {
-            BufferedReader readFile = new BufferedReader(new FileReader(allData));
-            StringBuilder dataContainer = new StringBuilder();
+            BufferedReader readFile = new BufferedReader(new FileReader(fromFileName));
             int value = readFile.read();
             while (value != -1) {
                 dataContainer.append((char) value);
                 value = readFile.read();
             }
-            fileToString = dataContainer.toString();
         } catch (IOException e) {
-            throw new RuntimeException("Can`t read file", e);
+            throw new RuntimeException("Can`t read a file", e);
         }
-        return fileToString;
+        return dataContainer.toString();
     }
 
-    private int[] getValues(String fromFileName) {
+    private int[] getValues(String fileToString) {
         int sumBuy = 0;
         int sumSupply = 0;
-        int total = 0;
-        int temporaryValue = 0;
-        String temporaryValueName = "";
-        String fileToString = readFile(fromFileName);
-        String[] stringToArray = fileToString.split("\n");
+        int total;
+        int temporaryValue;
+        String temporaryValueName;
+        String[] stringToArray = fileToString.split("\\r?\\n");
         for (int i = 0; i < stringToArray.length; i++) {
             String[] splitByComa = stringToArray[i].split(",");
             temporaryValueName = splitByComa[INDEX_STRING];
@@ -74,16 +59,27 @@ public class WorkWithFile {
     }
 
     private static void writeFile(String record, String toFileName) {
-        File statistic = new File(toFileName);
-        try {
-            statistic.createNewFile();
+        try (BufferedWriter statistic = new BufferedWriter(new FileWriter(toFileName))) {
+            statistic.write(record);
         } catch (IOException e) {
             throw new RuntimeException("Can`t create a file", e);
         }
-        try {
-            Files.write(statistic.toPath(),record.getBytes());
-        } catch (IOException e) {
-            throw new RuntimeException("Can`t write a file", e);
-        }
+    }
+
+    public static String createReport(int[] values) {
+        StringBuilder reportBuilder = new StringBuilder();
+        reportBuilder.append(System.lineSeparator())
+                .append(NAME_SUPPLY)
+                .append(",")
+                .append(values[INDEX_SUPPLY])
+                .append(System.lineSeparator())
+                .append(NAME_BUY)
+                .append(",")
+                .append(values[INDEX_BUY])
+                .append(System.lineSeparator())
+                .append("result")
+                .append(",")
+                .append(values[INDEX_TOTAL]);
+        return reportBuilder.toString();
     }
 }
