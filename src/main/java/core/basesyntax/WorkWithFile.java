@@ -10,6 +10,8 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
+    private static final int OPERATION_INDEX = 0;
+    private static final int COUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String dataFromFile = readFile(fromFileName);
@@ -40,15 +42,13 @@ public class WorkWithFile {
         int supplyCount = 0;
         int buyCount = 0;
         int resultCount = 0;
-        int indexOfOperation = 0;
-        int indexOfCount = 1;
 
         StringBuilder stringBuilder = new StringBuilder();
 
         for (int i = 0; i < dataFromFileArray.length; i++) {
             String[] currentDataArr = dataFromFileArray[i].split(",");
-            String nameOfOperation = currentDataArr[indexOfOperation];
-            int currentCount = Integer.parseInt(currentDataArr[indexOfCount]);
+            String nameOfOperation = currentDataArr[OPERATION_INDEX];
+            int currentCount = Integer.parseInt(currentDataArr[COUNT_INDEX]);
 
             if (nameOfOperation.equals(SUPPLY)) {
                 supplyCount += currentCount;
