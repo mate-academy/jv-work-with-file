@@ -13,46 +13,59 @@ public class WorkWithFile {
         writeReportToFile(report, toFileName);
     }
 
-    public static String readFile(String fromFileName) {
-        int supply = 0;
-        int buy = 0;
+    private static String readFile(String fromFileName) {
+        StringBuilder stringBuilder = new StringBuilder();
 
         try {
             BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
             String value = reader.readLine();
 
             while (value != null) {
-                String[] valueArr = value.split(",");
-
-                if (valueArr[0].equals("supply")) {
-                    supply += Integer.parseInt(valueArr[1]);
-                } else {
-                    buy += Integer.parseInt(valueArr[1]);
-                }
-
+                stringBuilder.append(value).append(" ");
                 value = reader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from file", e);
         }
 
-        return (supply + "," + buy);
+        return stringBuilder.toString();
     }
 
-    public static String createReport(String dataFromFile) {
-        String[] dataFromFileArray = dataFromFile.split(",");
-        int supply = Integer.parseInt(dataFromFileArray[0]);
-        int buy = Integer.parseInt(dataFromFileArray[1]);
-        int result = supply - buy;
+    private String createReport(String dataFromFile) {
+        final String Supply = "supply";
+        final String Buy = "buy";
+        final String Result = "result";
+        String[] dataFromFileArray = dataFromFile.split(" ");
+        int supplyCount = 0;
+        int buyCount = 0;
+        int resultCount = 0;
+
+        for (int i = 0; i < dataFromFileArray.length; i++) {
+            String[] currentDataArr = dataFromFileArray[i].split(",");
+            String nameOfOperation = currentDataArr[0];
+            int currentCount = Integer.parseInt(currentDataArr[1]);
+
+            switch (nameOfOperation) {
+                case Supply:
+                    supplyCount += currentCount;
+                    break;
+                case Buy:
+                    buyCount += currentCount;
+                    break;
+                default:
+            }
+        }
+
+        resultCount = supplyCount - buyCount;
 
         return (
-                "supply" + "," + supply + System.lineSeparator()
-              + "buy" + "," + buy + System.lineSeparator()
-              + "result" + "," + result + System.lineSeparator()
+                Supply + "," + supplyCount + System.lineSeparator()
+                + Buy + "," + buyCount + System.lineSeparator()
+                + Result + "," + resultCount + System.lineSeparator()
             );
     }
 
-    public static void writeReportToFile(String report, String toFileName) {
+    private void writeReportToFile(String report, String toFileName) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write(report);
         } catch (IOException e) {
