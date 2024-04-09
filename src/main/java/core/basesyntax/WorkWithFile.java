@@ -32,6 +32,7 @@ public class WorkWithFile {
 
     public void writeToFile(int supply, int buy, String toFileName) {
         File file = new File(toFileName);
+        StringBuilder builder = new StringBuilder();
         try {
             file.createNewFile();
         } catch (IOException e) {
@@ -39,7 +40,6 @@ public class WorkWithFile {
         }
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, true))) {
             if (file.length() == 0) {
-                StringBuilder builder = new StringBuilder();
                 builder.append("supply,").append(supply).append(System.lineSeparator())
                         .append("buy,").append(buy).append(System.lineSeparator())
                         .append("result,").append(supply - buy);
