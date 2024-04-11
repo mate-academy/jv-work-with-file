@@ -14,11 +14,19 @@ public class WorkWithFile {
     private static final String RESULT = "result";
     private int supplyTotal = 0;
     private int buyTotal = 0;
+    private String result = "";
 
     public void getStatistic(String fromFileName, String toFileName) {
+
+        readFromFile(fromFileName);
+        createReport();
+        writeToFile(toFileName);
+    }
+
+    public void readFromFile(String fileName) {
         supplyTotal = 0;
         buyTotal = 0;
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
             String value = bufferedReader.readLine();
             while (value != null) {
                 String[] splitString = value.split(",");
@@ -32,15 +40,20 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Couldn't read the file", e);
         }
+    }
 
+    public void createReport() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(SUPPLY).append(",").append(supplyTotal)
                 .append(System.lineSeparator()).append(BUY).append(",").append(buyTotal)
                 .append(System.lineSeparator()).append(RESULT).append(",")
                 .append(supplyTotal - buyTotal);
+        result = stringBuilder.toString();
+    }
 
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write(stringBuilder.toString());
+    public void writeToFile(String fileName) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
+            bufferedWriter.write(result);
         } catch (IOException e) {
             throw new RuntimeException("Couldn't write to file", e);
         }
