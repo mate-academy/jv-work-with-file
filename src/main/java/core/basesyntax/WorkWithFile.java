@@ -7,49 +7,50 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final int QUANTITY_INDEX = 1;
-    private static final int ACTION_INDEX = 0;
+    private static final int OPERATION_TYPE_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
     private static final String SUPPLY_ACTION = "supply";
     private static final String BUY_ACTION = "buy";
-    private int supply = 0;
-    private int buy = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        supply = 0;
-        buy = 0;
-        readFromFile(fromFileName);
-        String report = createReport(supply, buy);
+        String [] fromFileData = readFromFile(fromFileName);
+        String report = createReport(fromFileData);
         writeToFile(report, toFileName);
     }
 
-    private void readFromFile(String fromFileName) {
+    private String [] readFromFile(String fromFileName) {
         try (BufferedReader fromFileReader = new BufferedReader(new FileReader(fromFileName))) {
             String value;
+            StringBuilder values = new StringBuilder();
             while ((value = fromFileReader.readLine()) != null) {
-                String[] dataFromFile = value.split(",");
-                if (dataFromFile[ACTION_INDEX].equals(SUPPLY_ACTION)) {
-                    supply = supply + Integer.parseInt(dataFromFile[QUANTITY_INDEX]);
-                }
-                if (dataFromFile[ACTION_INDEX].equals(BUY_ACTION)) {
-                    buy = buy + Integer.parseInt(dataFromFile[QUANTITY_INDEX]);
-                }
-
+                values.append(value).append(System.lineSeparator());
             }
+            return values.toString().split(System.lineSeparator());
         } catch (IOException e) {
             throw new RuntimeException("Can't read from file" + fromFileName, e);
         }
     }
 
-    private String createReport(int supply, int buy) {
-        int result = supply - buy;
+    private String createReport(String [] fromFileData) {
+        int supply = 0;
+        int buy = 0;
+        for (String stringFromData : fromFileData) {
+            String[] dataFromFile = stringFromData.split(",");
+            if (dataFromFile[OPERATION_TYPE_INDEX].equals(SUPPLY_ACTION)) {
+                supply = supply + Integer.parseInt(dataFromFile[AMOUNT_INDEX]);
+            }
+            if (dataFromFile[OPERATION_TYPE_INDEX].equals(BUY_ACTION)) {
+                buy = buy + Integer.parseInt(dataFromFile[AMOUNT_INDEX]);
+            }
+        }
         return new StringBuilder().append("supply,").append(supply)
                 .append(System.lineSeparator()).append("buy,").append(buy)
-                .append(System.lineSeparator()).append("result,").append(result).toString();
+                .append(System.lineSeparator()).append("result,").append(supply - buy).toString();
     }
 
-    private void writeToFile(String statisticToFile, String toFileName) {
+    private void writeToFile(String report, String toFileName) {
         try (BufferedWriter toFileWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            toFileWriter.write(statisticToFile);
+            toFileWriter.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to file" + toFileName, e);
         }
