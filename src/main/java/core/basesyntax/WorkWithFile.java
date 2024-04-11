@@ -17,13 +17,12 @@ public class WorkWithFile {
     private String result = "";
 
     public void getStatistic(String fromFileName, String toFileName) {
-
         readFromFile(fromFileName);
         result = createReport();
         writeToFile(toFileName, result);
     }
 
-    public void readFromFile(String fileName) {
+    private void readFromFile(String fileName) {
         supplyTotal = 0;
         buyTotal = 0;
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
@@ -42,7 +41,7 @@ public class WorkWithFile {
         }
     }
 
-    public String createReport() {
+    private String createReport() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(SUPPLY).append(",").append(supplyTotal)
                 .append(System.lineSeparator()).append(BUY).append(",").append(buyTotal)
@@ -51,7 +50,7 @@ public class WorkWithFile {
         return stringBuilder.toString();
     }
 
-    public void writeToFile(String fileName, String report) {
+    private void writeToFile(String fileName, String report) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
             bufferedWriter.write(report);
         } catch (IOException e) {
