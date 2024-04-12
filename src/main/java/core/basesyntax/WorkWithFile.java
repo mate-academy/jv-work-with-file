@@ -27,7 +27,8 @@ public class WorkWithFile {
     }
 
     private String createReport(String data) {
-        int supply = 0, buy = 0;
+        int supply = 0;
+        int buy = 0;
         String[] splitData = data.split("\n");
         String[] line;
         for (String entry : splitData) {
