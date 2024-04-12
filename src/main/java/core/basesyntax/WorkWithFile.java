@@ -1,46 +1,50 @@
 package core.basesyntax;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashMap;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class WorkWithFile {
+    private static final int KEY_IDX = 0;
+    private static final int VALUE_IDX = 1;
+    private static final String SUPPLY_KEY = "supply";
+
     public void getStatistic(String fromFileName, String toFileName) {
-        HashMap<String, Integer> data = new HashMap<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(fromFileName))) {
-            String value = br.readLine();
-            while (value != null) {
-                String[] str = value.split(",");
-                if (!data.containsKey(str[0])) {
-                    data.put(str[0], Integer.parseInt(str[1]));
-                } else {
-                    data.put(str[0], data.get(str[0]) + Integer.parseInt(str[1]));
-                }
-                value = br.readLine();
-            }
+        String data = readFile(fromFileName);
+        String report = createReport(data);
+        writeFile(toFileName, report);
+    }
+
+    private String readFile(String fromFileName) {
+        Path path = Path.of(fromFileName);
+        try {
+            return Files.readString(path);
         } catch (IOException e) {
             throw new RuntimeException("Can't read from file", e);
         }
-        data.put("result", data.get("supply") - data.get("buy"));
-        writeStatistic(toFileName, createStatistic(data));
     }
 
-    private String createStatistic(HashMap<String, Integer> data) {
-        String[] keys = data.keySet().toArray(new String[0]);
-        StringBuilder builder = new StringBuilder();
-        for (int i = keys.length - 1; i >= 0; i--) {
-            builder.append(keys[i])
-                    .append(',')
-                    .append(data.get(keys[i]))
-                    .append(System.lineSeparator());
+    private String createReport(String data) {
+        int supply = 0, buy = 0;
+        String[] splitData = data.split("\n");
+        String[] line;
+        for (String entry : splitData) {
+            line = entry.split(",");
+            if (line[KEY_IDX].equals(SUPPLY_KEY)) {
+                supply += Integer.parseInt(line[VALUE_IDX]);
+            } else {
+                buy += Integer.parseInt(line[VALUE_IDX]);
+            }
         }
-        return builder.toString();
+
+        return String.format("supply,%d" + System.lineSeparator()
+                + "buy,%d" + System.lineSeparator() + "result,%d",
+                supply, buy, supply - buy);
     }
 
-    private void writeStatistic(String toFileName, String toWrite) {
+    private void writeFile(String toFileName, String toWrite) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write(toWrite);
         } catch (IOException e) {
