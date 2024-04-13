@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+
     public void getStatistic(String fromFileName, String toFileName) {
         String[] data = readFileText(fromFileName).split(",");
         String report = createReport(data);
@@ -29,19 +30,23 @@ public class WorkWithFile {
     }
 
     private String createReport(String[] data) {
-        int buy = 0;
         int supply = 0;
+        int buy = 0;
+        StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < data.length; i++) {
-            if (data[i].equals("supply")) {
+            String element = data[i];
+            if (element.equals("supply")) {
                 supply += Integer.parseInt(data[i + 1]);
             }
-            if (data[i].equals("buy")) {
+            if (element.equals("buy")) {
                 buy += Integer.parseInt(data[i + 1]);
             }
         }
         int result = supply - buy;
-        return "supply" + "," + supply + System.lineSeparator() + "buy" + "," + buy
-                + System.lineSeparator() + "result" + "," + result;
+        return stringBuilder
+                    .append("supply,").append(supply).append(System.lineSeparator())
+                    .append("buy,").append(buy).append(System.lineSeparator())
+                    .append("result,").append(result).toString();
     }
 
     private void writeToFile(String report, String toFileName) {
@@ -52,6 +57,3 @@ public class WorkWithFile {
         }
     }
 }
-
-
-
