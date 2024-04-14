@@ -2,7 +2,6 @@ package core.basesyntax;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -17,6 +16,26 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         String dataFromFile = readDataFromFile(fromFileName);
+        String report = createReport(dataFromFile);
+        writeDataToFile(report, toFileName);
+    }
+
+    private String readDataFromFile(String fileName) {
+        StringBuilder stringBuilder = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            String lineContent = reader.readLine();
+            while (lineContent != null) {
+                stringBuilder.append(System.lineSeparator())
+                        .append(lineContent);
+                lineContent = reader.readLine();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Can`t read data from the file" + fileName, e);
+        }
+        return stringBuilder.toString();
+    }
+
+    private String createReport(String dataFromFile) {
         String[] linesOfData = dataFromFile.split(System.lineSeparator());
 
         int supplyAmount = 0;
@@ -45,23 +64,6 @@ public class WorkWithFile {
                 .append(OPERATION_RESULT)
                 .append(VALUE_SEPARATOR)
                 .append(supplyAmount - buyAmount);
-        writeDataToFile(stringBuilder.toString(), toFileName);
-    }
-
-    private String readDataFromFile(String fileName) {
-        StringBuilder stringBuilder = new StringBuilder();
-        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
-            String lineContent = reader.readLine();
-            while (lineContent != null) {
-                stringBuilder.append(System.lineSeparator())
-                        .append(lineContent);
-                lineContent = reader.readLine();
-            }
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException("File not found", e);
-        } catch (IOException e) {
-            throw new RuntimeException("Can`t read data from the file" + fileName, e);
-        }
         return stringBuilder.toString();
     }
 
