@@ -2,11 +2,9 @@ package core.basesyntax;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,12 +51,13 @@ public class WorkWithFile {
     }
 
     private String constructReport(int supply, int buy, int result) {
-        return SUPPLY + COMMA + supply + "\n" +
-               BUY + COMMA + buy + "\n" +
-               RESULT + COMMA + result;
+        return SUPPLY + COMMA + supply + "\n"
+             + BUY + COMMA + buy + "\n"
+             + RESULT + COMMA + result;
     }
 
     private void printToConsole(int supply, int buy, int result) {
         System.out.println("Supply: " + supply + "\n" + "Buy: " + buy + "\n" + "Result: " + result);
     }
 }
+
