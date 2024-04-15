@@ -12,51 +12,52 @@ public class WorkWithFile {
     private static final String BUY = "buy";
     private static final String RESULT = "result";
     private static final String COMMA = ",";
+    private static final int OPERATION_INDEX = 0;
+    private static final int VALUE_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int supply = calculateSupply(fromFileName);
-        int buy = calculateBuy(fromFileName);
+        Map<String, Integer> operationTotals = calculateTotals(fromFileName);
+        int supply = operationTotals.getOrDefault(SUPPLY, 0);
+        int buy = operationTotals.getOrDefault(BUY, 0);
         int result = supply - buy;
         writeToFile(toFileName, supply, buy, result);
         printToConsole(supply, buy, result);
     }
 
-    private int calculateSupply(String fileName) {
-        return calculate(fileName, SUPPLY);
-    }
-
-    private int calculateBuy(String fileName) {
-        return calculate(fileName, BUY);
-    }
-
-    private int calculate(String fileName, String operation) {
-        int total = 0;
+    private Map<String, Integer> calculateTotals(String fileName) {
+        Map<String, Integer> totals = new HashMap<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(new File(fileName)))) {
             String line = reader.readLine();
             while (line != null) {
                 String[] separatedLine = line.split(COMMA);
-                if (separatedLine[0].equals(operation)) {
-                    total += Integer.parseInt(separatedLine[1]);
-                }
+                String operation = separatedLine[OPERATION_INDEX];
+                int value = Integer.parseInt(separatedLine[VALUE_INDEX]);
+                totals.put(operation, totals.getOrDefault(operation, 0) + value);
                 line = reader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from the file " + fileName, e);
         }
-        return total;
+        return totals;
     }
 
     private void writeToFile(String fileName, int supply, int buy, int result) {
+        String report = constructReport(supply, buy, result);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File(fileName)))) {
-            writer.write(SUPPLY + COMMA + supply + "\n");
-            writer.write(BUY + COMMA + buy + "\n");
-            writer.write(RESULT + COMMA + result);
+            writer.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to the file " + fileName, e);
         }
+    }
+
+    private String constructReport(int supply, int buy, int result) {
+        return SUPPLY + COMMA + supply + "\n" +
+               BUY + COMMA + buy + "\n" +
+               RESULT + COMMA + result;
     }
 
     private void printToConsole(int supply, int buy, int result) {
         System.out.println("Supply: " + supply + "\n" + "Buy: " + buy + "\n" + "Result: " + result);
     }
 }
+
