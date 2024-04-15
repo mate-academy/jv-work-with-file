@@ -6,6 +6,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class WorkWithFile {
     private static final String SUPPLY = "supply";
@@ -26,14 +29,13 @@ public class WorkWithFile {
 
     private Map<String, Integer> calculateTotals(String fileName) {
         Map<String, Integer> totals = new HashMap<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader((fileName))) {
-            String line = reader.readLine();
-            while (line != null) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
                 String[] separatedLine = line.split(COMMA);
                 String operation = separatedLine[OPERATION_INDEX];
                 int value = Integer.parseInt(separatedLine[VALUE_INDEX]);
                 totals.put(operation, totals.getOrDefault(operation, 0) + value);
-                line = reader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from the file " + fileName, e);
@@ -43,7 +45,7 @@ public class WorkWithFile {
 
     private void writeToFile(String fileName, int supply, int buy, int result) {
         String report = constructReport(supply, buy, result);
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File(fileName)))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             writer.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to the file " + fileName, e);
@@ -60,4 +62,3 @@ public class WorkWithFile {
         System.out.println("Supply: " + supply + "\n" + "Buy: " + buy + "\n" + "Result: " + result);
     }
 }
-
