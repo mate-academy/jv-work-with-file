@@ -26,7 +26,7 @@ public class WorkWithFile {
 
     private Map<String, Integer> calculateTotals(String fileName) {
         Map<String, Integer> totals = new HashMap<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader(new File(fileName)))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader((fileName))) {
             String line = reader.readLine();
             while (line != null) {
                 String[] separatedLine = line.split(COMMA);
