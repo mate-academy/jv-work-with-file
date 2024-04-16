@@ -9,6 +9,9 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final int OPERATION_TYPE_INDEX = 0;
     private static final int AMOUNT_INDEX = 1;
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
         // required variables - are not class variables, because
@@ -23,10 +26,10 @@ public class WorkWithFile {
             String[] parsingLine = stringLine.split(",");
             int amount = Integer.parseInt(parsingLine[AMOUNT_INDEX]);
             switch (parsingLine[OPERATION_TYPE_INDEX]) {
-                case "supply" :
+                case SUPPLY:
                     supply += amount;
                     break;
-                case "buy" :
+                case BUY:
                     buy += amount;
                     break;
                 default:
@@ -64,9 +67,9 @@ public class WorkWithFile {
 
     private String createReport(int supply, int buy) {
         StringBuilder sb = new StringBuilder();
-        sb.append("supply").append(",").append(supply).append(System.lineSeparator())
-                .append("buy").append(",").append(buy).append(System.lineSeparator())
-                .append("result").append(",").append(supply - buy)
+        sb.append(SUPPLY).append(",").append(supply).append(System.lineSeparator())
+                .append(BUY).append(",").append(buy).append(System.lineSeparator())
+                .append(RESULT).append(",").append(supply - buy)
                 .append(System.lineSeparator());
         return sb.toString();
     }
