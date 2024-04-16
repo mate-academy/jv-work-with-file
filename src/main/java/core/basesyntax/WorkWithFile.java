@@ -12,6 +12,7 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
+    private static final String SEPARATOR = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         // required variables - are not class variables, because
@@ -23,7 +24,7 @@ public class WorkWithFile {
 
         // calculating
         for (String stringLine : lines) {
-            String[] parsingLine = stringLine.split(",");
+            String[] parsingLine = stringLine.split(SEPARATOR);
             int amount = Integer.parseInt(parsingLine[AMOUNT_INDEX]);
             switch (parsingLine[OPERATION_TYPE_INDEX]) {
                 case SUPPLY:
