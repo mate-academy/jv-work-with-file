@@ -68,9 +68,9 @@ public class WorkWithFile {
 
     private String createReport(int supply, int buy) {
         StringBuilder sb = new StringBuilder();
-        sb.append(SUPPLY).append(",").append(supply).append(System.lineSeparator())
-                .append(BUY).append(",").append(buy).append(System.lineSeparator())
-                .append(RESULT).append(",").append(supply - buy)
+        sb.append(SUPPLY).append(SEPARATOR).append(supply).append(System.lineSeparator())
+                .append(BUY).append(SEPARATOR).append(buy).append(System.lineSeparator())
+                .append(RESULT).append(SEPARATOR).append(supply - buy)
                 .append(System.lineSeparator());
         return sb.toString();
     }
