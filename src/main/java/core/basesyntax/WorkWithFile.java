@@ -30,7 +30,7 @@ public class WorkWithFile {
         return statistic;
     }
 
-    private void writeToFile (String readFromFileName, String writeToFileName) {
+    private void writeToFile(String readFromFileName, String writeToFileName) {
         HashMap<String, Integer> temp = readFromFile(readFromFileName);
         int supplyTotal = temp.getOrDefault("supply", 0);
         int buyTotal = temp.getOrDefault("buy", 0);
