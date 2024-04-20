@@ -7,46 +7,50 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String Final_Supply = "supply";
+    private static final String Final_Buy = "buy";
+    private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String[] data = readFileText(fromFileName).split(",");
+        String[] data = readFileText(fromFileName);
         String report = createReport(data);
         writeToFile(toFileName, report);
     }
 
-    private String readFileText(String fromFileName) {
-        StringBuilder stringBuilder = new StringBuilder();
+    private String[] readFileText(String fromFileName) {
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
+            StringBuilder stringBuilder = new StringBuilder();
             String value = bufferedReader.readLine();
             while (value != null) {
                 stringBuilder.append(value).append(System.lineSeparator());
                 value = bufferedReader.readLine();
             }
+            return stringBuilder.toString().split(System.lineSeparator());
         } catch (IOException e) {
             throw new RuntimeException("can not read file: " + fromFileName, e);
         }
-        return stringBuilder.toString().replace(System.lineSeparator(), ",");
     }
 
-    private String createReport(String[] data) {
+    private String createReport(String[] datas) {
         int supply = 0;
         int buy = 0;
         StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < data.length; i++) {
-            String element = data[i];
-            if (element.equals("supply")) {
-                supply += Integer.parseInt(data[i + 1]);
-            }
-            if (element.equals("buy")) {
-                buy += Integer.parseInt(data[i + 1]);
+        for (String line: datas) {
+            String[] data = line.split(",");
+            if (data[0].equals("supply")) {
+                supply += Integer.parseInt(data[1]);
+            } else {
+                buy += Integer.parseInt(data[1]);
             }
         }
         int result = supply - buy;
         return stringBuilder
-                    .append("supply,").append(supply).append(System.lineSeparator())
-                    .append("buy,").append(buy).append(System.lineSeparator())
-                    .append("result,").append(result).toString();
+                    .append(Final_Supply).append(",").append(supply)
+                    .append(System.lineSeparator())
+                    .append(Final_Buy).append(",").append(buy)
+                    .append(System.lineSeparator())
+                    .append(RESULT).append(",").append(result).toString();
     }
 
     private void writeToFile(String report, String toFileName) {
