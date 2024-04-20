@@ -7,6 +7,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String STR_SUPPLY = "supply,";
+    private static final String STR_BUY = "buy,";
+    private static final String STR_RESULT = "result,";
+    private static final String COMMA_SYMBOL = ",";
+
     public void getStatistic(String fromFileName, String toFileName) {
         StringBuilder report = new StringBuilder();
 
@@ -20,7 +25,7 @@ public class WorkWithFile {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String currentString = bufferedReader.readLine();
             while (currentString != null) {
-                String[] splitedLine = currentString.split(",");
+                String[] splitedLine = currentString.split(COMMA_SYMBOL);
                 int operationAmount = Integer.parseInt(splitedLine[1]);
                 String operation = splitedLine[0];
                 if (operation.equals("supply")) {
@@ -38,13 +43,13 @@ public class WorkWithFile {
 
     public void createReport(int supply, int buy, StringBuilder report) {
         int result = supply - buy;
-        report.append("supply,")
+        report.append(STR_SUPPLY)
                 .append(supply)
                 .append(System.lineSeparator())
-                .append("buy,")
+                .append(STR_BUY)
                 .append(buy)
                 .append(System.lineSeparator())
-                .append("result,")
+                .append(STR_RESULT)
                 .append(result);
     }
 
