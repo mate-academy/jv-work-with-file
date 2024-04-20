@@ -7,7 +7,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 
-
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         HashMap<String, Integer> statistic = new HashMap<String, Integer>();
