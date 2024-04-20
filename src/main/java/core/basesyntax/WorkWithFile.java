@@ -9,9 +9,14 @@ import java.util.HashMap;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
+        writeToFile(fromFileName, toFileName);
+
+    }
+
+    private HashMap<String, Integer> readFromFile(String readFrormFile) {
         HashMap<String, Integer> statistic = new HashMap<String, Integer>();
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
+            BufferedReader reader = new BufferedReader(new FileReader(readFrormFile));
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
@@ -22,11 +27,16 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Error reading file", e);
         }
-        int supplyTotal = statistic.getOrDefault("supply", 0);
-        int buyTotal = statistic.getOrDefault("buy", 0);
+        return statistic;
+    }
+
+    private void writeToFile (String readFromFileName, String writeToFileName) {
+        HashMap<String, Integer> temp = readFromFile(readFromFileName);
+        int supplyTotal = temp.getOrDefault("supply", 0);
+        int buyTotal = temp.getOrDefault("buy", 0);
         int result = supplyTotal - buyTotal;
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(writeToFileName))) {
             writer.write("supply," + supplyTotal);
             writer.newLine();
             writer.write("buy," + buyTotal);
