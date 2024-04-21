@@ -6,9 +6,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 public class WorkWithFile {
     private static final String SUPPLY = "supply";
@@ -17,12 +14,9 @@ public class WorkWithFile {
     private static final String COMMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String path = ".\\" + toFileName;
-        Path filePath = FileSystems.getDefault().getPath(path);
-        if (!Files.exists(filePath)) {
-            String data = readFromFile(fromFileName);
-            writeToFile(data, toFileName);
-        }
+        String data = readFromFile(fromFileName);
+        writeToFile(data, toFileName);
+
     }
 
     private String readFromFile(String fileName) {
@@ -70,6 +64,7 @@ public class WorkWithFile {
 
     private void writeToFile(String data, String resultFile) {
         File file = new File(resultFile);
+        file.delete();
 
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, true))) {
             bufferedWriter.write(data);
