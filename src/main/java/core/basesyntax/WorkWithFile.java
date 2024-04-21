@@ -9,24 +9,21 @@ import java.io.IOException;
 
 public class WorkWithFile {
     private static final String SUPPLY = "supply";
-    private static final int ROWS_IN_FILE = 3;
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
+    private static final String COMMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        File file = new File(toFileName);
-        file.delete();
-        String[] inputFile = fileReader(fromFileName);
-        fileWriter(inputFile, toFileName);
+        String inputFile = readFile(fromFileName);
+        writeToFile(inputFile, toFileName);
     }
 
-    private String[] fileReader(String fileName) {
+    private String readFile(String fileName) {
         File file = new File(fileName);
         int supplyNum = 0;
         int buyNum = 0;
-        int result;
-        String[] answer = new String[ROWS_IN_FILE];
 
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
             StringBuilder stringBuilder = new StringBuilder();
             String value = bufferedReader.readLine();
 
@@ -46,28 +43,33 @@ public class WorkWithFile {
                 }
             }
 
-            result = supplyNum - buyNum;
-            answer[0] = "supply," + supplyNum;
-            answer[1] = "buy," + buyNum;
-            answer[2] = "result," + result;
-
-            return answer;
+            return createReport(supplyNum, buyNum);
 
         } catch (IOException e) {
-            throw new RuntimeException("Can`t read data from file", e);
+            throw new RuntimeException("Can't read data from file" + file, e);
         }
     }
 
-    private void fileWriter(String[] data, String name) {
-        File file = new File(name);
+    private String createReport(int supply, int buy) {
+        int result;
+        StringBuilder answer = new StringBuilder();
         String separator = System.lineSeparator();
-        for (String str : data) {
-            try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, true))) {
-                bufferedWriter.write(str);
-                bufferedWriter.write(separator);
-            } catch (IOException e) {
-                throw new RuntimeException("Can`t write data to file", e);
-            }
+        result = supply - buy;
+        answer.append(SUPPLY).append(COMMA).append(supply).append(separator);
+        answer.append(BUY).append(COMMA).append(buy).append(separator);
+        answer.append(RESULT).append(COMMA).append(result);
+
+        return answer.toString();
+    }
+
+    private void writeToFile(String data, String resultFile) {
+        File file = new File(resultFile);
+        file.delete();
+
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, true))) {
+            bufferedWriter.write(data);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write data to file" + file, e);
         }
     }
 }
