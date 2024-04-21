@@ -6,6 +6,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class WorkWithFile {
     private static final String SUPPLY = "supply";
@@ -14,16 +17,19 @@ public class WorkWithFile {
     private static final String COMMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String inputFile = readFile(fromFileName);
-        writeToFile(inputFile, toFileName);
+        String path = "C:\\Users\\antch\\IdeaProjects\\jv-work-with-file\\" + toFileName;
+        Path filePath = FileSystems.getDefault().getPath(path);
+        if (!Files.exists(filePath)) {
+            String data = readFromFile(fromFileName);
+            writeToFile(data, toFileName);
+        }
     }
 
-    private String readFile(String fileName) {
-        File file = new File(fileName);
+    private String readFromFile(String fileName) {
         int supplyNum = 0;
         int buyNum = 0;
 
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
             StringBuilder stringBuilder = new StringBuilder();
             String value = bufferedReader.readLine();
 
@@ -46,7 +52,7 @@ public class WorkWithFile {
             return createReport(supplyNum, buyNum);
 
         } catch (IOException e) {
-            throw new RuntimeException("Can't read data from file" + file, e);
+            throw new RuntimeException("Can't read data from file " + fileName, e);
         }
     }
 
@@ -64,12 +70,11 @@ public class WorkWithFile {
 
     private void writeToFile(String data, String resultFile) {
         File file = new File(resultFile);
-        file.delete();
 
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, true))) {
             bufferedWriter.write(data);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data to file" + file, e);
+            throw new RuntimeException("Can't write data to file " + file, e);
         }
     }
 }
