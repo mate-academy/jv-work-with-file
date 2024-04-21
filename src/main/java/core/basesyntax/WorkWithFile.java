@@ -11,6 +11,8 @@ public class WorkWithFile {
     private static final String BUY = "buy";
     private static final String RESULT = "result";
     private static final String COMMA = ",";
+    private static final int OPERATION = 0;
+    private static final int AMOUNT = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] data = readFileText(fromFileName);
@@ -21,10 +23,9 @@ public class WorkWithFile {
     private String[] readFileText(String fromFileName) {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             StringBuilder stringBuilder = new StringBuilder();
-            String value = bufferedReader.readLine();
-            while (value != null) {
+            String value;
+            while ((value = bufferedReader.readLine()) != null) {
                 stringBuilder.append(value).append(System.lineSeparator());
-                value = bufferedReader.readLine();
             }
             return stringBuilder.toString().split(System.lineSeparator());
         } catch (IOException e) {
@@ -33,15 +34,15 @@ public class WorkWithFile {
     }
 
     private String calculateData(String[] data) {
-        int supply = 0;
-        int buy = 0;
+        int supply = OPERATION;
+        int buy = OPERATION;
         StringBuilder stringBuilder = new StringBuilder();
         for (String line : data) {
             String[] value = line.split(",");
-            if (value[0].equals("supply")) {
-                supply += Integer.parseInt(value[1]);
+            if (value[OPERATION].equals("supply")) {
+                supply += Integer.parseInt(value[AMOUNT]);
             } else {
-                buy += Integer.parseInt(value[1]);
+                buy += Integer.parseInt(value[AMOUNT]);
             }
         }
         int result = supply - buy;
