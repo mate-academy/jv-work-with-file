@@ -17,7 +17,7 @@ public class WorkWithFile {
     private static final String COMMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String path = "..\\jv-work-with-file\\" + toFileName;
+        String path = ".\\" + toFileName;
         Path filePath = FileSystems.getDefault().getPath(path);
         if (!Files.exists(filePath)) {
             String data = readFromFile(fromFileName);
