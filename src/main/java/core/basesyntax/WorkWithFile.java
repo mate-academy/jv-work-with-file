@@ -7,19 +7,19 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final String Final_Supply = "supply";
-    private static final String Final_Buy = "buy";
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
     private static final String RESULT = "result";
+    private static final String COMMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] data = readFileText(fromFileName);
-        String report = createReport(data);
+        String report = calculateData(data);
         writeToFile(toFileName, report);
     }
 
     private String[] readFileText(String fromFileName) {
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             StringBuilder stringBuilder = new StringBuilder();
             String value = bufferedReader.readLine();
             while (value != null) {
@@ -32,25 +32,25 @@ public class WorkWithFile {
         }
     }
 
-    private String createReport(String[] datas) {
+    private String calculateData(String[] data) {
         int supply = 0;
         int buy = 0;
         StringBuilder stringBuilder = new StringBuilder();
-        for (String line: datas) {
-            String[] data = line.split(",");
-            if (data[0].equals("supply")) {
-                supply += Integer.parseInt(data[1]);
+        for (String line : data) {
+            String[] value = line.split(",");
+            if (value[0].equals("supply")) {
+                supply += Integer.parseInt(value[1]);
             } else {
-                buy += Integer.parseInt(data[1]);
+                buy += Integer.parseInt(value[1]);
             }
         }
         int result = supply - buy;
         return stringBuilder
-                    .append(Final_Supply).append(",").append(supply)
-                    .append(System.lineSeparator())
-                    .append(Final_Buy).append(",").append(buy)
-                    .append(System.lineSeparator())
-                    .append(RESULT).append(",").append(result).toString();
+                .append(SUPPLY).append(COMMA).append(supply)
+                .append(System.lineSeparator())
+                .append(BUY).append(COMMA).append(buy)
+                .append(System.lineSeparator())
+                .append(RESULT).append(COMMA).append(result).toString();
     }
 
     private void writeToFile(String report, String toFileName) {
