@@ -18,7 +18,7 @@ public class WorkWithFile {
 
     private int[] readFromFile(String fileName) {
         int[] statistic = new int[3];
-        try( BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
@@ -44,7 +44,7 @@ public class WorkWithFile {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             writer.write(OPERATION_SUPPLY + "," + supplyTotal);
             writer.newLine();
-            writer.write(OPERATION_BUY + ","+ buyTotal);
+            writer.write(OPERATION_BUY + "," + buyTotal);
             writer.newLine();
             writer.write(OPERATION_RESULT + "," + result);
         } catch (IOException e) {
