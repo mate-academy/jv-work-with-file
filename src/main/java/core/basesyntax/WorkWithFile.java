@@ -5,56 +5,67 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Objects;
 
 public class WorkWithFile {
-    private static final String SUPPLY_TEXT = "supply";
-    private static final String BUY_TEXT = "buy";
-    private static final String RESULT_TEXT = "result";
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
+    private static final String COMMA_SYMBOL = ",";
+    private int supply;
+    private int buy;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int[] data = getData(fromFileName);
-        createReport(toFileName, data[0], data[1]);
+        getData(fromFileName);
+        String report = createReport();
+        writeResultToFile(toFileName, report);
     }
 
-    public void createReport(String filename, int buy, int supply) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
-            StringBuilder reportBuilder = new StringBuilder();
-            String reportString = reportBuilder.append(SUPPLY_TEXT)
-                    .append(",")
-                    .append(supply)
-                    .append(System.lineSeparator())
-                    .append(BUY_TEXT)
-                    .append(",")
-                    .append(buy)
-                    .append(System.lineSeparator())
-                    .append(RESULT_TEXT)
-                    .append(",")
-                    .append(supply - buy)
-                    .toString();
-            writer.write(reportString);
+    private void getData(String fileName) {
+        supply = 0;
+        buy = 0;
+
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
+            String currentString = bufferedReader.readLine();
+            while (currentString != null) {
+                String[] splitedLine = currentString.split(COMMA_SYMBOL);
+                int operationAmount = Integer.parseInt(splitedLine[1]);
+                String operation = splitedLine[0];
+                if (operation.equals(SUPPLY)) {
+                    supply += operationAmount;
+                } else {
+                    buy += operationAmount;
+                }
+                currentString = bufferedReader.readLine();
+            }
         } catch (IOException e) {
-            throw new RuntimeException("Cannot read write file: " + e.getMessage());
+            throw new RuntimeException("Can't read data from file " + fileName, e);
         }
     }
 
-    public int[] getData(String filename) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
-            int buyVal = 0;
-            int supplyVal = 0;
-            String line;
+    private String createReport() {
+        StringBuilder report = new StringBuilder();
 
-            while ((line = reader.readLine()) != null) {
-                String[] lineArr = line.split(",");
-                if (Objects.equals(lineArr[0], "buy")) {
-                    buyVal += Integer.parseInt(lineArr[1]);
-                } else if (Objects.equals(lineArr[0], "supply")) {
-                    supplyVal += Integer.parseInt(lineArr[1]);
-                }
-            }
-            return new int[]{buyVal, supplyVal};
+        int result = supply - buy;
+        report.append(SUPPLY)
+                .append(COMMA_SYMBOL)
+                .append(supply)
+                .append(System.lineSeparator())
+                .append(BUY)
+                .append(COMMA_SYMBOL)
+                .append(buy)
+                .append(System.lineSeparator())
+                .append(RESULT)
+                .append(COMMA_SYMBOL)
+                .append(result);
+
+        return report.toString();
+    }
+
+    private void writeResultToFile(String fileName, String report) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
+            bufferedWriter.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Cannot read from file: " + e.getMessage());
+            throw new RuntimeException("Can't write data to file" + fileName, e);
         }
     }
 }
