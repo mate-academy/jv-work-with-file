@@ -5,45 +5,50 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashMap;
 
 public class WorkWithFile {
-    public void getStatistic(String fromFileName, String toFileName) {
-        writeToFile(fromFileName, toFileName);
+    private static final String OPERATION_SUPPLY = "supply";
+    private static final String OPERATION_BUY = "buy";
+    private static final String OPERATION_RESULT = "result";
 
+    public void getStatistic(String fromFileName, String toFileName) {
+        int[] data = readFromFile(fromFileName);
+        createReport(data, toFileName);
     }
 
-    private HashMap<String, Integer> readFromFile(String readFrormFile) {
-        HashMap<String, Integer> statistic = new HashMap<String, Integer>();
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(readFrormFile));
+    private int[] readFromFile(String fileName) {
+        int[] statistic = new int[3];
+        try( BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
                 String operations = parts[0];
                 int sum = Integer.parseInt(parts[1]);
-                statistic.put(operations, statistic.getOrDefault(operations, 0) + sum);
+                if (OPERATION_SUPPLY.equals(operations)) {
+                    statistic[0] += sum;
+                } else if (OPERATION_BUY.equals(operations)) {
+                    statistic[1] += sum;
+                }
             }
+            statistic[2] = statistic[0] - statistic[1];
         } catch (IOException e) {
-            throw new RuntimeException("Error reading file", e);
+            throw new RuntimeException("Can't read the data from the file" + fileName, e);
         }
         return statistic;
     }
 
-    private void writeToFile(String readFromFileName, String writeToFileName) {
-        HashMap<String, Integer> temp = readFromFile(readFromFileName);
-        int supplyTotal = temp.getOrDefault("supply", 0);
-        int buyTotal = temp.getOrDefault("buy", 0);
-        int result = supplyTotal - buyTotal;
-
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(writeToFileName))) {
-            writer.write("supply," + supplyTotal);
+    private void createReport(int[] data, String fileName) {
+        int supplyTotal = data[0];
+        int buyTotal = data[1];
+        int result = data[2];
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+            writer.write(OPERATION_SUPPLY + "," + supplyTotal);
             writer.newLine();
-            writer.write("buy," + buyTotal);
+            writer.write(OPERATION_BUY + ","+ buyTotal);
             writer.newLine();
-            writer.write("result," + result);
+            writer.write(OPERATION_RESULT + "," + result);
         } catch (IOException e) {
-            throw new RuntimeException("Error writing file", e);
+            throw new RuntimeException("an't write into the file " + fileName, e);
         }
     }
 }
