@@ -8,12 +8,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    public void getStatistic(String fromFileName, String toFileName) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(new File(fromFileName)));
-                 BufferedWriter writer = new BufferedWriter(new FileWriter(new File(toFileName)))) {
+    public int[] getStatistic(String fromFileName, String toFileName) {
+        int supplyTotal = 0;
+        int buyTotal = 0;
 
-            int supplyTotal = 0;
-            int buyTotal = 0;
+        try (BufferedReader reader = new BufferedReader(new FileReader(new File(fromFileName)))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
@@ -26,17 +25,21 @@ public class WorkWithFile {
                     buyTotal += amount;
                 }
             }
+        } catch (IOException e) {
+            throw new RuntimeException("Помилка обробки файлів", e);
+        }
 
-            int result = supplyTotal - buyTotal;
-
+        int result = supplyTotal - buyTotal;
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File(toFileName)))) {
             writer.write("supply," + supplyTotal);
             writer.newLine();
             writer.write("buy," + buyTotal);
             writer.newLine();
             writer.write("result," + result);
-
         } catch (IOException e) {
-            throw new RuntimeException("Error processing files", e);
+            throw new RuntimeException("Помилка запису в файл", e);
         }
+
+        return new int[]{supplyTotal, buyTotal, result};
     }
 }
