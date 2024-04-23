@@ -11,8 +11,8 @@ public class WorkWithFile {
     private static final String BUY = "buy";
     private static final String RESULT = "result";
     private static final String COMMA = ",";
-    private static final int OPERATION = 0;
-    private static final int AMOUNT = 1;
+    private static final int OPERATION_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] data = readFileText(fromFileName);
@@ -22,31 +22,31 @@ public class WorkWithFile {
 
     private String[] readFileText(String fromFileName) {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
-            StringBuilder stringBuilder = new StringBuilder();
-            String value;
-            while ((value = bufferedReader.readLine()) != null) {
-                stringBuilder.append(value).append(System.lineSeparator());
+            StringBuilder fileContent = new StringBuilder();
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                fileContent.append(line).append(System.lineSeparator());
             }
-            return stringBuilder.toString().split(System.lineSeparator());
+            return fileContent.toString().split(System.lineSeparator());
         } catch (IOException e) {
             throw new RuntimeException("can not read file: " + fromFileName, e);
         }
     }
 
     private String calculateData(String[] data) {
-        int supply = OPERATION;
-        int buy = OPERATION;
-        StringBuilder stringBuilder = new StringBuilder();
+        int supply = 0;
+        int buy = 0;
+        StringBuilder fileText = new StringBuilder();
         for (String line : data) {
             String[] value = line.split(",");
-            if (value[OPERATION].equals("supply")) {
-                supply += Integer.parseInt(value[AMOUNT]);
+            if (value[OPERATION_INDEX].equals("supply")) {
+                supply += Integer.parseInt(value[AMOUNT_INDEX]);
             } else {
-                buy += Integer.parseInt(value[AMOUNT]);
+                buy += Integer.parseInt(value[AMOUNT_INDEX]);
             }
         }
         int result = supply - buy;
-        return stringBuilder
+        return fileText
                 .append(SUPPLY).append(COMMA).append(supply)
                 .append(System.lineSeparator())
                 .append(BUY).append(COMMA).append(buy)
