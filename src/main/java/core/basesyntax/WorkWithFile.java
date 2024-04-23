@@ -43,11 +43,11 @@ public class WorkWithFile {
         int supplyTotal = data[0];
         int buyTotal = data[1];
         int result = data[2];
-        StringBuilder reportBuilder = new StringBuilder();
-        reportBuilder.append(OPERATION_SUPPLY).append(SEPARATE_SYMBOL).append(supplyTotal).append("\n");
-        reportBuilder.append(OPERATION_BUY).append(SEPARATE_SYMBOL).append(buyTotal).append("\n");
-        reportBuilder.append(OPERATION_RESULT).append(SEPARATE_SYMBOL).append(result).append("\n");
-        return reportBuilder.toString();
+        StringBuilder temp = new StringBuilder();
+        temp.append(OPERATION_SUPPLY).append(SEPARATE_SYMBOL).append(supplyTotal).append("\n");
+        temp.append(OPERATION_BUY).append(SEPARATE_SYMBOL).append(buyTotal).append("\n");
+        temp.append(OPERATION_RESULT).append(SEPARATE_SYMBOL).append(result).append("\n");
+        return temp.toString();
     }
 
     private void writeToFile(String report, String fileName) {
