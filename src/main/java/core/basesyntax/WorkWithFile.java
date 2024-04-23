@@ -10,10 +10,12 @@ public class WorkWithFile {
     private static final String OPERATION_SUPPLY = "supply";
     private static final String OPERATION_BUY = "buy";
     private static final String OPERATION_RESULT = "result";
+    private static final String SEPARATE_SYMBOL = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         int[] data = readFromFile(fromFileName);
-        createReport(data, toFileName);
+        String report = createReport(data);
+        writeToFile(report, toFileName);
     }
 
     private int[] readFromFile(String fileName) {
@@ -21,7 +23,7 @@ public class WorkWithFile {
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",");
+                String[] parts = line.split(SEPARATE_SYMBOL);
                 String operations = parts[0];
                 int sum = Integer.parseInt(parts[1]);
                 if (OPERATION_SUPPLY.equals(operations)) {
@@ -37,19 +39,22 @@ public class WorkWithFile {
         return statistic;
     }
 
-    private void createReport(int[] data, String fileName) {
+    private String createReport(int[] data) {
         int supplyTotal = data[0];
         int buyTotal = data[1];
         int result = data[2];
+        StringBuilder reportBuilder = new StringBuilder();
+        reportBuilder.append(OPERATION_SUPPLY).append(SEPARATE_SYMBOL).append(supplyTotal).append("\n");
+        reportBuilder.append(OPERATION_BUY).append(SEPARATE_SYMBOL).append(buyTotal).append("\n");
+        reportBuilder.append(OPERATION_RESULT).append(SEPARATE_SYMBOL).append(result).append("\n");
+        return reportBuilder.toString();
+    }
+
+    private void writeToFile(String report, String fileName) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
-            writer.write(OPERATION_SUPPLY + "," + supplyTotal);
-            writer.newLine();
-            writer.write(OPERATION_BUY + "," + buyTotal);
-            writer.newLine();
-            writer.write(OPERATION_RESULT + "," + result);
+            writer.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("an't write into the file " + fileName, e);
+            throw new RuntimeException("Can't write into the file " + fileName, e);
         }
     }
 }
-
