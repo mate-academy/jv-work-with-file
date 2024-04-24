@@ -44,9 +44,11 @@ public class WorkWithFile {
         int buyTotal = data[1];
         int result = data[2];
         StringBuilder temp = new StringBuilder();
-        temp.append(OPERATION_SUPPLY).append(SEPARATE_SYMBOL).append(supplyTotal).append("\n");
-        temp.append(OPERATION_BUY).append(SEPARATE_SYMBOL).append(buyTotal).append("\n");
-        temp.append(OPERATION_RESULT).append(SEPARATE_SYMBOL).append(result).append("\n");
+        temp.append(OPERATION_SUPPLY).append(SEPARATE_SYMBOL).append(supplyTotal).append(System.lineSeparator());
+        temp.append(OPERATION_BUY).append(SEPARATE_SYMBOL).append(buyTotal).append(System.lineSeparator());
+        System.lineSeparator();
+        temp.append(OPERATION_RESULT).append(SEPARATE_SYMBOL).append(result).append(System.lineSeparator());
+        System.lineSeparator();
         return temp.toString();
     }
 
