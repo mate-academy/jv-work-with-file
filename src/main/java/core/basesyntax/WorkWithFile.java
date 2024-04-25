@@ -8,24 +8,24 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class WorkWithFile {
+interface StatisticsCalculator {
+    Map<String, Integer> calculateTotals(String fileName);
+}
+
+interface StatisticsWriter {
+    void writeToFile(String fileName, int supply, int buy, int result);
+    void printToConsole(int supply, int buy, int result);
+}
+
+class FileStatisticsCalculator implements StatisticsCalculator {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
-    private static final String RESULT = "result";
     private static final String COMMA = ",";
     private static final int OPERATION_INDEX = 0;
     private static final int VALUE_INDEX = 1;
 
-    public void getStatistic(String fromFileName, String toFileName) {
-        Map<String, Integer> operationTotals = calculateTotals(fromFileName);
-        int supply = operationTotals.getOrDefault(SUPPLY, 0);
-        int buy = operationTotals.getOrDefault(BUY, 0);
-        int result = supply - buy;
-        writeToFile(toFileName, supply, buy, result);
-        printToConsole(supply, buy, result);
-    }
-
-    private Map<String, Integer> calculateTotals(String fileName) {
+    @Override
+    public Map<String, Integer> calculateTotals(String fileName) {
         Map<String, Integer> totals = new HashMap<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             String line;
@@ -40,8 +40,16 @@ public class WorkWithFile {
         }
         return totals;
     }
+}
 
-    private void writeToFile(String fileName, int supply, int buy, int result) {
+class FileStatisticsWriter implements StatisticsWriter {
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
+    private static final String COMMA = ",";
+
+    @Override
+    public void writeToFile(String fileName, int supply, int buy, int result) {
         String report = constructReport(supply, buy, result);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             writer.write(report);
@@ -56,8 +64,28 @@ public class WorkWithFile {
              + RESULT + COMMA + result;
     }
 
-    private void printToConsole(int supply, int buy, int result) {
+    @Override
+    public void printToConsole(int supply, int buy, int result) {
         System.out.println("Supply: " + supply + "\n" + "Buy: " + buy + "\n" + "Result: " + result);
+    }
+}
+
+public class WorkWithFile {
+    private final StatisticsCalculator calculator;
+    private final StatisticsWriter writer;
+
+    public WorkWithFile(StatisticsCalculator calculator, StatisticsWriter writer) {
+        this.calculator = calculator;
+        this.writer = writer;
+    }
+
+    public void getStatistic(String fromFileName, String toFileName) {
+        Map<String, Integer> operationTotals = calculator.calculateTotals(fromFileName);
+        int supply = operationTotals.getOrDefault(SUPPLY, 0);
+        int buy = operationTotals.getOrDefault(BUY, 0);
+        int result = supply - buy;
+        writer.writeToFile(toFileName, supply, buy, result);
+        writer.printToConsole(supply, buy, result);
     }
 }
 
