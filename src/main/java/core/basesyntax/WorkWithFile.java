@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 interface StatisticsCalculator {
+    String SUPPLY = "supply";
+    String BUY = "buy";
     Map<String, Integer> calculateTotals(String fileName);
 }
 
@@ -18,8 +20,6 @@ interface StatisticsWriter {
 }
 
 class FileStatisticsCalculator implements StatisticsCalculator {
-    private static final String SUPPLY = "supply";
-    private static final String BUY = "buy";
     private static final String COMMA = ",";
     private static final int OPERATION_INDEX = 0;
     private static final int VALUE_INDEX = 1;
@@ -43,8 +43,6 @@ class FileStatisticsCalculator implements StatisticsCalculator {
 }
 
 class FileStatisticsWriter implements StatisticsWriter {
-    private static final String SUPPLY = "supply";
-    private static final String BUY = "buy";
     private static final String RESULT = "result";
     private static final String COMMA = ",";
 
@@ -81,8 +79,8 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         Map<String, Integer> operationTotals = calculator.calculateTotals(fromFileName);
-        int supply = operationTotals.getOrDefault(SUPPLY, 0);
-        int buy = operationTotals.getOrDefault(BUY, 0);
+        int supply = operationTotals.getOrDefault(StatisticsCalculator.SUPPLY, 0);
+        int buy = operationTotals.getOrDefault(StatisticsCalculator.BUY, 0);
         int result = supply - buy;
         writer.writeToFile(toFileName, supply, buy, result);
         writer.printToConsole(supply, buy, result);
