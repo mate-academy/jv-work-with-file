@@ -57,8 +57,8 @@ class FileStatisticsWriter implements StatisticsWriter {
     }
 
     private String constructReport(int supply, int buy, int result) {
-        return SUPPLY + COMMA + supply + "\n"
-             + BUY + COMMA + buy + "\n"
+        return StatisticsCalculator.SUPPLY + COMMA + supply + "\n"
+             + StatisticsCalculator.BUY + COMMA + buy + "\n"
              + RESULT + COMMA + result;
     }
 
@@ -86,4 +86,6 @@ public class WorkWithFile {
         writer.printToConsole(supply, buy, result);
     }
 }
+
+   
 
