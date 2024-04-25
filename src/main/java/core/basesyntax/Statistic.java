@@ -4,8 +4,8 @@ import static core.basesyntax.OperationType.BUY;
 import static core.basesyntax.OperationType.SUPPLY;
 
 public class Statistic {
-    private int supply = 0;
-    private int buy = 0;
+    private int supply;
+    private int buy;
 
     public int getSupply() {
         return supply;
@@ -33,11 +33,11 @@ public class Statistic {
                 .append(SUPPLY)
                 .append(delimiter)
                 .append(getSupply())
-                .append("\n")
+                .append(System.lineSeparator())
                 .append(BUY)
                 .append(delimiter)
                 .append(getBuy())
-                .append("\n")
+                .append(System.lineSeparator())
                 .append("result")
                 .append(delimiter)
                 .append(getResult());
