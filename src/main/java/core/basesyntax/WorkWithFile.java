@@ -5,71 +5,58 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashMap;
 
 public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
     private static final String COMMA_SYMBOL = ",";
-    private static final int CSV_VALUE_INDEX = 1;
-    private static final int CSV_KEY_INDEX = 0;
+    private static final int OPERATION_TYPE_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        HashMap<String, Integer> data = getData(fromFileName);
+        String data = getData(fromFileName);
         String report = createReport(data);
         writeResultToFile(toFileName, report);
     }
 
-    private HashMap<String, Integer> getData(String fileName) {
-        int supply = 0;
-        int buy = 0;
-
+    private String getData(String fileName) {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
-            String currentString = bufferedReader.readLine();
-            while (currentString != null) {
-                String[] splitedLine = currentString.split(COMMA_SYMBOL);
-                int operationAmount = Integer.parseInt(splitedLine[CSV_VALUE_INDEX]);
-                String operation = splitedLine[CSV_KEY_INDEX];
-                if (operation.equals(SUPPLY)) {
-                    supply += operationAmount;
-                } else {
-                    buy += operationAmount;
-                }
-                currentString = bufferedReader.readLine();
+            StringBuilder builder = new StringBuilder();
+            String value = bufferedReader.readLine();
+            while (value != null) {
+                builder.append(value).append(System.lineSeparator());
+                value = bufferedReader.readLine();
             }
-            int finalSupply = supply;
-            int finalBuy = buy;
-            return new HashMap<>() {
-                {
-                    this.put("supply", finalSupply);
-                    this.put("buy", finalBuy);
-                }
-            };
+            return builder.toString();
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from file " + fileName, e);
         }
     }
 
-    private String createReport(HashMap<String, Integer> data) {
-        StringBuilder report = new StringBuilder();
-
-        int supply = data.get("supply");
-        int buy = data.get("buy");
-        int result = supply - buy;
-        report.append(SUPPLY)
-                .append(COMMA_SYMBOL)
-                .append(supply)
+    private String createReport(String data) {
+        StringBuilder value = new StringBuilder();
+        int amountSupply = 0;
+        int amountBuy = 0;
+        String[] firstSplitFile = data.split(System.lineSeparator());
+        for (String element : firstSplitFile) {
+            String[] splitFile = element.split(COMMA_SYMBOL);
+            if (splitFile[OPERATION_TYPE_INDEX].equals(SUPPLY)) {
+                amountSupply += Integer.parseInt(splitFile[AMOUNT_INDEX]);
+            }
+            if (splitFile[OPERATION_TYPE_INDEX].equals(BUY)) {
+                amountBuy += Integer.parseInt(splitFile[AMOUNT_INDEX]);
+            }
+        }
+        int totalAmount = amountSupply - amountBuy;
+        return value.append(SUPPLY).append(COMMA_SYMBOL)
+                .append(amountSupply)
                 .append(System.lineSeparator())
-                .append(BUY)
-                .append(COMMA_SYMBOL)
-                .append(buy)
+                .append(BUY).append(COMMA_SYMBOL)
+                .append(amountBuy)
                 .append(System.lineSeparator())
-                .append(RESULT)
-                .append(COMMA_SYMBOL)
-                .append(result);
-
-        return report.toString();
+                .append(RESULT).append(COMMA_SYMBOL)
+                .append(totalAmount).toString();
     }
 
     private void writeResultToFile(String fileName, String report) {
