@@ -13,18 +13,15 @@ public class WorkWithFile {
     private static final int AMOUNT_OPTIONS = 2;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        try {
-            String[] data = readFromFile(fromFileName);
-            int sumSupply = calculateSum(data, SUPPLY_OPTION);
-            int sumBuy = calculateSum(data, BUY_OPTION);
-            int result = sumSupply - sumBuy;
-            createReport(toFileName, sumSupply, sumBuy, result);
-        } catch (IOException e) {
-            throw new RuntimeException("Can't read from file" + fromFileName, e);
-        }
+        String[] data = readFromFile(fromFileName);
+        int sumSupply = calculateSum(data, SUPPLY_OPTION);
+        int sumBuy = calculateSum(data, BUY_OPTION);
+        int result = sumSupply - sumBuy;
+        String report = createReport(sumSupply, sumBuy, result);
+        writeToFile(toFileName, report);
     }
 
-    private String[] readFromFile(String fileName) throws IOException {
+    private String[] readFromFile(String fileName) {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
             return bufferedReader.lines().toArray(String[]::new);
         } catch (IOException e) {
@@ -43,24 +40,17 @@ public class WorkWithFile {
         return sum;
     }
 
-    private void createReport(String fileName, int sumSupply, int sumBuy, int result) {
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
-            writeToFile(bufferedWriter, SUPPLY_OPTION, sumSupply);
-            writeToFile(bufferedWriter, BUY_OPTION, sumBuy);
-            writeToFile(bufferedWriter, RESULT_OPTION, result);
-        } catch (IOException e) {
-            throw new RuntimeException("Can't write to file" + fileName, e);
-        }
+    private String createReport(int sumSupply, int sumBuy, int result) {
+        return SUPPLY_OPTION + "," + sumSupply + System.lineSeparator()
+                + BUY_OPTION + "," + sumBuy + System.lineSeparator()
+                + RESULT_OPTION + "," + result;
     }
 
-    private void writeToFile(BufferedWriter bufferedWriter, String option, int value) {
-        try {
-            bufferedWriter.write(option + "," + value);
-            if (!option.equals(RESULT_OPTION)) {
-                bufferedWriter.newLine();
-            }
+    private void writeToFile(String path, String report) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(path))) {
+            bufferedWriter.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write to file", e);
+            throw new RuntimeException("Can't write to file" + path, e);
         }
     }
 }
