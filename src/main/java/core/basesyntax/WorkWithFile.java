@@ -9,15 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WorkWithFile {
+    private static final int AMOUNT_INDEX = 1;
+
     public void getStatistic(String fromFileName, String toFileName) {
         String[] data = readFile(fromFileName);
         String result = createReport(data);
-
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            writer.write(result);
-        } catch (IOException e) {
-            throw new RuntimeException("Can't write data to the file " + toFileName, e);
-        }
+        writeToFile(toFileName, result);
     }
 
     private String[] readFile(String fromFileName) {
@@ -31,7 +28,6 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from the file " + fromFileName, e);
         }
-
         return lines.toArray(new String[0]);
     }
 
@@ -42,7 +38,7 @@ public class WorkWithFile {
 
         for (String item : data) {
             String[] parts = item.split(",");
-            int number = Integer.parseInt(parts[1]);
+            int number = Integer.parseInt(parts[AMOUNT_INDEX]);
 
             if (item.startsWith("supply")) {
                 supplySum += number;
@@ -62,4 +58,11 @@ public class WorkWithFile {
                 .append(System.lineSeparator()).toString();
     }
 
+    private void writeToFile(String toFileName, String result) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
+            writer.write(result);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write data to the file " + toFileName, e);
+        }
+    }
 }
