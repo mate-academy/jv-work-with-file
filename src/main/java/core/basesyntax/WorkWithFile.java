@@ -7,8 +7,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    public static final int AMOUNT_PART = 1;
-    public static final int OPERATION_TYPE_PART = 0;
+    public static final int OPERATION_TYPE_INDEX = 0;
+    public static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String dataFromFile = readFile(fromFileName);
