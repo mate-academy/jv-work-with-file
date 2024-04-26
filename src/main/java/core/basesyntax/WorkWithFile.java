@@ -38,14 +38,14 @@ public class WorkWithFile {
 
         for (String item : data) {
             String[] parts = item.split(",");
-            int number = Integer.parseInt(parts[AMOUNT_INDEX]);
+            int amount = Integer.parseInt(parts[AMOUNT_INDEX]);
 
             if (item.startsWith("supply")) {
-                supplySum += number;
+                supplySum += amount;
             }
 
             if (item.startsWith("buy")) {
-                buySum += number;
+                buySum += amount;
             }
         }
         int result = supplySum - buySum;
