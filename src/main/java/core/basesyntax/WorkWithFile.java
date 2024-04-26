@@ -10,6 +10,8 @@ public class WorkWithFile {
     private static final String BUY_OPTION = "buy";
     private static final String SUPPLY_OPTION = "supply";
     private static final String RESULT_OPTION = "result";
+    private static final int OPTION_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
     private static final int AMOUNT_OPTIONS = 2;
 
     public void getStatistic(String fromFileName, String toFileName) {
@@ -33,8 +35,8 @@ public class WorkWithFile {
         int sum = 0;
         for (String line : data) {
             String[] parts = line.split(",");
-            if (parts.length == AMOUNT_OPTIONS && parts[0].equalsIgnoreCase(option)) {
-                sum += Integer.parseInt(parts[1]);
+            if (parts.length == AMOUNT_OPTIONS && parts[OPTION_INDEX].equalsIgnoreCase(option)) {
+                sum += Integer.parseInt(parts[AMOUNT_INDEX]);
             }
         }
         return sum;
