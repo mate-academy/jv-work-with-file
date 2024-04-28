@@ -5,6 +5,8 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class WorkWithFile {
     public static final int AMOUNT_INDEX = 1;
@@ -17,33 +19,44 @@ public class WorkWithFile {
     public static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int[] dataFromFile = readFile(fromFileName);
-        String report = createReport(dataFromFile);
-        writeReport(toFileName, report);
+        List<String> dataFromFile = readFile(fromFileName);
+        int[] allOperations = processOperations(dataFromFile);
+        String report = createReport(allOperations);
+        writeToFile(toFileName, report);
     }
 
-    private int[] readFile(String fromFileName) {
-        int totalSupply = 0;
-        int totalBuy = 0;
+    private List<String> readFile(String fromFileName) {
+        List<String> operations = new ArrayList<>();
 
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String line = reader.readLine();
             while (line != null) {
-                String[] data = line.split(COMMA_CHAR);
-                String operationType = data[OPERATION_TYPE_INDEX].trim();
-                int amount = Integer.parseInt(data[AMOUNT_INDEX].trim());
-
-                if (SUPPLY.equals(operationType)) {
-                    totalSupply += amount;
-                } else if (BUY.equals(operationType)) {
-                    totalBuy += amount;
-                }
-
+                operations.add(line);
                 line = reader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("Cannot read file", e);
         }
+
+        return operations;
+    }
+
+    private int[] processOperations(List<String> operations) {
+        int totalSupply = 0;
+        int totalBuy = 0;
+
+        for (String line : operations) {
+            String[] data = line.split(COMMA_CHAR);
+            String operationType = data[OPERATION_TYPE_INDEX].trim();
+            int amount = Integer.parseInt(data[AMOUNT_INDEX].trim());
+
+            if (SUPPLY.equals(operationType)) {
+                totalSupply += amount;
+            } else if (BUY.equals(operationType)) {
+                totalBuy += amount;
+            }
+        }
+
         return new int[]{totalSupply, totalBuy};
     }
 
@@ -65,7 +78,7 @@ public class WorkWithFile {
         return csvData.toString();
     }
 
-    private void writeReport(String toFileName, String report) {
+    private void writeToFile(String toFileName, String report) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write(report);
         } catch (IOException e) {
