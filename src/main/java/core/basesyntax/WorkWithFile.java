@@ -15,38 +15,47 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         try {
-            String[] data = readFile(fromFileName);
-            String report = createReport(data);
+            int[] data = readFile(fromFileName);
+            int totalSupply = 0;
+            int totalBuy = 0;
+            for (int amount : data) {
+                if (amount > 0) {
+                    totalSupply += amount;
+                } else {
+                    totalBuy -= amount;
+                }
+            }
+            String report = createReport(totalSupply, totalBuy);
             writeToFile(report, toFileName);
             System.out.println("Statistics generated and written to " + toFileName);
         } catch (IOException e) {
-            throw new RuntimeException("Can't read or write file", e);
+            throw new RuntimeException("Statistics can't be generated", e);
         }
     }
 
-    private String[] readFile(String fromFileName) throws IOException {
+    private int[] readFile(String fromFileName) throws IOException {
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
-            return reader.lines().toArray(String[]::new);
+            return reader.lines()
+                    .mapToInt(line -> {
+                        String[] parts = line.split(COMMA);
+                        if (parts.length == 2) {
+                            int amount = Integer.parseInt(parts[1].trim());
+                            if (parts[0].equals(SUPPLY)) {
+                                return amount;
+                            } else if (parts[0].equals(BUY)) {
+                                return -amount; // Negative amount for buy
+                            }
+                        }
+                        return 0; // Return 0 for invalid lines
+                    })
+                    .toArray();
+        } catch (IOException e) {
+            throw new RuntimeException("File can't be opened", e);
         }
     }
 
-    private String createReport(String[] data) {
-        int totalSupply = 0;
-        int totalBuy = 0;
+    private String createReport(int totalSupply, int totalBuy) {
         StringBuilder reportBuilder = new StringBuilder();
-
-        for (String line : data) {
-            String[] parts = line.split(COMMA);
-            if (parts.length == 2) {
-                int amount = Integer.parseInt(parts[1].trim());
-                if (parts[0].equals(SUPPLY)) {
-                    totalSupply += amount;
-                } else if (parts[0].equals(BUY)) {
-                    totalBuy += amount;
-                }
-            }
-        }
-
         reportBuilder.append(SUPPLY).append(COMMA).append(totalSupply)
                 .append(LINE_SEPARATOR)
                 .append(BUY).append(COMMA).append(totalBuy)
@@ -59,6 +68,8 @@ public class WorkWithFile {
     private void writeToFile(String report, String toFileName) throws IOException {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write(report);
+        } catch (IOException e) {
+            throw new RuntimeException("File can't be written", e);
         }
     }
 }
