@@ -7,36 +7,55 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    public void getStatistic(String fromFileName, String toFileName) {
-        int supplyTotal = 0;
-        int buyTotal = 0;
+    static final String VALUE_SUPPLY = "supply";
+    static final String VALUE_BUY = "buy";
+    static final String VALUE_RESULT = "result";
+    static final int ZERO_INDEX = 0;
+    static final int FIRST_INDEX = 1;
+    static final String SEPARATOR = ",";
 
+    public void getStatistic(String fromFileName, String toFileName) {
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
+            StringBuilder dataFromFile = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",");
-                String operationType = parts[0].trim();
-                int amount = Integer.parseInt(parts[1].trim());
-
-                if (operationType.equals("supply")) {
-                    supplyTotal += amount;
-                } else if (operationType.equals("buy")) {
-                    buyTotal += amount;
-                }
+                dataFromFile.append(line).append(System.lineSeparator());
             }
+            String report = createReport(dataFromFile.toString());
+            writeReportToFile(report, toFileName);
         } catch (IOException e) {
-            throw new RuntimeException("Can`t read file " + fromFileName, e);
+            throw new RuntimeException("Can't read file " + fromFileName, e);
+        }
+    }
+
+    private static String createReport(String dataFromFile) {
+        int supplyTotal = 0;
+        int buyTotal = 0;
+        String[] lines = dataFromFile.split(System.lineSeparator());
+        for (String line : lines) {
+            String[] parts = line.split(SEPARATOR);
+            String operationType = parts[ZERO_INDEX].trim();
+            int amount = Integer.parseInt(parts[FIRST_INDEX].trim());
+
+            if (operationType.equals(VALUE_SUPPLY)) {
+                supplyTotal += amount;
+            } else if (operationType.equals(VALUE_BUY)) {
+                buyTotal += amount;
+            }
         }
 
         int result = supplyTotal - buyTotal;
 
+        return VALUE_SUPPLY + SEPARATOR + supplyTotal + System.lineSeparator()
+                + VALUE_BUY + SEPARATOR + buyTotal + System.lineSeparator()
+                + VALUE_RESULT + SEPARATOR + result;
+    }
+
+    private static void writeReportToFile(String report, String toFileName) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            writer.write("supply," + supplyTotal + System.lineSeparator());
-            writer.write("buy," + buyTotal + System.lineSeparator());
-            writer.write("result," + result + System.lineSeparator());
-            writer.flush();
+            writer.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Can`t write file " + toFileName, e);
+            throw new RuntimeException("Can't write file " + toFileName, e);
         }
     }
 }
