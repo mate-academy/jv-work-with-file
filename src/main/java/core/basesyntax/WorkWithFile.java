@@ -15,20 +15,25 @@ public class WorkWithFile {
     static final String SEPARATOR = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
+        String dataFromFile = readFromFile(fromFileName);
+        String report = createReport(dataFromFile);
+        writeReportToFile(report, toFileName);
+    }
+
+    private String readFromFile(String fromFileName) {
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             StringBuilder dataFromFile = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
                 dataFromFile.append(line).append(System.lineSeparator());
             }
-            String report = createReport(dataFromFile.toString());
-            writeReportToFile(report, toFileName);
+            return dataFromFile.toString();
         } catch (IOException e) {
             throw new RuntimeException("Can't read file " + fromFileName, e);
         }
     }
 
-    private static String createReport(String dataFromFile) {
+    private String createReport(String dataFromFile) {
         int supplyTotal = 0;
         int buyTotal = 0;
         String[] lines = dataFromFile.split(System.lineSeparator());
@@ -51,7 +56,7 @@ public class WorkWithFile {
                 + VALUE_RESULT + SEPARATOR + result;
     }
 
-    private static void writeReportToFile(String report, String toFileName) {
+    private void writeReportToFile(String report, String toFileName) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write(report);
         } catch (IOException e) {
