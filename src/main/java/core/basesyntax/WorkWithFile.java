@@ -14,39 +14,37 @@ public class WorkWithFile {
     private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        try {
-            int[] data = readFile(fromFileName);
-            int totalSupply = 0;
-            int totalBuy = 0;
-            for (int amount : data) {
-                if (amount > 0) {
-                    totalSupply += amount;
-                } else {
-                    totalBuy -= amount;
-                }
+        int[] data = readFile(fromFileName);
+        int totalSupply = 0;
+        int totalBuy = 0;
+        for (int amount : data) {
+            if (amount > 0) {
+                totalSupply += amount;
+            } else {
+                totalBuy -= amount;
             }
-            String report = createReport(totalSupply, totalBuy);
-            writeToFile(report, toFileName);
-            System.out.println("Statistics generated and written to " + toFileName);
-        } catch (IOException e) {
-            throw new RuntimeException("Statistics can't be generated", e);
         }
+        String report = createReport(totalSupply, totalBuy);
+        writeToFile(report, toFileName);
+        System.out.println("Statistics generated and written to " + toFileName);
     }
 
-    private int[] readFile(String fromFileName) throws IOException {
+    private int[] readFile(String fromFileName) {
+        final int firstPartOfLine = 0;
+        final int secondPartOfLine = 1;
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             return reader.lines()
                     .mapToInt(line -> {
                         String[] parts = line.split(COMMA);
                         if (parts.length == 2) {
-                            int amount = Integer.parseInt(parts[1].trim());
-                            if (parts[0].equals(SUPPLY)) {
+                            int amount = Integer.parseInt(parts[secondPartOfLine].trim());
+                            if (parts[firstPartOfLine].equals(SUPPLY)) {
                                 return amount;
-                            } else if (parts[0].equals(BUY)) {
-                                return -amount; // Negative amount for buy
+                            } else if (parts[firstPartOfLine].equals(BUY)) {
+                                return -amount;
                             }
                         }
-                        return 0; // Return 0 for invalid lines
+                        return 0;
                     })
                     .toArray();
         } catch (IOException e) {
@@ -65,7 +63,7 @@ public class WorkWithFile {
         return reportBuilder.toString();
     }
 
-    private void writeToFile(String report, String toFileName) throws IOException {
+    private void writeToFile(String report, String toFileName) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write(report);
         } catch (IOException e) {
