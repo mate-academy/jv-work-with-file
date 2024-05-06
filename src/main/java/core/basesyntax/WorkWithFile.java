@@ -7,12 +7,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    static final String VALUE_SUPPLY = "supply";
-    static final String VALUE_BUY = "buy";
-    static final String VALUE_RESULT = "result";
-    static final int ZERO_INDEX = 0;
-    static final int FIRST_INDEX = 1;
-    static final String SEPARATOR = ",";
+    private static final String VALUE_SUPPLY = "supply";
+    private static final String VALUE_BUY = "buy";
+    private static final String VALUE_RESULT = "result";
+    private static final int ZERO_INDEX = 0;
+    private static final int FIRST_INDEX = 1;
+    private static final String SEPARATOR = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String dataFromFile = readFromFile(fromFileName);
