@@ -3,6 +3,7 @@ package core.basesyntax;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class WorkWithFile {
@@ -24,11 +25,12 @@ public class WorkWithFile {
     }
 
     private String[] readFromFile(String fromFileName) {
+        Path fromFilePath = Paths.get(fromFileName);
         String seizedData;
         try {
-            seizedData = Files.readString(Path.of(fromFileName));
+            seizedData = Files.readString(fromFilePath);
         } catch (IOException e) {
-            throw new RuntimeException("Cant read from file..." + e);
+            throw new RuntimeException("Cant read from file..." + fromFileName, e);
         }
         return seizedData.split(FILTER_FOR_DELIMITERS);
     }
@@ -65,10 +67,11 @@ public class WorkWithFile {
     }
 
     private void writeToFile(String report, String toFileName) {
+        Path toFilePath = Paths.get(toFileName);
         try {
-            Files.write(Path.of(toFileName), report.getBytes());
+            Files.write(toFilePath, report.getBytes());
         } catch (IOException e) {
-            throw new RuntimeException("Can't write to file..." + toFileName + " " + e);
+            throw new RuntimeException("Can't write to file..." + toFileName, e);
         }
     }
 }
