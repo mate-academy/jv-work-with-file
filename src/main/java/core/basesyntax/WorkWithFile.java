@@ -38,7 +38,7 @@ public class WorkWithFile {
             writer.write(String.format("%s,%d", RESULT, result));
 
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can't write/read to/from file",e);
         }
     }
 }
