@@ -35,7 +35,7 @@ public class WorkWithFile {
 
             writer.write(String.format("%s,%d%n", OPERATION_SUPPLY, supplyTotal));
             writer.write(String.format("%s,%d%n", OPERATION_BUY, buyTotal));
-            writer.write(String.format("%s,%d%n", RESULT, result));
+            writer.write(String.format("%s,%d", RESULT, result));
 
         } catch (IOException e) {
             throw new RuntimeException(e);
