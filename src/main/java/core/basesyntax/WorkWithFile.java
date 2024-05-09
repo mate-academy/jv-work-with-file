@@ -14,34 +14,28 @@ public class WorkWithFile {
     public static final int AMOUNT = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String[] fileContent = readFromFile(fromFileName);
-        String report = writeReport(fileContent);
+        List<String> fileContent = readFromFile(fromFileName);
+        String report = createReport(fileContent);
         writeToFile(report, toFileName);
     }
 
-    private String[] readFromFile(String fromFileName) {
+    private List<String> readFromFile(String fromFileName) {
         Path fromFilePath = Paths.get(fromFileName);
         try {
-            List<String> lines = Files.readAllLines(fromFilePath);
-
-            StringBuilder stringBuilderContent = new StringBuilder();
-            for (String line : lines) {
-                stringBuilderContent.append(line).append("\n");
-            }
-            String stringBuilder = stringBuilderContent.toString();
-            return stringBuilder.split(COMMA_CHAR + "|\\n");
+            return Files.readAllLines(fromFilePath);
         } catch (IOException e) {
             throw new RuntimeException("Can't read a file " + fromFileName, e);
         }
     }
 
-    private String writeReport(String[] fileContent) {
+    private String createReport(List<String> fileContent) {
         int totalSupply = 0;
         int totalBuy = 0;
 
-        for (int i = 0; i < fileContent.length; i += 2) {
-            String typeOfOperation = fileContent[i];
-            int amount = Integer.parseInt(fileContent[i + AMOUNT]);
+        for (String line : fileContent) {
+            String[] parts = line.split(COMMA_CHAR);
+            String typeOfOperation = parts[0];
+            int amount = Integer.parseInt(parts[1]);
             if (typeOfOperation.equals(SUPPLY)) {
                 totalSupply += amount;
             } else if (typeOfOperation.equals(BUY)) {
