@@ -24,8 +24,8 @@ public class WorkWithFile {
         writeToFile(toFileName, totals[SUPPLY_INDEX], totals[BUY_INDEX], result);
     }
 
-    private List<String> readFromFile(String fileName) {
-        final Path path = Path.of(fileName);
+    private List<String> readFromFile(String fromFileName) {
+        final Path path = Path.of(fromFileName);
         try {
             return Files.readAllLines(path);
         } catch (IOException e) {
@@ -52,15 +52,16 @@ public class WorkWithFile {
         return new int[]{operationSupply, operationBuy};
     }
 
-    private int calculateResult(int supplyTotal, int buyTotal) {
-        return supplyTotal - buyTotal;
+    private int calculateResult(int operationSupply, int operationBuy) {
+        return operationSupply - operationBuy;
     }
 
-    private void writeToFile(String toFileName, int supplyTotal, int buyTotal, int result) {
+    private void writeToFile(String toFileName, int operationSupply,
+                             int operationBuy, int calculateResult) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            writer.write(String.format("%s,%d%n", OPERATION_SUPPLY, supplyTotal));
-            writer.write(String.format("%s,%d%n", OPERATION_BUY, buyTotal));
-            writer.write(String.format("%s,%d", RESULT, result));
+            writer.write(String.format("%s,%d%n", OPERATION_SUPPLY, operationSupply));
+            writer.write(String.format("%s,%d%n", OPERATION_BUY, operationBuy));
+            writer.write(String.format("%s,%d", RESULT, calculateResult));
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file", e);
         }
