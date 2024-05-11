@@ -11,6 +11,8 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String RESULT = "result";
     private static final String COMMA = ",";
+    private static final int OPERATION_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String report = readFile(fromFileName);
@@ -39,8 +41,8 @@ public class WorkWithFile {
         for (String line : lines) {
             String[] parts = line.split(COMMA);
             if (parts.length == 2) {
-                String operation = parts[0].trim();
-                int amount = Integer.parseInt(parts[1].trim());
+                String operation = parts[OPERATION_INDEX].trim();
+                int amount = Integer.parseInt(parts[AMOUNT_INDEX].trim());
                 if (operation.equals(SUPPLY)) {
                     countSupply += amount;
                 }
