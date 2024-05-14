@@ -36,16 +36,19 @@ public class WorkWithFile {
             report.append("supply,").append(supply).append(System.lineSeparator());
             report.append("buy,").append(bay).append(System.lineSeparator());
             report.append("result,").append(result);
-            File file = new File(toFileName);
-                try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, true))) {
-                    bufferedWriter.write(String.valueOf(report));
-                } catch (IOException e) {
-                    throw new RuntimeException("Can't write the file " + toFileName, e);
-                }
+            writeToFile(report,toFileName);
         } catch (FileNotFoundException e) {
             throw new RuntimeException("Can't open the file " + fromFileName, e);
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from the file " + fromFileName, e);
+        }
+    }
+    private void writeToFile (StringBuilder report, String toFileName) {
+        File file = new File(toFileName);
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, false))) {
+            bufferedWriter.write(String.valueOf(report));
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write the file " + toFileName, e);
         }
     }
 
