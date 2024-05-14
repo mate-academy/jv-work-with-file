@@ -11,6 +11,7 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final int SUPPLY_OR_BUY = 0;
     private static final int NUMBERS = 1;
+
     public void getStatistic(String fromFileName, String toFileName) {
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
@@ -31,19 +32,15 @@ public class WorkWithFile {
                     bay += Integer.parseInt(findStatistic[NUMBERS]);
                 }
             }
-            int result = supply - bay;
-            StringBuilder report = new StringBuilder();
-            report.append("supply,").append(supply).append(System.lineSeparator());
-            report.append("buy,").append(bay).append(System.lineSeparator());
-            report.append("result,").append(result);
-            writeToFile(report,toFileName);
+            writeToFile(createReport(supply,bay),toFileName);
         } catch (FileNotFoundException e) {
             throw new RuntimeException("Can't open the file " + fromFileName, e);
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from the file " + fromFileName, e);
         }
     }
-    private void writeToFile (StringBuilder report, String toFileName) {
+
+    private void writeToFile(StringBuilder report,String toFileName) {
         File file = new File(toFileName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, false))) {
             bufferedWriter.write(String.valueOf(report));
@@ -52,4 +49,12 @@ public class WorkWithFile {
         }
     }
 
+    private StringBuilder createReport(int supply,int bay) {
+        int result = supply - bay;
+        StringBuilder report = new StringBuilder();
+        report.append("supply,").append(supply).append(System.lineSeparator());
+        report.append("buy,").append(bay).append(System.lineSeparator());
+        report.append("result,").append(result);
+        return report;
+    }
 }
