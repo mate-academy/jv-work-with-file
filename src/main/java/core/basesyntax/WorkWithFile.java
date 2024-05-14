@@ -2,26 +2,25 @@ package core.basesyntax;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final String COMMA_SEPARATOR = ",";
+    private static final String COMMA = ",";
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        WorkWithFile report = new WorkWithFile();
-        report.writeReportToFile(createReport(readFromFile(fromFileName)), toFileName);
+        String dataFromFile = readFromFile(fromFileName);
+        String result = createReport(dataFromFile);
+        writeReportToFile(result, toFileName);
     }
 
     private String readFromFile(String fileName) {
-        File fileRead = new File(fileName);
         StringBuilder result = new StringBuilder();
-        try (BufferedReader bf = new BufferedReader(new FileReader(fileRead))) {
+        try (BufferedReader bf = new BufferedReader(new FileReader(fileName))) {
             String bufferValue = bf.readLine();
             while (bufferValue != null) {
                 result.append(bufferValue).append(System.lineSeparator());
@@ -33,32 +32,29 @@ public class WorkWithFile {
         return result.toString();
     }
 
-    private String[] createReport(String dataFromFile) {
-        int supply = 0;
-        int buy = 0;
+    private String createReport(String dataFromFile) {
+        int supplyResult = 0;
+        int buyResult = 0;
+        int result;
         for (String string: dataFromFile.split("\\s+")) {
             if (string.contains(SUPPLY)) {
-                supply += Integer.parseInt(string.split(COMMA_SEPARATOR)[1]);
+                supplyResult += Integer.parseInt(string.split(COMMA)[1]);
             } else {
-                buy += Integer.parseInt(string.split(COMMA_SEPARATOR)[1]);
+                buyResult += Integer.parseInt(string.split(COMMA)[1]);
             }
         }
-        StringBuilder supplyBuilder = new StringBuilder().append(SUPPLY)
-                .append(COMMA_SEPARATOR).append(supply);
-        StringBuilder buyBuilder = new StringBuilder().append(BUY)
-                .append(COMMA_SEPARATOR).append(buy);
-        StringBuilder resultBuilder = new StringBuilder().append(RESULT)
-                .append(COMMA_SEPARATOR).append(supply - buy);
-        return new String[]{supplyBuilder.toString(), buyBuilder.toString(),
-                resultBuilder.toString()};
+        result = supplyResult - buyResult;
+        StringBuilder builder = new StringBuilder();
+        builder.append(SUPPLY).append(COMMA).append(supplyResult).append(System.lineSeparator())
+                .append(BUY).append(COMMA).append(buyResult).append(System.lineSeparator())
+                .append(RESULT).append(COMMA).append(result);
+        return builder.toString();
     }
 
-    private void writeReportToFile(String[] report, String toFile) {
-        File fileWrite = new File(toFile);
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(fileWrite))) {
-            for (int i = 0; i < report.length; i++) {
-                bw.write(report[i] + System.lineSeparator());
-            }
+    private void writeReportToFile(String report, String toFile) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(toFile))) {
+            bw.write(report);
+
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file" + toFile, e);
         }
