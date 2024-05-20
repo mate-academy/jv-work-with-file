@@ -31,6 +31,7 @@ public class WorkWithFile {
 
     private void writeToFile(String toFileName) {
         File file = new File(toFileName);
+
         try( BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file)) ) {
             bufferedWriter.write(KEY_SUPPLY);
             bufferedWriter.write(DEFAULT_DELIMETER);
