@@ -30,9 +30,10 @@ public class WorkWithFile {
     }
 
     private void writeToFile(String toFileName) {
-        File file = new File(toFileName);
-
-        try( BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file)) ) {
+        BufferedWriter bufferedWriter = null;
+        try {
+            File file = new File(toFileName);
+            bufferedWriter = new BufferedWriter(new FileWriter(file));
             bufferedWriter.write(KEY_SUPPLY);
             bufferedWriter.write(DEFAULT_DELIMETER);
             bufferedWriter.write(Integer.valueOf(supply).toString());
@@ -48,7 +49,13 @@ public class WorkWithFile {
         } catch (FileNotFoundException e) {
             throw new RuntimeException("Can't open file", e);
         } catch (IOException e) {
-            throw new RuntimeException("Can't close file", e);
+            throw new RuntimeException("Can't write to file", e);
+        } finally {
+            try {
+                bufferedWriter.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
