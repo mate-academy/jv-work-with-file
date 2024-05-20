@@ -18,6 +18,25 @@ public class WorkWithFile {
     }
 
     private void writeToFile(String toFileName) {
+        File file = new File(toFileName);
+        try(BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
+            bufferedWriter.write(KEY_SUPPLY);
+            bufferedWriter.write(DEFAULT_DELIMETER);
+            bufferedWriter.write(Integer.valueOf(supply).toString());
+            bufferedWriter.write(System.lineSeparator());
+            bufferedWriter.write(KEY_BUY);
+            bufferedWriter.write(DEFAULT_DELIMETER);
+            bufferedWriter.write(Integer.valueOf(buy).toString());
+            bufferedWriter.write(System.lineSeparator());
+            bufferedWriter.write("result");
+            bufferedWriter.write(DEFAULT_DELIMETER);
+            bufferedWriter.write(Integer.valueOf(supply).toString(result));
+            bufferedWriter.write(System.lineSeparator());
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException("Can't open file", e);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't close file", e);
+        }
     }
 
     private void calculateResult() {
