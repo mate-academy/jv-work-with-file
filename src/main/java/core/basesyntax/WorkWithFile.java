@@ -1,7 +1,12 @@
 package core.basesyntax;
 
-import java.io.*;
-import java.nio.file.Files;
+import java.io.File;
+import java.io.BufferedWriter;
+import java.io.BufferedReader;
+import java.io.FileWriter;
+import java.io.FileReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class WorkWithFile {
     private static final String DEFAULT_DELIMETER = ",";
@@ -37,7 +42,7 @@ public class WorkWithFile {
             bufferedWriter.write(System.lineSeparator());
             bufferedWriter.write("result");
             bufferedWriter.write(DEFAULT_DELIMETER);
-            bufferedWriter.write(Integer.valueOf(supply).toString(result));
+            bufferedWriter.write(Integer.valueOf(result).toString());
             bufferedWriter.write(System.lineSeparator());
         } catch (FileNotFoundException e) {
             throw new RuntimeException("Can't open file", e);
@@ -51,8 +56,7 @@ public class WorkWithFile {
     }
 
     private void readFromFile(String fromFileName) {
-        File file = new File(fromFileName);
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             while (true) {
                 String line = bufferedReader.readLine();
                 if (line == null) {
