@@ -12,9 +12,16 @@ public class WorkWithFile {
     private int result = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
+        clear();
         readFromFile(fromFileName);
         calculateResult();
         writeToFile(toFileName);
+    }
+
+    private void clear() {
+        this.buy = 0;
+        this.supply = 0;
+        this.result = 0;
     }
 
     private void writeToFile(String toFileName) {
