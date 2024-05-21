@@ -1,19 +1,19 @@
 package core.basesyntax;
 
 public class Data {
-    private Integer value = 0;
-    private String type = null;
+    private int value = 0;
+    private String type;
 
     public Data(String type) {
         this.type = type;
     }
 
-    public Data(Integer value, String type) {
+    public Data(int value, String type) {
         this.value = value;
         this.type = type;
     }
 
-    public void setValue(Integer value) {
+    public void setValue(int value) {
         this.value = value;
     }
 

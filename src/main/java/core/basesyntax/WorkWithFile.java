@@ -22,6 +22,60 @@ public class WorkWithFile {
         writeToFile(toFileName, report);
     }
 
+    private String readFromFile(String fromFileName) {
+        StringBuilder stringBuilder = new StringBuilder();
+        BufferedReader bufferedReader = null;
+        try {
+            bufferedReader = new BufferedReader(new FileReader(new File(fromFileName)));
+            String line = null;
+            while ((line = bufferedReader.readLine()) != null) {
+                stringBuilder
+                        .append(line)
+                        .append(System.lineSeparator());
+            }
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException("Can't open file " + fromFileName, e);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't read line from file " + fromFileName, e);
+        } finally {
+            try {
+                bufferedReader.close();
+            } catch (IOException e) {
+                throw new RuntimeException("Can't close file " + fromFileName, e);
+            }
+        }
+        return stringBuilder.toString();
+    }
+
+    private String processData(String dataFromFile) {
+        Data supply = new Data(DATA_SUPPLY);
+        Data buy = new Data(DATA_BUY);
+        Data result = new Data(DATA_RESULT);
+        StringBuilder stringBuilder = new StringBuilder();
+        String[] lines = dataFromFile.split(System.lineSeparator());
+        for (String line : lines) {
+            String[] typeValue = line.split(DEFAULT_DELIMETER);
+            String type = typeValue[TYPE];
+            int value = Integer.parseInt(typeValue[VALUE]);
+            if (type.equals(DATA_SUPPLY)) {
+                supply.addValue(value);
+                continue;
+            } else if (type.equals(DATA_BUY)) {
+                buy.addValue(value);
+                continue;
+            } else {
+                throw new RuntimeException("unknown type of data");
+            }
+        }
+        int diff = supply.getValue() - buy.getValue();
+        result.setValue(diff);
+        stringBuilder
+                .append(supply.toString()).append(System.lineSeparator())
+                .append(buy.toString()).append(System.lineSeparator())
+                .append(result.toString());
+        return stringBuilder.toString();
+    }
+
     private void writeToFile(String toFilename, String report) {
         BufferedWriter bufferedWriter = null;
         try {
@@ -36,59 +90,5 @@ public class WorkWithFile {
                 throw new RuntimeException("Can't close file " + toFilename, e);
             }
         }
-    }
-
-    private String processData(String dataFromFile) {
-        Data supply = new Data(DATA_SUPPLY);
-        Data buy = new Data(DATA_BUY);
-        Data result = new Data(DATA_RESULT);
-        StringBuilder stringBuilder = new StringBuilder();
-        String[] lines = dataFromFile.split("\n");
-        for (String line : lines) {
-            String[] typeValue = line.split(DEFAULT_DELIMETER);
-            String type = typeValue[TYPE];
-            int value = Integer.parseInt(typeValue[VALUE]);
-            if (type.equals(DATA_SUPPLY)) {
-                supply.addValue(value);
-                continue;
-            }
-            if (type.equals(DATA_BUY)) {
-                buy.addValue(value);
-                continue;
-            }
-            throw new RuntimeException("unknown type of data");
-        }
-        int diff = supply.getValue() - buy.getValue();
-        result.setValue(diff);
-        stringBuilder
-                .append(supply.toString()).append(System.lineSeparator())
-                .append(buy.toString()).append(System.lineSeparator())
-                .append(result.toString());
-        return stringBuilder.toString();
-    }
-
-    private String readFromFile(String fromFileName) {
-        StringBuilder stringBuilder = new StringBuilder();
-        BufferedReader bufferedReader = null;
-        try {
-            bufferedReader = new BufferedReader(new FileReader(new File(fromFileName)));
-            String line = null;
-            while ((line = bufferedReader.readLine()) != null) {
-                stringBuilder
-                        .append(line)
-                        .append("\n");
-            }
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException("Can't open file " + fromFileName, e);
-        } catch (IOException e) {
-            throw new RuntimeException("Can't read line from file " + fromFileName, e);
-        } finally {
-            try {
-                bufferedReader.close();
-            } catch (IOException e) {
-                throw new RuntimeException("Can't close file " + fromFileName, e);
-            }
-        }
-        return stringBuilder.toString();
     }
 }
