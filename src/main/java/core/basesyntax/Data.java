@@ -8,13 +8,13 @@ public class Data {
         this.type = type;
     }
 
-    public void setValue(Integer value) {
-        this.value = value;
-    }
-
     public Data(Integer value, String type) {
         this.value = value;
         this.type = type;
+    }
+
+    public void setValue(Integer value) {
+        this.value = value;
     }
 
     public Integer getValue() {

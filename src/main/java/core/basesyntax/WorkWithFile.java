@@ -7,13 +7,14 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Arrays;
 
 public class WorkWithFile {
     private static final String DEFAULT_DELIMETER = ",";
     private static final String DATA_SUPPLY = "supply";
     private static final String DATA_BUY = "buy";
     private static final String DATA_RESULT = "result";
+    private static final int TYPE = 0;
+    private static final int VALUE = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String dataFromFile = readFromFile(fromFileName);
@@ -38,8 +39,6 @@ public class WorkWithFile {
     }
 
     private String processData(String dataFromFile) {
-        final int TYPE = 0;
-        final int VALUE = 1;
         Data supply = new Data(DATA_SUPPLY);
         Data buy = new Data(DATA_BUY);
         Data result = new Data(DATA_RESULT);
@@ -90,7 +89,7 @@ public class WorkWithFile {
             try {
                 bufferedReader.close();
             } catch (IOException e) {
-                throw new RuntimeException("Can't close file "  +fromFileName, e);
+                throw new RuntimeException("Can't close file "  + fromFileName, e);
             }
         }
         return stringBuilder.toString();
