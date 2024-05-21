@@ -69,18 +69,12 @@ public class WorkWithFile {
     }
 
     private void writeToFile(String toFilename, String report) {
-        BufferedWriter bufferedWriter = null;
-        try {
-            bufferedWriter = new BufferedWriter(new FileWriter(new File(toFilename)));
+        try (BufferedWriter bufferedWriter =
+                    new BufferedWriter(new FileWriter(new File(toFilename)));) {
             bufferedWriter.write(report);
+            bufferedWriter.close();
         } catch (IOException e) {
             throw new RuntimeException("Can't open file " + toFilename, e);
-        } finally {
-            try {
-                bufferedWriter.close();
-            } catch (IOException e) {
-                throw new RuntimeException("Can't close file " + toFilename, e);
-            }
         }
     }
 }
