@@ -9,9 +9,9 @@ import java.io.IOException;
 
 public class WorkWithFile {
     private static final String DEFAULT_DELIMETER = ",";
-    private static final String DATA_SUPPLY = "supply";
-    private static final String DATA_BUY = "buy";
-    private static final String DATA_RESULT = "result";
+//    private static final String DATA_SUPPLY = "supply";
+//    private static final String DATA_BUY = "buy";
+//    private static final String DATA_RESULT = "result";
     private static final int TYPE = 0;
     private static final int VALUE = 1;
 
@@ -24,7 +24,7 @@ public class WorkWithFile {
     private String readFromFile(String fromFileName) {
         StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader bufferedReader =
-                     new BufferedReader(new FileReader(new File(fromFileName)))) {
+                     new BufferedReader(new FileReader(fromFileName))) {
             String line = null;
             while ((line = bufferedReader.readLine()) != null) {
                 stringBuilder
@@ -38,18 +38,18 @@ public class WorkWithFile {
     }
 
     private String processData(String dataFromFile) {
-        Data supply = new Data(DATA_SUPPLY);
-        Data buy = new Data(DATA_BUY);
-        Data result = new Data(DATA_RESULT);
+        Data supply = new Data(TypeEnum.SUPPLY);
+        Data buy = new Data(TypeEnum.BUY);
+        Data result = new Data(TypeEnum.RESULT);
         StringBuilder stringBuilder = new StringBuilder();
         String[] lines = dataFromFile.split(System.lineSeparator());
         for (String line : lines) {
             String[] typeValue = line.split(DEFAULT_DELIMETER);
-            String type = typeValue[TYPE];
+            TypeEnum type = TypeEnum.valueOf(typeValue[TYPE].toString().toUpperCase());
             int value = Integer.parseInt(typeValue[VALUE]);
-            if (type.equals(DATA_SUPPLY)) {
+            if (type == TypeEnum.SUPPLY) {
                 supply.addValue(value);
-            } else if (type.equals(DATA_BUY)) {
+            } else if (type == TypeEnum.BUY) {
                 buy.addValue(value);
             } else {
                 throw new RuntimeException("unknown type of data");
@@ -66,7 +66,7 @@ public class WorkWithFile {
 
     private void writeToFile(String toFilename, String report) {
         try (BufferedWriter bufferedWriter =
-                    new BufferedWriter(new FileWriter(new File(toFilename)));) {
+                    new BufferedWriter(new FileWriter(toFilename));) {
             bufferedWriter.write(report);
             bufferedWriter.close();
         } catch (IOException e) {

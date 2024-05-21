@@ -2,13 +2,13 @@ package core.basesyntax;
 
 public class Data {
     private int value;
-    private String type;
+    private TypeEnum type;
 
-    public Data(String type) {
+    public Data(TypeEnum type) {
         this.type = type;
     }
 
-    public Data(int value, String type) {
+    public Data(int value, TypeEnum type) {
         this.value = value;
         this.type = type;
     }
@@ -25,12 +25,12 @@ public class Data {
         this.value += value;
     }
 
-    public String getType() {
+    public TypeEnum getType() {
         return type;
     }
 
     @Override
     public String toString() {
-        return type + "," + value;
+        return type.toString().toLowerCase() + "," + value;
     }
 }
