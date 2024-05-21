@@ -24,25 +24,18 @@ public class WorkWithFile {
 
     private String readFromFile(String fromFileName) {
         StringBuilder stringBuilder = new StringBuilder();
-        BufferedReader bufferedReader = null;
-        try {
-            bufferedReader = new BufferedReader(new FileReader(new File(fromFileName)));
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(new File(fromFileName)))) {
             String line = null;
             while ((line = bufferedReader.readLine()) != null) {
                 stringBuilder
                         .append(line)
                         .append(System.lineSeparator());
             }
+            bufferedReader.close();
         } catch (FileNotFoundException e) {
             throw new RuntimeException("Can't open file " + fromFileName, e);
         } catch (IOException e) {
             throw new RuntimeException("Can't read line from file " + fromFileName, e);
-        } finally {
-            try {
-                bufferedReader.close();
-            } catch (IOException e) {
-                throw new RuntimeException("Can't close file " + fromFileName, e);
-            }
         }
         return stringBuilder.toString();
     }
