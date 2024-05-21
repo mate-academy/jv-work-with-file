@@ -59,10 +59,8 @@ public class WorkWithFile {
             int value = Integer.parseInt(typeValue[VALUE]);
             if (type.equals(DATA_SUPPLY)) {
                 supply.addValue(value);
-                continue;
             } else if (type.equals(DATA_BUY)) {
                 buy.addValue(value);
-                continue;
             } else {
                 throw new RuntimeException("unknown type of data");
             }
