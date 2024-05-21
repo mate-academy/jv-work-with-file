@@ -2,16 +2,12 @@ package core.basesyntax;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
     private static final String DEFAULT_DELIMETER = ",";
-//    private static final String DATA_SUPPLY = "supply";
-//    private static final String DATA_BUY = "buy";
-//    private static final String DATA_RESULT = "result";
     private static final int TYPE = 0;
     private static final int VALUE = 1;
 
