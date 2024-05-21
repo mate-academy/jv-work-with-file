@@ -72,11 +72,8 @@ public class WorkWithFile {
         BufferedReader bufferedReader = null;
         try {
             bufferedReader = new BufferedReader(new FileReader(new File(fromFileName)));
-            while (true) {
-                String line = bufferedReader.readLine();
-                if (line == null) {
-                    break;
-                }
+            String line = null;
+            while ((line = bufferedReader.readLine()) != null) {
                 stringBuilder
                         .append(line)
                         .append("\n");
