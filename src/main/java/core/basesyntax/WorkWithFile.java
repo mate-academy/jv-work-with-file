@@ -89,7 +89,7 @@ public class WorkWithFile {
             try {
                 bufferedReader.close();
             } catch (IOException e) {
-                throw new RuntimeException("Can't close file "  + fromFileName, e);
+                throw new RuntimeException("Can't close file " + fromFileName, e);
             }
         }
         return stringBuilder.toString();
