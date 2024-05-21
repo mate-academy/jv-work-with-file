@@ -1,47 +1,59 @@
 package core.basesyntax;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Scanner;
 
 public class WorkWithFile {
+    public static final String COMMA = ",";
+    public static final String SUPPLY = "supply";
+    public static final String BUY = "buy";
+    public static final String RESULT = "result";
+
     public void getStatistic(String fromFileName, String toFileName) {
-        File fileFrom = new File(fromFileName);
-        File fileTo = new File(toFileName);
-        try {
-            Scanner scanner = new Scanner(fileFrom);
-            scanner.useDelimiter(",");
+        String originText = readFile(fromFileName);
+        String result = getResult(originText);
+        writeToFile(result, toFileName);
+    }
+
+    private String readFile(String originFile) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(originFile))) {
             StringBuilder stringBuilder = new StringBuilder();
-            String text = String.valueOf(stringBuilder);
-            while (scanner.hasNext()) {
-                text = String.valueOf(stringBuilder.append(scanner.next()).append(" "));
+            String text = reader.readLine();
+            while (text != null) {
+                stringBuilder.append(text).append(System.lineSeparator());
+                text = reader.readLine();
             }
-            BufferedWriter writer = getBufferedWriter(text, fileTo);
-            writer.close();
+            return stringBuilder.toString();
         } catch (IOException e) {
             throw new RuntimeException("Can't read file", e);
         }
     }
 
-    private static BufferedWriter getBufferedWriter(String text, File fileTo) throws IOException {
+    private static String getResult(String text) {
         String[] textData = text.split("\\W+");
-        int supplyResult = 0;
-        int buyResult = 0;
+        int resultSupply = 0;
+        int resultBuy = 0;
         for (int i = 0; i < textData.length; i++) {
-            if (textData[i].equals("supply")) {
-                supplyResult += Integer.parseInt(textData[i + 1]);
-            } else if (textData[i].equals("buy")) {
-                buyResult += Integer.parseInt(textData[i + 1]);
+            if (textData[i].equals(SUPPLY)) {
+                resultSupply += Integer.parseInt(textData[i + 1]);
+            } else if (textData[i].equals(BUY)) {
+                resultBuy += Integer.parseInt(textData[i + 1]);
             }
         }
-        int totalResult = supplyResult - buyResult;
-        String result = "supply," + supplyResult
-                + "\nbuy," + buyResult
-                + "\nresult," + totalResult;
-        BufferedWriter writer = new BufferedWriter(new FileWriter(fileTo));
-        writer.write(result);
-        return writer;
+        int totalResult = resultSupply - resultBuy;
+        return SUPPLY + COMMA + resultSupply + System.lineSeparator()
+                + BUY + COMMA + resultBuy + System.lineSeparator()
+                + RESULT + COMMA + totalResult;
+    }
+
+    private static void writeToFile(String result, String toFile) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFile))) {
+            writer.write(result);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write file", e);
+        }
     }
 }
