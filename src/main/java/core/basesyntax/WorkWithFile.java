@@ -32,9 +32,6 @@ public class WorkWithFile {
                         .append(line)
                         .append(System.lineSeparator());
             }
-            bufferedReader.close();
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException("Can't open file " + fromFileName, e);
         } catch (IOException e) {
             throw new RuntimeException("Can't read line from file " + fromFileName, e);
         }

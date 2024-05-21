@@ -1,7 +1,7 @@
 package core.basesyntax;
 
 public class Data {
-    private int value = 0;
+    private int value;
     private String type;
 
     public Data(String type) {
