@@ -17,7 +17,8 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] dataFromFile = readFromFile(fromFileName);
-        writeToFile(toFileName, createReport(dataFromFile));
+        String report = createReport(dataFromFile);
+        writeToFile(toFileName, report);
     }
 
     private String[] readFromFile(String fromFileName) {
@@ -51,8 +52,11 @@ public class WorkWithFile {
             }
         }
 
-        int result = totalSupply - totalBuy;
+        return generateReportString(totalSupply, totalBuy);
+    }
 
+    private String generateReportString(int totalSupply, int totalBuy) {
+        int result = totalSupply - totalBuy;
         return SUPPLY + COMMA + totalSupply + NEW_LINE
                 + BUY + COMMA + totalBuy + NEW_LINE
                 + RESULT + COMMA + result + NEW_LINE;
