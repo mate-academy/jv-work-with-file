@@ -12,18 +12,37 @@ public class WorkWithFile {
     private static final String RESULT = "result";
     private static final String COMMA = ",";
     private static final String NEW_LINE = System.lineSeparator();
+    private static final int OPERATION_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int totalSupply = 0;
-        int totalBuy = 0;
+        String[] dataFromFile = readFromFile(fromFileName);
+        String report = createReport(dataFromFile);
+        writeToFile(toFileName, report);
+    }
 
-        // Read data from the input file
+    private String[] readFromFile(String fromFileName) {
+        StringBuilder fileContent = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String line;
             while ((line = reader.readLine()) != null) {
+                fileContent.append(line).append(NEW_LINE);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Error reading the file: " + fromFileName, e);
+        }
+        return fileContent.toString().split(NEW_LINE);
+    }
+
+    private String createReport(String[] data) {
+        int totalSupply = 0;
+        int totalBuy = 0;
+
+        for (String line : data) {
+            if (!line.isEmpty()) {
                 String[] parts = line.split(COMMA);
-                String operationType = parts[0];
-                int amount = Integer.parseInt(parts[1]);
+                String operationType = parts[OPERATION_INDEX];
+                int amount = Integer.parseInt(parts[AMOUNT_INDEX]);
 
                 if (SUPPLY.equals(operationType)) {
                     totalSupply += amount;
@@ -31,20 +50,22 @@ public class WorkWithFile {
                     totalBuy += amount;
                 }
             }
-        } catch (IOException | NumberFormatException e) {
-            System.err.println("Error reading the file: " + e.getMessage());
-            return;
         }
 
         int result = totalSupply - totalBuy;
 
-        // Write the result to the output file
+        String report = SUPPLY + COMMA + totalSupply + NEW_LINE
+                + BUY + COMMA + totalBuy + NEW_LINE
+                + RESULT + COMMA + result + NEW_LINE;
+
+        return report;
+    }
+
+    private void writeToFile(String toFileName, String report) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            writer.write(SUPPLY + COMMA + totalSupply + NEW_LINE);
-            writer.write(BUY + COMMA + totalBuy + NEW_LINE);
-            writer.write(RESULT + COMMA + result + NEW_LINE);
+            writer.write(report);
         } catch (IOException e) {
-            System.err.println("Error writing the file: " + e.getMessage());
+            throw new RuntimeException("Error writing the file: " + toFileName, e);
         }
     }
 }
