@@ -8,16 +8,22 @@ import java.io.IOException;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
+        String[] resultFile = readFromFile(fromFileName);
+        String report = createReport(resultFile);
+        writeToFile(toFileName, report);
+    }
+
+    public String[] readFromFile(String fromFileName) {
+        String[] dateFromLine;
+        String str;
+        int result;
         int supply = 0;
         int buy = 0;
-        int result;
-        String report = null;
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
-            String str;
             while ((str = bufferedReader.readLine()) != null) {
                 if (str.contains("supply")) {
-                    String[] values = str.split(",");
-                    int numbers = Integer.parseInt(values[1]);
+                    dateFromLine = str.split(",");
+                    int numbers = Integer.parseInt(dateFromLine[1]);
                     supply += numbers;
                 }
                 if (str.contains("buy")) {
@@ -30,9 +36,21 @@ public class WorkWithFile {
             throw new RuntimeException("Cannot read file ", e);
         }
         result = supply - buy;
-        report = "supply," + supply + System.lineSeparator()
-                    + "buy," + buy + System.lineSeparator()
-                    + "result," + result;
+        String[] resultFile = new String[3];
+        resultFile[0] = "" + supply;
+        resultFile[1] = "" + buy;
+        resultFile[2] = "" + result;
+        return resultFile;
+    }
+
+    public String createReport(String[] result) {
+        String report = "supply," + result[0] + System.lineSeparator()
+                + "buy," + result[1] + System.lineSeparator()
+                + "result," + result[2];
+        return report;
+    }
+
+    public void writeToFile(String toFileName, String report) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(report);
         } catch (IOException e) {
@@ -40,3 +58,10 @@ public class WorkWithFile {
         }
     }
 }
+/*
+try to not do everything in single method, lets use such pattern:
+постарайтесь не делать все одним методом, давайте воспользуемся таким шаблоном:
+String data = readFromFile(file);
+String report = createReport(data);
+writeToFile(file, report)
+ */
