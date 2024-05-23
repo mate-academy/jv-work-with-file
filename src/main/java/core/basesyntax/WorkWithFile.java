@@ -15,19 +15,22 @@ public class WorkWithFile {
 
     public String[] readFromFile(String fromFileName) {
         String[] dateFromLine;
-        String str;
+        String data;
         int result;
         int supply = 0;
         int buy = 0;
+        String sypply = "supply";
+        String comma = ",";
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
-            while ((str = bufferedReader.readLine()) != null) {
-                if (str.contains("supply")) {
-                    dateFromLine = str.split(",");
-                    int numbers = Integer.parseInt(dateFromLine[1]);
+            while ((data = bufferedReader.readLine()) != null) {
+                if (data.contains(sypply)) {
+                    dateFromLine = data.split(comma);
+                    String amount = dateFromLine[1];
+                    int numbers = Integer.parseInt(amount);
                     supply += numbers;
                 }
-                if (str.contains("buy")) {
-                    String[] values = str.split(",");
+                if (data.contains("buy")) {
+                    String[] values = data.split(comma);
                     int money = Integer.parseInt(values[1]);
                     buy += money;
                 }
@@ -36,18 +39,21 @@ public class WorkWithFile {
             throw new RuntimeException("Cannot read file ", e);
         }
         result = supply - buy;
-        String[] resultFile = new String[3];
-        resultFile[0] = "" + supply;
-        resultFile[1] = "" + buy;
-        resultFile[2] = "" + result;
-        return resultFile;
+        String supplyValye = "" + supply;
+        String buyValue = "" + buy;
+        String resultValue = "" + result;
+        return new String[] {supplyValye, buyValue, resultValue};
     }
 
     public String createReport(String[] result) {
-        String report = "supply," + result[0] + System.lineSeparator()
-                + "buy," + result[1] + System.lineSeparator()
-                + "result," + result[2];
-        return report;
+        String supply = result[0];
+        String buy = result[1];
+        String resultValue = result[2];
+        StringBuilder report = new StringBuilder();
+        report.append("supply,").append(supply).append(System.lineSeparator())
+                .append("buy,").append(buy).append(System.lineSeparator())
+                .append("result,").append(resultValue);
+        return report.toString();
     }
 
     public void writeToFile(String toFileName, String report) {
@@ -58,10 +64,3 @@ public class WorkWithFile {
         }
     }
 }
-/*
-try to not do everything in single method, lets use such pattern:
-постарайтесь не делать все одним методом, давайте воспользуемся таким шаблоном:
-String data = readFromFile(file);
-String report = createReport(data);
-writeToFile(file, report)
- */
