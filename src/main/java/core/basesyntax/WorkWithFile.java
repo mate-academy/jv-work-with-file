@@ -10,10 +10,10 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         int totalSupply = 0;
         int totalBuy = 0;
-        int result = 0;
+        int result;
 
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
-            String line = null;
+            String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
                 String operation = parts[0];
