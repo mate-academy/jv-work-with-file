@@ -21,7 +21,7 @@ public class WorkWithFile {
                 content.append(line).append(System.lineSeparator());
             }
         } catch (IOException exception) {
-            throw new RuntimeException("Can't read file.");
+            throw new RuntimeException("Can't read file.", exception);
         }
         return content.toString().split(System.lineSeparator());
     }
