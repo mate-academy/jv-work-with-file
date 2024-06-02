@@ -7,13 +7,19 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
+    private static final String COMMA = ",";
+    private static final String LINE_SEPARATOR = System.lineSeparator();
+
     public void getStatistic(String fromFileName, String toFileName) {
-        String[] dataFromFile = readFile(fromFileName);
+        String dataFromFile = readFile(fromFileName);
         String report = createReport(dataFromFile);
         writeReportToFile(toFileName, report);
     }
 
-    private String[] readFile(String fromFileName) {
+    private String readFile(String fromFileName) {
         StringBuilder content = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String line;
@@ -23,17 +29,20 @@ public class WorkWithFile {
         } catch (IOException exception) {
             throw new RuntimeException("Can't read file.", exception);
         }
-        return content.toString().split(System.lineSeparator());
+        return content.toString();
     }
 
-    private String createReport(String[] lines) {
+    private String createReport(String data) {
         int totalSupply = 0;
         int totalBuy = 0;
+        int firstPart = 0;
+        int secondPart = 1;
 
+        String[] lines = data.split(System.lineSeparator());
         for (String line : lines) {
             String[] parts = line.split(",");
-            String operation = parts[0];
-            int amount = Integer.parseInt(parts[1]);
+            String operation = parts[firstPart];
+            int amount = Integer.parseInt(parts[secondPart]);
 
             if (operation.equals("supply")) {
                 totalSupply += amount;
@@ -45,10 +54,10 @@ public class WorkWithFile {
         int result = totalSupply - totalBuy;
 
         return new StringBuilder()
-                    .append("supply,").append(totalSupply).append(System.lineSeparator())
-                    .append("buy,").append(totalBuy).append(System.lineSeparator())
-                    .append("result,").append(result).append(System.lineSeparator())
-                    .toString();
+                .append(SUPPLY).append(COMMA).append(totalSupply).append(LINE_SEPARATOR)
+                .append(BUY).append(COMMA).append(totalBuy).append(LINE_SEPARATOR)
+                .append(RESULT).append(COMMA).append(result).append(LINE_SEPARATOR)
+                .toString();
     }
 
     private void writeReportToFile(String toFileName, String report) {
