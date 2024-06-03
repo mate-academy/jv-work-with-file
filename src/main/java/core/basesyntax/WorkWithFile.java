@@ -8,79 +8,47 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-
+    private static final int OPERATION_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
-    private static final String RESULT = "result";
 
     public int[] getStatistic(String fromFileName, String toFileName) {
-        String[] lines = readFile(fromFileName);
-        Totals totals = calculateTotals(lines);
-        writeFile(toFileName, totals);
-        return new int[]{totals.getSupplyTotal(), totals.getBuyTotal(), totals.getResult()};
-    }
-
-    private String[] readFile(String fromFileName) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(new File(fromFileName)))) {
-            return reader.lines().toArray(String[]::new);
-        } catch (IOException e) {
-            throw new RuntimeException("Помилка обробки файлів", e);
-        }
-    }
-
-    private Totals calculateTotals(String[] lines) {
         int supplyTotal = 0;
         int buyTotal = 0;
 
-        for (String line : lines) {
-            String[] parts = line.split(",");
-            String operation = parts[0].trim();
-            int amount = Integer.parseInt(parts[1].trim());
+        try (BufferedReader reader = new BufferedReader(new FileReader(new File(fromFileName)))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                String operation = parts[OPERATION_INDEX].trim();
+                int amount = Integer.parseInt(parts[AMOUNT_INDEX].trim());
 
-            if (SUPPLY.equals(operation)) {
-                supplyTotal += amount;
-            } else if (BUY.equals(operation)) {
-                buyTotal += amount;
+                if (SUPPLY.equals(operation)) {
+                    supplyTotal += amount;
+                } else if (BUY.equals(operation)) {
+                    buyTotal += amount;
+                }
             }
+        } catch (IOException e) {
+            throw new RuntimeException("File processing error", e);
         }
 
         int result = supplyTotal - buyTotal;
-        return new Totals(supplyTotal, buyTotal, result);
+        writeFile(toFileName, supplyTotal, buyTotal, result);
+
+        return new int[]{supplyTotal, buyTotal, result};
     }
 
-    private void writeFile(String toFileName, Totals totals) {
+    private void writeFile(String toFileName, int supplyTotal, int buyTotal, int result) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File(toFileName)))) {
-            writer.write(SUPPLY + "," + totals.getSupplyTotal());
+            writer.write(SUPPLY + "," + supplyTotal);
             writer.newLine();
-            writer.write(BUY + "," + totals.getBuyTotal());
+            writer.write(BUY + "," + buyTotal);
             writer.newLine();
-            writer.write(RESULT + "," + totals.getResult());
+            writer.write("result," + result);
         } catch (IOException e) {
-            throw new RuntimeException("Помилка запису в файл", e);
+            throw new RuntimeException("File writing error", e);
         }
-    }
-}
-
-class Totals {
-    private final int supplyTotal;
-    private final int buyTotal;
-    private final int result;
-
-    public Totals(int supplyTotal, int buyTotal, int result) {
-        this.supplyTotal = supplyTotal;
-        this.buyTotal = buyTotal;
-        this.result = result;
-    }
-
-    public int getSupplyTotal() {
-        return supplyTotal;
-    }
-
-    public int getBuyTotal() {
-        return buyTotal;
-    }
-
-    public int getResult() {
-        return result;
     }
 }
