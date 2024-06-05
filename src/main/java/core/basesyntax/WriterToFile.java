@@ -17,7 +17,7 @@ public class WriterToFile {
             for (var entry : inputMap.entrySet()) {
                 bufferedWriter.write(entry.getKey()
                                              + FileParser.COMMA_SEPARATOR
-                                             + entry.getValue() + "\n");
+                                             + entry.getValue() + "\r\n");
                 if (index == 0) {
                     supplyValue = entry.getValue();
                     index++;
