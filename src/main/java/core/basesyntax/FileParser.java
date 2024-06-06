@@ -1,14 +1,12 @@
 package core.basesyntax;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.List;
+import java.util.ArrayList;
 
 public class FileParser {
-    public static final String COMMA_SEPARATOR = ",";
 
     public List<String> parseFileContent(String fileName) {
         List<String> fileContent = new ArrayList<>();
