@@ -6,14 +6,14 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FileParser {
+public class ReaderFile {
 
-    public List<String> parseFileContent(String fileName) {
+    public List<String> readFromFile(String fileName) {
         List<String> fileContent = new ArrayList<>();
         try {
             fileContent = Files.readAllLines(Paths.get(fileName));
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Can't read from file", e);
         }
         return fileContent;
     }
