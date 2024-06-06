@@ -49,7 +49,9 @@ public class WorkWithFile {
         int supplyTotal = output[0];
         int buyTotal = output[1];
         int result = supplyTotal - buyTotal;
-        return String.format("%s,%d%n%s,%d%n%s,%d", SUPPLY, supplyTotal, BUY, buyTotal, RESULT, result);
+        return String.format("%s,%d%n%s,%d%n%s,%d", SUPPLY, supplyTotal,
+                BUY, buyTotal,
+                RESULT, result);
     }
 
     private void writeToFile(String result, String toFileName) {
@@ -60,11 +62,15 @@ public class WorkWithFile {
         }
     }
 
-    private void writeFile(String toFileName, int supplyTotal, int buyTotal, int result) {
+    private void writeFile(String toFileName, int supplyTotal,
+                           int buyTotal, int result) {
         StringBuilder sb = new StringBuilder();
-        sb.append(SUPPLY).append(COMMA_DELIMITER).append(supplyTotal).append(System.lineSeparator());
-        sb.append(BUY).append(COMMA_DELIMITER).append(buyTotal).append(System.lineSeparator());
-        sb.append(RESULT).append(COMMA_DELIMITER).append(result).append(System.lineSeparator());
+        sb.append(SUPPLY).append(COMMA_DELIMITER)
+                .append(supplyTotal).append(System.lineSeparator());
+        sb.append(BUY).append(COMMA_DELIMITER)
+                .append(buyTotal).append(System.lineSeparator());
+        sb.append(RESULT).append(COMMA_DELIMITER)
+                .append(result).append(System.lineSeparator());
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write(sb.toString());
