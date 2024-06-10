@@ -2,7 +2,6 @@ package core.basesyntax;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -22,17 +21,15 @@ public class WorkWithFile {
     }
 
     public String readFile(String fromFileName) {
-        File file = new File(fromFileName);
         StringBuilder stringBuilder = new StringBuilder();
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String fileLine = bufferedReader.readLine();
             while (fileLine != null) {
                 stringBuilder.append(fileLine).append(SPACE);
                 fileLine = bufferedReader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't read file: " + fromFileName, e);
         }
         return stringBuilder.toString();
     }
@@ -40,6 +37,7 @@ public class WorkWithFile {
     public String createReport(String dataFromFile) {
         int totalSupply = 0;
         int totalBuy = 0;
+        StringBuilder stringBuilder = new StringBuilder();
         String[] parts = dataFromFile.split(SPACE);
         for (String part : parts) {
             if (part.contains(SUPPLY)) {
@@ -48,17 +46,18 @@ public class WorkWithFile {
                 totalBuy += Integer.parseInt(part.replaceAll(BUY + COMMA, ""));
             }
         }
-        return SUPPLY + COMMA + totalSupply + NEW_LINE
-                + BUY + COMMA + totalBuy + NEW_LINE
-                + RESULT + COMMA + (totalSupply - totalBuy);
+        stringBuilder.append(SUPPLY).append(COMMA).append(totalSupply)
+                .append(NEW_LINE).append(BUY).append(COMMA).append(totalBuy)
+                .append(NEW_LINE).append(RESULT).append(COMMA)
+                .append(totalSupply - totalBuy);
+        return stringBuilder.toString();
     }
 
     public void writeToFile(String toFileName, String report) {
-        File file = new File(toFileName);
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data to file", e);
+            throw new RuntimeException("Can't write data to file: " + toFileName, e);
         }
     }
 }
