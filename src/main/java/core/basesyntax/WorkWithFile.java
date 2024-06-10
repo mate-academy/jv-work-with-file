@@ -14,6 +14,14 @@ public class WorkWithFile {
     private static final String COMMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
+        int[] supplyAndBuySums = readData(fromFileName);
+        int supplySum = supplyAndBuySums[0];
+        int buySum = supplyAndBuySums[1];
+        int result = calculateResult(supplySum, buySum);
+        writeReport(toFileName, supplySum, buySum, result);
+    }
+
+    private int[] readData(String fromFileName) {
         int supplySum = 0;
         int buySum = 0;
 
@@ -34,8 +42,11 @@ public class WorkWithFile {
             throw new RuntimeException("Can not read data from the file " + fromFileName, e);
         }
 
-        int result = supplySum - buySum;
-        writeReport(toFileName, supplySum, buySum, result);
+        return new int[]{supplySum, buySum};
+    }
+
+    private int calculateResult(int supplySum, int buySum) {
+        return supplySum - buySum;
     }
 
     private void writeReport(String toFileName, int supplySum, int buySum, int result) {
