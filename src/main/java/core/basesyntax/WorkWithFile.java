@@ -45,18 +45,14 @@ public class WorkWithFile {
     private String createReport(int[] supplyAndBuySums) {
         int supplySum = supplyAndBuySums[0];
         int buySum = supplyAndBuySums[1];
-        int result = calculateResult(supplySum, buySum);
+        int result = supplySum - buySum;
 
         StringBuilder reportBuilder = new StringBuilder();
-        reportBuilder.append(SUPPLY).append(COMMA).append(supplySum).append(System.lineSeparator());
-        reportBuilder.append(BUY).append(COMMA).append(buySum).append(System.lineSeparator());
-        reportBuilder.append(RESULT).append(COMMA).append(result).append(System.lineSeparator());
+        reportBuilder.append(SUPPLY).append(COMMA).append(supplySum).append(System.lineSeparator())
+                .append(BUY).append(COMMA).append(buySum).append(System.lineSeparator())
+                .append(RESULT).append(COMMA).append(result).append(System.lineSeparator());
 
         return reportBuilder.toString();
-    }
-
-    private int calculateResult(int supplySum, int buySum) {
-        return supplySum - buySum;
     }
 
     private void writeReport(String toFileName, String report) {
