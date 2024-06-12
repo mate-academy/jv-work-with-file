@@ -66,9 +66,4 @@ public class WorkWithFile {
             throw new RuntimeException("Can not write data to the file " + toFileName, e);
         }
     }
-
-    public static void main(String[] args) {
-        WorkWithFile calculator = new WorkWithFile();
-        calculator.getStatistic("input.txt", "output.txt");
-    }
 }
