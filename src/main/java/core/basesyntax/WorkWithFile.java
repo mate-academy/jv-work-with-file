@@ -7,18 +7,15 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-
+    private static final String COMMA = ",";
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
-    private static final String COMMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         int[] supplyAndBuySums = readData(fromFileName);
-        int supplySum = supplyAndBuySums[0];
-        int buySum = supplyAndBuySums[1];
-        int result = calculateResult(supplySum, buySum);
-        writeReport(toFileName, supplySum, buySum, result);
+        String report = createReport(supplyAndBuySums);
+        writeReport(toFileName, report);
     }
 
     private int[] readData(String fromFileName) {
@@ -45,17 +42,33 @@ public class WorkWithFile {
         return new int[]{supplySum, buySum};
     }
 
+    private String createReport(int[] supplyAndBuySums) {
+        int supplySum = supplyAndBuySums[0];
+        int buySum = supplyAndBuySums[1];
+        int result = calculateResult(supplySum, buySum);
+
+        StringBuilder reportBuilder = new StringBuilder();
+        reportBuilder.append(SUPPLY).append(COMMA).append(supplySum).append(System.lineSeparator());
+        reportBuilder.append(BUY).append(COMMA).append(buySum).append(System.lineSeparator());
+        reportBuilder.append(RESULT).append(COMMA).append(result).append(System.lineSeparator());
+
+        return reportBuilder.toString();
+    }
+
     private int calculateResult(int supplySum, int buySum) {
         return supplySum - buySum;
     }
 
-    private void writeReport(String toFileName, int supplySum, int buySum, int result) {
+    private void writeReport(String toFileName, String report) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write(SUPPLY + COMMA + supplySum + System.lineSeparator());
-            bufferedWriter.write(BUY + COMMA + buySum + System.lineSeparator());
-            bufferedWriter.write(RESULT + COMMA + result + System.lineSeparator());
+            bufferedWriter.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Can not write data to the file " + toFileName, e);
         }
+    }
+
+    public static void main(String[] args) {
+        WorkWithFile calculator = new WorkWithFile();
+        calculator.getStatistic("input.txt", "output.txt");
     }
 }
