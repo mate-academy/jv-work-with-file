@@ -19,7 +19,7 @@ public class WorkWithFile {
         int totalBuy = 0;
 
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
-             BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
+                BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
 
             String line;
             while ((line = reader.readLine()) != null) {
