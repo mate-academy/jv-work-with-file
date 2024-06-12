@@ -9,6 +9,8 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
+    private static final String RESULT = "result";
+    private static final String COMMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String data = readFile(fromFileName);
@@ -19,20 +21,21 @@ public class WorkWithFile {
     private String generateReport(String data) {
         StringBuilder report = new StringBuilder();
         String[] stringArray = data.split(" ");
-        report.append("supply,").append(Integer.parseInt(stringArray[0]))
-                .append(System.lineSeparator());
-        report.append("buy,").append(Integer.parseInt(stringArray[1]))
-                .append(System.lineSeparator());
-        report.append("result,").append(Integer.parseInt(stringArray[2]))
+        String supply = stringArray[0];
+        String buy = stringArray[1];
+        String result = stringArray[2];
+        report.append(SUPPLY).append(COMMA).append(supply)
+                .append(System.lineSeparator())
+                .append(BUY).append(COMMA).append(buy)
+                .append(System.lineSeparator())
+                .append(RESULT).append(COMMA).append(result)
                 .append(System.lineSeparator());
         return report.toString();
     }
 
     private String readFile(String fileName) {
-        BufferedReader reader = null;
         StringBuilder stringBuilder = new StringBuilder();
-        try {
-            reader = new BufferedReader(new FileReader(fileName));
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             int supply = 0;
             int buy = 0;
             int result;
@@ -51,33 +54,15 @@ public class WorkWithFile {
                     .append(result);
             return stringBuilder.toString();
         } catch (IOException e) {
-            throw new RuntimeException("Something went wrong");
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException ignored) {
-                    System.out.println("There was an error closing the reader");
-                }
-            }
+            throw new RuntimeException("There was an error reading data to the file");
         }
     }
 
     private void writeToFile(String fileName, String report) {
-        BufferedWriter writer = null;
-        try {
-            writer = new BufferedWriter(new FileWriter(fileName));
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             writer.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Something went wrong");
-        } finally {
-            if (writer != null) {
-                try {
-                    writer.close();
-                } catch (IOException ignored) {
-                    System.out.println("There was an error closing the writer");
-                }
-            }
+            throw new RuntimeException("There was an error writing data to the file");
         }
     }
 }
