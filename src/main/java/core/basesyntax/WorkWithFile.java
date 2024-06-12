@@ -11,40 +11,45 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
+    private static final int OPERATION_TYPE_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int[] supplyAndBuySums = readData(fromFileName);
-        String report = createReport(supplyAndBuySums);
+        String data = readData(fromFileName);
+        String report = createReport(data);
         writeReport(toFileName, report);
     }
 
-    private int[] readData(String fromFileName) {
-        int supplySum = 0;
-        int buySum = 0;
-
+    private String readData(String fromFileName) {
+        StringBuilder dataBuilder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
-                String[] data = line.split(COMMA);
-                String operationType = data[0];
-                int amount = Integer.parseInt(data[1]);
-
-                if (operationType.equals(SUPPLY)) {
-                    supplySum += amount;
-                } else if (operationType.equals(BUY)) {
-                    buySum += amount;
-                }
+                dataBuilder.append(line).append(System.lineSeparator());
             }
         } catch (IOException e) {
             throw new RuntimeException("Can not read data from the file " + fromFileName, e);
         }
-
-        return new int[]{supplySum, buySum};
+        return dataBuilder.toString();
     }
 
-    private String createReport(int[] supplyAndBuySums) {
-        int supplySum = supplyAndBuySums[0];
-        int buySum = supplyAndBuySums[1];
+    private String createReport(String data) {
+        int supplySum = 0;
+        int buySum = 0;
+
+        String[] lines = data.split(System.lineSeparator());
+        for (String line : lines) {
+            String[] elements = line.split(COMMA);
+            String operationType = elements[OPERATION_TYPE_INDEX];
+            int amount = Integer.parseInt(elements[AMOUNT_INDEX]);
+
+            if (operationType.equals(SUPPLY)) {
+                supplySum += amount;
+            } else if (operationType.equals(BUY)) {
+                buySum += amount;
+            }
+        }
+
         int result = supplySum - buySum;
 
         StringBuilder reportBuilder = new StringBuilder();
