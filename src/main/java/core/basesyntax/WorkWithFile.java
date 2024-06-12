@@ -37,9 +37,7 @@ public class WorkWithFile {
             writer.newLine();
 
         } catch (IOException e) {
-            System.out.println("An error occurred: " + e.getMessage());
-        } catch (NumberFormatException e) {
-            System.out.println("Invalid number format in the input file: " + e.getMessage());
+            throw new RuntimeException("Cant write to file", e);
         }
     }
 }
