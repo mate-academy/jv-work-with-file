@@ -12,12 +12,10 @@ public class WorkWithFile {
     private static final String BUY = "buy";
     private static final String RESULT = "result";
     private static final int START_VALUE = 0;
-    private static final int STEP = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int supplyValue = calculateSupplyValue(readFromFile(fromFileName));
-        int buyValue = calculateBuyValue(readFromFile(fromFileName));
-        writeInfoToFile(supplyValue, buyValue, toFileName);
+        writeInfoToFile(calculateSupplyValue(readFromFile(fromFileName)),
+                calculateBuyValue(readFromFile(fromFileName)), toFileName);
     }
 
     private String[] readFromFile(String fromFileName) {
@@ -26,33 +24,30 @@ public class WorkWithFile {
             StringBuilder builder = new StringBuilder();
             String line = bufferedReader.readLine();
             while (line != null) {
-                String[] listArray = line.split(",");
-                for (String list : listArray) {
-                    builder.append(list).append(",");
-                }
+                builder.append(line).append(",");
                 line = bufferedReader.readLine();
             }
             return builder.toString().split(",");
         } catch (IOException e) {
-            throw new RuntimeException("Can't read from file" + e);
+            throw new RuntimeException("Can't read from file" + e.getMessage());
         }
     }
 
-    private int calculateSupplyValue(String[] string) {
+    private int calculateSupplyValue(String[] dataLines) {
         int supplyValue = START_VALUE;
-        for (int i = 0; i < string.length; i++) {
-            if (string[i].equals(SUPPLY)) {
-                supplyValue += Integer.parseInt(string[i + STEP]);
+        for (int i = 0; i < dataLines.length; i++) {
+            if (dataLines[i].equals(SUPPLY)) {
+                supplyValue += Integer.parseInt(dataLines[i + 1]);
             }
         }
         return supplyValue;
     }
 
-    private int calculateBuyValue(String[] string) {
+    private int calculateBuyValue(String[] dataLines) {
         int buyValue = START_VALUE;
-        for (int i = 0; i < string.length; i++) {
-            if (string[i].equals(BUY)) {
-                buyValue += Integer.parseInt(string[i + STEP]);
+        for (int i = 0; i < dataLines.length; i++) {
+            if (dataLines[i].equals(BUY)) {
+                buyValue += Integer.parseInt(dataLines[i + 1]);
             }
         }
         return buyValue;
@@ -64,7 +59,7 @@ public class WorkWithFile {
                     + BUY + "," + buy + System.lineSeparator()
                     + RESULT + "," + (supply - buy));
         } catch (IOException e) {
-            throw new RuntimeException("Can't create this file " + e);
+            throw new RuntimeException("Can't create this file " + e.getMessage());
         }
     }
 
