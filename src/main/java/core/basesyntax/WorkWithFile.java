@@ -8,11 +8,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    public static final String SUPPLY = "supply";
-    public static final String BUY = "buy";
-    public static final String COMMA_SEPARATOR = ",";
-    public static final int TYPE_INDEX = 0;
-    public static final int VALUE_INDEX = 1;
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String COMMA_SEPARATOR = ",";
+    private static final int TYPE_INDEX = 0;
+    private static final int VALUE_INDEX = 1;
 
     private int supply = 0;
     private int buy = 0;
