@@ -8,33 +8,53 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private String line;
+    public static final String SUPPLY = "supply";
+    public static final String BUY = "buy";
+    public static final String COMMA_SEPARATOR = ",";
+    public static final int TYPE_INDEX = 0;
+    public static final int VALUE_INDEX = 1;
+
+    private int supply = 0;
+    private int buy = 0;
+    private int result = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int supply = 0;
-        int buy = 0;
-        int result = 0;
-
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
-            while ((line = bufferedReader.readLine()) != null) {
-                String[] parts = line.split(",");
-                String type = parts[0];
-                int value = Integer.parseInt(parts[1]);
-                if (type.equals("supply")) {
-                    supply += value;
-                } else if (type.equals("buy")) {
-                    buy += value;
-                }
-            }
-            result = supply - buy;
-        } catch (IOException e) {
-            throw new RuntimeException("Can't read data from the file " + fromFileName, e);
-        }
-
-        toFileName(toFileName, supply, buy, result);
+        String data = readFromFile(fromFileName);
+        calculateStatistics(data);
+        writeStatisticToFile(toFileName);
     }
 
-    public void toFileName(String toFileName, int supply, int buy, int result) {
+    private String readFromFile(String fileName) {
+        StringBuilder data = new StringBuilder();
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                data.append(line).append(System.lineSeparator());
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Can't read data from the file " + fileName, e);
+        }
+        return data.toString();
+    }
+
+    private void calculateStatistics(String data) {
+        supply = 0;
+        buy = 0;
+        String[] lines = data.split(System.lineSeparator());
+        for (String line : lines) {
+            String[] parts = line.split(COMMA_SEPARATOR);
+            String type = parts[TYPE_INDEX];
+            int value = Integer.parseInt(parts[VALUE_INDEX]);
+            if (type.equals(SUPPLY)) {
+                supply += value;
+            } else if (type.equals(BUY)) {
+                buy += value;
+            }
+        }
+        result = supply - buy;
+    }
+
+    private void writeStatisticToFile(String toFileName) {
         File file = new File(toFileName);
         try {
             file.createNewFile();
