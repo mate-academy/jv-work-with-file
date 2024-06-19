@@ -2,7 +2,6 @@ package core.basesyntax;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -12,12 +11,13 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String COMA = ",";
-    private static final String SPACE = " ";
     private static final String RESULT = "result";
+    private static final int OPERATION = 0;
+    private static final int VALUE = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String fileContent = readFileContent(fromFileName);
-        String[] splitText = splitTextIntoWords(fileContent);
+        String[] splitText = splitByLines(fileContent);
         int[] results = calculateResult(splitText);
         String report = createReport(results);
         writeContentToFile(report, toFileName);
@@ -25,11 +25,10 @@ public class WorkWithFile {
 
     private String readFileContent(String fromFileName) {
         StringBuilder allText = new StringBuilder();
-        File file = new File(fromFileName);
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
-                allText.append(line).append(SPACE);
+                allText.append(line).append(System.lineSeparator());
             }
         } catch (FileNotFoundException e) {
             throw new RuntimeException("File not found", e);
@@ -39,8 +38,8 @@ public class WorkWithFile {
         return allText.toString();
     }
 
-    private String[] splitTextIntoWords(String text) {
-        return text.split(SPACE);
+    private String[] splitByLines(String text) {
+        return text.split(System.lineSeparator());
     }
 
     private int[] calculateResult(String[] text) {
@@ -49,8 +48,8 @@ public class WorkWithFile {
 
         for (String element : text) {
             String[] partsOfElement = element.split(COMA);
-            String operation = partsOfElement[0];
-            int value = Integer.parseInt(partsOfElement[1]);
+            String operation = partsOfElement[OPERATION];
+            int value = Integer.parseInt(partsOfElement[VALUE]);
             if (operation.equals(SUPPLY)) {
                 supplySum += value;
             } else if (operation.equals(BUY)) {
