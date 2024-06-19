@@ -74,21 +74,10 @@ public class WorkWithFile {
     }
 
     private void writeContentToFile(String text, String toFileName) {
-        BufferedWriter bufferedWriter = null;
-        try {
-            bufferedWriter = new BufferedWriter(new FileWriter(toFileName));
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(text);
-            bufferedWriter.flush();
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to the file", e);
-        } finally {
-            if (bufferedWriter != null) {
-                try {
-                    bufferedWriter.close();
-                } catch (IOException e) {
-                    throw new RuntimeException("Can't close the file", e);
-                }
-            }
         }
     }
 }
