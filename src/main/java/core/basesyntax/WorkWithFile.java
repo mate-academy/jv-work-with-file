@@ -8,8 +8,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-   private int buySum = 0;
-   private int supplySum = 0;
+    private int buySum = 0;
+    private int supplySum = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
         readFromFile(fromFileName);
