@@ -4,9 +4,21 @@ package core.basesyntax;
 import java.io.*;
 
 public class WorkWithFile {
+    int buySum = 0;
+    int supplySum = 0;
     public void getStatistic(String fromFileName, String toFileName) {
-        int buySum = 0;
-        int supplySum = 0;
+        readFromFile(fromFileName);
+        calculateReport();
+        writeToFile(toFileName);
+        cleanUp();
+    }
+
+    private void cleanUp() {
+        buySum = 0;
+        supplySum = 0;
+    }
+
+    public void readFromFile(String fromFileName) {
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))){
             String line;
             while ((line = reader.readLine()) != null) {
@@ -25,15 +37,19 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read file ", e);
         }
+    }
 
-        int result = supplySum - buySum;
+    public int calculateReport() {
+        return supplySum - buySum;
+    }
 
+    public void writeToFile(String toFileName) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             StringBuilder builder = new StringBuilder();
-
-            writer.write(String.valueOf(builder.append("supply, ").append(supplySum)));
-            writer.write(String.valueOf(builder.append("buy, ").append(buySum)));
-            writer.write(String.valueOf(builder.append("result, ").append(result)));
+            builder.append("supply,").append(supplySum).append(System.lineSeparator())
+                    .append("buy,").append(buySum).append(System.lineSeparator())
+                    .append("result,").append(calculateReport());
+            writer.write(builder.toString());
         } catch (IOException e) {
             throw new RuntimeException("Can't write file ", e);
         }
