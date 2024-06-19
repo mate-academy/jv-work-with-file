@@ -1,11 +1,16 @@
 package core.basesyntax;
 
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class WorkWithFile {
-    int buySum = 0;
-    int supplySum = 0;
+   private int buySum = 0;
+   private int supplySum = 0;
+
     public void getStatistic(String fromFileName, String toFileName) {
         readFromFile(fromFileName);
         calculateReport();
@@ -19,7 +24,7 @@ public class WorkWithFile {
     }
 
     public void readFromFile(String fromFileName) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))){
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
