@@ -10,11 +10,12 @@ import java.util.List;
 public class WorkWithFile {
     private static final int OPERATION_PART = 0;
     private static final int VALUE_PART = 1;
+    private static final int FIRST_VALUE = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
         File file = new File(fromFileName);
-        int supply = 0;
-        int buy = 0;
+        int supply = FIRST_VALUE;
+        int buy = FIRST_VALUE;
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             List<String> strings = Files.readAllLines(file.toPath());
 
