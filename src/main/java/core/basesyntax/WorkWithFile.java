@@ -8,6 +8,9 @@ import java.nio.file.Files;
 import java.util.List;
 
 public class WorkWithFile {
+    private static final int OPERATION_PART = 0;
+    private static final int VALUE_PART = 1;
+
     public void getStatistic(String fromFileName, String toFileName) {
         File file = new File(fromFileName);
         int supply = 0;
@@ -17,10 +20,10 @@ public class WorkWithFile {
 
             for (String part : strings) {
                 String[] parts = part.split(",");
-                if (parts[0].equals("supply")) {
-                    supply += Integer.parseInt(parts[1]);
+                if (parts[OPERATION_PART].equals("supply")) {
+                    supply += Integer.parseInt(parts[VALUE_PART]);
                 } else {
-                    buy += Integer.parseInt(parts[1]);
+                    buy += Integer.parseInt(parts[VALUE_PART]);
                 }
             }
             int result = supply - buy;
