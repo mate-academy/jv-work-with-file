@@ -7,9 +7,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private final String Supply = "supply";
-    private final String Buy = "buy";
-    private final String Separator = ",";
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String SEPARATOR = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         int[] output = readFromFile(fromFileName);
@@ -23,13 +23,13 @@ public class WorkWithFile {
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(Separator);
+                String[] parts = line.split(SEPARATOR);
                 String type = parts[0];
                 int amount = Integer.parseInt(parts[1]);
 
-                if (Supply.equals(type)) {
+                if (SUPPLY.equals(type)) {
                     supplySum += amount;
-                } else if (Buy.equals(type)) {
+                } else if (BUY.equals(type)) {
                     buySum += amount;
                 }
             }
@@ -47,8 +47,8 @@ public class WorkWithFile {
         int buyResult = data[1];
         int result = data[2];
         StringBuilder builder = new StringBuilder();
-        builder.append(Supply).append(Separator).append(supplyResult).append(System.lineSeparator())
-                .append(Buy).append(Separator).append(buyResult).append(System.lineSeparator())
+        builder.append(SUPPLY).append(SEPARATOR).append(supplyResult).append(System.lineSeparator())
+                .append(BUY).append(SEPARATOR).append(buyResult).append(System.lineSeparator())
                 .append("result,").append(result);
         return builder.toString();
     }
