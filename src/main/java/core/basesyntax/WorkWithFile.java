@@ -18,9 +18,7 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         String[] receivedData = readDataFromFile(fromFileName);
         String[] resultParameters = dataProcessing(receivedData);
-        int supplyAmount = Integer.parseInt(resultParameters[INDEX_OF_SUPPLY_PARAMETER]);
-        int buyAmount = Integer.parseInt(resultParameters[INDEX_OF_BUY_PARAMETER]);
-        String report = createReport(supplyAmount, buyAmount);
+        String report = createReport(resultParameters);
         writeDataToFile(toFileName, report);
     }
 
@@ -61,7 +59,9 @@ public class WorkWithFile {
         }
     }
 
-    private String createReport(int supplyAmount, int buyAmount) {
+    private String createReport(String[] resultParameters) {
+        int supplyAmount = Integer.parseInt(resultParameters[INDEX_OF_SUPPLY_PARAMETER]);
+        int buyAmount = Integer.parseInt(resultParameters[INDEX_OF_BUY_PARAMETER]);
         int result = supplyAmount - buyAmount;
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(SUPPLY).append(COMA_SEPARATOR).append(supplyAmount)
