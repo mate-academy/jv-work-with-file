@@ -9,15 +9,16 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
+    private static final String RESULT = "result";
     private static final int INDEX_OF_BUSINESS_TYPE_PARAMETER = 0;
     private static final int INDEX_OF_AMOUNT = 1;
     private static final int INDEX_OF_SUPPLY_PARAMETER = 0;
     private static final int INDEX_OF_BUY_PARAMETER = 1;
-    private static final String COMA_SEPARATOR = ",";
+    private static final String COMMA_SEPARATOR = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] receivedData = readDataFromFile(fromFileName);
-        String[] resultParameters = dataProcessing(receivedData);
+        int[] resultParameters = dataProcessing(receivedData);
         String report = createReport(resultParameters);
         writeDataToFile(toFileName, report);
     }
@@ -35,11 +36,11 @@ public class WorkWithFile {
         }
     }
 
-    private String[] dataProcessing(String[] receivedData) {
+    private int[] dataProcessing(String[] receivedData) {
         int supplyAmount = 0;
         int buyAmount = 0;
         for (String data : receivedData) {
-            String[] dataArray = data.split(COMA_SEPARATOR);
+            String[] dataArray = data.split(COMMA_SEPARATOR);
             if (dataArray[INDEX_OF_BUSINESS_TYPE_PARAMETER].equalsIgnoreCase(SUPPLY)) {
                 supplyAmount += Integer.parseInt(dataArray[INDEX_OF_AMOUNT]);
             } else if (dataArray[INDEX_OF_BUSINESS_TYPE_PARAMETER].equalsIgnoreCase(BUY)) {
@@ -48,7 +49,21 @@ public class WorkWithFile {
                 throw new RuntimeException("Invalid data");
             }
         }
-        return new String[]{String.valueOf(supplyAmount), String.valueOf(buyAmount)};
+        return new int[]{supplyAmount, buyAmount};
+    }
+
+    private String createReport(int[] resultParameters) {
+        int supplyAmount = resultParameters[INDEX_OF_SUPPLY_PARAMETER];
+        int buyAmount = resultParameters[INDEX_OF_BUY_PARAMETER];
+        int result = supplyAmount - buyAmount;
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(SUPPLY).append(COMMA_SEPARATOR).append(supplyAmount)
+                .append(System.lineSeparator())
+                .append(BUY).append(COMMA_SEPARATOR).append(buyAmount)
+                .append(System.lineSeparator())
+                .append(RESULT).append(COMMA_SEPARATOR).append(result)
+                .append(System.lineSeparator());
+        return stringBuilder.toString();
     }
 
     private void writeDataToFile(String toFileName, String report) {
@@ -57,19 +72,5 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to the file " + toFileName, e);
         }
-    }
-
-    private String createReport(String[] resultParameters) {
-        int supplyAmount = Integer.parseInt(resultParameters[INDEX_OF_SUPPLY_PARAMETER]);
-        int buyAmount = Integer.parseInt(resultParameters[INDEX_OF_BUY_PARAMETER]);
-        int result = supplyAmount - buyAmount;
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(SUPPLY).append(COMA_SEPARATOR).append(supplyAmount)
-                .append(System.lineSeparator())
-                .append(BUY).append(COMA_SEPARATOR).append(buyAmount)
-                .append(System.lineSeparator())
-                .append("result").append(COMA_SEPARATOR).append(result)
-                .append(System.lineSeparator());
-        return stringBuilder.toString();
     }
 }
