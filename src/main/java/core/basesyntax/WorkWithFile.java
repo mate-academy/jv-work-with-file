@@ -1,31 +1,36 @@
 package core.basesyntax;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 public class WorkWithFile {
+    public static final String BUY = "buy";
+    public static final String SUPPLY = "supply";
+
+    private final CsvFileReader reader = new CsvFileReader();
+    private final CsvFileWriter writer = new CsvFileWriter();
+
     public void getStatistic(String fromFileName, String toFileName) {
-        Reader reader = new Reader();
-        Writer writer = new Writer();
-        writer.createCsvFile(toFileName);
-        File readFile = new File(fromFileName);
-        File fromFile = new File(toFileName);
-        List<String> result = reader.readCsvFileWithData(readFile.toPath());
+        Path pathFile = Paths.get(fromFileName);
+        List<String> result = reader.readCsvFileWithData(pathFile);
+
         int buyCount = 0;
         int supplyCount = 0;
-        int total;
 
         for (String line : result) {
             String[] parts = line.split(",");
-            if (parts[0].equals("buy")) {
+            if (BUY.equals(parts[0])) {
                 buyCount += Integer.parseInt(parts[1]);
             }
-            if (parts[0].equals("supply")) {
+            if (SUPPLY.equals(parts[0])) {
                 supplyCount += Integer.parseInt(parts[1]);
             }
         }
 
-        total = supplyCount - buyCount;
-        writer.writeCsvFileWithData(fromFile.toPath(), buyCount, supplyCount, total);
+        int total = supplyCount - buyCount;
+        writer.createCsvFile(toFileName);
+        writer.writeCsvFileWithData(new File(toFileName).toPath(), buyCount, supplyCount, total);
     }
 }

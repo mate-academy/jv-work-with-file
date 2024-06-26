@@ -5,14 +5,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
-public class Reader {
+public class CsvFileReader {
     public List<String> readCsvFileWithData(Path pathFile) {
-        List<String> result;
         try {
-            result = Files.readAllLines(pathFile);
+            return Files.readAllLines(pathFile);
         } catch (IOException e) {
             throw new RuntimeException("Can't read file " + pathFile, e);
         }
-        return result;
     }
 }

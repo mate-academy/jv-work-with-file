@@ -6,7 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 
-public class Writer {
+public class CsvFileWriter {
     public void createCsvFile(String toFileName) {
         File file = new File(toFileName);
         try {
