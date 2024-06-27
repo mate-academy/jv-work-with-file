@@ -1,31 +1,15 @@
 package core.basesyntax;
 
-import java.io.File;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Arrays;
 
 public class CsvFileWriter {
-    public void createCsvFile(String toFileName) {
-        File file = new File(toFileName);
-        try {
-            file.createNewFile();
+    void writeToFile(String text, String toFileName) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
+            writer.write(text);
         } catch (IOException e) {
-            throw new RuntimeException("Can't create file " + toFileName, e);
-        }
-    }
-
-    public void writeCsvFileWithData(Path pathFile,
-                                     int buyCount,
-                                     int supplyCount,
-                                     int total) {
-        try {
-            Files.write(pathFile, Arrays.asList("supply," + supplyCount,
-                                                "buy," + buyCount,
-                                                "result," + total));
-        } catch (IOException e) {
-            throw new RuntimeException("Can't write file " + pathFile, e);
+            throw new RuntimeException("Can't write to file " + toFileName, e);
         }
     }
 }
