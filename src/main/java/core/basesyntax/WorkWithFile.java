@@ -1,6 +1,10 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class WorkWithFile {
     private static final int TRANSACTION_TYPE_INDEX = 1;
@@ -13,11 +17,10 @@ public class WorkWithFile {
         writeTextToFile(
                 createReport(getTextFromFile(fromFileName)),
                 toFileName);
-
     }
 
-    private void writeTextToFile(String data, String toFileName){
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))){
+    private void writeTextToFile(String data, String toFileName) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(data);
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to file ", e);
