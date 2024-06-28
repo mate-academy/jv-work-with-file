@@ -27,7 +27,7 @@ public class WorkWithFile {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
-                dataFromFile.append(line).append(System.lineSeparator());
+                dataFromFile.append(line).append(LINE_SEPARATOR);
             }
         } catch (IOException e) {
             throw new RuntimeException("Error reading data from file " + fromFileName, e);
@@ -37,7 +37,7 @@ public class WorkWithFile {
 
     private void writeToFile(String toFileName, String report) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            writer.write(report.toCharArray());
+            writer.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to the file", e);
         }
@@ -46,17 +46,22 @@ public class WorkWithFile {
     private String createReport(String dataFromFile) {
         int buyValue = 0;
         int supplyValue = 0;
-        for (String pair : dataFromFile.split(LINE_SEPARATOR)) {
-            String[] keyValue = pair.split(COMMA);
-            if (keyValue[CATEGORY_INDEX].equals(SUPPLY)) {
-                supplyValue += Integer.parseInt(keyValue[VALUE_INDEX]);
+        String[] lines = dataFromFile.split(LINE_SEPARATOR);
+        for (String line : lines) {
+            String[] keyValue = line.split(COMMA);
+            if (keyValue.length == 2) {
+                if (keyValue[CATEGORY_INDEX].equals(SUPPLY)) {
+                    supplyValue += Integer.parseInt(keyValue[VALUE_INDEX]);
+                } else if (keyValue[CATEGORY_INDEX].equals(BUY)) {
+                    buyValue += Integer.parseInt(keyValue[VALUE_INDEX]);
+                }
             } else {
-                buyValue += Integer.parseInt(keyValue[VALUE_INDEX]);
+                throw new IllegalArgumentException("Invalid data format: " + line);
             }
         }
         int resultValue = supplyValue - buyValue;
-        return SUPPLY + COMMA + supplyValue + System.lineSeparator()
-                + BUY + COMMA + buyValue + System.lineSeparator()
+        return SUPPLY + COMMA + supplyValue + LINE_SEPARATOR
+                + BUY + COMMA + buyValue + LINE_SEPARATOR
                 + RESULT + COMMA + resultValue;
     }
 
