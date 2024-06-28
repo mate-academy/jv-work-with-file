@@ -29,8 +29,7 @@ public class WorkWithFile {
 
     private String getTextFromFile(String fromFileName) {
         StringBuilder stringBuilder = new StringBuilder();
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String value = bufferedReader.readLine();
 
             while (value != null) {
@@ -52,9 +51,9 @@ public class WorkWithFile {
         int result = 0;
         String [] table = text.split("\\W+");
         for (int i = 0; i < table.length; i++) {
-            if (table[i].contains(SUPPLY)) {
+            if (table[i].equals(SUPPLY)) {
                 supplyTotal += Integer.parseInt(table[i + TRANSACTION_TYPE_INDEX]);
-            } else if (table[i].contains(BUY)) {
+            } else if (table[i].equals(BUY)) {
                 buyTotal += Integer.parseInt(table[i + TRANSACTION_TYPE_INDEX]);
             }
         }

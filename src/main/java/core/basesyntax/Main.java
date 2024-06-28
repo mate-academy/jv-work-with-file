@@ -9,12 +9,11 @@ public class Main {
                 "orange.csv"
         };
         String [] resultFiles = new String[]{
-                "apple_result.txt",
-                "banana_result.txt",
-                "grape_result.txt",
-                "orange_result.txt"
+                "apple_result.csv",
+                "banana_result.csv",
+                "grape_result.csv",
+                "orange_result.csv"
         };
-
         WorkWithFile workWithFile = new WorkWithFile();
         for (int i = 0; i < files.length; i++) {
             workWithFile.getStatistic(files[i], resultFiles[i]);
