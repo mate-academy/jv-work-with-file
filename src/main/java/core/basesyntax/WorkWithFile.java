@@ -12,6 +12,7 @@ public class WorkWithFile {
     private static final String BUY = "buy";
     private static final String COMMA = ",";
     private static final String RESULT = "result";
+    private static final String NON_WORD_CHARACTERS = "\\W+";
 
     public void getStatistic(String fromFileName, String toFileName) {
         writeTextToFile(
@@ -23,7 +24,7 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(data);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data to file ", e);
+            throw new RuntimeException("Can't write data to file " + toFileName, e);
         }
     }
 
@@ -38,18 +39,18 @@ public class WorkWithFile {
             }
 
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file ", e);
+            throw new RuntimeException("Can't read file " + fromFileName, e);
         }
 
         return stringBuilder.toString().toLowerCase();
     }
 
     private String createReport(String text) {
-        StringBuilder stringBuilder = new StringBuilder();
         int supplyTotal = 0;
         int buyTotal = 0;
-        int result = 0;
-        String [] table = text.split("\\W+");
+        int total;
+        StringBuilder stringBuilder = new StringBuilder();
+        String [] table = text.split(NON_WORD_CHARACTERS);
         for (int i = 0; i < table.length; i++) {
             if (table[i].equals(SUPPLY)) {
                 supplyTotal += Integer.parseInt(table[i + TRANSACTION_TYPE_INDEX]);
@@ -57,7 +58,7 @@ public class WorkWithFile {
                 buyTotal += Integer.parseInt(table[i + TRANSACTION_TYPE_INDEX]);
             }
         }
-        result = supplyTotal - buyTotal;
+        total = supplyTotal - buyTotal;
         stringBuilder
                 .append(SUPPLY)
                 .append(COMMA)
@@ -69,7 +70,7 @@ public class WorkWithFile {
                 .append(System.lineSeparator())
                 .append(RESULT)
                 .append(COMMA)
-                .append(result)
+                .append(total)
                 .append(System.lineSeparator());
         return stringBuilder.toString();
     }
