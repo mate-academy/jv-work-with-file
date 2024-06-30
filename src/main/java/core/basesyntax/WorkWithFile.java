@@ -60,9 +60,11 @@ public class WorkWithFile {
             }
         }
         int resultValue = supplyValue - buyValue;
-        return SUPPLY + COMMA + supplyValue + LINE_SEPARATOR
-                + BUY + COMMA + buyValue + LINE_SEPARATOR
-                + RESULT + COMMA + resultValue;
+        StringBuilder reportBuilder = new StringBuilder();
+        reportBuilder.append(SUPPLY).append(COMMA).append(supplyValue).append(LINE_SEPARATOR)
+                .append(BUY).append(COMMA).append(buyValue).append(LINE_SEPARATOR)
+                .append(RESULT).append(COMMA).append(resultValue);
+        return reportBuilder.toString();
     }
 
     public static void main(String[] args) {
