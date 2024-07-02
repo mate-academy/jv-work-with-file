@@ -16,9 +16,9 @@ public class WorkWithFile {
             String value;
 
             while ((value = bufferedReader.readLine()) != null) {
-                String[] spitedLine = value.split(",");
-                String name = spitedLine[0];
-                int amount = Integer.parseInt(spitedLine[1]);
+                String[] splitLine = value.split(",");
+                String name = splitLine[0];
+                int amount = Integer.parseInt(splitLine[1]);
 
                 if ("supply".equals(name)) {
                     supplyOutput += amount;
