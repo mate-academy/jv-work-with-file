@@ -7,17 +7,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final int INDEX_SYPPLY = 0;
+    private static final int INDEX_BUY = 1;
+    private static final int INDEX_RESULT = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int supply = 0;
-        int buy = 0;
         String[] resultArray = readFile(fromFileName);
-        supply = Integer.parseInt(resultArray[0]);
-        buy = Integer.parseInt(resultArray[1]);
-
-        int result = supply - buy;
-        String report = generateReport(supply, buy, result);
-
+        String report = generateReport(resultArray);
         writeFile(toFileName, report);
     }
 
@@ -36,13 +32,17 @@ public class WorkWithFile {
                 }
                 line = reader.readLine();
             }
-            return new String[]{String.valueOf(supply), String.valueOf(buy)};
+            return new String[]
+                    {String.valueOf(supply), String.valueOf(buy)};
         } catch (IOException e) {
             throw new RuntimeException("Can't read file", e);
         }
     }
 
-    private String generateReport(int supply, int buy, int result) {
+    private String generateReport(String [] resultArray) {
+        int supply = Integer.parseInt(resultArray[INDEX_SYPPLY]);
+        int buy = Integer.parseInt(resultArray[INDEX_BUY]);
+        int result = supply - buy;
         StringBuilder reportBuilder = new StringBuilder();
         reportBuilder.append("supply,")
                 .append(supply)
