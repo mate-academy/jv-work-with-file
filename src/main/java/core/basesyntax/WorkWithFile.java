@@ -11,34 +11,55 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         int supply = 0;
         int buy = 0;
+        String[] resultArray = readFile(fromFileName);
+        supply = Integer.parseInt(resultArray[0]);
+        buy = Integer.parseInt(resultArray[1]);
+
+        int result = supply - buy;
+        String report = generateReport(supply, buy, result);
+
+        writeFile(toFileName, report);
+    }
+
+    private String[] readFile(String fromFileName) {
+        int supply = 0;
+        int buy = 0;
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
-            String value = reader.readLine();
-            while (value != null) {
-                if (value.startsWith("supply,")) {
-                    String supplyResult = value.substring(value.indexOf(',') + 1);
-                    supply += Integer.valueOf(supplyResult);
+            String line = reader.readLine();
+            while (line != null) {
+                String[] parts = line.split(",");
+                int value = Integer.parseInt(parts[1]);
+                if (parts[0].equals("supply")) {
+                    supply += value;
                 } else {
-                    String buyResult = value.substring(value.indexOf(',') + 1);
-                    buy += Integer.valueOf(buyResult);
+                    buy += value;
                 }
-                value = reader.readLine();
+                line = reader.readLine();
             }
+            return new String[]{String.valueOf(supply), String.valueOf(buy)};
         } catch (IOException e) {
             throw new RuntimeException("Can't read file", e);
         }
-        int result = supply - buy;
-        String[] resultArray = {
-                "supply," + supply,
-                "buy," + buy,
-                "result," + result
-        };
+    }
 
+    private String generateReport(int supply, int buy, int result) {
+        StringBuilder reportBuilder = new StringBuilder();
+        reportBuilder.append("supply,")
+                .append(supply)
+                .append(System.lineSeparator());
+        reportBuilder.append("buy,")
+                .append(buy)
+                .append(System.lineSeparator());
+        reportBuilder.append("result,")
+                .append(result);
+        return reportBuilder.toString();
+    }
+
+    private void writeFile(String toFileName, String report) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            writer.write(" ");
-            for (String object : resultArray) {
-                writer.write(object);
-                writer.newLine();
-            }
+            writer.write("");
+            writer.write(report);
+
         } catch (IOException e) {
             throw new RuntimeException("Can't write file", e);
         }
