@@ -31,7 +31,7 @@ public class WorkWithFile {
         return content.toString();
     }
 
-    private static String calculateResults(String fileContent ) {
+    private static String calculateResults(String fileContent) {
         int totalSupply = 0;
         int totalBuy = 0;
         String[] lines = fileContent.split("\n");
