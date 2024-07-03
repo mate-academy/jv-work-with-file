@@ -11,6 +11,8 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
+    private static final int POSITION_TRAN_TYPE = 0;
+    private static final int POSITION_AMOUNT = 1;
 
     static void getStatistic(String fromFileName, String toFileName) {
         String fileContent = readData(fromFileName);
@@ -34,24 +36,24 @@ public class WorkWithFile {
     private static String calculateResults(String fileContent) {
         int totalSupply = 0;
         int totalBuy = 0;
-        String[] lines = fileContent.split("\n");
+        String[] lines = fileContent.split(System.lineSeparator());
         for (String line : lines) {
             String[] parts = line.split(DELIMITER);
-            String transactionType = parts[0];
+            String transactionType = parts[POSITION_TRAN_TYPE];
             int transactionAmount;
             try {
-                transactionAmount = Integer.parseInt(parts[1].trim());
+                transactionAmount = Integer.parseInt(parts[POSITION_AMOUNT].trim());
             } catch (NumberFormatException e) {
-                continue;
+                throw new RuntimeException("Can't parse amount " + parts[POSITION_AMOUNT], e);
             }
             totalSupply += SUPPLY.equals(transactionType) ? transactionAmount : 0;
             totalBuy += BUY.equals(transactionType) ? transactionAmount : 0;
         }
         int result = totalSupply - totalBuy;
         StringBuilder builder = new StringBuilder();
-        builder.append(SUPPLY).append(",").append(totalSupply).append(System.lineSeparator());
-        builder.append(BUY).append(",").append(totalBuy).append(System.lineSeparator());
-        builder.append(RESULT).append(",").append(result).append(System.lineSeparator());
+        builder.append(SUPPLY).append(DELIMITER).append(totalSupply).append(System.lineSeparator());
+        builder.append(BUY).append(DELIMITER).append(totalBuy).append(System.lineSeparator());
+        builder.append(RESULT).append(DELIMITER).append(result).append(System.lineSeparator());
         return builder.toString();
     }
 
