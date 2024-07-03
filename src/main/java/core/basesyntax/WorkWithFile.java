@@ -9,8 +9,6 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final int PROCESS_INDEX = 0;
     private static final int VALUE_INDEX = 1;
-    private static final int INDEX_SUPPLY = 0;
-    private static final int INDEX_BUY = 1;
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
@@ -45,8 +43,8 @@ public class WorkWithFile {
     }
 
     private String generateReport(int [] resultArray) {
-        int supply = resultArray[INDEX_SUPPLY];
-        int buy = resultArray[INDEX_BUY];
+        int supply = resultArray[PROCESS_INDEX];
+        int buy = resultArray[VALUE_INDEX];
         int result = supply - buy;
         StringBuilder reportBuilder = new StringBuilder();
         reportBuilder.append(SUPPLY)
