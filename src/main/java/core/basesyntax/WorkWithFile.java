@@ -7,8 +7,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static final int INDEX_CHECK_0 = 0;
-    private static final int INDEX_CHECK_1 = 1;
+    private static final int PROCESS_INDEX = 0;
+    private static final int VALUE_INDEX = 1;
     private static final int INDEX_SUPPLY = 0;
     private static final int INDEX_BUY = 1;
     private static final String SUPPLY = "supply";
@@ -30,8 +30,8 @@ public class WorkWithFile {
             String line = reader.readLine();
             while (line != null) {
                 String[] parts = line.split(COMMA);
-                int value = Integer.parseInt(parts[INDEX_CHECK_1]);
-                if (parts[INDEX_CHECK_0].equals(SUPPLY)) {
+                int value = Integer.parseInt(parts[VALUE_INDEX]);
+                if (parts[PROCESS_INDEX].equals(SUPPLY)) {
                     supply += value;
                 } else {
                     buy += value;
