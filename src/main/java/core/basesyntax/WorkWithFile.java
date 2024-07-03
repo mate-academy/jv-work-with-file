@@ -8,45 +8,56 @@ import java.io.IOException;
 
 public class WorkWithFile {
     private static final String DELIMITER = ",";
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
 
     static void getStatistic(String fromFileName, String toFileName) {
-        int[] data = readData(fromFileName);
-        int[] results = calculateResults(data[0], data[1]);
-        writeResults(toFileName, results[0], results[1], results[2]);
+        String fileContent = readData(fromFileName);
+        String results = calculateResults(fileContent);
+        writeResults(toFileName,results);
     }
 
-    private static int[] readData(String fromFileName) {
-        int totalSupply = 0;
-        int totalBuy = 0;
-
+    private static String readData(String fromFileName) {
+        StringBuilder content = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(DELIMITER);
-                String transactionType = parts[0];
-                int transactionAmount = Integer.parseInt(parts[1]);
-
-                totalSupply += "supply".equals(transactionType) ? transactionAmount : 0;
-                totalBuy += "buy".equals(transactionType) ? transactionAmount : 0;
+                content.append(line).append(System.lineSeparator());
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from file" + fromFileName, e);
         }
-        return new int[]{totalSupply, totalBuy};
+        return content.toString();
     }
 
-    private static int[] calculateResults(int totalSupply, int totalBuy) {
+    private static String calculateResults(String fileContent ) {
+        int totalSupply = 0;
+        int totalBuy = 0;
+        String[] lines = fileContent.split("\n");
+        for (String line : lines) {
+            String[] parts = line.split(DELIMITER);
+            String transactionType = parts[0];
+            int transactionAmount;
+            try {
+                transactionAmount = Integer.parseInt(parts[1].trim());
+            } catch (NumberFormatException e) {
+                continue;
+            }
+            totalSupply += SUPPLY.equals(transactionType) ? transactionAmount : 0;
+            totalBuy += BUY.equals(transactionType) ? transactionAmount : 0;
+        }
         int result = totalSupply - totalBuy;
-        return new int[]{totalSupply, totalBuy, result};
+        StringBuilder builder = new StringBuilder();
+        builder.append(SUPPLY).append(",").append(totalSupply).append(System.lineSeparator());
+        builder.append(BUY).append(",").append(totalBuy).append(System.lineSeparator());
+        builder.append(RESULT).append(",").append(result).append(System.lineSeparator());
+        return builder.toString();
     }
 
-    private static void writeResults(String toFileName, int totalSupply, int totalBuy, int result) {
-        StringBuilder builder = new StringBuilder();
-        builder.append("supply,").append(totalSupply).append(System.lineSeparator());
-        builder.append("buy,").append(totalBuy).append(System.lineSeparator());
-        builder.append("result,").append(result).append(System.lineSeparator());
+    private static void writeResults(String toFileName, String results) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            writer.write(builder.toString());
+            writer.write(results);
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to file" + toFileName, e);
         }
