@@ -9,7 +9,11 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final int INDEX_SYPPLY = 0;
     private static final int INDEX_BUY = 1;
-    private static final int INDEX_RESULT = 0;
+    private static final String SUPPLY = "supply,";
+    private static final String BUY = "buy,";
+    private static final String RESULT = "result,";
+    private static final String COMMA = ",";
+    private static final String NEW_LINE = System.lineSeparator();
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] resultArray = readFile(fromFileName);
@@ -23,7 +27,7 @@ public class WorkWithFile {
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String line = reader.readLine();
             while (line != null) {
-                String[] parts = line.split(",");
+                String[] parts = line.split(COMMA);
                 int value = Integer.parseInt(parts[1]);
                 if (parts[0].equals("supply")) {
                     supply += value;
@@ -44,13 +48,13 @@ public class WorkWithFile {
         int buy = Integer.parseInt(resultArray[INDEX_BUY]);
         int result = supply - buy;
         StringBuilder reportBuilder = new StringBuilder();
-        reportBuilder.append("supply,")
+        reportBuilder.append(SUPPLY)
                 .append(supply)
-                .append(System.lineSeparator());
-        reportBuilder.append("buy,")
+                .append(NEW_LINE)
+                .append(BUY)
                 .append(buy)
-                .append(System.lineSeparator());
-        reportBuilder.append("result,")
+                .append(NEW_LINE)
+                .append(RESULT)
                 .append(result);
         return reportBuilder.toString();
     }
