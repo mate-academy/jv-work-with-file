@@ -14,10 +14,11 @@ public class ReportService {
         int buy = salesVolume[BUY_INDEX];
         int result = salesVolume[RESULT_INDEX];
 
-        return new StringBuilder()
+        StringBuilder report = new StringBuilder()
                 .append(SUPPLY).append(COMMA).append(supply).append(System.lineSeparator())
                 .append(BUY).append(COMMA).append(buy).append(System.lineSeparator())
-                .append(RESULT).append(COMMA).append(result).append(System.lineSeparator())
-                .toString();
+                .append(RESULT).append(COMMA).append(result).append(System.lineSeparator());
+
+        return report.toString();
     }
 }
