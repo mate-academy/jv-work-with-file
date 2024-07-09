@@ -7,35 +7,60 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
+    private static final String COMMA = ",";
+
     public void getStatistic(String fromFileName, String toFileName) {
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
-                BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
+        int[] reportData = readFile(fromFileName);
+        String report = calculateReport(reportData);
+        writeToFile(toFileName, report);
+    }
 
-            int supplyOutput = 0;
-            int buyOutput = 0;
+    private int[] readFile(String fromFileName) {
+        int supply = 0;
+        int buy = 0;
+
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String value;
-
             while ((value = bufferedReader.readLine()) != null) {
-                String[] splitLine = value.split(",");
+                String[] splitLine = value.split(COMMA);
                 String name = splitLine[0];
                 int amount = Integer.parseInt(splitLine[1]);
 
-                if ("supply".equals(name)) {
-                    supplyOutput += amount;
-                } else if ("buy".equals(name)) {
-                    buyOutput += amount;
+                if (SUPPLY.equals(name)) {
+                    supply += amount;
+                } else if (BUY.equals(name)) {
+                    buy += amount;
                 }
             }
-
-            int result = supplyOutput - buyOutput;
-            bufferedWriter.write("supply," + supplyOutput);
-            bufferedWriter.newLine();
-            bufferedWriter.write("buy," + buyOutput);
-            bufferedWriter.newLine();
-            bufferedWriter.write("result," + result);
-
         } catch (IOException e) {
-            throw new RuntimeException("Error processing files", e);
+            throw new RuntimeException("Unable to read a file", e);
+        }
+
+        return new int[]{supply, buy};
+    }
+
+    private String calculateReport(int[] reportData) {
+        int supplyOutput = reportData[0];
+        int buyOutput = reportData[1];
+        int result = supplyOutput - buyOutput;
+
+        StringBuilder report = new StringBuilder();
+        report.append(SUPPLY).append(COMMA).append(supplyOutput).append(System.lineSeparator());
+        report.append(BUY).append(COMMA).append(buyOutput).append(System.lineSeparator());
+        report.append(RESULT).append(COMMA).append(result);
+
+        return report.toString();
+    }
+
+    private void writeToFile(String toFileName, String report) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
+            bufferedWriter.write(report);
+        } catch (IOException e) {
+            throw new RuntimeException("Unable to write to the file", e);
         }
     }
 }
