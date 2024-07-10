@@ -11,23 +11,23 @@ public class WorkWithFile {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String line;
             String[] temporaryArray;
-            int supplyInt = 0;
-            int buyInt = 0;
+            int totalSupply = 0;
+            int totalBuy = 0;
             while ((line = bufferedReader.readLine()) != null) {
                 temporaryArray = line.split(",");
                 if (temporaryArray[0].equals("supply")) {
-                    supplyInt += Integer.parseInt(temporaryArray[1]);
+                    totalSupply += Integer.parseInt(temporaryArray[1]);
                 } else if (temporaryArray[0].equals("buy")) {
-                    buyInt += Integer.parseInt(temporaryArray[1]);
+                    totalBuy += Integer.parseInt(temporaryArray[1]);
                 }
             }
-            createReportFile(toFileName, supplyInt, buyInt);
+            createReportFile(toFileName, totalSupply, totalBuy);
         } catch (IOException e) {
             throw new RuntimeException("Can't read info from file", e);
         }
     }
 
-    public void createReportFile(String reportName, int supplyInt, int buyInt) {
+    private void createReportFile(String reportName, int supplyInt, int buyInt) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(reportName))) {
             bufferedWriter.write("supply," + supplyInt);
             bufferedWriter.newLine();
