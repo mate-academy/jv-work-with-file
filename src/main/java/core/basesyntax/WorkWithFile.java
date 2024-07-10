@@ -1,5 +1,7 @@
 package core.basesyntax;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -9,6 +11,8 @@ import java.util.List;
 public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
+    private static final String COMMA = ",";
+    private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
         List<String> dataFromFile = readFromFile(fromFileName);
@@ -20,7 +24,7 @@ public class WorkWithFile {
     }
 
     private List<String> readFromFile(String fileName) {
-        try {
+        try (BufferedReader reader = Files.newBufferedReader(Paths.get(fileName))) {
             return Files.readAllLines(Paths.get(fileName));
         } catch (IOException e) {
             throw new RuntimeException("Can't read the file " + fileName, e);
@@ -39,16 +43,22 @@ public class WorkWithFile {
     }
 
     private List<String> createReport(int supplyAmount, int buyAmount, int result) {
+        StringBuilder firstLine = new StringBuilder();
+        StringBuilder secondLine = new StringBuilder();
+        StringBuilder thirdLine = new StringBuilder();
         return Arrays.asList(
-                SUPPLY + "," + supplyAmount,
-                BUY + "," + buyAmount,
-                "result," + result
+                firstLine.append(SUPPLY).append(COMMA).append(supplyAmount).toString(),
+                secondLine.append(BUY).append(COMMA).append(buyAmount).toString(),
+                thirdLine.append(RESULT).append(COMMA).append(result).toString()
         );
     }
 
     private void writeToFile(String fileName, List<String> report) {
-        try {
-            Files.write(Paths.get(fileName), report);
+        try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(fileName))) {
+            for (String line : report) {
+                writer.write(line);
+                writer.newLine();
+            }
         } catch (IOException e) {
             throw new RuntimeException("Can't write to the file " + fileName, e);
         }
