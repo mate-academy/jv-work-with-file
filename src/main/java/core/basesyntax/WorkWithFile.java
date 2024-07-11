@@ -11,20 +11,23 @@ public class WorkWithFile {
     private static final String BUY = "buy";
     private static final String RESULT = "result";
     private static final String COMMA = ",";
-    private static final int TWO = 2;
-    private static final int ZERO = 0;
-    private static final int ONE = 1;
+    private static final int INNER_ARRAY_SIZE = 2;
+    private static final int NUMBER_ZERO = 0;
+    private static final int NUMBER_ONE = 1;
+    private static final int NUMBER_TWO = 2;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        calculateReport(readFromFile(fromFileName), toFileName);
+        String[][] data = readFromFile(fromFileName);
+        int[] statistics = calculateReport(data);
+        writeToFile(toFileName, statistics);
     }
 
     private String[][] readFromFile(String fileName) {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
-            int i = ZERO;
             int arraySize = createArraySize(fileName);
+            String[][] sourceArray = new String[arraySize][INNER_ARRAY_SIZE];
             String line;
-            String[][] sourceArray = new String[arraySize][TWO];
+            int i = NUMBER_ZERO;
             while ((line = bufferedReader.readLine()) != null) {
                 sourceArray[i] = line.split(COMMA);
                 i++;
@@ -35,34 +38,41 @@ public class WorkWithFile {
         }
     }
 
-    private void calculateReport(String[][] originalSourceArray, String reportName) {
-        int totalSupply = ZERO;
-        int totalBuy = ZERO;
+    private int[] calculateReport(String[][] originalSourceArray) {
+        int totalSupply = NUMBER_ZERO;
+        int totalBuy = NUMBER_ZERO;
         for (String[] sourceElement : originalSourceArray) {
-            if (sourceElement[ZERO].equals("supply")) {
-                totalSupply += Integer.parseInt(sourceElement[ONE]);
-            }
-            if (sourceElement[ZERO].equals("buy")) {
-                totalBuy += Integer.parseInt(sourceElement[ONE]);
+            if (sourceElement[NUMBER_ZERO].equals(SUPPLY)) {
+                totalSupply += Integer.parseInt(sourceElement[NUMBER_ONE]);
+            } else if (sourceElement[NUMBER_ZERO].equals(BUY)) {
+                totalBuy += Integer.parseInt(sourceElement[NUMBER_ONE]);
             }
         }
-        int[] statisticArray = {totalSupply, totalBuy, totalSupply - totalBuy};
+        return new int[]{totalSupply, totalBuy, totalSupply - totalBuy};
+    }
+
+    private void writeToFile(String reportName, int[] statistics) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(reportName))) {
-            StringBuilder text = new StringBuilder();
-            text.append("supply,").append(statisticArray[ZERO]).append(System.lineSeparator())
-                    .append("buy,").append(statisticArray[ONE]).append(System.lineSeparator())
-                    .append("result,").append(statisticArray[TWO]);
-            bufferedWriter.write(text.toString());
+            bufferedWriter.write(buildReportContent(statistics));
         } catch (IOException e) {
             throw new RuntimeException("Can't write info in file", e);
         }
     }
 
+    private String buildReportContent(int[] statistics) {
+        StringBuilder text = new StringBuilder();
+        text.append(SUPPLY).append(COMMA).append(statistics[NUMBER_ZERO])
+                .append(System.lineSeparator())
+                .append(BUY).append(COMMA).append(statistics[NUMBER_ONE])
+                .append(System.lineSeparator())
+                .append(RESULT).append(COMMA).append(statistics[NUMBER_TWO]);
+        return text.toString();
+    }
+
     private int createArraySize(String fileName) {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
-            int arraySize = ZERO;
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
+            int arraySize = NUMBER_ZERO;
+            while (bufferedReader.readLine() != null) {
                 arraySize++;
             }
             return arraySize;
