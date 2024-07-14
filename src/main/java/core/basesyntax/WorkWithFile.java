@@ -9,24 +9,32 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WorkWithFile {
+    private static final String COMMA = ",";
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
+
     public void getStatistic(String fromFileName, String toFileName) {
         List<String> lines = readFile(fromFileName);
-        List<String> reportLines = processLines(lines);
+        String reportLines = processLines(lines);
         writeFile(reportLines, toFileName);
     }
 
-    public void writeFile(List<String> lines, String toFileName) {
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            for (String line : lines) {
-                bufferedWriter.write(line);
-                bufferedWriter.newLine();
+    public List<String> readFile(String fromFileName) {
+        List<String> lines = new ArrayList<>();
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
+            String value = bufferedReader.readLine();
+            while (value != null) {
+                lines.add(value);
+                value = bufferedReader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't write to the file", e);
+            throw new RuntimeException("Can't read the file", e);
         }
+        return lines;
     }
 
-    public List<String> processLines(List<String> lines) {
+    private String processLines(List<String> lines) {
         int totalSupply = 0;
         int totalBuy = 0;
 
@@ -43,25 +51,19 @@ public class WorkWithFile {
         }
 
         int result = totalSupply - totalBuy;
-        List<String> reportLines = new ArrayList<>();
-        reportLines.add("supply," + totalSupply);
-        reportLines.add("buy," + totalBuy);
-        reportLines.add("result," + result);
-
-        return reportLines;
+        StringBuilder reportBuilder = new StringBuilder();
+        reportBuilder.append(SUPPLY).append(COMMA)
+                .append(totalSupply).append(System.lineSeparator());
+        reportBuilder.append(BUY).append(COMMA).append(totalBuy).append(System.lineSeparator());
+        reportBuilder.append(RESULT).append(COMMA).append(result);
+        return reportBuilder.toString();
     }
 
-    public List<String> readFile(String fromFileName) {
-        List<String> lines = new ArrayList<>();
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
-            String value = bufferedReader.readLine();
-            while (value != null) {
-                lines.add(value);
-                value = bufferedReader.readLine();
-            }
+    private void writeFile(String lines, String toFileName) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
+            bufferedWriter.write(lines);
         } catch (IOException e) {
-            throw new RuntimeException("Can't read the file", e);
+            throw new RuntimeException("Can't write to the file", e);
         }
-        return lines;
     }
 }
