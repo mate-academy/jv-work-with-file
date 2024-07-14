@@ -48,7 +48,8 @@ public class WorkWithFile {
         return total;
     }
 
-    private void writeReportToFile(String fileName, int supply, int buy, int result) throws IOException {
+    private void writeReportToFile(String fileName, int supply, int buy, int result)
+            throws IOException {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             writer.write("supply," + supply + System.lineSeparator());
             writer.write("buy," + buy + System.lineSeparator());
