@@ -6,7 +6,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
-
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         int supply = 0;
