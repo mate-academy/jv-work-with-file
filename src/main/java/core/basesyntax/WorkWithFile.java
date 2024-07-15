@@ -10,6 +10,7 @@ public class WorkWithFile {
     static final String SUPPLY_OPERATION = "supply";
     static final String BUY_OPERATION = "buy";
     static final String DELIMITER = ",";
+    static final String RESULT_OPERATION = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String dataFromFile = readFile(fromFileName);
@@ -51,9 +52,12 @@ public class WorkWithFile {
 
         int result = supply - buy;
         StringBuilder report = new StringBuilder();
-        report.append("supply,").append(supply).append(System.lineSeparator());
-        report.append("buy,").append(buy).append(System.lineSeparator());
-        report.append("result,").append(result).append(System.lineSeparator());
+        report.append(SUPPLY_OPERATION)
+                .append(DELIMITER).append(supply).append(System.lineSeparator());
+        report.append(BUY_OPERATION)
+                .append(DELIMITER).append(buy).append(System.lineSeparator());
+        report.append(RESULT_OPERATION)
+                .append(DELIMITER).append(result).append(System.lineSeparator());
 
         return report.toString();
     }
