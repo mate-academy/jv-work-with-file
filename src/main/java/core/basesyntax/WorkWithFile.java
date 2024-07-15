@@ -39,11 +39,11 @@ public class WorkWithFile {
         int totalBuy = 0;
 
         for (String line : lines) {
-            String[] parts = line.split(",");
+            String[] parts = line.split(COMMA);
             String operations = parts[0];
             int amount = Integer.parseInt(parts[1]);
 
-            if (operations.equals("supply")) {
+            if (operations.equals(SUPPLY)) {
                 totalSupply += amount;
             } else {
                 totalBuy += amount;
