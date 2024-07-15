@@ -11,28 +11,21 @@ public class WorkWithFile {
     private static final String DELIMITER = ",";
     private static final String OPERATION_SUPPLY = "supply";
     private static final String OPERATION_BUY = "buy";
+    private static final String OPERATION_RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
         int supply = 0;
         int buy = 0;
 
-        try {
-            supply = processFile(fromFileName, OPERATION_SUPPLY);
-            buy = processFile(fromFileName, OPERATION_BUY);
-        } catch (IOException e) {
-            throw new RuntimeException("Error processing file: " + e.getMessage(), e);
-        }
+        supply = processFile(fromFileName, OPERATION_SUPPLY);
+        buy = processFile(fromFileName, OPERATION_BUY);
 
-        int result = supply - buy;
+        String report = generateReport(supply, buy);
 
-        try {
-            writeReportToFile(toFileName, supply, buy, result);
-        } catch (IOException e) {
-            throw new RuntimeException("Error writing report to file: " + e.getMessage(), e);
-        }
+        writeReportToFile(toFileName, report);
     }
 
-    private int processFile(String fileName, String operationType) throws IOException {
+    private int processFile(String fileName, String operationType) {
         int total = 0;
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             String line;
@@ -44,16 +37,29 @@ public class WorkWithFile {
                     total += amount;
                 }
             }
+        } catch (IOException e) {
+            throw new RuntimeException("Error processing file: " + fileName, e);
         }
         return total;
     }
 
-    private void writeReportToFile(String fileName, int supply, int buy, int result)
-            throws IOException {
+    private String generateReport(int supply, int buy) {
+        int result = supply - buy;
+        StringBuilder reportBuilder = new StringBuilder();
+        reportBuilder.append(OPERATION_SUPPLY).append(DELIMITER)
+                .append(supply).append(System.lineSeparator());
+        reportBuilder.append(OPERATION_BUY).append(DELIMITER)
+                .append(buy).append(System.lineSeparator());
+        reportBuilder.append(OPERATION_RESULT).append(DELIMITER)
+                .append(result).append(System.lineSeparator());
+        return reportBuilder.toString();
+    }
+
+    private void writeReportToFile(String fileName, String report) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
-            writer.write("supply," + supply + System.lineSeparator());
-            writer.write("buy," + buy + System.lineSeparator());
-            writer.write("result," + result + System.lineSeparator());
+            writer.write(report);
+        } catch (IOException e) {
+            throw new RuntimeException("Error writing report to file: " + fileName, e);
         }
     }
 }
