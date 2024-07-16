@@ -62,7 +62,12 @@ public class WorkWithFile {
     }
 
     private String buildLine(String operation, int amount) {
-        return operation + DELIMITER + amount + System.lineSeparator();
+        StringBuilder line = new StringBuilder();
+        line.append(operation)
+                .append(DELIMITER)
+                .append(amount)
+                .append(System.lineSeparator());
+        return line.toString();
     }
 
     public static void main(String[] args) {
