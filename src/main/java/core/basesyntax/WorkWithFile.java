@@ -6,8 +6,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 
 public class WorkWithFile {
-    private int supply = 0;
-    private int buy = 0;
+    private int supply;
+    private int buy;
 
     public void getStatistic(String fromFileName, String toFileName) {
         readFile(fromFileName);
