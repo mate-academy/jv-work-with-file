@@ -25,7 +25,7 @@ public class WorkWithFile {
     }
 
     private StringBuilder generateReport(int[] information) {
-        return  new StringBuilder().append(SUPPLY).append(COMA).append(information[0])
+        return new StringBuilder().append(SUPPLY).append(COMA).append(information[0])
                 .append(System.lineSeparator()).append(BUY).append(COMA)
                 .append(information[1]).append(System.lineSeparator()).append(RESULT)
                 .append(COMA).append(information[0] - information[1]);
