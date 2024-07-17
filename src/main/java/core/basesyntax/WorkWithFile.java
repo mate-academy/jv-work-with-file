@@ -18,13 +18,17 @@ public class WorkWithFile {
 
     private void writeFile(String toFileName, int[] information) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            String stringBuilder = SUPPLY + COMA + information[0] + System.lineSeparator()
-                    + BUY + COMA + information[1] + System.lineSeparator()
-                    + RESULT + COMA + (information[0] - information[1]);
-            bufferedWriter.write(stringBuilder);
+            bufferedWriter.write(String.valueOf(generateReport(information)));
         } catch (Exception e) {
             throw new RuntimeException("Can't write data from the file " + toFileName, e);
         }
+    }
+
+    private StringBuilder generateReport(int[] information) {
+        return  new StringBuilder().append(SUPPLY).append(COMA).append(information[0])
+                .append(System.lineSeparator()).append(BUY).append(COMA)
+                .append(information[1]).append(System.lineSeparator()).append(RESULT)
+                .append(COMA).append(information[0] - information[1]);
     }
 
     private int[] readFile(String fromFileName) {
