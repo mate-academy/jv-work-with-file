@@ -12,42 +12,37 @@ public class WorkWithFile {
     private static final String COMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int[] newInfoForSupplyAndBuy = readFile(fromFileName);
-        writeFile(toFileName, newInfoForSupplyAndBuy);
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
+            int sumSupply = 0;
+            int sumBuy = 0;
+            String infoLine = reader.readLine();
+            while (infoLine != null) {
+                String[] marketDataArrays = infoLine.split(COMA);
+                if (marketDataArrays[0].equals(SUPPLY)) {
+                    sumSupply += Integer.parseInt(marketDataArrays[1]);
+                } else if (marketDataArrays[0].equals(BUY)) {
+                    sumBuy += Integer.parseInt(marketDataArrays[1]);
+                }
+                infoLine = reader.readLine();
+            }
+            writeFile(toFileName, sumSupply, sumBuy);
+        } catch (Exception e) {
+            throw new RuntimeException("Can't read data from the file " + fromFileName, e);
+        }
     }
 
-    private void writeFile(String toFileName, int[] information) {
+    private void writeFile(String toFileName, int supple, int buy) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write(String.valueOf(generateReport(information)));
+            bufferedWriter.write(String.valueOf(generateReport(supple, buy)));
         } catch (Exception e) {
             throw new RuntimeException("Can't write data from the file " + toFileName, e);
         }
     }
 
-    private StringBuilder generateReport(int[] information) {
-        return new StringBuilder().append(SUPPLY).append(COMA).append(information[0])
+    private StringBuilder generateReport(int sumSupple, int sumBuy) {
+        return new StringBuilder().append(SUPPLY).append(COMA).append(sumSupple)
                 .append(System.lineSeparator()).append(BUY).append(COMA)
-                .append(information[1]).append(System.lineSeparator()).append(RESULT)
-                .append(COMA).append(information[0] - information[1]);
-    }
-
-    private int[] readFile(String fromFileName) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
-            int[] infoForSupplyAndBuy = new int[2];
-            String info = reader.readLine();
-            while (info != null) {
-                String[] strings = info.split(COMA);
-                if (strings[0].equals(SUPPLY)) {
-                    infoForSupplyAndBuy[0] += Integer.parseInt(strings[1]);
-                } else if (strings[0].equals(BUY)) {
-                    infoForSupplyAndBuy[1] += Integer.parseInt(strings[1]);
-                }
-                info = reader.readLine();
-            }
-            return infoForSupplyAndBuy;
-        } catch (Exception e) {
-            throw new RuntimeException("Can't read data from the file " + fromFileName, e);
-        }
+                .append(sumBuy).append(System.lineSeparator()).append(RESULT)
+                .append(COMA).append(sumSupple - sumBuy);
     }
 }
-
