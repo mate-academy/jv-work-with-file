@@ -18,8 +18,8 @@ public class WorkWithFile {
     private void writeFile(String toFileName) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write("supply," + supply
-                    + "\r\n" + "buy," + buy
-                    + "\r\n" + "result," + (supply - buy));
+                    + System.lineSeparator() + "buy," + buy
+                    + System.lineSeparator() + "result," + (supply - buy));
         } catch (Exception e) {
             throw new RuntimeException("Can't read data from the file " + toFileName, e);
         }
