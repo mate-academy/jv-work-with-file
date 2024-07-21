@@ -68,7 +68,8 @@ public class WorkWithFile {
                 }
             }
         } catch (IOException ioException) {
-            throw new RuntimeException("Can't read data from the file " + fromFileName, ioException);
+            throw new RuntimeException("Can't read data from the file "
+                    + fromFileName, ioException);
         }
     }
 }
