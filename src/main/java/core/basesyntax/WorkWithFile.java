@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class WorkWithFile {
-    private void getStatistic(String fromFileName, String toFileName) {
+    public void getStatistic(String fromFileName, String toFileName) {
         File fileFromFileName = new File(fromFileName);
         File fileToFileName = new File(toFileName);
         Map<String, Integer> result = new HashMap<>();
