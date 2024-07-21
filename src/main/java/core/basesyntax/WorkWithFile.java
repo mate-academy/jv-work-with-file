@@ -1,11 +1,6 @@
 package core.basesyntax;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,11 +33,11 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             StringBuilder stringBuilder = new StringBuilder();
             for (Map.Entry<String, Integer> entry : result.entrySet()) {
+                stringBuilder.setLength(0);
                 bufferedWriter.write(stringBuilder
                         .append(entry.getKey())
                         .append(",")
-                        .append(entry.getValue())
-                        .append(System.lineSeparator()).toString());
+                        .append(entry.getValue()).toString());
                 bufferedWriter.newLine();
             }
         } catch (IOException ioException) {
