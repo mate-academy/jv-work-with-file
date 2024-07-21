@@ -38,7 +38,11 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             StringBuilder stringBuilder = new StringBuilder();
             for (Map.Entry<String, Integer> entry : result.entrySet()) {
-                bufferedWriter.write(stringBuilder.append(entry.getKey()).append(",").append(entry.getValue()).append(System.lineSeparator()).toString());
+                bufferedWriter.write(stringBuilder
+                        .append(entry.getKey())
+                        .append(",")
+                        .append(entry.getValue())
+                        .append(System.lineSeparator()).toString());
                 bufferedWriter.newLine();
             }
         } catch (IOException ioException) {
