@@ -23,15 +23,15 @@ public class WorkWithFile {
             File newFile = new File("result.txt");
             try {
                 newFile.createNewFile();
-                toFileName = newFile.getName();
+                fileToFileName = new File(newFile.getName());
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             }
         }
 
-        readFromFileAndPutDataToMap(fromFileName, result);
+        readFromFileAndPutDataToMap(fileFromFileName.getName(), result);
 
-        writeToFileDataFromMap(toFileName, result);
+        writeToFileDataFromMap(fileToFileName.getName(), result);
     }
 
     private void writeToFileDataFromMap(String toFileName, Map<String, Integer> result) {
