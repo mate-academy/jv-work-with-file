@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.Comparator;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
@@ -15,17 +14,15 @@ public class WorkWithFile {
         for (String line : data) {
             resultData.append(line).append(System.lineSeparator());
         }
-        resultData.append(getOdd(data));
+        resultData.append(getOddOfValues(data));
         writeToFile(resultData.toString().split(System.lineSeparator()), toFileName);
     }
 
     private String[] getSortedData(String[] resultData) {
-        Arrays.sort(resultData, new Comparator<String>() {
-            @Override
-            public int compare(String o1, String o2) {
-                return Integer.valueOf(o2.split(",")[1])
-                        .compareTo(Integer.valueOf(o1.split(",")[1]));
-            }
+        Arrays.sort(resultData, (o1, o2) -> {
+            int number1 = Integer.parseInt(o1.split(",")[1]);
+            int number2 = Integer.parseInt(o2.split(",")[1]);
+            return Integer.compare(number2, number1);
         });
         return resultData;
     }
@@ -48,7 +45,7 @@ public class WorkWithFile {
         return resultData.toString().split(System.lineSeparator());
     }
 
-    private String getOdd(String[] resultData) {
+    private String getOddOfValues(String[] resultData) {
         StringBuilder result = new StringBuilder();
         int odd = 0;
         for (String number : resultData) {
@@ -77,7 +74,7 @@ public class WorkWithFile {
 
     private String[] readFromFile(String fromFile) {
         try {
-            return Files.readString(Paths.get(fromFile)).split("\n");
+            return Files.readString(Paths.get(fromFile)).split("\r?\n");
         } catch (IOException e) {
             throw new RuntimeException("Can't read from file", e);
         }
