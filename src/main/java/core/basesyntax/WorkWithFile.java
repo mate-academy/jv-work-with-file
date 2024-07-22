@@ -1,13 +1,16 @@
 package core.basesyntax;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 public class WorkWithFile {
     private static final String COMMA = ",";
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] textFromFile = readFromFile(fromFileName);
@@ -16,8 +19,15 @@ public class WorkWithFile {
     }
 
     private String[] readFromFile(String fromFileName) {
-        try {
-            return Files.readString(Path.of(fromFileName)).split("\r?\n");
+        try (FileReader file = new FileReader(fromFileName);
+                BufferedReader reader = new BufferedReader(file)) {
+            StringBuilder text = new StringBuilder();
+            String line = reader.readLine();
+            while (line != null) {
+                text.append(line).append(System.lineSeparator());
+                line = reader.readLine();
+            }
+            return text.toString().split(System.lineSeparator());
         } catch (IOException e) {
             throw new RuntimeException("Can't read from file", e);
         }
@@ -30,16 +40,16 @@ public class WorkWithFile {
         int result;
         for (String product : data) {
             String[] line = product.split(COMMA);
-            if (line[0].equals("supply")) {
+            if (line[0].equals(SUPPLY)) {
                 supplySum += Integer.parseInt(line[1]);
             } else {
                 buySum += Integer.parseInt(line[1]);
             }
         }
         result = supplySum - buySum;
-        report.append("supply,").append(supplySum).append(System.lineSeparator());
-        report.append("buy,").append(buySum).append(System.lineSeparator());
-        report.append("result,").append(result);
+        report.append(SUPPLY).append(COMMA).append(supplySum).append(System.lineSeparator());
+        report.append(BUY).append(COMMA).append(buySum).append(System.lineSeparator());
+        report.append(RESULT).append(COMMA).append(result);
 
         return report.toString();
     }
