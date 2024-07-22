@@ -89,7 +89,7 @@ public class WorkWithFile {
             data.append(line).append(System.lineSeparator());
         }
         try (FileWriter file = new FileWriter(toFile);
-                BufferedWriter writer = new BufferedWriter(file);) {
+                BufferedWriter writer = new BufferedWriter(file)) {
             writer.write(String.valueOf(data));
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file", e);
