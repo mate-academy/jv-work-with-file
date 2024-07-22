@@ -37,7 +37,14 @@ public class WorkWithFile {
     private void writeToFileDataFromMap(String toFileName, Map<String, Integer> result) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             StringBuilder stringBuilder = new StringBuilder();
+            int supply = 0;
+            int buy = 0;
             for (Map.Entry<String, Integer> entry : result.entrySet()) {
+                if (entry.getKey().equals("supply")) {
+                    supply = entry.getValue();
+                } else if (entry.getKey().equals("buy")) {
+                    buy = entry.getValue();
+                }
                 stringBuilder.setLength(0);
                 bufferedWriter.write(stringBuilder
                         .append(entry.getKey())
@@ -45,6 +52,8 @@ public class WorkWithFile {
                         .append(entry.getValue()).toString());
                 bufferedWriter.newLine();
             }
+            stringBuilder.setLength(0);
+            bufferedWriter.write(stringBuilder.append("result,").append(supply - buy).toString());
         } catch (IOException ioException) {
             throw new RuntimeException("Can't write data to the file " + toFileName, ioException);
         }
