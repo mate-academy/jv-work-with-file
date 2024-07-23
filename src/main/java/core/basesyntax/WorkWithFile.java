@@ -19,16 +19,6 @@ public class WorkWithFile {
             return;
         }
 
-        if (!fileToFileName.exists()) {
-            File newFile = new File("result.txt");
-            try {
-                newFile.createNewFile();
-                fileToFileName = new File(newFile.getName());
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
-            }
-        }
-
         readFromFileAndPutDataToMap(fileFromFileName.getName(), result);
 
         writeToFileDataFromMap(fileToFileName.getName(), result);
@@ -36,24 +26,15 @@ public class WorkWithFile {
 
     private void writeToFileDataFromMap(String toFileName, Map<String, Integer> result) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            StringBuilder stringBuilder = new StringBuilder();
-            int supply = 0;
-            int buy = 0;
-            for (Map.Entry<String, Integer> entry : result.entrySet()) {
-                if (entry.getKey().equals("supply")) {
-                    supply = entry.getValue();
-                } else if (entry.getKey().equals("buy")) {
-                    buy = entry.getValue();
-                }
-                stringBuilder.setLength(0);
-                bufferedWriter.write(stringBuilder
-                        .append(entry.getKey())
-                        .append(",")
-                        .append(entry.getValue()).toString());
-                bufferedWriter.newLine();
-            }
-            stringBuilder.setLength(0);
-            bufferedWriter.write(stringBuilder.append("result,").append(supply - buy).toString());
+            int supply = result.getOrDefault("supply", 0);
+            int buy = result.getOrDefault("buy", 0);
+            int finalResult = supply - buy;
+
+            bufferedWriter.write("supply," + supply);
+            bufferedWriter.newLine();
+            bufferedWriter.write("buy," + buy);
+            bufferedWriter.newLine();
+            bufferedWriter.write("result," + finalResult);
         } catch (IOException ioException) {
             throw new RuntimeException("Can't write data to the file " + toFileName, ioException);
         }
@@ -68,12 +49,7 @@ public class WorkWithFile {
                 if (wordsAndNumber.length == 2) {
                     String word = wordsAndNumber[0];
                     int number = Integer.parseInt(wordsAndNumber[1]);
-                    if (result.containsKey(word)) {
-                        int numberInMap = result.get(word);
-                        result.put(word, numberInMap + number);
-                    } else {
-                        result.put(word, number);
-                    }
+                    result.put(word, result.getOrDefault(word, 0) + number);
                 }
             }
         } catch (IOException ioException) {
