@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -15,31 +14,30 @@ public class WorkWithFile {
     private static final String COMMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        Path pathOfCsvFile = Path.of(fromFileName);
+        String[] dataFromFile = readFromFile(fromFileName);
+        String report = createReportFromData(dataFromFile);
+        writeToFile(report, toFileName);
+    }
+
+    private String[] readFromFile(String filepath) {
         try {
-            List<String> lines = Files.readAllLines(pathOfCsvFile);
-            String[] valueFromList = lines.toArray(new String[]{});
-            String report = createReport(valueFromList);
-            writeToFile(report, toFileName);
+            List<String> lines = Files.readAllLines(Path.of(filepath));
+            return lines.toArray(new String[]{});
         } catch (IOException e) {
             throw new RuntimeException("can't read a file", e);
         }
     }
 
-    private String createReport(String[] getString) {
+    private String createReportFromData(String[] getData) {
         int supply = 0;
         int buy = 0;
-        for (String data : getString) {
-            String[] calculationString = new String[2];
+        for (String data : getData) {
             String[] splitData = data.split(",");
-            calculationString[0] = splitData[0];
-            calculationString[1] = splitData[1];
-            if (calculationString[0].equals(SUPPLY)) {
-                supply += Integer.parseInt(calculationString[1]);
+            if (splitData[0].equals(SUPPLY)) {
+                supply += Integer.parseInt(splitData[1]);
             }
-            if (calculationString[0].equals(BUY)) {
-                buy += Integer.parseInt(calculationString[1]);
-
+            if (splitData[0].equals(BUY)) {
+                buy += Integer.parseInt(splitData[1]);
             }
         }
         StringBuilder builder = new StringBuilder();
@@ -50,11 +48,10 @@ public class WorkWithFile {
     }
 
     private void writeToFile(String report, String toFileName) {
-        File file = new File(toFileName);
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write(report);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("can't write a file", e);
         }
 
     }
