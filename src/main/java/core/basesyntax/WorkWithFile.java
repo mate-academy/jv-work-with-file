@@ -10,51 +10,59 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class WorkWithFile {
+    private static final String SEPARATOR = ",";
+    private static final int OPERATION_TYPE_INDEX = 0;
+    private static final int OPERATION_VALUE_INDEX = 1;
+
     public void getStatistic(String fromFileName, String toFileName) {
         File fileFromFileName = new File(fromFileName);
-        File fileToFileName = new File(toFileName);
         Map<String, Integer> result = new HashMap<>();
 
         if (!fileFromFileName.exists()) {
             return;
         }
 
-        readFromFileAndPutDataToMap(fileFromFileName.getName(), result);
+        readFromFile(fileFromFileName.getName(), result);
 
-        writeToFileDataFromMap(fileToFileName.getName(), result);
+        writeToFileDataFromMap(toFileName, result);
     }
 
     private void writeToFileDataFromMap(String toFileName, Map<String, Integer> result) {
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            int supply = result.getOrDefault("supply", 0);
-            int buy = result.getOrDefault("buy", 0);
+        File fileToFileName = new File(toFileName);
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileToFileName))) {
+            int supply = result.getOrDefault("supply", OPERATION_TYPE_INDEX);
+            int buy = result.getOrDefault("buy", OPERATION_TYPE_INDEX);
             int finalResult = supply - buy;
 
-            bufferedWriter.write("supply," + supply);
+            bufferedWriter.write("supply" + SEPARATOR + supply);
             bufferedWriter.newLine();
-            bufferedWriter.write("buy," + buy);
+            bufferedWriter.write("buy" + SEPARATOR + buy);
             bufferedWriter.newLine();
-            bufferedWriter.write("result," + finalResult);
+            bufferedWriter.write("result" + SEPARATOR + finalResult);
         } catch (IOException ioException) {
-            throw new RuntimeException("Can't write data to the file " + toFileName, ioException);
+            throw new RuntimeException("Can't write data to the file " + fileToFileName.getName(), ioException);
         }
     }
 
-    private void readFromFileAndPutDataToMap(String fromFileName, Map<String, Integer> result) {
+    private void readFromFile(String fromFileName, Map<String, Integer> result) {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String lineData;
 
             while ((lineData = bufferedReader.readLine()) != null) {
-                String[] wordsAndNumber = lineData.split(",");
-                if (wordsAndNumber.length == 2) {
-                    String word = wordsAndNumber[0];
-                    int number = Integer.parseInt(wordsAndNumber[1]);
-                    result.put(word, result.getOrDefault(word, 0) + number);
-                }
+                putDataToMap(result, lineData);
             }
         } catch (IOException ioException) {
             throw new RuntimeException("Can't read data from the file "
                     + fromFileName, ioException);
+        }
+    }
+
+    private void putDataToMap(Map<String, Integer> result, String lineData) {
+        String[] wordsAndNumber = lineData.split(SEPARATOR);
+        if (wordsAndNumber.length == 2) {
+            String word = wordsAndNumber[OPERATION_TYPE_INDEX];
+            int number = Integer.parseInt(wordsAndNumber[OPERATION_VALUE_INDEX]);
+            result.put(word, result.getOrDefault(word, OPERATION_TYPE_INDEX) + number);
         }
     }
 }
