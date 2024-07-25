@@ -16,31 +16,24 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] output = readFile(fromFileName);
-        String[] result = generateReport(output);
+        String[] result = calculateAndFormatReport(output);
         writeToFile(result, toFileName);
     }
 
-    public static String[] readFile(String fromFileName) {
+    public String[] readFile(String fromFileName) {
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
-            int linesCount = 0;
-            while (reader.readLine() != null) {
-                linesCount++;
+            String line;
+            StringBuilder fileContent = new StringBuilder();
+            while ((line = reader.readLine()) != null) {
+                fileContent.append(line).append(System.lineSeparator());
             }
-            String[] output = new String[linesCount];
-            try (BufferedReader readerAgain = new BufferedReader(new FileReader(fromFileName))) {
-                String line;
-                int index = 0;
-                while ((line = readerAgain.readLine()) != null) {
-                    output[index++] = line.trim();
-                }
-            }
-            return output;
+            return fileContent.toString().split(System.lineSeparator());
         } catch (IOException e) {
             throw new RuntimeException("Can't read the file.", e);
         }
     }
 
-    public static String[] generateReport(String[] output) {
+    public String[] calculateAndFormatReport(String[] output) {
         int totalSupply = 0;
         int totalBuy = 0;
         String[] report = new String[3];
@@ -61,12 +54,11 @@ public class WorkWithFile {
         return report;
     }
 
-    public static void writeToFile(String[] report, String toFileName) {
-        try (BufferedWriter buffer = new BufferedWriter(new FileWriter(toFileName, false))) {
+    public void writeToFile(String[] report, String toFileName) {
+        try (BufferedWriter fileWriter = new BufferedWriter(new FileWriter(toFileName, false))) {
             for (String part : report) {
-                buffer.write(part);
-                buffer.newLine();
-                buffer.flush();
+                fileWriter.write(part);
+                fileWriter.newLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("Can`t write data to file.", e);
