@@ -16,10 +16,7 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         List<String> dataFromFile = readFromFile(fromFileName);
-        int supplyAmount = calculateTotal(dataFromFile, SUPPLY);
-        int buyAmount = calculateTotal(dataFromFile, BUY);
-        int result = supplyAmount - buyAmount;
-        List<String> report = createReport(supplyAmount, buyAmount, result);
+        List<String> report = createReport(dataFromFile);
         writeToFile(toFileName, report);
     }
 
@@ -34,7 +31,7 @@ public class WorkWithFile {
     private int calculateTotal(List<String> data, String operationType) {
         int total = 0;
         for (String line : data) {
-            String[] eachElement = line.split(",");
+            String[] eachElement = line.split(COMMA);
             if (eachElement[0].equals(operationType)) {
                 total += Integer.parseInt(eachElement[1]);
             }
@@ -42,15 +39,21 @@ public class WorkWithFile {
         return total;
     }
 
-    private List<String> createReport(int supplyAmount, int buyAmount, int result) {
-        StringBuilder firstLine = new StringBuilder();
-        StringBuilder secondLine = new StringBuilder();
-        StringBuilder thirdLine = new StringBuilder();
-        return Arrays.asList(
-                firstLine.append(SUPPLY).append(COMMA).append(supplyAmount).toString(),
-                secondLine.append(BUY).append(COMMA).append(buyAmount).toString(),
-                thirdLine.append(RESULT).append(COMMA).append(result).toString()
-        );
+    private List<String> createReport(List<String> dataFromFile) {
+        int supplyAmount = calculateTotal(dataFromFile, SUPPLY);
+        int buyAmount = calculateTotal(dataFromFile, BUY);
+        int result = supplyAmount - buyAmount;
+        StringBuilder builder = new StringBuilder();
+        final String firstLine = builder.append(SUPPLY).append(COMMA)
+                .append(supplyAmount).toString();
+        builder.setLength(0);
+        final String secondLine = builder.append(BUY).append(COMMA)
+                .append(buyAmount).toString();
+        builder.setLength(0);
+        final String thirdLine = builder.append(RESULT).append(COMMA)
+                .append(result).toString();
+        builder.setLength(0);
+        return Arrays.asList(firstLine, secondLine, thirdLine);
     }
 
     private void writeToFile(String fileName, List<String> report) {
