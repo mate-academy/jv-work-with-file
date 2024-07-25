@@ -40,7 +40,8 @@ public class WorkWithFile {
             bufferedWriter.newLine();
             bufferedWriter.write("result" + SEPARATOR + finalResult);
         } catch (IOException ioException) {
-            throw new RuntimeException("Can't write data to the file " + fileToFileName.getName(), ioException);
+            throw new RuntimeException("Can't write data to the file "
+                    + fileToFileName.getName(), ioException);
         }
     }
 
