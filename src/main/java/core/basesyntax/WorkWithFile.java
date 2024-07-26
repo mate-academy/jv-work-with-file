@@ -25,12 +25,12 @@ public class WorkWithFile {
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                data.append(line).append("\n");
+                data.append(line).append(System.lineSeparator());
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read from file", e);
+            throw new RuntimeException("Can't read from file: " + fromFileName, e);
         }
-        return data.toString().split("\n");
+        return data.toString().split(System.lineSeparator());
     }
 
     private String[] createResult(String[] data) {
@@ -62,7 +62,7 @@ public class WorkWithFile {
                 writer.newLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can`t write to a file", e);
+            throw new RuntimeException("Can`t write to a file: " + toFileName, e);
         }
     }
 }
