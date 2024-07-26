@@ -13,6 +13,8 @@ public class WorkWithFile {
     private static final String BUY = "buy";
     private static final String COMMA = ",";
     private static final String RESULT = "result";
+    private static final int FIRST_ELEMENT_INDEX = 0;
+    private static final int SECOND_ELEMENT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         List<String> dataFromFile = readFromFile(fromFileName);
@@ -32,8 +34,8 @@ public class WorkWithFile {
         int total = 0;
         for (String line : data) {
             String[] eachElement = line.split(COMMA);
-            if (eachElement[0].equals(operationType)) {
-                total += Integer.parseInt(eachElement[1]);
+            if (eachElement[FIRST_ELEMENT_INDEX].equals(operationType)) {
+                total += Integer.parseInt(eachElement[SECOND_ELEMENT_INDEX]);
             }
         }
         return total;
@@ -43,17 +45,9 @@ public class WorkWithFile {
         int supplyAmount = calculateTotal(dataFromFile, SUPPLY);
         int buyAmount = calculateTotal(dataFromFile, BUY);
         int result = supplyAmount - buyAmount;
-        StringBuilder builder = new StringBuilder();
-        final String firstLine = builder.append(SUPPLY).append(COMMA)
-                .append(supplyAmount).toString();
-        builder.setLength(0);
-        final String secondLine = builder.append(BUY).append(COMMA)
-                .append(buyAmount).toString();
-        builder.setLength(0);
-        final String thirdLine = builder.append(RESULT).append(COMMA)
-                .append(result).toString();
-        builder.setLength(0);
-        return Arrays.asList(firstLine, secondLine, thirdLine);
+        return Arrays.asList(createLine(SUPPLY, supplyAmount),
+                createLine(BUY, buyAmount),
+                createLine(RESULT, result));
     }
 
     private void writeToFile(String fileName, List<String> report) {
@@ -65,5 +59,11 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't write to the file " + fileName, e);
         }
+    }
+
+    private String createLine(String operationType, int value) {
+        StringBuilder builder = new StringBuilder();
+        return builder.append(operationType).append(COMMA)
+                .append(value).toString();
     }
 }
