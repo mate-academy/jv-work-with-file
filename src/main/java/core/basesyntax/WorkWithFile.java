@@ -16,7 +16,7 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] data = readFromFile(fromFileName);
-        String[] report = calculateReport(data);
+        String report = calculateReport(data);
         writeIntoFile(toFileName,report);
     }
 
@@ -33,7 +33,7 @@ public class WorkWithFile {
         return data.toString().split(System.lineSeparator());
     }
 
-    private String [] calculateReport(String[] data) {
+    private String calculateReport(String[] data) {
         int totalSupply = 0;
         int totalBuy = 0;
         for (String reports : data) {
@@ -47,19 +47,16 @@ public class WorkWithFile {
             }
         }
         int result = totalSupply - totalBuy;
-        return new String[] {
-                SUPPLY + SEPARATOR + totalSupply,
-                BUY + SEPARATOR + totalBuy,
-                RESULT + SEPARATOR + result
-        };
+        StringBuilder builder = new StringBuilder();
+        builder.append(SUPPLY).append(SEPARATOR).append(totalSupply).append(System.lineSeparator())
+                .append(BUY).append(SEPARATOR).append(totalBuy).append(System.lineSeparator())
+                .append(RESULT).append(SEPARATOR).append(totalSupply - totalBuy);
+        return builder.toString();
     }
 
-    private void writeIntoFile(String toFileName, String[] report) {
+    private void writeIntoFile(String toFileName, String report) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            for (String line : report) {
-                writer.write(line);
-                writer.newLine();
-            }
+            writer.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Failed to write data " + toFileName, e);
         }
