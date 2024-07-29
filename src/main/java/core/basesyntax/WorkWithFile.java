@@ -17,7 +17,7 @@ public class WorkWithFile {
         try {
             return Files.readString(new File(fromFileName).toPath());
         } catch (IOException e) {
-            throw new RuntimeException("Can't open file",e);
+            throw new RuntimeException("Can't open file" + fromFileName,e);
         }
     }
 
