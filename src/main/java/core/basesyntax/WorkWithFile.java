@@ -19,33 +19,6 @@ public class WorkWithFile {
         writeToFile(toFileName, report);
     }
 
-    private class DataCounter {
-        private int buyAmount = 0;
-        private int supplyAmount = 0;
-
-        private DataCounter() {
-        }
-
-        private void countValues(String[] dataArray) {
-            for (int i = 0; i < dataArray.length; i += 2) {
-                switch (dataArray[i]) {
-                    case BUY_STRING_VALUE -> buyAmount += Integer.parseInt(dataArray[i + 1]);
-                    case SUPPLY_STRING_VALUE -> supplyAmount += Integer.parseInt(dataArray[i + 1]);
-                    default -> throw new RuntimeException(
-                            "Unexpected data in countBuyAndSupplyValues()");
-                }
-            }
-        }
-
-        private int getSupplyAmount() {
-            return supplyAmount;
-        }
-
-        private int getBuyAmount() {
-            return buyAmount;
-        }
-    }
-
     private String readFromFile(String fromFileName) {
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             StringBuilder resultString = new StringBuilder();
@@ -83,6 +56,33 @@ public class WorkWithFile {
             writer.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to file",e);
+        }
+    }
+
+    private class DataCounter {
+        private int buyAmount = 0;
+        private int supplyAmount = 0;
+
+        private DataCounter() {
+        }
+
+        private void countValues(String[] dataArray) {
+            for (int i = 0; i < dataArray.length; i += 2) {
+                switch (dataArray[i]) {
+                    case BUY_STRING_VALUE -> buyAmount += Integer.parseInt(dataArray[i + 1]);
+                    case SUPPLY_STRING_VALUE -> supplyAmount += Integer.parseInt(dataArray[i + 1]);
+                    default -> throw new RuntimeException(
+                            "Unexpected data in countBuyAndSupplyValues()");
+                }
+            }
+        }
+
+        private int getSupplyAmount() {
+            return supplyAmount;
+        }
+
+        private int getBuyAmount() {
+            return buyAmount;
         }
     }
 }
