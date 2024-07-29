@@ -45,9 +45,11 @@ public class WorkWithFile {
         int supplyAmount = calculateTotal(dataFromFile, SUPPLY);
         int buyAmount = calculateTotal(dataFromFile, BUY);
         int result = supplyAmount - buyAmount;
-        return Arrays.asList(createLine(SUPPLY, supplyAmount),
-                createLine(BUY, buyAmount),
-                createLine(RESULT, result));
+        StringBuilder builder = new StringBuilder();
+        builder.append(SUPPLY).append(COMMA).append(supplyAmount).append(System.lineSeparator())
+                .append(BUY).append(COMMA).append(buyAmount).append(System.lineSeparator())
+                .append(RESULT).append(COMMA).append(result);
+        return Arrays.asList(builder.toString());
     }
 
     private void writeToFile(String fileName, List<String> report) {
@@ -59,11 +61,5 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't write to the file " + fileName, e);
         }
-    }
-
-    private String createLine(String operationType, int value) {
-        StringBuilder builder = new StringBuilder();
-        return builder.append(operationType).append(COMMA)
-                .append(value).toString();
     }
 }
