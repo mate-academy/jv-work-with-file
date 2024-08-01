@@ -7,6 +7,8 @@ import java.io.IOException;
 
 public class WorkWithFile {
     private static final int START_AMOUNT_VALUE = 0;
+    private static final int ARRAY_POSITION_0 = 0;
+    private static final int ARRAY_POSITION_1 = 1;
     private static final int ARRAY_SPLIT_POINT_0 = 0;
     private static final int ARRAY_SPLIT_POINT_1 = 1;
     private static final String SUPPLY = "supply";
@@ -15,6 +17,14 @@ public class WorkWithFile {
     private static final String COMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
+        int[] amountValue = getAmountValue(fromFileName);
+        int supplyAmount = amountValue[ARRAY_POSITION_0];
+        int buyAmount = amountValue[ARRAY_POSITION_1];
+        String statistic = createReport(supplyAmount, buyAmount);
+        writeFile(statistic, toFileName);
+    }
+
+    private int[] getAmountValue(String fromFileName) {
         String text;
         int supplyAmount = START_AMOUNT_VALUE;
         int buyAmount = START_AMOUNT_VALUE;
@@ -31,8 +41,7 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read a file " + fromFileName, e);
         }
-        String statistic = createReport(supplyAmount, buyAmount);
-        writeFile(statistic, toFileName);
+        return new int[]{supplyAmount, buyAmount};
     }
 
     private String createReport(int supplyAmount, int buyAmount) {
