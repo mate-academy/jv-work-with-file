@@ -11,10 +11,14 @@ import java.util.Map;
 public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
+        Map<String, Integer> statistics = readData(fromFileName);
+        writeData(toFileName, statistics);
+    }
 
+    private Map<String, Integer> readData(String fileName) {
         Map<String, Integer> statistics = new HashMap<>();
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
@@ -29,23 +33,29 @@ public class WorkWithFile {
                 } catch (NumberFormatException e) {
                     continue;
                 }
+
                 statistics.put(operationType, statistics.getOrDefault(operationType, 0) + amount);
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read that file", e);
         }
+
+        return statistics;
+    }
+
+    private void writeData(String fileName, Map<String, Integer> statistics) {
         int supply = statistics.getOrDefault("supply", 0);
         int buy = statistics.getOrDefault("buy", 0);
         int result = supply - buy;
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             writer.write("supply," + supply);
             writer.newLine();
             writer.write("buy," + buy);
             writer.newLine();
             writer.write("result," + result);
         } catch (IOException e) {
-            throw new RuntimeException("Cen't write to that file", e);
+            throw new RuntimeException("Can't write to that file", e);
         }
     }
 }
