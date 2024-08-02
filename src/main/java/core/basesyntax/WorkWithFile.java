@@ -39,11 +39,9 @@ public class WorkWithFile {
 
     private String createReport(int sumOfSupply, int sumOfBuy) {
         int result = sumOfSupply - sumOfBuy;
-        StringBuilder builder = new StringBuilder();
-        return builder.append(SUPPLY).append(COMMA).append(sumOfSupply)
-                .append(System.lineSeparator()).append(BUY).append(COMMA)
-                .append(sumOfBuy).append(System.lineSeparator())
-                .append(RESULT).append(',').append(result).toString();
+        return SUPPLY + COMMA + sumOfSupply + System.lineSeparator()
+                + BUY + COMMA + sumOfBuy + System.lineSeparator()
+                + RESULT + COMMA + result;
     }
 
     private void writeDataToFile(String toFileName, String report) {
