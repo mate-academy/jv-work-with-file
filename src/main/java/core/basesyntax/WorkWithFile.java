@@ -2,7 +2,6 @@ package core.basesyntax;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -12,17 +11,9 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
+    private static final int PART_LINE = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        File reportFile = new File(toFileName);
-        if (!reportFile.exists()) {
-            try {
-                reportFile.createNewFile();
-            } catch (IOException e) {
-                throw new RuntimeException("Cannot create " + toFileName + " file", e);
-            }
-        }
-
         String[] actionsList = readFile(fromFileName);
         String report = createReport(actionsList);
         writeReportToFile(report, toFileName);
@@ -41,9 +32,9 @@ public class WorkWithFile {
             return fileDataCollector.toString().split(System.lineSeparator());
 
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("Can't find file", e);
+            throw new RuntimeException("Can't find " + fromFileName + " file", e);
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't read " + fromFileName + " file", e);
         }
     }
 
@@ -80,6 +71,6 @@ public class WorkWithFile {
 
     private int calculateTurnover(String action) {
         String[] lineElements = action.split(",");
-        return Integer.parseInt(lineElements[1]);
+        return Integer.parseInt(lineElements[PART_LINE]);
     }
 }
