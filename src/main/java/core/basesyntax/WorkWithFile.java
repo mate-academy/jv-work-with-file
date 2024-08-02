@@ -44,9 +44,9 @@ public class WorkWithFile {
             bufferedWriter.write(reportToWrite);
 
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("Can't find the file", e);
+            throw new RuntimeException("Can't find " + toFileName + " file", e);
         } catch (IOException e) {
-            throw new RuntimeException("Can't read the file", e);
+            throw new RuntimeException("Can't write to " + toFileName + " file", e);
         }
     }
 
