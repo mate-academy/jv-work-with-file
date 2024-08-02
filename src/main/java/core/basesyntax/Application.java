@@ -1,17 +1,14 @@
 package core.basesyntax;
 
-import java.io.File;
-import java.io.IOException;
-
 public class Application {
+    private static final String BANANA = "banana.csv";
+    private static final String APPLE = "apple.csv";
+    private static final String GRAPE = "grape.csv";
+    private static final String ORANGE = "orange.csv";
+    private static final String REPORT = "report.csv";
+
     public static void main(String[] args) {
         WorkWithFile workWithFile = new WorkWithFile();
-        File reportFile = new File("report.csv");
-        try {
-            reportFile.createNewFile();
-            workWithFile.getStatistic("orange.csv", "report.csv");
-        } catch (IOException e) {
-            throw new RuntimeException("Can't create file", e);
-        }
+        workWithFile.getStatistic(BANANA, REPORT);
     }
 }

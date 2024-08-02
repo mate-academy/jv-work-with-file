@@ -2,12 +2,11 @@ package core.basesyntax;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 public class WorkWithFile {
     private static final String SUPPLY = "supply";
@@ -15,10 +14,13 @@ public class WorkWithFile {
     private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        try {
-            Files.deleteIfExists(Path.of(toFileName));
-        } catch (IOException e) {
-            throw new RuntimeException("Cannot delete file " + toFileName, e);
+        File reportFile = new File(toFileName);
+        if (!reportFile.exists()) {
+            try {
+                reportFile.createNewFile();
+            } catch (IOException e) {
+                throw new RuntimeException("Cannot create " + toFileName + " file", e);
+            }
         }
 
         String[] actionsList = readFile(fromFileName);
@@ -28,15 +30,15 @@ public class WorkWithFile {
     
     private String[] readFile(String fromFileName) {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
-            StringBuilder stringBuilder = new StringBuilder();
+            StringBuilder fileDataCollector = new StringBuilder();
             String line = bufferedReader.readLine();
 
             while (line != null) {
-                stringBuilder.append(line).append(System.lineSeparator());
+                fileDataCollector.append(line).append(System.lineSeparator());
                 line = bufferedReader.readLine();
             }
 
-            return stringBuilder.toString().split("[\\n\\r\\t]+");
+            return fileDataCollector.toString().split(System.lineSeparator());
 
         } catch (FileNotFoundException e) {
             throw new RuntimeException("Can't find file", e);
@@ -47,7 +49,7 @@ public class WorkWithFile {
 
     private void writeReportToFile(String reportToWrite, String toFileName) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(
-                new FileWriter(toFileName, true))) {
+                new FileWriter(toFileName))) {
             bufferedWriter.write(reportToWrite);
 
         } catch (FileNotFoundException e) {
@@ -77,8 +79,7 @@ public class WorkWithFile {
     }
 
     private int calculateTurnover(String action) {
-        action = action.replaceAll("[^0-9]", "");
-        return Integer.parseInt(action);
+        String[] lineElements = action.split(",");
+        return Integer.parseInt(lineElements[1]);
     }
-
 }
