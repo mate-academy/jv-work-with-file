@@ -10,17 +10,16 @@ public class WorkWithFile {
     private static final String BUY = "buy";
     private static final String COMMA = ",";
     private static final String RESULT = "result";
-    private int sumOfSupply = 0;
-    private int sumOfBuy = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        readDataFromFile(fromFileName);
-        String report = createReport(sumOfSupply, sumOfBuy);
+        int[] dataFromFile = readDataFromFile(fromFileName);
+        String report = createReport(dataFromFile);
         writeDataToFile(toFileName, report);
-        resetCalculations();
     }
 
-    private void readDataFromFile(String fromFileName) {
+    private int[] readDataFromFile(String fromFileName) {
+        int sumOfSupply = 0;
+        int sumOfBuy = 0;
         try {
             List<String> data = Files.readAllLines(Path.of(fromFileName));
             for (String line : data) {
@@ -35,9 +34,12 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from " + fromFileName, e);
         }
+        return new int[]{sumOfSupply, sumOfBuy};
     }
 
-    private String createReport(int sumOfSupply, int sumOfBuy) {
+    private String createReport(int[] dataFromFile) {
+        int sumOfSupply = dataFromFile[0];
+        int sumOfBuy = dataFromFile[1];
         int result = sumOfSupply - sumOfBuy;
         return SUPPLY + COMMA + sumOfSupply + System.lineSeparator()
                 + BUY + COMMA + sumOfBuy + System.lineSeparator()
@@ -50,10 +52,5 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't write report to " + toFileName, e);
         }
-    }
-
-    private void resetCalculations() {
-        sumOfSupply = 0;
-        sumOfBuy = 0;
     }
 }
