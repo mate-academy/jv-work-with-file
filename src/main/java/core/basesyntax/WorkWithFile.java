@@ -9,20 +9,22 @@ import java.nio.file.Paths;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
-        writeToFile(toFileName, getReport(fromFileName));
+        writeIntoFile(toFileName, calculateReport(fromFileName));
     }
 
-    public static int[] readFile(String fromFileName) {
+    private static int[] readFromFile(String fromFileName) {
         final String split = ",";
+        final String supply = "supply";
+        final String buy = "buy";
         int supplySum = 0;
         int buySum = 0;
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(split);
-                if (parts[0].equals("supply")) {
+                if (parts[0].equals(supply)) {
                     supplySum += Integer.parseInt(parts[1]);
-                } else if (parts[0].equals("buy")) {
+                } else if (parts[0].equals(buy)) {
                     buySum += Integer.parseInt(parts[1]);
                 }
             }
@@ -32,8 +34,8 @@ public class WorkWithFile {
         return new int[]{supplySum, buySum};
     }
 
-    public String getReport(String fromFileName) {
-        int[] current = readFile(fromFileName);
+    private String calculateReport(String fromFileName) {
+        int[] current = readFromFile(fromFileName);
         final int supply = current[0];
         final int buy = current[1];
         final int result = supply - buy;
@@ -42,7 +44,7 @@ public class WorkWithFile {
                 + "result," + result;
     }
 
-    public void writeToFile(String toFileName, String report) {
+    private void writeIntoFile(String toFileName, String report) {
         try (BufferedWriter bufferedWriter = Files.newBufferedWriter(Paths.get(toFileName))) {
             bufferedWriter.write(report);
         } catch (IOException e) {
