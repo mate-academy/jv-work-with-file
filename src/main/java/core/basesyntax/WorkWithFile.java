@@ -38,12 +38,15 @@ public class WorkWithFile {
     }
 
     private String createReport(int[] dataFromFile) {
+        StringBuilder builder = new StringBuilder();
         int sumOfSupply = dataFromFile[0];
         int sumOfBuy = dataFromFile[1];
         int result = sumOfSupply - sumOfBuy;
-        return SUPPLY + COMMA + sumOfSupply + System.lineSeparator()
-                + BUY + COMMA + sumOfBuy + System.lineSeparator()
-                + RESULT + COMMA + result;
+        return builder.append(SUPPLY).append(COMMA).append(sumOfSupply)
+                .append(System.lineSeparator())
+                .append(BUY).append(COMMA).append(sumOfBuy)
+                .append(System.lineSeparator())
+                .append(RESULT).append(COMMA).append(result).toString();
     }
 
     private void writeDataToFile(String toFileName, String report) {
