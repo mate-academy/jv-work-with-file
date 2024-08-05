@@ -8,23 +8,25 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class WorkWithFile {
+    public static final String SPLIT = ",";
+    public static final String SUPPLY = "supply";
+    public static final String BUY = "buy";
+    public static final String RESULT = "result";
+
     public void getStatistic(String fromFileName, String toFileName) {
         writeIntoFile(toFileName, calculateReport(fromFileName));
     }
 
     private static int[] readFromFile(String fromFileName) {
-        final String split = ",";
-        final String supply = "supply";
-        final String buy = "buy";
         int supplySum = 0;
         int buySum = 0;
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(split);
-                if (parts[0].equals(supply)) {
+                String[] parts = line.split(SPLIT);
+                if (parts[0].equals(SUPPLY)) {
                     supplySum += Integer.parseInt(parts[1]);
-                } else if (parts[0].equals(buy)) {
+                } else if (parts[0].equals(BUY)) {
                     buySum += Integer.parseInt(parts[1]);
                 }
             }
@@ -35,13 +37,15 @@ public class WorkWithFile {
     }
 
     private String calculateReport(String fromFileName) {
+        StringBuilder stringBuilder = new StringBuilder();
         int[] current = readFromFile(fromFileName);
-        final int supply = current[0];
-        final int buy = current[1];
-        final int result = supply - buy;
-        return "supply," + supply + System.lineSeparator()
-                + "buy," + buy + System.lineSeparator()
-                + "result," + result;
+        int supply = current[0];
+        int buy = current[1];
+        int result = current[0] - current[1];
+        return stringBuilder.append(SUPPLY)
+                .append(SPLIT).append(supply).append(System.lineSeparator()).append(BUY)
+                .append(SPLIT).append(buy).append(System.lineSeparator()).append(RESULT)
+                .append(SPLIT).append(result).toString();
     }
 
     private void writeIntoFile(String toFileName, String report) {
