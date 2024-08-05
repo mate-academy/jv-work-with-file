@@ -11,7 +11,7 @@ public class EntryToFile {
             bufferedWriter.write("buy," + report.getBuys() + System.lineSeparator());
             bufferedWriter.write("result," + report.getResult() + System.lineSeparator());
         } catch (IOException e) {
-            throw new RuntimeException("Can't write to file", e);
+            throw new RuntimeException("Can't write to file" + toFileName, e);
         }
     }
 }
