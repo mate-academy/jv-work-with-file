@@ -1,61 +1,65 @@
 package core.basesyntax;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
 
 public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
-        Map<String, Integer> statistics = readData(fromFileName);
-        writeData(toFileName, statistics);
+        String[] lines = readFromFile(fromFileName);
+        String report = createReport(lines);
+        writeToFile(report, toFileName);
     }
 
-    private Map<String, Integer> readData(String fileName) {
-        Map<String, Integer> statistics = new HashMap<>();
+    private String[] readFromFile(String fromFileName) {
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",");
-                if (parts.length != 2) {
-                    continue;
-                }
+        File inputFile = new File(fromFileName);
+        Path inputFilePath = Path.of(inputFile.toURI());
+        List<String> lines;
 
-                String operationType = parts[0].trim();
-                int amount;
-                try {
-                    amount = Integer.parseInt(parts[1].trim());
-                } catch (NumberFormatException e) {
-                    continue;
-                }
-
-                statistics.put(operationType, statistics.getOrDefault(operationType, 0) + amount);
-            }
+        try {
+            lines = Files.readAllLines(inputFilePath);
         } catch (IOException e) {
-            throw new RuntimeException("Can't read that file", e);
+            throw new RuntimeException("Can't read that file named: " + fromFileName, e);
+        }
+        System.out.println(lines);
+        return lines.toArray(new String[]{});
+    }
+
+    private String createReport(String[] lines) {
+        int supplyTotal = 0;
+        int buyTotal = 0;
+
+        for (String line : lines) {
+            String[] parts = line.split(",");
+            String operation = parts[0];
+            int amount = Integer.parseInt(parts[1]);
+
+            if (operation.equals("supply")) {
+                supplyTotal += amount;
+            } else if (operation.equals("buy")) {
+                buyTotal += amount;
+            }
         }
 
-        return statistics;
+        int result = supplyTotal - buyTotal;
+
+        return "supply," + supplyTotal + System.lineSeparator()
+                + "buy," + buyTotal + System.lineSeparator()
+                + "result," + result;
     }
 
-    private void writeData(String fileName, Map<String, Integer> statistics) {
-        int supply = statistics.getOrDefault("supply", 0);
-        int buy = statistics.getOrDefault("buy", 0);
-        int result = supply - buy;
+    private void writeToFile(String report, String toFileName) {
+        File outputFile = new File(toFileName);
+        Path outputFilePath = Path.of(outputFile.toURI());
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
-            writer.write("supply," + supply);
-            writer.newLine();
-            writer.write("buy," + buy);
-            writer.newLine();
-            writer.write("result," + result);
+        try {
+            Files.writeString(outputFilePath, report);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write to that file", e);
+            throw new RuntimeException("Can't write to file named: " + toFileName, e);
         }
     }
 }
