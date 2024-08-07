@@ -1,6 +1,6 @@
 package core.basesyntax;
 
-public enum Name {
+public enum OperationType {
     SUPPLY,
     BUY
 }

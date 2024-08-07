@@ -1,27 +1,26 @@
 package core.basesyntax;
 
 public class Report {
+    private int buyAmount;
+    private int supplyAmount;
 
-    private int buys;
-    private int supplies;
-
-    public int getBuys() {
-        return buys;
+    public int getBuysAmount() {
+        return buyAmount;
     }
 
-    public int getSupplies() {
-        return supplies;
+    public int getSuppliesAmount() {
+        return supplyAmount;
     }
 
-    public void addBuy(int value) {
-        buys += value;
+    public void addBuysAmount(int value) {
+        buyAmount += value;
     }
 
-    public void addSupply(int value) {
-        supplies += value;
+    public void addSuppliesAmount(int value) {
+        supplyAmount += value;
     }
 
     public int getResult() {
-        return supplies - buys;
+        return supplyAmount - buyAmount;
     }
 }

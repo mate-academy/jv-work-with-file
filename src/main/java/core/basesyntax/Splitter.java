@@ -8,8 +8,8 @@ public class Splitter {
         if (stringArray.length < 2) {
             throw new RuntimeException("Input string has invalid format");
         }
-        boolean isBuy = Name.BUY.name().equalsIgnoreCase(stringArray[0]);
-        Name name = isBuy ? Name.BUY : Name.SUPPLY;
-        return new ReportItem(name, Integer.parseInt(stringArray[1]));
+        boolean isBuy = OperationType.BUY.name().equalsIgnoreCase(stringArray[0]);
+        OperationType operationType = isBuy ? OperationType.BUY : OperationType.SUPPLY;
+        return new ReportItem(operationType, Integer.parseInt(stringArray[1]));
     }
 }

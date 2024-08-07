@@ -1,20 +1,19 @@
 package core.basesyntax;
 
 public class Calculator {
-
     public void calculateReportItems(Report report, ReportItem reportItem) {
-        if (Name.BUY.equals(reportItem.getName())) {
-            sumReportItems(report, reportItem, Name.BUY);
+        if (OperationType.BUY.equals(reportItem.getOperationType())) {
+            sumReportItems(report, reportItem, OperationType.BUY);
         } else {
-            sumReportItems(report, reportItem, Name.SUPPLY);
+            sumReportItems(report, reportItem, OperationType.SUPPLY);
         }
     }
 
-    private void sumReportItems(Report report, ReportItem reportItem, Name name) {
-        if (Name.BUY.equals(name)) {
-            report.addBuy(reportItem.getValue());
+    private void sumReportItems(Report report, ReportItem reportItem, OperationType operationType) {
+        if (OperationType.BUY.equals(operationType)) {
+            report.addBuysAmount(reportItem.getValue());
         } else {
-            report.addSupply(reportItem.getValue());
+            report.addSuppliesAmount(reportItem.getValue());
         }
     }
 }

@@ -4,11 +4,11 @@ import java.util.List;
 
 public class WorkWithFile {
     private ReaderFromFile readerFromFile;
-    private EntryToFile entryToFile;
+    private WriteToFile writeToFile;
     private FileProcessor fileProcessor;
 
     public WorkWithFile() {
-        this.entryToFile = new EntryToFile();
+        this.writeToFile = new WriteToFile();
         this.readerFromFile = new ReaderFromFile();
         this.fileProcessor = new FileProcessor();
     }
@@ -17,6 +17,6 @@ public class WorkWithFile {
         Report report = new Report();
         List<String> stringList = readerFromFile.readFile(fromFileName);
         fileProcessor.processFile(stringList, report);
-        entryToFile.writeToFile(report, toFileName);
+        writeToFile.writeToFile(report, toFileName);
     }
 }

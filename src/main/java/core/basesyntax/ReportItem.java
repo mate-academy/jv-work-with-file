@@ -1,16 +1,16 @@
 package core.basesyntax;
 
 public class ReportItem {
-    private Name name;
+    private OperationType operationType;
     private int value;
 
-    public ReportItem(Name name, int value) {
-        this.name = name;
+    public ReportItem(OperationType operationType, int value) {
+        this.operationType = operationType;
         this.value = value;
     }
 
-    public Name getName() {
-        return this.name;
+    public OperationType getOperationType() {
+        return this.operationType;
     }
 
     public int getValue() {
