@@ -16,6 +16,5 @@ public class FileProcessor {
             ReportItem reportItem = splitter.splitString(str);
             calculator.calculateReportItems(report, reportItem);
         }
-
     }
 }
