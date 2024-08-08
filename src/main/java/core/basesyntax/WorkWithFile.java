@@ -12,10 +12,10 @@ public class WorkWithFile {
     public static final String SEPARATOR = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        readDataFromFile(fromFileName, toFileName);
+        readAndWriteData(fromFileName, toFileName);
     }
 
-    public void readDataFromFile(String fromFile, String toFile) {
+    public void readAndWriteData(String fromFile, String toFile) {
         int supplySum = 0;
         int buySum = 0;
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFile))) {
@@ -34,11 +34,16 @@ public class WorkWithFile {
         writeDataToFile(toFile, supplySum, buySum);
     }
 
-    public void writeDataToFile(String toFile, int supplySum, int buySum) {
+    public static void writeDataToFile(String toFile, int supplySum, int buySum) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFile))) {
-            bufferedWriter.write("supply," + supplySum + System.lineSeparator());
-            bufferedWriter.write("buy," + buySum + System.lineSeparator());
-            bufferedWriter.write("result," + (supplySum - buySum));
+            String supplyInfo = "supply," + supplySum + System.lineSeparator();
+            String buyInfo = "buy," + buySum + System.lineSeparator();
+            String resultCount = "result," + (supplySum - buySum);
+            StringBuilder result = new StringBuilder()
+                    .append(supplyInfo)
+                    .append(buyInfo)
+                    .append(resultCount);
+            bufferedWriter.write(String.valueOf(result));
         } catch (IOException e) {
             throw new RuntimeException("can`t write to file", e);
         }
