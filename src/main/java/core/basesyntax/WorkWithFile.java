@@ -14,7 +14,8 @@ public class WorkWithFile {
         int supplyTotal = 0;
         int buyTotal = 0;
 
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 String[] parts = line.split(",");
@@ -28,7 +29,8 @@ public class WorkWithFile {
                 }
             }
         } catch (IOException e) {
-            throw new RuntimeException("An error occurred while reading the file");
+            throw new RuntimeException("An error occurred while reading the file"
+                    + fromFileName, e);
         }
         int result = supplyTotal - buyTotal;
 
@@ -40,7 +42,8 @@ public class WorkWithFile {
         try {
             Files.write(Path.of(toFileName), lines);
         } catch (IOException e) {
-            throw new RuntimeException("An error occurred while reading the file");
+            throw new RuntimeException("An error occurred while reading the file"
+                    + toFileName, e);
         }
     }
 }
