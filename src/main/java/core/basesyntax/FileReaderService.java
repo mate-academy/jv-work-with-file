@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReaderFromFile {
+public class FileReaderService {
     public List<String> readFile(String fromFileName) {
         List<String> stringList = new ArrayList<>();
         try (FileReader fileReader = new FileReader(fromFileName);

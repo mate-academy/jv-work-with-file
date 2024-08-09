@@ -3,14 +3,14 @@ package core.basesyntax;
 import java.util.List;
 
 public class WorkWithFile {
-    private ReaderFromFile readerFromFile;
-    private WriteToFile writeToFile;
-    private FileProcessor fileProcessor;
+    private FileReaderService readerFromFile;
+    private FileWriterService writeToFile;
+    private FileProcessorService fileProcessor;
 
     public WorkWithFile() {
-        this.writeToFile = new WriteToFile();
-        this.readerFromFile = new ReaderFromFile();
-        this.fileProcessor = new FileProcessor();
+        this.writeToFile = new FileWriterService();
+        this.readerFromFile = new FileReaderService();
+        this.fileProcessor = new FileProcessorService();
     }
 
     public void getStatistic(String fromFileName, String toFileName) {

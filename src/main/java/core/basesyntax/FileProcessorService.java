@@ -2,11 +2,11 @@ package core.basesyntax;
 
 import java.util.List;
 
-public class FileProcessor {
+public class FileProcessorService {
     private Splitter splitter;
     private Calculator calculator;
 
-    public FileProcessor() {
+    public FileProcessorService() {
         this.splitter = new Splitter();
         this.calculator = new Calculator();
     }
