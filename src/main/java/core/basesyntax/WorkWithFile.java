@@ -19,7 +19,6 @@ public class WorkWithFile {
         int[] totals = readFromFile(fromFileName);
         String report = generateReport(totals[0], totals[1]);
         writeToFile(toFileName, report);
-
     }
 
     private static int[] readFromFile(String fromFileName) {
