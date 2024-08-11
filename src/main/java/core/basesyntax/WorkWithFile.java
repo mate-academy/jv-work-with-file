@@ -12,7 +12,8 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         List<Operation> operations = reader.readOperations(fromFileName);
-        Report report = Report.ofOperations(operations);
+        Report report = new Report();
+        report.ofOperations(operations);
         writer.writeReportToCsv(report, toFileName);
     }
 }

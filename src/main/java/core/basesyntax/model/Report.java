@@ -16,23 +16,21 @@ public class Report {
         this.buy = totalBuy;
     }
 
-    public static Report ofOperations(List<Operation> operations) {
-        Report report = new Report();
+    public void ofOperations(List<Operation> operations) {
         for (Operation operation : operations) {
             if (operation.getOperationType().equals(OperationType.SUPPLY)) {
-                report.incrementSupply(operation.getAmount());
+                incrementSupply(operation.getAmount());
             } else {
-                report.incrementBuy(operation.getAmount());
+                incrementBuy(operation.getAmount());
             }
         }
-        return report;
     }
 
-    public void incrementSupply(int increment) {
+    private void incrementSupply(int increment) {
         this.supply += increment;
     }
 
-    public void incrementBuy(int increment) {
+    private void incrementBuy(int increment) {
         this.buy += increment;
     }
 

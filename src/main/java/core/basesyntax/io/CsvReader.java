@@ -7,7 +7,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class CsvReader {
     private static final String DELIMITER = ",";
@@ -18,7 +17,7 @@ public class CsvReader {
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             return reader.lines()
                     .map(this::csvStringToOperation)
-                    .collect(Collectors.toList());
+                    .toList();
         } catch (IOException e) {
             throw new CsvException("Cannot read file = [" + fileName + "]", e);
         }
