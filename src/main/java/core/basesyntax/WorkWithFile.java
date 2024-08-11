@@ -3,9 +3,7 @@ package core.basesyntax;
 import core.basesyntax.io.CsvReader;
 import core.basesyntax.io.CsvWriter;
 import core.basesyntax.model.Operation;
-import core.basesyntax.model.OperationType;
 import core.basesyntax.model.Report;
-
 import java.util.List;
 
 public class WorkWithFile {
@@ -14,14 +12,7 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         List<Operation> operations = reader.readOperations(fromFileName);
-        Report report = new Report();
-        for (Operation operation : operations) {
-            if (operation.getOperationType().equals(OperationType.SUPPLY)) {
-                report.incrementSupply(operation.getAmount());
-            } else {
-                report.incrementBuy(operation.getAmount());
-            }
-        }
+        Report report = Report.ofOperations(operations);
         writer.writeReportToCsv(report, toFileName);
     }
 }

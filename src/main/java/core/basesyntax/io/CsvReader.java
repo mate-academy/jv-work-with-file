@@ -3,7 +3,6 @@ package core.basesyntax.io;
 import core.basesyntax.io.exception.CsvException;
 import core.basesyntax.model.Operation;
 import core.basesyntax.model.OperationType;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -21,7 +20,7 @@ public class CsvReader {
                     .map(this::csvStringToOperation)
                     .collect(Collectors.toList());
         } catch (IOException e) {
-            throw new CsvException("Cannot access file with name = [" + fileName + "]");
+            throw new CsvException("Cannot read file = [" + fileName + "]", e);
         }
     }
 
