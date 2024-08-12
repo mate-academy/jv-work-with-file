@@ -14,6 +14,8 @@ public class WorkWithFile {
     private static final String RESULT = "result";
     private static final int STARTING_COUNT = 0;
     private static final int ELEMENTS_ON_THE_LINE = 2;
+    private static final int OPERATION_INDEX = 0;
+    private static final int OPERATION_VALUE_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] data = readData(fromFileName);
@@ -46,10 +48,10 @@ public class WorkWithFile {
         for (String value : data) {
             String[] currentLine = value.split(SEPARATOR);
             if (currentLine.length == ELEMENTS_ON_THE_LINE) {
-                int count = Integer.parseInt(currentLine[1]);
-                if (currentLine[0].contains(SUPPLY)) {
+                int count = Integer.parseInt(currentLine[OPERATION_VALUE_INDEX]);
+                if (currentLine[OPERATION_INDEX].contains(SUPPLY)) {
                     supplyCount += count;
-                } else if (currentLine[0].contains(BUY)) {
+                } else if (currentLine[OPERATION_INDEX].contains(BUY)) {
                     buyCount += count;
                 }
             }
