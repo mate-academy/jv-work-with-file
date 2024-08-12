@@ -17,7 +17,7 @@ public class WorkWithFile {
     public static final String BUY_STRING = "buy";
     public static final String REPORT_STRING = "result";
 
-    private String[] readFromFile(String fileName) {
+    private ArrayList<String> readFromFile(String fileName) {
         ArrayList<String> linesList = new ArrayList<>();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
             String line;
@@ -27,10 +27,10 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read file", e);
         }
-        return linesList.toArray(new String[0]);
+        return linesList;
     }
 
-    private int[] generateReport(String[] readFileStrings) {
+    private int[] generateReport(ArrayList<String> readFileStrings) {
         int supplySum = 0;
         int buySum = 0;
         for (String string : readFileStrings) {
@@ -41,15 +41,17 @@ public class WorkWithFile {
                 buySum += Integer.parseInt(splitedString[NUMBERS_PART_INDEX]);
             }
         }
-        return new int[]{supplySum,buySum};
+        return new int[]{supplySum, buySum};
     }
 
     private void writeIntoFile(int[] sums, String fileName) {
+        StringBuilder report = new StringBuilder();
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
-            String report = SUPPLY_STRING + "," + sums[SUPPLY_PART_INDEX] + System.lineSeparator()
+            report = new StringBuilder(SUPPLY_STRING + "," + sums[SUPPLY_PART_INDEX]
+                    + System.lineSeparator()
                     + BUY_STRING + "," + sums[BUY_PART_INDEX] + System.lineSeparator()
-                    + REPORT_STRING + "," + (sums[SUPPLY_PART_INDEX] - sums[BUY_PART_INDEX]);
-            bufferedWriter.write(report);
+                    + REPORT_STRING + "," + (sums[SUPPLY_PART_INDEX] - sums[BUY_PART_INDEX]));
+            bufferedWriter.write(report.toString());
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to file", e);
         }
