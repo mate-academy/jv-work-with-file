@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class WorkWithFile {
     public static final int ACTION_PART_INDEX = 0;
@@ -17,20 +18,24 @@ public class WorkWithFile {
     public static final String BUY_STRING = "buy";
     public static final String REPORT_STRING = "result";
 
-    private ArrayList<String> readFromFile(String fileName) {
-        ArrayList<String> linesList = new ArrayList<>();
+    public void getStatistic(String fromFileName, String toFileName) {
+        writeIntoFile(generateReport(readFromFile(fromFileName)),toFileName);
+    }
+
+    private List<String> readFromFile(String fileName) {
+        List<String> lines = new ArrayList<>();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
-                linesList.add(line);
+                lines.add(line);
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't read csv file", e);
         }
-        return linesList;
+        return lines;
     }
 
-    private int[] generateReport(ArrayList<String> readFileStrings) {
+    private int[] generateReport(List<String> readFileStrings) {
         int supplySum = 0;
         int buySum = 0;
         for (String string : readFileStrings) {
@@ -53,12 +58,8 @@ public class WorkWithFile {
                     + REPORT_STRING + "," + (sums[SUPPLY_PART_INDEX] - sums[BUY_PART_INDEX]));
             bufferedWriter.write(report.toString());
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data to file", e);
+            throw new RuntimeException("Can't write data to csv file", e);
         }
-    }
-
-    public void getStatistic(String fromFileName, String toFileName) {
-        writeIntoFile(generateReport(readFromFile(fromFileName)),toFileName);
     }
 }
 
