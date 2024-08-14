@@ -2,7 +2,6 @@ package core.basesyntax;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -11,6 +10,10 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final int VALUE_INDEX = 1;
     private static final int NAME_INDEX = 0;
+    public static final String SUPPLY_STRING = "supply";
+    public static final String SEPARATION_PLACE = ",";
+    public static final String BUY_STRING = "buy";
+    public static final String RESULT_STRING = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String data = readFileContent(fromFileName);
@@ -19,9 +22,8 @@ public class WorkWithFile {
     }
 
     private String readFileContent(String fromFileName) {
-        File fileCopy = new File(fromFileName);
         StringBuilder content = new StringBuilder();
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileCopy))) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 content.append(line).append(System.lineSeparator());
@@ -39,8 +41,8 @@ public class WorkWithFile {
         int totalBuy = 0;
         String[] lines = string.split(System.lineSeparator());
         for (String item : lines) {
-            String[] array = item.split(",");
-            if (array[NAME_INDEX].equals("supply")) {
+            String[] array = item.split(SEPARATION_PLACE);
+            if (array[NAME_INDEX].equals(SUPPLY_STRING)) {
                 totalSupply += Integer.parseInt(array[VALUE_INDEX]);
             } else {
                 totalBuy += Integer.parseInt(array[VALUE_INDEX]);
@@ -48,9 +50,9 @@ public class WorkWithFile {
         }
 
         StringBuilder reportBuilder = new StringBuilder()
-                .append("supply,").append(totalSupply).append(System.lineSeparator())
-                .append("buy,").append(totalBuy).append(System.lineSeparator())
-                .append("result,").append(totalSupply - totalBuy)
+                .append(SUPPLY_STRING).append(totalSupply).append(System.lineSeparator())
+                .append(BUY_STRING).append(totalBuy).append(System.lineSeparator())
+                .append(RESULT_STRING).append(totalSupply - totalBuy)
                 .append(System.lineSeparator());
         return reportBuilder.toString();
     }
