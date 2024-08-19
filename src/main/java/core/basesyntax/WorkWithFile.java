@@ -8,7 +8,20 @@ import java.io.IOException;
 
 public class WorkWithFile {
 
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+
     public void getStatistic(String fromFileName, String toFileName) {
+
+        int[] totals = calculateStatistics(fromFileName);
+        int totalSupply = totals[0];
+        int totalBuy = totals[1];
+        int result = totalSupply - totalBuy;
+
+        writeStatistics(toFileName, totalSupply, totalBuy, result);
+    }
+
+    private int[] calculateStatistics(String fromFileName) {
         int totalSupply = 0;
         int totalBuy = 0;
 
@@ -22,24 +35,32 @@ public class WorkWithFile {
                 String operation = parts[0].trim();
                 int amount = Integer.parseInt(parts[1].trim());
 
-                if (operation.equals("supply")) {
+                if (operation.equals(SUPPLY)) {
                     totalSupply += amount;
-                } else if (operation.equals("buy")) {
+                } else if (operation.equals(BUY)) {
                     totalBuy += amount;
                 }
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't correctly read data from file " + fromFileName, e);
+            throw new RuntimeException("Failed to correctly read data from the file "
+                    + fromFileName, e);
         }
 
-        int result = totalSupply - totalBuy;
+        return new int[]{totalSupply, totalBuy};
+    }
+
+    private void writeStatistics(String toFileName, int totalSupply, int totalBuy, int result) {
+
+        StringBuilder output = new StringBuilder();
+        output.append(SUPPLY).append(",").append(totalSupply).append(System.lineSeparator());
+        output.append(BUY).append(",").append(totalBuy).append(System.lineSeparator());
+        output.append("result,").append(result).append(System.lineSeparator());
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            writer.write("supply," + totalSupply + System.lineSeparator());
-            writer.write("buy," + totalBuy + System.lineSeparator());
-            writer.write("result," + result + System.lineSeparator());
+            writer.write(output.toString());
         } catch (IOException e) {
-            throw new RuntimeException("Can't correctly write data to file " + toFileName, e);
+            throw new RuntimeException("Failed to correctly write data to the file "
+                    + toFileName, e);
         }
     }
 }
