@@ -37,7 +37,7 @@ public class WorkWithFile {
                 reportData.put(operation, reportData.get(operation) + amount);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error reading file: " + fromFileName, e);
         }
 
         return reportData;
@@ -48,12 +48,23 @@ public class WorkWithFile {
         int totalBuy = reportData.get(BUY);
         int result = totalSupply - totalBuy;
 
+        StringBuilder reportBuilder = new StringBuilder();
+        appendFormattedLine(reportBuilder, SUPPLY, totalSupply);
+        appendFormattedLine(reportBuilder, BUY, totalBuy);
+        appendFormattedLine(reportBuilder, RESULT, result);
+
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            writer.write(SUPPLY + COMMA + totalSupply + System.lineSeparator());
-            writer.write(BUY + COMMA + totalBuy + System.lineSeparator());
-            writer.write(RESULT + COMMA + result + System.lineSeparator());
+            writer.write(reportBuilder.toString());
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error writing to file: " + toFileName, e);
         }
     }
+
+    private void appendFormattedLine(StringBuilder builder, String operation, int amount) {
+        builder.append(operation)
+                .append(COMMA)
+                .append(amount)
+                .append(System.lineSeparator());
+    }
 }
+
