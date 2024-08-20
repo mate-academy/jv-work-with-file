@@ -11,6 +11,10 @@ public class WorkWithFile {
     private static final int DEFAULT_SUM = 0;
     private static final int FIRST_CELL_ARRAY = 0;
     private static final int SECOND_CELL_ARRAY = 1;
+    private static final String COMMA = ",";
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String data = readFromFile(fromFileName);
@@ -38,21 +42,21 @@ public class WorkWithFile {
         int supplySum = DEFAULT_SUM;
         int buySum = DEFAULT_SUM;
         for (String line : lines) {
-            String[] fields = line.split(",");
+            String[] fields = line.split(COMMA);
             if (fields.length == 2) {
                 String operation = fields[FIRST_CELL_ARRAY].trim();
                 int amount = Integer.parseInt(fields[SECOND_CELL_ARRAY].trim());
-                if (operation.equals("supply")) {
+                if (operation.equals(SUPPLY)) {
                     supplySum += amount;
-                } else if (operation.equals("buy")) {
+                } else if (operation.equals(BUY)) {
                     buySum += amount;
                 }
             }
         }
         int result = supplySum - buySum;
-        stringBuilder.append("supply,").append(supplySum).append(System.lineSeparator())
-                .append("buy,").append(buySum).append(System.lineSeparator())
-                .append("result,").append(result);
+        stringBuilder.append(SUPPLY).append(COMMA).append(supplySum).append(System.lineSeparator())
+                .append(BUY).append(COMMA).append(buySum).append(System.lineSeparator())
+                .append(RESULT).append(COMMA).append(result);
         return stringBuilder.toString();
     }
 
