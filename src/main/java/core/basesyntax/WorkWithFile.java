@@ -10,24 +10,28 @@ public class WorkWithFile {
     public static final int INDEX_OF_KIND = 0;
     public static final int INDEX_OF_SPENDINGS = 1;
     public static final String SEPARATOR = ",";
+    public static final String SUPPLY = "supply";
+    public static final String BUY = "buy";
+    public static final String RESULT = "result";
+    public static final String COMMA = ",";
     private static int supplySum = 0;
     private static int buySum = 0;
-    private static StringBuilder result;
+    private static String result;
 
     public void getStatistic(String fromFileName, String toFileName) {
         supplySum = 0;
         buySum = 0;
         readDataFromFile(fromFileName);
-        generateReport();
+        result = generateReport();
         writeDataToFile(toFileName, result);
     }
 
-    public void readDataFromFile(String fromFile) {
+    private void readDataFromFile(String fromFile) {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFile))) {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 String[] linesOfFile = line.split(SEPARATOR);
-                if (linesOfFile[INDEX_OF_KIND].equalsIgnoreCase("supply")) {
+                if (linesOfFile[INDEX_OF_KIND].equalsIgnoreCase(SUPPLY)) {
                     supplySum += Integer.parseInt(linesOfFile[INDEX_OF_SPENDINGS]);
                 } else {
                     buySum += Integer.parseInt(linesOfFile[INDEX_OF_SPENDINGS]);
@@ -38,17 +42,15 @@ public class WorkWithFile {
         }
     }
 
-    public void generateReport() {
-        String supplyInfo = "supply," + supplySum + System.lineSeparator();
-        String buyInfo = "buy," + buySum + System.lineSeparator();
-        String resultCount = "result," + (supplySum - buySum);
-        result = new StringBuilder()
-                .append(supplyInfo)
-                .append(buyInfo)
-                .append(resultCount);
+    private String generateReport() {
+        return new StringBuilder()
+                .append(SUPPLY).append(COMMA).append(supplySum).append(System.lineSeparator())
+                .append(BUY).append(COMMA).append(buySum).append(System.lineSeparator())
+                .append(RESULT).append(COMMA).append(supplySum - buySum).toString();
+
     }
 
-    public static void writeDataToFile(String toFile, StringBuilder result) {
+    private static void writeDataToFile(String toFile, String result) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFile))) {
             bufferedWriter.write(String.valueOf(result));
         } catch (IOException e) {
