@@ -16,8 +16,11 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
 
+        final int Num1 = 0;
+        final int Num2 = 1;
+
         int[] totals = readFromFile(fromFileName);
-        String report = generateReport(totals[0], totals[1]);
+        String report = generateReport(totals[Num1], totals[Num2]);
         writeToFile(toFileName, report);
     }
 
@@ -40,7 +43,7 @@ public class WorkWithFile {
                 }
             }
         } catch (IOException e) {
-            throw new RuntimeException("An error occurred while reading the file"
+            throw new RuntimeException("An error occurred while reading the file "
                     + fromFileName, e);
         }
 
@@ -60,13 +63,11 @@ public class WorkWithFile {
     }
 
     private static void writeToFile(String toFileName, String report) {
-
         try {
             Files.writeString(Path.of(toFileName), report);
         } catch (IOException e) {
-            throw new RuntimeException("An error occurred while reading the file"
+            throw new RuntimeException("An error occurred while reading the file "
                     + toFileName, e);
         }
     }
 }
-
