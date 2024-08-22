@@ -13,6 +13,7 @@ public class WorkWithFile {
     public static final String BUY = "buy";
     public static final String RESULT = "result";
     public static final String COMMA = ",";
+    public static final String SEPARATOR = " ";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String data = readDataFromFile(fromFileName);
@@ -37,11 +38,11 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("can`t read from file", e);
         }
-        return result = supplySum + " " + buySum;
+        return result = supplySum + SEPARATOR + buySum;
     }
 
     private String generateReport(String data) {
-        String[] regex = data.split(" ");
+        String[] regex = data.split(SEPARATOR);
         return new StringBuilder()
                 .append(SUPPLY)
                 .append(COMMA)
