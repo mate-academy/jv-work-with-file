@@ -11,6 +11,9 @@ import java.util.List;
 import java.util.Map;
 
 public class WorkWithFile {
+    private static final int OPERATION_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
+
     public void getStatistic(String fromFileName, String toFileName) {
         Map<String, Integer> operationSums = new LinkedHashMap<>();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
@@ -24,7 +27,7 @@ public class WorkWithFile {
                 }
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't read file: " + fromFileName, e);
         }
         int supplySum = operationSums.getOrDefault("supply", 0);
         int buySum = operationSums.getOrDefault("buy", 0);
@@ -40,7 +43,7 @@ public class WorkWithFile {
             bufferedWriter.write("result," + result);
             bufferedWriter.newLine();
         } catch (IOException e) {
-            throw new RuntimeException("Can't write file", e);
+            throw new RuntimeException("Can't write file: " + toFileName, e);
         }
     }
 }
