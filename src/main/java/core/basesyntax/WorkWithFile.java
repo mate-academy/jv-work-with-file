@@ -9,28 +9,25 @@ import java.io.IOException;
 public class WorkWithFile {
     public static final int INDEX_OF_KIND = 0;
     public static final int INDEX_OF_SPENDINGS = 1;
-    public static final String SEPARATOR = ",";
     public static final String SUPPLY = "supply";
     public static final String BUY = "buy";
     public static final String RESULT = "result";
     public static final String COMMA = ",";
-    private static int supplySum = 0;
-    private static int buySum = 0;
-    private static String result;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        supplySum = 0;
-        buySum = 0;
-        readDataFromFile(fromFileName);
-        result = generateReport();
-        writeDataToFile(toFileName, result);
+        String data = readDataFromFile(fromFileName);
+        String report = generateReport(data);
+        writeDataToFile(toFileName, report);
     }
 
-    private void readDataFromFile(String fromFile) {
+    private String readDataFromFile(String fromFile) {
+        int supplySum = 0;
+        int buySum = 0;
+        String result;
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFile))) {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
-                String[] linesOfFile = line.split(SEPARATOR);
+                String[] linesOfFile = line.split(COMMA);
                 if (linesOfFile[INDEX_OF_KIND].equalsIgnoreCase(SUPPLY)) {
                     supplySum += Integer.parseInt(linesOfFile[INDEX_OF_SPENDINGS]);
                 } else {
@@ -40,14 +37,24 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("can`t read from file", e);
         }
+        return result = supplySum + " " + buySum;
     }
 
-    private String generateReport() {
+    private String generateReport(String data) {
+        String[] regex = data.split(" ");
         return new StringBuilder()
-                .append(SUPPLY).append(COMMA).append(supplySum).append(System.lineSeparator())
-                .append(BUY).append(COMMA).append(buySum).append(System.lineSeparator())
-                .append(RESULT).append(COMMA).append(supplySum - buySum).toString();
-
+                .append(SUPPLY)
+                .append(COMMA)
+                .append(regex[INDEX_OF_KIND])
+                .append(System.lineSeparator())
+                .append(BUY)
+                .append(COMMA)
+                .append(regex[INDEX_OF_SPENDINGS])
+                .append(System.lineSeparator())
+                .append(RESULT)
+                .append(COMMA)
+                .append(Integer.parseInt(regex[INDEX_OF_KIND])
+                        - Integer.parseInt(regex[INDEX_OF_SPENDINGS])).toString();
     }
 
     private static void writeDataToFile(String toFile, String result) {
