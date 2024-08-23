@@ -15,9 +15,9 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         String[] lines = readFromFile(fromFileName).split(System.lineSeparator());
         int supplyCount = countSpecificType(lines, SUPPLY);
-        int byuCount = countSpecificType(lines, BUY);
-        int resultCount = supplyCount - byuCount;
-        writeToFile(toFileName, toCsvFormat(supplyCount, byuCount, resultCount));
+        int buyCount = countSpecificType(lines, BUY);
+        int resultCount = supplyCount - buyCount;
+        writeToFile(toFileName, prepareResult(supplyCount, buyCount, resultCount));
     }
 
     private String readFromFile(String fromFileName) {
@@ -41,11 +41,11 @@ public class WorkWithFile {
         }
     }
 
-    private String toCsvFormat(int supplyCount, int buyCount, int resultCount) {
+    private String prepareResult(int supplyCount, int buyCount, int resultCount) {
         StringBuilder builder = new StringBuilder();
-        builder.append(SUPPLY + SEPARATOR + supplyCount).append(System.lineSeparator());
-        builder.append(BUY + SEPARATOR + buyCount).append(System.lineSeparator());
-        builder.append(RESULT + SEPARATOR + resultCount).append(System.lineSeparator());
+        builder.append(SUPPLY).append(SEPARATOR).append(supplyCount).append(System.lineSeparator());
+        builder.append(BUY).append(SEPARATOR).append(buyCount).append(System.lineSeparator());
+        builder.append(RESULT).append(SEPARATOR).append(resultCount).append(System.lineSeparator());
         return builder.toString();
     }
 
