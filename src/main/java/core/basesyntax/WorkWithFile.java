@@ -16,11 +16,11 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
 
-        final int Num1 = 0;
-        final int Num2 = 1;
+        final int SupplyIndex = 0;
+        final int BuyIndex = 1;
 
         int[] totals = readFromFile(fromFileName);
-        String report = generateReport(totals[Num1], totals[Num2]);
+        String report = generateReport(totals[SupplyIndex], totals[BuyIndex]);
         writeToFile(toFileName, report);
     }
 
@@ -66,7 +66,7 @@ public class WorkWithFile {
         try {
             Files.writeString(Path.of(toFileName), report);
         } catch (IOException e) {
-            throw new RuntimeException("An error occurred while reading the file "
+            throw new RuntimeException("An error occurred while writing the file "
                     + toFileName, e);
         }
     }
