@@ -14,11 +14,15 @@ public class WorkWithFile {
     private static final String INPUT_FILE_NAME = "input.csv";
     private static final String OUTPUT_FILE_NAME = "output.csv";
 
-    public void generateStatistic() {
-        int totalSupply = calculate(INPUT_FILE_NAME, SUPPLY);
-        int totalBuy = calculate(INPUT_FILE_NAME, BUY);
+    public void getStatistic(String fromFileName, String toFileName) {
+        int totalSupply = calculate(fromFileName, SUPPLY);
+        int totalBuy = calculate(fromFileName, BUY);
         int result = totalSupply - totalBuy;
-        writeStatisticsToFile(OUTPUT_FILE_NAME, totalSupply, totalBuy, result);
+        writeStatisticsToFile(toFileName, totalSupply, totalBuy, result);
+    }
+
+    public void getStatistic() {
+        getStatistic(INPUT_FILE_NAME, OUTPUT_FILE_NAME);
     }
 
     private int calculate(String fileName, String operationType) {
