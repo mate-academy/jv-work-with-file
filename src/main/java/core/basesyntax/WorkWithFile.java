@@ -55,14 +55,17 @@ public class WorkWithFile {
 
     private void writeStatisticsToFile(String fileName, int supplyTotal, int buyTotal, int result) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
-            writer.write(SUPPLY + SEPARATOR + supplyTotal);
-            writer.newLine();
-            writer.write(BUY + SEPARATOR + buyTotal);
-            writer.newLine();
-            writer.write(RESULT + SEPARATOR + result);
+            writer.write(generateReport(supplyTotal, buyTotal, result));
         } catch (IOException e) {
             throw new RuntimeException("Can't save data in file " + fileName, e);
         }
     }
-}
 
+    private String generateReport(int supplyTotal, int buyTotal, int result) {
+        StringBuilder report = new StringBuilder();
+        report.append(SUPPLY).append(SEPARATOR).append(supplyTotal).append(System.lineSeparator());
+        report.append(BUY).append(SEPARATOR).append(buyTotal).append(System.lineSeparator());
+        report.append(RESULT).append(SEPARATOR).append(result).append(System.lineSeparator());
+        return report.toString();
+    }
+}
