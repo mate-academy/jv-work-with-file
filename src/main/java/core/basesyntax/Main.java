@@ -2,11 +2,7 @@ package core.basesyntax;
 
 public class Main {
     public static void main(String[] args) {
-        WorkWithFile workWithFile =new WorkWithFile();
-
-        String fromFileName ="input.csv";
-        String toFileName ="output.csv";
-
-        workWithFile.getStatistic(fromFileName,toFileName);
+        WorkWithFile workWithFile = new WorkWithFile();
+        workWithFile.generateStatistic();
     }
 }

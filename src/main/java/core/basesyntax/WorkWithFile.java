@@ -11,12 +11,14 @@ public class WorkWithFile {
     private static final String BUY = "buy";
     private static final String RESULT = "result";
     private static final String SEPARATOR = ",";
+    private static final String INPUT_FILE_NAME = "input.csv";
+    private static final String OUTPUT_FILE_NAME = "output.csv";
 
-    public void getStatistic(String fromFileName, String toFileName) {
-        int totalSupply = calculate(fromFileName, SUPPLY);
-        int totalBuy = calculate(fromFileName, BUY);
+    public void generateStatistic() {
+        int totalSupply = calculate(INPUT_FILE_NAME, SUPPLY);
+        int totalBuy = calculate(INPUT_FILE_NAME, BUY);
         int result = totalSupply - totalBuy;
-        writeAccount(toFileName, totalSupply, totalBuy, result);
+        writeStatisticsToFile(OUTPUT_FILE_NAME, totalSupply, totalBuy, result);
     }
 
     private int calculate(String fileName, String operationType) {
@@ -24,7 +26,7 @@ public class WorkWithFile {
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                total += convertLine(line, operationType);
+                total += parseAndSum(line, operationType);
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read from file " + fileName, e);
@@ -32,7 +34,7 @@ public class WorkWithFile {
         return total;
     }
 
-    private int convertLine(String line, String operationType) {
+    private int parseAndSum(String line, String operationType) {
         String[] parts = line.split(SEPARATOR);
         if (parts.length == 2) {
             String operation = parts[0];
@@ -47,7 +49,7 @@ public class WorkWithFile {
         return 0;
     }
 
-    private void writeAccount(String fileName, int supplyTotal, int buyTotal, int result) {
+    private void writeStatisticsToFile(String fileName, int supplyTotal, int buyTotal, int result) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             writer.write(SUPPLY + SEPARATOR + supplyTotal);
             writer.newLine();
