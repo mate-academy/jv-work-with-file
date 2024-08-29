@@ -11,8 +11,8 @@ public class WorkWithFile {
     private static final String BUY = "buy";
     private static final String RESULT = "result";
     private static final String SEPARATOR = ",";
-    private static final int INDEX_OPERATION = 0;
-    private static final int INDEX_AMOUNT = 1;
+    private static final int INDEX_OF_OPERATION = 0;
+    private static final int INDEX_OF_AMOUNT = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         int totalSupply = 0;
@@ -23,8 +23,8 @@ public class WorkWithFile {
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(SEPARATOR);
                 if (parts.length == 2) {
-                    String operation = parts[INDEX_OPERATION];
-                    int amount = Integer.parseInt(parts[INDEX_AMOUNT]);
+                    String operation = parts[INDEX_OF_OPERATION];
+                    int amount = Integer.parseInt(parts[INDEX_OF_AMOUNT]);
 
                     if (operation.equals(SUPPLY)) {
                         totalSupply += amount;
