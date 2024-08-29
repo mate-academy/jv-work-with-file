@@ -44,7 +44,7 @@ public class WorkWithFile {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             writer.write(generateReport(supplyTotal, buyTotal, result));
         } catch (IOException e) {
-            throw new RuntimeException("Can't save data in file " + fileName, e);
+            throw new RuntimeException("Can't save data in the file " + fileName, e);
         }
     }
 
