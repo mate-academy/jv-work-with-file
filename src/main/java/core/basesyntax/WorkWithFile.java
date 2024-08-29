@@ -34,7 +34,7 @@ public class WorkWithFile {
                 }
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read from file " + fromFileName, e);
+            throw new RuntimeException("Can't read from the file " + fromFileName, e);
         }
         int result = totalSupply - totalBuy;
         writeStatisticsToFile(toFileName, totalSupply, totalBuy, result);
