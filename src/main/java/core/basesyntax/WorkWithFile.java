@@ -1,7 +1,37 @@
 package core.basesyntax;
 
+import java.io.*;
+
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
+        try(BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
+            String line = bufferedReader.readLine();
+            int supply = 0;
+            int buy = 0;
 
+            while (line != null) {
+                String[] lineContent = line.split(",");
+                if (lineContent[0].equals("supply")) {
+                    supply += Integer.parseInt(lineContent[1]);
+                } else if (lineContent[0].equals("buy")) {
+                    buy += Integer.parseInt(lineContent[1]);
+                }
+                line = bufferedReader.readLine();
+            }
+
+            int result = supply - buy;
+
+            try(BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
+                bufferedWriter.write("supply," + supply);
+                bufferedWriter.newLine();
+                bufferedWriter.write("buy," + buy);
+                bufferedWriter.newLine();
+                bufferedWriter.write("result," + result);
+            } catch (IOException e) {
+                throw new RuntimeException("Can't write data to file", e);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Can't to open file", e);
+        }
     }
 }
