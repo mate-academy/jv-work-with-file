@@ -7,7 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    public void getStatistic(String fromFileName, String toFileName) {
+    protected void getStatistic(String fromFileName, String toFileName) {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String line = bufferedReader.readLine();
             int supply = 0;
@@ -23,9 +23,8 @@ public class WorkWithFile {
                 line = bufferedReader.readLine();
             }
 
-            int result = supply - buy;
-
             try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
+                int result = supply - buy;
                 bufferedWriter.write("supply," + supply);
                 bufferedWriter.newLine();
                 bufferedWriter.write("buy," + buy);
@@ -35,7 +34,7 @@ public class WorkWithFile {
                 throw new RuntimeException("Can't write data to file", e);
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't to open file", e);
+            throw new RuntimeException("Can't open file" + fromFileName, e);
         }
     }
 }
