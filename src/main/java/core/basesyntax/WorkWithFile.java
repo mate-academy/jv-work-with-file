@@ -34,7 +34,7 @@ public class WorkWithFile {
                 }
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read from the file " + fromFileName, e);
+            throw new RuntimeException("Can't read from file " + fromFileName, e);
         }
         int result = totalSupply - totalBuy;
         writeStatisticsToFile(toFileName, totalSupply, totalBuy, result);
@@ -44,7 +44,7 @@ public class WorkWithFile {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             writer.write(generateReport(supplyTotal, buyTotal, result));
         } catch (IOException e) {
-            throw new RuntimeException("Can't save data in the file " + fileName, e);
+            throw new RuntimeException("Can't save data in file " + fileName, e);
         }
     }
 
