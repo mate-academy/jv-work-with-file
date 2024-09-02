@@ -14,8 +14,8 @@ public class WorkWithFile {
     private static final String SPLIT_REGEX = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int buySum = countSupplyOrBuyInFile(fromFileName, BUY_OPERATION);
-        int supplySum = countSupplyOrBuyInFile(fromFileName, SUPPLY_OPERATION);
+        int buySum = calculateTotalAmountOfOperation(fromFileName, BUY_OPERATION);
+        int supplySum = calculateTotalAmountOfOperation(fromFileName, SUPPLY_OPERATION);
         int result = supplySum - buySum;
 
         try (BufferedWriter output = new BufferedWriter(new FileWriter(toFileName))) {
@@ -25,32 +25,32 @@ public class WorkWithFile {
                     .append("result").append(",").append(result);
             output.write(builder.toString());
         } catch (IOException e) {
-            throw new RuntimeException("Cannot write file " + e);
+            throw new RuntimeException("Cannot write to file: " + toFileName + e);
         }
     }
 
-    private int countSupplyOrBuyInFile(String fromFileName, String option) {
+    private int calculateTotalAmountOfOperation(String fromFileName, String option) {
         if (!option.equals(BUY_OPERATION) && !option.equals(SUPPLY_OPERATION)) {
             throw new WrongOptionException("Wrong option");
         }
 
         try (BufferedReader input = new BufferedReader(new FileReader(fromFileName))) {
             String value = input.readLine();
-            int supplyCounterReturn = 0;
+            int operationSum = 0;
             while (value != null) {
                 String[] valueSplit = value.split(SPLIT_REGEX);
                 if (option.equals(SUPPLY_OPERATION) && valueSplit[OPERATION_TYPE_INDEX]
                         .equals(SUPPLY_OPERATION)) {
-                    supplyCounterReturn += Integer.parseInt(valueSplit[OPERATION_AMOUNT_INDEX]);
+                    operationSum += Integer.parseInt(valueSplit[OPERATION_AMOUNT_INDEX]);
                 } else if (option.equals(BUY_OPERATION) && valueSplit[OPERATION_TYPE_INDEX]
                         .equals(BUY_OPERATION)) {
-                    supplyCounterReturn += Integer.parseInt(valueSplit[OPERATION_AMOUNT_INDEX]);
+                    operationSum += Integer.parseInt(valueSplit[OPERATION_AMOUNT_INDEX]);
                 }
                 value = input.readLine();
             }
-            return supplyCounterReturn;
+            return operationSum;
         } catch (IOException e) {
-            throw new RuntimeException("Cannot read file " + e);
+            throw new RuntimeException("Cannot read from file: " + fromFileName + e);
         }
     }
 }
