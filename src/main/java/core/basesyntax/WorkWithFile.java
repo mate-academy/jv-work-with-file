@@ -40,15 +40,15 @@ public class WorkWithFile {
 
     private String createReport(int supplyAmount, int buyAmount) {
         StringBuilder stringBuilder = new StringBuilder()
-            .append("supply,")
-            .append(supplyAmount)
-            .append(System.lineSeparator())
-            .append("buy,")
-            .append(buyAmount)
-            .append(System.lineSeparator())
-            .append("result,")
-            .append(supplyAmount - buyAmount)
-            .append(System.lineSeparator());
+                .append("supply,")
+                .append(supplyAmount)
+                .append(System.lineSeparator())
+                .append("buy,")
+                .append(buyAmount)
+                .append(System.lineSeparator())
+                .append("result,")
+                .append(supplyAmount - buyAmount)
+                .append(System.lineSeparator());
 
         return stringBuilder.toString();
     }
