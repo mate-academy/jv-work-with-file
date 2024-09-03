@@ -7,7 +7,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 public class WorkWithFile {
-    private final String csvDataSeparator = ",";
+    private static final String CSV_DATA_SEPARATOR = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         int supplyAmount = 0;
@@ -19,7 +19,7 @@ public class WorkWithFile {
         List<String> fileData = this.readFile(fromFile.toPath());
 
         for (String data : fileData) {
-            String[] values = data.split(csvDataSeparator);
+            String[] values = data.split(CSV_DATA_SEPARATOR);
 
             String operation = values[0];
             String amount = values[1];
