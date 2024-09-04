@@ -13,6 +13,10 @@ public class WorkWithFile {
     private static final int AMOUNT = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
+        writeToFile(toFileName, createReport(fromFileName));
+    }
+
+    public String createReport(String fromFileName) {
         String[] values;
         StringBuilder stringBuilder = new StringBuilder();
         int supplyValue = 0;
@@ -32,9 +36,9 @@ public class WorkWithFile {
         }
         resultValue = supplyValue - buyValue;
         stringBuilder.append("supply," + supplyValue + System.lineSeparator())
-                        .append("buy," + buyValue + System.lineSeparator())
-                                .append("result," + resultValue + System.lineSeparator());
-        writeToFile(toFileName, stringBuilder.toString());
+                .append("buy," + buyValue + System.lineSeparator())
+                .append("result," + resultValue + System.lineSeparator());
+        return stringBuilder.toString();
     }
 
     public List<String> readFromFile(String fromFileName) {
