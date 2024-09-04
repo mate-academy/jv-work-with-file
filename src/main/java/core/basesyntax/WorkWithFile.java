@@ -10,6 +10,7 @@ public class WorkWithFile {
     public static final String SUPPLY = "supply";
     public static final String BUY = "buy";
     public static final String RESULT = "result";
+    public static final char COMMA = ',';
 
     protected void getStatistic(String fromFileName, String toFileName) {
         String[] data = readFile(fromFileName);
