@@ -45,9 +45,9 @@ public class WorkWithFile {
                 lineFromInputfile = value.split(",");
                 String operationType = lineFromInputfile[INDEX_OF_OPERATION_TYPE];
                 int amount = Integer.parseInt(lineFromInputfile[INDEX_OF_AMOUNT]);
-                if (operationType.equals("supply")) {
+                if (operationType.equals(NAME_OF_OPERATION_SUPPLY)) {
                     supplyAmount += amount;
-                } else if (operationType.equals("buy")) {
+                } else if (operationType.equals(NAME_OF_OPERATION_BUY)) {
                     buyAmount += amount;
                 }
                 value = reader.readLine();
@@ -58,7 +58,7 @@ public class WorkWithFile {
         return new int[]{supplyAmount, buyAmount};
     }
 
-    private static String createReportMessage(int supplyAmount, int buyAmount) {
+    private String createReportMessage(int supplyAmount, int buyAmount) {
         int resultAmount = supplyAmount - buyAmount;
         return NAME_OF_OPERATION_SUPPLY + "," + supplyAmount + System.lineSeparator()
                 + NAME_OF_OPERATION_BUY + "," + buyAmount + System.lineSeparator()
