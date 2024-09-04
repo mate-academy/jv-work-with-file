@@ -14,8 +14,8 @@ public class WorkWithFile {
 
     protected void getStatistic(String fromFileName, String toFileName) {
         String[] data = readFile(fromFileName);
-        int[] results = calculateStatistics(data);
-        writeFile(toFileName, results);
+        String result = calculateStatistics(data);
+        writeFile(toFileName, result);
     }
 
     private String[] readFile(String fromFileName) {
@@ -31,7 +31,7 @@ public class WorkWithFile {
         return content.toString().split(System.lineSeparator());
     }
 
-    private int[] calculateStatistics(String[] data) {
+    private String calculateStatistics(String[] data) {
         int supply = 0;
         int buy = 0;
         for (String line : data) {
@@ -43,16 +43,18 @@ public class WorkWithFile {
             }
         }
         int result = supply - buy;
-        return new int[]{supply, buy, result};
+
+        StringBuilder resultBuilder = new StringBuilder();
+        resultBuilder.append(SUPPLY).append(COMMA).append(supply).append(System.lineSeparator());
+        resultBuilder.append(BUY).append(COMMA).append(buy).append(System.lineSeparator());
+        resultBuilder.append(RESULT).append(COMMA).append(result);
+
+        return resultBuilder.toString();
     }
 
-    private void writeFile(String toFileName, int[] results) {
+    private void writeFile(String toFileName, String result) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write(SUPPLY + "," + results[0]);
-            bufferedWriter.newLine();
-            bufferedWriter.write(BUY + "," + results[1]);
-            bufferedWriter.newLine();
-            bufferedWriter.write(RESULT + "," + results[2]);
+            bufferedWriter.write(result);
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to file", e);
         }
