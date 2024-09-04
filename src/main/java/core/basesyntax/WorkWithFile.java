@@ -12,14 +12,18 @@ public class WorkWithFile {
     private static final String NAME_OF_OPERATION_BUY = "buy";
     private static final int INDEX_OF_OPERATION_TYPE = 0;
     private static final int INDEX_OF_AMOUNT = 1;
-    private int supplyAmount = 0;
-    private int buyAmount = 0;
+    private static final int INDEX_OF_SUPPLY_AMOUNT = 0;
+    private static final int INDEX_OF_BUY_AMOUNT = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
+        int supplyAmount = 0;
+        int buyAmount = 0;
 
-        readAmountsOfOperations(fromFileName);
+        int[] operationsAmounts = readAmountsOfOperations(fromFileName);
+        supplyAmount = operationsAmounts[INDEX_OF_SUPPLY_AMOUNT];
+        buyAmount = operationsAmounts[INDEX_OF_BUY_AMOUNT];
 
-        String report = createReportMessage();
+        String report = createReportMessage(supplyAmount, buyAmount);
         File fileToWrite = new File(toFileName);
 
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileToWrite))) {
@@ -27,11 +31,11 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file", e);
         }
-
-        setDefaultAmountsValuesAfterWriteReport();
     }
 
-    private void readAmountsOfOperations(String fromFileName) {
+    private static int[] readAmountsOfOperations(String fromFileName) {
+        int supplyAmount = 0;
+        int buyAmount = 0;
         File file = new File(fromFileName);
 
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
@@ -51,17 +55,13 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read file", e);
         }
+        return new int[]{supplyAmount, buyAmount};
     }
 
-    private String createReportMessage() {
+    private static String createReportMessage(int supplyAmount, int buyAmount) {
         int resultAmount = supplyAmount - buyAmount;
         return NAME_OF_OPERATION_SUPPLY + "," + supplyAmount + System.lineSeparator()
                 + NAME_OF_OPERATION_BUY + "," + buyAmount + System.lineSeparator()
                 + "result," + resultAmount + System.lineSeparator();
-    }
-
-    private void setDefaultAmountsValuesAfterWriteReport() {
-        supplyAmount = 0;
-        buyAmount = 0;
     }
 }
