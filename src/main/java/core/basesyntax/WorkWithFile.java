@@ -35,7 +35,7 @@ public class WorkWithFile {
         int supply = 0;
         int buy = 0;
         for (String line : data) {
-            String[] lineContent = line.split(",");
+            String[] lineContent = line.split(String.valueOf(COMMA));
             if (lineContent[0].equals(SUPPLY)) {
                 supply += Integer.parseInt(lineContent[1]);
             } else if (lineContent[0].equals(BUY)) {
