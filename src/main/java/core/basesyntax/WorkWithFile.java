@@ -9,6 +9,9 @@ import java.util.List;
 public class WorkWithFile {
     private static final String SUPPLY_OPERATION = "supply";
     private static final String BUY_OPERATION = "buy";
+    private static final String RESULT_OPERATION = "result";
+    private static final String COMMA = ",";
+
     private static final int OPERATION_TYPE = 0;
     private static final int AMOUNT = 1;
 
@@ -37,9 +40,9 @@ public class WorkWithFile {
             }
         }
         resultValue = supplyValue - buyValue;
-        stringBuilder.append("supply," + supplyValue + System.lineSeparator())
-                .append("buy," + buyValue + System.lineSeparator())
-                .append("result," + resultValue + System.lineSeparator());
+        stringBuilder.append(SUPPLY_OPERATION + COMMA + supplyValue + System.lineSeparator())
+                .append(BUY_OPERATION + COMMA + buyValue + System.lineSeparator())
+                .append(RESULT_OPERATION + COMMA + resultValue + System.lineSeparator());
         return stringBuilder.toString();
     }
 
