@@ -13,16 +13,18 @@ public class WorkWithFile {
     private static final int AMOUNT = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        writeToFile(toFileName, createReport(fromFileName));
+        List<String> linesFromFile = readFromFile(fromFileName);
+        String report = createReport(linesFromFile);
+        writeToFile(toFileName, report);
     }
 
-    public String createReport(String fromFileName) {
+    public String createReport(List<String> linesFromFile) {
         String[] values;
         StringBuilder stringBuilder = new StringBuilder();
         int supplyValue = 0;
         int buyValue = 0;
         int resultValue = 0;
-        for (String str : readFromFile(fromFileName)) {
+        for (String str : linesFromFile) {
             values = str.split(",");
             try {
                 if (values[OPERATION_TYPE].equals(SUPPLY_OPERATION)) {
