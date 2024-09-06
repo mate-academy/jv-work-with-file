@@ -11,7 +11,6 @@ public class WorkWithFile {
     private static final String BUY_OPERATION = "buy";
     private static final String RESULT_OPERATION = "result";
     private static final String COMMA = ",";
-
     private static final int OPERATION_TYPE = 0;
     private static final int AMOUNT = 1;
 
@@ -21,14 +20,14 @@ public class WorkWithFile {
         writeToFile(toFileName, report);
     }
 
-    public String createReport(List<String> linesFromFile) {
+    private String createReport(List<String> linesFromFile) {
         String[] values;
         StringBuilder stringBuilder = new StringBuilder();
         int supplyValue = 0;
         int buyValue = 0;
         int resultValue = 0;
         for (String str : linesFromFile) {
-            values = str.split(",");
+            values = str.split(COMMA);
             try {
                 if (values[OPERATION_TYPE].equals(SUPPLY_OPERATION)) {
                     supplyValue += Integer.parseInt(values[AMOUNT]);
@@ -40,13 +39,16 @@ public class WorkWithFile {
             }
         }
         resultValue = supplyValue - buyValue;
-        stringBuilder.append(SUPPLY_OPERATION + COMMA + supplyValue + System.lineSeparator())
-                .append(BUY_OPERATION + COMMA + buyValue + System.lineSeparator())
-                .append(RESULT_OPERATION + COMMA + resultValue + System.lineSeparator());
+        stringBuilder.append(SUPPLY_OPERATION).append(COMMA).append(supplyValue)
+                .append(System.lineSeparator())
+                .append(BUY_OPERATION).append(COMMA).append(buyValue)
+                .append(System.lineSeparator())
+                .append(RESULT_OPERATION).append(COMMA).append(resultValue)
+                .append(System.lineSeparator());
         return stringBuilder.toString();
     }
 
-    public List<String> readFromFile(String fromFileName) {
+    private List<String> readFromFile(String fromFileName) {
         List<String> linesFromFile;
         File file = new File(fromFileName);
         try {
@@ -57,7 +59,7 @@ public class WorkWithFile {
         return linesFromFile;
     }
 
-    public void writeToFile(String toFileName, String content) {
+    private void writeToFile(String toFileName, String content) {
         try (FileWriter fileWriter = new FileWriter(new File(toFileName))) {
             fileWriter.write(content);
         } catch (IOException e) {
