@@ -1,54 +1,3 @@
-//FIRST VARIANT
-//package core.basesyntax;
-//
-//import java.io.BufferedReader;
-//import java.io.BufferedWriter;
-//import java.io.FileReader;
-//import java.io.FileWriter;
-//import java.io.IOException;
-//
-//public class WorkWithFile {
-//    public void getStatistic(String fromFileName, String toFileName) {
-//        String supply = "supply";
-//        String buy = "buy";
-//        int index;
-//        int value;
-//        int supplyCount = 0;
-//        int buyCount = 0;
-//        int result;
-//        String example;
-//        StringBuilder builder = new StringBuilder();
-//
-//        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
-//                BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-//
-//            String line;
-//            while ((line = reader.readLine()) != null) {
-//                index = line.indexOf(',');
-//                example = line.substring(0, index);
-//                value = Integer.parseInt(line.substring(index + 1));
-//
-//                if (example.equals(supply)) {
-//                    supplyCount += value;
-//                } else if (example.equals(buy)) {
-//                    buyCount += value;
-//                }
-//            }
-//
-//            result = supplyCount - buyCount;
-//            builder.append("supply,").append(supplyCount).append("\n");
-//            builder.append("buy,").append(buyCount).append("\n");
-//            builder.append("result,").append(result);
-//
-//            writer.write(builder.toString());
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
-//}
-
-//SECOND VARIANT
-
 package core.basesyntax;
 
 import java.io.BufferedReader;
@@ -58,66 +7,59 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    public static final String SUPPLY = "SUPPLY";
+    public static final String BUY = "BUY";
+    public static final String RESULT = "RESULT";
+    public static final String COMMA = ",";
+
     public void getStatistic(String fromFileName, String toFileName) {
-        Result output = readFile(fromFileName);
-        String result2 = getResult(output);
-        writeToFile(result2, toFileName);
+        int[] result = readFile(fromFileName);
+        String find = getResult(result);
+        writeToFile(find, toFileName);
     }
 
-    public static Result readFile(String fileName) {
-        int[] numbers;
-        String[] variables;
-        try (BufferedReader reader = new BufferedReader(new FileReader(fileName));
-                BufferedReader newReader = new BufferedReader(new FileReader(fileName))) {
-            String line;
-            int value = 0;
-            int count = 0;
-            while ((line = reader.readLine()) != null) {
-                count++;
-            }
-            variables = new String[count];
-            numbers = new int[count];
-            int i = 0;
-            while ((line = newReader.readLine()) != null) {
-                String[] parts = line.split(",");
-                variables[i] = parts[0];
-                numbers[i] = Integer.parseInt(parts[1]);
-                i++;
+    private int[] readFile(String sourceFile) {
+        int supplyResult = 0;
+        int buyResult = 0;
+        int result = 0;
+        String variable;
+        try (BufferedReader reader = new BufferedReader(new FileReader(sourceFile))) {
+            String value = reader.readLine();
+            while (value != null) {
+                variable = value.substring(0, value.indexOf(COMMA));
+                String amount = value.substring(value.indexOf(COMMA) + 1);
+                if (variable.equals(SUPPLY.toLowerCase())) {
+                    supplyResult += Integer.parseInt(amount);
+                } else if (variable.equals(BUY.toLowerCase())) {
+                    buyResult += Integer.parseInt(amount);
+                }
+                result = supplyResult - buyResult;
+                value = reader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("File " + fileName + " was not found", e);
+            throw new RuntimeException("Can't read the data from the file " + sourceFile, e);
         }
-        return new Result(variables, numbers);
+        return new int[] {supplyResult, buyResult, result};
     }
 
-    public static String getResult(Result output) {
-        String supply = "supply";
-        String buy = "buy";
-        int countSupply = 0;
-        int countBuy = 0;
-        int result = 0;
+    private String getResult(int[] data) {
+        int supplyResult = data[0];
+        int buyResult = data[1];
+        int result = data[2];
         StringBuilder builder = new StringBuilder();
-        String[] variables = output.getVariables();
-        int[] numbers = output.getNumbers();
-        for (int i = 0; i < variables.length; i++) {
-            if (variables[i].equals(supply)) {
-                countSupply += numbers[i];
-            } else {
-                countBuy += numbers[i];
-            }
-        }
-        result = countSupply - countBuy;
-        builder.append("supply,").append(countSupply).append(System.lineSeparator());
-        builder.append("buy,").append(countBuy).append(System.lineSeparator());
-        builder.append("result,").append(result);
+        builder.append(SUPPLY.toLowerCase()).append(COMMA)
+                .append(supplyResult).append(System.lineSeparator())
+                .append(BUY.toLowerCase()).append(COMMA)
+                .append(buyResult).append(System.lineSeparator())
+                .append(RESULT.toLowerCase()).append(COMMA).append(result);
         return builder.toString();
     }
 
-    public static void writeToFile(String text, String toFile) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFile))) {
-            writer.write(text);
+    private void writeToFile(String data, String resultFile) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(resultFile))) {
+            bufferedWriter.write(data);
         } catch (IOException e) {
-            throw new RuntimeException("Can not write information to the file", e);
+            throw new RuntimeException("Can't write into the file" + resultFile, e);
         }
     }
 }
