@@ -27,7 +27,7 @@ public class WorkWithFile {
                 }
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data to file");
+            throw new RuntimeException("Can't read data from file");
         }
 
         // Подсчет результата
@@ -42,7 +42,7 @@ public class WorkWithFile {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Can't save data to file");
+            throw new RuntimeException("Can't write data to file");
         }
     }
 }
