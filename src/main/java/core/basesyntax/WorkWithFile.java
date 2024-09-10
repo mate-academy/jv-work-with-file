@@ -11,7 +11,6 @@ public class WorkWithFile {
         int supplySum = 0;
         int buySum = 0;
 
-        // Чтение данных из файла
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -19,7 +18,6 @@ public class WorkWithFile {
                 String operationType = parts[0];
                 int amount = Integer.parseInt(parts[1]);
 
-                // Увеличение суммы в зависимости от типа операции
                 if (operationType.equals("supply")) {
                     supplySum += amount;
                 } else if (operationType.equals("buy")) {
@@ -30,15 +28,12 @@ public class WorkWithFile {
             throw new RuntimeException("Can't read data from file");
         }
 
-        // Подсчет результата
         int result = supplySum - buySum;
 
-        // Формирование строки отчета
         String report = "supply," + supplySum + System.lineSeparator()
                 + "buy," + buySum + System.lineSeparator()
                 + "result," + result + System.lineSeparator();
 
-        // Запись отчета в файл
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write(report);
         } catch (IOException e) {
