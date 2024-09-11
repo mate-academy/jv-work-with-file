@@ -7,9 +7,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final int INITIAL_SUM = 0;
     public void getStatistic(String fromFileName, String toFileName) {
-        int supplySum = 0;
-        int buySum = 0;
+        int supplySum = INITIAL_SUM;
+        int buySum = INITIAL_SUM;
 
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String line;
@@ -18,9 +22,9 @@ public class WorkWithFile {
                 String operationType = parts[0];
                 int amount = Integer.parseInt(parts[1]);
 
-                if (operationType.equals("supply")) {
+                if (operationType.equals(SUPPLY)) {
                     supplySum += amount;
-                } else if (operationType.equals("buy")) {
+                } else if (operationType.equals(BUY)) {
                     buySum += amount;
                 }
             }
@@ -30,9 +34,12 @@ public class WorkWithFile {
 
         int result = supplySum - buySum;
 
-        String report = "supply," + supplySum + System.lineSeparator()
-                + "buy," + buySum + System.lineSeparator()
-                + "result," + result + System.lineSeparator();
+        StringBuilder reportBuilder = new StringBuilder();
+        reportBuilder.append(SUPPLY).append(",").append(supplySum).append(System.lineSeparator())
+                .append(BUY).append(",").append(buySum).append(System.lineSeparator())
+                .append("result,").append(result).append(System.lineSeparator());
+
+        String report = reportBuilder.toString();
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write(report);
