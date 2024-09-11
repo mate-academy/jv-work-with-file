@@ -57,7 +57,7 @@ public class WorkWithFile {
         }
 
         try {
-            String joinedOperations = String.join("\r\n", operations);
+            String joinedOperations = String.join(System.lineSeparator(), operations);
             Files.write(file.toPath(), joinedOperations.getBytes());
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to the file: ", e);
