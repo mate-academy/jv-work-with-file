@@ -14,7 +14,6 @@ public class WorkWithFile {
     private static final String BUY_STR = "buy";
     private static final String RESULT_STR = "result";
     private static final String COMMA = ",";
-    private static final String LINE_SEPARATOR = System.lineSeparator();
 
     public void getStatistic(String fromFileName, String toFileName) {
         ArrayList<String> data = readFile(fromFileName);
@@ -46,11 +45,11 @@ public class WorkWithFile {
         StringBuilder builder = new StringBuilder();
 
         for (String operation : operationsList) {
-            String[] partsOfOperation = operation.split(",");
+            String[] partsOfOperation = operation.split(COMMA);
             String type = partsOfOperation[0];
             int quantity = Integer.parseInt(partsOfOperation[1]);
 
-            if (type.equals("buy")) {
+            if (type.equals(BUY_STR)) {
                 buyOperations += quantity;
             } else {
                 supplyOperations += quantity;
@@ -60,15 +59,15 @@ public class WorkWithFile {
         builder.append(SUPPLY_STR)
                 .append(COMMA)
                 .append(supplyOperations)
-                .append(LINE_SEPARATOR);
+                .append(System.lineSeparator());
         builder.append(BUY_STR)
                 .append(COMMA)
                 .append(buyOperations)
-                .append(LINE_SEPARATOR);
+                .append(System.lineSeparator());
         builder.append(RESULT_STR)
                 .append(COMMA)
                 .append(supplyOperations - buyOperations)
-                .append(LINE_SEPARATOR);
+                .append(System.lineSeparator());
 
         return builder.toString();
     }
