@@ -10,6 +10,8 @@ public class WorkWithFile {
 
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
+    private static final String COMMA = ",";
+    private static final String RESULT = "result";
     private static final int INITIAL_SUM = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
@@ -19,7 +21,7 @@ public class WorkWithFile {
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",");
+                String[] parts = line.split(COMMA);
                 String operationType = parts[0];
                 int amount = Integer.parseInt(parts[1]);
 
@@ -36,9 +38,9 @@ public class WorkWithFile {
         int result = supplySum - buySum;
 
         StringBuilder reportBuilder = new StringBuilder();
-        reportBuilder.append(SUPPLY).append(",").append(supplySum).append(System.lineSeparator())
-                .append(BUY).append(",").append(buySum).append(System.lineSeparator())
-                .append("result,").append(result).append(System.lineSeparator());
+        reportBuilder.append(SUPPLY).append(COMMA).append(supplySum).append(System.lineSeparator())
+                .append(BUY).append(COMMA).append(buySum).append(System.lineSeparator())
+                .append(RESULT).append(COMMA).append(result).append(System.lineSeparator());
 
         String report = reportBuilder.toString();
 
