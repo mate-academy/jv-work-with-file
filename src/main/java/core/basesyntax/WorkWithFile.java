@@ -23,6 +23,7 @@ public class WorkWithFile {
         int buyResult = 0;
         int result = 0;
         String variable;
+
         try (BufferedReader reader = new BufferedReader(new FileReader(sourceFile))) {
             String value = reader.readLine();
             while (value != null) {
