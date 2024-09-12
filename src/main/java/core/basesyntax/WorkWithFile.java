@@ -28,8 +28,8 @@ public class WorkWithFile {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] details = line.split(COMMA);
-                String operationType = details[0];
-                int amount = Integer.parseInt(details[1]);
+                String operationType = details[SUPPLY_INDEX];
+                int amount = Integer.parseInt(details[BUY_INDEX]);
 
                 if (operationType.equals(SUPPLY)) {
                     supplySum += amount;
