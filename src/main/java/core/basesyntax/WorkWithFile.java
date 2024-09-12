@@ -15,6 +15,16 @@ public class WorkWithFile {
     private static final int INITIAL_SUM = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
+        int[] supplyAndBuySums = readFromFile(fromFileName);
+        int supplySum = supplyAndBuySums[0];
+        int buySum = supplyAndBuySums[1];
+
+        String report = generateReport(supplySum, buySum);
+
+        writeIntoFile(toFileName, report);
+    }
+
+    public int[] readFromFile(String fromFileName) {
         int supplySum = INITIAL_SUM;
         int buySum = INITIAL_SUM;
 
@@ -32,9 +42,13 @@ public class WorkWithFile {
                 }
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read data from file");
+            throw new RuntimeException("Can't read data from file", e);
         }
 
+        return new int[] {supplySum, buySum};
+    }
+
+    public String generateReport(int supplySum, int buySum) {
         int result = supplySum - buySum;
 
         StringBuilder reportBuilder = new StringBuilder();
@@ -42,12 +56,14 @@ public class WorkWithFile {
                 .append(BUY).append(COMMA).append(buySum).append(System.lineSeparator())
                 .append(RESULT).append(COMMA).append(result).append(System.lineSeparator());
 
-        String report = reportBuilder.toString();
+        return reportBuilder.toString();
+    }
 
+    public void writeIntoFile(String toFileName, String report) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data to file");
+            throw new RuntimeException("Can't write data to file", e);
         }
     }
 }
