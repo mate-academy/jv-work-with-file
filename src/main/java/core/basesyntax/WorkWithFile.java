@@ -20,12 +20,10 @@ public class WorkWithFile {
 
         readDataFromTheFile(fromFile);
 
-        int result = supplyAmount - buyAmount;
-
         stringBuilder.setLength(0);
         stringBuilder.append("supply,").append(supplyAmount).append(System.lineSeparator())
                 .append("buy,").append(buyAmount).append(System.lineSeparator())
-                .append("result,").append(result);
+                .append("result,").append(supplyAmount - buyAmount);
 
         writeReportToFile(toFile);
     }
