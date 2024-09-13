@@ -27,7 +27,7 @@ public class WorkWithFile {
                 .append("buy,").append(buyAmount).append(System.lineSeparator())
                 .append("result,").append(result);
 
-        writeToTheFile(toFile);
+        writeReportToFile(toFile);
     }
 
     private void readDataFromTheFile(File fromFile) {
@@ -46,22 +46,22 @@ public class WorkWithFile {
             }
 
             String operation = values[0];
-            String amount = values[1];
+            String amountString = values[1];
 
             try {
-                int value = Integer.parseInt(amount);
+                int value = Integer.parseInt(amountString);
                 if (operation.equals(OPERATION)) {
                     buyAmount += value;
                 } else {
                     supplyAmount += value;
                 }
             } catch (NumberFormatException e) {
-                System.err.println("Invalid number format in file: " + amount);
+                throw new RuntimeException("Invalid number format in file: " + amountString);
             }
         }
     }
 
-    private void writeToTheFile(File toFile) {
+    private void writeReportToFile(File toFile) {
         try {
             Files.write(toFile.toPath(), stringBuilder.toString().getBytes());
         } catch (IOException e) {
