@@ -10,28 +10,26 @@ public class WorkWithFile {
     public static final String OPERATION = "buy";
     private int supplyAmount = 0;
     private int buyAmount = 0;
-    private int result = 0;
-    private String operation;
-    private String amount;
-    private List<String> fileData = null;
     private final StringBuilder stringBuilder = new StringBuilder();
 
     public void getStatistic(String fromFileName, String toFileName) {
         File fromFile = new File(fromFileName);
-        final File toFile = new File(toFileName);
+        File toFile = new File(toFileName);
 
         readDataFromTheFile(fromFile);
 
-        result = supplyAmount - buyAmount;
+        int result = supplyAmount - buyAmount;
 
-        stringBuilder.append("supply, ").append(supplyAmount).append(System.lineSeparator())
-                .append("buy, ").append(buyAmount).append(System.lineSeparator())
-                .append("result, ").append(result);
+        stringBuilder.setLength(0);
+        stringBuilder.append("supply,").append(supplyAmount).append(System.lineSeparator())
+                .append("buy,").append(buyAmount).append(System.lineSeparator())
+                .append("result,").append(result);
 
         writeToTheFile(toFile);
     }
 
     public void readDataFromTheFile(File fromFile) {
+        List<String> fileData;
         try {
             fileData = Files.readAllLines(fromFile.toPath());
         } catch (IOException e) {
@@ -41,8 +39,8 @@ public class WorkWithFile {
         for (String data : fileData) {
             String[] values = data.split(DELIMITER);
 
-            operation = values[0];
-            amount = values[1];
+            String operation = values[0];
+            String amount = values[1];
 
             if (operation.equals(OPERATION)) {
                 buyAmount += Integer.parseInt(amount);
