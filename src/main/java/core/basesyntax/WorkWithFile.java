@@ -13,6 +13,8 @@ public class WorkWithFile {
     private final StringBuilder stringBuilder = new StringBuilder();
 
     public void getStatistic(String fromFileName, String toFileName) {
+        supplyAmount = 0;
+        buyAmount = 0;
         File fromFile = new File(fromFileName);
         final File toFile = new File(toFileName);
 
@@ -28,6 +30,7 @@ public class WorkWithFile {
         writeToTheFile(toFile);
     }
 
+
     public void readDataFromTheFile(File fromFile) {
         List<String> fileData;
         try {
@@ -42,7 +45,7 @@ public class WorkWithFile {
             String operation = values[0];
             String amount = values[1];
 
-            if (operation.toLowerCase().equals(OPERATION)) {
+            if (operation.equals(OPERATION)) {
                 buyAmount += Integer.parseInt(amount);
             } else {
                 supplyAmount += Integer.parseInt(amount);
