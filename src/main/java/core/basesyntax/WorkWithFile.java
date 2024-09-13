@@ -28,6 +28,7 @@ public class WorkWithFile {
         writeToTheFile(toFile);
     }
 
+
     public void readDataFromTheFile(File fromFile) {
         List<String> fileData;
         try {
