@@ -18,7 +18,7 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         File fromFile = new File(fromFileName);
-        File toFile = new File(toFileName);
+        final File toFile = new File(toFileName);
 
         readDataFromTheFile(fromFile);
 
