@@ -42,7 +42,7 @@ public class WorkWithFile {
             String operation = values[0];
             String amount = values[1];
 
-            if (operation.equals(OPERATION)) {
+            if (operation.toLowerCase().equals(OPERATION)) {
                 buyAmount += Integer.parseInt(amount);
             } else {
                 supplyAmount += Integer.parseInt(amount);
