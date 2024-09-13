@@ -9,6 +9,11 @@ import java.io.IOException;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
+        int[] statistics = readData(fromFileName);
+        writeData(toFileName, statistics[0], statistics[1]);
+    }
+
+    private int[] readData(String fromFileName) {
         int supply = 0;
         int buy = 0;
 
@@ -16,29 +21,30 @@ public class WorkWithFile {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 String[] element = line.split(",");
-                String firstElement = element[0];
-                int secondElement = Integer.parseInt(element[1]);
+                String operationType = element[0];
+                int amount = Integer.parseInt(element[1]);
 
-                if (firstElement.equals("supply")) {
-                    supply += secondElement;
-                } else if (firstElement.equals("buy")) {
-                    buy += secondElement;
+                if (operationType.equals("supply")) {
+                    supply += amount;
+                } else if (operationType.equals("buy")) {
+                    buy += amount;
                 }
             }
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("File not found:" + e);
+            throw new RuntimeException("File not found:" + fromFileName, e);
         } catch (IOException e) {
-            throw new RuntimeException("Error while reading the file: " + e);
+            throw new RuntimeException("Error while reading the file " + fromFileName, e);
         }
+        return new int[]{supply, buy};
+    }
 
-        int result = supply - buy;
-
+    private void writeData(String toFileName, int supply, int buy) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write("supply," + supply + System.lineSeparator());
             bufferedWriter.write("buy," + buy + System.lineSeparator());
-            bufferedWriter.write("result," + result + System.lineSeparator());
+            bufferedWriter.write("result," + (supply - buy) + System.lineSeparator());
         } catch (IOException e) {
-            throw new RuntimeException("Error while writing to the file: " + e);
+            throw new RuntimeException("Error while writing to the file: " + toFileName, e);
         }
     }
 }
