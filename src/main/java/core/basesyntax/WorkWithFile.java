@@ -22,7 +22,7 @@ public class WorkWithFile {
         writeToFile(toFileName, data);
     }
 
-    public String[] readFromFile(String fromFileName)
+    private String[] readFromFile(String fromFileName)
             throws IOException {
         int supplyCounter = 0;
         int buyCounter = 0;
@@ -47,7 +47,7 @@ public class WorkWithFile {
                 String.valueOf(supplyCounter - buyCounter)};
     }
 
-    public void writeToFile(String toFileName, String data) throws IOException {
+    private void writeToFile(String toFileName, String data) throws IOException {
         try (FileWriter fileWriter = new FileWriter(toFileName)) {
             fileWriter.write(data);
         } catch (IOException e) {
@@ -55,7 +55,7 @@ public class WorkWithFile {
         }
     }
 
-    public String infoGathering(String[] result) {
+    private String infoGathering(String[] result) {
         return new StringBuilder(OPERATION_SUPPLY).append(COMMA)
                 .append(result[OPERATION_TYPE_SUPPLY]).append(System.lineSeparator())
                 .append(OPERATION_BUY).append(COMMA).append(result[OPERATION_TYPE_BUY])
