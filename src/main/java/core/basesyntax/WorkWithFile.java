@@ -12,20 +12,22 @@ public class WorkWithFile {
     public static final String RESULT = "result";
     private int supplyAmount = 0;
     private int buyAmount = 0;
-    private final StringBuilder stringBuilder = new StringBuilder();
 
     public void getStatistic(String fromFileName, String toFileName) {
+        StringBuilder stringBuilder = new StringBuilder();
+
         supplyAmount = 0;
         buyAmount = 0;
         File fromFile = new File(fromFileName);
         final File toFile = new File(toFileName);
 
-        calculateReport(fromFile);
+        calculateReport(fromFile, stringBuilder);
 
-        writeIntoFile(toFile);
+        writeIntoFile(toFile, stringBuilder);
     }
 
-    private void calculateReport(File fromFile) {
+    private void calculateReport(File fromFile, StringBuilder stringBuilder) {
+
         readFromFile(fromFile);
 
         stringBuilder.append(SUPPLY).append(COMMA).append(supplyAmount)
@@ -66,7 +68,8 @@ public class WorkWithFile {
         }
     }
 
-    private void writeIntoFile(File toFile) {
+    private void writeIntoFile(File toFile, StringBuilder stringBuilder) {
+
         try {
             Files.write(toFile.toPath(), stringBuilder.toString().getBytes());
         } catch (IOException e) {
