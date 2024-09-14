@@ -6,27 +6,18 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    public static final int OPERATION_TYPE = 0;
-    public static final int AMOUNT = 1;
-    public static final String OPERATION_SUPPLY = "supply";
-    public static final String OPERATION_BUY = "buy";
-    public static final String OPERATION_RESULT = "result";
-    public static final String COMMA = ",";
+    private static final int OPERATION_TYPE = 0;
+    private static final int AMOUNT = 1;
+    private static final String OPERATION_SUPPLY = "supply";
+    private static final String OPERATION_BUY = "buy";
+    private static final String OPERATION_RESULT = "result";
+    private static final String COMMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) throws IOException {
         Counters counters = new Counters(0,0);
         int result = readFromFile(fromFileName, counters);
-
-        StringBuilder data = new StringBuilder(OPERATION_SUPPLY
-                + COMMA + counters.supplyCounter + System.lineSeparator()
-                + OPERATION_BUY + COMMA + counters.buyCounter + System.lineSeparator()
-                + OPERATION_RESULT + COMMA + result + System.lineSeparator());
-
-        try (FileWriter fileWriter = new FileWriter(toFileName)) {
-            fileWriter.write(data.toString());
-        } catch (IOException e) {
-            throw new IOException("can not write to file", e);
-        }
+        String data = infoGathering(counters, result);
+        writeToFile(toFileName, data);
     }
 
     public int readFromFile(String fromFileName, Counters counters)
@@ -49,5 +40,20 @@ public class WorkWithFile {
         }
 
         return counters.supplyCounter - counters.buyCounter;
+    }
+
+    public void writeToFile(String toFileName, String data) throws IOException {
+        try (FileWriter fileWriter = new FileWriter(toFileName)) {
+            fileWriter.write(data.toString());
+        } catch (IOException e) {
+            throw new IOException("can not write to file", e);
+        }
+    }
+
+    public String infoGathering(Counters counters, int result) {
+        return new StringBuilder(OPERATION_SUPPLY
+                + COMMA + counters.supplyCounter + System.lineSeparator()
+                + OPERATION_BUY + COMMA + counters.buyCounter + System.lineSeparator()
+                + OPERATION_RESULT + COMMA + result + System.lineSeparator()).toString();
     }
 }
