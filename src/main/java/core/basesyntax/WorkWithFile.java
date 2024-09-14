@@ -6,8 +6,10 @@ import java.nio.file.Files;
 import java.util.List;
 
 public class WorkWithFile {
-    public static final String DELIMITER = ",";
-    public static final String OPERATION = "buy";
+    public static final String COMMA = ",";
+    public static final String SUPPLY = "supply";
+    public static final String BUY = "buy";
+    public static final String RESULT = "result";
     private int supplyAmount = 0;
     private int buyAmount = 0;
     private final StringBuilder stringBuilder = new StringBuilder();
@@ -18,17 +20,20 @@ public class WorkWithFile {
         File fromFile = new File(fromFileName);
         final File toFile = new File(toFileName);
 
-        readDataFromTheFile(fromFile);
+        calculateReport(fromFile);
 
-        stringBuilder.setLength(0);
-        stringBuilder.append("supply,").append(supplyAmount).append(System.lineSeparator())
-                .append("buy,").append(buyAmount).append(System.lineSeparator())
-                .append("result,").append(supplyAmount - buyAmount);
-
-        writeReportToFile(toFile);
+        writeIntoFile(toFile);
     }
 
-    private void readDataFromTheFile(File fromFile) {
+    private void calculateReport(File fromFile) {
+        readFromFile(fromFile);
+
+        stringBuilder.append(SUPPLY).append(COMMA).append(supplyAmount).append(System.lineSeparator())
+                .append(BUY).append(COMMA).append(buyAmount).append(System.lineSeparator())
+                .append(RESULT).append(COMMA).append(supplyAmount - buyAmount);
+    }
+
+    private void readFromFile(File fromFile) {
         List<String> fileData;
         try {
             fileData = Files.readAllLines(fromFile.toPath());
@@ -37,7 +42,7 @@ public class WorkWithFile {
         }
 
         for (String data : fileData) {
-            String[] values = data.split(DELIMITER);
+            String[] values = data.split(COMMA);
 
             if (values.length != 2) {
                 continue;
@@ -48,7 +53,7 @@ public class WorkWithFile {
 
             try {
                 int value = Integer.parseInt(amountString);
-                if (operation.equals(OPERATION)) {
+                if (operation.equals(BUY)) {
                     buyAmount += value;
                 } else {
                     supplyAmount += value;
@@ -59,7 +64,7 @@ public class WorkWithFile {
         }
     }
 
-    private void writeReportToFile(File toFile) {
+    private void writeIntoFile(File toFile) {
         try {
             Files.write(toFile.toPath(), stringBuilder.toString().getBytes());
         } catch (IOException e) {
