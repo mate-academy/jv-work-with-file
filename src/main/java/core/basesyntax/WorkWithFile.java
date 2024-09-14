@@ -11,6 +11,7 @@ public class WorkWithFile {
     private static final String FILTER_FOR_DELIMITERS = "\\W+";
     private static final String SUPPLY_FILTER = "supply";
     private static final String BUY_FILTER = "buy";
+    private static final String RESULT_FILTER = "result";
     private static final int RESET_STRING_BUILDER = 0;
     private static final int INDEX_OF_FIRST_ELEMENT = 0;
     private static final int INDEX_OF_SECOND_ELEMENT = 1;
@@ -62,7 +63,7 @@ public class WorkWithFile {
                 reportBuilder.append(buySum).append(System.lineSeparator());
             }
         }
-        reportBuilder.append("result").append(CSV_DELIMITER).append(supplySum - buySum);
+        reportBuilder.append(RESULT_FILTER).append(CSV_DELIMITER).append(supplySum - buySum);
         return reportBuilder.toString();
     }
 
