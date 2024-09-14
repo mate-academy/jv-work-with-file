@@ -28,8 +28,10 @@ public class WorkWithFile {
     private void calculateReport(File fromFile) {
         readFromFile(fromFile);
 
-        stringBuilder.append(SUPPLY).append(COMMA).append(supplyAmount).append(System.lineSeparator())
-                .append(BUY).append(COMMA).append(buyAmount).append(System.lineSeparator())
+        stringBuilder.append(SUPPLY).append(COMMA).append(supplyAmount)
+                .append(System.lineSeparator())
+                .append(BUY).append(COMMA).append(buyAmount)
+                .append(System.lineSeparator())
                 .append(RESULT).append(COMMA).append(supplyAmount - buyAmount);
     }
 
