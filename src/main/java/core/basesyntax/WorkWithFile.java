@@ -7,7 +7,17 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+
     public void getStatistic(String fromFileName, String toFileName) {
+        int[] totals = calculateTotals(fromFileName);
+        int totalSupply = totals[0];
+        int totalBuy = totals[1];
+        int totalAmount = totalSupply - totalBuy;
+
+        writeReport(toFileName, totalSupply, totalBuy, totalAmount);
+    }
+
+    private int[] calculateTotals(String fromFileName) {
         int totalSupply = 0;
         int totalBuy = 0;
 
@@ -27,14 +37,17 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Error reading file: " + fromFileName, e);
         }
-        int totalAmount = totalSupply - totalBuy;
 
+        return new int[] {totalSupply, totalBuy};
+    }
+
+    private void writeReport(String toFileName, int totalSupply, int totalBuy, int totalAmount) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write("supply," + totalSupply + System.lineSeparator());
             writer.write("buy," + totalBuy + System.lineSeparator());
             writer.write("result," + totalAmount + System.lineSeparator());
         } catch (IOException e) {
-            throw new RuntimeException("Error writing file" + toFileName, e);
+            throw new RuntimeException("Error writing file: " + toFileName, e);
         }
     }
 }
