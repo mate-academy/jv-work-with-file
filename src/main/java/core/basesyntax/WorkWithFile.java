@@ -13,11 +13,12 @@ public class WorkWithFile {
     private static final String COMMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int[] statistics = calculateStatistics(fromFileName);
-        writeResultToFile(statistics, toFileName);
+        int[] statistics = readFromFile(fromFileName);
+        String report = generateReport(statistics);
+        writeResultToFile(report, toFileName);
     }
 
-    private int[] calculateStatistics(String fromFileName) {
+    private int[] readFromFile(String fromFileName) {
         int totalSupply = 0;
         int totalBuy = 0;
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
@@ -39,17 +40,27 @@ public class WorkWithFile {
         return new int[]{totalSupply, totalBuy};
     }
 
-    private void writeResultToFile(int[] statistics, String toFileName) {
+    private String generateReport(int[] statistics) {
         int totalSupply = statistics[0];
         int totalBuy = statistics[1];
         int result = totalSupply - totalBuy;
+        String[] operations = {SUPPLY, BUY, RESULT};
+        int[] amounts = {totalSupply, totalBuy, result};
+        StringBuilder reportBuilder = new StringBuilder();
+        for (int i = 0; i < operations.length; i++) {
+            reportBuilder.append(operations[i])
+                    .append(COMMA)
+                    .append(amounts[i])
+                    .append(System.lineSeparator());
+        }
+        return reportBuilder.toString();
+    }
 
+    private void writeResultToFile(String report, String toFileName) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write(SUPPLY + COMMA + totalSupply + System.lineSeparator());
-            bufferedWriter.write(BUY + COMMA + totalBuy + System.lineSeparator());
-            bufferedWriter.write(RESULT + COMMA + result + System.lineSeparator());
+            bufferedWriter.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Can`t write to file", e);
+            throw new RuntimeException("Can`t write to file",e);
         }
     }
 }
