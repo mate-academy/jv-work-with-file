@@ -7,6 +7,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
+    private static final String COMMA = ",";
+
     public void getStatistic(String fromFileName, String toFileName) {
         String[] strings = readFile(fromFileName);
         int[] output = dataFile(strings);
@@ -15,7 +20,7 @@ public class WorkWithFile {
     }
 
     private void writeFile(String data, String toFileName) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName, true))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName, false))) {
             writer.write(data);
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to file" + toFileName, e);
@@ -42,9 +47,9 @@ public class WorkWithFile {
         int result = 0;
         for (int i = 0; i < arrays.length; i++) {
             String substring = arrays[i].substring(0, arrays[i].indexOf(","));
-            if (substring.equals("supply")) {
+            if (substring.equals(SUPPLY)) {
                 supplyResult += Integer.parseInt(arrays[i].substring(arrays[i].indexOf(",") + 1));
-            } else if (substring.equals("buy")) {
+            } else if (substring.equals(BUY)) {
                 buyResult += Integer.parseInt(arrays[i].substring(arrays[i].indexOf(",") + 1));
             }
             result = supplyResult - buyResult;
@@ -57,9 +62,9 @@ public class WorkWithFile {
         int buyResult = data[1];
         int result = data[2];
         StringBuilder builder = new StringBuilder();
-        builder.append("supply").append(",").append(supplyResult).append(System.lineSeparator())
-                .append("buy").append(",").append(buyResult).append(System.lineSeparator())
-                .append("result").append(",").append(result);
+        builder.append(SUPPLY).append(COMMA).append(supplyResult).append(System.lineSeparator())
+                .append(BUY).append(COMMA).append(buyResult).append(System.lineSeparator())
+                .append(RESULT).append(COMMA).append(result);
         return builder.toString();
     }
 }
