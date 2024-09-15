@@ -7,6 +7,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final int OPERATION_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
@@ -25,8 +27,8 @@ public class WorkWithFile {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 String[] data = line.split(COMMA);
-                String operation = data[0];
-                int amount = Integer.parseInt(data[1]);
+                String operation = data[OPERATION_INDEX];
+                int amount = Integer.parseInt(data[AMOUNT_INDEX]);
 
                 if (operation.equals(SUPPLY)) {
                     totalSupply += amount;
@@ -35,7 +37,7 @@ public class WorkWithFile {
                 }
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can`t read the file", e);
+            throw new RuntimeException("Can`t read the file" + fromFileName, e);
         }
         return new int[]{totalSupply, totalBuy};
     }
@@ -60,7 +62,7 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Can`t write to file",e);
+            throw new RuntimeException("Can`t write to file" + toFileName, e);
         }
     }
 }
