@@ -16,46 +16,55 @@ public class WorkWithFile {
     private static final String OPERATION_RESULT = "result";
     private static final String COMMA = ",";
 
-    public void getStatistic(String fromFileName, String toFileName) throws IOException {
-        String[] resultFromRead = readFromFile(fromFileName);
-        String data = infoGathering(resultFromRead);
-        writeToFile(toFileName, data);
+    public void getStatistic(String fromFileName, String toFileName) {
+        String resultFromRead = readFromFile(fromFileName);
+        String[] resultFromProcessing = infoProcessing(resultFromRead);
+        String resultConstruction = infoConstruction(resultFromProcessing);
+        writeToFile(toFileName, resultConstruction);
     }
 
-    private String[] readFromFile(String fromFileName)
-            throws IOException {
-        int supplyCounter = 0;
-        int buyCounter = 0;
+    private String readFromFile(String fromFileName) {
+        StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
-                String[] dataFromFile = line.split(COMMA);
-                int amount = Integer.parseInt(dataFromFile[AMOUNT]);
-
-                if (dataFromFile[OPERATION_TYPE].equals(OPERATION_SUPPLY)) {
-                    supplyCounter += amount;
-                } else {
-                    buyCounter += amount;
-                }
-
+                stringBuilder.append(line).append(System.lineSeparator());
             }
         } catch (IOException e) {
-            throw new IOException("File can not be open", e);
+            throw new RuntimeException("File can not be open", e);
         }
 
-        return new String[]{String.valueOf(supplyCounter), String.valueOf(buyCounter),
+        return stringBuilder.toString();
+    }
+
+    private String[] infoProcessing(String data) {
+        int supplyCounter = 0;
+        int buyCounter = 0;
+        String[] splitData = data.split(System.lineSeparator());
+
+        for (String string : splitData) {
+            String[] wordToProcess = string.split(COMMA);
+            int amount = Integer.parseInt(wordToProcess[AMOUNT]);
+            if (wordToProcess[OPERATION_TYPE].equals(OPERATION_SUPPLY)) {
+                supplyCounter += amount;
+            } else {
+                buyCounter += amount;
+            }
+        }
+
+        return new String[] {String.valueOf(supplyCounter), String.valueOf(buyCounter),
                 String.valueOf(supplyCounter - buyCounter)};
     }
 
-    private void writeToFile(String toFileName, String data) throws IOException {
+    private void writeToFile(String toFileName, String data) {
         try (FileWriter fileWriter = new FileWriter(toFileName)) {
             fileWriter.write(data);
         } catch (IOException e) {
-            throw new IOException("can not write to file", e);
+            throw new RuntimeException("can not write to file", e);
         }
     }
 
-    private String infoGathering(String[] result) {
+    private String infoConstruction(String[] result) {
         return new StringBuilder(OPERATION_SUPPLY).append(COMMA)
                 .append(result[OPERATION_TYPE_SUPPLY]).append(System.lineSeparator())
                 .append(OPERATION_BUY).append(COMMA).append(result[OPERATION_TYPE_BUY])
