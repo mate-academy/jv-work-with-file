@@ -28,17 +28,17 @@ public class WorkWithFile {
         String[] arrayWithData = allData.split(",");
         for (int i = 0; i < arrayWithData.length; i++) {
             if (arrayWithData[i].equals("buy")) {
-                buy += Integer.getInteger(arrayWithData[i + 1]);
+                buy += Integer.parseInt(arrayWithData[i + 1]);
             } else if (arrayWithData[i].equals("supply")) {
-                supply += Integer.getInteger(arrayWithData[i + 1]);
+                supply += Integer.parseInt(arrayWithData[i + 1]);
             }
         }
         int result = supply - buy;
 
         StringBuilder resultBuilder = new StringBuilder();
-        resultBuilder.append("supply").append(supply).append(System.lineSeparator())
-                .append("buy").append(buy).append(System.lineSeparator())
-                .append("result").append(result);
+        resultBuilder.append("supply,").append(supply).append(System.lineSeparator())
+                .append("buy,").append(buy).append(System.lineSeparator())
+                .append("result,").append(result);
         File writeInfoTo = new File(toFileName);
         try {
             FileWriter fileWriter = new FileWriter(writeInfoTo);
