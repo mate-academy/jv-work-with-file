@@ -32,7 +32,7 @@ public class WorkWithFile {
                 stringBuilder.append(line).append(System.lineSeparator());
             }
         } catch (IOException e) {
-            throw new RuntimeException("File can not be open", e);
+            throw new RuntimeException("File" + fromFileName + " can not be open", e);
         }
 
         return stringBuilder.toString();
@@ -61,7 +61,7 @@ public class WorkWithFile {
         try (FileWriter fileWriter = new FileWriter(toFileName)) {
             fileWriter.write(data);
         } catch (IOException e) {
-            throw new RuntimeException("can not write to file", e);
+            throw new RuntimeException("can not write to file" + toFileName, e);
         }
     }
 
