@@ -8,7 +8,18 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String BUY = "buy";
+    private static final String SUPPLY = "supply";
+    private static final String RESULT = "result";
+    private static final int ADDITIONAL_NUMBER = 1;
+
     public void getStatistic(String fromFileName, String toFileName) {
+        String getAllData = readFromFile(fromFileName);
+        String report = generateReport(getAllData);
+        writeResultToFile(report, toFileName);
+    }
+
+    private String readFromFile(String fromFileName) {
         File getInfoFrom = new File(fromFileName);
         StringBuilder builder = new StringBuilder();
         try {
@@ -19,34 +30,38 @@ public class WorkWithFile {
                 value = reader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can't read data from the file " + getInfoFrom, e);
         }
+        return builder.toString();
+    }
 
+    private String generateReport(String allData) {
         int buy = 0;
         int supply = 0;
-        String allData = builder.toString();
         String[] arrayWithData = allData.split(",");
         for (int i = 0; i < arrayWithData.length; i++) {
-            if (arrayWithData[i].equals("buy")) {
-                buy += Integer.parseInt(arrayWithData[i + 1]);
-            } else if (arrayWithData[i].equals("supply")) {
-                supply += Integer.parseInt(arrayWithData[i + 1]);
+            if (arrayWithData[i].equals(BUY)) {
+                buy += Integer.parseInt(arrayWithData[i + ADDITIONAL_NUMBER]);
+            } else if (arrayWithData[i].equals(SUPPLY)) {
+                supply += Integer.parseInt(arrayWithData[i + ADDITIONAL_NUMBER]);
             }
         }
         int result = supply - buy;
+        StringBuilder reportBuilder = new StringBuilder();
+        reportBuilder.append(SUPPLY + ',').append(supply).append(System.lineSeparator())
+                .append(BUY + ',').append(buy).append(System.lineSeparator())
+                .append(RESULT + ',').append(result);
+        return reportBuilder.toString();
+    }
 
-        StringBuilder resultBuilder = new StringBuilder();
-        resultBuilder.append("supply,").append(supply).append(System.lineSeparator())
-                .append("buy,").append(buy).append(System.lineSeparator())
-                .append("result,").append(result);
+    private void writeResultToFile(String report, String toFileName) {
         File writeInfoTo = new File(toFileName);
         try {
-            FileWriter fileWriter = new FileWriter(writeInfoTo);
-            BufferedWriter writer = new BufferedWriter(fileWriter);
-            writer.write(resultBuilder.toString());
+            BufferedWriter writer = new BufferedWriter(new FileWriter(writeInfoTo));
+            writer.write(report);
             writer.flush();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can't write data to file " + writeInfoTo, e);
         }
     }
 }
