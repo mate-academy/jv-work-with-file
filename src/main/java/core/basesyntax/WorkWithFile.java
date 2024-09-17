@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Stack;
 
 public class WorkWithFile {
     private static final int OPERATION_TYPE = 0;
@@ -65,10 +66,16 @@ public class WorkWithFile {
     }
 
     private String infoConstruction(String[] result) {
-        return new StringBuilder(OPERATION_SUPPLY).append(COMMA)
-                .append(result[OPERATION_TYPE_SUPPLY]).append(System.lineSeparator())
-                .append(OPERATION_BUY).append(COMMA).append(result[OPERATION_TYPE_BUY])
-                .append(System.lineSeparator()).append(OPERATION_RESULT).append(COMMA)
-                .append(result[OPERATION_TYPE_RESULT]).append(System.lineSeparator()).toString();
+        Stack<String> stack = new Stack<>();
+        stack.push(OPERATION_RESULT + COMMA + result[2]);
+        stack.push(OPERATION_BUY + COMMA + result[1]);
+        stack.push(OPERATION_SUPPLY + COMMA + result[0]);
+
+        StringBuilder resultBuilder = new StringBuilder();
+        while (!stack.isEmpty()) {
+            resultBuilder.append(stack.pop()).append(System.lineSeparator());
+        }
+
+        return resultBuilder.toString();
     }
 }
