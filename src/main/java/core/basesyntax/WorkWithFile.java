@@ -11,6 +11,7 @@ public class WorkWithFile {
     private static final String BUY = "buy";
     private static final String SUPPLY = "supply";
     private static final String RESULT = "result";
+    private static final String COMMA = ",";
     private static final int ADDITIONAL_NUMBER = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
@@ -20,17 +21,15 @@ public class WorkWithFile {
     }
 
     private String readFromFile(String fromFileName) {
-        File getInfoFrom = new File(fromFileName);
         StringBuilder builder = new StringBuilder();
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(getInfoFrom));
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String value = reader.readLine();
             while (value != null) {
-                builder.append(value).append(",");
+                builder.append(value).append(COMMA);
                 value = reader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read data from the file " + getInfoFrom, e);
+            throw new RuntimeException("Can't read data from the file " + fromFileName, e);
         }
         return builder.toString();
     }
@@ -38,7 +37,7 @@ public class WorkWithFile {
     private String generateReport(String allData) {
         int buy = 0;
         int supply = 0;
-        String[] arrayWithData = allData.split(",");
+        String[] arrayWithData = allData.split(COMMA);
         for (int i = 0; i < arrayWithData.length; i++) {
             if (arrayWithData[i].equals(BUY)) {
                 buy += Integer.parseInt(arrayWithData[i + ADDITIONAL_NUMBER]);
@@ -48,16 +47,15 @@ public class WorkWithFile {
         }
         int result = supply - buy;
         StringBuilder reportBuilder = new StringBuilder();
-        reportBuilder.append(SUPPLY + ',').append(supply).append(System.lineSeparator())
-                .append(BUY + ',').append(buy).append(System.lineSeparator())
-                .append(RESULT + ',').append(result);
+        reportBuilder.append(SUPPLY).append(COMMA).append(supply).append(System.lineSeparator())
+                .append(BUY).append(COMMA).append(buy).append(System.lineSeparator())
+                .append(RESULT).append(COMMA).append(result);
         return reportBuilder.toString();
     }
 
     private void writeResultToFile(String report, String toFileName) {
         File writeInfoTo = new File(toFileName);
-        try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(writeInfoTo));
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(writeInfoTo))) {
             writer.write(report);
             writer.flush();
         } catch (IOException e) {
