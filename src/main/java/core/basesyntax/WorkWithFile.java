@@ -10,7 +10,7 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final int ONE = 1;
     private static final int ZERO = 0;
-    //ygihbl
+    get chan
 
     public String getStatistic(String fromFileName, String toFileName) {
         File inputFile = new File(fromFileName);
