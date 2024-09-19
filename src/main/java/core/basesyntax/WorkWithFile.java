@@ -9,6 +9,7 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final String SUPPLY_OPERATION_TYPE = "supply";
     private static final String BUY_OPERATION_TYPE = "buy";
+    private static final String RESULT_OF_REPORT = "result";
     private static final String COMMA = ",";
     private static final int ARRAY_INDEX_FOR_AMOUNT = 1;
     private static final int ARRAY_INDEX_FOR_TOTAL_SUPPLY_AMOUNT = 0;
@@ -18,14 +19,6 @@ public class WorkWithFile {
         int[] supplyAndBuyAmounts = readFromFile(fromFileName);
         String statistic = generateReport(supplyAndBuyAmounts);
         writeToFile(toFileName, statistic);
-    }
-
-    private void writeToFile(String toFileName, String statistic) {
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write(statistic);
-        } catch (IOException e) {
-            throw new RuntimeException("Can't write data to file " + toFileName, e);
-        }
     }
 
     private int[] readFromFile(String fromFileName) {
@@ -46,19 +39,31 @@ public class WorkWithFile {
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from file " + fromFileName, e);
-        } catch (NullPointerException e) {
-            throw new RuntimeException("Data not found in file " + fromFileName, e);
         }
         return new int[]{supplyAmount, buyAmount};
     }
 
     private String generateReport(int[] supplyAndBuyAmounts) {
-        return "supply,"
-                + supplyAndBuyAmounts[ARRAY_INDEX_FOR_TOTAL_SUPPLY_AMOUNT]
-                + System.lineSeparator()
-                + "buy," + supplyAndBuyAmounts[ARRAY_INDEX_FOR_TOTAL_BUY_AMOUNT]
-                + System.lineSeparator() + "result,"
-                + (supplyAndBuyAmounts[ARRAY_INDEX_FOR_TOTAL_SUPPLY_AMOUNT]
-                - supplyAndBuyAmounts[ARRAY_INDEX_FOR_TOTAL_BUY_AMOUNT]);
+        int finalAmount = supplyAndBuyAmounts[ARRAY_INDEX_FOR_TOTAL_SUPPLY_AMOUNT]
+                - supplyAndBuyAmounts[ARRAY_INDEX_FOR_TOTAL_BUY_AMOUNT];
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(SUPPLY_OPERATION_TYPE).append(COMMA)
+                        .append(supplyAndBuyAmounts[ARRAY_INDEX_FOR_TOTAL_SUPPLY_AMOUNT])
+                                .append(System.lineSeparator())
+                                        .append(BUY_OPERATION_TYPE).append(COMMA)
+                        .append(supplyAndBuyAmounts[ARRAY_INDEX_FOR_TOTAL_BUY_AMOUNT])
+                                .append(System.lineSeparator())
+                                        .append(RESULT_OF_REPORT).append(COMMA)
+                        .append((finalAmount));
+
+        return stringBuilder.toString();
+    }
+
+    private void writeToFile(String toFileName, String statistic) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
+            bufferedWriter.write(statistic);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write data to file " + toFileName, e);
+        }
     }
 }
