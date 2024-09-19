@@ -10,7 +10,7 @@ public class Main {
             String fromFileName = inputFiles[i];
             String newFile = outputFiles[i];
 
-            String result = workWithFile.getStatistic(fromFileName, newFile);
+            String result = workWithFile.writeStatistic(fromFileName, newFile);
             System.out.println(result);
         }
     }
