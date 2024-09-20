@@ -7,7 +7,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private int[] getStatistic(String fromFileName) {
+
+    public int[] readStatistic(String fromFileName) {
         int supply = 0;
         int buy = 0;
 
@@ -28,8 +29,8 @@ public class WorkWithFile {
         return new int[]{supply, buy};
     }
 
-    private StringBuilder countStatistic(String fromFileName) {
-        int[] stats = getStatistic(fromFileName);
+    public StringBuilder countStatistic(String fromFileName) {
+        int[] stats = readStatistic(fromFileName);
         int supply = stats[0];
         int buy = stats[1];
         int countedResult = supply - buy;
@@ -37,24 +38,27 @@ public class WorkWithFile {
         StringBuilder result = new StringBuilder();
         result.append("supply,");
         result.append(supply);
-        result.append("\n");
+        result.append("\r\n");
         result.append("buy,");
         result.append(buy);
-        result.append("\n");
+        result.append("\r\n");
         result.append("result,");
         result.append(countedResult);
 
         return result;
     }
 
-    public String writeStatistic(String fromFileName, String toFileName) {
+    public void writeStatistic(String fromFileName, String newFile) {
         StringBuilder result = countStatistic(fromFileName);
-
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(newFile))) {
             bufferedWriter.write(result.toString());
         } catch (IOException e) {
             throw new RuntimeException("Can't write file", e);
         }
-        return result.toString();
+    }
+
+    public String getStatistic(String fromFileName, String newFile) {
+        writeStatistic(fromFileName, newFile);
+        return countStatistic(fromFileName).toString();
     }
 }

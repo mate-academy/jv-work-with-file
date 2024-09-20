@@ -5,13 +5,11 @@ public class Main {
         String[] inputFiles = {"apple.csv", "banana.csv", "grape.csv", "orange.csv"};
         String[] outputFiles = {"newFile1.txt", "newFile2.txt", "newFile3.txt", "newFile4.txt"};
         WorkWithFile workWithFile = new WorkWithFile();
-
         for (int i = 0; i < inputFiles.length; i++) {
-            String fromFileName = inputFiles[i];
+            String fromFile = inputFiles[i];
             String newFile = outputFiles[i];
-
-            String result = workWithFile.writeStatistic(fromFileName, newFile);
-            System.out.println(result);
+            workWithFile.writeStatistic(fromFile, newFile);
+            System.out.println(workWithFile.countStatistic(inputFiles[i]).toString());
         }
     }
 }
