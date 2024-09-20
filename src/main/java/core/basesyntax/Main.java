@@ -16,7 +16,6 @@ public class Main {
         }
 
         for (int i = 0; i < inputFiles.length; i++) {
-            System.out.println("Statistics for " + inputFiles[i] + ":");
             System.out.println(results[i]);
         }
     }
