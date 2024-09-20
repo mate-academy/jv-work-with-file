@@ -14,5 +14,10 @@ public class Main {
             results[i] = workWithFile.getStatistic(fromFile, newFile);
             System.out.println(results[i]);
         }
+
+        for (int i = 0; i < inputFiles.length; i++) {
+            System.out.println("Statistics for " + inputFiles[i] + ":");
+            System.out.println(results[i]);
+        }
     }
 }
