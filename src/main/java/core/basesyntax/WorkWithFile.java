@@ -5,8 +5,11 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class WorkWithFile {
+    private final Map<String, String> statisticsCache = new HashMap<>();
 
     public int[] readStatistic(String fromFileName) {
         int supply = 0;
@@ -58,7 +61,13 @@ public class WorkWithFile {
     }
 
     public String getStatistic(String fromFileName, String newFile) {
+        if (statisticsCache.containsKey(fromFileName)) {
+            return statisticsCache.get(fromFileName);
+        }
+
         writeStatistic(fromFileName, newFile);
-        return countStatistic(fromFileName).toString();
+        String result = countStatistic(fromFileName).toString();
+        statisticsCache.put(fromFileName, result);
+        return result;
     }
 }
