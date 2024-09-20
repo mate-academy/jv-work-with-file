@@ -1,9 +1,13 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class WorkWithFile {
-    private int[] getStatistic(String fromFileName, String toFileName) {
+    private int[] getStatistic(String fromFileName) {
         int supply = 0;
         int buy = 0;
 
