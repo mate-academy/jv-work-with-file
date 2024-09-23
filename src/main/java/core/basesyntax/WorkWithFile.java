@@ -17,15 +17,6 @@ public class WorkWithFile {
     private static final int AMOUNT_INDEX = 1;
     private final Map<String, String> statisticsCache = new HashMap<>();
 
-    public void writeStatistic(String fromFileName, String newFile) {
-        String result = countStatistic(fromFileName);
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(newFile))) {
-            bufferedWriter.write(result);
-        } catch (IOException e) {
-            throw new RuntimeException("Can't write file", e);
-        }
-    }
-
     public String getStatistic(String fromFileName, String newFile) {
         if (statisticsCache.containsKey(fromFileName)) {
             return statisticsCache.get(fromFileName);
@@ -35,6 +26,15 @@ public class WorkWithFile {
         String result = countStatistic(fromFileName);
         statisticsCache.put(fromFileName, result);
         return result;
+    }
+
+    private void writeStatistic(String fromFileName, String newFile) {
+        String result = countStatistic(fromFileName);
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(newFile))) {
+            bufferedWriter.write(result);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write file", e);
+        }
     }
 
     private int[] readStatistic(String fromFileName) {

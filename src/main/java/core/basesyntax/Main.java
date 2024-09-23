@@ -11,7 +11,6 @@ public class Main {
         for (int i = 0; i < inputFiles.length; i++) {
             String fromFile = inputFiles[i];
             String newFile = outputFiles[i];
-            workWithFile.writeStatistic(fromFile, newFile);
             results[i] = workWithFile.getStatistic(fromFile, newFile);
         }
 
