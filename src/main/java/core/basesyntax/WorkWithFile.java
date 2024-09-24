@@ -33,7 +33,7 @@ public class WorkWithFile {
                 .append(System.lineSeparator())
                 .append(BUY).append(COMMA).append(buyAmount)
                 .append(System.lineSeparator())
-                .append(RESULT).append(COMMA).append(supplyAmount - buyAmount);
+                .append(RESULT).append(COMMA).append(supplyAmount - buyAmount).toString();
     }
 
     private void readFromFile(File fromFile) {
