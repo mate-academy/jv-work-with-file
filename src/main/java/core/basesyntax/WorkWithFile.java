@@ -19,7 +19,9 @@ public class WorkWithFile {
         supplyAmount = 0;
         buyAmount = 0;
 
-        calculateReport(fromFile, stringBuilder);
+        restul = readFromFile(fromFile);
+        report = calculateReport(fromFile, stringBuilder);
+        writeIntoFile(toFile, report);
 
         writeIntoFile(toFile, stringBuilder);
     }
