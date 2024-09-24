@@ -18,8 +18,6 @@ public class WorkWithFile {
 
         supplyAmount = 0;
         buyAmount = 0;
-        File fromFile = new File(fromFileName);
-        final File toFile = new File(toFileName);
 
         calculateReport(fromFile, stringBuilder);
 
