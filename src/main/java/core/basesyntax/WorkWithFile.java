@@ -28,7 +28,6 @@ public class WorkWithFile {
 
     private void calculateReport(File fromFile, StringBuilder stringBuilder) {
 
-        readFromFile(fromFile);
 
         stringBuilder.append(SUPPLY).append(COMMA).append(supplyAmount)
                 .append(System.lineSeparator())
