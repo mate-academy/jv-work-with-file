@@ -29,7 +29,7 @@ public class WorkWithFile {
     private String calculateReport(File fromFile, StringBuilder stringBuilder) {
 
 
-        stringBuilder.append(SUPPLY).append(COMMA).append(supplyAmount)
+        return stringBuilder.append(SUPPLY).append(COMMA).append(supplyAmount)
                 .append(System.lineSeparator())
                 .append(BUY).append(COMMA).append(buyAmount)
                 .append(System.lineSeparator())
