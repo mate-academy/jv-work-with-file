@@ -22,9 +22,10 @@ public class WorkWithFile {
             return statisticsCache.get(fromFileName);
         }
 
-        writeStatistic(fromFileName, newFile);
+        readStatistic(fromFileName);
         String result = countStatistic(fromFileName);
         statisticsCache.put(fromFileName, result);
+        writeStatistic(fromFileName, newFile);
         return result;
     }
 
