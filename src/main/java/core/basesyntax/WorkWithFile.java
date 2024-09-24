@@ -26,7 +26,7 @@ public class WorkWithFile {
         writeIntoFile(toFile, stringBuilder);
     }
 
-    private void calculateReport(File fromFile, StringBuilder stringBuilder) {
+    private String calculateReport(File fromFile, StringBuilder stringBuilder) {
 
 
         stringBuilder.append(SUPPLY).append(COMMA).append(supplyAmount)
