@@ -18,7 +18,6 @@ public class WorkWithFile {
         int[] stats = readStatistic(fromFileName);
         String result = countStatistic(fromFileName, stats);
         writeStatistic(result, newFile);
-        System.out.println(result);
     }
 
     private int[] readStatistic(String fromFileName) {
