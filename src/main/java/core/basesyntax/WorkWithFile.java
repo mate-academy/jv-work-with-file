@@ -5,8 +5,6 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 public class WorkWithFile {
     private static final String BUY_CONSTANT = "buy";
@@ -15,27 +13,12 @@ public class WorkWithFile {
     private static final String SUPPLY_CONSTANT = "supply";
     private static final int OPERATION_INDEX = 0;
     private static final int AMOUNT_INDEX = 1;
-    private final Map<String, String> statisticsCache = new HashMap<>();
 
     public String getStatistic(String fromFileName, String newFile) {
-        if (statisticsCache.containsKey(fromFileName)) {
-            return statisticsCache.get(fromFileName);
-        }
-
-        readStatistic(fromFileName);
-        String result = countStatistic(fromFileName);
-        statisticsCache.put(fromFileName, result);
-        writeStatistic(fromFileName, newFile);
+        int[] stats = readStatistic(fromFileName);
+        String result = countStatistic(fromFileName, stats);
+        writeStatistic(fromFileName, newFile, stats);
         return result;
-    }
-
-    private void writeStatistic(String fromFileName, String newFile) {
-        String result = countStatistic(fromFileName);
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(newFile))) {
-            bufferedWriter.write(result);
-        } catch (IOException e) {
-            throw new RuntimeException("Can't write file", e);
-        }
     }
 
     private int[] readStatistic(String fromFileName) {
@@ -59,8 +42,8 @@ public class WorkWithFile {
         return new int[]{supply, buy};
     }
 
-    private String countStatistic(String fromFileName) {
-        int[] stats = readStatistic(fromFileName);
+    private String countStatistic(String fromFileName, int[] stats) {
+        //int[] stats = readStatistic(fromFileName);
         int supply = stats[OPERATION_INDEX];
         int buy = stats[AMOUNT_INDEX];
         int countedResult = supply - buy;
@@ -70,5 +53,14 @@ public class WorkWithFile {
                 .append(System.lineSeparator()).append(BUY_CONSTANT).append(COMMA)
                 .append(buy).append(System.lineSeparator()).append(RESULT_CONSTANT)
                 .append(COMMA).append(countedResult).toString();
+    }
+
+    private void writeStatistic(String fromFileName, String newFile, int[] stats) {
+        String result = countStatistic(fromFileName, stats);
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(newFile))) {
+            bufferedWriter.write(result);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write file", e);
+        }
     }
 }
