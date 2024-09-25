@@ -14,11 +14,11 @@ public class WorkWithFile {
     private static final int OPERATION_INDEX = 0;
     private static final int AMOUNT_INDEX = 1;
 
-    public String getStatistic(String fromFileName, String newFile) {
+    public void getStatistic(String fromFileName, String newFile) {
         int[] stats = readStatistic(fromFileName);
         String result = countStatistic(fromFileName, stats);
-        writeStatistic(fromFileName, newFile, stats);
-        return result;
+        writeStatistic(result, newFile);
+        System.out.println(result);
     }
 
     private int[] readStatistic(String fromFileName) {
@@ -43,7 +43,6 @@ public class WorkWithFile {
     }
 
     private String countStatistic(String fromFileName, int[] stats) {
-        //int[] stats = readStatistic(fromFileName);
         int supply = stats[OPERATION_INDEX];
         int buy = stats[AMOUNT_INDEX];
         int countedResult = supply - buy;
@@ -55,8 +54,7 @@ public class WorkWithFile {
                 .append(COMMA).append(countedResult).toString();
     }
 
-    private void writeStatistic(String fromFileName, String newFile, int[] stats) {
-        String result = countStatistic(fromFileName, stats);
+    private void writeStatistic(String result, String newFile) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(newFile))) {
             bufferedWriter.write(result);
         } catch (IOException e) {
