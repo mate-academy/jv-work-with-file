@@ -10,21 +10,16 @@ public class WorkWithFile {
     private static final String DELIMITER = ",";
     private static final String BUY = "buy";
     private static final String SUPPLY = "supply";
-    private int amountBuy = 0;
-    private int amountSupply = 0;
-    private int result;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        amountBuy = 0;
-        amountSupply = 0;
-        result = 0;
-
-        readFile(fromFileName);
-        calculateResult();
-        writeIntoFile(toFileName);
+        int[] results = readFile(fromFileName);
+        writeIntoFile(toFileName, results);
     }
 
-    public void readFile(String fromFileName) {
+    private int[] readFile(String fromFileName) {
+        int amountBuy = 0;
+        int amountSupply = 0;
+
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -32,30 +27,38 @@ public class WorkWithFile {
                 String operationType = parts[0].trim();
                 int amount = Integer.parseInt(parts[1].trim());
 
-                if (operationType.equals(BUY)) {
-                    amountBuy += amount;
-                } else if (operationType.equals(SUPPLY)) {
-                    amountSupply += amount;
-                }
+                int[] updatedAmounts = processOperation(operationType, amount, amountBuy, amountSupply);
+                amountBuy = updatedAmounts[0];
+                amountSupply = updatedAmounts[1];
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read the file", e);
+            throw new RuntimeException("Can't read the file: " + fromFileName, e);
         }
+
+        return calculateResult(amountSupply, amountBuy);
     }
 
-    public void calculateResult() {
-        result = amountSupply - amountBuy;
+    private int[] processOperation(String operationType, int amount, int amountBuy, int amountSupply) {
+        if (operationType.equals(BUY)) {
+            amountBuy += amount;
+        } else if (operationType.equals(SUPPLY)) {
+            amountSupply += amount;
+        }
+        return new int[]{amountBuy, amountSupply};
     }
 
-    private void writeIntoFile(String toFileName) {
+    private int[] calculateResult(int amountSupply, int amountBuy) {
+        int result = amountSupply - amountBuy;
+        return new int[]{amountSupply, amountBuy, result};
+    }
+
+    private void writeIntoFile(String toFileName, int[] results) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write(new StringBuilder().append("supply,").append(amountSupply)
-                    .append(System.lineSeparator()).toString());
-            bufferedWriter.write(new StringBuilder().append("buy,").append(amountBuy)
-                    .append(System.lineSeparator()).toString());
-            bufferedWriter.write(new StringBuilder().append("result,").append(result).toString());
+            bufferedWriter.write("supply," + results[0] + System.lineSeparator());
+            bufferedWriter.write("buy," + results[1] + System.lineSeparator());
+            bufferedWriter.write("result," + results[2]);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write to the file", e);
+            throw new RuntimeException("Can't write to the file: " + toFileName, e);
         }
     }
 }
