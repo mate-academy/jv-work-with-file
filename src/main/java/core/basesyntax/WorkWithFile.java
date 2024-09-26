@@ -13,7 +13,7 @@ public class WorkWithFile {
     private static final String RESULT = "result";
     private static final int INDEX_AMOUNT_SUPPLY = 0;
     private static final int INDEX_AMOUNT_BUY = 1;
-    private static final int INDEX_AMOUNT_RESULT= 2;
+    private static final int INDEX_AMOUNT_RESULT = 2;
 
     public void getStatistic(String fromFileName, String toFileName) {
         int[] results = readFile(fromFileName);
@@ -70,10 +70,18 @@ public class WorkWithFile {
 
     private String prepareReport(int[] results) {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(SUPPLY).append(DELIMITER).append(results[INDEX_AMOUNT_SUPPLY]).append(System.lineSeparator());
-        stringBuilder.append(BUY).append(DELIMITER).append(results[INDEX_AMOUNT_BUY]).append(System.lineSeparator());
-        stringBuilder.append(RESULT).append(DELIMITER).append(results[INDEX_AMOUNT_RESULT]).append(System.lineSeparator());
+        stringBuilder.append(SUPPLY)
+                .append(DELIMITER)
+                .append(results[INDEX_AMOUNT_SUPPLY])
+                .append(System.lineSeparator());
+        stringBuilder.append(BUY)
+                .append(DELIMITER)
+                .append(results[INDEX_AMOUNT_BUY])
+                .append(System.lineSeparator());
+        stringBuilder.append(RESULT)
+                .append(DELIMITER)
+                .append(results[INDEX_AMOUNT_RESULT])
+                .append(System.lineSeparator());
         return stringBuilder.toString();
     }
-
 }
