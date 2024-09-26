@@ -27,7 +27,8 @@ public class WorkWithFile {
                 String operationType = parts[0].trim();
                 int amount = Integer.parseInt(parts[1].trim());
 
-                int[] updatedAmounts = processOperation(operationType, amount, amountBuy, amountSupply);
+                int[] updatedAmounts = processOperation(operationType,
+                        amount, amountBuy, amountSupply);
                 amountBuy = updatedAmounts[0];
                 amountSupply = updatedAmounts[1];
             }
@@ -38,7 +39,8 @@ public class WorkWithFile {
         return calculateResult(amountSupply, amountBuy);
     }
 
-    private int[] processOperation(String operationType, int amount, int amountBuy, int amountSupply) {
+    private int[] processOperation(String operationType,
+                                   int amount, int amountBuy, int amountSupply) {
         if (operationType.equals(BUY)) {
             amountBuy += amount;
         } else if (operationType.equals(SUPPLY)) {
