@@ -16,21 +16,12 @@ public class WorkWithFile {
     private static final int INDEX_OF_BUY_AMOUNT = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int supplyAmount = 0;
-        int buyAmount = 0;
-
         int[] operationsAmounts = readAmountsOfOperations(fromFileName);
-        supplyAmount = operationsAmounts[INDEX_OF_SUPPLY_AMOUNT];
-        buyAmount = operationsAmounts[INDEX_OF_BUY_AMOUNT];
+        int supplyAmount = operationsAmounts[INDEX_OF_SUPPLY_AMOUNT];
+        int buyAmount = operationsAmounts[INDEX_OF_BUY_AMOUNT];
 
         String report = createReportMessage(supplyAmount, buyAmount);
-        File fileToWrite = new File(toFileName);
-
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileToWrite))) {
-            bufferedWriter.write(report);
-        } catch (IOException e) {
-            throw new RuntimeException("Can't write to file", e);
-        }
+        writeReportToFile(report, toFileName);
     }
 
     private static int[] readAmountsOfOperations(String fromFileName) {
@@ -58,10 +49,24 @@ public class WorkWithFile {
         return new int[]{supplyAmount, buyAmount};
     }
 
-    private String createReportMessage(int supplyAmount, int buyAmount) {
-        int resultAmount = supplyAmount - buyAmount;
-        return NAME_OF_OPERATION_SUPPLY + "," + supplyAmount + System.lineSeparator()
-                + NAME_OF_OPERATION_BUY + "," + buyAmount + System.lineSeparator()
-                + "result," + resultAmount + System.lineSeparator();
+    private static String createReportMessage(int supplyAmount, int buyAmount) {
+        final int resultAmount = supplyAmount - buyAmount;
+        StringBuilder stringBuilderResult = new StringBuilder();
+        stringBuilderResult.append(NAME_OF_OPERATION_SUPPLY).append(",")
+                .append(supplyAmount).append(System.lineSeparator())
+                .append(NAME_OF_OPERATION_BUY).append(",")
+                .append(buyAmount).append(System.lineSeparator())
+                .append("result,").append(resultAmount)
+                .append(System.lineSeparator());
+        return stringBuilderResult.toString();
+    }
+
+    private static void writeReportToFile(String report, String toFileName) {
+        File fileToWrite = new File(toFileName);
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileToWrite))) {
+            bufferedWriter.write(report);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write to file", e);
+        }
     }
 }
