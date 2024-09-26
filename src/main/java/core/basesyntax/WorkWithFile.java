@@ -11,48 +11,48 @@ import java.util.List;
 public class WorkWithFile {
     private static final String OPERATION_TYPE_BUY = "buy";
     private static final String OPERATION_TYPE_SUPPLY = "supply";
+    private static final String COMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        List<String> records = new ArrayList<>();
         StringBuilder report = new StringBuilder();
-        readFromFile(fromFileName, records, report);
-        writeToFile(toFileName, report);
-    }
-
-    private static void readFromFile(String fromFileName,
-                                     List<String> stringFromFile, StringBuilder report) {
+        List<String> stringFromFile = new ArrayList<>();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String read = bufferedReader.readLine();
             while (read != null) {
                 stringFromFile.add(read);
                 read = bufferedReader.readLine();
             }
-            int buy = 0;
-            int supply = 0;
-
-            for (String s : stringFromFile) {
-                String[] split = s.split(",");
-                int digit = Integer.parseInt(split[1]);
-                if (split[0].equals(OPERATION_TYPE_BUY)) {
-                    buy += digit;
-                } else if (split[0].equals(OPERATION_TYPE_SUPPLY)) {
-                    supply += digit;
-                }
-            }
-
-            int result = supply - buy;
-            report.append("supply,")
-                    .append(supply)
-                    .append(System.lineSeparator())
-                    .append("buy,")
-                    .append(buy)
-                    .append(System.lineSeparator())
-                    .append("result,")
-                    .append(result);
+            buildReport(stringFromFile, report);
 
         } catch (IOException e) {
             throw new RuntimeException("Failed to read from file: " + fromFileName, e);
         }
+        writeToFile(toFileName, report);
+    }
+
+    private static void buildReport(List<String> stringFromFile, StringBuilder report) {
+        int buy = 0;
+        int supply = 0;
+
+        for (String record : stringFromFile) {
+            String[] recordParts = record.split(COMA);
+            int digit = Integer.parseInt(recordParts[1]);
+            if (recordParts[0].equals(OPERATION_TYPE_BUY)) {
+                buy += digit;
+            } else if (recordParts[0].equals(OPERATION_TYPE_SUPPLY)) {
+                supply += digit;
+            }
+        }
+
+        int result = supply - buy;
+        report.append("supply,")
+                .append(supply)
+                .append(System.lineSeparator())
+                .append("buy,")
+                .append(buy)
+                .append(System.lineSeparator())
+                .append("result,")
+                .append(result);
     }
 
     private static void writeToFile(String toFileName, StringBuilder report) {
