@@ -10,8 +10,10 @@ public class WorkWithFile {
     private static final String DELIMITER = ",";
     private static final String BUY = "buy";
     private static final String SUPPLY = "supply";
-    private static final int INDEX_AMOUNT_BUY = 0;
-    private static final int INDEX_AMOUNT_SUPPLY = 1;
+    private static final String RESULT = "result";
+    private static final int INDEX_AMOUNT_SUPPLY = 0;
+    private static final int INDEX_AMOUNT_BUY = 1;
+    private static final int INDEX_AMOUNT_RESULT= 2;
 
     public void getStatistic(String fromFileName, String toFileName) {
         int[] results = readFile(fromFileName);
@@ -48,7 +50,7 @@ public class WorkWithFile {
         } else if (operationType.equals(SUPPLY)) {
             amountSupply += amount;
         }
-        return new int[]{amountBuy, amountSupply};
+        return new int[]{amountSupply, amountBuy};
     }
 
     private int[] calculateResult(int amountSupply, int amountBuy) {
@@ -68,9 +70,9 @@ public class WorkWithFile {
 
     private String prepareReport(int[] results) {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("supply,").append(results[0]).append(System.lineSeparator());
-        stringBuilder.append("buy,").append(results[1]).append(System.lineSeparator());
-        stringBuilder.append("result,").append(results[2]).append(System.lineSeparator());
+        stringBuilder.append(SUPPLY).append(DELIMITER).append(results[INDEX_AMOUNT_SUPPLY]).append(System.lineSeparator());
+        stringBuilder.append(BUY).append(DELIMITER).append(results[INDEX_AMOUNT_BUY]).append(System.lineSeparator());
+        stringBuilder.append(RESULT).append(DELIMITER).append(results[INDEX_AMOUNT_RESULT]).append(System.lineSeparator());
         return stringBuilder.toString();
     }
 
