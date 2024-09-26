@@ -8,16 +8,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private File file;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        writeDataToFile(readAndSort(fromFileName), toFileName);
+        writeDataToFile(calculateStatistics(fromFileName), toFileName);
 
     }
 
-    public int [] readAndSort(String fromFileName) {
-        file = new File(fromFileName);
-        String [] temp = new String[2];
+    public int [] calculateStatistics(String fromFileName) {
+        File file = new File(fromFileName);
         int [] result = new int[3];
 
         try {
@@ -25,8 +23,8 @@ public class WorkWithFile {
             String splitInput = reader.readLine();
 
             while (splitInput != null) {
+                String [] temp = new String[2];
                 temp = splitInput.split(",");
-                System.out.println(splitInput);
                 splitInput = reader.readLine();
 
                 switch (temp[0]) {
@@ -40,21 +38,20 @@ public class WorkWithFile {
             }
             result[2] = result[0] - result[1];
         } catch (IOException e) {
-            throw new RuntimeException("Can`t found file", e);
+            throw new RuntimeException("Can't read data from the file", e);
         }
         return result;
     }
 
     public void writeDataToFile(int [] inputData, String destination) {
-        file = new File(destination);
-        FileWriter cleaner;
-        try {
-
-            BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-            writer.write("supply," + inputData[0] + System.lineSeparator()
-                    + "buy," + inputData[1] + System.lineSeparator()
-                    + "result," + inputData[2] + System.lineSeparator());
-            writer.close();
+        File file = new File(destination);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            StringBuilder builder = new StringBuilder("supply,");
+            builder.append(inputData[0]).append(System.lineSeparator())
+                            .append("buy,").append(inputData[1])
+                            .append(System.lineSeparator()).append("result,")
+                            .append(inputData[2]).append(System.lineSeparator());
+            writer.write(builder.toString());
         } catch (IOException e) {
             throw new RuntimeException("Can`t find current file", e);
         }
