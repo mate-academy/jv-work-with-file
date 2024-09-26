@@ -10,6 +10,8 @@ public class WorkWithFile {
     private static final String DELIMITER = ",";
     private static final String BUY = "buy";
     private static final String SUPPLY = "supply";
+    private static final int INDEX_AMOUNT_BUY = 0;
+    private static final int INDEX_AMOUNT_SUPPLY = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         int[] results = readFile(fromFileName);
@@ -29,8 +31,8 @@ public class WorkWithFile {
 
                 int[] updatedAmounts = processOperation(operationType,
                         amount, amountBuy, amountSupply);
-                amountBuy = updatedAmounts[0];
-                amountSupply = updatedAmounts[1];
+                amountBuy = updatedAmounts[INDEX_AMOUNT_BUY];
+                amountSupply = updatedAmounts[INDEX_AMOUNT_SUPPLY];
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read the file: " + fromFileName, e);
@@ -55,12 +57,21 @@ public class WorkWithFile {
     }
 
     private void writeIntoFile(String toFileName, int[] results) {
+        String report = prepareReport(results);
+
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write("supply," + results[0] + System.lineSeparator());
-            bufferedWriter.write("buy," + results[1] + System.lineSeparator());
-            bufferedWriter.write("result," + results[2]);
+            bufferedWriter.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Can't write to the file: " + toFileName, e);
         }
     }
+
+    private String prepareReport(int[] results) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("supply,").append(results[0]).append(System.lineSeparator());
+        stringBuilder.append("buy,").append(results[1]).append(System.lineSeparator());
+        stringBuilder.append("result,").append(results[2]).append(System.lineSeparator());
+        return stringBuilder.toString();
+    }
+
 }
