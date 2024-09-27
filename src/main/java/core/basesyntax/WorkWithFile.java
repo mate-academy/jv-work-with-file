@@ -2,10 +2,8 @@ package core.basesyntax;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 import java.util.List;
 
 public class WorkWithFile {
@@ -41,9 +39,7 @@ public class WorkWithFile {
 
     public void writeStringToFile(String fileName, String... texts) {
         try (BufferedWriter bufferedWriter = Files.newBufferedWriter(
-                Path.of(fileName),
-                StandardCharsets.UTF_8,
-                StandardOpenOption.APPEND)
+                Path.of(fileName))
         ) {
             for (String text : texts) {
                 bufferedWriter.write(text);
