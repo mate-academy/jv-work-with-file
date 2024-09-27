@@ -36,7 +36,7 @@ public class WorkWithFile {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write(stringBuilder.toString());
         } catch (IOException e) {
-            throw new RuntimeException("Can't run this file", e);
+            throw new RuntimeException("Cannot run this file", e);
         }
     }
 }
