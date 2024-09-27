@@ -4,12 +4,12 @@ public class DataRecord {
     private int supply;
     private int buy;
 
-    public String getStringSupply() {
-        return String.valueOf(supply);
+    public int getSupply() {
+        return supply;
     }
 
-    public String getStringBuy() {
-        return String.valueOf(buy);
+    public int getBuy() {
+        return buy;
     }
 
     public void addSupply(int amount) {
