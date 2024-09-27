@@ -16,6 +16,12 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         StringBuilder report = new StringBuilder();
         List<String> stringFromFile = new ArrayList<>();
+        readFromFile(fromFileName, stringFromFile, report);
+        writeToFile(toFileName, report);
+    }
+
+    private void readFromFile(String fromFileName, List<String> stringFromFile,
+                              StringBuilder report) {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String read = bufferedReader.readLine();
             while (read != null) {
@@ -27,10 +33,9 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Failed to read from file: " + fromFileName, e);
         }
-        writeToFile(toFileName, report);
     }
 
-    private static void buildReport(List<String> stringFromFile, StringBuilder report) {
+    private void buildReport(List<String> stringFromFile, StringBuilder report) {
         int buy = 0;
         int supply = 0;
 
@@ -45,17 +50,19 @@ public class WorkWithFile {
         }
 
         int result = supply - buy;
-        report.append("supply,")
+        report.append(OPERATION_TYPE_SUPPLY)
+                .append(COMA)
                 .append(supply)
                 .append(System.lineSeparator())
-                .append("buy,")
+                .append(OPERATION_TYPE_BUY)
+                .append(COMA)
                 .append(buy)
                 .append(System.lineSeparator())
                 .append("result,")
                 .append(result);
     }
 
-    private static void writeToFile(String toFileName, StringBuilder report) {
+    private void writeToFile(String toFileName, StringBuilder report) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(report.toString());
         } catch (IOException e) {
