@@ -7,8 +7,18 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String SUPPLY_CONS = "supply";
+    private static final String BUY_CONS = "buy";
+    private static final String RESULT_CONS = "result";
+
     public void getStatistic(String fromFileName, String toFileName) {
-        StringBuilder stringBuilder = new StringBuilder();
+        int[] totals = readFile(fromFileName);
+        int totalSupply = totals[0];
+        int totalBuy = totals[1];
+        writeToFile(toFileName, totalSupply, totalBuy);
+    }
+
+    public int[] readFile(String fromFileName) {
         int totalSupply = 0;
         int totalBuy = 0;
 
@@ -18,9 +28,9 @@ public class WorkWithFile {
                 String[] values = line.split(",");
                 String type = values[0];
                 int amount = Integer.parseInt(values[1]);
-                if (type.equals("supply")) {
+                if (type.equals(SUPPLY_CONS)) {
                     totalSupply += amount;
-                } else if (type.equals("buy")) {
+                } else if (type.equals(BUY_CONS)) {
                     totalBuy += amount;
                 }
             }
@@ -28,15 +38,23 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read from this file", e);
         }
+        return new int[]{totalSupply, totalBuy};
+    }
+
+    public void writeToFile(String toFileName, int totalSupply, int totalBuy) {
+        StringBuilder stringBuilder = new StringBuilder();
         int result = totalSupply - totalBuy;
-        stringBuilder.append("supply,").append(totalSupply).append(System.lineSeparator());
-        stringBuilder.append("buy,").append(totalBuy).append(System.lineSeparator());
-        stringBuilder.append("result,").append(result);
+        stringBuilder.append(SUPPLY_CONS).append(",")
+                .append(totalSupply).append(System.lineSeparator());
+        stringBuilder.append(BUY_CONS).append(",")
+                .append(totalBuy).append(System.lineSeparator());
+        stringBuilder.append(RESULT_CONS).append(",").append(result);
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write(stringBuilder.toString());
         } catch (IOException e) {
-            throw new RuntimeException("Cannot run this file", e);
+            throw new RuntimeException("Cannot write to the file", e);
         }
     }
 }
+
