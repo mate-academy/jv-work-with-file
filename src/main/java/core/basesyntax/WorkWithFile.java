@@ -14,9 +14,11 @@ public class WorkWithFile {
 
     }
 
-    public int [] calculateStatistics(String fromFileName) {
+    public String calculateStatistics(String fromFileName) {
         File file = new File(fromFileName);
-        int [] result = new int[3];
+        int supply = 0;
+        int buy = 0;
+        int result = 0;
 
         try {
             BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -29,22 +31,23 @@ public class WorkWithFile {
 
                 switch (temp[0]) {
                     case "supply":
-                        result[0] += Integer.parseInt(temp[1]);
+                        supply += Integer.parseInt(temp[1]);
                         break;
                     default:
-                        result[1] += Integer.parseInt(temp[1]);
+                        buy += Integer.parseInt(temp[1]);
                         break;
                 }
             }
-            result[2] = result[0] - result[1];
+            result = supply - buy;
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from the file", e);
         }
-        return result;
+        return supply + " " + buy + " " + result;
     }
 
-    public void writeDataToFile(int [] inputData, String destination) {
+    public void writeDataToFile(String quantity, String destination) {
         File file = new File(destination);
+        String [] inputData = quantity.split(" ");
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             StringBuilder builder = new StringBuilder("supply,");
             builder.append(inputData[0]).append(System.lineSeparator())
