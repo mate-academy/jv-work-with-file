@@ -14,11 +14,9 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         File fromFile = new File(fromFileName);
-        File toFile = new File(toFileName);
         int supplySum = 0;
         int buySum = 0;
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFile));
-                BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFile))) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFile))) {
             String value = bufferedReader.readLine();
             while (value != null) {
                 String[] words = value.split(",");
@@ -29,15 +27,25 @@ public class WorkWithFile {
                 }
                 value = bufferedReader.readLine();
             }
-            int result = (supplySum - buySum);
-
-            StringBuilder reportBuilder = new StringBuilder();
-            reportBuilder.append("supply,").append(supplySum).append(System.lineSeparator())
-                    .append("buy,").append(buySum).append(System.lineSeparator())
-                    .append("result,").append(result).append(System.lineSeparator());
-            bufferedWriter.write(reportBuilder.toString());
         } catch (IOException e) {
-            throw new RuntimeException("Can't rewrite data", e);
+            throw new RuntimeException("Error processing files: can't read file", e);
         }
+
+        File toFile = new File(toFileName);
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFile))) {
+            bufferedWriter.write(getReport(supplySum, buySum));
+        } catch (IOException e) {
+            throw new RuntimeException("Error processing files: can't write in file", e);
+        }
+
+    }
+
+    private String getReport(int supply, int buy) {
+        int result = (supply - buy);
+        StringBuilder reportBuilder = new StringBuilder();
+        reportBuilder.append("supply,").append(supply).append(System.lineSeparator())
+                .append("buy,").append(buy).append(System.lineSeparator())
+                .append("result,").append(result).append(System.lineSeparator());
+        return reportBuilder.toString();
     }
 }
