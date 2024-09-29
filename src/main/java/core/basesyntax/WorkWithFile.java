@@ -17,8 +17,8 @@ public class WorkWithFile {
         File toFile = new File(toFileName);
         int supplySum = 0;
         int buySum = 0;
-        int result = 0;
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFile))) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFile));
+             BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFile))) {
             String value = bufferedReader.readLine();
             while (value != null) {
                 String[] words = value.split(",");
@@ -29,16 +29,15 @@ public class WorkWithFile {
                 }
                 value = bufferedReader.readLine();
             }
-            result += (supplySum - buySum);
+            int result = (supplySum - buySum);
 
-            String report = "supply," + supplySum + System.lineSeparator()
-                    + "buy," + buySum + System.lineSeparator()
-                    + "result," + result + System.lineSeparator();
-            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFile));
-            bufferedWriter.write(report);
-            bufferedWriter.close();
+            StringBuilder reportBuilder = new StringBuilder();
+            reportBuilder.append("supply,").append(supplySum).append(System.lineSeparator())
+                    .append("buy,").append(buySum).append(System.lineSeparator())
+                    .append("result,").append(result).append(System.lineSeparator());
+            bufferedWriter.write(reportBuilder.toString());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can't rewrite data" ,e);
         }
     }
 }
