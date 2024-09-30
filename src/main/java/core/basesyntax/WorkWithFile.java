@@ -2,7 +2,6 @@ package core.basesyntax;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -18,10 +17,10 @@ public class WorkWithFile {
     public static final int VALUE_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        writeFile(composeReport(calculateOperations(readFile(fromFileName))), toFileName);
+        writeFile(composeReport(calculateOperations(readLinesFromFile(fromFileName))), toFileName);
     }
 
-    public String[] readFile(String filename) {
+    public String[] readLinesFromFile(String filename) {
         StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(filename))) {
             String string = bufferedReader.readLine();
@@ -37,10 +36,10 @@ public class WorkWithFile {
         return String.valueOf(stringBuilder).split(System.lineSeparator());
     }
 
-    public Table calculateOperations(String[] operations) {
+    public Table calculateOperations(String[] lines) {
         int buy = 0;
         int supply = 0;
-        for (String operation : operations) {
+        for (String operation : lines) {
             String[] operationData = operation.split(OPERATION_VALUE_DELIMITER);
             switch (operationData[OPERATION_INDEX]) {
                 case BUY_OPERATION_TITLE: {
@@ -69,16 +68,15 @@ public class WorkWithFile {
                 .append(System.lineSeparator())
                 .append(RESULT_OPERATION_TITLE)
                 .append(OPERATION_VALUE_DELIMITER)
-                .append(table.getResult());
+                .append(table.calculateResult());
         return String.valueOf(report);
     }
 
-    public File writeFile(String report, String filename) {
+    public void writeFile(String report, String filename) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(filename))) {
             bufferedWriter.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file " + filename, e);
         }
-        return new File(filename);
     }
 }
