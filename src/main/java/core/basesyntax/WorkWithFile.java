@@ -57,7 +57,7 @@ public class WorkWithFile {
         }
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            writer.write(String.valueOf(results));
+            writer.write(results.toString());
         } catch (IOException e) {
             throw new RuntimeException("cannot write to file", e);
         }
