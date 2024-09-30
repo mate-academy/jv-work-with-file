@@ -1,10 +1,6 @@
 package core.basesyntax;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.nio.file.Files;
+import java.io.*;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
@@ -12,16 +8,16 @@ public class WorkWithFile {
         String importantSymbol = ",";
         int operationTypeIndex = 0;
         int amountIndex = 1;
-        int arraysSize = 3;
+        int arraysMaxSize = 3;
         int resultIndex = 2;
-        String[] type = new String[arraysSize];
-        int[] amount = new int[arraysSize];
+        String[] type = new String[arraysMaxSize];
+        int[] amount = new int[arraysMaxSize];
 
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String value = reader.readLine();
             while (value != null) {
                 String[] values = value.split(importantSymbol);
-                for (int i = 0; i < arraysSize; i++) {
+                for (int i = 0; i < arraysMaxSize; i++) {
                     if (type[i] == null && values[operationTypeIndex] != null) {
                         type[i] = values[operationTypeIndex];
                         amount[i] += Integer.parseInt(values[amountIndex]);
@@ -33,14 +29,15 @@ public class WorkWithFile {
                     }
                 }
                 value = reader.readLine();
-                type[resultIndex] = "result";
-                amount[resultIndex] = Math.abs(amount[resultIndex - 1] - amount[resultIndex - 2]);
             }
         } catch (IOException e) {
             throw new RuntimeException("cannot read from file", e);
         }
 
-        for (int i = 0; i < arraysSize - 1; i++) {
+        type[resultIndex] = "result";
+        amount[resultIndex] = Math.abs(amount[1] - amount[0]);
+
+        for (int i = 0; i < arraysMaxSize - 1; i++) {
             if (amount[i] < amount[i + 1]) {
                 int amountArg = amount[i];
                 amount[i] = amount[i + 1];
@@ -51,13 +48,12 @@ public class WorkWithFile {
             }
         }
 
-        for (int i = 0; i < arraysSize; i++) {
+        for (int i = 0; i < arraysMaxSize; i++) {
             results.append(type[i]).append(',').append(amount[i]).append(System.lineSeparator());
         }
 
-        File file = new File(toFileName);
-        try {
-            Files.writeString(file.toPath(), results);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
+            writer.write(String.valueOf(results));
         } catch (IOException e) {
             throw new RuntimeException("cannot write to file", e);
         }
