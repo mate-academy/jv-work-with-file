@@ -1,70 +1,81 @@
 package core.basesyntax;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
+import java.util.List;
 
 public class WorkWithFile {
     private static final String COMMA = ",";
     private static final int OPERATION_TYPE_INDEX = 0;
     private static final int AMOUNT_INDEX = 1;
+    private static final int MAX_LENGTH = 2;
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
 
-        final int SupplyIndex = 0;
-        final int BuyIndex = 1;
-
         int[] totals = readFromFile(fromFileName);
-        String report = generateReport(totals[SupplyIndex], totals[BuyIndex]);
-        writeToFile(toFileName, report);
+        String result = generateReport(totals);
+        writeToFile(result, toFileName);
     }
 
-    private static int[] readFromFile(String fromFileName) {
+    private int[] readFromFile(String fromFileName) {
+
+        List<String> fileContent;
+        try {
+            fileContent = Files.readAllLines(new File(fromFileName).toPath());
+        } catch (IOException e) {
+            throw new RuntimeException("Can't read from file", e);
+        }
 
         int supplyTotal = 0;
         int buyTotal = 0;
 
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                String[] parts = line.split(COMMA);
-                String operationType = parts[OPERATION_TYPE_INDEX];
-                int amount = Integer.parseInt(parts[AMOUNT_INDEX]);
-
-                if (operationType.equals(SUPPLY)) {
-                    supplyTotal += amount;
-                } else if (operationType.equals(BUY)) {
-                    buyTotal += amount;
-                }
+        for (String data : fileContent) {
+            String[] values = data.split(COMMA);
+            if (values.length != MAX_LENGTH) {
+                throw new IllegalArgumentException("Not true format " + values.length);
             }
-        } catch (IOException e) {
-            throw new RuntimeException("An error occurred while reading the file "
-                    + fromFileName, e);
+            String operation = values[OPERATION_TYPE_INDEX];
+            String amount = values[AMOUNT_INDEX];
+
+            try {
+                int value = Integer.parseInt(amount);
+                if (operation.equals(BUY)) {
+                    buyTotal += value;
+                } else if (operation.equals(SUPPLY)) {
+                    supplyTotal += value;
+                }
+            } catch (NumberFormatException e) {
+                throw new RuntimeException("File '" + fromFileName
+                        + " contains invalid number format: " + amount);
+            }
         }
 
         return new int[]{supplyTotal, buyTotal};
     }
 
-    private static String generateReport(int supplyTotal, int buyTotal) {
+    private String generateReport(int[] totals) {
 
-        int result = supplyTotal - buyTotal;
+        int supplyValue = totals[OPERATION_TYPE_INDEX];
+        int buyValue = totals[AMOUNT_INDEX];
+        int result = supplyValue - buyValue;
 
         StringBuilder report = new StringBuilder();
-        report.append(SUPPLY).append(" ").append(supplyTotal).append(System.lineSeparator());
-        report.append(BUY).append(" ").append(buyTotal).append(System.lineSeparator());
-        report.append(RESULT).append(" ").append(result).append(System.lineSeparator());
+        report.append(SUPPLY).append(COMMA).append(supplyValue).append(System.lineSeparator());
+        report.append(BUY).append(COMMA).append(buyValue).append(System.lineSeparator());
+        report.append(RESULT).append(COMMA).append(result).append(System.lineSeparator());
 
         return report.toString();
     }
 
-    private static void writeToFile(String toFileName, String report) {
+    private void writeToFile(String report, String toFileName) {
+        File toFile = new File(toFileName);
+
         try {
-            Files.writeString(Path.of(toFileName), report);
+            Files.write(toFile.toPath(), report.getBytes());
         } catch (IOException e) {
             throw new RuntimeException("An error occurred while writing the file "
                     + toFileName, e);
