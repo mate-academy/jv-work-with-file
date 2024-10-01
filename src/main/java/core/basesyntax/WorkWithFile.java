@@ -2,7 +2,6 @@ package core.basesyntax;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -17,10 +16,12 @@ public class WorkWithFile {
     public static final int VALUE_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        writeFile(composeReport(calculateOperations(readLinesFromFile(fromFileName))), toFileName);
+        Table table = createTableWithTotals(readLinesFromFileToArray(fromFileName));
+        writeFile(composeReport(table.getSupply(), table.getBuy(), table.calculateResult()),
+                toFileName);
     }
 
-    public String[] readLinesFromFile(String filename) {
+    private String[] readLinesFromFileToArray(String filename) {
         StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(filename))) {
             String string = bufferedReader.readLine();
@@ -28,15 +29,13 @@ public class WorkWithFile {
                 stringBuilder.append(string).append(System.lineSeparator());
                 string = bufferedReader.readLine();
             }
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException("File " + filename + " not found", e);
         } catch (IOException e) {
-            throw new RuntimeException("Can't read from file " + filename, e);
+            throw new RuntimeException("File not found or can't read from file " + filename, e);
         }
         return String.valueOf(stringBuilder).split(System.lineSeparator());
     }
 
-    public Table calculateOperations(String[] lines) {
+    private Table createTableWithTotals(String[] lines) {
         int buy = 0;
         int supply = 0;
         for (String operation : lines) {
@@ -50,29 +49,30 @@ public class WorkWithFile {
                     supply += Integer.parseInt(operationData[VALUE_INDEX]);
                     break;
                 }
-                default: break;
+                default:
+                    break;
             }
         }
         return new Table(buy, supply);
     }
 
-    public String composeReport(Table table) {
+    private String composeReport(int supplyAmount, int buyAmount, int result) {
         StringBuilder report = new StringBuilder();
         report.append(SUPPLY_OPERATION_TITLE)
                 .append(OPERATION_VALUE_DELIMITER)
-                .append(table.getSupply())
+                .append(supplyAmount)
                 .append(System.lineSeparator())
                 .append(BUY_OPERATION_TITLE)
                 .append(OPERATION_VALUE_DELIMITER)
-                .append(table.getBuy())
+                .append(buyAmount)
                 .append(System.lineSeparator())
                 .append(RESULT_OPERATION_TITLE)
                 .append(OPERATION_VALUE_DELIMITER)
-                .append(table.calculateResult());
+                .append(result);
         return String.valueOf(report);
     }
 
-    public void writeFile(String report, String filename) {
+    private void writeFile(String report, String filename) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(filename))) {
             bufferedWriter.write(report);
         } catch (IOException e) {
