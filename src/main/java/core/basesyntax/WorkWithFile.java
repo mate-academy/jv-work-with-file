@@ -34,6 +34,7 @@ public class WorkWithFile {
                         + System.lineSeparator() + "result," + (supply - buy);
         writeToFile(toFileName,s);
     }
+
     public void writeToFile(String toFile, String string) {
         try {
             Files.write(Path.of(toFile),string.getBytes());
