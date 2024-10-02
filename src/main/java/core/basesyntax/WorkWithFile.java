@@ -10,16 +10,20 @@ import java.util.stream.Stream;
 public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String result = getStringFromFile(fromFileName);
+        String result = generateReportFromDataFile(fromFileName);
+        writeData(toFileName, result);
+    }
+
+    private void writeData(String toFileName, String result) {
         Path outputFile = Paths.get(toFileName);
         try {
             Files.write(outputFile, result.getBytes(StandardCharsets.UTF_8));
         } catch (IOException ioException) {
-            throw new RuntimeException(ioException);
+            throw new RuntimeException(ioException.getMessage());
         }
     }
 
-    private String getStringFromFile(String fromFileName) {
+    private String generateReportFromDataFile(String fromFileName) {
         Path inputFile = Paths.get(fromFileName);
         final int[] supply = {0};
         final int[] buy = {0};
