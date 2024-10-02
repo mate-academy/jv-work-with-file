@@ -9,12 +9,12 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final String NAME_OF_OPERATION_SUPPLY = "supply";
     private static final String NAME_OF_OPERATION_BUY = "buy";
+    private static final String RESULT = "result";
     private static final String COMMA_SYMBOL = ",";
     private static final int INDEX_OF_OPERATION_TYPE = 0;
     private static final int INDEX_OF_AMOUNT = 1;
     private static final int INDEX_OF_SUPPLY_AMOUNT = 0;
     private static final int INDEX_OF_BUY_AMOUNT = 1;
-    private static int RESULT_AMOUNT;
 
     public void getStatistic(String fromFileName, String toFileName) {
         int[] operationsAmounts = readAmountsOfOperations(fromFileName);
@@ -50,14 +50,14 @@ public class WorkWithFile {
     }
 
     private String createReportMessage(int supplyAmount, int buyAmount) {
-        RESULT_AMOUNT = supplyAmount - buyAmount;
+        int resultAmount = supplyAmount - buyAmount;
         StringBuilder stringBuilderResult = new StringBuilder();
         stringBuilderResult.append(NAME_OF_OPERATION_SUPPLY).append(COMMA_SYMBOL)
                 .append(supplyAmount).append(System.lineSeparator())
                 .append(NAME_OF_OPERATION_BUY).append(COMMA_SYMBOL)
                 .append(buyAmount).append(System.lineSeparator())
-                .append("result").append(COMMA_SYMBOL)
-                .append(RESULT_AMOUNT).append(System.lineSeparator());
+                .append(RESULT).append(COMMA_SYMBOL)
+                .append(resultAmount).append(System.lineSeparator());
         return stringBuilderResult.toString();
     }
 
