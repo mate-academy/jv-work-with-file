@@ -8,9 +8,11 @@ import java.nio.file.Paths;
 import java.util.stream.Stream;
 
 public class WorkWithFile {
+    private static final int INDEX_OPERATION = 0;
+    private static final int INDEX_VALUE = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String result = generateReportFromDataFile(fromFileName);
+        String result = createReportFromData(fromFileName);
         writeData(toFileName, result);
     }
 
@@ -23,27 +25,26 @@ public class WorkWithFile {
         }
     }
 
-    private String generateReportFromDataFile(String fromFileName) {
+    private String createReportFromData(String fromFileName) {
         Path inputFile = Paths.get(fromFileName);
         final int[] supply = {0};
         final int[] buy = {0};
-        final int indexOperation = 0;
-        final int indexValue = 1;
 
         try (Stream<String> lines = Files.lines(inputFile)) {
             lines.forEach(line -> {
                 String[] parts = line.split(",");
-                if ("supply".equals(parts[indexOperation])) {
-                    supply[0] += Integer.parseInt(parts[indexValue]);
-                } else if ("buy".equals(parts[indexOperation])) {
-                    buy[0] += Integer.parseInt(parts[indexValue]);
+                if ("supply".equals(parts[INDEX_OPERATION])) {
+                    supply[0] += Integer.parseInt(parts[INDEX_VALUE]);
+                } else if ("buy".equals(parts[INDEX_OPERATION])) {
+                    buy[0] += Integer.parseInt(parts[INDEX_VALUE]);
                 }
             });
         } catch (IOException ioException) {
             throw new RuntimeException(ioException);
         }
-        String result = String.format("supply,%d%nbuy,%d%nresult,%d", supply[0], buy[0],
-                supply[0] - buy[0]);
-        return result;
+        return new StringBuilder("supply,").append(supply[0])
+            .append("\nbuy,").append(buy[0])
+            .append("\nresult,").append(supply[0] - buy[0])
+            .toString();
     }
 }
