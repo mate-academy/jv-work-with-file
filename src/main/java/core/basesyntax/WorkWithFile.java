@@ -9,10 +9,12 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final String NAME_OF_OPERATION_SUPPLY = "supply";
     private static final String NAME_OF_OPERATION_BUY = "buy";
+    private static final String COMMA_SYMBOL = ",";
     private static final int INDEX_OF_OPERATION_TYPE = 0;
     private static final int INDEX_OF_AMOUNT = 1;
     private static final int INDEX_OF_SUPPLY_AMOUNT = 0;
     private static final int INDEX_OF_BUY_AMOUNT = 1;
+    private static int RESULT_AMOUNT;
 
     public void getStatistic(String fromFileName, String toFileName) {
         int[] operationsAmounts = readAmountsOfOperations(fromFileName);
@@ -23,7 +25,7 @@ public class WorkWithFile {
         writeReportToFile(report, toFileName);
     }
 
-    private static int[] readAmountsOfOperations(String fromFileName) {
+    private int[] readAmountsOfOperations(String fromFileName) {
         int supplyAmount = 0;
         int buyAmount = 0;
 
@@ -31,7 +33,7 @@ public class WorkWithFile {
             String value = reader.readLine();
             String[] lineFromInputfile;
             while (value != null) {
-                lineFromInputfile = value.split(",");
+                lineFromInputfile = value.split(COMMA_SYMBOL);
                 String operationType = lineFromInputfile[INDEX_OF_OPERATION_TYPE];
                 int amount = Integer.parseInt(lineFromInputfile[INDEX_OF_AMOUNT]);
                 if (operationType.equals(NAME_OF_OPERATION_SUPPLY)) {
@@ -47,19 +49,19 @@ public class WorkWithFile {
         return new int[]{supplyAmount, buyAmount};
     }
 
-    private static String createReportMessage(int supplyAmount, int buyAmount) {
-        final int resultAmount = supplyAmount - buyAmount;
+    private String createReportMessage(int supplyAmount, int buyAmount) {
+        RESULT_AMOUNT = supplyAmount - buyAmount;
         StringBuilder stringBuilderResult = new StringBuilder();
-        stringBuilderResult.append(NAME_OF_OPERATION_SUPPLY).append(",")
+        stringBuilderResult.append(NAME_OF_OPERATION_SUPPLY).append(COMMA_SYMBOL)
                 .append(supplyAmount).append(System.lineSeparator())
-                .append(NAME_OF_OPERATION_BUY).append(",")
+                .append(NAME_OF_OPERATION_BUY).append(COMMA_SYMBOL)
                 .append(buyAmount).append(System.lineSeparator())
-                .append("result,").append(resultAmount)
-                .append(System.lineSeparator());
+                .append("result").append(COMMA_SYMBOL)
+                .append(RESULT_AMOUNT).append(System.lineSeparator());
         return stringBuilderResult.toString();
     }
 
-    private static void writeReportToFile(String report, String toFileName) {
+    private void writeReportToFile(String report, String toFileName) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(report);
         } catch (IOException e) {
