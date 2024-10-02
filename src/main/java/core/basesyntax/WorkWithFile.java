@@ -32,8 +32,11 @@ public class WorkWithFile {
 
         String s = "supply," + supply + System.lineSeparator() + "buy," + buy
                         + System.lineSeparator() + "result," + (supply - buy);
+        writeToFile(toFileName,s);
+    }
+    public void writeToFile(String toFile, String string) {
         try {
-            Files.write(Path.of(toFileName),s.getBytes());
+            Files.write(Path.of(toFile),string.getBytes());
         } catch (IOException e) {
             throw new RuntimeException("Can't write file",e);
         }
