@@ -10,6 +10,16 @@ import java.util.stream.Stream;
 public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
+        String result = getStringFromFile(fromFileName);
+        Path outputFile = Paths.get(toFileName);
+        try {
+            Files.write(outputFile, result.getBytes(StandardCharsets.UTF_8));
+        } catch (IOException ioException) {
+            throw new RuntimeException(ioException);
+        }
+    }
+
+    private String getStringFromFile(String fromFileName) {
         Path inputFile = Paths.get(fromFileName);
         final int[] supply = {0};
         final int[] buy = {0};
@@ -30,11 +40,6 @@ public class WorkWithFile {
         }
         String result = String.format("supply,%d%nbuy,%d%nresult,%d", supply[0], buy[0],
                 supply[0] - buy[0]);
-        Path outputFile = Paths.get(toFileName);
-        try {
-            Files.write(outputFile, result.getBytes(StandardCharsets.UTF_8));
-        } catch (IOException ioException) {
-            throw new RuntimeException(ioException);
-        }
+        return result;
     }
 }
