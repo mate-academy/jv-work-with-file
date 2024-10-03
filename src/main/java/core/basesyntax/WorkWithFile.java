@@ -15,9 +15,10 @@ public class WorkWithFile {
     private static final int VALUE_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        Table table = createTableWithTotals(readLinesFromFileToArray(fromFileName));
-        writeFile(composeReport(table.getSupply(), table.getBuy(), table.calculateResult()),
-                toFileName);
+        String[] linesFromFile = readLinesFromFileToArray(fromFileName);
+        Table totals = createTableWithTotals(linesFromFile);
+        String report = composeReport(totals);
+        writeFile(report, toFileName);
     }
 
     private String[] readLinesFromFileToArray(String filename) {
@@ -55,20 +56,20 @@ public class WorkWithFile {
         return new Table(buy, supply);
     }
 
-    private String composeReport(int supplyAmount, int buyAmount, int result) {
+    private String composeReport(Table totals) {
         StringBuilder report = new StringBuilder();
         report.append(SUPPLY_OPERATION_TITLE)
                 .append(OPERATION_VALUE_DELIMITER)
-                .append(supplyAmount)
+                .append(totals.getSupply())
                 .append(System.lineSeparator())
                 .append(BUY_OPERATION_TITLE)
                 .append(OPERATION_VALUE_DELIMITER)
-                .append(buyAmount)
+                .append(totals.getBuy())
                 .append(System.lineSeparator())
                 .append(RESULT_OPERATION_TITLE)
                 .append(OPERATION_VALUE_DELIMITER)
-                .append(result);
-        return String.valueOf(report);
+                .append(totals.calculateResult());
+        return report.toString();
     }
 
     private void writeFile(String report, String filename) {
