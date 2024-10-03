@@ -22,12 +22,11 @@ public class WorkWithFile {
     }
 
     private int[] readFromFile(String fromFileName) {
-
         List<String> fileContent;
         try {
             fileContent = Files.readAllLines(new File(fromFileName).toPath());
         } catch (IOException e) {
-            throw new RuntimeException("Can't read from file", e);
+            throw new RuntimeException("Can't read from file" + fromFileName, e);
         }
 
         int supplyTotal = 0;
@@ -64,9 +63,18 @@ public class WorkWithFile {
         int result = supplyValue - buyValue;
 
         StringBuilder report = new StringBuilder();
-        report.append(SUPPLY).append(COMMA).append(supplyValue).append(System.lineSeparator());
-        report.append(BUY).append(COMMA).append(buyValue).append(System.lineSeparator());
-        report.append(RESULT).append(COMMA).append(result).append(System.lineSeparator());
+        report.append(SUPPLY)
+                .append(COMMA)
+                .append(supplyValue)
+                .append(System.lineSeparator());
+        report.append(BUY)
+                .append(COMMA)
+                .append(buyValue)
+                .append(System.lineSeparator());
+        report.append(RESULT)
+                .append(COMMA)
+                .append(result)
+                .append(System.lineSeparator());
 
         return report.toString();
     }
