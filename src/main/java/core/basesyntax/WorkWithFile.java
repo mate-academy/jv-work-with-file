@@ -7,13 +7,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-
-    public static final String OPERATION_VALUE_DELIMITER = ",";
-    public static final String SUPPLY_OPERATION_TITLE = "supply";
-    public static final String BUY_OPERATION_TITLE = "buy";
-    public static final String RESULT_OPERATION_TITLE = "result";
-    public static final int OPERATION_INDEX = 0;
-    public static final int VALUE_INDEX = 1;
+    private static final String OPERATION_VALUE_DELIMITER = ",";
+    private static final String SUPPLY_OPERATION_TITLE = "supply";
+    private static final String BUY_OPERATION_TITLE = "buy";
+    private static final String RESULT_OPERATION_TITLE = "result";
+    private static final int OPERATION_INDEX = 0;
+    private static final int VALUE_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         Table table = createTableWithTotals(readLinesFromFileToArray(fromFileName));
@@ -22,17 +21,17 @@ public class WorkWithFile {
     }
 
     private String[] readLinesFromFileToArray(String filename) {
-        StringBuilder stringBuilder = new StringBuilder();
+        StringBuilder linesFromFile = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(filename))) {
             String string = bufferedReader.readLine();
             while (string != null) {
-                stringBuilder.append(string).append(System.lineSeparator());
+                linesFromFile.append(string).append(System.lineSeparator());
                 string = bufferedReader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("File not found or can't read from file " + filename, e);
         }
-        return String.valueOf(stringBuilder).split(System.lineSeparator());
+        return String.valueOf(linesFromFile).split(System.lineSeparator());
     }
 
     private Table createTableWithTotals(String[] lines) {
