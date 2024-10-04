@@ -12,8 +12,8 @@ public class WorkWithFile {
     private static final String BUY = "buy";
     private static final String RESULT = "result";
     private static final String COMMA = ",";
-    private static final int OPERATION = 0;
-    private static final int AMOUNT = 1;
+    private static final int OPERATION_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         String data = readData(fromFileName);
@@ -34,7 +34,7 @@ public class WorkWithFile {
 
             return stringBuilder.toString();
         } catch (IOException e) {
-            throw new RuntimeException("Can't read data from the file " + fileName, e);
+            throw new RuntimeException("Can't read data from the file: " + fileName, e);
         }
     }
 
@@ -52,8 +52,8 @@ public class WorkWithFile {
                 throw new IllegalArgumentException("Invalid line format: " + line);
             }
 
-            String operation = parts[OPERATION].trim();
-            int amount = Integer.parseInt(parts[AMOUNT].trim());
+            String operation = parts[OPERATION_INDEX].trim();
+            int amount = Integer.parseInt(parts[AMOUNT_INDEX].trim());
 
             if (operation.equals(SUPPLY)) {
                 totalSupply += amount;
@@ -65,9 +65,17 @@ public class WorkWithFile {
         result = totalSupply - totalBuy;
 
         StringBuilder resultData = new StringBuilder();
-        resultData.append(SUPPLY).append(COMMA).append(totalSupply).append(LINE_SEPARATOR)
-                .append(BUY).append(COMMA).append(totalBuy).append(LINE_SEPARATOR)
-                .append(RESULT).append(COMMA).append(result);
+        resultData.append(SUPPLY)
+                .append(COMMA)
+                .append(totalSupply)
+                .append(LINE_SEPARATOR)
+                .append(BUY)
+                .append(COMMA)
+                .append(totalBuy)
+                .append(LINE_SEPARATOR)
+                .append(RESULT)
+                .append(COMMA)
+                .append(result);
 
         return resultData.toString();
     }
@@ -76,7 +84,7 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
             bufferedWriter.write(data);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data to the file" + fileName, e);
+            throw new RuntimeException("Can't write data to the file: " + fileName, e);
         }
     }
 }
