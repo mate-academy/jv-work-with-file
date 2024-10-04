@@ -24,7 +24,7 @@ public class WorkWithFile {
         writeResults(toFileName, statistics);
     }
 
-    private void readAndParseData(String fromFileName, List<Integer> supplyAmounts,
+    public void readAndParseData(String fromFileName, List<Integer> supplyAmounts,
                                   List<Integer> buyAmounts) {
         try (BufferedReader fromFile = new BufferedReader(new FileReader(fromFileName))) {
             String line;
@@ -49,7 +49,7 @@ public class WorkWithFile {
         }
     }
 
-    private static int sumList(List<Integer> amounts) {
+    public static int sumList(List<Integer> amounts) {
         int sum = 0;
         for (int amount : amounts) {
             sum += amount;
@@ -57,7 +57,7 @@ public class WorkWithFile {
         return sum;
     }
 
-    private int[] calculateStatistics(List<Integer> supplyAmounts, List<Integer> buyAmounts) {
+    public int[] calculateStatistics(List<Integer> supplyAmounts, List<Integer> buyAmounts) {
         int totalSupply = sumList(supplyAmounts);
         int totalBuy = sumList(buyAmounts);
         int result = totalSupply - totalBuy;
@@ -65,7 +65,7 @@ public class WorkWithFile {
         return new int[]{totalSupply, totalBuy, result};
     }
 
-    private void writeResults(String toFileName, int[] statistics) {
+    public void writeResults(String toFileName, int[] statistics) {
         try (BufferedWriter toFile = new BufferedWriter(new FileWriter(toFileName))) {
             toFile.write(SUPPLY + "," + statistics[0]);
             toFile.newLine();
