@@ -5,22 +5,27 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Arrays;
 
 public class WorkWithFile {
     private static final String LINE_SEPARATOR = System.lineSeparator();
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
+    private static final String COMMA = ",";
+    private static final int OPERATION = 0;
+    private static final int AMOUNT = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String[][] data = readData(fromFileName);
+        String data = readData(fromFileName);
 
         String resultData = calculateStatistics(data);
 
         writeData(toFileName, resultData);
     }
 
-    public String[][] readData(String fileName) {
-        //Read from file
+    private String readData(String fileName) {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
-
             StringBuilder stringBuilder = new StringBuilder();
             String line;
 
@@ -28,29 +33,32 @@ public class WorkWithFile {
                 stringBuilder.append(line).append(LINE_SEPARATOR);
             }
 
-            String[] lines = stringBuilder.toString().split(LINE_SEPARATOR);
-            String[][] data = new String[lines.length][2];
-            for (int i = 0; i < lines.length; i++) {
-                data[i] = lines[i].split(",");
-            }
-            return data;
+            return stringBuilder.toString();
         } catch (IOException e) {
             throw new RuntimeException("Can't read data from the file " + fileName, e);
         }
     }
 
-    public String calculateStatistics(String[][] data) {
+    private String calculateStatistics(String data) {
         int totalSupply = 0;
         int totalBuy = 0;
-        int result = 0;
+        int result;
 
-        for (String[] entry : data) {
-            String operation = entry[0];
-            int amount = Integer.parseInt(entry[1]);
+        for (String line : data.split(LINE_SEPARATOR)) {
+            if (line.isEmpty()) {
+                continue;
+            }
+            String[] parts = line.split(COMMA);
+            if (parts.length != 2) {
+                throw new IllegalArgumentException("Invalid line format: " + line);
+            }
 
-            if (operation.equals("supply")) {
+            String operation = parts[OPERATION].trim();
+            int amount = Integer.parseInt(parts[AMOUNT].trim());
+
+            if (operation.equals(SUPPLY)) {
                 totalSupply += amount;
-            } else if (operation.equals("buy")) {
+            } else if (operation.equals(BUY)) {
                 totalBuy += amount;
             }
         }
@@ -58,15 +66,14 @@ public class WorkWithFile {
         result = totalSupply - totalBuy;
 
         StringBuilder resultData = new StringBuilder();
-        resultData.append("supply,").append(totalSupply).append(LINE_SEPARATOR)
-                .append("buy,").append(totalBuy).append(LINE_SEPARATOR)
-                .append("result,").append(result);
+        resultData.append(SUPPLY).append(COMMA).append(totalSupply).append(LINE_SEPARATOR)
+                .append(BUY).append(COMMA).append(totalBuy).append(LINE_SEPARATOR)
+                .append(RESULT).append(COMMA).append(result);
 
         return resultData.toString();
     }
 
-    public void writeData(String fileName, String data) {
-        //Write to File
+    private void writeData(String fileName, String data) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
             bufferedWriter.write(data);
         } catch (IOException e) {
