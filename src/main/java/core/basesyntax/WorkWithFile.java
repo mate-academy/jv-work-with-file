@@ -9,10 +9,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WorkWithFile {
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
+
     public void getStatistic(String fromFileName, String toFileName) {
         List<Integer> supplyAmounts = new ArrayList<>();
         List<Integer> buyAmounts = new ArrayList<>();
 
+        readAndParseData(fromFileName, supplyAmounts, buyAmounts);
+
+        int[] statistics = calculateStatistics(supplyAmounts, buyAmounts);
+
+        writeResults(toFileName, statistics);
+    }
+
+    private void readAndParseData(String fromFileName, List<Integer> supplyAmounts,
+                                  List<Integer> buyAmounts) {
         try (BufferedReader fromFile = new BufferedReader(new FileReader(fromFileName))) {
             String line;
 
@@ -23,9 +36,9 @@ public class WorkWithFile {
                     String operationType = values[0].trim();
                     int amount = Integer.parseInt(values[1].trim());
 
-                    if (operationType.equalsIgnoreCase("supply")) {
+                    if (operationType.equalsIgnoreCase(SUPPLY)) {
                         supplyAmounts.add(amount);
-                    } else if (operationType.equalsIgnoreCase("buy")) {
+                    } else if (operationType.equalsIgnoreCase(BUY)) {
                         buyAmounts.add(amount);
 
                     }
@@ -33,20 +46,6 @@ public class WorkWithFile {
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read the file", e);
-        }
-
-        int totalSupply = sumList(supplyAmounts);
-        int totalBuy = sumList(buyAmounts);
-        int result = totalSupply - totalBuy;
-
-        try (BufferedWriter toFile = new BufferedWriter(new FileWriter(toFileName))) {
-            toFile.write("supply," + totalSupply);
-            toFile.newLine();
-            toFile.write("buy," + totalBuy);
-            toFile.newLine();
-            toFile.write("result," + result);
-        } catch (IOException e) {
-            throw new RuntimeException("Can't write to the file", e);
         }
     }
 
@@ -56,5 +55,25 @@ public class WorkWithFile {
             sum += amount;
         }
         return sum;
+    }
+
+    private int[] calculateStatistics(List<Integer> supplyAmounts, List<Integer> buyAmounts) {
+        int totalSupply = sumList(supplyAmounts);
+        int totalBuy = sumList(buyAmounts);
+        int result = totalSupply - totalBuy;
+
+        return new int[]{totalSupply, totalBuy, result};
+    }
+
+    private void writeResults(String toFileName, int[] statistics) {
+        try (BufferedWriter toFile = new BufferedWriter(new FileWriter(toFileName))) {
+            toFile.write(SUPPLY + "," + statistics[0]);
+            toFile.newLine();
+            toFile.write(BUY + "," + statistics[1]);
+            toFile.newLine();
+            toFile.write(RESULT + "," + statistics[2]);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write to the file", e);
+        }
     }
 }
