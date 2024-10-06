@@ -7,43 +7,50 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-
-    // Define constants
     private static final String COMMA = ",";
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
+    private static final int ZERO = 0;
+    private static final int ONE = 1;
+
 
     public void getStatistic(String fromFileName, String toFileName) {
-        // Read data from file and calculate totals
         int[] totals = calculateTotals(fromFileName);
-        int totalSupply = totals[0];
-        int totalBuy = totals[1];
+        int totalSupply = totals[ZERO];
+        int totalBuy = totals[ONE];
         int totalAmount = totalSupply - totalBuy;
 
-        // Write the calculated report into the output file
         writeReport(toFileName, totalSupply, totalBuy, totalAmount);
     }
 
     private int[] calculateTotals(String fromFileName) {
-        int totalSupply = 0;
-        int totalBuy = 0;
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] data = line.split(COMMA);
-                String operationType = data[0];
-                int amount = Integer.parseInt(data[1]);
-
-                if (operationType.equals(SUPPLY)) {
-                    totalSupply += amount;
-                } else if (operationType.equals(BUY)) {
-                    totalBuy += amount;
-                }
-            }
+        try (BufferedReader reader = createReader(fromFileName)) {
+            return calculateTotalsFromReader(reader);
         } catch (IOException e) {
             throw new RuntimeException("Error reading file: " + fromFileName, e);
+        }
+    }
+
+    private BufferedReader createReader(String fromFileName) throws IOException {
+        return new BufferedReader(new FileReader(fromFileName));
+    }
+
+    private int[] calculateTotalsFromReader(BufferedReader reader) throws IOException {
+        int totalSupply = ZERO;
+        int totalBuy = ZERO;
+
+        String line;
+        while ((line = reader.readLine()) != null) {
+            String[] data = line.split(COMMA);
+            String operationType = data[ZERO];
+            int amount = Integer.parseInt(data[ONE]);
+
+            if (operationType.equals(SUPPLY)) {
+                totalSupply += amount;
+            } else if (operationType.equals(BUY)) {
+                totalBuy += amount;
+            }
         }
 
         return new int[] {totalSupply, totalBuy};
