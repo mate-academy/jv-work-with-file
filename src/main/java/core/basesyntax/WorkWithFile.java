@@ -14,7 +14,6 @@ public class WorkWithFile {
     private static final int ZERO = 0;
     private static final int ONE = 1;
 
-
     public void getStatistic(String fromFileName, String toFileName) {
         int[] totals = calculateTotals(fromFileName);
         int totalSupply = totals[ZERO];
