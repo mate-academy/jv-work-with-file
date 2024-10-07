@@ -15,12 +15,17 @@ public class WorkWithFile {
     private static final int ONE = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
+
         int[] totals = calculateTotals(fromFileName);
+
         int totalSupply = totals[ZERO];
+
         int totalBuy = totals[ONE];
+
         int totalAmount = totalSupply - totalBuy;
 
-        writeReport(toFileName, totalSupply, totalBuy, totalAmount);
+        processReport(toFileName, totalSupply, totalBuy, totalAmount);
+
     }
 
     private int[] calculateTotals(String fromFileName) {
@@ -55,13 +60,29 @@ public class WorkWithFile {
         return new int[] {totalSupply, totalBuy};
     }
 
-    private void writeReport(String toFileName, int totalSupply, int totalBuy, int totalAmount) {
+    private void processReport(String toFileName, int totalSupply, int totalBuy, int totalAmount) {
+        String report = prepareReport(totalSupply, totalBuy, totalAmount);
+        writeReport(toFileName, report);
+    }
+
+    private String prepareReport(int totalSupply, int totalBuy, int totalAmount) {
+        StringBuilder report = new StringBuilder();
+        report.append(formatReportLine(SUPPLY, totalSupply))
+                .append(formatReportLine(BUY, totalBuy))
+                .append(formatReportLine(RESULT, totalAmount));
+        return report.toString();
+    }
+
+    private String formatReportLine(String label, int value) {
+        return label + COMMA + value + System.lineSeparator();
+    }
+
+    private void writeReport(String toFileName, String report) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            writer.write(SUPPLY + COMMA + totalSupply + System.lineSeparator());
-            writer.write(BUY + COMMA + totalBuy + System.lineSeparator());
-            writer.write(RESULT + COMMA + totalAmount + System.lineSeparator());
+            writer.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Error writing file: " + toFileName, e);
         }
     }
 }
+
