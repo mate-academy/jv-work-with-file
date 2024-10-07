@@ -9,11 +9,13 @@ import java.io.IOException;
 public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int supply = 0;
-        int buy = 0;
-        int result = 0;
 
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
+        writeResultFile(toFileName, readAndCalculatedFile(fromFileName));
+    }
+
+    private String readAndCalculatedFile(String fileName) {
+        int[] results = new int[3];
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 String[] array = line.split(",");
@@ -22,26 +24,36 @@ public class WorkWithFile {
                     int value = Integer.parseInt(array[1].trim());
 
                     if (type.equals("supply")) {
-                        supply += value;
+                        results[0] += value;
                     } else if (type.equals("buy")) {
-                        buy += value;
+                        results[1] += value;
                     }
                 }
             }
 
-            result = supply - buy;
+            results[2] = results[0] - results[1];
+            return convertResult(results);
 
-            String[] results = new String[]{"supply," + supply, "buy," + buy, "result," + result};
-            try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-                for (String res : results) {
-                    bufferedWriter.write(res);
-                    bufferedWriter.newLine();
-                }
-            } catch (IOException e) {
-                throw new RuntimeException("Can't write to file", e);
-            }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can`t read file", e);
         }
+    }
+
+    private void writeResultFile(String toFile, String result) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFile))) {
+            bufferedWriter.write(String.valueOf(result));
+            bufferedWriter.newLine();
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private String convertResult(int[] array) {
+        StringBuilder resultsBuilder = new StringBuilder();
+
+        return resultsBuilder.append("supply,").append(array[0]).append(System.lineSeparator())
+            .append("buy,").append(array[1]).append(System.lineSeparator())
+            .append("result,").append(array[2]).toString();
     }
 }
