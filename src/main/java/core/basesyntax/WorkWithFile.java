@@ -11,16 +11,16 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
-    private static final int ZERO = 0;
-    private static final int ONE = 1;
+    private static final int OPERATION_TYPE_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
 
         int[] totals = calculateTotals(fromFileName);
 
-        int totalSupply = totals[ZERO];
+        int totalSupply = totals[OPERATION_TYPE_INDEX];
 
-        int totalBuy = totals[ONE];
+        int totalBuy = totals[AMOUNT_INDEX];
 
         int totalAmount = totalSupply - totalBuy;
 
@@ -41,14 +41,14 @@ public class WorkWithFile {
     }
 
     private int[] calculateTotalsFromReader(BufferedReader reader) throws IOException {
-        int totalSupply = ZERO;
-        int totalBuy = ZERO;
+        int totalSupply = OPERATION_TYPE_INDEX;
+        int totalBuy = OPERATION_TYPE_INDEX;
 
         String line;
         while ((line = reader.readLine()) != null) {
             String[] data = line.split(COMMA);
-            String operationType = data[ZERO];
-            int amount = Integer.parseInt(data[ONE]);
+            String operationType = data[OPERATION_TYPE_INDEX];
+            int amount = Integer.parseInt(data[AMOUNT_INDEX]);
 
             if (operationType.equals(SUPPLY)) {
                 totalSupply += amount;
