@@ -30,9 +30,11 @@ public class WorkWithFile {
         int result = totalSupply - totalBuy;
 
         try (BufferedWriter fileWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            fileWriter.write("supply," + String.valueOf(totalSupply) + System.lineSeparator());
-            fileWriter.write("buy," + String.valueOf(totalBuy) + System.lineSeparator());
-            fileWriter.write("result," + String.valueOf(result) + System.lineSeparator());
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append("supply,").append(totalSupply).append(System.lineSeparator());
+            stringBuilder.append("buy,").append(totalBuy).append(System.lineSeparator());
+            stringBuilder.append("result,").append(result).append(System.lineSeparator());
+            fileWriter.write(String.valueOf(stringBuilder));
 
         } catch (IOException e) {
             throw new RuntimeException("Can't write file: " + toFileName, e);
