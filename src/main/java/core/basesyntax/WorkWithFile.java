@@ -8,52 +8,61 @@ import java.io.IOException;
 
 public class WorkWithFile {
 
-    public void getStatistic(String fromFileName, String toFileName) {
+    private static final String SUPPLY_IDENTIFICATION = "supply";
+    private static final String BUY_IDENTIFICATION = "buy";
+    private static final String CSV_DIVIDER = ",";
 
-        writeResultFile(toFileName, readAndCalculatedFile(fromFileName));
+    public void getStatistic(String fromFileName, String toFileName) {
+        TransactionData transactionData = readAndCalculatedFromFile(fromFileName);
+
+        writeStatisticsToFile(toFileName, transactionData);
     }
 
-    private String readAndCalculatedFile(String fileName) {
-        int[] results = new int[3];
+    private TransactionData readAndCalculatedFromFile(String fileName) {
+        int supply = 0;
+        int buy = 0;
+        int result = 0;
+
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
-                String[] array = line.split(",");
+                String[] array = line.split(CSV_DIVIDER);
                 if (array.length == 2) {
                     String type = array[0].trim();
                     int value = Integer.parseInt(array[1].trim());
 
-                    if (type.equals("supply")) {
-                        results[0] += value;
-                    } else if (type.equals("buy")) {
-                        results[1] += value;
+                    if (type.equals(SUPPLY_IDENTIFICATION)) {
+                        supply += value;
+                    } else if (type.equals(BUY_IDENTIFICATION)) {
+                        buy += value;
                     }
                 }
+                result = supply - buy;
             }
 
-            results[2] = results[0] - results[1];
-            return convertResult(results);
+            return new TransactionData(supply, buy, result);
 
         } catch (IOException e) {
             throw new RuntimeException("Can`t read file", e);
         }
     }
 
-    private void writeResultFile(String toFile, String result) {
+    private void writeStatisticsToFile(String toFile, TransactionData result) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFile))) {
-            bufferedWriter.write(String.valueOf(result));
+            bufferedWriter.write(convertResult(result));
             bufferedWriter.newLine();
 
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Cannot write to file", e);
         }
     }
 
-    private String convertResult(int[] array) {
+    private String convertResult(TransactionData transactionData) {
         StringBuilder resultsBuilder = new StringBuilder();
 
-        return resultsBuilder.append("supply,").append(array[0]).append(System.lineSeparator())
-            .append("buy,").append(array[1]).append(System.lineSeparator())
-            .append("result,").append(array[2]).toString();
+        return resultsBuilder.append("supply,").append(transactionData.supply)
+            .append(System.lineSeparator())
+            .append("buy,").append(transactionData.buy).append(System.lineSeparator())
+            .append("result,").append(transactionData.result).toString();
     }
 }
