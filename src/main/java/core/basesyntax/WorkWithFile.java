@@ -12,6 +12,11 @@ public class WorkWithFile {
     private static final String TXT_RESULT = "result";
     private static final String TXT_SEPARATOR = ",";
 
+    private void appendStringBuilder(StringBuilder stringBuilder,
+                                     String text, int number) {
+        stringBuilder.append(text).append(number).append(System.lineSeparator());
+    }
+
     public void getStatistic(String fromFileName, String toFileName) {
         try {
             File firstFile = new File(fromFileName);
@@ -35,10 +40,9 @@ public class WorkWithFile {
             int result = supply - buy;
 
             StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder
-                    .append(TXT_SUPPLY).append(TXT_SEPARATOR).append(supply).append(System.lineSeparator())
-                    .append(TXT_BUY).append(TXT_SEPARATOR).append(buy).append(System.lineSeparator())
-                    .append(TXT_RESULT).append(TXT_SEPARATOR).append(result).append(System.lineSeparator());
+            appendStringBuilder(stringBuilder, TXT_SUPPLY + TXT_SEPARATOR, supply);
+            appendStringBuilder(stringBuilder, TXT_BUY + TXT_SEPARATOR, buy);
+            appendStringBuilder(stringBuilder, TXT_RESULT + TXT_SEPARATOR, result);
 
             secondFile.createNewFile();
             Files.write(secondFile.toPath(), stringBuilder.toString().getBytes());
