@@ -60,8 +60,10 @@ public class WorkWithFile {
             }
         }
 
-        result.append(OPER_TYPE_SUPPLY).append(",").append(groupSupplyCount).append(System.lineSeparator())
-                .append(OPER_TYPE_BUY).append(",").append(groupBuyCount).append(System.lineSeparator())
+        result.append(OPER_TYPE_SUPPLY).append(",").append(groupSupplyCount)
+                .append(System.lineSeparator())
+                .append(OPER_TYPE_BUY).append(",").append(groupBuyCount)
+                .append(System.lineSeparator())
                 .append("result,").append(groupSupplyCount - groupBuyCount);
 
         return result.toString();
