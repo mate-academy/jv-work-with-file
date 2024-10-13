@@ -11,6 +11,7 @@ public class WorkWithFile {
     private static final int AMOUNT = 1;
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
+    private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String content = readFile(fromFileName);
@@ -32,14 +33,14 @@ public class WorkWithFile {
                 }
             }
         } catch (IOException e) {
-            throw new RuntimeException("File not found " + e);
+            throw new RuntimeException("Error reading file: " + fileName, e);
         }
         int resultAmount = supplyAmount - buyAmount;
 
         StringBuilder result = new StringBuilder()
                 .append(SUPPLY).append(",").append(supplyAmount).append(System.lineSeparator())
                 .append(BUY).append(",").append(buyAmount).append(System.lineSeparator())
-                .append("result,").append(resultAmount);
+                .append(RESULT).append(",").append(resultAmount);
 
         return result.toString();
     }
@@ -48,7 +49,7 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
             bufferedWriter.write(content);
         } catch (IOException e) {
-            throw new RuntimeException("File not found " + e);
+            throw new RuntimeException("Error writing file: " + fileName, e);
         }
     }
 }
