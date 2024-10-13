@@ -15,7 +15,6 @@ public class WorkWithFile {
     private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-
         int[] totals = calculateTotals(fromFileName);
 
         int totalSupply = totals[OPERATION_TYPE_INDEX];
