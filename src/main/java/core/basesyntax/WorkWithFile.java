@@ -15,7 +15,7 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         String dataFromFile = readDataFromFile(fromFileName);
 
-        String report = createReport(dataFromFile);
+        String report = generateReportFromData(dataFromFile);
 
         writeDataToFile(report, toFileName);
     }
@@ -41,16 +41,17 @@ public class WorkWithFile {
         return stringBuilder.toString();
     }
 
-    private String createReport(String data) {
+    private String generateReportFromData(String data) {
         int groupSupplyCount = 0;
         int groupBuyCount = 0;
+        StringBuilder result = new StringBuilder();
 
         String[] recordsFromData = data.split(System.lineSeparator());
         for (String record : recordsFromData) {
             String[] parseRecord = record.split(CSV_FILE_SEPERATOR);
 
             String group = parseRecord[0];
-            int groupCount = parseNumberFromString(parseRecord[1]);
+            int groupCount = convertStringToNumber(parseRecord[1]);
 
             if (group.equals(OPER_TYPE_SUPPLY)) {
                 groupSupplyCount += groupCount;
@@ -59,9 +60,11 @@ public class WorkWithFile {
             }
         }
 
-        return OPER_TYPE_SUPPLY + "," + groupSupplyCount + System.lineSeparator()
-                        + OPER_TYPE_BUY + "," + groupBuyCount + System.lineSeparator()
-                        + "result," + (groupSupplyCount - groupBuyCount);
+        result.append(OPER_TYPE_SUPPLY).append(",").append(groupSupplyCount).append(System.lineSeparator())
+                .append(OPER_TYPE_BUY).append(",").append(groupBuyCount).append(System.lineSeparator())
+                .append("result,").append(groupSupplyCount - groupBuyCount);
+
+        return result.toString();
     }
 
     private void writeDataToFile(String data, String toFileName) {
@@ -72,7 +75,7 @@ public class WorkWithFile {
         }
     }
 
-    private int parseNumberFromString(String parseValue) {
+    private int convertStringToNumber(String parseValue) {
         try {
             return Integer.parseInt(parseValue);
         } catch (NumberFormatException e) {
