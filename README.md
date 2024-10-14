@@ -23,7 +23,7 @@ For example, let's say you had a spreadsheet containing the following data:
 
 The above data could be represented in a CSV-formatted file as follows:
 ```csv
-supply,30
+supply,30cx 
 buy,10
 buy,13
 supply,17
