@@ -18,7 +18,7 @@ public class WorkWithFile {
             writeDataToFile(toFileName, totalSupply, totalBuy, result);
         } catch (IOException e) {
             throw new RuntimeException("Error processing files: " + fromFileName
-                    +" and " + toFileName, e);
+                    + " and " + toFileName, e);
         }
     }
 
