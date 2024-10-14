@@ -14,35 +14,42 @@ public class WorkWithFile {
         int totalSupply = 0;
         int totalBuy = 0;
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",");
-                int amount = Integer.parseInt(parts[1]);
-
-                if (SUPPLY.equals(parts[0])) {
-                    totalSupply += amount;
-                } else if (BUY.equals(parts[0])) {
-                    totalBuy += amount;
-                }
-            }
+        try {
+            totalSupply = readData(fromFileName, SUPPLY);
+            totalBuy = readData(fromFileName, BUY);
         } catch (IOException e) {
-            throw new RuntimeException("Error reading from file: " + fromFileName, e);
+            throw new RuntimeException("Error reading data from file: " + fromFileName, e);
         }
 
         int result = totalSupply - totalBuy;
 
-        // Теперь записываем результаты в файл
         try (FileWriter writer = new FileWriter(toFileName)) {
-            // Используем StringBuilder для эффективной конкатенации строк
-            StringBuilder sb = new StringBuilder();
-            sb.append(SUPPLY).append(",").append(totalSupply).append(System.lineSeparator());
-            sb.append(BUY).append(",").append(totalBuy).append(System.lineSeparator());
-            sb.append("result").append(",").append(result).append(System.lineSeparator());
-
-            writer.write(sb.toString());
+            writer.write(SUPPLY + "," + totalSupply + System.lineSeparator());
+            writer.write(BUY + "," + totalBuy + System.lineSeparator());
+            writer.write("result," + result + System.lineSeparator());
         } catch (IOException e) {
-            throw new RuntimeException("Error writing to file: " + toFileName, e);
+            throw new RuntimeException("Error writing data to file: " + toFileName, e);
         }
+    }
+
+    private int readData(String fileName, String operation) throws IOException {
+        int total = 0;
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (operation.equals(parts[0])) {
+                    try {
+                        int amount = Integer.parseInt(parts[1]);
+                        total += amount;
+                    } catch (NumberFormatException e) {
+                        throw new IOException("Invalid amount format in file: " + fileName, e);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            throw new IOException("Error reading file: " + fileName, e);
+        }
+        return total;
     }
 }
