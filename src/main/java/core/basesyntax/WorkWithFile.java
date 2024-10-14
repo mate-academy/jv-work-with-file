@@ -22,8 +22,7 @@ public class WorkWithFile {
         int supplyAmount = 0;
         int buyAmount = 0;
         int resultAmount;
-        String report;
-        StringBuilder builder = new StringBuilder();
+        StringBuilder reportBuilder = new StringBuilder();
         try (BufferedReader reader
                      = new BufferedReader(new FileReader(fromFile))) {
             String data = reader.readLine();
@@ -40,11 +39,10 @@ public class WorkWithFile {
             throw new RuntimeException("Can't read file", e);
         }
         resultAmount = supplyAmount - buyAmount;
-        report = builder.append(SUPPLY).append(",")
+        return reportBuilder.append(SUPPLY).append(",")
                 .append(supplyAmount).append(System.lineSeparator())
                 .append(BUY).append(",").append(buyAmount).append(System.lineSeparator())
                 .append(RESULT).append(",").append(resultAmount).toString();
-        return report;
     }
 
     private void writeFile(String toFile, String text) {
