@@ -11,24 +11,13 @@ public class WorkWithFile {
     private static final String BUY = "buy";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int totalSupply = 0;
-        int totalBuy = 0;
-
         try {
-            totalSupply = readData(fromFileName, SUPPLY);
-            totalBuy = readData(fromFileName, BUY);
+            int totalSupply = readData(fromFileName, SUPPLY);
+            int totalBuy = readData(fromFileName, BUY);
+            int result = calculateResult(totalSupply, totalBuy);
+            writeDataToFile(toFileName, totalSupply, totalBuy, result);
         } catch (IOException e) {
-            throw new RuntimeException("Error reading data from file: " + fromFileName, e);
-        }
-
-        int result = totalSupply - totalBuy;
-
-        try (FileWriter writer = new FileWriter(toFileName)) {
-            writer.write(SUPPLY + "," + totalSupply + System.lineSeparator());
-            writer.write(BUY + "," + totalBuy + System.lineSeparator());
-            writer.write("result," + result + System.lineSeparator());
-        } catch (IOException e) {
-            throw new RuntimeException("Error writing data to file: " + toFileName, e);
+            throw new RuntimeException("Error processing files: " + fromFileName + " and " + toFileName, e);
         }
     }
 
@@ -47,9 +36,21 @@ public class WorkWithFile {
                     }
                 }
             }
-        } catch (IOException e) {
-            throw new IOException("Error reading file: " + fileName, e);
         }
         return total;
+    }
+
+    private int calculateResult(int totalSupply, int totalBuy) {
+        return totalSupply - totalBuy;
+    }
+
+    private void writeDataToFile(String fileName, int totalSupply, int totalBuy, int result) throws IOException {
+        try (FileWriter writer = new FileWriter(fileName)) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(SUPPLY).append(",").append(totalSupply).append(System.lineSeparator());
+            sb.append(BUY).append(",").append(totalBuy).append(System.lineSeparator());
+            sb.append("result").append(",").append(result).append(System.lineSeparator());
+            writer.write(sb.toString());
+        }
     }
 }
