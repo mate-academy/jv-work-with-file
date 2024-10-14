@@ -14,11 +14,11 @@ public class WorkWithFile {
     private static final String BUY = "buy";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String text = readFile(fromFileName);
-        writeFile(toFileName, text);
+        String text = readFileAndCreateReport(fromFileName);
+        writeReportToFile(toFileName, text);
     }
 
-    private String readFile(String fromFile) {
+    private String readFileAndCreateReport(String fromFile) {
         int supplyAmount = 0;
         int buyAmount = 0;
         int resultAmount;
@@ -44,8 +44,8 @@ public class WorkWithFile {
                 .append(BUY).append(",").append(buyAmount).append(System.lineSeparator())
                 .append(RESULT).append(",").append(resultAmount).toString();
     }
-
-    private void writeFile(String toFile, String text) {
+    
+    private void writeReportToFile(String toFile, String text) {
         try (BufferedWriter writer
                      = new BufferedWriter(new FileWriter(toFile))) {
             writer.write(text);
