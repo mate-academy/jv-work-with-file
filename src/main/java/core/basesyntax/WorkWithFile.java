@@ -17,7 +17,8 @@ public class WorkWithFile {
             int result = calculateResult(totalSupply, totalBuy);
             writeDataToFile(toFileName, totalSupply, totalBuy, result);
         } catch (IOException e) {
-            throw new RuntimeException("Error processing files: " + fromFileName + " and " + toFileName, e);
+            throw new RuntimeException("Error processing files: " + fromFileName +
+                    " and " + toFileName, e);
         }
     }
 
@@ -44,12 +45,22 @@ public class WorkWithFile {
         return totalSupply - totalBuy;
     }
 
-    private void writeDataToFile(String fileName, int totalSupply, int totalBuy, int result) throws IOException {
+    private void writeDataToFile(String fileName, int totalSupply, int totalBuy,
+                                 int result) throws IOException {
         try (FileWriter writer = new FileWriter(fileName)) {
             StringBuilder sb = new StringBuilder();
-            sb.append(SUPPLY).append(",").append(totalSupply).append(System.lineSeparator());
-            sb.append(BUY).append(",").append(totalBuy).append(System.lineSeparator());
-            sb.append("result").append(",").append(result).append(System.lineSeparator());
+            sb.append(SUPPLY)
+                    .append(",")
+                    .append(totalSupply)
+                    .append(System.lineSeparator());
+            sb.append(BUY)
+                    .append(",")
+                    .append(totalBuy)
+                    .append(System.lineSeparator());
+            sb.append("result")
+                    .append(",")
+                    .append(result)
+                    .append(System.lineSeparator());
             writer.write(sb.toString());
         }
     }
