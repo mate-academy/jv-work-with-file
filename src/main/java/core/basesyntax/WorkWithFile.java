@@ -13,8 +13,10 @@ public class WorkWithFile {
     private static final String RESULT = "result";
     private static final int OPERATION_TYPE_INDEX = 0;
     private static final int AMOUNT_INDEX = 1;
+    private static final int TOTAL_AMOUNT_INDEX = 2;
 
     public void getStatistic(String fromFileName, String toFileName) {
+
         int[] totals = calculateTotals(fromFileName);
 
         int totalSupply = totals[OPERATION_TYPE_INDEX];
@@ -23,8 +25,8 @@ public class WorkWithFile {
 
         int totalAmount = totalSupply - totalBuy;
 
-        processReport(toFileName, totalSupply, totalBuy, totalAmount);
-
+        String report = processReport(new int[]{totalSupply, totalBuy, totalAmount});
+        writeReport(toFileName, report);
     }
 
     private int[] calculateTotals(String fromFileName) {
@@ -59,9 +61,10 @@ public class WorkWithFile {
         return new int[] {totalSupply, totalBuy};
     }
 
-    private void processReport(String toFileName, int totalSupply, int totalBuy, int totalAmount) {
-        String report = prepareReport(totalSupply, totalBuy, totalAmount);
-        writeReport(toFileName, report);
+    private String processReport(int[] totals) {
+        return prepareReport(totals[OPERATION_TYPE_INDEX],
+                totals[AMOUNT_INDEX],
+                totals[TOTAL_AMOUNT_INDEX]);
     }
 
     private String prepareReport(int totalSupply, int totalBuy, int totalAmount) {
