@@ -30,15 +30,11 @@ public class WorkWithFile {
     }
 
     private int[] calculateTotals(String fromFileName) {
-        try (BufferedReader reader = createReader(fromFileName)) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             return calculateTotalsFromReader(reader);
         } catch (IOException e) {
             throw new RuntimeException("Error reading file: " + fromFileName, e);
         }
-    }
-
-    private BufferedReader createReader(String fromFileName) throws IOException {
-        return new BufferedReader(new FileReader(fromFileName));
     }
 
     private int[] calculateTotalsFromReader(BufferedReader reader) throws IOException {
@@ -69,14 +65,10 @@ public class WorkWithFile {
 
     private String prepareReport(int totalSupply, int totalBuy, int totalAmount) {
         StringBuilder report = new StringBuilder();
-        report.append(formatReportLine(SUPPLY, totalSupply))
-                .append(formatReportLine(BUY, totalBuy))
-                .append(formatReportLine(RESULT, totalAmount));
+        report.append(SUPPLY).append(COMMA).append(totalSupply).append(System.lineSeparator())
+                .append(BUY).append(COMMA).append(totalBuy).append(System.lineSeparator())
+                .append(RESULT).append(COMMA).append(totalAmount).append(System.lineSeparator());
         return report.toString();
-    }
-
-    private String formatReportLine(String label, int value) {
-        return label + COMMA + value + System.lineSeparator();
     }
 
     private void writeReport(String toFileName, String report) {
