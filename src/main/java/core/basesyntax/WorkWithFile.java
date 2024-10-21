@@ -12,22 +12,19 @@ public class WorkWithFile {
         int buy = 0;
         int supply = 0;
         try (BufferedReader br = new BufferedReader(new FileReader(fromFileName))) {
-            while (true) {
-                String line = br.readLine();
-                if (line == null) {
-                    break;
-                } else {
-                    String[] splitedLine = line.split(",");
-                    switch (splitedLine[0]) {
-                        case "buy" -> buy += Integer.parseInt(splitedLine[1]);
-                        case "supply" -> supply += Integer.parseInt(splitedLine[1]);
-                        default -> System.out.println("unknown line: " + line);
-                    }
+            String line = br.readLine();
+            while (line != null) {
+                String[] splitedLine = line.split(",");
+                switch (splitedLine[0]) {
+                    case "buy" -> buy += Integer.parseInt(splitedLine[1]);
+                    case "supply" -> supply += Integer.parseInt(splitedLine[1]);
+                    default -> System.out.println("unknown line: " + line);
                 }
+                line = br.readLine();
             }
             writeToFile(toFileName, buy, supply);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
@@ -45,7 +42,7 @@ public class WorkWithFile {
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 }
