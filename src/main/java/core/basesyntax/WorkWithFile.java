@@ -13,7 +13,6 @@ public class WorkWithFile {
     private static final String RESULT = "result";
     private static final int OPERATION_TYPE_INDEX = 0;
     private static final int AMOUNT_INDEX = 1;
-    private static final int TOTAL_AMOUNT_INDEX = 2;
 
     public void getStatistic(String fromFileName, String toFileName) {
 
@@ -58,12 +57,14 @@ public class WorkWithFile {
     }
 
     private String processReport(int[] totals) {
-        return prepareReport(totals[OPERATION_TYPE_INDEX],
-                totals[AMOUNT_INDEX],
-                totals[TOTAL_AMOUNT_INDEX]);
+        return prepareReport(totals);
     }
 
-    private String prepareReport(int totalSupply, int totalBuy, int totalAmount) {
+    private String prepareReport(int[] totals) {
+        int totalSupply = totals[OPERATION_TYPE_INDEX];
+        int totalBuy = totals[AMOUNT_INDEX];
+        int totalAmount = totalSupply - totalBuy;
+
         StringBuilder report = new StringBuilder();
         report.append(SUPPLY).append(COMMA).append(totalSupply).append(System.lineSeparator())
                 .append(BUY).append(COMMA).append(totalBuy).append(System.lineSeparator())
@@ -79,4 +80,3 @@ public class WorkWithFile {
         }
     }
 }
-
