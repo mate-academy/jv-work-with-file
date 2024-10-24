@@ -15,41 +15,32 @@ public class WorkWithFile {
     private static final int AMOUNT_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int[] totals = calculateTotals(fromFileName);
-        String report = processReport(totals);
+        int[] totals = calculateTotalsFromReader(fromFileName);
+        String report = prepareReport(totals);
         writeReport(toFileName, report);
     }
 
-    private int[] calculateTotals(String fromFileName) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
-            return calculateTotalsFromReader(reader);
-        } catch (IOException e) {
-            throw new RuntimeException("Error reading file: " + fromFileName, e);
-        }
-    }
-
-    private int[] calculateTotalsFromReader(BufferedReader reader) throws IOException {
+    private int[] calculateTotalsFromReader(String fromFileName) {
         int totalSupply = OPERATION_TYPE_INDEX;
         int totalBuy = OPERATION_TYPE_INDEX;
 
-        String line;
-        while ((line = reader.readLine()) != null) {
-            String[] data = line.split(COMMA);
-            String operationType = data[OPERATION_TYPE_INDEX];
-            int amount = Integer.parseInt(data[AMOUNT_INDEX]);
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] data = line.split(COMMA);
+                String operationType = data[OPERATION_TYPE_INDEX];
+                int amount = Integer.parseInt(data[AMOUNT_INDEX]);
 
-            if (operationType.equals(SUPPLY)) {
-                totalSupply += amount;
-            } else if (operationType.equals(BUY)) {
-                totalBuy += amount;
+                if (operationType.equals(SUPPLY)) {
+                    totalSupply += amount;
+                } else if (operationType.equals(BUY)) {
+                    totalBuy += amount;
+                }
             }
+        } catch (IOException e) {
+            throw new RuntimeException("Error reading file: " + fromFileName, e);
         }
-
         return new int[] {totalSupply, totalBuy};
-    }
-
-    private String processReport(int[] totals) {
-        return prepareReport(totals);
     }
 
     private String prepareReport(int[] totals) {
