@@ -19,7 +19,7 @@ public class WorkWithFile {
 
             while ((line = reader.readLine()) != null) { // Читаємо файл, рядок за рядком
 
-                String[] parts = line.split("\\W+");
+                String[] parts = line.split(",");
                 String definition = parts[0];
                 int amountOfDefinition = Integer.parseInt(parts[1]);
                 if (definition.equals("buy")) {
@@ -31,14 +31,14 @@ public class WorkWithFile {
             }
             result = supply - buy;
 
-            creatRaport(toFileName, buy, supply, result);
+            createReport(toFileName, buy, supply, result);
 
         } catch (IOException e) {
             e.printStackTrace(); // Виводимо стек виключення в разі помилки
         }
     }
 
-    private void creatRaport(String tofileName, int buy, int supply, int result) {
+    private void createReport(String tofileName, int buy, int supply, int result) {
         try (BufferedWriter writer =
                      new BufferedWriter(new FileWriter(tofileName))) { //try-with-resources
 
