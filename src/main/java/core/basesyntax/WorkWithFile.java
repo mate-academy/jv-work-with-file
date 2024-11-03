@@ -6,7 +6,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,10 +21,15 @@ public class WorkWithFile {
             throw new RuntimeException("Can`t read file", e);
         }
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
+            List<String> resultList = new ArrayList<>();
             for (String key : resultMap.keySet()) {
-                writer.write(key);
-                writer.write(",");
-                writer.write(resultMap.get(key).toString());
+                String stringBuilder = key +
+                        "," +
+                        resultMap.get(key).toString();
+                resultList.add(stringBuilder);
+            }
+            for (String line : resultList.reversed()) {
+                writer.write(line);
                 writer.newLine();
             }
         } catch (IOException e) {
@@ -47,7 +51,6 @@ public class WorkWithFile {
     public Map<String, Integer> getResultMap(List<String> lines) {
         Map<String, Integer> resultMap = new HashMap<>();
         List<String> names = getAllFieldNames(lines);
-        names.sort(Collections.reverseOrder());
         for (String name : names) {
             resultMap.put(name, 0);
         }
