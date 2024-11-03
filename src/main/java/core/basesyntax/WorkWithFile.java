@@ -24,7 +24,7 @@ public class WorkWithFile {
             for (String key : resultMap.keySet()) {
                 writer.write(key);
                 writer.write(",");
-                writer.write(resultMap.get(key));
+                writer.write(resultMap.get(key).toString());
                 writer.newLine();
             }
         } catch (IOException e) {
