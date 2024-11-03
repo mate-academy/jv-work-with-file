@@ -34,6 +34,8 @@ public class WorkWithFile {
                 writer.write(line);
                 writer.newLine();
             }
+            int result = resultMap.get("supply")-resultMap.get("buy");
+            writer.write("result," + result);
         } catch (IOException e) {
             throw new RuntimeException("Can`t create file", e);
         }
