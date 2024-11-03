@@ -5,10 +5,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
@@ -28,7 +25,7 @@ public class WorkWithFile {
                         resultMap.get(key).toString();
                 resultList.add(stringBuilder);
             }
-            resultList = resultList.reversed();
+            resultList.sort(Collections.reverseOrder());
             for (String line : resultList) {
                 writer.write(line);
                 writer.newLine();
