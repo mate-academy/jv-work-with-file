@@ -5,10 +5,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
@@ -46,6 +43,7 @@ public class WorkWithFile {
     public Map<String, Integer> getResultMap(List<String> lines) {
         Map<String, Integer> resultMap = new HashMap<>();
         List<String> names = getAllFieldNames(lines);
+        names.sort(Collections.reverseOrder());
         for (String name : names) {
             resultMap.put(name, 0);
         }
