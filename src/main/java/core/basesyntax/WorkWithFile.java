@@ -36,7 +36,7 @@ public class WorkWithFile {
     public List<String> getAllFieldNames(List<String> lines) {
         List<String> names = new ArrayList<>();
         for (String line : lines) {
-            String[] words = line.split("\\s+");
+            String[] words = line.split(",");
             String firstWord = words[0].replaceAll("[\\p{Punct}]", "");
             names.add(firstWord);
         }
