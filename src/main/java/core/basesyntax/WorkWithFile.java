@@ -28,7 +28,8 @@ public class WorkWithFile {
                         resultMap.get(key).toString();
                 resultList.add(stringBuilder);
             }
-            for (String line : resultList.reversed()) {
+            resultList = resultList.reversed();
+            for (String line : resultList) {
                 writer.write(line);
                 writer.newLine();
             }
