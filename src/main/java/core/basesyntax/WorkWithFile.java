@@ -41,7 +41,8 @@ public class WorkWithFile {
         return new int[]{totalSupply, totalBuy};
     }
 
-    private void writeOutput(String toFileName, int totalSupply, int totalBuy, int result) throws IOException {
+    private void writeOutput(String toFileName, int totalSupply, int totalBuy, int result)
+            throws IOException {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(toFileName))) {
             bw.write(OPERATION_SUPPLY + "," + totalSupply);
             bw.newLine();
