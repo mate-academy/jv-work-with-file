@@ -20,9 +20,9 @@ public class WorkWithFile {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             List<String> resultList = new ArrayList<>();
             for (String key : resultMap.keySet()) {
-                String stringBuilder = key +
-                        "," +
-                        resultMap.get(key).toString();
+                String stringBuilder = key
+                        + ","
+                        + resultMap.get(key).toString();
                 resultList.add(stringBuilder);
             }
             resultList.sort(Collections.reverseOrder());
