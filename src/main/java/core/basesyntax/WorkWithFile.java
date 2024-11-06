@@ -2,7 +2,6 @@ package core.basesyntax;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -28,37 +27,31 @@ public class WorkWithFile {
             throw new RuntimeException("Can't read from file" + fromFileName, e);
         }
         String result = createReport(inputData);
-        File file = new File(toFileName);
-        try {
-            file.createNewFile();
-        } catch (IOException e) {
-            throw new RuntimeException("Can't create file" + toFileName, e);
-        }
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write(result);
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to file" + toFileName, e);
         }
-
     }
 
     private String createReport(StringBuilder inputData) {
         StringBuilder reportBuilder = new StringBuilder();
         int totalSupply = 0;
-        int totalBy = 0;
+        int totalBuy = 0;
         String[] operationList = inputData.toString().split(SEPARATOR);
         for (String currentOperation : operationList) {
             String[] operationName = currentOperation.split(COMMA);
             int quantity = Integer.parseInt(operationName[QUANTITY_POSITION]);
             if (operationName[OPERATION_POSITION].equals(SUPPLY)) {
                 totalSupply = totalSupply + quantity;
-            } else {
-                totalBy = totalBy + quantity;
+            }
+            if (operationName[OPERATION_POSITION].equals(BUY)) {
+                totalBuy = totalBuy + quantity;
             }
         }
         reportBuilder.append(SUPPLY).append(COMMA).append(totalSupply).append(SEPARATOR).append(BUY)
-                .append(COMMA).append(totalBy).append(SEPARATOR).append(RESULT).append(COMMA)
-                .append(totalSupply - totalBy);
+                .append(COMMA).append(totalBuy).append(SEPARATOR).append(RESULT).append(COMMA)
+                .append(totalSupply - totalBuy);
         return reportBuilder.toString();
     }
 }
