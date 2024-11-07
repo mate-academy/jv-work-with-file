@@ -15,9 +15,6 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         readFile(fromFileName);
         writeToFile(toFileName);
-        supply = 0;
-        buy = 0;
-        result = 0;
     }
 
     private void readFile(String fileName) {
@@ -49,10 +46,12 @@ public class WorkWithFile {
 
     private void writeToFile(String fileName) {
         File file = new File(fileName);
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
-            writer.write(getReport());
-        } catch (IOException e) {
-            throw new RuntimeException("Cant write data to file " + fileName, e);
+        if (file.length() == 0) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
+                writer.write(getReport());
+            } catch (IOException e) {
+                throw new RuntimeException("Cant write data to file " + fileName, e);
+            }
         }
     }
 }

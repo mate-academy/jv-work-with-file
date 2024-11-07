@@ -4,6 +4,5 @@ public class Main {
     public static void main(String[] args) {
         WorkWithFile workWithFile = new WorkWithFile();
         workWithFile.getStatistic("banana.csv", "test.csv");
-        workWithFile.getStatistic("banana.csv", "test.csv");
     }
 }
