@@ -8,40 +8,60 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String COMMA = ",";
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
+    private static final int OPERATION_TYPE_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
+    private static final int STRING_PARTS_LENGHT = 2;
+
+    private int supply;
+    private int buy;
+
     public void getStatistic(String fromFileName, String toFileName) {
-        int supply = 0;
-        int buy = 0;
+        supply = 0;
+        buy = 0;
+        readFromFile(fromFileName);
+        String report = generateReport();
+        writeToFile(toFileName, report);
+    }
+
+    private void readFromFile(String fromFileName) {
         File file = new File(fromFileName);
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            String line = reader.readLine();
-            while (line != null) {
-                String[] parts = line.split(",");
-                if (parts.length == 2) {
-                    String operationName = parts[0].trim();
-                    int amount = Integer.parseInt(parts[1].trim());
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(COMMA);
+                if (parts.length == STRING_PARTS_LENGHT) {
+                    String operationName = parts[OPERATION_TYPE_INDEX].trim();
+                    int amount = Integer.parseInt(parts[AMOUNT_INDEX].trim());
 
-                    if (operationName.equals("supply")) {
+                    if (operationName.equals(SUPPLY)) {
                         supply += amount;
-                    } else if (operationName.equals("buy")) {
+                    } else if (operationName.equals(BUY)) {
                         buy += amount;
                     }
                 }
-                line = reader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read file", e);
         }
-        int result = supply - buy;
+    }
 
+    private String generateReport() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(String.format("%s%s%d%n", SUPPLY, COMMA, supply));
+        stringBuilder.append(String.format("%s%s%d%n", BUY, COMMA, buy));
+        stringBuilder.append(String.format("%s%s%d", RESULT, COMMA, supply - buy));
+        return stringBuilder.toString();
+    }
+
+    private void writeToFile(String toFileName, String report) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write("supply," + supply);
-            bufferedWriter.newLine();
-            bufferedWriter.write("buy," + buy);
-            bufferedWriter.newLine();
-            bufferedWriter.write("result," + result);
+            bufferedWriter.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file", e);
         }
     }
-
 }
