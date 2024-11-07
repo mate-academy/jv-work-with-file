@@ -1,6 +1,12 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Arrays;
 
 public class WorkWithFile {
@@ -30,7 +36,7 @@ public class WorkWithFile {
         Integer[] num = new Integer[numbers.length - 1];
         System.out.println(num.length);
         for (int i = 0; i < num.length; i++) {
-            num[i] = Integer.valueOf(numbers[i+1]);
+            num[i] = Integer.valueOf(numbers[i + 1]);
         }
         String[] words = str.trim().split("\\d+");
         StringBuilder stringBuilder1 = new StringBuilder();
@@ -66,7 +72,5 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-
     }
 }
