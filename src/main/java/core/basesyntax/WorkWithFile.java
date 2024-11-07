@@ -2,7 +2,6 @@ package core.basesyntax;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -28,8 +27,7 @@ public class WorkWithFile {
     }
 
     private void readFromFile(String fromFileName) {
-        File file = new File(fromFileName);
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(COMMA);
@@ -51,9 +49,9 @@ public class WorkWithFile {
 
     private String generateReport() {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(String.format("%s%s%d%n", SUPPLY, COMMA, supply));
-        stringBuilder.append(String.format("%s%s%d%n", BUY, COMMA, buy));
-        stringBuilder.append(String.format("%s%s%d", RESULT, COMMA, supply - buy));
+        stringBuilder.append(SUPPLY).append(COMMA).append(supply).append(System.lineSeparator())
+                .append(BUY).append(COMMA).append(buy).append(System.lineSeparator())
+                .append(RESULT).append(COMMA).append(supply - buy);
         return stringBuilder.toString();
     }
 
