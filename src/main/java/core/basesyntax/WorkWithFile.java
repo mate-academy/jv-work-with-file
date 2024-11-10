@@ -16,7 +16,7 @@ public class WorkWithFile {
             BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
             String value = reader.readLine();
             while (value != null) {
-                stringBuilder.append (value);
+                stringBuilder.append(value);
                 value = reader.readLine();
             }
 
