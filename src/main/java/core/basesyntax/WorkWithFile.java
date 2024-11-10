@@ -11,15 +11,13 @@ import java.util.Arrays;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
-        File file = new File(fromFileName);
         StringBuilder stringBuilder = new StringBuilder();
         try {
-            file.createNewFile();
-            BufferedReader reader = new BufferedReader(new FileReader(file));
-            int value = reader.read();
-            while (value != -1) {
-                stringBuilder.append((char) value);
-                value = reader.read();
+            BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
+            String value = reader.readLine();
+            while (value != null) {
+                stringBuilder.append (value);
+                value = reader.readLine();
             }
 
         } catch (FileNotFoundException e) {
@@ -35,8 +33,13 @@ public class WorkWithFile {
         String[] numbers = str.trim().split("\\D+");
         Integer[] num = new Integer[numbers.length - 1];
         System.out.println(num.length);
-        for (int i = 0; i < num.length; i++) {
-            num[i] = Integer.valueOf(numbers[i + 1]);
+        num[0] = Integer.valueOf(numbers[1]);
+        for (int i = 1; i < num.length; i++) {
+            if (Integer.valueOf(numbers[i + 1]) >= 0) {
+                num[i] = Integer.valueOf(numbers[i + 1]);
+            } else {
+                continue;
+            }
         }
         String[] words = str.trim().split("\\d+");
         StringBuilder stringBuilder1 = new StringBuilder();
@@ -63,9 +66,7 @@ public class WorkWithFile {
 
         }
         int result = supply - buy;
-        File file1 = new File(toFileName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            file1.createNewFile();
             bufferedWriter.write("supply," + supply + System.lineSeparator());
             bufferedWriter.write("buy," + buy + System.lineSeparator());
             bufferedWriter.write("result," + result + System.lineSeparator());
