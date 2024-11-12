@@ -1,8 +1,8 @@
 package core.basesyntax;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.BufferedWriter;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -21,9 +21,13 @@ public class WorkWithFile {
                         break;
                     case "supply":
                         supply += Integer.parseInt(data[1]);
+                        break;
+                    default:
+                        continue;
                 }
                 try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-                    writer.write(String.format("supply,%d" + System.lineSeparator() + "buy,%d" + System.lineSeparator() + "result,%d", supply, buy, supply - buy));
+                    writer.write(String.format("supply,%d" + System.lineSeparator()
+                            + "buy,%d" + System.lineSeparator() + "result,%d", supply, buy, supply - buy));
                 } catch (IOException e) {
                     System.out.println(e.getLocalizedMessage());
                 }
