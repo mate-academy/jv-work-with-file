@@ -23,14 +23,13 @@ public class WorkWithFile {
                         supply += Integer.parseInt(data[1]);
                         break;
                     default:
-                        continue;
                 }
-                try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-                    writer.write(String.format("supply,%d" + System.lineSeparator()
-                            + "buy,%d" + System.lineSeparator() + "result,%d", supply, buy, supply - buy));
-                } catch (IOException e) {
-                    System.out.println(e.getLocalizedMessage());
-                }
+            }
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
+                String form = "supply,%d" + System.lineSeparator() + "buy,%d" + System.lineSeparator() + "result,%d";
+                writer.write(String.format(form, supply, buy, supply - buy));
+            } catch (IOException e) {
+                System.out.println(e.getLocalizedMessage());
             }
         } catch (IOException e) {
             System.out.println(e.getLocalizedMessage());
