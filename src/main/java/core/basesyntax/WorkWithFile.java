@@ -26,7 +26,8 @@ public class WorkWithFile {
                 }
             }
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-                String form = "supply,%d" + System.lineSeparator() + "buy,%d" + System.lineSeparator() + "result,%d";
+                String sep = System.lineSeparator();
+                String form = "supply,%d" + sep + "buy,%d" + sep + "result,%d";
                 writer.write(String.format(form, supply, buy, supply - buy));
             } catch (IOException e) {
                 System.out.println(e.getLocalizedMessage());
