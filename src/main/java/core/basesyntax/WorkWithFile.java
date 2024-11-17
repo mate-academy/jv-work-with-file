@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
@@ -32,7 +31,6 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new IOException("Error processing file operations");
         }
-
         myResult = stringSupply + ',' + supply + System.lineSeparator()
                 + stringBuy + ',' + buy + System.lineSeparator()
                 + "result," + result;
@@ -43,7 +41,6 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new IOException("Error writing file");
         }
-
         return;
     }
 }
