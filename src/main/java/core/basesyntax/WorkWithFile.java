@@ -7,7 +7,7 @@ import java.nio.file.Files;
 import java.util.List;
 
 public class WorkWithFile {
-    public void getStatistic(String fromFileName, String toFileName) throws FileNotFoundException {
+    public void getStatistic(String fromFileName, String toFileName) throws IOException {
         File file = new File(fromFileName);
         String stringSupply = "supply";
         String stringBuy = "buy";
@@ -22,15 +22,15 @@ public class WorkWithFile {
             for (String string : stringList) {
                 arrayString = string.split(",");
                 if (arrayString[0].equals(stringSupply)) {
-                    supply += Integer.valueOf(arrayString[1]);
+                    supply += Integer.parseInt(arrayString[1]);
                 }
                 if (arrayString[0].equals(stringBuy)) {
-                    buy += Integer.valueOf(arrayString[1]);
+                    buy += Integer.parseInt(arrayString[1]);
                 }
             }
             result = supply - buy;
         } catch (IOException e) {
-            throw new FileNotFoundException("Can't read data from file");
+            throw new IOException("Error processing file operations");
         }
 
         myResult = stringSupply + ',' + supply + System.lineSeparator()
@@ -41,7 +41,7 @@ public class WorkWithFile {
         try {
             Files.write(file.toPath(), myResult.getBytes());
         } catch (IOException e) {
-            throw new FileNotFoundException("Can't read data from file");
+            throw new IOException("Error writing file");
         }
 
         return;

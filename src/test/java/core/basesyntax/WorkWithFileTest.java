@@ -31,7 +31,7 @@ public class WorkWithFileTest {
     public void getStatisticAboutApple() {
         try {
             workWithFile.getStatistic("apple.csv", APPLE_RESULT_FILE);
-        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
             System.out.println("Can't write data to file");
         }
 
@@ -46,7 +46,7 @@ public class WorkWithFileTest {
     public void getStatisticAboutOrange() {
         try {
         workWithFile.getStatistic("orange.csv", ORANGE_RESULT_FILE);
-        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
             System.out.println("Can't write data to file");
         }
         String actualResult = readFromFile(ORANGE_RESULT_FILE).trim();
@@ -60,7 +60,7 @@ public class WorkWithFileTest {
     public void getStatisticAboutGrape() {
         try {
         workWithFile.getStatistic("grape.csv", GRAPE_RESULT_FILE);
-        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
             System.out.println("Can't write data to file");
         }
         String actualResult = readFromFile(GRAPE_RESULT_FILE).trim();
@@ -74,7 +74,7 @@ public class WorkWithFileTest {
     public void getStatisticAboutBanana() {
         try {
         workWithFile.getStatistic("banana.csv", BANANA_RESULT_FILE);
-        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
             System.out.println("Can't write data to file");
         }
         String actualResult = readFromFile(BANANA_RESULT_FILE).trim();
@@ -89,7 +89,7 @@ public class WorkWithFileTest {
         try {
         workWithFile.getStatistic("banana.csv", BANANA_RESULT_FILE);
         workWithFile.getStatistic("banana.csv", BANANA_RESULT_FILE);
-        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
             System.out.println("Can't write data to file");
         }
         String actualResult = readFromFile(BANANA_RESULT_FILE).trim();
