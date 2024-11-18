@@ -5,7 +5,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
-class FileWork {
+public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         int supply = 0;
@@ -32,7 +32,6 @@ class FileWork {
 
         int result = supply - buy;
 
-        // Write results to the new file
         try (FileWriter writer = new FileWriter(toFileName)) {
             writer.write("supply," + supply + "\n");
             writer.write("buy," + buy + "\n");
