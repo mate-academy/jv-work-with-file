@@ -12,10 +12,6 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
 
         File sourceFile = new File(fromFileName);
-        if (!sourceFile.exists() || !sourceFile.canRead()) {
-            System.out.println("Source file doesn't exists or not readable");
-            return;
-        }
         StringBuilder builder = new StringBuilder();
         int sumSupply = 0;
         int sumBuy = 0;
@@ -27,7 +23,7 @@ public class WorkWithFile {
                 value = reader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can`t read file", e);
+            throw new RuntimeException("Source file doesn't exists or not readable", e);
         }
 
         String[] splitValues = builder.toString().split(System.lineSeparator());
@@ -50,15 +46,10 @@ public class WorkWithFile {
         builder.append("result,").append(sumSupply - sumBuy);
 
         File destinationFile = new File(toFileName);
-        if (!destinationFile.exists() || !destinationFile.canWrite()) {
-            System.out.println("Destination file doesn't exists or not writable");
-            return;
-        }
-
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(destinationFile))) {
             writer.write(builder.toString());
         } catch (IOException e) {
-            throw new RuntimeException("Can`t write file", e);
+            throw new RuntimeException("Destination file doesn't exists or not writable", e);
         }
     }
 }
