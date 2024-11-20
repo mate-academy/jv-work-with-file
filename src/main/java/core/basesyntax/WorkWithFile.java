@@ -30,13 +30,17 @@ public class WorkWithFile {
         String[] array = builder.toString().split(System.lineSeparator());
 
         for (String arr : array) {
+            if (arr == null) {
+                System.out.println("From file name is empty!");
+            }
+
             String[] operationType = arr.split(",");
 
             if (operationType[NAME_POSITION].equals("supply")) {
                 try {
                     sumSupply += Integer.parseInt(operationType[NUM_POSITION]);
                 } catch (NumberFormatException e) {
-                    throw new RuntimeException("Invalid number", e);
+                    throw new RuntimeException("Invalid number, invalid value entered", e);
                 }
             }
 
@@ -44,7 +48,7 @@ public class WorkWithFile {
                 try {
                     sumBuy += Integer.parseInt(operationType[NUM_POSITION]);
                 } catch (NumberFormatException e) {
-                    throw new RuntimeException("Invalid number", e);
+                    throw new RuntimeException("Invalid number, invalid value entered", e);
                 }
             }
         }
@@ -61,5 +65,6 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can`t write file", e);
         }
+
     }
 }
