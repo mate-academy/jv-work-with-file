@@ -34,6 +34,7 @@ public class WorkWithFile {
                 System.out.println("From file name is empty!");
             }
 
+            assert arr != null;
             String[] operationType = arr.split(",");
 
             if (operationType[NAME_POSITION].equals("supply")) {
