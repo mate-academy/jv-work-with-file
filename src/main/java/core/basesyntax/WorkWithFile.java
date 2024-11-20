@@ -8,9 +8,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    public static void main(String[] args) {
-        getStatistic("grape.csv", "report.txt");
-    }
 
     public static void getStatistic(String fromFileName, String toFileName) {
         if (fromFileName == null) {
@@ -44,6 +41,7 @@ public class WorkWithFile {
                 System.out.println("From file name is empty!");
             }
 
+            assert value != null;
             String[] items = value.split(",");
 
             if (items[0].equals("supply")) {
