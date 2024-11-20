@@ -9,7 +9,7 @@ import java.io.IOException;
 
 public class WorkWithFile {
 
-    public static void getStatistic(String fromFileName, String toFileName) {
+    public void getStatistic(String fromFileName, String toFileName) {
         if (fromFileName == null) {
             System.out.println("Source file doesn't exists");
             return;
