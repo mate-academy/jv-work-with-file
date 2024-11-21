@@ -27,7 +27,6 @@ public class WorkWithFile {
         }
 
         String[] splitValues = builder.toString().split(System.lineSeparator());
-
         for (String value : splitValues) {
             String[] items = value.split(",");
 
