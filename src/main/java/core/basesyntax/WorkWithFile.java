@@ -24,7 +24,7 @@ public class WorkWithFile {
                 if (operation.equals(SUPPLY)) {
                     supply += number;
                 }
-                if(operation.equals(BUY)) {
+                if (operation.equals(BUY)) {
                     buy += number;
                 }
                 line = reader.readLine();
