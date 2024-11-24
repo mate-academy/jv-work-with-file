@@ -26,7 +26,7 @@ public class WorkWithFile {
 
             return strBuild.toString();
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file");
+            throw new RuntimeException("Can't read file", e);
         }
     }
 
@@ -54,19 +54,10 @@ public class WorkWithFile {
     }
 
     public void writeDataToFile(String text, String file) {
-        BufferedWriter bufferedWriter = null;
-
-        try {
-            bufferedWriter = new BufferedWriter(new FileWriter(file));
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
             bufferedWriter.write(text);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write date to file");
-        } finally {
-            try {
-                bufferedWriter.close();
-            } catch (IOException e) {
-                throw new RuntimeException();
-            }
+            throw new RuntimeException("Can't write data to file", e);
         }
     }
 }
