@@ -25,7 +25,7 @@ public class WorkWithFile {
                 }
             }
         } catch (IOException e) {
-            throw new RuntimeException("An error occurred while reading the file"
+            throw new RuntimeException("An error occurred while writing to the file"
                     + fromFileName, e);
         }
         int result = supplyTotal - buyTotal;
@@ -36,7 +36,7 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("An error occurred while reading the file" + toFileName, e);
+            throw new RuntimeException("An error occurred while writing to the file" + toFileName, e);
         }
     }
 }
