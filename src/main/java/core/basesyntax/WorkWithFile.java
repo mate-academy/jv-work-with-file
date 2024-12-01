@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -26,7 +25,7 @@ public class WorkWithFile {
             throw new RuntimeException();
         }
         String report = "supply," + supplyCounter + "\n"
-                + "buy," + buyCounter + "\n" + "result," + (supplyCounter -buyCounter);
+                + "buy," + buyCounter + "\n" + "result," + (supplyCounter - buyCounter);
         try {
             Files.writeString(pathToSave, report);
         } catch (IOException e) {
