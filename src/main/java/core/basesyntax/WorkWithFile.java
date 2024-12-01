@@ -15,7 +15,7 @@ public class WorkWithFile {
         try {
             BufferedReader readedFile = new BufferedReader(new FileReader(String.valueOf(path)));
             String[] linesArra = Files.readAllLines(path).toArray(new String[0]);
-            for (int i = 0; i <linesArra.length ; i++) {
+            for (int i = 0; i < linesArra.length; i++) {
                 if (linesArra[i].split(",")[0].equals("supply")) {
                     supplyCounter += Integer.parseInt(linesArra[i].split(",")[1]);
                 } else {
