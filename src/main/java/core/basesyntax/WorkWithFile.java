@@ -1,7 +1,5 @@
 package core.basesyntax;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -17,7 +15,7 @@ public class WorkWithFile {
             for (int i = 0; i < linesArray.length; i++) {
                 if (linesArray[i].split(",")[0].equals("supply")) {
                     supplyCounter += Integer.parseInt(linesArray[i].split(",")[1]);
-                } else if (linesArray[i].split(",")[0].equals("buy")){
+                } else if (linesArray[i].split(",")[0].equals("buy")) {
                     buyCounter += Integer.parseInt(linesArray[i].split(",")[1]);
                 }
             }
