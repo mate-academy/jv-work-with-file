@@ -1,5 +1,7 @@
 package core.basesyntax;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -11,14 +13,13 @@ public class WorkWithFile {
         Path path = Path.of(fromFileName);
         Path pathToSave = Path.of(toFileName);
         try {
-            String readedFile = String.valueOf(Files.readAllLines(path))
-                    .replaceAll("[^sa-zA-Z0-9]", ",");
-            String[] separatedFile = readedFile.split(",");
-            for (int i = 0; i < separatedFile.length; i++) {
-                if (separatedFile[i].trim().equals("supply")) {
-                    supplyCounter += Integer.parseInt(separatedFile[ i + 1]);
-                } else if (separatedFile[i].trim().equals("buy")) {
-                    buyCounter += Integer.parseInt(separatedFile[ i + 1]);
+            BufferedReader readedFile = new BufferedReader(new FileReader(String.valueOf(path)));
+            String[] linesArra = Files.readAllLines(path).toArray(new String[0]);
+            for (int i = 0; i <linesArra.length ; i++) {
+                if (linesArra[i].split(",")[0].equals("supply")) {
+                    supplyCounter += Integer.parseInt(linesArra[i].split(",")[1]);
+                } else {
+                    buyCounter += Integer.parseInt(linesArra[i].split(",")[1]);
                 }
             }
         } catch (IOException e) {
