@@ -13,24 +13,23 @@ public class WorkWithFile {
         Path path = Path.of(fromFileName);
         Path pathToSave = Path.of(toFileName);
         try {
-            BufferedReader readedFile = new BufferedReader(new FileReader(String.valueOf(path)));
-            String[] linesArra = Files.readAllLines(path).toArray(new String[0]);
-            for (int i = 0; i < linesArra.length; i++) {
-                if (linesArra[i].split(",")[0].equals("supply")) {
-                    supplyCounter += Integer.parseInt(linesArra[i].split(",")[1]);
-                } else {
-                    buyCounter += Integer.parseInt(linesArra[i].split(",")[1]);
+            String[] linesArray = Files.readAllLines(path).toArray(new String[0]);
+            for (int i = 0; i < linesArray.length; i++) {
+                if (linesArray[i].split(",")[0].equals("supply")) {
+                    supplyCounter += Integer.parseInt(linesArray[i].split(",")[1]);
+                } else if (linesArray[i].split(",")[0].equals("buy")){
+                    buyCounter += Integer.parseInt(linesArray[i].split(",")[1]);
                 }
             }
         } catch (IOException e) {
-            throw new RuntimeException();
+            throw new RuntimeException("Can't read the file");
         }
         String report = "supply," + supplyCounter + "\n"
                 + "buy," + buyCounter + "\n" + "result," + (supplyCounter - buyCounter);
         try {
             Files.writeString(pathToSave, report);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(" Can't write to File");
         }
     }
 }
