@@ -26,7 +26,7 @@ public class WorkWithFile {
                 content.append(line).append(System.lineSeparator());
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read data from file " + fromFileName, e);
+            throw new RuntimeException("Can't read data from file " + fromFileName, e); 
         }
 
         if (content.toString().isBlank()) {
@@ -67,12 +67,10 @@ public class WorkWithFile {
     }
 
     private void writeToFile(String toFileName, String report) {
-        try {
-            try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-                bufferedWriter.write(report);
-            }
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
+            bufferedWriter.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data to file " + toFileName, e);
+            throw new RuntimeException("Can't write data to file " + toFileName, e); 
         }
     }
 }
