@@ -43,18 +43,17 @@ public class WorkWithFile {
                 throw new RuntimeException("Invalid line format: " + line);
             }
 
-            String operation = parts[0];
-            int amount;
             try {
-                amount = Integer.parseInt(parts[1]);
+                String operation = parts[0];
+                int amount = Integer.parseInt(parts[1]);
+
+                if (operation.equals(SUPPLY)) {
+                    supply += amount;
+                } else if (operation.equals(BUY)) {
+                    buy += amount;
+                }
             } catch (NumberFormatException e) {
                 throw new RuntimeException("Invalid number format in line: " + line, e);
-            }
-
-            if (operation.equals(SUPPLY)) {
-                supply += amount;
-            } else if (operation.equals(BUY)) {
-                buy += amount;
             }
         }
 
