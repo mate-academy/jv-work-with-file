@@ -6,7 +6,6 @@ import java.nio.file.Path;
 import java.util.List;
 
 public class WorkWithFile {
-
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
