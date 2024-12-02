@@ -19,10 +19,16 @@ public class WorkWithFile {
     }
 
     private List<String> readFromFile(String fromFileName) {
+        Path filePath = Path.of(fromFileName);
+
+        if (!Files.exists(filePath)) {
+            throw new RuntimeException("Input file does not exist: " + fromFileName);
+        }
+
         try {
-            return Files.readAllLines(Path.of(fromFileName));
+            return Files.readAllLines(filePath);
         } catch (IOException e) {
-            throw new RuntimeException("Can't read data from file " + fromFileName, e);
+            throw new RuntimeException("Can't read data from file: " + fromFileName, e);
         }
     }
 
@@ -32,8 +38,18 @@ public class WorkWithFile {
 
         for (String line : lines) {
             String[] parts = line.split(COMMA);
+
+            if (parts.length != 2) {
+                throw new RuntimeException("Invalid line format: " + line);
+            }
+
             String operation = parts[0];
-            int amount = Integer.parseInt(parts[1]);
+            int amount;
+            try {
+                amount = Integer.parseInt(parts[1]);
+            } catch (NumberFormatException e) {
+                throw new RuntimeException("Invalid number format in line: " + line, e);
+            }
 
             if (operation.equals(SUPPLY)) {
                 supply += amount;
@@ -48,17 +64,17 @@ public class WorkWithFile {
     }
 
     private void writeToFile(String toFileName, String report) {
-        try {
-            Path filePath = Path.of(toFileName);
-            Path directoryPath = filePath.getParent();
+        Path filePath = Path.of(toFileName);
+        Path directoryPath = filePath.getParent();
 
+        try {
             if (directoryPath != null && !Files.exists(directoryPath)) {
-                Files.createDirectories(directoryPath); 
+                Files.createDirectories(directoryPath);
             }
 
-            Files.writeString(filePath, report); 
+            Files.writeString(filePath, report);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data to file " + toFileName, e);
+            throw new RuntimeException("Can't write data to file: " + toFileName, e);
         }
     }
 }
