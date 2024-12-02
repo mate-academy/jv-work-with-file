@@ -1,47 +1,50 @@
 package core.basesyntax;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.List;
 
 public class WorkWithFile {
+
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
     private static final String COMMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        List<String> lines = readFromFile(fromFileName);
-        String report = generateReport(lines);
+        String report = generateReport(readFromFile(fromFileName));
         writeToFile(toFileName, report);
     }
 
-    private List<String> readFromFile(String fromFileName) {
-        Path filePath = Path.of(fromFileName);
-
-        if (!Files.exists(filePath)) {
-            throw new RuntimeException("Input file does not exist: " + fromFileName);
-        }
-
-        try {
-            return Files.readAllLines(filePath);
+    private String[] readFromFile(String fromFileName) {
+        StringBuilder content = new StringBuilder();
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                content.append(line).append(System.lineSeparator());
+            }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read data from file: " + fromFileName, e);
+            throw new RuntimeException("Can't read data from file " + fromFileName, e);
         }
+
+        if (content.toString().isBlank()) {
+            throw new IllegalArgumentException("The file " + fromFileName + " is empty.");
+        }
+
+        return content.toString().split(System.lineSeparator());
     }
 
-    private String generateReport(List<String> lines) {
+    private String generateReport(String[] lines) {
         int supply = 0;
         int buy = 0;
 
         for (String line : lines) {
             String[] parts = line.split(COMMA);
-
             if (parts.length != 2) {
-                throw new RuntimeException("Invalid line format: " + line);
+                throw new IllegalArgumentException("Invalid file format at line: " + line);
             }
-
             try {
                 String operation = parts[0];
                 int amount = Integer.parseInt(parts[1]);
@@ -50,9 +53,11 @@ public class WorkWithFile {
                     supply += amount;
                 } else if (operation.equals(BUY)) {
                     buy += amount;
+                } else {
+                    throw new IllegalArgumentException("Unknown operation: " + operation);
                 }
             } catch (NumberFormatException e) {
-                throw new RuntimeException("Invalid number format in line: " + line, e);
+                throw new IllegalArgumentException("Invalid number format in line: " + line, e);
             }
         }
 
@@ -62,17 +67,12 @@ public class WorkWithFile {
     }
 
     private void writeToFile(String toFileName, String report) {
-        Path filePath = Path.of(toFileName);
-        Path directoryPath = filePath.getParent();
-
         try {
-            if (directoryPath != null && !Files.exists(directoryPath)) {
-                Files.createDirectories(directoryPath);
+            try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
+                bufferedWriter.write(report);
             }
-
-            Files.writeString(filePath, report);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data to file: " + toFileName, e);
+            throw new RuntimeException("Can't write data to file " + toFileName, e);
         }
     }
 }
