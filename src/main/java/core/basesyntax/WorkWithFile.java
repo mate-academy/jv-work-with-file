@@ -11,31 +11,28 @@ import java.util.List;
 public class WorkWithFile {
     private static final String STRING_SEPARATOR = ",";
     private static final String[] REPORT_COLUMNS = new String[] {"supply", "buy", "result"};
-    private static BufferedWriter bufferedWriter = null;
-    private static File file = null;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        HashMap<String, Integer> results = calculateStatisticResults(fromFileName);
         clearFile(toFileName);
-        file = new File(toFileName);
+        writeFile(fromFileName, toFileName);
+    }
 
-        try {
-            bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true));
+    private void writeFile(String fromFileName, String toFileName) {
+        HashMap<String, Integer> results = calculateStatisticResults(fromFileName);
 
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true))) {
             for (String column: REPORT_COLUMNS) {
                 bufferedWriter.write(column + "," + results.get(column) + System.lineSeparator());
                 bufferedWriter.flush();
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't write file: " + toFileName + ". Error: " + e);
-        } finally {
-            closeBufferWriter(toFileName);
         }
     }
 
-    public HashMap<String, Integer> calculateStatisticResults(String fromFileName) {
+    private HashMap<String, Integer> calculateStatisticResults(String fromFileName) {
         HashMap<String, Integer> results = new HashMap<>();
-        file = new File(fromFileName);
+        File file = new File(fromFileName);
 
         try {
             List<String> lines = Files.readAllLines(file.toPath());
@@ -64,31 +61,11 @@ public class WorkWithFile {
         return results;
     }
 
-    private void closeBufferWriter(String fileName) {
-        if (bufferedWriter != null) {
-            try {
-                bufferedWriter.close();
-            } catch (IOException e) {
-                throw new RuntimeException("Can't close file: " + fileName + ". Error: " + e);
-            }
-        }
-    }
+    private void clearFile(String toFileName) {
+        File file = new File(toFileName);
 
-    private void clearFile(String fileName) {
-        file = new File(fileName);
-
-        try {
-            bufferedWriter = new BufferedWriter(new FileWriter(fileName));
-
-            if (file.exists()) {
-                bufferedWriter.write("");
-                bufferedWriter.flush();
-            }
-
-        } catch (IOException e) {
-            throw new RuntimeException("Can't write file: " + fileName + ". Error: " + e);
-        } finally {
-            closeBufferWriter(fileName);
+        if (file.delete()) {
+            System.out.println("File: " + file.getName() + " successful deleted.");
         }
     }
 
