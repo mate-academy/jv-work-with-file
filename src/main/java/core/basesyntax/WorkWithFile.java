@@ -14,6 +14,10 @@ public class WorkWithFile {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
+                if (parts.length != 2) {
+                    System.out.println("Невірний формат рядка: " + line);
+                    continue;
+                }
                 String operation = parts[0];
                 int amount = Integer.parseInt(parts[1]);
                 if (operation.equals("supply")) {
