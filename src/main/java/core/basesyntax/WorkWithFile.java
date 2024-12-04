@@ -13,14 +13,13 @@ public class WorkWithFile {
     private static final String[] REPORT_COLUMNS = new String[] {"supply", "buy", "result"};
 
     public void getStatistic(String fromFileName, String toFileName) {
-        clearFile(toFileName);
         writeFile(fromFileName, toFileName);
     }
 
     private void writeFile(String fromFileName, String toFileName) {
         HashMap<String, Integer> results = calculateStatisticResults(fromFileName);
 
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName, true))) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             for (String column: REPORT_COLUMNS) {
                 bufferedWriter.write(column + "," + results.get(column) + System.lineSeparator());
                 bufferedWriter.flush();
@@ -60,13 +59,4 @@ public class WorkWithFile {
 
         return results;
     }
-
-    private void clearFile(String toFileName) {
-        File file = new File(toFileName);
-
-        if (file.delete()) {
-            System.out.println("File: " + file.getName() + " successful deleted.");
-        }
-    }
-
 }
