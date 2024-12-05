@@ -14,22 +14,13 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         List<String> lines = readFromFile(fromFileName);
-        HashMap<String, Integer> results = calculateReport(lines);
-        writeReport(results, toFileName);
+        String report = getReportByLines(lines);
+        writeReport(report, toFileName);
     }
 
-    private void writeReport(HashMap<String, Integer> report, String toFileName) {
+    private void writeReport(String report, String toFileName) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            for (String column: REPORT_COLUMNS) {
-                bufferedWriter.write(
-                        new StringBuilder()
-                                .append(column)
-                                .append(COMMA)
-                                .append(report.get(column))
-                                .append(System.lineSeparator())
-                                .toString()
-                );
-            }
+            bufferedWriter.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Can't write file: " + toFileName + ". Error: " + e);
         }
@@ -44,7 +35,7 @@ public class WorkWithFile {
         }
     }
 
-    private HashMap<String, Integer> calculateReport(List<String> lines) {
+    private String getReportByLines(List<String> lines) {
         HashMap<String, Integer> results = new HashMap<>();
 
         for (String line: lines) {
@@ -65,6 +56,11 @@ public class WorkWithFile {
         Integer totalBuy = results.get(REPORT_COLUMNS[1]);
         results.put(REPORT_COLUMNS[2], totalSupply - totalBuy);
 
-        return results;
+        StringBuilder report = new StringBuilder();
+        for (String column: REPORT_COLUMNS) {
+            report.append(column).append(COMMA).append(results.get(column)).append(System.lineSeparator());
+        }
+
+        return report.toString();
     }
 }
