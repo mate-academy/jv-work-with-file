@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class WorkWithFile {
-    private static final String STRING_SEPARATOR = ",";
+    private static final String COMMA = ",";
     private static final String[] REPORT_COLUMNS = new String[] {"supply", "buy", "result"};
 
     public void getStatistic(String fromFileName, String toFileName) {
@@ -21,8 +21,14 @@ public class WorkWithFile {
 
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             for (String column: REPORT_COLUMNS) {
-                bufferedWriter.write(column + "," + results.get(column) + System.lineSeparator());
-                bufferedWriter.flush();
+                bufferedWriter.write(
+                        new StringBuilder()
+                                .append(column)
+                                .append(COMMA)
+                                .append(results.get(column))
+                                .append(System.lineSeparator())
+                                .toString()
+                );
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't write file: " + toFileName + ". Error: " + e);
@@ -37,7 +43,7 @@ public class WorkWithFile {
             List<String> lines = Files.readAllLines(file.toPath());
 
             for (String line: lines) {
-                String[] splitLine = line.split(STRING_SEPARATOR);
+                String[] splitLine = line.split(COMMA);
                 String operationType = splitLine[0];
                 int amount = Integer.parseInt(splitLine[1]);
 
