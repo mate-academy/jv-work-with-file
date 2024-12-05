@@ -13,19 +13,19 @@ public class WorkWithFile {
     private static final String[] REPORT_COLUMNS = new String[] {"supply", "buy", "result"};
 
     public void getStatistic(String fromFileName, String toFileName) {
-        writeFile(fromFileName, toFileName);
+        List<String> lines = readFromFile(fromFileName);
+        HashMap<String, Integer> results = calculateReport(lines);
+        writeReport(results, toFileName);
     }
 
-    private void writeFile(String fromFileName, String toFileName) {
-        HashMap<String, Integer> results = calculateStatisticResults(fromFileName);
-
+    private void writeReport(HashMap<String, Integer> report, String toFileName) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             for (String column: REPORT_COLUMNS) {
                 bufferedWriter.write(
                         new StringBuilder()
                                 .append(column)
                                 .append(COMMA)
-                                .append(results.get(column))
+                                .append(report.get(column))
                                 .append(System.lineSeparator())
                                 .toString()
                 );
@@ -35,33 +35,35 @@ public class WorkWithFile {
         }
     }
 
-    private HashMap<String, Integer> calculateStatisticResults(String fromFileName) {
-        HashMap<String, Integer> results = new HashMap<>();
+    private List<String> readFromFile(String fromFileName) {
         File file = new File(fromFileName);
-
         try {
-            List<String> lines = Files.readAllLines(file.toPath());
-
-            for (String line: lines) {
-                String[] splitLine = line.split(COMMA);
-                String operationType = splitLine[0];
-                int amount = Integer.parseInt(splitLine[1]);
-
-                Integer previousSum = results.get(operationType);
-
-                if (previousSum != null) {
-                    results.replace(operationType, previousSum + amount);
-                } else {
-                    results.put(operationType, amount);
-                }
-            }
-
-            Integer totalSupply = results.get(REPORT_COLUMNS[0]);
-            Integer totalBuy = results.get(REPORT_COLUMNS[1]);
-            results.put(REPORT_COLUMNS[2], totalSupply - totalBuy);
+            return Files.readAllLines(file.toPath());
         } catch (IOException e) {
-            throw new RuntimeException("Error reading file: ", e);
+            throw new RuntimeException(e);
         }
+    }
+
+    private HashMap<String, Integer> calculateReport(List<String> lines) {
+        HashMap<String, Integer> results = new HashMap<>();
+
+        for (String line: lines) {
+            String[] splitLine = line.split(COMMA);
+            String operationType = splitLine[0];
+            int amount = Integer.parseInt(splitLine[1]);
+
+            Integer previousSum = results.get(operationType);
+
+            if (previousSum != null) {
+                results.replace(operationType, previousSum + amount);
+            } else {
+                results.put(operationType, amount);
+            }
+        }
+
+        Integer totalSupply = results.get(REPORT_COLUMNS[0]);
+        Integer totalBuy = results.get(REPORT_COLUMNS[1]);
+        results.put(REPORT_COLUMNS[2], totalSupply - totalBuy);
 
         return results;
     }
