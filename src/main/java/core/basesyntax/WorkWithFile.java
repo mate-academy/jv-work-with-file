@@ -58,7 +58,11 @@ public class WorkWithFile {
 
         StringBuilder report = new StringBuilder();
         for (String column: REPORT_COLUMNS) {
-            report.append(column).append(COMMA).append(results.get(column)).append(System.lineSeparator());
+            report
+                    .append(column)
+                    .append(COMMA)
+                    .append(results.get(column))
+                    .append(System.lineSeparator());
         }
 
         return report.toString();
