@@ -53,10 +53,4 @@ public class WorkWithFile {
             throw new RuntimeException("Cannot write to .csv file " + toFileName + e);
         }
     }
-
-    public static void main(String[] args) {
-        WorkWithFile workWithFile = new WorkWithFile();
-        workWithFile.getStatistic("apple.csv", "report.csv");
-
-    }
 }
