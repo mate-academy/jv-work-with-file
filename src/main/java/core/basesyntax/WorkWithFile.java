@@ -15,7 +15,7 @@ public class WorkWithFile {
     }
 
     private static Map<String, Integer> getDataFromFile(String fromFileName) {
-        Map<String, Integer> map = new TreeMap<String, Integer>(Collections.reverseOrder());
+        Map<String, Integer> map = new TreeMap<>(Collections.reverseOrder());
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String line;
             int coma;
@@ -27,12 +27,12 @@ public class WorkWithFile {
                 if (map.containsKey(line.substring(0, coma))) {
                     oldMapValue = map.get(line.substring(0, coma));
                     newMapValue = oldMapValue
-                            + Integer.parseInt(line.substring(coma + 1, line.length()));
+                            + Integer.parseInt(line.substring(coma + 1));
                     map.put(line.substring(0, coma), newMapValue);
                     continue;
                 }
                 map.put(line.substring(0, coma),
-                        Integer.parseInt(line.substring(coma + 1, line.length())));
+                        Integer.parseInt(line.substring(coma + 1)));
             }
             return map;
         } catch (IOException e) {
