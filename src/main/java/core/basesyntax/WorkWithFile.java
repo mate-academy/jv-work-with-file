@@ -15,6 +15,7 @@ public class WorkWithFile {
     private final char comma = ',';
     private final String supply = "supply";
     private final String buy = "buy";
+    private final String result = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
         List<String> lines = getStringFromFile(fromFileName);
@@ -49,7 +50,7 @@ public class WorkWithFile {
         }
         map.put(supply, supplyCounter);
         map.put(buy, buyCounter);
-        map.put("result", supplyCounter - buyCounter);
+        map.put(result, supplyCounter - buyCounter);
         return map;
     }
 
