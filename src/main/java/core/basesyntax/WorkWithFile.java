@@ -15,8 +15,17 @@ public class WorkWithFile {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
+                if (parts.length != 2) {
+                    throw new IllegalArgumentException("Invalid format in line: " + line);
+                }
+
                 String operation = parts[0];
-                int amount = Integer.parseInt(parts[1]);
+                int amount;
+                try {
+                    amount = Integer.parseInt(parts[1]);
+                } catch (NumberFormatException e) {
+                    throw new IllegalArgumentException("Invalid amount in line: " + line, e);
+                }
 
                 if (operation.equals("supply")) {
                     totalSupply += amount;
