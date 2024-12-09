@@ -11,6 +11,11 @@ import java.util.List;
 import java.util.Map;
 
 public class WorkWithFile {
+
+    private final char comma = ',';
+    private final String supply = "supply";
+    private final String buy = "buy";
+
     public void getStatistic(String fromFileName, String toFileName) {
         List<String> lines = getStringFromFile(fromFileName);
         Map<String, Integer> map = calculateAndFormReport(lines);
@@ -30,28 +35,28 @@ public class WorkWithFile {
     }
 
     private Map<String, Integer> calculateAndFormReport(List<String> lines) {
-        int supply = 0;
-        int buy = 0;
+        int supplyCounter = 0;
+        int buyCounter = 0;
         int addingNumber;
         Map<String, Integer> map = new LinkedHashMap<>();
         for (String string : lines) {
-            addingNumber = Integer.parseInt(string.substring(string.indexOf(',') + 1));
-            if (string.contains("supply")) {
-                supply += addingNumber;
+            addingNumber = Integer.parseInt(string.substring(string.indexOf(comma) + 1));
+            if (string.contains(supply)) {
+                supplyCounter += addingNumber;
             } else {
-                buy += addingNumber;
+                buyCounter += addingNumber;
             }
         }
-        map.put("supply", supply);
-        map.put("buy", buy);
-        map.put("result", supply - buy);
+        map.put(supply, supplyCounter);
+        map.put(buy, buyCounter);
+        map.put("result", supplyCounter - buyCounter);
         return map;
     }
 
     private void writeDataToFile(Map<String, Integer> reportValues, String toFileName) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             for (Map.Entry<String, Integer> entry : reportValues.entrySet()) {
-                bufferedWriter.write(entry.getKey() + "," + entry.getValue()
+                bufferedWriter.write(entry.getKey() + comma + entry.getValue()
                         + System.lineSeparator());
             }
         } catch (IOException e) {
