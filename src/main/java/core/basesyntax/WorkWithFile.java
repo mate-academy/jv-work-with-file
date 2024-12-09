@@ -5,52 +5,57 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
-        writeDataToFile(getDataFromFile(fromFileName), toFileName);
+        List<String> lines = getStringFromFile(fromFileName);
+        Map<String, Integer> map = calculateAndFormReport(lines);
+        writeDataToFile(map, toFileName);
     }
 
-    private static Map<String, Integer> getDataFromFile(String fromFileName) {
-        Map<String, Integer> map = new TreeMap<>(Collections.reverseOrder());
+    private List<String> getStringFromFile(String fromFileName) {
+        List<String> lines = new ArrayList<String>();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
-            String line;
-            int coma;
-            int oldMapValue;
-            int newMapValue;
-
-            while ((line = bufferedReader.readLine()) != null) {
-                coma = line.indexOf(',');
-                if (map.containsKey(line.substring(0, coma))) {
-                    oldMapValue = map.get(line.substring(0, coma));
-                    newMapValue = oldMapValue
-                            + Integer.parseInt(line.substring(coma + 1));
-                    map.put(line.substring(0, coma), newMapValue);
-                    continue;
-                }
-                map.put(line.substring(0, coma),
-                        Integer.parseInt(line.substring(coma + 1)));
+            while (bufferedReader.ready()) {
+                lines.add(bufferedReader.readLine());
             }
-            return map;
+            return lines;
         } catch (IOException e) {
-            throw new RuntimeException("Cannot read from .csv file " + fromFileName + e);
+            throw new RuntimeException("Cannot read from .csv file " + fromFileName, e);
         }
     }
 
-    private static void writeDataToFile(Map<String, Integer> data, String toFileName) {
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            int result = data.get("supply") - data.get("buy");
-
-            for (Map.Entry<String, Integer> entry : data.entrySet()) {
-                bufferedWriter.write(entry.getKey() + ","
-                        + entry.getValue() + System.lineSeparator());
+    private Map<String, Integer> calculateAndFormReport(List<String> lines) {
+        int supply = 0;
+        int buy = 0;
+        int addingNumber;
+        Map<String, Integer> map = new LinkedHashMap<>();
+        for (String string : lines) {
+            addingNumber = Integer.parseInt(string.substring(string.indexOf(',') + 1));
+            if (string.contains("supply")) {
+                supply += addingNumber;
+            } else {
+                buy += addingNumber;
             }
-            bufferedWriter.write("result," + result);
+        }
+        map.put("supply", supply);
+        map.put("buy", buy);
+        map.put("result", supply - buy);
+        return map;
+    }
+
+    private void writeDataToFile(Map<String, Integer> reportValues, String toFileName) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
+            for (Map.Entry<String, Integer> entry : reportValues.entrySet()) {
+                bufferedWriter.write(entry.getKey() + "," + entry.getValue()
+                        + System.lineSeparator());
+            }
         } catch (IOException e) {
-            throw new RuntimeException("Cannot write to .csv file " + toFileName + e);
+            throw new RuntimeException("Cannot write to .csv file " + toFileName, e);
         }
     }
 }
