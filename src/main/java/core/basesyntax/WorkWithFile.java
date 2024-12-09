@@ -18,7 +18,7 @@ public class WorkWithFile {
     }
 
     private List<String> getStringFromFile(String fromFileName) {
-        List<String> lines = new ArrayList<String>();
+        List<String> lines = new ArrayList<>();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             while (bufferedReader.ready()) {
                 lines.add(bufferedReader.readLine());
