@@ -10,6 +10,11 @@ import java.util.List;
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         File file = new File(fromFileName);
+
+        if (!file.exists() || !file.canWrite()) {
+            throw new RuntimeException("Such file does not exist: " + fromFileName);
+        }
+
         int totalSupply = 0;
         int totalBuy = 0;
 
@@ -18,13 +23,18 @@ public class WorkWithFile {
             for (String row : rows) {
                 String[] parts = row.split(",");
                 String operation = parts[0];
-                int value = Integer.parseInt(parts[1]);
+                try {
+                    int value = Integer.parseInt(parts[1]);
 
-                if (operation.equals("supply")) {
-                    totalSupply += value;
-                } else if (operation.equals("buy")) {
-                    totalBuy += value;
+                    if (operation.equals("supply")) {
+                        totalSupply += value;
+                    } else if (operation.equals("buy")) {
+                        totalBuy += value;
+                    }
+                } catch (NumberFormatException e) {
+                    throw new NumberFormatException();
                 }
+
             }
         } catch (IOException e) {
             throw new RuntimeException("Unable to read provided file: " + fromFileName, e);
@@ -34,6 +44,10 @@ public class WorkWithFile {
 
         File finalFile = new File(toFileName);
 
+        File parentDir = finalFile.getParentFile();
+        if (parentDir != null && !parentDir.exists() && !parentDir.mkdirs()) {
+            throw new RuntimeException("Unable to create directories for file: " + toFileName);
+        }
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(finalFile))) {
             writer.write("supply," + totalSupply + System.lineSeparator());
             writer.write("buy," + totalBuy + System.lineSeparator());
