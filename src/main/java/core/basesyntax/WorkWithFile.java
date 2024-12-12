@@ -31,9 +31,9 @@ public class WorkWithFile {
         int buySum = 0;
         for (String row : data) {
             String[] rowDataArr = row.split(",");
-            if (rowDataArr[0].equals("supply")) {
+            if (rowDataArr[0].equals(SUPPLY_ROW_NAME)) {
                 supplySum += Integer.parseInt(rowDataArr[1]);
-            } else if (rowDataArr[0].equals("buy")) {
+            } else if (rowDataArr[0].equals(BUY_ROW_NAME)) {
                 buySum += Integer.parseInt(rowDataArr[1]);
             }
         }
