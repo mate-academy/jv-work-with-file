@@ -1,49 +1,62 @@
 package core.basesyntax;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.List;
 
 public class WorkWithFile {
+    public static final String SUPPLY_ROW_NAME = "supply";
+    public static final String BUY_ROW_NAME = "buy";
+    public static final String RESULT_ROW_NAME = "result";
+
     public void getStatistic(String fromFileName, String toFileName) {
-        int buySum = 0;
-        int supplySum = 0;
-        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
-            String line = reader.readLine();
-            while (line != null) {
-                String[] lineValues = line.split(",");
-                if (lineValues[0].equals("buy")) {
-                    buySum += Integer.parseInt(lineValues[1]);
-                } else if (lineValues[0].equals("supply")) {
-                    supplySum += Integer.parseInt(lineValues[1]);
-                }
-                line = reader.readLine();
-            }
+        List<String> dataRows = readData(fromFileName);
+        String resultString = processData(dataRows);
+        writeReport(toFileName, resultString);
+    }
+
+    private List<String> readData(String sourceFile) {
+        try {
+            return Files.readAllLines(new File(sourceFile).toPath());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private String processData(List<String> data) {
+        int supplySum = 0;
+        int buySum = 0;
+        for (String row : data) {
+            String[] rowDataArr = row.split(",");
+            if (rowDataArr[0].equals("supply")) {
+                supplySum += Integer.parseInt(rowDataArr[1]);
+            } else if (rowDataArr[0].equals("buy")) {
+                buySum += Integer.parseInt(rowDataArr[1]);
+            }
+        }
         int result = supplySum - buySum;
-        File toFileFile = new File(toFileName);
-        try {
-            Files.deleteIfExists(toFileFile.toPath());
-        } catch (IOException e) {
-            throw new RuntimeException("Cannot delete file " + toFileName, e);
-        }
-        try {
-            Files.createFile(toFileFile.toPath());
-        } catch (IOException e) {
-            throw new RuntimeException("Cannot create file " + toFileName, e);
-        }
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName, true))) {
-            writer.write("supply," + supplySum);
-            writer.newLine();
-            writer.write("buy," + buySum);
-            writer.newLine();
-            writer.write("result," + result);
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder
+                .append(SUPPLY_ROW_NAME)
+                .append(",")
+                .append(supplySum)
+                .append(System.lineSeparator())
+                .append(BUY_ROW_NAME)
+                .append(",")
+                .append(buySum)
+                .append(System.lineSeparator())
+                .append(RESULT_ROW_NAME)
+                .append(",")
+                .append(result);
+        return stringBuilder.toString();
+    }
+
+    private void writeReport(String outputFile, String result) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile))) {
+            writer.write(result);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
