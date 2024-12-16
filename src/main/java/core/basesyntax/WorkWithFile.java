@@ -11,7 +11,7 @@ public class WorkWithFile {
     private static final int NAME = 0;
     private static final int AMOUNT = 1;
     private static final String EXCEPTION_READ_TEXT = "Can't read the file";
-    private static final String EXCEPTION_WRITE_TEXT = "Can't writ to the file";
+    private static final String EXCEPTION_WRITE_TEXT = "Can't write to the file";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String textToWrite = readFile(fromFileName);
@@ -29,7 +29,8 @@ public class WorkWithFile {
                 String[] splitValue = value.split(",");
                 if (splitValue[NAME].equals("supply")) {
                     supply += Integer.parseInt(splitValue[AMOUNT]);
-                } else {
+                }
+                if (splitValue[NAME].equals("buy")) {
                     buy += Integer.parseInt(splitValue[AMOUNT]);
                 }
                 value = reader.readLine();
