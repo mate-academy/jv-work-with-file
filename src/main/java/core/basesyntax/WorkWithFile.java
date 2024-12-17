@@ -33,9 +33,9 @@ public class WorkWithFile {
         int countOfBuy = 0;
         StringBuilder stringBuilder = new StringBuilder();
 
-        String[] split = text.split(" ");
-        for (String s : split) {
-            String[] strArray = s.split(",");
+        String[] splitStr = text.split("\\s+");
+        for (int i = 0; i < splitStr.length; i++) {
+            String[] strArray = splitStr[i].split(",");
             if (strArray[0].equals("supply")) {
                 countOfSupply += Integer.parseInt(strArray[1]);
             } else {
