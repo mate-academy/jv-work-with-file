@@ -9,12 +9,13 @@ import java.io.IOException;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
+        final String buy = "buy";
+        final String supply = "supply";
+        final String result = "result";
         File fromFile = new File(fromFileName);
         StringBuilder builder = new StringBuilder();
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFile));
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFile))) {
             String value = bufferedReader.readLine();
-
             while (value != null) {
                 builder.append(value).append(System.lineSeparator());
                 value = bufferedReader.readLine();
@@ -42,12 +43,12 @@ public class WorkWithFile {
         }
         int resultSum = supplySum - buySum;
 
-        String result = resultBuilder.append("supply,").append(supplySum)
+        String resultString = resultBuilder.append(supply).append(",").append(supplySum)
                 .append(System.lineSeparator())
-                .append("buy,").append(buySum).append(System.lineSeparator())
-                .append("result,").append(resultSum).toString();
+                .append(buy).append(",").append(buySum).append(System.lineSeparator())
+                .append(result).append(",").append(resultSum).toString();
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write(result);
+            bufferedWriter.write(resultString);
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file", e);
         }
