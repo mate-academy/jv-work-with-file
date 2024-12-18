@@ -30,20 +30,22 @@ public class WorkWithFile {
             names[i] = divided[0];
             numbers[i] = Integer.parseInt(divided[1]);
         }
-        String defaultName = names[0];
-        int sum = 0;
+        int buySum = 0;
+        int supplySum = 0;
         StringBuilder resultBuilder = new StringBuilder();
-        for (int i = 0; i < readFile.length; i++) {
-            for (int j = 0; j < readFile.length; j++) {
-                if (names[j].equals(defaultName)) {
-                    sum += numbers[i];
-
-                }
+        for (int j = 0; j < readFile.length; j++) {
+            if (names[j].equals("buy")) {
+                buySum += numbers[j];
+            } else {
+                supplySum += numbers[j];
             }
-            builder.append(names[i]).append(",").append(sum).append(System.lineSeparator());
-            defaultName = names[i];
         }
-        String result = builder.toString();
+        int resultSum = supplySum - buySum;
+
+        String result = resultBuilder.append("supply,").append(supplySum)
+                .append(System.lineSeparator())
+                .append("buy,").append(buySum).append(System.lineSeparator())
+                .append("result,").append(resultSum).toString();
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(result);
         } catch (IOException e) {
