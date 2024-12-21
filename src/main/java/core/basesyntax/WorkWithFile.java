@@ -10,14 +10,14 @@ import java.io.IOException;
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         String[] entries = getTableEntries(fromFileName);
-        if(entries.length == 0 || entries[0].isEmpty()){
+        if (entries.length == 0 || entries[0].isEmpty()) {
             return;
         }
         String[] reportData = getReportData(entries);
         clearFile(toFileName);
-        for(String entry : reportData){
-            try(BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName,
-                    true))){
+        for (String entry : reportData) {
+            try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName,
+                    true))) {
                 bufferedWriter.write(entry + System.lineSeparator());
             } catch (IOException e) {
                 throw new RuntimeException("Can't write to this file: " + toFileName, e);
@@ -34,7 +34,7 @@ public class WorkWithFile {
     }
 
     public String[] getTableEntries(String fromFileName) {
-        try(BufferedReader reader = new BufferedReader(new FileReader(fromFileName))){
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             StringBuilder data = new StringBuilder();
             String value = reader.readLine();
             while (value != null) {
@@ -54,11 +54,11 @@ public class WorkWithFile {
         StringBuilder report = new StringBuilder();
         int buyAmount = 0;
         int supplyAmount = 0;
-        for(String entry : tableData){
+        for (String entry : tableData) {
             String[] data = entry.split(",");
-            if(data[0].equals("buy")){
+            if (data[0].equals("buy")) {
                 buyAmount += Integer.parseInt(data[1]);
-            } else if(data[0].equals("supply")){
+            } else if (data[0].equals("supply")) {
                 supplyAmount += Integer.parseInt(data[1]);
             }
         }
