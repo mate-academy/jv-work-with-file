@@ -9,27 +9,22 @@ import java.io.IOException;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
-        String[] entries = getTableEntries(fromFileName);
-        if (entries.length == 0 || entries[0].isEmpty()) {
+        if (fromFileName.isEmpty()) {
             return;
         }
+        String[] entries = getTableEntries(fromFileName);
         String[] reportData = getReportData(entries);
-        clearFile(toFileName);
-        for (String entry : reportData) {
-            try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName,
-                    true))) {
-                bufferedWriter.write(entry + System.lineSeparator());
-            } catch (IOException e) {
-                throw new RuntimeException("Can't write to this file: " + toFileName, e);
-            }
-        }
-    }
 
-    public void clearFile(String fileName) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
-            writer.write("");
+        StringBuilder reportBuilder = new StringBuilder();
+
+        for (String entry : reportData) {
+            reportBuilder.append(entry).append(System.lineSeparator());
+        }
+
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
+            bufferedWriter.write(reportBuilder.toString().trim() + System.lineSeparator());
         } catch (IOException e) {
-            throw new RuntimeException("Error clearing file: " + fileName, e);
+            throw new RuntimeException("Can't write to this file: " + toFileName, e);
         }
     }
 
@@ -54,13 +49,18 @@ public class WorkWithFile {
         StringBuilder report = new StringBuilder();
         int buyAmount = 0;
         int supplyAmount = 0;
-        for (String entry : tableData) {
-            String[] data = entry.split(",");
-            if (data[0].equals("buy")) {
-                buyAmount += Integer.parseInt(data[1]);
-            } else if (data[0].equals("supply")) {
-                supplyAmount += Integer.parseInt(data[1]);
+
+        try {
+            for (String entry : tableData) {
+                String[] data = entry.split(",");
+                if (data[0].equals("buy")) {
+                    buyAmount += Integer.parseInt(data[1]);
+                } else if (data[0].equals("supply")) {
+                    supplyAmount += Integer.parseInt(data[1]);
+                }
             }
+        } catch (RuntimeException e) {
+            throw new ArrayIndexOutOfBoundsException("Wrong data format");
         }
         report.append("supply,").append(supplyAmount).append(System.lineSeparator())
                 .append("buy,").append(buyAmount).append(System.lineSeparator())
