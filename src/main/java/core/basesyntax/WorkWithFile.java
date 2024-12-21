@@ -12,6 +12,10 @@ public class WorkWithFile {
     public static final String RESULT_KEYWORD = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
+        writeOutputFile(toFileName, getOutputString(fromFileName));
+    }
+
+    private String getOutputString(String fromFileName) {
         StringBuilder outputString = new StringBuilder();
         try (BufferedReader inputFileBuffRdr = new BufferedReader(new FileReader(fromFileName))) {
             String inputLine;
@@ -20,7 +24,7 @@ public class WorkWithFile {
                 String[] splittedInputLine = inputLine.split(",");
                 if (splittedInputLine[0].equals(FIRST_KEYWORD)) {
                     countedBalances[0] += Integer.parseInt(splittedInputLine[1]);
-                } else {
+                } else if (splittedInputLine[0].equals(SECOND_KEYWORD)) {
                     countedBalances[1] += Integer.parseInt(splittedInputLine[1]);
                 }
             }
@@ -34,12 +38,14 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Cannot read from file", e);
         }
+        return outputString.toString();
+    }
 
+    private void writeOutputFile(String toFileName, String outputString) {
         try {
-            Files.write(Paths.get(toFileName), outputString.toString().getBytes());
+            Files.write(Paths.get(toFileName), outputString.getBytes());
         } catch (IOException e) {
             throw new RuntimeException("Can`t write results to file.", e);
         }
-
     }
 }
