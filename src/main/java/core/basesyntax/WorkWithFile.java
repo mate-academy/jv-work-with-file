@@ -26,6 +26,9 @@ public class WorkWithFile {
                     countedBalances[0] += Integer.parseInt(splittedInputLine[1]);
                 } else if (splittedInputLine[0].equals(SECOND_KEYWORD)) {
                     countedBalances[1] += Integer.parseInt(splittedInputLine[1]);
+                } else {
+                    throw new Exception("The keywords are not recognized. "
+                            + "Please correct the inout data file to proceed");
                 }
             }
             outputString.append(FIRST_KEYWORD).append(",").append(countedBalances[0])
@@ -37,6 +40,8 @@ public class WorkWithFile {
                     .append(System.lineSeparator());
         } catch (IOException e) {
             throw new RuntimeException("Cannot read from file", e);
+        } catch (Exception e) {
+            throw new RuntimeException("Unrecognized keywords.", e);
         }
         return outputString.toString();
     }
