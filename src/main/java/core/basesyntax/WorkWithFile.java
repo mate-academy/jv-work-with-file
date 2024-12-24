@@ -18,7 +18,7 @@ public class WorkWithFile {
         try {
             Files.write(file.toPath(), toFileName.getBytes(), StandardOpenOption.APPEND);
         } catch (Exception e) {
-            throw new RuntimeException("Can't write to data to file", e);
+            throw new RuntimeException("Can't write to data to file",e);
         }
     }
 
