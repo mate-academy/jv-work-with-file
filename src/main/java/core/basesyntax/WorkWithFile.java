@@ -13,12 +13,13 @@ public class WorkWithFile {
             List<String> strings = Files.readAllLines(file.toPath());
             System.out.println(strings);
         } catch (IOException e) {
-            throw new RuntimeException("Can't read fails ", e);
+            throw new RuntimeException("Can't read file", e);
         }
+
         try {
             Files.write(file.toPath(), toFileName.getBytes(), StandardOpenOption.APPEND);
         } catch (Exception e) {
-            throw new RuntimeException("Can't write to data to file",e);
+            throw new RuntimeException("Can't write data to file", e);
         }
     }
 
