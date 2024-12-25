@@ -1,9 +1,10 @@
 package core.basesyntax;
 
-import java.io.FileWriter;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 
 class WorkWithFile {
@@ -17,7 +18,7 @@ class WorkWithFile {
         Integer supplyCount = 0;
         Integer buyCount = 0;
 
-        try (BufferedReader br = new BufferedReader (new FileReader (fromFileName))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(fromFileName))) {
             String value;
             while ((value = br.readLine()) != null) {
                 try {
@@ -45,7 +46,7 @@ class WorkWithFile {
             throw new IllegalArgumentException("File is not found!");
         }
 
-        try(BufferedWriter bw = new BufferedWriter(new FileWriter (toFileName))) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(toFileName))) {
             bw.write(sb.toString());
         } catch (IOException e) {
             throw new RuntimeException("Can't write data from the file " + toFileName, e);
