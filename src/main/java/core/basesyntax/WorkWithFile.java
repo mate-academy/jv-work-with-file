@@ -13,12 +13,11 @@ public class WorkWithFile {
             return;
         }
 
-        String sCurrentLine = "'^[a-z]([a-z0-9][a-zA-Z0-9]*)?$'";
         Integer supplyCount = 0;
         Integer buyCount = 0;
 
         try (BufferedReader br = new BufferedReader(new FileReader(fromFileName))) {
-
+            String sCurrentLine;
             while ((sCurrentLine = br.readLine()) != null) {
                 String [] elements = sCurrentLine.split(",");
                 if (elements[0].equals("supply")) {
