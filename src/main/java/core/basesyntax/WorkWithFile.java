@@ -13,14 +13,13 @@ public class WorkWithFile {
             return;
         }
 
-        String sCurrentLine = null;
+        String sCurrentLine = "'^[a-z]([a-z0-9][a-zA-Z0-9]*)?$'";
         Integer supplyCount = 0;
         Integer buyCount = 0;
 
         try (BufferedReader br = new BufferedReader(new FileReader(fromFileName))) {
 
-            while ((sCurrentLine = br.readLine()) != null)
-            {
+            while ((sCurrentLine = br.readLine()) != null) {
                 String [] elements = sCurrentLine.split(",");
                 if (elements[0].equals("supply")) {
                     supplyCount += Integer.parseInt(elements[1]);
@@ -35,8 +34,8 @@ public class WorkWithFile {
         StringBuilder sb = new StringBuilder();
         sb.append("supply").append(",").append(supplyCount).append(System.lineSeparator());
         sb.append("buy").append(",").append(buyCount).append(System.lineSeparator());
-        sb.append("result").append(",").append(supplyCount - buyCount).
-                append(System.lineSeparator());
+        sb.append("result").append(",").append(supplyCount - buyCount)
+                        .append(System.lineSeparator());
 
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(toFileName))) {
             bw.write(sb.toString());
