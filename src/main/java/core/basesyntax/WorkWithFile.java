@@ -17,10 +17,9 @@ public class WorkWithFile {
         Integer buyCount = 0;
 
         try (BufferedReader br = new BufferedReader(new FileReader(fromFileName))) {
-
-            while ((br.readLine()) != null) {
-                String sCurrentLine = br.readLine();
-                String [] elements = sCurrentLine.split(",");
+            String value = br.readLine();
+            while (value != null) {
+                String [] elements = value.split(",");
                 if (elements[0].equals("supply")) {
                     supplyCount += Integer.parseInt(elements[1]);
                 } else {
