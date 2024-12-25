@@ -1,5 +1,6 @@
 package core.basesyntax;
 
+
 import java.io.*;
 
 public class WorkWithFile {
@@ -13,10 +14,10 @@ public class WorkWithFile {
         Integer supplyCount = 0;
         Integer buyCount = 0;
 
-        try (BufferedReader br = new BufferedReader(new FileReader (fromFileName))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(fromFileName))) {
             String value;
-            while ((value = br.readLine()) != null) {
-                try{
+            while (( value = br.readLine()) != null) {
+                try {
                     String [] elements = value.split(",");
                     if (elements[0].equals("supply")) {
                         supplyCount += Integer.parseInt(elements[1]);
