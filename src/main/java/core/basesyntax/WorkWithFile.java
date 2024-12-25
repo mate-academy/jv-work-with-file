@@ -1,32 +1,33 @@
 package core.basesyntax;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.*;
 
 public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
 
-        if (fromFileName == null || toFileName == null) {
-            return;
+        if (fromFileName == null) {
+            throw new IllegalArgumentException("File is not found!");
         }
 
         Integer supplyCount = 0;
         Integer buyCount = 0;
 
-        try (BufferedReader br = new BufferedReader(new FileReader(fromFileName))) {
-            String value = br.readLine();
-            while (value != null) {
-                String [] elements = value.split(",");
-                if (elements[0].equals("supply")) {
-                    supplyCount += Integer.parseInt(elements[1]);
-                } else {
-                    buyCount += Integer.parseInt(elements[1]);
+        try (BufferedReader br = new BufferedReader(new FileReader (fromFileName))) {
+            String value;
+            while ((value = br.readLine()) != null) {
+                try{
+                    String [] elements = value.split(",");
+                    if (elements[0].equals("supply")) {
+                        supplyCount += Integer.parseInt(elements[1]);
+                    } else {
+                        buyCount += Integer.parseInt(elements[1]);
+                    }
+                } catch (NumberFormatException n){
+                    throw new NumberFormatException("Bad format of data!");
                 }
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new RuntimeException("Can't read data from the file " + fromFileName, e);
         }
 
@@ -36,9 +37,13 @@ public class WorkWithFile {
         sb.append("result").append(",").append(supplyCount - buyCount)
                         .append(System.lineSeparator());
 
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(toFileName))) {
+        if (toFileName == null) {
+            throw new IllegalArgumentException("File is not found!");
+        }
+
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter (toFileName))) {
             bw.write(sb.toString());
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new RuntimeException("Can't write data from the file " + toFileName, e);
         }
     }
