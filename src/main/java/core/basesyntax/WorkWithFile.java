@@ -15,7 +15,7 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read file", e);
         }
-
+        File file1 = new File(toFileName);
         try {
             Files.write(file.toPath(), toFileName.getBytes(), StandardOpenOption.APPEND);
         } catch (Exception e) {
