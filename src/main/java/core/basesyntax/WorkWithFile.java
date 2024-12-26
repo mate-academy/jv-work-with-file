@@ -27,7 +27,8 @@ public class WorkWithFile {
                 }
             }
         } catch (IOException e) {
-            throw new RuntimeException(fromFileName, e);
+            throw new RuntimeException("Error reading file: "
+                    + fromFileName + " - " + e.getMessage(), e);
         }
 
         // subtract
@@ -39,7 +40,8 @@ public class WorkWithFile {
             writer.write("buy," + totalBuy + System.lineSeparator());
             writer.write("result," + result + System.lineSeparator());
         } catch (IOException e) {
-            throw new RuntimeException(toFileName, e);
+            throw new RuntimeException("Error writing to file: "
+                    + toFileName + " - " + e.getMessage(), e);
         }
     }
 }
