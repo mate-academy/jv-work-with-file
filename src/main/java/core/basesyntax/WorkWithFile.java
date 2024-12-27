@@ -19,8 +19,7 @@ public class WorkWithFile {
 
     public static String[] readFromFile(String fromFileName) {
         File file = new File(fromFileName);
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(file));
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             StringBuilder builder = new StringBuilder();
             String value = reader.readLine();
             while (value != null) {
@@ -29,7 +28,7 @@ public class WorkWithFile {
             }
             return builder.toString().split(LINE_SEPARATOR);
         } catch (IOException e) {
-            throw new RuntimeException("Can't open file", e);
+            throw new RuntimeException("Error reading from file", e);
         }
     }
 
@@ -56,7 +55,7 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, false))) {
             bufferedWriter.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Can`t write data to file", e);
+            throw new RuntimeException("Can`t write data to " + toFileName, e);
         }
     }
 }
