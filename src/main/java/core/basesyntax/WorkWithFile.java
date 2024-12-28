@@ -25,20 +25,14 @@ public class WorkWithFile {
             throw new RuntimeException("Unable to read from this file", e);
         }
         String[] filteredData = stringBuilder.toString().split(System.lineSeparator());
-        String[] data = new String[filteredData.length * 2];
-        int index = 0;
-        for (String filter : filteredData) {
-            String[] parts = filter.split(",");
-            data[index++] = parts[0];
-            data[index++] = parts[1];
-        }
         int operationType1Amount = 0;
         int operationType2Amount = 0;
-        for (int i = 0; i < data.length; i += 2) {
-            if (data[i].equals(operationType1)) {
-                operationType1Amount += Integer.parseInt(data[(i + 1)]);
-            } else if (data[i].equals(operationType2)) {
-                operationType2Amount += Integer.parseInt(data[(i + 1)]);
+        for (String filter : filteredData) {
+            String[] parts = filter.split(",");
+            if (parts[0].equals(operationType1)) {
+                operationType1Amount += Integer.parseInt(parts[1]);
+            } else if (parts[0].equals(operationType2)) {
+                operationType2Amount += Integer.parseInt(parts[1]);
             }
         }
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(exportedFile))) {
@@ -46,8 +40,9 @@ public class WorkWithFile {
                     + System.lineSeparator());
             bufferedWriter.write(operationType2 + "," + operationType2Amount
                     + System.lineSeparator());
-            bufferedWriter.write(operationType3 + "," + (operationType1Amount - operationType2Amount
-                    + System.lineSeparator()));
+            bufferedWriter.write(operationType3 + ","
+                    + (operationType1Amount - operationType2Amount)
+                    + System.lineSeparator());
         } catch (IOException e) {
             throw new RuntimeException("Can`t export the data", e);
         }
