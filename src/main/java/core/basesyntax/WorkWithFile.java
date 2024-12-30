@@ -10,11 +10,16 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final int OPERATION_TYPE_INDEX = 0;
     private static final int AMOUNT_INDEX = 1;
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
+    private static final String COMMA = ",";
     private static final String LINE_SEPARATOR = System.lineSeparator();
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] infoFromFile = readFromFile(fromFileName);
-        writeToFile(toFileName, createReport(infoFromFile));
+        String report = createReport(infoFromFile);
+        writeToFile(toFileName, report);
     }
 
     private String[] readFromFile(String fromFileName) {
@@ -28,7 +33,7 @@ public class WorkWithFile {
             }
             return builder.toString().split(LINE_SEPARATOR);
         } catch (IOException e) {
-            throw new RuntimeException("Error reading from " + fromFileName, e);
+            throw new RuntimeException("Can't read from file with name: " + fromFileName, e);
         }
     }
 
@@ -36,18 +41,19 @@ public class WorkWithFile {
         int supply = 0;
         int buy = 0;
         for (String infoFromLine : infoFromFile) {
-            String[] information = infoFromLine.split(",");
+            String[] information = infoFromLine.split(COMMA);
             int amount = Integer.parseInt(information[AMOUNT_INDEX]);
-            if (information[OPERATION_TYPE_INDEX].equals("supply")) {
+            if (information[OPERATION_TYPE_INDEX].equals(SUPPLY)) {
                 supply += amount;
             } else {
                 buy += amount;
             }
         }
         return new StringBuilder()
-                .append("supply,").append(supply).append(LINE_SEPARATOR)
-                .append("buy,").append(buy).append(LINE_SEPARATOR)
-                .append("result,").append(supply - buy).toString();
+                .append(SUPPLY).append(COMMA).append(supply).append(LINE_SEPARATOR)
+                .append(BUY).append(COMMA).append(buy).append(LINE_SEPARATOR)
+                .append(RESULT).append(COMMA).append(supply - buy)
+                .toString();
     }
 
     private void writeToFile(String toFileName, String report) {
