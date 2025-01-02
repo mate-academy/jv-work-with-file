@@ -17,8 +17,12 @@ public class WorkWithFile {
             String[] action;
             String value = reader.readLine();
             while (value != null) {
+                value = value.trim();
+                if (value.isEmpty() || !value.contains(",")) {
+                    value = reader.readLine();
+                    continue;
+                }
                 action = value.split(",\\s*");
-                // System.out.println(Arrays.toString(action));
 
                 supply += action[0].equals("supply") ? Integer.parseInt(action[1]) : 0;
                 buy += action[0].equals("buy") ? Integer.parseInt(action[1]) : 0;
@@ -27,8 +31,6 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-        System.out.println(supply + " : " + buy);
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             StringBuilder sb = new StringBuilder("");
