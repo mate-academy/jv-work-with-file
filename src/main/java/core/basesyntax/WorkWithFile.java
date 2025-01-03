@@ -17,36 +17,39 @@ public class WorkWithFile {
     private static final String LINE_SEPARATOR = System.lineSeparator();
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String[] infoFromFile = readFromFile(fromFileName);
+        String infoFromFile = readFromFile(fromFileName);
         String report = createReport(infoFromFile);
         writeToFile(toFileName, report);
     }
 
-    private String[] readFromFile(String fromFileName) {
-        File file = new File(fromFileName);
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            StringBuilder builder = new StringBuilder();
-            String value = reader.readLine();
-            while (value != null) {
-                builder.append(value).append(LINE_SEPARATOR);
-                value = reader.readLine();
+    private String readFromFile(String fileName) {
+        StringBuilder builder = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            String line = reader.readLine();
+            while (line != null) {
+                builder.append(line).append(LINE_SEPARATOR);
+                line = reader.readLine();
             }
-            return builder.toString().split(LINE_SEPARATOR);
         } catch (IOException e) {
-            throw new RuntimeException("Can't read from file with name: " + fromFileName, e);
+            throw new RuntimeException("Can't read data from the file" + fileName, e);
         }
+        return builder.toString();
     }
 
-    private String createReport(String[] infoFromFile) {
+    private String createReport(String infoFromFile) {
         int supply = 0;
         int buy = 0;
-        for (String infoFromLine : infoFromFile) {
+        String[] data = infoFromFile.split(LINE_SEPARATOR);
+        for (String infoFromLine : data) {
             String[] information = infoFromLine.split(COMMA);
             int amount = Integer.parseInt(information[AMOUNT_INDEX]);
-            if (information[OPERATION_TYPE_INDEX].equals(SUPPLY)) {
-                supply += amount;
-            } else {
-                buy += amount;
+            switch (information[OPERATION_TYPE_INDEX]) {
+                case SUPPLY:
+                    supply += amount;
+                    break;
+                case BUY:
+                default:
+                    buy += amount;
             }
         }
         return new StringBuilder()
