@@ -16,7 +16,7 @@ public class WorkWithFile {
 
         try {
             BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
-            while ((value = value = reader.readLine()) != null) {
+            while ((value = reader.readLine()) != null) {
                 readFileData = value.split(",");
                 if (readFileData[0].equals("buy")) {
                     buyValue += Integer.valueOf(readFileData[1]);
@@ -25,9 +25,9 @@ public class WorkWithFile {
                 }
             }
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("Can't open the file");
+            throw new RuntimeException("File not found", e);
         } catch (IOException e) {
-            throw new RuntimeException("Cant read from file");
+            throw new RuntimeException("Can't read from file", e);
         }
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
@@ -39,7 +39,7 @@ public class WorkWithFile {
             writer.write("result," + result);
             writer.newLine();
         } catch (IOException e) {
-            throw new RuntimeException("Can't open the file");
+            throw new RuntimeException("Can't write to file", e);
         }
     }
 }
