@@ -1,12 +1,18 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         try {
             writeToFile(fromFileName, toFileName);
-        } catch (IOException e){
+        } catch (IOException e) {
             System.out.println("Unknown Error");
         }
     }
@@ -54,7 +60,7 @@ public class WorkWithFile {
             writer.write("buy," + readFromFile[1]);
             writer.newLine();
             writer.write("result," + readFromFile[2]);
-        } catch (IOException e){
+        } catch (IOException e) {
             throw new IOException("Can`t write to " + toFileName);
         }
     }
