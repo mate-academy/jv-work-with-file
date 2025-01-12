@@ -5,7 +5,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class WorkWithFile {
@@ -13,11 +12,11 @@ public class WorkWithFile {
         try {
             writeToFile(fromFileName, toFileName);
         } catch (IOException e) {
-            System.out.println("Unknown Error");
+            System.out.println("IOException " + e);
         }
     }
 
-    private int[] readFromFile(String fromFileName) throws FileNotFoundException {
+    private int[] readFromFile(String fromFileName) throws IOException {
         File readFile = new File(fromFileName);
         int supply = 0;
         int buy = 0;
@@ -46,7 +45,7 @@ public class WorkWithFile {
             finalResult[2] = result;
             return finalResult;
         } catch (IOException e) {
-            throw new FileNotFoundException("File " + fromFileName + " not found!");
+            throw new IOException("An error occurred while working with  " + fromFileName);
         }
     }
 
