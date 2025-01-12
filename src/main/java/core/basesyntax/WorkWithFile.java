@@ -12,7 +12,7 @@ public class WorkWithFile {
         try {
             writeToFile(fromFileName, toFileName);
         } catch (IOException e) {
-            System.out.println("IOException " + e);
+            System.out.println("Unknown IOException error occurred while running " + e);
         }
     }
 
@@ -45,7 +45,7 @@ public class WorkWithFile {
             finalResult[2] = result;
             return finalResult;
         } catch (IOException e) {
-            throw new IOException("An error occurred while working with  " + fromFileName);
+            throw new RuntimeException("Can't read data from the file " + fromFileName, e);
         }
     }
 
@@ -60,7 +60,7 @@ public class WorkWithFile {
             writer.newLine();
             writer.write("result," + readFromFile[2]);
         } catch (IOException e) {
-            throw new IOException("Can`t write to " + toFileName);
+            throw new RuntimeException("Can't write data to the file " + toFileName, e);
         }
     }
 }
