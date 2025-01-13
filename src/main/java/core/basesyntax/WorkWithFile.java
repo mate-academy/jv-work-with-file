@@ -6,23 +6,23 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
 
         LineRecord[] summaryReport = new LineRecord[2];
-        int recordCount = adaptCSVData(fromFileName, summaryReport);
-        updateReportLine(toFileName, summaryReport, recordCount);
+        adaptCsvData(fromFileName, summaryReport);
+        updateReportLine(toFileName, summaryReport);
     }
 
-    private int adaptCSVData(String fromFileName, LineRecord[] reportList) {
+    private void adaptCsvData(String fromFileName, LineRecord[] reportList) {
         int countOfLines = 0;
-        try (BufferedReader br = new BufferedReader(new FileReader(fromFileName))){
+        try (BufferedReader br = new BufferedReader(new FileReader(fromFileName))) {
             String line;
-            while((line = br.readLine()) != null) {
+            while ((line = br.readLine()) != null) {
                 String[] values = line.split(",");
-                if(values.length == 2) {
+                if (values.length == 2) {
                     String name = values[0].trim();
                     int amount = Integer.parseInt(values[1].trim());
                     int index = -1;
 
-                    for(int i = 0; i < countOfLines; i++) {
-                        if(reportList[i].getLineOperatorTypeName().equals(name)) {
+                    for (int i = 0; i < countOfLines; i++) {
+                        if (reportList[i].getLineOperatorTypeName().equals(name)) {
                             index = i;
                             break;
                         }
@@ -39,13 +39,14 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return countOfLines;
     }
 
-    private void updateReportLine(String outputFileName, LineRecord[] summaryReport, int reportLength) {
-        try(BufferedWriter summary = new BufferedWriter(new FileWriter(outputFileName))) {
-            LineRecord supply = summaryReport[0].getLineOperatorTypeName().equals("supply") ? summaryReport[0] : summaryReport[1];
-            LineRecord buy = summaryReport[0].getLineOperatorTypeName().equals("buy") ? summaryReport[0] : summaryReport[1];
+    private void updateReportLine(String outputFileName, LineRecord[] summaryReport) {
+        try (BufferedWriter summary = new BufferedWriter(new FileWriter(outputFileName))) {
+            LineRecord supply = summaryReport[0].getLineOperatorTypeName().equals("supply")
+                    ? summaryReport[0] : summaryReport[1];
+            LineRecord buy = summaryReport[0].getLineOperatorTypeName().equals("buy")
+                    ? summaryReport[0] : summaryReport[1];
             int result = supply.getLineAmount() - buy.getLineAmount();
 
             summary.write(supply.getConcatenatedLine());
