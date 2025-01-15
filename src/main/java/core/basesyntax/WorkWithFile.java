@@ -33,7 +33,7 @@ public class WorkWithFile {
                         .append(System.lineSeparator());
             }
             stringBuilder.append("result,").append(values[0] - values[1]);
-            try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))){
+            try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
                 bufferedWriter.write(stringBuilder.toString());
             }
 
