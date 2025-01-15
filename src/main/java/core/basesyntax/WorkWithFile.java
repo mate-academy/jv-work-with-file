@@ -1,10 +1,14 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class WorkWithFile {
-    public final String[] keys = new String[]{"supply", "buy"};
-    public final int[] values = new int[keys.length];
+    private final String[] keys = new String[]{"supply", "buy"};
+    private final int[] values = new int[keys.length];
 
     public void getStatistic(String fromFileName, String toFileName) {
         reset();
@@ -51,7 +55,8 @@ public class WorkWithFile {
             throw new RuntimeException(e);
         }
     }
-    private void reset () {
+
+    private void reset() {
         for (int i = 0; i < values.length; i++) {
             values[i] = 0;
         }
