@@ -1,18 +1,20 @@
 package core.basesyntax;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 
 public class WorkWithFile {
-    public void getStatistic(String fromFileName, String toFileName) {
-        String[] keys = new String[] {"supply", "buy"};
-        int[] values = new int[keys.length];
+    public final String[] keys = new String[]{"supply", "buy"};
+    public final int[] values = new int[keys.length];
 
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
+    public void getStatistic(String fromFileName, String toFileName) {
+        reset();
+        readFromFile(fromFileName);
+        String output = calculateResult(values);
+        writeToFile(output, toFileName);
+    }
+
+    private void readFromFile(String fromFileName) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String line = reader.readLine();
             while (line != null) {
                 String[] keyValuePair = line.split("\\,");
@@ -25,20 +27,33 @@ public class WorkWithFile {
                 }
                 line = reader.readLine();
             }
-            StringBuilder stringBuilder = new StringBuilder();
-            for (int i = 0; i < keys.length; i++) {
-                stringBuilder.append(keys[i])
-                        .append(",")
-                        .append(values[i])
-                        .append(System.lineSeparator());
-            }
-            stringBuilder.append("result,").append(values[0] - values[1]);
-            try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-                bufferedWriter.write(stringBuilder.toString());
-            }
-
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private String calculateResult(int[] values) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < keys.length; i++) {
+            stringBuilder.append(keys[i])
+                    .append(",")
+                    .append(values[i])
+                    .append(System.lineSeparator());
+        }
+        stringBuilder.append("result,").append(values[0] - values[1]);
+        return stringBuilder.toString();
+    }
+
+    private void writeToFile(String result, String toFileName) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
+            bufferedWriter.write(result);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    private void reset () {
+        for (int i = 0; i < values.length; i++) {
+            values[i] = 0;
         }
     }
 }
