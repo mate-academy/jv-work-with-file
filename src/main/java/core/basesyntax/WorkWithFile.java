@@ -5,7 +5,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,7 +37,7 @@ public class WorkWithFile {
         File endFile = new File(toFileName);
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(endFile))) {
-            if ( value.containsKey("supply") && value.containsKey("buy")) {
+            if (value.containsKey("supply") && value.containsKey("buy")) {
 
                 writer.write(String.format("%s,%d%n", "supply", value.get("supply")));
                 writer.write(String.format("%s,%d%n", "buy", value.get("buy")));
