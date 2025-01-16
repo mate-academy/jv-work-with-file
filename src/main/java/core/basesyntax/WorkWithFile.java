@@ -23,7 +23,7 @@ public class WorkWithFile {
     private String readFile(String fromFileName) {
         StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
-            String line ;
+            String line;
             while ((line = bufferedReader.readLine()) != null) {
                 stringBuilder.append(line).append(System.lineSeparator());
             }
