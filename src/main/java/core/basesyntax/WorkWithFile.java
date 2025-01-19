@@ -8,52 +8,74 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
+
     public void getStatistic(String fromFileName, String toFileName) {
         File inputFile = new File(fromFileName);
         File outputFile = new File(toFileName);
-        StringBuilder stringBuilder = new StringBuilder();
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(inputFile));
-                BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(outputFile))) {
-            String value = bufferedReader.readLine();
-            while (value != null) {
-                stringBuilder.append(value).append(',');
-                value = bufferedReader.readLine();
+
+        String fileContent = readFile(inputFile);
+        String report = processContent(fileContent);
+        writeFile(outputFile, report);
+    }
+
+    private String readFile(File inputFile) {
+        StringBuilder contentBuilder = new StringBuilder();
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(inputFile))) {
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                contentBuilder.append(line).append(System.lineSeparator());
             }
-            String[] contentOfTheFile = stringBuilder.toString().split(",");
-            String[] operationType = new String[contentOfTheFile.length / 2];
-            int[] amount = new int[contentOfTheFile.length / 2];
-            int supplyAmount = 0;
-            int buyAmount = 0;
-            int resultAmount = 0;
-            int indexOperationType = 0;
-            int indexAmount = 0;
-            for (int i = 0; i < contentOfTheFile.length; i++) {
-                if (i % 2 == 0) {
-                    operationType[indexOperationType] = contentOfTheFile[i];
-                    indexOperationType++;
-                } else {
-                    amount[indexAmount] = Integer.parseInt(contentOfTheFile[i]);
-                    indexAmount++;
-                }
-            }
-            for (int i = 0; i < indexOperationType; i++) {
-                if (operationType[i].equals("supply")) {
-                    supplyAmount += amount[i];
-                }
-                if (operationType[i].equals("buy")) {
-                    buyAmount += amount[i];
-                }
-            }
-            resultAmount = supplyAmount - buyAmount;
-            StringBuilder newStringBuilder = new StringBuilder();
-            newStringBuilder.append("supply,")
-                    .append(supplyAmount).append(System.lineSeparator()).append("buy,")
-                    .append(buyAmount).append(System.lineSeparator())
-                    .append("result,").append(resultAmount);
-            bufferedWriter.write(newStringBuilder.toString());
         } catch (IOException e) {
-            throw new RuntimeException("Can't open file");
+            throw new RuntimeException("Error reading file: " + inputFile.getName(), e);
+        }
+        return contentBuilder.toString().trim();
+    }
+
+    private String processContent(String fileContent) {
+        String[] lines = fileContent.split(System.lineSeparator());
+        int supplyAmount = 0;
+        int buyAmount = 0;
+
+        for (String line : lines) {
+            String[] parts = line.split(",");
+            if (parts.length != 2) {
+                throw new IllegalArgumentException("Invalid line format: " + line);
+            }
+
+            String operation = parts[0];
+            int amount;
+            try {
+                amount = Integer.parseInt(parts[1]);
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("Invalid amount format in line: " + line, e);
+            }
+
+            if (SUPPLY.equals(operation)) {
+                supplyAmount += amount;
+            } else if (BUY.equals(operation)) {
+                buyAmount += amount;
+            } else {
+                throw new IllegalArgumentException("Unknown operation type: " + operation);
+            }
         }
 
+        int resultAmount = supplyAmount - buyAmount;
+        return new StringBuilder()
+                .append(SUPPLY).append(",").append(supplyAmount).append(System.lineSeparator())
+                .append(BUY).append(",").append(buyAmount).append(System.lineSeparator())
+                .append(RESULT).append(",").append(resultAmount)
+                .toString();
+    }
+
+    private void writeFile(File outputFile, String content) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(outputFile))) {
+            bufferedWriter.write(content);
+        } catch (IOException e) {
+            throw new RuntimeException("Error writing to file: " + outputFile.getName(), e);
+        }
     }
 }
