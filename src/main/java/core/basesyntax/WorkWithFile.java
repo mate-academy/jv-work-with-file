@@ -1,7 +1,11 @@
 package core.basesyntax;
 
-import java.io.*;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
@@ -9,7 +13,7 @@ public class WorkWithFile {
         File outputFile = new File(toFileName);
         StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(inputFile));
-             BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(outputFile))) {
+                BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(outputFile))) {
             String value = bufferedReader.readLine();
             while (value != null) {
                 stringBuilder.append(value).append(',');
@@ -35,7 +39,8 @@ public class WorkWithFile {
             for (int i = 0; i < indexOperationType; i++) {
                 if (operationType[i].equals("supply")) {
                     supplyAmount += amount[i];
-                } if (operationType[i].equals("buy")) {
+                }
+                if (operationType[i].equals("buy")) {
                     buyAmount += amount[i];
                 }
             }
