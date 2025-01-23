@@ -12,15 +12,15 @@ public class WorkWithFile {
         int buy = 0;
 
         try (BufferedReader reader = Files.newBufferedReader(Paths.get(fromFileName))) {
-            String line = " ";
-            while ((line = reader.readLine()) != null){
+            String line;
+            while ((line = reader.readLine()) != null) {
                 String [] parts = line.split(",");
                 if (parts.length == 2) {
                     String operation = parts[0].trim();
                     int amount = Integer.parseInt(parts[1].trim());
                     if ("supply".equalsIgnoreCase(operation)) {
                         supply += amount;
-                    } else if ("buy".equalsIgnoreCase(operation)){
+                    } else if ("buy".equalsIgnoreCase(operation)) {
                         buy += amount;
                     }
                 }
@@ -37,7 +37,7 @@ public class WorkWithFile {
             writer.newLine();
             writer.write("result," + result);
         } catch (IOException e) {
-            System.err.println("Error writing to the file: " + e.getMessage());
+            throw new RuntimeException("Error reading file: " + fromFileName, e);
         }
     }
 }
