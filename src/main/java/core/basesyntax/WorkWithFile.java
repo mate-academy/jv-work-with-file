@@ -12,19 +12,21 @@ public class WorkWithFile {
         int supply = 0;
         int buy = 0;
         int result;
-        final String supplyStr = "supply";
-        final String buyStr = "buy";
         // Step 1: Read the CSV file
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 String[] lineSplit = line.split(",");
-                int value = Integer.parseInt(lineSplit[1].trim());
-                String lineEach = lineSplit[0].trim();
-                if (lineEach.equals(supplyStr)) {
-                    supply += value;
-                } else if (lineEach.equals(buyStr)) {
-                    buy += value;
+                try {
+                    int value = Integer.parseInt(lineSplit[1].trim());
+                    String lineEach = lineSplit[0].trim();
+                    if (lineEach.equals("supply")) {
+                        supply += value;
+                    } else if (lineEach.equals("buy")) {
+                        buy += value;
+                    }
+                } catch (NumberFormatException e) {
+                    throw new RuntimeException("Invalid number format", e);
                 }
             }
             result = supply - buy;
