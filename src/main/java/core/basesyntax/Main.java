@@ -7,20 +7,19 @@ public class Main {
     public static void main(String[] args) {
         WorkWithFile workWithFile = new WorkWithFile();
 
-        String fromFileName = "banana.csv";
-        String toFileName = "reports.csv";
+        final String FROM_FILE_NAME = "banana.csv";
+        final String TO_FILE_NAME = "result.csv";
 
-        File reportFile = new File(toFileName);
+        File reportFile = new File(TO_FILE_NAME);
         if (!reportFile.exists()) {
             try {
                 if (reportFile.createNewFile()) {
                     System.out.println("New report file created.");
                 }
             } catch (IOException e) {
-                System.out.println("Error creating the report file: " + e.getMessage());
-                return;
+                throw new RuntimeException("Error creating the report file: " + e.getMessage(), e);
             }
         }
-        workWithFile.getStatistic(fromFileName, toFileName);
+        workWithFile.getStatistic(FROM_FILE_NAME, TO_FILE_NAME);
     }
 }

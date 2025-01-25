@@ -25,11 +25,9 @@ public class WorkWithFile {
                 }
             }
         } catch (IOException e) {
-            System.out.println("Error reading file: " + e.getMessage());
-            return;
+            throw new RuntimeException("Error reading file: " + e.getMessage(), e);
         } catch (NumberFormatException e) {
-            System.out.println("Invalid number format: " + e.getMessage());
-            return;
+            throw new RuntimeException("Invalid number format: " + e.getMessage(), e);
         }
 
         String result = "supply," + totalSupply + System.lineSeparator()
@@ -39,7 +37,7 @@ public class WorkWithFile {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write(result);
         } catch (IOException e) {
-            System.out.println("Error writing file:" + e.getMessage());
+            throw new RuntimeException("Error writing file:" + e.getMessage(), e);
         }
     }
 }
