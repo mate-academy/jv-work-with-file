@@ -4,11 +4,12 @@ import java.io.File;
 import java.io.IOException;
 
 public class Main {
+
+    public static final String FROM_FILE_NAME = "banana.csv";
+    public static final String TO_FILE_NAME = "result.csv";
+
     public static void main(String[] args) {
         WorkWithFile workWithFile = new WorkWithFile();
-
-        final String FROM_FILE_NAME = "banana.csv";
-        final String TO_FILE_NAME = "result.csv";
 
         File reportFile = new File(TO_FILE_NAME);
         if (!reportFile.exists()) {
