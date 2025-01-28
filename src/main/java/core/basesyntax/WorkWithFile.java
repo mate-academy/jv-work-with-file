@@ -12,7 +12,7 @@ public class WorkWithFile {
         int totalSupply = 0;
         int totalBuy = 0;
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))){
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
 
             String value = reader.readLine();
             while (value != null) {
