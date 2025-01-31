@@ -12,6 +12,7 @@ public class WorkWithFile {
         File file = new File(fromFileName);
 
         if (!file.exists()) {
+            System.out.println("the file does not exist.");
             return;
         }
 
@@ -28,11 +29,12 @@ public class WorkWithFile {
 
                 if (operation.equals("supply")) {
                     supplyTotal += amount;
-                } else {
+                } else if (operation.equals("buy")) {
                     buyTotal += amount;
                 }
             }            
         } catch (IOException e) {
+            System.out.println("Error while reading file: " + e.getMessage());
             return;
         }
 
@@ -45,6 +47,7 @@ public class WorkWithFile {
             writer.newLine();
             writer.write("result," + result);
         } catch (IOException e) {
+            System.out.println("Error while writing file: " + e.getMessage());
             return;
         }
     }
