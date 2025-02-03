@@ -37,7 +37,7 @@ public class WorkWithFile {
         int buyInt = 0;
         String[] arrayOfStrings = readedString.split(System.lineSeparator());
         for (String string : arrayOfStrings) {
-            String[] stringSplit = string.split("\\W+");
+            String[] stringSplit = string.split(",");
             if (stringSplit[0].equals(SUPPLY)) {
                 supplyInt += Integer.parseInt(stringSplit[1]);
             } else {
@@ -52,10 +52,9 @@ public class WorkWithFile {
     private void writeToFile(String toFileName, String resultString) {
         File toFile = new File(toFileName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFile))) {
-            bufferedWriter.write("");
             bufferedWriter.write(resultString);
         } catch (IOException e) {
-            throw new RuntimeException("Can't read data to the file " + toFile, e);
+            throw new RuntimeException("Can't write data to the file " + toFile, e);
         }
     }
 }
