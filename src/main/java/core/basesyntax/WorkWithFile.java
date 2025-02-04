@@ -1,37 +1,35 @@
 package core.basesyntax;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
-        // Симулюємо вміст файлу (fromFileName)
-        String data = "supply,30\nbuy,10\nbuy,13\nsupply,17\nbuy,10";
-
         int supply = 0;
         int buy = 0;
 
-        // Розділяємо дані за рядками
-        String[] lines = data.split("\n");
-        for (String line : lines) {
-            String[] parts = line.split(",");
-            String operation = parts[0];
-            int amount = Integer.parseInt(parts[1]);
-
-            if (operation.equals("supply")) {
-                supply += amount;
-            } else if (operation.equals("buy")) {
-                buy += amount;
+        try {
+            List<String> lines = Files.readAllLines(Path.of(fromFileName));
+            for (String line : lines) {
+                String[] data = line.split(",");
+                if (data[0].equals("supply")) {
+                    supply += Integer.parseInt(data[1]);
+                } else if (data[0].equals("buy")) {
+                    buy += Integer.parseInt(data[1]);
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         int result = supply - buy;
+        String output = String.format("supply,%d%n" + "buy,%d%n" + "result,%d", supply, buy, result);
 
-        // Формуємо звіт
-        String report = "supply," + supply + "\n"
-                + "buy," + buy + "\n"
-                + "result," + result;
-
-        // Симулюємо запис у файл (toFileName)
-        System.out.println("=== Report ===");
-        System.out.println(report);
+        try {
+            Files.writeString(Path.of(toFileName), output);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
-
