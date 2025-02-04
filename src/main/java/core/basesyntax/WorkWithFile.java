@@ -8,18 +8,26 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String COMMA = ",";
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
+    private static final String RESULT = "result";
+    private StringBuilder stringBuilder = new StringBuilder();
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String readedString = readFromFile(fromFileName);
-        String resultString = createReport(readedString);
-        writeToFile(toFileName, resultString);
+        String data = readFromFile(fromFileName);
+        String report = createReport(data);
+        File toFile = new File(toFileName);
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFile))) {
+            bufferedWriter.write(report);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write data to the file " + toFile, e);
+        }
     }
 
     private String readFromFile(String fileName) {
         File fromFile = new File(fileName);
-        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFile))) {
             String value = bufferedReader.readLine();
             while (value != null) {
@@ -37,7 +45,7 @@ public class WorkWithFile {
         int buyInt = 0;
         String[] arrayOfStrings = readedString.split(System.lineSeparator());
         for (String string : arrayOfStrings) {
-            String[] stringSplit = string.split(",");
+            String[] stringSplit = string.split(COMMA);
             if (stringSplit[0].equals(SUPPLY)) {
                 supplyInt += Integer.parseInt(stringSplit[1]);
             } else {
@@ -45,16 +53,10 @@ public class WorkWithFile {
             }
         }
         int resultInt = supplyInt - buyInt;
-        return SUPPLY + "," + supplyInt + System.lineSeparator() + BUY + "," + buyInt
-                + System.lineSeparator() + "result" + "," + resultInt;
-    }
-
-    private void writeToFile(String toFileName, String resultString) {
-        File toFile = new File(toFileName);
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFile))) {
-            bufferedWriter.write(resultString);
-        } catch (IOException e) {
-            throw new RuntimeException("Can't write data to the file " + toFile, e);
-        }
+        stringBuilder = new StringBuilder();
+        stringBuilder.append(SUPPLY).append(COMMA).append(supplyInt).append(System.lineSeparator())
+                .append(BUY).append(COMMA).append(buyInt).append(System.lineSeparator())
+                .append(RESULT).append(COMMA).append(resultInt);
+        return stringBuilder.toString();
     }
 }
