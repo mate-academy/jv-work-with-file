@@ -24,7 +24,10 @@ public class WorkWithFile {
         }
 
         int result = supply - buy;
-        String output = String.format("supply,%d%n" + "buy,%d%n" + "result,%d", supply, buy, result);
+        String output = String.join(System.lineSeparator(),
+                "supply," + supply,
+                "buy," + buy,
+                "result," + result);
 
         try {
             Files.writeString(Path.of(toFileName), output);
