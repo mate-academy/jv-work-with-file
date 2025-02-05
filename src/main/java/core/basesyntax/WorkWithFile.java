@@ -1,50 +1,38 @@
 package core.basesyntax;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
 
 public class WorkWithFile {
     private static final String COMMA = ",";
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
-    private StringBuilder stringBuilder = new StringBuilder();
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String data = readFromFile(fromFileName);
+        List<String> data = readFromFile(fromFileName);
         String report = createReport(data);
-        File toFile = new File(toFileName);
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFile))) {
-            bufferedWriter.write(report);
-        } catch (IOException e) {
-            throw new RuntimeException("Can't write data to the file " + toFile, e);
-        }
+        writeReport(toFileName, report);
     }
 
-    private String readFromFile(String fileName) {
-        File fromFile = new File(fileName);
-        stringBuilder = new StringBuilder();
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFile))) {
-            String value = bufferedReader.readLine();
-            while (value != null) {
-                stringBuilder.append(value).append(System.lineSeparator());
-                value = bufferedReader.readLine();
-            }
+    private List<String> readFromFile(String fromFileName) {
+        List<String> lines = null;
+        try {
+            lines = Files.readAllLines(Path.of(fromFileName));
         } catch (IOException e) {
-            throw new RuntimeException("Can't read data from the file " + fromFile, e);
+            throw new RuntimeException("Can't read data from the file " + fromFileName, e);
         }
-        return stringBuilder.toString();
+        return lines;
     }
 
-    private String createReport(String readedString) {
+    private String createReport(List<String> inputData) {
         int supplyInt = 0;
         int buyInt = 0;
-        String[] arrayOfStrings = readedString.split(System.lineSeparator());
-        for (String string : arrayOfStrings) {
+        for (String string : inputData) {
             String[] stringSplit = string.split(COMMA);
             if (stringSplit[0].equals(SUPPLY)) {
                 supplyInt += Integer.parseInt(stringSplit[1]);
@@ -53,10 +41,18 @@ public class WorkWithFile {
             }
         }
         int resultInt = supplyInt - buyInt;
-        stringBuilder = new StringBuilder();
+        StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(SUPPLY).append(COMMA).append(supplyInt).append(System.lineSeparator())
                 .append(BUY).append(COMMA).append(buyInt).append(System.lineSeparator())
                 .append(RESULT).append(COMMA).append(resultInt);
         return stringBuilder.toString();
+    }
+
+    private void writeReport(String toFileName, String report) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
+            bufferedWriter.write(report);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write data to the file " + toFileName, e);
+        }
     }
 }
