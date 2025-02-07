@@ -8,7 +8,18 @@ import java.io.IOException;
 
 public class WorkWithFile {
 
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+
     public void getStatistic(String fromFileName, String toFileName) {
+        int[] statistics = readData(fromFileName);
+        int totalSupply = statistics[0];
+        int totalBuy = statistics[1];
+        int result = totalSupply - totalBuy;
+        writeReport(toFileName, totalSupply, totalBuy, result);
+    }
+
+    private int[] readData(String fromFileName) {
         int totalSupply = 0;
         int totalBuy = 0;
 
@@ -16,39 +27,56 @@ public class WorkWithFile {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
-                String operation = parts[0].trim();
-                int amount = Integer.parseInt(parts[1].trim());
-
-                // Calculating total supply and buy
-                if ("supply".equalsIgnoreCase(operation)) {
-                    totalSupply += amount;
-                } else if ("buy".equalsIgnoreCase(operation)) {
-                    totalBuy += amount;
+                if (parts.length != 2) {
+                    throw new RuntimeException("Invalid line format: " + line);
                 }
 
+                String operation = parts[0].trim();
+                int amount;
+                try {
+                    amount = Integer.parseInt(parts[1].trim());
+                } catch (NumberFormatException e) {
+                    throw new RuntimeException("Error parsing the amount in line: " + line, e);
+                }
+
+                if (SUPPLY.equalsIgnoreCase(operation)) {
+                    totalSupply += amount;
+                } else if (BUY.equalsIgnoreCase(operation)) {
+                    totalBuy += amount;
+                } else {
+                    throw new RuntimeException("Unknown operation in line: " + line);
+                }
             }
-
         } catch (IOException e) {
-            System.err.println("Error reading the file: " + e.getMessage());
-        } catch (NumberFormatException e) {
-            System.err.println("Error parsing the amount: " + e.getMessage());
+            throw new RuntimeException("Error reading the file: " + fromFileName, e);
         }
 
-        int result = totalSupply - totalBuy;
+        return new int[]{totalSupply, totalBuy};
+    }
 
+    private void writeReport(String toFileName, int totalSupply, int totalBuy, int result) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            writer.write("supply," + totalSupply + System.lineSeparator());
-            writer.write("buy," + totalBuy + System.lineSeparator());
-            writer.write("result," + result + System.lineSeparator());
+            writer.write(buildReport(totalSupply, totalBuy, result));
         } catch (IOException e) {
-            System.err.println("Error writing to the file: " + e.getMessage());
+            throw new RuntimeException("Error writing to the file: " + toFileName, e);
         }
+    }
 
+    private String buildReport(int totalSupply, int totalBuy, int result) {
+        StringBuilder report = new StringBuilder();
+        report.append(SUPPLY).append(",").append(totalSupply).append(System.lineSeparator());
+        report.append(BUY).append(",").append(totalBuy).append(System.lineSeparator());
+        report.append("result,").append(result).append(System.lineSeparator());
+        return report.toString();
     }
 
     public static void main(String[] args) {
-        WorkWithFile statistic = new WorkWithFile();
-        statistic.getStatistic("input.csv", "output.csv");
-    }
+        if (args.length != 2) {
+            System.err.println("Usage: java WorkWithFile <inputFileName> <outputFileName>");
+            return;
+        }
 
+        WorkWithFile statistic = new WorkWithFile();
+        statistic.getStatistic(args[0], args[1]);
+    }
 }
