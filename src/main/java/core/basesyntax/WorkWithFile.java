@@ -46,7 +46,9 @@ public class WorkWithFile {
                 } else {
                     throw new RuntimeException("Unknown operation in line: " + line);
                 }
+
             }
+
         } catch (IOException e) {
             throw new RuntimeException("Error reading the file: " + fromFileName, e);
         }
@@ -60,6 +62,7 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Error writing to the file: " + toFileName, e);
         }
+
     }
 
     private String buildReport(int totalSupply, int totalBuy, int result) {
@@ -79,4 +82,5 @@ public class WorkWithFile {
         WorkWithFile statistic = new WorkWithFile();
         statistic.getStatistic(args[0], args[1]);
     }
+
 }
