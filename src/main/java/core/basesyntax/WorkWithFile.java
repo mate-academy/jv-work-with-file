@@ -24,7 +24,7 @@ public class WorkWithFile {
                 word = line.substring(0, indexOf);
                 if (word.equals("supply")) {
                     supply += Integer.parseInt(line.substring(indexOf + 1, line.length()));
-                } else {
+                } else if (word.equals("buy")) {
                     buy += Integer.parseInt(line.substring(indexOf + 1, line.length()));
                 }
 
@@ -44,7 +44,7 @@ public class WorkWithFile {
             bufferedWriter.write("result," + result + System.lineSeparator());
 
         } catch (IOException e) {
-            throw new RuntimeException("Error writing to file: ", e);
+            throw new RuntimeException("Error writing to file: " + toFileName, e);
         }
 
     }
