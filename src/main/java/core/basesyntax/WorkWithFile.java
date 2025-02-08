@@ -10,9 +10,6 @@ public class WorkWithFile {
 
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
-    private static final String RESULT = "result";
-    private static final String COMMA = ",";
-    private static final String LINE_SEPARATOR = System.lineSeparator();
 
     public void getStatistic(String fromFileName, String toFileName) {
         int[] statistics = readData(fromFileName);
@@ -29,9 +26,9 @@ public class WorkWithFile {
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(COMMA);
+                String[] parts = line.split(",");
                 if (parts.length != 2) {
-                    throw new IllegalArgumentException("Invalid line format: " + line);
+                    throw new RuntimeException("Invalid line format: " + line);
                 }
 
                 String operation = parts[0].trim();
@@ -39,20 +36,19 @@ public class WorkWithFile {
                 try {
                     amount = Integer.parseInt(parts[1].trim());
                 } catch (NumberFormatException e) {
-                    throw new IllegalArgumentException("Error parsing the amount in line: " + line, e);
+                    throw new RuntimeException("Error parsing the amount in line: " + line, e);
                 }
 
-                switch (operation.toLowerCase()) {
-                    case SUPPLY:
-                        totalSupply += amount;
-                        break;
-                    case BUY:
-                        totalBuy += amount;
-                        break;
-                    default:
-                        throw new IllegalArgumentException("Unknown operation in line: " + line);
+                if (SUPPLY.equalsIgnoreCase(operation)) {
+                    totalSupply += amount;
+                } else if (BUY.equalsIgnoreCase(operation)) {
+                    totalBuy += amount;
+                } else {
+                    throw new RuntimeException("Unknown operation in line: " + line);
                 }
+
             }
+
         } catch (IOException e) {
             throw new RuntimeException("Error reading the file: " + fromFileName, e);
         }
@@ -66,14 +62,15 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Error writing to the file: " + toFileName, e);
         }
+
     }
 
     private String buildReport(int totalSupply, int totalBuy, int result) {
-        return new StringBuilder()
-                .append(SUPPLY).append(COMMA).append(totalSupply).append(LINE_SEPARATOR)
-                .append(BUY).append(COMMA).append(totalBuy).append(LINE_SEPARATOR)
-                .append(RESULT).append(COMMA).append(result).append(LINE_SEPARATOR)
-                .toString();
+        StringBuilder report = new StringBuilder();
+        report.append(SUPPLY).append(",").append(totalSupply).append(System.lineSeparator());
+        report.append(BUY).append(",").append(totalBuy).append(System.lineSeparator());
+        report.append("result,").append(result).append(System.lineSeparator());
+        return report.toString();
     }
 
     public static void main(String[] args) {
