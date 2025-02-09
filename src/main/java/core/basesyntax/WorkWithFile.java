@@ -27,15 +27,17 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        writeToFile(supply, buy, toFileName);
+    }
 
+    public void writeToFile(int supply, int buy, String toFileName) {
         int result = supply - buy;
-
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write("supply," + supply + "\n");
             writer.write("buy," + buy + "\n");
             writer.write("result," + result + "\n");
         } catch (IOException e) {
-            System.out.println("Error write to file: " + e);
+            throw new RuntimeException(e);
         }
     }
 }
