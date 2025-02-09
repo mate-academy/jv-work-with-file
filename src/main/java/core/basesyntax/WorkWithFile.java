@@ -7,9 +7,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    int supply = 0;
+    int buy = 0;
+
+    public String Supply = "supply";
+    public String Buy = "Buy";
+
     public void getStatistic(String fromFileName, String toFileName) {
-        int supply = 0;
-        int buy = 0;
 
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String line;
@@ -18,14 +22,14 @@ public class WorkWithFile {
                 String operation = parts[0].trim();
                 int amount = Integer.parseInt(parts[1].trim());
 
-                if ("supply".equalsIgnoreCase(operation)) {
+                if (Supply.equalsIgnoreCase(operation)) {
                     supply += amount;
-                } else if ("buy".equalsIgnoreCase(operation)) {
+                } else if (Buy.equalsIgnoreCase(operation)) {
                     buy += amount;
                 }
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println("Error: " + e);
         }
         writeToFile(supply, buy, toFileName);
     }
@@ -37,7 +41,7 @@ public class WorkWithFile {
             writer.write("buy," + buy + "\n");
             writer.write("result," + result + "\n");
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println("Error: " + e);
         }
     }
 }
