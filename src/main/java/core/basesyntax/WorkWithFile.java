@@ -2,9 +2,9 @@ package core.basesyntax;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.IOException;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+import java.io.IOException;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
@@ -35,7 +35,7 @@ public class WorkWithFile {
             writer.write("buy," + buy + "\n");
             writer.write("result," + result + "\n");
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Error write to file: " + e);
         }
     }
 }
