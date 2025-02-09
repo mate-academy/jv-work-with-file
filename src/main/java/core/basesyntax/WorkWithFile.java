@@ -11,7 +11,8 @@ public class WorkWithFile {
     int buy = 0;
 
     public String Supply = "supply";
-    public String Buy = "Buy";
+    public String Buy = "buy";
+    public String Result = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
 
@@ -37,9 +38,9 @@ public class WorkWithFile {
     public void writeToFile(int supply, int buy, String toFileName) {
         int result = supply - buy;
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            writer.write("supply," + supply + "\n");
-            writer.write("buy," + buy + "\n");
-            writer.write("result," + result + "\n");
+            writer.write(Supply + "," + supply + "\n");
+            writer.write(Buy + "," + buy + "\n");
+            writer.write(Result + "," + result + "\n");
         } catch (IOException e) {
             System.out.println("Error: " + e);
         }
