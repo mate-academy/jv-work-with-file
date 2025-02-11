@@ -1,6 +1,7 @@
 package core.basesyntax;
 
 import java.io.*;
+
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         int supply = 0;
@@ -19,7 +20,6 @@ public class WorkWithFile {
             throw new RuntimeException("Error reading file: " + fromFileName, e);
         }
         int result = supply - buy;
-
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write("supply," + supply + System.lineSeparator());
             writer.write("buy," + buy + System.lineSeparator());
