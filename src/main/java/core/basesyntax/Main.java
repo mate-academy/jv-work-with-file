@@ -18,11 +18,11 @@ public class Main {
     }
 
     private static void createInputFile(String fileName) {
-        String content = "supply,30\n" +
-                "buy,10\n" +
-                "buy,13\n" +
-                "supply,17\n" +
-                "buy,10";
+        String content = "supply,30\n"
+                + "buy,10\n"
+                + "buy,13\n"
+                + "supply,17\n"
+                + "buy,10";
 
         try (FileWriter writer = new FileWriter(fileName)) {
             writer.write(content);
