@@ -15,9 +15,9 @@ public class WorkWithFile {
             for (String line : lines) {
                 String[] parts = line.split(",");
                 int sum = Integer.parseInt(parts[1]);
-                if(parts[0].equals("supply")) {
+                if (parts[0].equals("supply")) {
                     supplyTotal += sum;
-                } else  if (parts[0].equals("buy")) {
+                } else if (parts[0].equals("buy")) {
                     buyTotal += sum;
                 }
             }
