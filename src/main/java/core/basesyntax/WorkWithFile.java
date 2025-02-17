@@ -1,8 +1,12 @@
 package core.basesyntax;
 
-import java.io.*;
-import java.util.List;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class WorkWithFile {
     private static final String SUPPLY = "supply";
@@ -21,10 +25,8 @@ public class WorkWithFile {
             while ((line = reader.readLine()) != null) {
                 lines.add(line);
             }
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException("Plik nie znaleziony: " + fileName, e);
         } catch (IOException e) {
-            throw new RuntimeException("Błąd odczytu pliku: " + fileName, e);
+            throw new RuntimeException("Błąd podczas odczytu pliku: " + fileName, e);
         }
         return lines;
     }
