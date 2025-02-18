@@ -11,14 +11,14 @@ import java.nio.file.Path;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
-        String infoFromFile = readeFromFile(fromFileName);
+        String infoFromFile = readFromFile(fromFileName);
         String report = createReport(infoFromFile);
         writeToFile(report, toFileName);
     }
 
-    private String readeFromFile(String fromFileName) {
+    private String readFromFile(String fromFileName) {
         File file = new File(fromFileName);
-        String resultString = null;
+        String resultString;
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
             StringBuilder stringBuilder = new StringBuilder();
             String value = bufferedReader.readLine();
@@ -28,7 +28,7 @@ public class WorkWithFile {
             }
             resultString = stringBuilder.toString();
         } catch (IOException e) {
-            throw new RuntimeException("There is no such file" + e);
+            throw new RuntimeException("File not found: " + e.getMessage());
         }
         return resultString;
     }
@@ -37,7 +37,7 @@ public class WorkWithFile {
         try {
             Files.deleteIfExists(Path.of(toFileName));
         } catch (IOException e) {
-            throw new RuntimeException("Can't delete file ", e);
+            throw new RuntimeException("Can't delete file: " + toFileName + ", " + e.getMessage());
         }
 
         String[] reportArray = report.split("\\R");
@@ -47,7 +47,8 @@ public class WorkWithFile {
                 bufferedWriter.write(value);
                 bufferedWriter.newLine();
             } catch (IOException e) {
-                throw new RuntimeException("Can't write to file" + e);
+                throw new RuntimeException("Can't write to file: " + toFileName
+                        + ", " + e.getMessage());
             }
         }
     }
