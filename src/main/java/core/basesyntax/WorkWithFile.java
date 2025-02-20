@@ -51,9 +51,20 @@ public class WorkWithFile {
         return builder.toString();
     }
 
-    private void readDataFromLine(String line) {
+    private void readDataFromLine(String line) throws IOException {
         String[] dataFromLine = line.split(DATA_SEPARATOR);
-        int cellNumber = dataFromLine[0].equals(SUPPLY) ? 0 : 1;
-        results[cellNumber] += Integer.parseInt(dataFromLine[1]);
+        int cellNumber;
+        if (dataFromLine[0].equals(SUPPLY)) {
+            cellNumber = 0;
+        } else if (dataFromLine[0].equals(BUY)) {
+            cellNumber = 1;
+        } else {
+            throw new IOException();
+        }
+        try {
+            results[cellNumber] += Integer.parseInt(dataFromLine[1]);
+        } catch (NumberFormatException e) {
+            throw new RuntimeException("Incorrect data", e);
+        }
     }
 }
