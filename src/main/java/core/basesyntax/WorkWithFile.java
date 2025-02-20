@@ -6,8 +6,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
@@ -28,28 +26,21 @@ public class WorkWithFile {
             }
             resultString = stringBuilder.toString();
         } catch (IOException e) {
-            throw new RuntimeException("File not found: " + e.getMessage());
+            throw new RuntimeException("File not found: " + fromFileName
+                    + ", " + e.getMessage());
         }
         return resultString;
     }
 
     private void writeToFile(String report, String toFileName) {
-        try {
-            Files.deleteIfExists(Path.of(toFileName));
-        } catch (IOException e) {
-            throw new RuntimeException("Can't delete file: " + toFileName + ", " + e.getMessage());
-        }
 
-        String[] reportArray = report.split("\\R");
         File file = new File(toFileName);
-        for (String value: reportArray) {
-            try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, true))) {
-                bufferedWriter.write(value);
-                bufferedWriter.newLine();
-            } catch (IOException e) {
-                throw new RuntimeException("Can't write to file: " + toFileName
-                        + ", " + e.getMessage());
-            }
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, false))) {
+            bufferedWriter.write(report);
+            bufferedWriter.newLine();
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write to file: " + toFileName
+                    + ", " + e.getMessage());
         }
     }
 
