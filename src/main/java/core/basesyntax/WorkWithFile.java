@@ -8,33 +8,36 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    public void getStatistic(String fromFileName, String toFileName) {
-        int buy = 0;
-        int supply = 0;
-        try {
-            BufferedReader reader = new BufferedReader(
-                    new FileReader(new File(fromFileName)));
+    public int[] read(String file) {
+        int[] info = new int[2];
+        try (BufferedReader reader = new BufferedReader(
+                new FileReader(new File(file)))) {
             String line = reader.readLine();
             while (line != null) {
                 String[] value = line.split(",");
                 if (value[0].equals("buy")) {
-                    buy += Integer.valueOf(value[1]);
+                    info[0] += Integer.valueOf(value[1]);
                 }
                 if (value[0].equals("supply")) {
-                    supply += Integer.valueOf(value[1]);
+                    info[1] += Integer.valueOf(value[1]);
                 }
                 line = reader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("can't read file", e);
+            throw new RuntimeException("can't read file " + file, e);
         }
-        int result = supply - buy;
+        return info;
+    }
+
+    public void getStatistic(String fromFileName, String toFileName) {
+        int[] readInfo = read(fromFileName);
+        int result = readInfo[0] - readInfo[1];
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File(toFileName)))) {
-            writer.write("supply," + supply + System.lineSeparator()
-                    + "buy," + buy + System.lineSeparator()
+            writer.write("supply," + readInfo[1] + System.lineSeparator()
+                    + "buy," + readInfo[0] + System.lineSeparator()
                     + "result," + result);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("can't write file " + toFileName, e);
         }
     }
 }
