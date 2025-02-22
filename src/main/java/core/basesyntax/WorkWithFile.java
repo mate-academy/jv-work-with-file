@@ -31,7 +31,7 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         int[] readInfo = read(fromFileName);
-        int result = readInfo[0] - readInfo[1];
+        int result = readInfo[1] - readInfo[0];
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File(toFileName)))) {
             writer.write("supply," + readInfo[1] + System.lineSeparator()
                     + "buy," + readInfo[0] + System.lineSeparator()
