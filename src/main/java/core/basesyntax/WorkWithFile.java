@@ -12,12 +12,9 @@ public class WorkWithFile {
         File sourceFile = new File(fromFileName);
         int supplySum = 0;
         int buySum = 0;
-        int result = 0;
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(sourceFile));
+        try (BufferedReader reader = new BufferedReader(new FileReader(sourceFile))) {
             String fileLine = reader.readLine();
             while (fileLine != null) {
-                System.out.println(fileLine);
                 String[] line = fileLine.split(",");
                 if (line[0].equals("supply")) {
                     supplySum += Integer.parseInt(line[1]);
@@ -30,14 +27,17 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read file", e);
         }
-        result = supplySum - buySum;
-        String inputData = "supply," + supplySum + System.lineSeparator() + "buy," + buySum
-                + System.lineSeparator() + "result," + result;
+        String inputData = getResult(supplySum, buySum);
         File targetFile = new File(toFileName);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(targetFile))) {
             bufferedWriter.write(inputData);
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to file", e);
         }
+    }
+    public String getResult(int supplySum, int buySum) {
+        int result = supplySum - buySum;
+        String inputData = "supply," + supplySum + System.lineSeparator() + "buy," + buySum
+                + System.lineSeparator() + "result," + result;
     }
 }
