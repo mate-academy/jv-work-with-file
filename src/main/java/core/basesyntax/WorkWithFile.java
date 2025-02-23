@@ -35,9 +35,12 @@ public class WorkWithFile {
             throw new RuntimeException("Can't write data to file", e);
         }
     }
+
     public String getResult(int supplySum, int buySum) {
-        int result = supplySum - buySum;
-        String inputData = "supply," + supplySum + System.lineSeparator() + "buy," + buySum
-                + System.lineSeparator() + "result," + result;
+        StringBuilder result = new StringBuilder("");
+        result.append("supply,").append(supplySum).append(System.lineSeparator())
+                .append("buy,").append(buySum).append(System.lineSeparator())
+                .append("result,").append(supplySum - buySum);
+        return result.toString();
     }
 }
