@@ -8,6 +8,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String SPLIT_EXPRESSION = "\\R|,";
+    private static final String SUPPLY_KEYWORD = "supply";
+    private static final String BUY_KEYWORD = "buy";
+    private static final String RESULT_KEYWORD = "result";
+    private static final String COMA_SEPARATOR = ",";
+
     public void getStatistic(String fromFileName, String toFileName) {
         String infoFromFile = readFromFile(fromFileName);
         String report = createReport(infoFromFile);
@@ -26,8 +32,8 @@ public class WorkWithFile {
             }
             resultString = stringBuilder.toString();
         } catch (IOException e) {
-            throw new RuntimeException("File not found: " + fromFileName
-                    + ", " + e.getMessage());
+            throw new RuntimeException("Can't read file by path: " + fromFileName
+                    + COMA_SEPARATOR + " " + e.getMessage());
         }
         return resultString;
     }
@@ -40,25 +46,25 @@ public class WorkWithFile {
             bufferedWriter.newLine();
         } catch (IOException e) {
             throw new RuntimeException("Can't write to file: " + toFileName
-                    + ", " + e.getMessage());
+                    + COMA_SEPARATOR + " " + e.getMessage());
         }
     }
 
     private String createReport(String resultString) {
-        String[] values = resultString.split("\\R|,");
+        String[] values = resultString.split(SPLIT_EXPRESSION);
         int supply = 0;
         int buy = 0;
         for (int i = 0; i < values.length; i++) {
-            if (values[i].startsWith("supply")) {
+            if (values[i].startsWith(SUPPLY_KEYWORD)) {
                 supply += Integer.parseInt(values[i + 1]);
             }
-            if (values[i].startsWith("buy")) {
+            if (values[i].startsWith(BUY_KEYWORD)) {
                 buy += Integer.parseInt(values[i + 1]);
             }
         }
         int result = supply - buy;
-        return "supply," + supply + System.lineSeparator()
-                + "buy," + buy + System.lineSeparator()
-                + "result," + result + System.lineSeparator();
+        return SUPPLY_KEYWORD + COMA_SEPARATOR + supply + System.lineSeparator()
+                + BUY_KEYWORD + COMA_SEPARATOR + buy + System.lineSeparator()
+                + RESULT_KEYWORD + COMA_SEPARATOR + result + System.lineSeparator();
     }
 }
