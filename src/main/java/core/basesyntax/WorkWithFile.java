@@ -33,8 +33,7 @@ public class WorkWithFile {
         int supplySum = 0;
         int buySum = 0;
         int resultSum;
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(statisticFile));
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(statisticFile))) {
             String value = bufferedReader.readLine();
             while (value != null) {
                 int parseInt = Integer.parseInt(value.substring(value.indexOf(',') + 1));
@@ -45,7 +44,7 @@ public class WorkWithFile {
                 }
                 value = bufferedReader.readLine();
             }
-            resultSum = (supplySum > buySum) ? (supplySum - buySum) : (buySum - supplySum);
+            resultSum = supplySum - buySum;
             return new int[]{supplySum, buySum, resultSum};
         } catch (IOException e) {
             throw new RuntimeException("Can't get statistic values", e);
