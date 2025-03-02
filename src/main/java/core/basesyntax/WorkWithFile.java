@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.Arrays;
 
 public class WorkWithFile {
-    public static void getStatistic(String fromFileName, String toFileName) {
+    public void getStatistic(String fromFileName, String toFileName) {
 
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String line;
@@ -38,7 +38,7 @@ public class WorkWithFile {
                 writer.write(String.join(",", row));
                 writer.newLine();
             }
-            System.out.println("CSV file written successfully");
+
         } catch (IOException e) {
             throw new RuntimeException("Can't write  " + toFileName, e);
         }
