@@ -36,10 +36,10 @@ public class WorkWithFile {
 
         System.out.println("Supply equals " + supply);
 
-        ArrayList<String> buy = new ArrayList<>();
-        buy.add("Item 1");
-        buy.add("Item 2");
-        buy.add("Item 4");
+        ArrayList<Integer> buy = new ArrayList<>();
+        buy.add(Integer.valueOf("Item 1"));
+        buy.add(Integer.valueOf("Item 2"));
+        buy.add(Integer.valueOf("Item 4"));
 
         System.out.println("Buy equals " + buy);
 
