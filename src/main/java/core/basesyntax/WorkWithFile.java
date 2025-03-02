@@ -26,7 +26,6 @@ public class WorkWithFile {
                 {"supply", "17"},
                 {"buy", "10"}
         };
-
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
 
             writer.write(String.join(",", headers));
@@ -41,4 +40,3 @@ public class WorkWithFile {
         }
       }
     }
-
