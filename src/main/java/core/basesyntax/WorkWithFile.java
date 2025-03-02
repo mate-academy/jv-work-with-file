@@ -5,7 +5,8 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.ArrayList;
+
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
@@ -14,7 +15,6 @@ public class WorkWithFile {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] values = line.split((","));
-                System.out.println(Arrays.toString(values));
             }
         } catch (IOException e) {
             {
@@ -30,6 +30,19 @@ public class WorkWithFile {
                 {"supply", "17"},
                 {"buy", "10"}
         };
+        ArrayList<String> supply = new ArrayList<>();
+        supply.add("Item 0");
+        supply.add("Item 3");
+
+        System.out.println("Supply equals " + supply);
+
+        ArrayList<String> buy = new ArrayList<>();
+        buy.add("Item 1");
+        buy.add("Item 2");
+        buy.add("Item 4");
+
+        System.out.println("Buy equals " + buy);
+
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
 
             writer.write(String.join(",", headers));
