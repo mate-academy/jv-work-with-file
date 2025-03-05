@@ -14,7 +14,7 @@ public class WorkWithFile {
     public int[] calculate(String fromFileName) {
         int supplySum = 0;
         int buySum = 0;
-        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName));) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
