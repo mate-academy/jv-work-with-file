@@ -1,56 +1,43 @@
 package core.basesyntax;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileReader;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
+        File file = new File(fromFileName);
+        Path path = Path.of(file.toURI());
+        List<String> lines;
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] values = line.split((","));
-            }
+        try {
+            lines = Files.readAllLines(path);
         } catch (IOException e) {
-            {
-                throw new RuntimeException("Can't read data from the file " + fromFileName, e);
+
+            throw new RuntimeException("Can't read data from the file " + fromFileName, e);
+        }
+        String[] array = lines.toArray(new String[]{});
+        int supplySum = 0;
+        int buySum = 0;
+        for (String data : array) {
+            String[] split = data.split(",");
+            if (split[0].equals("buy")) {
+                buySum += Integer.parseInt(split[1]);
+            } else {
+                supplySum += Integer.parseInt(split[1]);
             }
         }
-
-        String[] headers = {"operation time", "amount"};
-        String[][] data = {
-                {"supply", "30"},
-                {"buy", "10"},
-                {"buy", "13"},
-                {"supply", "17"},
-                {"buy", "10"}
-        };
-        ArrayList<String> supply = new ArrayList<>();
-        supply.add("Item 0");
-        supply.add("Item 3");
-
-        System.out.println("Supply equals " + supply);
-
-        ArrayList<Integer> buy = new ArrayList<>();
-        buy.add(Integer.valueOf("Item 1"));
-        buy.add(Integer.valueOf("Item 2"));
-        buy.add(Integer.valueOf("Item 4"));
-
-        System.out.println("Buy equals " + buy);
+        String report = "supply," + supplySum + System.lineSeparator()
+                + "buy," + buySum + System.lineSeparator()
+                + "result," + (supplySum - buySum);
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
 
-            writer.write(String.join(",", headers));
-            writer.newLine();
-            for (String[] row : data) {
-                writer.write(String.join(",", row));
-                writer.newLine();
-            }
+            writer.write(report);
 
         } catch (IOException e) {
             throw new RuntimeException("Can't write  " + toFileName, e);
