@@ -19,14 +19,16 @@ public class WorkWithFile {
                     case "buy":
                         buy += Integer.parseInt(temp[1]);
                         break;
-                    default:
+                    case "supply":
                         supply += Integer.parseInt(temp[1]);
                         break;
+                    default:
+                        System.out.println("unrecognized parameter: " + temp[0]);
                 }
                 line = bufferedReader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("can`t read", e);
+            throw new RuntimeException("can`t read file: " + fromFileName, e);
         }
         int result = supply - buy;
         stringBuilder.append("supply,").append(supply).append(System.lineSeparator()).append("buy,")
@@ -34,7 +36,7 @@ public class WorkWithFile {
         try {
             Files.writeString(Path.of(toFileName), stringBuilder.toString());
         } catch (IOException e) {
-            throw new RuntimeException("Can`t write", e);
+            throw new RuntimeException("Can`t write file: " + toFileName, e);
         }
 
     }
