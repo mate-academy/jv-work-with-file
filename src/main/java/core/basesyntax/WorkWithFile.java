@@ -40,8 +40,10 @@ public class WorkWithFile {
             String[] splittedRecord = record.split(recordSeparator);
             if (splittedRecord[0].equals(supplyAction)) {
                 supply += Integer.parseInt(splittedRecord[1]);
-            } else {
+            } else if (splittedRecord[0].equals(buyAction)) {
                 buy += Integer.parseInt(splittedRecord[1]);
+            } else {
+                throw new RuntimeException("Can't parse data: " + splittedRecord[0]);
             }
         }
         int result = supply - buy;
