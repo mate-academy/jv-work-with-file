@@ -11,7 +11,7 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
     }
 
-    private String[] readeFile(String fromFileName) {
+    private String[] readFile(String fromFileName) {
         try {
             BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
             int value = reader.read();
@@ -20,11 +20,10 @@ public class WorkWithFile {
                 builder.append((char) (value));
                 value = reader.read();
             }
-            System.out.println(builder);
+            return builder.toString().split("\n");
         } catch (IOException e) {
             throw new RuntimeException("Can't read from file", e);
         }
-        return null;
     }
 
     private String createReport(String[] data) {
@@ -33,11 +32,11 @@ public class WorkWithFile {
         for (String currentData : data) {
             if (currentData.split(",")[0].equals("supply")) {
                 supply += Integer.parseInt(currentData.split(",")[1]);
-            } else if (currentData.split(",")[1].equals("buy")) {
-                buy += Integer.parseInt(currentData.split(",")[2]);
+            } else if (currentData.split(",")[0].equals("buy")) {
+                buy += Integer.parseInt(currentData.split(",")[1]);
             }
         }
-        return null;
+        return String.format("supply,%d\nbuy,%d\nresult,%d");
     }
 
     private void writeToFile(String report, String toFileName) {
