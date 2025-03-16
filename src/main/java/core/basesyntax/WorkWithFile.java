@@ -37,7 +37,7 @@ public class WorkWithFile {
         }
     }
 
-    private void writeToFile(int supply, int buy, String toFileName) throws RuntimeException{
+    private void writeToFile(int supply, int buy, String toFileName) throws RuntimeException {
         int result = supply - buy;
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
