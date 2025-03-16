@@ -12,7 +12,7 @@ public class WorkWithFile {
 
         int supply = 0;
         int buy = 0;
-        String[] words;
+        String[] data;
 
         try {
 
@@ -20,20 +20,24 @@ public class WorkWithFile {
 
             for (String line : lines) {
 
-                words = line.trim().split(",");
-                int value = Integer.parseInt(words[1]);
+                data = line.trim().split(",");
+                int value = Integer.parseInt(data[1]);
 
-                if (words[0].equals("supply")) {
+                if (data[0].equals("supply")) {
                     supply += value;
                 } else {
                     buy += value;
                 }
             }
 
-        } catch (IOException e) {
-            throw new RuntimeException("error", e);
-        }
+            writeToFile(supply, buy, toFileName);
 
+        } catch (IOException e) {
+            throw new RuntimeException("Error while reading the file.", e);
+        }
+    }
+
+    private void writeToFile(int supply, int buy, String toFileName) throws RuntimeException{
         int result = supply - buy;
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
@@ -45,7 +49,7 @@ public class WorkWithFile {
             writer.write("result," + result);
 
         } catch (IOException e) {
-            throw new RuntimeException("error", e);
+            throw new RuntimeException("Error while reading the file.", e);
         }
     }
 }
