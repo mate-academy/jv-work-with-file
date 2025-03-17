@@ -12,6 +12,7 @@ public class WorkWithFile {
     private static final String COMMA = ",";
     private static final String BUY = "buy";
     private static final String SUPPLY = "supply";
+    private static final String RESULT = "result";
     private static final int AMOUNT_INDEX = 1;
     private static final int TYPE_INDEX = 0;
 
@@ -50,14 +51,14 @@ public class WorkWithFile {
             int sum = Integer.parseInt(splittedString[AMOUNT_INDEX]);
             if (splittedString[TYPE_INDEX].equalsIgnoreCase(SUPPLY)) {
                 totalSupply += sum;
-            } else if (splittedString[0].equalsIgnoreCase(BUY)) {
+            } else if (splittedString[TYPE_INDEX].equalsIgnoreCase(BUY)) {
                 totalBuy += sum;
             }
         }
         result = totalSupply - totalBuy;
         String report = SUPPLY + COMMA + totalSupply + System.lineSeparator()
                 + BUY + COMMA + totalBuy + System.lineSeparator()
-                + "result" + COMMA + result;
+                + RESULT + COMMA + result;
         return report;
     }
 
