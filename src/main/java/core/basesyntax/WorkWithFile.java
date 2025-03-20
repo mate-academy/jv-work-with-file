@@ -1,6 +1,11 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.BufferedWriter;
 
 public class WorkWithFile {
 
@@ -38,13 +43,12 @@ public class WorkWithFile {
         }
     }
 
-
     public static String saveToFile(int result, int sumOfSupply, int sumOfBuy) {
         StringBuilder resultToFile = new StringBuilder();
-        resultToFile.append("supply,").append(sumOfSupply).
-                append(System.lineSeparator()).append("buy,").
-                append(sumOfBuy).append(System.lineSeparator()).
-                append("result,").append(result);
+        resultToFile.append("supply,").append(sumOfSupply)
+                .append(System.lineSeparator()).append("buy,")
+                .append(sumOfBuy).append(System.lineSeparator())
+                .append("result,").append(result);
 
         return resultToFile.toString();
     }
