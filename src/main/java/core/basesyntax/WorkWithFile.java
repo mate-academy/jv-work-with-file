@@ -9,6 +9,10 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final String SEARCHED_OPERATION_1 = "supply";
     private static final String SEARCHED_OPERATION_2 = "buy";
+    private static final String RESULT_WORD = "result";
+    private int totalOfOperation1;
+    private int totalOfOperation2;
+    private int operationDifference;
 
     public void getStatistic(String fromFileName, String toFileName) {
         int totalOfOperation1 = 0;
@@ -29,17 +33,19 @@ public class WorkWithFile {
             throw new RuntimeException("Can't read from file", e);
         }
         int operationDifference = totalOfOperation1 - totalOfOperation2;
+    }
+
+    public void writeStatistic(String toFileName) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write(SEARCHED_OPERATION_1 + "," + totalOfOperation1);
             writer.newLine();
             writer.write(SEARCHED_OPERATION_2 + "," + totalOfOperation2);
             writer.newLine();
-            writer.write("result" + "," + operationDifference);
+            writer.write(RESULT_WORD + "," + operationDifference);
             writer.newLine();
 
         } catch (IOException e) {
             throw new RuntimeException("Can't write the file", e);
         }
-
     }
 }
