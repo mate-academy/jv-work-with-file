@@ -41,7 +41,8 @@ public class WorkWithFile {
         return new int[]{totalOfOperation1, totalOfOperation2};
     }
 
-    private void writeStatistic(String toFileName, int totalOfOperation1, int totalOfOperation2, int operationDifference) {
+    private void writeStatistic(String toFileName, int totalOfOperation1,
+                                int totalOfOperation2, int operationDifference) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write(SEARCHED_OPERATION_1 + "," + totalOfOperation1);
             writer.newLine();
