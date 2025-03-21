@@ -1,6 +1,11 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.FileWriter;
+import java.io.BufferedWriter;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
@@ -13,12 +18,17 @@ public class WorkWithFile {
                 builder.append(line).append(" ");
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can't read data from the file " + toFileName, e);
         }
 
-        String output = builder.toString();t
+        String output = builder.toString();
         String[] lines = output.split(",|\\s+");
-        String[][] results = new String[lines.length / 2][2];
+
+        if (lines.length % 2 != 0) {
+            throw new IllegalArgumentException("Need an even number of lines");
+        }
+
+        String[][] results = new String[lines.length/2][2];
         int firstItem = 0;
         int secondItem = 1;
 
@@ -63,17 +73,19 @@ public class WorkWithFile {
             resultCSV[i][1] = Integer.toString(amount);
         }
 
-        int sum = 0;
+        if (resultCSV.length > 1) {
+            int sum = 0;
 
-        if (Integer.parseInt(resultCSV[0][1]) < Integer.parseInt(resultCSV[1][1])) {
-            String[] temp2 = resultCSV[0];
-            resultCSV[0] = resultCSV[1];
-            resultCSV[1] = temp2;
+            if (Integer.parseInt(resultCSV[0][1]) < Integer.parseInt(resultCSV[1][1])) {
+                String[] temp2 = resultCSV[0];
+                resultCSV[0] = resultCSV[1];
+                resultCSV[1] = temp2;
+            }
+
+            sum = Integer.parseInt(resultCSV[0][1]) - Integer.parseInt(resultCSV[1][1]);
+            resultCSV[resultCSV.length - 1][0] = "result";
+            resultCSV[resultCSV.length - 1][1] = Integer.toString(sum);
         }
-
-        sum = Integer.parseInt(resultCSV[0][1]) - Integer.parseInt(resultCSV[1][1]);
-        resultCSV[resultCSV.length - 1][0] = "result";
-        resultCSV[resultCSV.length - 1][1] =  Integer.toString(sum);
 
         StringBuilder builder1 = new StringBuilder();
         for (String[] strings : resultCSV) {
@@ -89,7 +101,7 @@ public class WorkWithFile {
             bufferedWriter.write(textResult);
             bufferedWriter.flush();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can't write data to the file " + toFileName,e);
         }
     }
 }
