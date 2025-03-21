@@ -10,11 +10,17 @@ public class WorkWithFile {
     private static final String SEARCHED_OPERATION_1 = "supply";
     private static final String SEARCHED_OPERATION_2 = "buy";
     private static final String RESULT_WORD = "result";
-    private int totalOfOperation1;
-    private int totalOfOperation2;
-    private int operationDifference;
 
     public void getStatistic(String fromFileName, String toFileName) {
+        int[] statistics = readStatistics(fromFileName);
+        int totalOfOperation1 = statistics[0];
+        int totalOfOperation2 = statistics[1];
+        int operationDifference = totalOfOperation1 - totalOfOperation2;
+
+        writeStatistic(toFileName, totalOfOperation1, totalOfOperation2, operationDifference);
+    }
+
+    private int[] readStatistics(String fromFileName) {
         int totalOfOperation1 = 0;
         int totalOfOperation2 = 0;
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
@@ -32,10 +38,10 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't read from file", e);
         }
-        int operationDifference = totalOfOperation1 - totalOfOperation2;
+        return new int[]{totalOfOperation1, totalOfOperation2};
     }
 
-    public void writeStatistic(String toFileName) {
+    private void writeStatistic(String toFileName, int totalOfOperation1, int totalOfOperation2, int operationDifference) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write(SEARCHED_OPERATION_1 + "," + totalOfOperation1);
             writer.newLine();
@@ -43,7 +49,6 @@ public class WorkWithFile {
             writer.newLine();
             writer.write(RESULT_WORD + "," + operationDifference);
             writer.newLine();
-
         } catch (IOException e) {
             throw new RuntimeException("Can't write the file", e);
         }
