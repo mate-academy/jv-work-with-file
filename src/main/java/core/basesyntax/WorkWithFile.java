@@ -1,8 +1,8 @@
 package core.basesyntax;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.io.BufferedReader;
 import java.nio.file.Path;
 
 public class WorkWithFile {
@@ -32,7 +32,7 @@ public class WorkWithFile {
 
         try {
             Files.writeString(Path.of(toFileName), resultStr);
-        } catch (IOException  e) {
+        } catch (IOException e) {
             throw new RuntimeException("Can't write data to file: " + toFileName, e);
         }
     }
