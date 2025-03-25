@@ -28,12 +28,10 @@ public class WorkWithFile {
         int result = supplySum - buySum;
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            System.out.println("supply," + supplySum + System.lineSeparator()
-                    + "buy," + buySum + System.lineSeparator() + "result," + result);
             writer.write("supply," + supplySum + System.lineSeparator()
                     + "buy," + buySum + System.lineSeparator() + "result," + result);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can't write data to the file " + toFileName, e);
         }
     }
 }
