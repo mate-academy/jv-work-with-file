@@ -26,7 +26,7 @@ public class WorkWithFile {
                 }
             }
         } catch (IOException | NumberFormatException e) {
-            e.printStackTrace();
+            throw  new RuntimeException("Cant read" ,e);
         }
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
@@ -39,7 +39,7 @@ public class WorkWithFile {
             writer.write("result," + result);
 
         } catch (IOException e) {
-            e.printStackTrace();
+            throw  new RuntimeException("Cant wright" ,e);
         }
     }
 }
