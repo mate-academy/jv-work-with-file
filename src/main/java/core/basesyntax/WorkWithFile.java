@@ -11,7 +11,7 @@ public class WorkWithFile {
         File file = new File(fromFileName);
         File csv = new File(toFileName);
         String lineSeparator = System.lineSeparator();
-        int supplier= 0;
+        int supplier = 0;
         int buy = 0;
 
         try {
@@ -33,7 +33,7 @@ public class WorkWithFile {
             Files.writeString(csv.toPath(),
                     "result," + (supplier - buy), StandardOpenOption.APPEND);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can't read data from the file " + fromFileName, e);
         }
     }
 }
