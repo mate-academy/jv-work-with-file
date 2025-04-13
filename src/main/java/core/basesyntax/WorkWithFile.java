@@ -7,18 +7,21 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String COMMA = ",";
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
+
     public void getStatistic(String fromFileName, String toFileName) {
+        int supply = 0;
+        int buy = 0;
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));) {
 
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
-            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName));
             String line = bufferedReader.readLine();
-            int supply = 0;
-            int buy = 0;
             while (line != null) {
-                String[] spllitedLine = line.split(",");
+                String[] spllitedLine = line.split(COMMA);
 
-                if ("supply".equals(spllitedLine[0])) {
+                if (SUPPLY.equals(spllitedLine[0])) {
                     supply += Integer.parseInt(spllitedLine[1]);
                 } else {
                     buy += Integer.parseInt(spllitedLine[1]);
@@ -26,14 +29,21 @@ public class WorkWithFile {
                 line = bufferedReader.readLine();
             }
 
-            bufferedWriter.write("supply," + supply + System.lineSeparator()
-                    + "buy," + buy + System.lineSeparator()
-                    + "result," + (supply - buy));
-            bufferedWriter.flush();
-            bufferedWriter.close();
-            bufferedReader.close();
         } catch (IOException e) {
             throw new RuntimeException("Cant read or write file", e);
         }
+
+        writeToFile(buy, supply, toFileName);
+    }
+
+    public void writeToFile(int buy, int supply, String file) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));) {
+            bufferedWriter.write(SUPPLY + COMMA + supply + System.lineSeparator()
+                    + BUY + COMMA + buy + System.lineSeparator()
+                    + RESULT + COMMA + (supply - buy));
+        } catch (IOException e) {
+            throw new RuntimeException("File writing error", e);
+        }
+
     }
 }
