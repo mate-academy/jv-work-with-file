@@ -1,33 +1,45 @@
 package core.basesyntax;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
-        TransactionProcessor transactionProcessor = new TransactionProcessor();
-        ReportBuilder reportBuilder = new ReportBuilder();
+        int supply = 0;
+        int buy = 0;
 
-        ReportWriter reportWriter = new ReportWriter();
-
-        try (BufferedReader bufferedReader = Files.newBufferedReader(Paths.get(fromFileName))) {
-            bufferedReader.readLine();
-
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                transactionProcessor.process(line);
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                String operation = parts[0];
+                int amount = Integer.parseInt(parts[1]);
+
+                if ("supply".equals(operation)) {
+                    supply += amount;
+                } else if ("buy".equals(operation)) {
+                    buy += amount;
+                }
             }
         } catch (IOException e) {
-            throw new RuntimeException("Unable to read file: " + fromFileName, e);
+            throw new RuntimeException("Can't read file " + fromFileName, e);
         }
 
-        int supply = transactionProcessor.getTotalSupply();
-        int buy = transactionProcessor.getTotalBuy();
-        int result = transactionProcessor.getResult();
+        int result = supply - buy;
+        String report = "supply," + supply + System.lineSeparator()
+                + "buy," + buy + System.lineSeparator()
+                + "result," + result;
 
-        String report = reportBuilder.buildReport(supply, buy, result);
-        reportWriter.writeReport(toFileName, report);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
+            writer.write(report);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write to file " + toFileName, e);
+        }
     }
 }
+
+
+
