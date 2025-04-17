@@ -8,38 +8,36 @@ import java.io.IOException;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
-        int supply = 0;
-        int buy = 0;
+        int totalBuy = 0;
+        int totalSupply = 0;
 
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",");
-                String operation = parts[0];
-                int amount = Integer.parseInt(parts[1]);
+                String[] data = line.split(",");
+                String operation = data[0].trim();
+                int amount = Integer.parseInt(data[1].trim());
 
-                if ("supply".equals(operation)) {
-                    supply += amount;
-                } else if ("buy".equals(operation)) {
-                    buy += amount;
+                if ("buy".equals(operation)) {
+                    totalBuy += amount;
+                } else if ("supply".equals(operation)) {
+                    totalSupply += amount;
                 }
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file " + fromFileName, e);
+            throw new RuntimeException("Can't read file: " + fromFileName, e);
         }
 
-        int result = supply - buy;
-        String report = "supply," + supply + System.lineSeparator()
-                + "buy," + buy + System.lineSeparator()
-                + "result," + result;
+        int result = totalSupply - totalBuy;
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            writer.write(report);
+            writer.write("supply," + totalSupply + System.lineSeparator());
+            writer.write("buy," + totalBuy + System.lineSeparator());
+            writer.write("result," + result + System.lineSeparator());
         } catch (IOException e) {
-            throw new RuntimeException("Can't write to file " + toFileName, e);
+            throw new RuntimeException("Can't write file: " + toFileName, e);
         }
     }
 }
-
 
 
