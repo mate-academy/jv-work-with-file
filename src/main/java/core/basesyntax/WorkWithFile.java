@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-
 import java.io.*;
 
 public class WorkWithFile {
