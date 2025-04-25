@@ -4,6 +4,7 @@ import java.io.*;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
+
         int supply = 0;
         int buy = 0;
 
