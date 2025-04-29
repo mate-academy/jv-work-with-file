@@ -55,5 +55,44 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can't write data to file: " + toFileName, e);
         }
+
+    private List<String> readFile(String fromFileName) {
+        try {
+            return Files.readAllLines(Path.of(fromFileName));
+        } catch (IOException e) {
+            throw new RuntimeException("Can't read data from file: " + fromFileName, e);
+        }
+    }
+
+    private String generateReport(List<String> lines) {
+        int supplyTotal = 0;
+        int buyTotal = 0;
+
+        for (String line : lines) {
+            String[] parts = line.split(COMMA);
+            String operation = parts[0];
+            int amount = Integer.parseInt(parts[1]);
+
+            if (SUPPLY.equals(operation)) {
+                supplyTotal += amount;
+            } else if (BUY.equals(operation)) {
+                buyTotal += amount;
+            }
+        }
+
+        int resultTotal = supplyTotal - buyTotal;
+
+        return String.join(System.lineSeparator(),
+                SUPPLY + COMMA + supplyTotal,
+                BUY + COMMA + buyTotal,
+                RESULT + COMMA + resultTotal);
+    }
+
+    private void writeToFile(String toFileName, String report) {
+        try {
+            Files.writeString(Path.of(toFileName), report);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write data to file: " + toFileName, e);
+        }
     }
 }
