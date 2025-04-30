@@ -1,5 +1,6 @@
 package core.basesyntax;
 
+import java.io.FileNotFoundException;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
@@ -28,7 +29,11 @@ public class WorkWithFileTest {
 
     @Test
     public void getStatisticAboutApple() {
-        workWithFile.getStatistic("apple.csv", APPLE_RESULT_FILE);
+        try {
+            workWithFile.getStatistic("apple.csv", APPLE_RESULT_FILE);
+        } catch (IOException e) {
+            System.out.println("Can't write data to file");
+        }
 
         String actualResult = readFromFile(APPLE_RESULT_FILE).trim();
         String expectedResult = "supply,188" + System.lineSeparator()
@@ -39,8 +44,11 @@ public class WorkWithFileTest {
 
     @Test
     public void getStatisticAboutOrange() {
+        try {
         workWithFile.getStatistic("orange.csv", ORANGE_RESULT_FILE);
-
+        } catch (IOException e) {
+            System.out.println("Can't write data to file");
+        }
         String actualResult = readFromFile(ORANGE_RESULT_FILE).trim();
         String expectedResult = "supply,295" + System.lineSeparator()
                 + "buy,154" + System.lineSeparator()
@@ -50,8 +58,11 @@ public class WorkWithFileTest {
 
     @Test
     public void getStatisticAboutGrape() {
+        try {
         workWithFile.getStatistic("grape.csv", GRAPE_RESULT_FILE);
-
+        } catch (IOException e) {
+            System.out.println("Can't write data to file");
+        }
         String actualResult = readFromFile(GRAPE_RESULT_FILE).trim();
         String expectedResult = "supply,352" + System.lineSeparator()
                 + "buy,352" + System.lineSeparator()
@@ -61,8 +72,11 @@ public class WorkWithFileTest {
 
     @Test
     public void getStatisticAboutBanana() {
+        try {
         workWithFile.getStatistic("banana.csv", BANANA_RESULT_FILE);
-
+        } catch (IOException e) {
+            System.out.println("Can't write data to file");
+        }
         String actualResult = readFromFile(BANANA_RESULT_FILE).trim();
         String expectedResult = "supply,491" + System.lineSeparator()
                 + "buy,293" + System.lineSeparator()
@@ -72,9 +86,12 @@ public class WorkWithFileTest {
 
     @Test
     public void getStatisticAboutBananaRepeatedMethodCall() {
+        try {
         workWithFile.getStatistic("banana.csv", BANANA_RESULT_FILE);
         workWithFile.getStatistic("banana.csv", BANANA_RESULT_FILE);
-
+        } catch (IOException e) {
+            System.out.println("Can't write data to file");
+        }
         String actualResult = readFromFile(BANANA_RESULT_FILE).trim();
         String expectedResult = "supply,491" + System.lineSeparator()
             + "buy,293" + System.lineSeparator()
