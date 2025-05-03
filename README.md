@@ -9,7 +9,8 @@ This method has two parameters:
 
 The input file has a `.csv` format. CSV is a simple file format used to store tabular data.
 This type of file is very popular for storing information. So we will start working with it. 
-CSV stands for "comma-separated values". Its data fields are most often separated, or delimited by a comma. 
+CSV stands for "comma-separated values". Its data fields are most often separated,
+or delimited by a comma. 
 
 For example, let's say you had a spreadsheet containing the following data:
 
@@ -31,7 +32,8 @@ buy,10
 ```
 
 __Your task is to read all data from an input CSV file, 
-create a report, and write it to newFile (the name of this file is the second parameter in the method).__
+create a report, and write it to newFile
+(the name of this file is the second parameter in the method).__
 
 Example of the report:
 ```csv
