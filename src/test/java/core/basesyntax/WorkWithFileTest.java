@@ -6,6 +6,7 @@ import org.junit.Test;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 
 public class WorkWithFileTest {
     private WorkWithFile workWithFile = new WorkWithFile();
@@ -13,7 +14,7 @@ public class WorkWithFileTest {
     private static final String GRAPE_RESULT_FILE = "grapeResult.csv";
     private static final String ORANGE_RESULT_FILE = "orangeResult.csv";
     private static final String BANANA_RESULT_FILE = "bananaResult.csv";
-
+    private List<Integer> list;
     @After
     public void clearResults() {
         try {
