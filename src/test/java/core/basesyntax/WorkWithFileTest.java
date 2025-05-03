@@ -8,7 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class WorkWithFileTest {
-    private WorkWithFile workWithFile = new WorkWithFile();
+    private final WorkWithFile workWithFile = new WorkWithFile();
     private static final String APPLE_RESULT_FILE = "appleResult.csv";
     private static final String GRAPE_RESULT_FILE = "grapeResult.csv";
     private static final String ORANGE_RESULT_FILE = "orangeResult.csv";
