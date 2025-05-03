@@ -45,4 +45,4 @@ Explanation:
 - `buy = 10 + 13 + 10 = 33`
 - `result = supply - buy = 47 - 33 = 14`
 
-#### [Try to avoid these common mistakes, while solving task](./checklist.md)
+#### [Try to avoid these common mistakes, while solving task](/checklist.md)
