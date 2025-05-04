@@ -21,7 +21,7 @@ public class WorkWithFile {
                 String[] arr = lineOfFile.split(",");
                 if (arr[0].equals(FIRST_PARAMETER)) {
                     supply += Integer.parseInt(arr[1]);
-                } else {
+                } else if (arr[0].equals(SECOND_PARAMETER)) {
                     buy += Integer.parseInt(arr[1]);
                 }
                 lineOfFile = bufferedReader.readLine();
