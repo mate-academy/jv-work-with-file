@@ -1,7 +1,42 @@
 package core.basesyntax;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
+        int supplyTotal = 0;
+        int buyTotal = 0;
 
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
+            String line;
+            String operation;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length == 2) {
+                    operation = parts[0].trim();
+                    int amount = Integer.parseInt(parts[1]);
+
+                    if ("supply".equals(operation)) {
+                        supplyTotal += amount;
+                    } else if ("buy".equals(operation)) {
+                        buyTotal += amount;
+                    }
+                }
+            }
+
+            int result = supplyTotal - buyTotal;
+
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
+                writer.write("supply," + supplyTotal + System.lineSeparator());
+                writer.write("buy," + buyTotal + System.lineSeparator());
+                writer.write("result," + result);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Error processing file", e);
+        }
     }
 }
