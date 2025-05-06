@@ -51,7 +51,7 @@ public class WorkWithFile {
         return stringBuilder.toString();
     }
 
-    private static void writeDataToFile(List<String> lines, String fileName) {
+    private void writeDataToFile(List<String> lines, String fileName) {
         String report = createReport(lines);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
             bufferedWriter.write(report);
