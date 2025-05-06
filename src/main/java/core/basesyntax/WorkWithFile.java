@@ -13,10 +13,11 @@ public class WorkWithFile {
 
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String line;
+            String operation;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
                 if (parts.length == 2) {
-                    String operation = parts[0];
+                    operation = parts[0].trim();
                     int amount = Integer.parseInt(parts[1]);
 
                     if ("supply".equals(operation)) {
