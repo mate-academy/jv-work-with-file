@@ -12,11 +12,13 @@ public class WorkWithFile {
         try {
             List<String> allLines = Files.readAllLines(new File(fromFileName).toPath());
             for (String line : allLines) {
-                String[] splited = line.split(",");
-                if (splited[0].equals("supply")) {
-                    countSupply += Integer.parseInt(splited[1]);
-                } else {
-                    countBuy += Integer.parseInt(splited[1]);
+                if (line.matches("^[^,]+,[^,]+$")) {
+                    String[] splited = line.split(",");
+                    if (splited[0].equals("supply")) {
+                        countSupply += Integer.parseInt(splited[1]);
+                    } else {
+                        countBuy += Integer.parseInt(splited[1]);
+                    }
                 }
             }
         } catch (IOException e) {
