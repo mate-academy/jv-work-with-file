@@ -10,11 +10,15 @@ import java.util.List;
 public class WorkWithFile {
     private static final int OPERATION_TYPE_INDEX = 0;
     private static final int AMOUNT_INDEX = 1;
+    private static final String SEPARATOR = ",";
+    private static final String OPERATION_SUPPLY = "supply";
+    private static final String OPERATION_BUY = "buy";
 
     public void getStatistic(String fromFileName, String toFileName) {
         List<String> lines = readLinesFromFile(fromFileName);
         int[] operationTotals = calculateTotals(lines);
-        writeToFile(operationTotals, toFileName);
+        String[] resultsLines = getResultLines(operationTotals);
+        writeToFile(resultsLines, toFileName);
     }
 
     private List<String> readLinesFromFile(String fromFileName) {
@@ -35,13 +39,13 @@ public class WorkWithFile {
         int buyTotal = 0;
 
         for (String line : lines) {
-            String[] lineArray = line.split(",");
+            String[] lineArray = line.split(SEPARATOR);
             String operationType = lineArray[OPERATION_TYPE_INDEX];
             int amount = Integer.parseInt(lineArray[AMOUNT_INDEX]);
 
-            if ("supply".equals(operationType)) {
+            if (OPERATION_SUPPLY.equals(operationType)) {
                 supplyTotal += amount;
-            } else if ("buy".equals(operationType)) {
+            } else if (OPERATION_BUY.equals(operationType)) {
                 buyTotal += amount;
             }
         }
@@ -49,18 +53,30 @@ public class WorkWithFile {
         return new int[]{supplyTotal, buyTotal};
     }
 
-    private void writeToFile(int[] summaryArray, String toFileName) {
-        int netResult = summaryArray[0] - summaryArray[1];
+    private String[] getResultLines(int[] summaryArray) {
+        String[] resultLines = new String[3];
+
+        resultLines[0] = OPERATION_SUPPLY + SEPARATOR + summaryArray[0];
+        resultLines[1] = OPERATION_BUY + SEPARATOR + summaryArray[1];
+        resultLines[2] = "result" + SEPARATOR + (summaryArray[0] - summaryArray[1]);
+
+        return resultLines;
+
+    }
+
+    private void writeToFile(String[] resultsLines, String toFileName) {
 
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write("supply," + summaryArray[0]);
-            bufferedWriter.newLine();
-            bufferedWriter.write("buy," + summaryArray[1]);
-            bufferedWriter.newLine();
-            bufferedWriter.write("result," + netResult);
+
+            for (String line : resultsLines) {
+                bufferedWriter.write(line);
+                bufferedWriter.newLine();
+            }
 
         } catch (IOException e) {
             throw new RuntimeException("Error writing to file: " + toFileName, e);
         }
     }
+
 }
+
