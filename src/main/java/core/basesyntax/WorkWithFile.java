@@ -65,9 +65,7 @@ public class WorkWithFile {
     }
 
     private void writeToFile(String[] resultsLines, String toFileName) {
-
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-
             for (String line : resultsLines) {
                 bufferedWriter.write(line);
                 bufferedWriter.newLine();
