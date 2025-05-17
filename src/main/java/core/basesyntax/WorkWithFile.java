@@ -28,7 +28,7 @@ public class WorkWithFile {
                 }
             }
         } catch (IOException e) {
-            throw new RuntimeException("Не удалось прочитать файл: " + fromFileName, e);
+            throw new RuntimeException("Failed to read file: " + fromFileName, e);
         }
 
         int result = supplyTotal - buyTotal;
@@ -36,12 +36,12 @@ public class WorkWithFile {
         StringBuilder report = new StringBuilder();
         report.append("supply,").append(supplyTotal).append(System.lineSeparator());
         report.append("buy,").append(buyTotal).append(System.lineSeparator());
-        report.append("result,").append(result).append(System.lineSeparator());
+        report.append("result,").append(result);
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write(report.toString());
         } catch (IOException e) {
-            throw new RuntimeException("Не удалось записать в файл: " + toFileName, e);
+            throw new RuntimeException("Failed to read file: " + toFileName, e);
         }
     }
 }
