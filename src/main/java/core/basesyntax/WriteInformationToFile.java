@@ -4,8 +4,8 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class WriteDateToFile {
-    public void writeDte(int supplyAmount, int buyAmount, String fileName) {
+public class WriteInformationToFile {
+    public void writeInformation(int supplyAmount, int buyAmount, String fileName) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName));) {
             bufferedWriter.write("supply," + supplyAmount + System.lineSeparator());
             bufferedWriter.write("buy," + buyAmount + System.lineSeparator());
