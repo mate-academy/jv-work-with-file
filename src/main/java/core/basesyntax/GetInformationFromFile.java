@@ -11,7 +11,7 @@ public class GetInformationFromFile {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName));
             String index = bufferedReader.readLine();
             while (index != null) {
-                builder.append(index).append(" ");
+                builder.append(index).append(System.lineSeparator());
                 index = bufferedReader.readLine();
             }
             return builder.toString();

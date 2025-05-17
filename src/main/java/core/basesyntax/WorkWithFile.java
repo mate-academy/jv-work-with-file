@@ -2,12 +2,12 @@ package core.basesyntax;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
-        GetInformationFromFile getDateFromFile = new GetInformationFromFile();
-        String dateFromFileStr = getDateFromFile.getInformation(fromFileName);
+        GetInformationFromFile getDataFromFile = new GetInformationFromFile();
+        String dataFromFileStr = getDataFromFile.getInformation(fromFileName);
         int supplyAmount = 0;
         int buyAmount = 0;
-        if (dateFromFileStr != null) {
-            String[] dateFromFile = dateFromFileStr.split(" ");
+        if (dataFromFileStr != null) {
+            String[] dateFromFile = dataFromFileStr.split(System.lineSeparator());
             for (String date : dateFromFile) {
                 if (date == null || date.trim().isEmpty()) {
                     continue;
@@ -24,7 +24,6 @@ public class WorkWithFile {
                         buyAmount += Integer.parseInt(splitDate[1]);
                         break;
                     default:
-                        System.out.println("Something went wrong");
                         break;
                 }
             }
