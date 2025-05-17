@@ -4,8 +4,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
-public class GetDateFromFile {
-    public String getDate(String fileName) {
+public class GetInformationFromFile {
+    public String getInformation(String fileName) {
         StringBuilder builder = new StringBuilder();
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName));
