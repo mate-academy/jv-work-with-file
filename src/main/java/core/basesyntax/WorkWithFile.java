@@ -34,13 +34,24 @@ public class WorkWithFile {
         int totalBuy = 0;
 
         for (String line : fileContent) {
+            if (line == null || !line.contains(",") || line.isBlank()) {
+                continue;
+            }
             String[] parts = line.split(COMMA_CHAR);
-            String typeOfOperation = parts[0];
-            int amount = Integer.parseInt(parts[1]);
-            if (typeOfOperation.equals(SUPPLY)) {
-                totalSupply += amount;
-            } else if (typeOfOperation.equals(BUY)) {
-                totalBuy += amount;
+            if (parts.length < 2) {
+                continue;
+            }
+
+            try {
+                String type = parts[0].trim();
+                int amount = Integer.parseInt(parts[1].trim());
+                if (type.equals(SUPPLY)) {
+                    totalSupply += amount;
+                } else if (type.equals(BUY)) {
+                    totalBuy += amount;
+                }
+            } catch (NumberFormatException e) {
+                continue;
             }
         }
 
