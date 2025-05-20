@@ -32,7 +32,7 @@ public class WorkWithFile {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(COMMA_DELIMITER);
-                map.get(values[0]).add(Integer.valueOf(values[1]));
+                map.getOrDefault(values[0], new ArrayList<>()).add(Integer.valueOf(values[1]));
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -58,7 +58,7 @@ public class WorkWithFile {
 
     public static void main(String[] args) {
         WorkWithFile workWithFile = new WorkWithFile();
-        workWithFile.getStatistic("apple.csv", "output.txt");
+        workWithFile.getStatistic("banana.csv", "output.txt");
     }
 
     public String convertToCsv(String[] data) {
