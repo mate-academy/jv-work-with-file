@@ -1,8 +1,15 @@
 package core.basesyntax;
 
-import javax.swing.text.html.CSS;
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -30,7 +37,6 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
         return map;
     }
 
@@ -55,17 +61,17 @@ public class WorkWithFile {
         workWithFile.getStatistic("apple.csv", "output.txt");
     }
 
-    public String convertToCSV(String[] data) {
+    public String convertToCsv(String[] data) {
         return Stream.of(data)
                 .map(this::escapeSpecialCharacters)
                 .collect(Collectors.joining(","));
     }
 
-    public void writeToFile(List<String[]> dataLines, String CSV_FILE_NAME) {
-        File csvOutputFile = new File(CSV_FILE_NAME);
+    public void writeToFile(List<String[]> dataLines, String fileName) {
+        File csvOutputFile = new File(fileName);
         try (PrintWriter pw = new PrintWriter(csvOutputFile)) {
             dataLines.stream()
-                    .map(this::convertToCSV)
+                    .map(this::convertToCsv)
                     .forEach(pw::println);
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
@@ -83,6 +89,4 @@ public class WorkWithFile {
         }
         return escapedData;
     }
-
-
 }
