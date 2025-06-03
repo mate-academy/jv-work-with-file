@@ -35,7 +35,7 @@ public class WorkWithFile {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write("supply," + totalSupply + System.lineSeparator());
             writer.write("buy," + totalBuy + System.lineSeparator());
-            writer.write("result," + result + System.lineSeparator());
+            writer.write("result," + result);
         } catch (IOException e) {
             System.out.println("Error writing file");
         }
