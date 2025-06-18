@@ -34,13 +34,13 @@ public class WorkWithFile {
         report[1] = "buy," + buy;
         report[2] = "result," + result;
         File myFile = new File(toFileName);
-        for (String pure : report) {
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(myFile))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(myFile))) {
+            for (String pure : report) {
                 writer.write(pure);
                 writer.newLine();
-            } catch (Exception e) {
-                throw new RuntimeException("Can't write file", e);
             }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 }
