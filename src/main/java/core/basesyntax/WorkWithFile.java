@@ -35,7 +35,7 @@ public class WorkWithFile {
         report[2] = "result," + result;
         File myFile = new File(toFileName);
         for (String pure : report) {
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(myFile, true))) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(myFile))) {
                 writer.write(pure);
                 writer.newLine();
             } catch (Exception e) {
