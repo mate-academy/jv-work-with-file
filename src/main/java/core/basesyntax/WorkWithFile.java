@@ -2,29 +2,26 @@ package core.basesyntax;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
+import java.nio.file.StandardOpenOption;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) throws IOException {
-        List<String> fileInfo = List.of(getSortedInfo(fromFileName));
-        writeToFile(fileInfo,toFileName);
-
+        String[] sortedInfo = getSortedInfo(fromFileName);
+        String fileInfo = String.join("\r\n", sortedInfo);
+        writeToFile(fileInfo, toFileName);
     }
 
     public String[] getSortedInfo(String fromFileName) throws IOException {
-        List<String> lines = Files.readAllLines(Paths.get(fromFileName));
+        var lines = Files.readAllLines(Paths.get(fromFileName));
         int supply = 0;
         int buy = 0;
 
         for (String line : lines) {
             String[] parts = line.split(",");
-
             if (parts.length == 2) {
                 String type = parts[0].trim();
-                String amountStr = parts[1].trim();
-                int amount = Integer.parseInt(amountStr);
+                int amount = Integer.parseInt(parts[1].trim());
 
                 if (type.equals("supply")) {
                     supply += amount;
@@ -33,6 +30,7 @@ public class WorkWithFile {
                 }
             }
         }
+
         int result = supply - buy;
         return new String[]{
                 "supply," + supply,
@@ -41,12 +39,13 @@ public class WorkWithFile {
         };
     }
 
-    public void writeToFile(List<String> fileInfo,String toFileName) throws IOException {
-        if (Files.notExists(Path.of(toFileName))) {
-            Files.createFile(Path.of(toFileName));
-        }
-        Files.write(Paths.get(toFileName), fileInfo);
+    public void writeToFile(String fileInfo, String toFileName) throws IOException {
+        Files.writeString(
+                Paths.get(toFileName),
+                fileInfo,
+                StandardOpenOption.CREATE,
+                StandardOpenOption.TRUNCATE_EXISTING
+        );
     }
 }
-
 
