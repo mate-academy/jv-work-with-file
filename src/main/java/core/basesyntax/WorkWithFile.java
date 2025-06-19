@@ -5,7 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-x
+
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) throws IOException {
         List<String> fileInfo = List.of(getSortedInfo(fromFileName));
@@ -42,7 +42,7 @@ public class WorkWithFile {
     }
 
     public void writeToFile(List<String> fileInfo,String toFileName) throws IOException {
-        if(Files.notExists(Path.of(toFileName))) {
+        if (Files.notExists(Path.of(toFileName))) {
             Files.createFile(Path.of(toFileName));
         }
         Files.write(Paths.get(toFileName), fileInfo);
