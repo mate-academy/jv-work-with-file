@@ -25,9 +25,14 @@ public class WorkWithFile {
 
             int result = totalSupply - totalBuy;
 
-            String report = "supply," + totalSupply + System.lineSeparator() +
-                    "buy," + totalBuy + System.lineSeparator() +
-                    "result," + result;
+            String report = "supply,"
+                    + totalSupply
+                    + System.lineSeparator()
+                    + "buy,"
+                    + totalBuy
+                    + System.lineSeparator()
+                    + "result,"
+                    + result;
 
             java.nio.file.Path outputPath = java.nio.file.Path.of(toFileName);
             java.nio.file.Files.writeString(outputPath, report);
