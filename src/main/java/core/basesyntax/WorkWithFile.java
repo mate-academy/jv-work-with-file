@@ -7,6 +7,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String COMMA = ",";
+    private static final String NEW_LINE = System.lineSeparator();
+    private static final int OPERATION_INDEX = 0;
+    private static final int VALUE_INDEX = 1;
+
     public void getStatistic(String fromFileName, String toFileName) {
         int supplyTotal = 0;
         int buyTotal = 0;
@@ -14,13 +21,13 @@ public class WorkWithFile {
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",");
-                String operation = parts[0];
-                int amount = Integer.parseInt(parts[1]);
+                String[] parts = line.split(COMMA);
+                String operation = parts[OPERATION_INDEX];
+                int amount = Integer.parseInt(parts[VALUE_INDEX]);
 
-                if (operation.equals("supply")) {
+                if (operation.equals(SUPPLY)) {
                     supplyTotal += amount;
-                } else if (operation.equals("buy")) {
+                } else if (operation.equals(BUY)) {
                     buyTotal += amount;
                 }
             }
@@ -28,14 +35,20 @@ public class WorkWithFile {
             throw new RuntimeException("Can't read data from file: " + fromFileName, e);
         }
 
-        String report = "supply," + supplyTotal + System.lineSeparator()
-                + "buy," + buyTotal + System.lineSeparator()
-                + "result," + (supplyTotal - buyTotal);
+        writeReport(toFileName, supplyTotal, buyTotal);
+    }
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            writer.write(report);
+    private void writeReport(String fileName, int supply, int buy) {
+        int result = supply - buy;
+        StringBuilder builder = new StringBuilder();
+        builder.append(SUPPLY).append(COMMA).append(supply).append(NEW_LINE);
+        builder.append(BUY).append(COMMA).append(buy).append(NEW_LINE);
+        builder.append("result").append(COMMA).append(result);
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+            writer.write(builder.toString());
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data to  file: " + toFileName, e);
+            throw new RuntimeException("Can't write data to file: " + fileName, e);
         }
     }
 }
