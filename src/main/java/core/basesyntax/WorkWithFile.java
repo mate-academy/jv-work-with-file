@@ -10,6 +10,7 @@ public class WorkWithFile {
     private static final String SUPPLY_OPERATION = "supply";
     private static final String BUY_OPERATION = "buy";
     private static final String RESULT_OPERATION = "result";
+    private static final String OPERATION = "operation type";
     private static final int OPERATION_TYPE_INDEX = 0;
     private static final int AMOUNT_VALUE_INDEX = 1;
     private static final String CSV_DELIMITER = ",";
@@ -29,12 +30,12 @@ public class WorkWithFile {
             while ((currentLine = fileReader.readLine()) != null) {
                 String[] lineValues = currentLine.split(CSV_DELIMITER);
                 String operationType = lineValues[OPERATION_TYPE_INDEX];
+
+                if (OPERATION.equals(operationType)) {
+                    continue;
+                }
                 int operationAmount = Integer.parseInt(lineValues[AMOUNT_VALUE_INDEX]);
 
-                if (!SUPPLY_OPERATION.equals(operationType)
-                        && !BUY_OPERATION.equals(operationType)) {
-                    fileReader.readLine();
-                }
                 if (SUPPLY_OPERATION.equals(operationType)) {
                     totalSupplyAmount += operationAmount;
                 } else if (BUY_OPERATION.equals(operationType)) {
