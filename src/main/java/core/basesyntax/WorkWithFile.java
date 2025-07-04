@@ -14,22 +14,18 @@ public class WorkWithFile {
         int buy = 0;
         try {
             BufferedReader reader = new BufferedReader(new FileReader(file));
-            StringBuilder builder = new StringBuilder();
-            int value = reader.read();
-            while (value != -1) {
-                builder.append((char) value);
-                value = reader.read();
-            }
-            reader.close();
-            String[] arrayList = builder.toString().split(System.lineSeparator());
-            for (String line : arrayList) {
+            String line = reader.readLine();
+            while (line != null) {
                 String[] part = line.split(",");
                 if (part[0].equals("supply")) {
                     supply += Integer.parseInt(part[1]);
                 } else if (part[0].equals("buy")) {
                     buy += Integer.parseInt(part[1]);
                 }
+                line = reader.readLine();
             }
+            reader.close();
+            
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
                 writer.write("supply," + supply);
                 writer.newLine();
