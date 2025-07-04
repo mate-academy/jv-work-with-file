@@ -31,6 +31,10 @@ public class WorkWithFile {
                 String operationType = lineValues[OPERATION_TYPE_INDEX];
                 int operationAmount = Integer.parseInt(lineValues[AMOUNT_VALUE_INDEX]);
 
+                if (!SUPPLY_OPERATION.equals(operationType)
+                        && !BUY_OPERATION.equals(operationType)) {
+                    fileReader.readLine();
+                }
                 if (SUPPLY_OPERATION.equals(operationType)) {
                     totalSupplyAmount += operationAmount;
                 } else if (BUY_OPERATION.equals(operationType)) {
