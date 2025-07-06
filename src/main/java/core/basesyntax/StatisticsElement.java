@@ -19,6 +19,10 @@ public class StatisticsElement {
     }
 
     public void setSum(int sum) {
+        this.sum = sum;
+    }
+
+    public void addToSum(int sum) {
         this.sum = this.sum + sum;
     }
 

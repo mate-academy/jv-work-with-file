@@ -36,7 +36,7 @@ public class WorkWithFile {
 
                 elem = getStatElem(name,listElement);
                 if (elem != null && sum != 0) {
-                    elem.setSum(sum);
+                    elem.addToSum(sum);
                 }
             }
 
@@ -50,26 +50,29 @@ public class WorkWithFile {
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
 
+            int sumSupply = 0;
+            int sumBuy = 0;
+
             StatisticsElement elemSupply;
             StatisticsElement elemBuy;
 
             if (!listElement.isEmpty()) {
 
                 if (listElement.get(1).getName().equals("supply")) {
-                    elemSupply = listElement.get(1);
-                    elemBuy = listElement.get(0);
-                } else {
-                    elemSupply = listElement.get(0);
-                    elemBuy = listElement.get(1);
+                    sumSupply = listElement.get(1).getSum();
+                } else if (listElement.get(0).getName().equals("supply")) {
+                    sumSupply = listElement.get(0).getSum();
                 }
 
-                writer.write(elemSupply.getName() + ","
-                                 + elemSupply.getSum()
-                                 + System.lineSeparator());
-                writer.write(elemBuy.getName() + ","
-                                 + elemBuy.getSum()
-                                 + System.lineSeparator());
-                writer.write("result," + (elemSupply.getSum() - elemBuy.getSum()));
+                if (listElement.get(1).getName().equals("buy")) {
+                    sumBuy = listElement.get(1).getSum();
+                } else if (listElement.get(0).getName().equals("buy")) {
+                    sumBuy = listElement.get(0).getSum();
+                }
+
+                writer.write("supply," + sumSupply + System.lineSeparator());
+                writer.write("buy," + sumBuy + System.lineSeparator());
+                writer.write("result," + (sumSupply - sumBuy));
             }
 
         } catch (IOException e) {
