@@ -16,7 +16,6 @@ public class WorkWithFile {
         String csvSplitBy = ",";
         ArrayList<StatisticsElement> listElement = new ArrayList<>();
         StatisticsElement elem;
-        //read
 
         try {
 
@@ -45,8 +44,6 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can`t read a line from file",e);
         }
-
-        //System.out.println("write to file " + listElement.size() + " elements");
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
 
@@ -78,7 +75,6 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
     }
 
     public StatisticsElement getStatElem(String str,ArrayList<StatisticsElement> listElement) {
@@ -87,7 +83,6 @@ public class WorkWithFile {
 
         for (StatisticsElement elemArr : listElement) {
             String name = elemArr.getName();
-
             if (name.equals(str)) {
                 return elemArr;
             }
