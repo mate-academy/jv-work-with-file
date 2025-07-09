@@ -13,12 +13,5 @@ public class Main {
         workWithFile.getStatistic(inputFileName, outputFileName);
 
         System.out.println("Report generated successfully in " + outputFileName);
-
-        try {
-            String reportContent = Files.readString(Paths.get(outputFileName));
-            System.out.println("Report content:\n" + reportContent);
-        } catch (IOException e) {
-            System.err.println("Failed to read report file: " + e.getMessage());
-        }
     }
 }
