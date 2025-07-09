@@ -37,7 +37,9 @@ public class WorkWithFile {
                     int value = Integer.parseInt(parts[1].trim());
                     total += value;
                 } catch (NumberFormatException e) {
-                    throw new RuntimeException("Invalid number format in file: " + fileName + ", line: " + line, e);
+                    throw new RuntimeException(
+                            "Invalid number format in file: " + fileName + ", line: " + line,
+                            e);
                 }
             }
         } catch (IOException e) {
