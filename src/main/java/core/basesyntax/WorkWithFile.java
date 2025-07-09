@@ -18,6 +18,7 @@ public class WorkWithFile {
         int buyTotal = readTotalByOperation(fromFileName, BUY);
         String report = buildReport(supplyTotal, buyTotal);
         writeReport(toFileName, report);
+        System.out.println(report);
     }
 
     private int readTotalByOperation(String fileName, String operation) {
@@ -52,7 +53,7 @@ public class WorkWithFile {
         StringBuilder builder = new StringBuilder();
         builder.append(SUPPLY).append(COMMA).append(supply).append(LINE_SEPARATOR);
         builder.append(BUY).append(COMMA).append(buy).append(LINE_SEPARATOR);
-        builder.append(RESULT).append(COMMA).append(supply - buy).append(LINE_SEPARATOR);
+        builder.append(RESULT).append(COMMA).append(supply - buy);
         return builder.toString();
     }
 
