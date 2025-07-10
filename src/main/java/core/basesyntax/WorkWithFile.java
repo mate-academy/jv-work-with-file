@@ -20,7 +20,8 @@ public class WorkWithFile {
                 String[] data = value.split(",");
                 if (data[0].equals("supply")) {
                     supplySum += Integer.parseInt(data[1]);
-                } else {
+                }
+                if (data[0].equals("buy")) {
                     buySum += Integer.parseInt(data[1]);
                 }
                 value = bufferedReader.readLine();
