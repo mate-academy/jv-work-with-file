@@ -30,7 +30,7 @@ public class WorkWithFile {
                 String[] data = newLine.split(",");
                 if (data[0].equals("buy")) {
                     buy += Integer.parseInt(data[1]);
-                } else {
+                } else if (data[0].equals("supply")) {
                     supply += Integer.parseInt(data[1]);
                 }
                 newLine = bufferedReader.readLine();
@@ -40,6 +40,8 @@ public class WorkWithFile {
             throw new RuntimeException("Can't open the file", e);
         } catch (IOException e) {
             throw new RuntimeException("Can't read the file", e);
+        } catch (NullPointerException e) {
+            throw new RuntimeException("In the file is not declared case", e);
         }
 
         String supplyStr = "supply," + supply + "\n";
