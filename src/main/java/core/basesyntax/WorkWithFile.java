@@ -1,14 +1,10 @@
 package core.basesyntax;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.StandardOpenOption;
-import java.util.HashMap;
-import java.util.Map;
 
 public class WorkWithFile {
 
@@ -20,47 +16,40 @@ public class WorkWithFile {
     }
 
     public void getStatistic(String fromFileName, String toFileName) {
-        Map<String, Integer> operations = new HashMap<>();
-        BufferedReader bufferedReader = null;
-        try {
-            File inputFile = new File(fromFileName);
-            bufferedReader = new BufferedReader(new FileReader(inputFile));
+        int buy = 0;
+        int supply = 0;
+
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
+
+            String newLine = bufferedReader.readLine();
+            if (!newLine.matches("^([a-zA-Z_]+),(\\d+)$")) {
+                newLine = bufferedReader.readLine();
+            }
+
+            while (newLine != null) {
+                String[] data = newLine.split(",");
+                if (data[0].equals("buy")) {
+                    buy += Integer.parseInt(data[1]);
+                } else {
+                    supply += Integer.parseInt(data[1]);
+                }
+                newLine = bufferedReader.readLine();
+            }
+
         } catch (FileNotFoundException e) {
             throw new RuntimeException("Can't open the file", e);
-        }
-        try {
-            String tempLine = bufferedReader.readLine();
-            while (tempLine != null) {
-                String[] data = new String[2];
-                data = tempLine.split(",");
-                Integer num = Integer.parseInt(data[1]);
-
-                operations.compute(data[0], (key, val) -> val == null ? num : val + num);
-
-                tempLine = bufferedReader.readLine();
-            }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read from file", e);
+            throw new RuntimeException("Can't read the file", e);
         }
 
-        File toFile = new File(toFileName);
-        try {
-            if (toFile.exists()) {
-                toFile.delete();
-            }
-            toFile.createNewFile();
-        } catch (IOException e) {
-            throw new RuntimeException("Can't create to file", e);
-        }
+        String supplyStr = "supply," + supply + "\n";
+        String buyStr = "buy," + buy + "\n";
+        String resultStr = "result," + (supply - buy);
 
-        String supply = "supply," + operations.get("supply") + "\n";
-        String buy = "buy," + operations.get("buy") + "\n";
-        String result = "result," + (operations.get("supply") - operations.get("buy"));
-
-        try {
-            Files.write(toFile.toPath(), supply.getBytes(), StandardOpenOption.APPEND);
-            Files.write(toFile.toPath(), buy.getBytes(), StandardOpenOption.APPEND);
-            Files.write(toFile.toPath(), result.getBytes(), StandardOpenOption.APPEND);
+        try (FileWriter fileWriter = new FileWriter(toFileName)) {
+            fileWriter.write(supplyStr);
+            fileWriter.write(buyStr);
+            fileWriter.write(resultStr);
         } catch (IOException e) {
             throw new RuntimeException("Can't write to the file", e);
         }
