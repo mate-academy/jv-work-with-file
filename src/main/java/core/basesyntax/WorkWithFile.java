@@ -40,7 +40,6 @@ public class WorkWithFile {
                 + "buy," + totalBuy
                 + System.lineSeparator()
                 + "result," + result;
-        System.out.println(report);
 
         BufferedWriter bufferedWriter = null;
         try {
