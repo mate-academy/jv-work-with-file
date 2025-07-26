@@ -29,8 +29,7 @@ public class WorkWithFile {
         int[] data = new int[2];
         String line;
 
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             while ((line = bufferedReader.readLine()) != null) {
                 String[] lineArray = line.split(SPLIT_SYMBOL);
                 if (lineArray[FILE_NAME_INDEX].equalsIgnoreCase(SUPPLY_TYPE)) {
