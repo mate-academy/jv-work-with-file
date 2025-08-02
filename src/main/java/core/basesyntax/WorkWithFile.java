@@ -36,7 +36,7 @@ public class WorkWithFile {
             bufferedWriter.close();
 
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            throw new RuntimeException("File operation failed:", e);
         }
     }
 }
