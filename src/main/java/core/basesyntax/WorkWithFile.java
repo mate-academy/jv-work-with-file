@@ -1,14 +1,17 @@
 package core.basesyntax;
 
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
-
+        StringBuilder builder = new StringBuilder();
         try (
                 BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
-            StringBuilder builder = new StringBuilder();
             String line = null;
             int supply = 0;
             int buy = 0;
@@ -23,16 +26,16 @@ public class WorkWithFile {
             builder.append("supply,").append(supply).append(System.lineSeparator());
             builder.append("buy,").append(buy).append(System.lineSeparator());
             builder.append("result,").append(supply - buy);
-            String report = builder.toString();
+
         } catch (FileNotFoundException ex) {
             throw new RuntimeException(ex);
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
+        String report = builder.toString();
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
 
-            writer.write(fromFileName);
-
+            writer.write(report);
 
         } catch (IOException ex) {
             throw new RuntimeException(ex);
