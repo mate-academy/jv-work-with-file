@@ -17,10 +17,11 @@ public class WorkWithFile {
             int buy = 0;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
-                if (parts[0].equals("supply")) {
+                if (parts[0].equals("supply") || parts.length != 2) {
                     supply += Integer.parseInt(parts[1]);
                 } else if (parts[0].equals("buy")) {
                     buy += Integer.parseInt(parts[1]);
+                } else {
                 }
             }
             builder.append("supply,").append(supply).append(System.lineSeparator());
