@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-
 import java.io.*;
 
 public class WorkWithFile {
@@ -11,9 +10,8 @@ public class WorkWithFile {
             int supplySum = 0;
             int buySum = 0;
             int result = 0;
-            String[] parts = new String[0];
             while (value != null) {
-                parts = value.split(",");
+                String[] parts = value.split(",");
                 if (parts[0].equals("supply")) {
                     supplySum += Integer.parseInt(parts[1]);
                 }
