@@ -3,6 +3,9 @@ package core.basesyntax;
 import java.io.*;
 
 public class WorkWithFile {
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+
     public void getStatistic(String fromFileName, String toFileName) {
 
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
@@ -12,11 +15,13 @@ public class WorkWithFile {
             int result = 0;
             while (value != null) {
                 String[] parts = value.split(",");
-                if (parts[0].equals("supply")) {
-                    supplySum += Integer.parseInt(parts[1]);
-                }
-                if (parts[0].equals("buy")) {
-                    buySum += Integer.parseInt(parts[1]);
+                if (parts.length == 2) {
+                    if (parts[0].equals(SUPPLY)) {
+                        supplySum += Integer.parseInt(parts[1]);
+                    }
+                    if (parts[0].equals(BUY)) {
+                        buySum += Integer.parseInt(parts[1]);
+                    }
                 }
                 value = bufferedReader.readLine();
             }
