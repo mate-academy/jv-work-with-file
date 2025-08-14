@@ -7,11 +7,6 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
 
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
-            try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-                bufferedWriter.write(supplyResult);
-                bufferedWriter.write(buyResult);
-                bufferedWriter.write(resultResult);
-            }
             String value = bufferedReader.readLine();
             int supplySum = 0;
             int buySum = 0;
@@ -28,9 +23,11 @@ public class WorkWithFile {
                 value = bufferedReader.readLine();
             }
             result = supplySum - buySum;
-            String supplyResult = "supply," + supplySum + "\n";
-            String buyResult = "buy," + buySum + "\n";
-            String resultResult = "result," + result + "\n";
+            try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
+                bufferedWriter.write("supply," + supplySum + "\n");
+                bufferedWriter.write("buy," + buySum + "\n");
+                bufferedWriter.write("result," + result + "\n");
+            }
         } catch (FileNotFoundException e) {
             throw new RuntimeException("Can`t found the file", e);
         } catch (IOException e) {
