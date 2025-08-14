@@ -1,6 +1,11 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class WorkWithFile {
     private static final String SUPPLY = "supply";
@@ -31,10 +36,8 @@ public class WorkWithFile {
                 bufferedWriter.write("buy," + buySum + "\n");
                 bufferedWriter.write("result," + result + "\n");
             }
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException("Can`t found the file", e);
-        } catch (IOException e) {
-            throw new RuntimeException("Can`t read the file", e);
+        } catch (FileNotFoundException | IOException e) {
+            throw new RuntimeException("Can`t process whith file", e);
         }
     }
 }
