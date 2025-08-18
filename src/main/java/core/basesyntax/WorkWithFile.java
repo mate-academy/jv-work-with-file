@@ -34,8 +34,8 @@ public class WorkWithFile {
             throw new RuntimeException("Can`t process with file", e);
         }
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            String stringBuilder = "supply," + supplySum + "\n" + "buy," +
-                    buySum + "\n" + "result," + result;
+            String stringBuilder = "supply," + supplySum + "\n" + "buy,"
+                    + buySum + "\n" + "result," + result;
             bufferedWriter.write(stringBuilder);
         } catch (IOException e) {
             throw new RuntimeException("Can`t process with file", e);
