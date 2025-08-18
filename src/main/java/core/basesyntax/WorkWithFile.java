@@ -30,13 +30,14 @@ public class WorkWithFile {
                 value = bufferedReader.readLine();
             }
             result = supplySum - buySum;
-        } catch (IOException | NumberFormatException e) {
+        } catch (IOException e) {
             throw new RuntimeException("Can`t process with file", e);
         }
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write("supply," + supplySum + "\n");
-            bufferedWriter.write("buy," + buySum + "\n");
-            bufferedWriter.write("result," + result + "\n");
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append("supply,").append(supplySum).append("\n").append("buy,")
+                    .append(buySum).append("\n").append("result,").append(result);
+            bufferedWriter.write(stringBuilder.toString());
         } catch (IOException e) {
             throw new RuntimeException("Can`t process with file", e);
         }
