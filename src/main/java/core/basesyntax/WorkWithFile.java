@@ -20,7 +20,6 @@ public class WorkWithFile {
             while (value != null) {
                 String[] parts = value.split(",");
                 if (parts.length == 2) {
-                    Integer.parseInt(parts[1]);
                     if (parts[0].equals(SUPPLY)) {
                         supplySum += Integer.parseInt(parts[1]);
                     }
@@ -29,12 +28,11 @@ public class WorkWithFile {
                     }
                 }
                 value = bufferedReader.readLine();
+                Integer.parseInt(parts[1]);
             }
             result = supplySum - buySum;
-        } catch (IOException e) {
+        } catch (IOException | NumberFormatException e) {
             throw new RuntimeException("Can`t process with file", e);
-        } catch (NumberFormatException e) {
-            throw new RuntimeException("Wrong format", e);
         }
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write("supply," + supplySum + "\n");
