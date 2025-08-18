@@ -19,6 +19,7 @@ public class WorkWithFile {
             String value = bufferedReader.readLine();
             while (value != null) {
                 String[] parts = value.split(",");
+                Integer.parseInt(parts[1]);
                 if (parts.length == 2) {
                     if (parts[0].equals(SUPPLY)) {
                         supplySum += Integer.parseInt(parts[1]);
@@ -32,13 +33,15 @@ public class WorkWithFile {
             result = supplySum - buySum;
         } catch (IOException e) {
             throw new RuntimeException("Can`t process with file", e);
+        } catch (NumberFormatException e) {
+            // Можеш пропустити цей рядок або вивести попередження
         }
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write("supply," + supplySum + "\n");
             bufferedWriter.write("buy," + buySum + "\n");
             bufferedWriter.write("result," + result + "\n");
         } catch (IOException e) {
-            throw new RuntimeException("Can`t process whith file", e);
+            throw new RuntimeException("Can`t process with file", e);
         }
     }
 }
