@@ -28,7 +28,6 @@ public class WorkWithFile {
                     }
                 }
                 value = bufferedReader.readLine();
-                Integer.parseInt(parts[1]);
             }
             result = supplySum - buySum;
         } catch (IOException | NumberFormatException e) {
