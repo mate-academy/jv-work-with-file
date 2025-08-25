@@ -1,6 +1,10 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.FileWriter;
 
 public class WorkWithFile {
     public static void getStatistic(String fromFileName, String toFileName) {
@@ -14,7 +18,6 @@ public class WorkWithFile {
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             while ((line = reader.readLine()) != null) {
                 lineSplit = line.split(",");
-
                 int num;
 
                 if (lineSplit[0].equals("supply")) {
@@ -27,7 +30,6 @@ public class WorkWithFile {
                     buy += num;
                 }
             }
-
         } catch (IOException e) {
             throw new RuntimeException("Can't read from a file.",e);
         }
@@ -37,9 +39,7 @@ public class WorkWithFile {
 
             write.write("supply," + supply + System.lineSeparator() +
                     "buy," + buy + System.lineSeparator() + "result," + result);
-        }
-
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException("Can't write to a file.", e);
         }
     }
