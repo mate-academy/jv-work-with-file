@@ -3,8 +3,9 @@ package core.basesyntax;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
-import java.io.IOException;
 import java.io.FileWriter;
+import java.io.IOException;
+
 
 public class WorkWithFile {
     public static void getStatistic(String fromFileName, String toFileName) {
@@ -23,9 +24,7 @@ public class WorkWithFile {
                 if (lineSplit[0].equals("supply")) {
                     num = Integer.parseInt(lineSplit[1]);
                     supply += num;
-                }
-
-                else if (lineSplit[0].equals("buy")) {
+                } else if (lineSplit[0].equals("buy")) {
                     num = Integer.parseInt(lineSplit[1]);
                     buy += num;
                 }
@@ -37,8 +36,8 @@ public class WorkWithFile {
         try (BufferedWriter write = new BufferedWriter(new FileWriter(toFileName))) {
             result = supply - buy;
 
-            write.write("supply," + supply + System.lineSeparator() +
-                    "buy," + buy + System.lineSeparator() + "result," + result);
+            write.write("supply," + supply + System.lineSeparator()
+                    + "buy," + buy + System.lineSeparator() + "result," + result);
         } catch (IOException e) {
             throw new RuntimeException("Can't write to a file.", e);
         }
