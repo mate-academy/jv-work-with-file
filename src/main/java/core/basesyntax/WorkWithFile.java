@@ -12,7 +12,6 @@ public class WorkWithFile {
     private static final String RESULT = "result";
     private static final char RESULT_ENTRY_DELIMITER = ',';
 
-
     public void getStatistic(String fromFileName, String toFileName) {
         String fileContent = readDataFromFile(fromFileName);
         int[] data = calculateData(fileContent);
@@ -66,8 +65,9 @@ public class WorkWithFile {
         int supplyType = data[0];
         int buyType = data[1];
 
-        stringBuilder.append(OP_SUPPLY).append(RESULT_ENTRY_DELIMITER).append(supplyType).append(System.lineSeparator())
-                .append(OP_BUY).append(RESULT_ENTRY_DELIMITER).append(buyType).append(System.lineSeparator())
+        stringBuilder.append(OP_SUPPLY).append(RESULT_ENTRY_DELIMITER)
+                .append(supplyType).append(System.lineSeparator()).append(OP_BUY)
+                .append(RESULT_ENTRY_DELIMITER).append(buyType).append(System.lineSeparator())
                 .append(RESULT).append(RESULT_ENTRY_DELIMITER).append(supplyType - buyType);
 
         return stringBuilder.toString();
