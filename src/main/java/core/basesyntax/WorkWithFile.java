@@ -7,6 +7,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String OP_SUPPLY = "supply";
+    private static final String OP_BUY = "buy";
+    private static final String RESULT = "result";
+    private static final char RESULT_ENTRY_DELIMITER = ',';
+
+
     public void getStatistic(String fromFileName, String toFileName) {
         String fileContent = readDataFromFile(fromFileName);
         int[] data = calculateData(fileContent);
@@ -25,7 +31,7 @@ public class WorkWithFile {
 
             return stringBuilder.toString();
         } catch (IOException e) {
-            throw new RuntimeException("Cannot read the file", e);
+            throw new RuntimeException("Cannot read the file:" + path, e);
         }
     }
 
@@ -38,10 +44,10 @@ public class WorkWithFile {
             String[] itemValues = item.split(",");
 
             switch (itemValues[0]) {
-                case "supply":
+                case OP_SUPPLY:
                     supplyCounter += Integer.parseInt(itemValues[1]);
                     break;
-                case "buy":
+                case OP_BUY:
                     buyCounter += Integer.parseInt(itemValues[1]);
                     break;
                 default:
@@ -60,9 +66,9 @@ public class WorkWithFile {
         int supplyType = data[0];
         int buyType = data[1];
 
-        stringBuilder.append("supply,").append(supplyType).append(System.lineSeparator())
-                .append("buy,").append(buyType).append(System.lineSeparator())
-                .append("result,").append(supplyType - buyType);
+        stringBuilder.append(OP_SUPPLY).append(RESULT_ENTRY_DELIMITER).append(supplyType).append(System.lineSeparator())
+                .append(OP_BUY).append(RESULT_ENTRY_DELIMITER).append(buyType).append(System.lineSeparator())
+                .append(RESULT).append(RESULT_ENTRY_DELIMITER).append(supplyType - buyType);
 
         return stringBuilder.toString();
     }
@@ -71,7 +77,7 @@ public class WorkWithFile {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(path))) {
             bufferedWriter.write(content);
         } catch (IOException e) {
-            throw new RuntimeException("Cannot write into the file!", e);
+            throw new RuntimeException("Cannot write to the file:" + path, e);
         }
     }
 }
