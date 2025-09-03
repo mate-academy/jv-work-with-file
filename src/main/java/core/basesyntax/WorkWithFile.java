@@ -33,7 +33,9 @@ public class WorkWithFile {
                 writer.newLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't process file: " + fromFileName + " or "
+            throw new RuntimeException("Can't process file: "
+                    + fromFileName
+                    + " or "
                     + toFileName, e);
         }
     }
