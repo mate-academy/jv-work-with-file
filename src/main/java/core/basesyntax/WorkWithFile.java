@@ -45,7 +45,8 @@ public class WorkWithFile {
     private String buildReport(int totalSupply, int totalBuy) {
         StringBuilder report = new StringBuilder();
         int result = totalSupply - totalBuy;
-        report.append(OP_SUPPLY).append(DELIMITER).append(totalSupply).append(System.lineSeparator());
+        report.append(OP_SUPPLY).append(DELIMITER).append(totalSupply)
+                .append(System.lineSeparator());
         report.append(OP_BUY).append(DELIMITER).append(totalBuy).append(System.lineSeparator());
         report.append(LABEL_RESULT).append(DELIMITER).append(result).append(System.lineSeparator());
         return report.toString();
