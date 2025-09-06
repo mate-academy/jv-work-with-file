@@ -1,43 +1,69 @@
 package core.basesyntax;
 
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String DELIMITER = ",";
+    private static final int INDEX_OF_SUPPLY = 0;
+    private static final int INDEX_OF_BUY = 1;
+    private static final int INDEX_OF_RESULT = 2;
 
-    public void getStatistic(String fromFileName, String toFileName) {
+    public String getStatistic(String fromFileName, String toFileName) {
         StringBuilder answer = new StringBuilder();
-        int supply = 0;
-        int buy = 0;
+
+        int[] calculation = readAndCalculate(fromFileName);
+
+        answer.append("supply,").append(calculation[INDEX_OF_SUPPLY]).append(System.lineSeparator())
+                .append("buy,").append(calculation[INDEX_OF_BUY]).append(System.lineSeparator())
+                .append("result,").append(calculation[INDEX_OF_RESULT]);
+
+        createTheReport(toFileName, answer.toString());
+        return answer.toString();
+    }
+
+    private int[] readAndCalculate(String fromFileName) {
+        int[] result = new int[3]; // totalSupply and totalBuy and result
 
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                String[] data = line.split(",");
-                for (int i = 0; i < data.length; i += 2) {
-                    String type = data[i].trim();
-                    String numberStr = data[i + 1].replaceAll("[^0-9]", "");
-                    int number = Integer.parseInt(numberStr);
-                    if (type.equals("supply")) {
-                        supply += number;
-                    } else if (type.equals("buy")) {
-                        buy += number;
-                    }
+                String[] data = line.split(DELIMITER);
+
+                if (data.length != 2){
+                    throw new RuntimeException("Invalid input format in line: " + line);
+                }
+
+                String type = data[0].trim();
+                int amount;
+                try {
+                    amount = Integer.parseInt(data[1].trim());
+                } catch (NumberFormatException e) {
+                    throw new RuntimeException("Invalid amount in line: " + line, e);
+                }
+                if (type.equals(SUPPLY)) {
+                    result[0] += amount;
+                } else if (type.equals(BUY)) {
+                    result[1] += amount;
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Failed to read input file: " + fromFileName, e);
         }
+        result[2] = result[0] - result[1];
+        return result;
+    }
 
-        int result = supply - buy;
-        answer.append("supply,").append(supply).append(System.lineSeparator())
-                .append("buy,").append(buy).append(System.lineSeparator())
-                .append("result,").append(result);
-
+    private void createTheReport(String toFileName, String report) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            writer.write(answer.toString());
+            writer.write(report);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Failed to write output file: " + toFileName, e);
         }
     }
 }
