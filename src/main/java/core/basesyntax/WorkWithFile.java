@@ -7,48 +7,52 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    private static String SUPPLY_LABEL = "supply";
-    private static String BUY_LABEL = "buy";
-    private static String RESULT_LABEL = "result";
-    private static String DELIMITER = ",";
-    private static String NEW_LINE = "\n";
+    private static final String SUPPLY_LABEL = "supply";
+    private static final String BUY_LABEL = "buy";
+    private static final String RESULT_LABEL = "result";
+    private static final String DELIMITER = ",";
+    private static final String NEW_LINE = "\n";
 
     private int[] readAndAggregate(String fromFileName) {
-        int supply = 0;
-        int buy = 0;
         int[] result = new int[2];
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String line = reader.readLine();
-            String[] key = line.split(",");
+            String[] key = new String[2];
             while (line != null) {
-                key = line.split(",");
-                if (key[0].equals("supply")) {
-                    result[0] += Integer.parseInt(key[1]);
-                    line = reader.readLine();
+                if (key.length == 2) {
+                    key = line.split(DELIMITER);
+                    if (key[0].equals(SUPPLY_LABEL)) {
+                        result[0] += Integer.parseInt(key[1]);
+                        line = reader.readLine();
+                    } else if (key[0].equals(BUY_LABEL)) {
+                        result[1] += Integer.parseInt(key[1]);
+                        line = reader.readLine();
+                    } else {
+                        throw new RuntimeException("Unknown line " + line + "in file " + fromFileName);
+                    }
                 } else {
-                    result[1] += Integer.parseInt(key[1]);
-                    line = reader.readLine();
+                    throw new RuntimeException("Wrong line " + line + "in file " + fromFileName);
                 }
             }
         } catch (IOException e) {
-            throw new RuntimeException("Not able to read a file", e);
+            throw new RuntimeException("Not able to read file: " + fromFileName, e);
         }
         return result;
     }
 
     private String buildReport(int totalSupply, int totalBuy) {
-        String report = "";
-        report += SUPPLY_LABEL + DELIMITER + totalSupply + NEW_LINE;
-        report += BUY_LABEL + DELIMITER + totalBuy + NEW_LINE;
-        report += RESULT_LABEL + DELIMITER + (totalSupply - totalBuy);
-        return report;
+        StringBuilder report = new StringBuilder();
+        report.append(SUPPLY_LABEL + DELIMITER).append(totalSupply).append(NEW_LINE);
+        report.append(BUY_LABEL + DELIMITER).append(totalBuy).append(NEW_LINE);
+        report.append(RESULT_LABEL + DELIMITER).append(totalSupply - totalBuy);
+        return report.toString();
     }
 
     private void writeToFile(String toFileName, String report) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Not able to write a file", e);
+            throw new RuntimeException("Not able to write in a file: " + toFileName, e);
         }
     }
 
