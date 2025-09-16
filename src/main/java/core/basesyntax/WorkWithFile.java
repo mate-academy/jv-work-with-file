@@ -28,7 +28,8 @@ public class WorkWithFile {
                         result[1] += Integer.parseInt(key[1]);
                         line = reader.readLine();
                     } else {
-                        throw new RuntimeException("Unknown line " + line + "in file " + fromFileName);
+                        throw new RuntimeException("Wrong word " + line + "in file "
+                                + fromFileName);
                     }
                 } else {
                     throw new RuntimeException("Wrong line " + line + "in file " + fromFileName);
