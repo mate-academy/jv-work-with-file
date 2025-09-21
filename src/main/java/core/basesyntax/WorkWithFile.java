@@ -6,6 +6,11 @@ import java.io.FileReader;
 import java.io.FileWriter;
 
 public class WorkWithFile {
+    private static final String OPERATION_TYPE_SUPPLY = "supply";
+    private static final String OPERATION_TYPE_BUY = "buy";
+    private static final String OPERATION_TYPE_RESULT = "result";
+    private static final String COMMA_SEPARATOR = ",";
+
     public void getStatistic(String fromFileName, String toFileName) {
         int supply = 0;
         int buy = 0;
@@ -15,10 +20,10 @@ public class WorkWithFile {
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
                 switch (parts[0]) {
-                    case "buy":
+                    case OPERATION_TYPE_BUY:
                         buy += Integer.parseInt(parts[1]);
                         break;
-                    case "supply":
+                    case OPERATION_TYPE_SUPPLY:
                         supply += Integer.parseInt(parts[1]);
                         break;
                     default:
@@ -30,13 +35,13 @@ public class WorkWithFile {
             throw new RuntimeException("Can't read file", e);
         }
 
-        String resultToFile = "supply," + supply + System.lineSeparator()
-                            + "buy," + buy + System.lineSeparator()
-                            + "result," + (supply - buy);
-        
+        String resultToFile = OPERATION_TYPE_SUPPLY + COMMA_SEPARATOR 
+                + supply + System.lineSeparator()
+                + OPERATION_TYPE_BUY + COMMA_SEPARATOR + buy + System.lineSeparator()
+                + OPERATION_TYPE_RESULT + COMMA_SEPARATOR + (supply - buy);
+
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write(resultToFile);
-
         } catch (Exception e) {
             throw new RuntimeException("Can't write file", e);
         }
