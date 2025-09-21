@@ -23,7 +23,6 @@ public class WorkWithFile {
                         break;
                     default:
                         break;
-
                 }
             }
 
@@ -31,9 +30,9 @@ public class WorkWithFile {
             throw new RuntimeException("Can't read file", e);
         }
 
-        String resultToFile = "supply," + supply + System.lineSeparator() + 
-                              "buy," + buy + System.lineSeparator() + 
-                              "result," + (supply - buy);
+        String resultToFile = "supply," + supply + System.lineSeparator()
+                            + "buy," + buy + System.lineSeparator()
+                            + "result," + (supply - buy);
         
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write(resultToFile);
