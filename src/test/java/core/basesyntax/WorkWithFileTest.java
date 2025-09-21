@@ -33,7 +33,7 @@ public class WorkWithFileTest {
         String actualResult = readFromFile(APPLE_RESULT_FILE).trim();
         String expectedResult = "supply,188" + System.lineSeparator()
                 + "buy,115" + System.lineSeparator()
-                + "result,73";
+                + "result,73"; 
         Assert.assertEquals(expectedResult, actualResult);
     }
 
