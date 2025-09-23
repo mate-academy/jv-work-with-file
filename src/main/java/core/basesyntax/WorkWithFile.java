@@ -1,5 +1,6 @@
 package core.basesyntax;
 
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -11,6 +12,7 @@ public class WorkWithFile {
         int supply = 0;
         int buy = 0;
 
+        // Getting supply & buy values from file
         try (BufferedReader br = new BufferedReader(new FileReader(fromFileName))) {
             String value;
             while ((value = br.readLine()) != null) {
@@ -24,7 +26,10 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException();
         }
-
+        // Writing final stats
+        writeStatistic(toFileName, supply, buy);
+    }
+    public void writeStatistic(String toFileName, int supply, int buy) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(toFileName))) {
             bw.write("supply," + supply);
             bw.newLine();
@@ -35,5 +40,4 @@ public class WorkWithFile {
             throw new RuntimeException();
         }
     }
-
 }
