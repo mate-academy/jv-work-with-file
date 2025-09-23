@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.awt.*;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -24,11 +23,12 @@ public class WorkWithFile {
                 }
             }
         } catch (IOException e) {
-            throw new RuntimeException();
+            throw new RuntimeException("Error reading file " + fromFileName, e);
         }
         // Writing final stats
         writeStatistic(toFileName, supply, buy);
     }
+
     public void writeStatistic(String toFileName, int supply, int buy) {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(toFileName))) {
             bw.write("supply," + supply);
@@ -37,7 +37,7 @@ public class WorkWithFile {
             bw.newLine();
             bw.write("result," + (supply - buy));
         } catch (IOException e) {
-            throw new RuntimeException();
+            throw new RuntimeException("Can't write statistics to file" + toFileName, e);
         }
     }
 }
