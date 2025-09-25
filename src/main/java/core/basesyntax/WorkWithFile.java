@@ -1,11 +1,10 @@
 package core.basesyntax;
 
-import java.io.File;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,16 +18,16 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         List<String> lines = readFromFile(fromFileName);
         Map<String, Integer> agregatedData = createAggregatedData(lines);
-        List<String> report = createReport(agregatedData);
+        String report = createReport(agregatedData);
         savetoFile(report, toFileName);
     }
 
-    private List<String> createReport(Map<String, Integer> dataForReport) {
-        List<String> report = new ArrayList<>();
-        report.add(createLine(SUPPLY, dataForReport.get(SUPPLY)));
-        report.add(createLine(BUY, dataForReport.get(BUY)));
-        report.add(createLine(RESULT, dataForReport.get(RESULT)));
-        return report;
+    private String createReport(Map<String, Integer> dataForReport) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(createLine(SUPPLY, dataForReport.get(SUPPLY)));
+        stringBuilder.append(createLine(BUY, dataForReport.get(BUY)));
+        stringBuilder.append(createLine(RESULT, dataForReport.get(RESULT)));
+        return stringBuilder.toString();
     }
 
     private String createLine(String key, Integer value) {
@@ -40,20 +39,11 @@ public class WorkWithFile {
         return stringBuilder.toString();
     }
 
-    private void savetoFile(List<String> report, String toFileName) {
-        File file = new File(toFileName);
-        try {
-            file.delete();
-            file.createNewFile();
+    private void savetoFile(String report, String toFileName) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
+            writer.write(report);
         } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        for (String line : report) {
-            try {
-                Files.write(file.toPath(), line.getBytes(), StandardOpenOption.APPEND);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            throw new RuntimeException("can't write to the file", e);
         }
     }
 
