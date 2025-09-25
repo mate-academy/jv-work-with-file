@@ -10,16 +10,16 @@ import java.util.List;
 import java.util.Map;
 
 public class WorkWithFile {
-    public static final String dataSeparator = ",";
-    public static final String RESULT = "result";
-    public static final String SUPPLY = "supply";
-    public static final String BUY = "buy";
+    private static final String DATA_SEPARATOR = ",";
+    private static final String RESULT = "result";
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
 
     public void getStatistic(String fromFileName, String toFileName) {
         List<String> lines = readFromFile(fromFileName);
-        Map<String, Integer> agregatedData = createAggregatedData(lines);
-        String report = createReport(agregatedData);
-        savetoFile(report, toFileName);
+        Map<String, Integer> aggregatedData = createAggregatedData(lines);
+        String report = createReport(aggregatedData);
+        saveToFile(report, toFileName);
     }
 
     private String createReport(Map<String, Integer> dataForReport) {
@@ -33,13 +33,13 @@ public class WorkWithFile {
     private String createLine(String key, Integer value) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(key)
-                .append(dataSeparator)
+                .append(DATA_SEPARATOR)
                 .append(value)
                 .append(System.lineSeparator());
         return stringBuilder.toString();
     }
 
-    private void savetoFile(String report, String toFileName) {
+    private void saveToFile(String report, String toFileName) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write(report);
         } catch (IOException e) {
@@ -49,22 +49,37 @@ public class WorkWithFile {
 
     private Map<String, Integer> createAggregatedData(List<String> lines) {
         Map<String, Integer> dataforReport = new HashMap<>();
+        dataforReport.put(BUY, 0);
+        dataforReport.put(SUPPLY, 0);
         for (String line : lines) {
-            String[] dataInLine = line.split(dataSeparator);
-            if (dataforReport.containsKey(dataInLine[0])) {
-                Integer temp = dataforReport.get(dataInLine[0]);
-                temp += Integer.valueOf(dataInLine[1]);
-                dataforReport.put(dataInLine[0], temp);
+            String[] dataInLine = line.split(DATA_SEPARATOR);
+            if (dataInLine.length < 2) {
+                continue;
+            }
+            String key = dataInLine[0].trim();
+            if (!BUY.equals(key) && !SUPPLY.equals(key)) {
+                throw new RuntimeException(key + "is not a " + BUY + " or" + SUPPLY);
+            }
+            int value = 0;
+            try {
+                value = Integer.parseInt(dataInLine[1].trim());
+            } catch (NumberFormatException e) {
+                throw new RuntimeException(dataInLine[1] + "is not a number", e);
+            }
+            if (dataforReport.containsKey(key)) {
+                Integer temp = dataforReport.get(key);
+                temp += value;
+                dataforReport.put(key, temp);
             } else {
-                dataforReport.put(dataInLine[0], Integer.valueOf(dataInLine[1]));
+                dataforReport.put(key, value);
             }
         }
         dataforReport.put(RESULT, getResult(dataforReport));
         return dataforReport;
     }
 
-    private Integer getResult(Map<String, Integer> dataforReport) {
-        return dataforReport.get(SUPPLY) - dataforReport.get(BUY);
+    private Integer getResult(Map<String, Integer> dataForReport) {
+        return dataForReport.get(SUPPLY) - dataForReport.get(BUY);
     }
 
     private List<String> readFromFile(String fromFileName) {
@@ -73,7 +88,7 @@ public class WorkWithFile {
         try {
             return Files.readAllLines(path);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can't read data from the file " + fromFileName, e);
         }
     }
 }
