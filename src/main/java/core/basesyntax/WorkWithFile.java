@@ -35,7 +35,7 @@ public class WorkWithFile {
         try {
             return Files.readString(Path.of(fromFileName));
         } catch (IOException e) {
-            throw new RuntimeException("Can't read a file: " + fromFileName + e);
+            throw new RuntimeException("Can't read data from a file: " + fromFileName + e);
         }
     }
 
