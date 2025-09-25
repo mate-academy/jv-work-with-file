@@ -10,53 +10,91 @@ public class WorkWithFile {
     private static final String SEP = ",";
     private static final String BUY = "buy";
     private static final String SUPPLY = "supply";
+    private static final String RESULT = "result";
+    private static final String NEW_LINE = System.lineSeparator();
+
+    private static final class Totals {
+        private final int supply;
+        private final int buy;
+
+        Totals(int supply, int buy) {
+            this.supply = supply;
+            this.buy = buy;
+        }
+    }
 
     public void getStatistic(String fromFileName, String toFileName) {
-        String content;
+
+        String content = readFile(fromFileName);
+        Totals totals = parseAndAggregate(content);
+        String report = buildReport(totals);
+        writeFile(toFileName, report);
+    }
+
+    private String readFile(String fromFileName) {
         try {
-            content = Files.readString(Path.of(fromFileName));
+            return Files.readString(Path.of(fromFileName));
         } catch (IOException e) {
-            throw new RuntimeException("Can't read a file", e);
+            throw new RuntimeException("Can't read a file: " + fromFileName + e);
         }
+    }
+
+    private Totals parseAndAggregate(String content) {
+        int sumSupply = 0;
+        int sumBuy = 0;
 
         String[] lines = content.split(SPLIT_REGEX);
-        int sumOfBuy = 0;
-        int sumOfSupply = 0;
-
         for (int i = 0; i < lines.length; i++) {
             String line = lines[i].trim();
-
             if (line.isEmpty()) {
                 continue;
             }
 
-            String[] separateLine = line.split(SEP);
-
-            String activity = separateLine[0].trim().toLowerCase();
-            String amountOfActivity = separateLine[1];
-            int amount = Integer.parseInt(amountOfActivity);
-
-            if (!activity.equals(SUPPLY) && !activity.equals(BUY)) {
+            String[] parts = line.split(SEP);
+            if (parts.length != 2) {
                 continue;
             }
 
-            if (activity.equals(SUPPLY)) {
-                sumOfSupply += amount;
+            String op = parts[0].trim().toLowerCase();
+            String amountStr = parts[1].trim();
+
+            if (!SUPPLY.equals(op) && !BUY.equals(op)) {
+                continue;
+            }
+
+            int amount;
+            try {
+                amount = Integer.parseInt(amountStr);
+            } catch (NumberFormatException ex) {
+                continue;
+            }
+
+            if (SUPPLY.equals(op)) {
+                sumSupply += amount;
             } else {
-                sumOfBuy += amount;
+                sumBuy += amount;
             }
         }
-        int result = sumOfSupply - sumOfBuy;
 
-        String newLine = System.lineSeparator();
-        String report = SUPPLY + "," + sumOfSupply + newLine
-                + BUY + "," + sumOfBuy + newLine
-                + "result," + result;
+        return new Totals(sumSupply, sumBuy);
+    }
 
+    private String buildReport(Totals t) {
+        int result = t.supply - t.buy;
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(SUPPLY).append(SEP).append(t.supply).append(NEW_LINE)
+                .append(BUY).append(SEP).append(t.buy).append(NEW_LINE)
+                .append(RESULT).append(SEP).append(result).append(NEW_LINE);
+
+        return sb.toString();
+    }
+
+    private void writeFile(String toFileName, String report) {
         try {
             Files.writeString(Path.of(toFileName), report);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can't write data to file: " + toFileName, e);
         }
     }
 }
