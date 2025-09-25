@@ -51,7 +51,7 @@ public class WorkWithFile {
         String newLine = System.lineSeparator();
         String report = SUPPLY + "," + sumOfSupply + newLine
                 + BUY + "," + sumOfBuy + newLine
-                + "result," +result;
+                + "result," + result;
 
         try {
             Files.writeString(Path.of(toFileName), report);
