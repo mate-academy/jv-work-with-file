@@ -29,7 +29,9 @@ public class WorkWithFile {
 
                 if (parts.length != 2) {
                     throw new RuntimeException(
-                            "Invalid line format in file: " + fromFileName + " -> \"" + line + "\"");
+                            "Invalid line format in file: "
+                                    + fromFileName + " -> \""
+                                    + line + "\"");
                 }
 
                 String operation = parts[0].trim();
@@ -38,7 +40,9 @@ public class WorkWithFile {
                     amount = Integer.parseInt(parts[1].trim());
                 } catch (NumberFormatException e) {
                     throw new RuntimeException(
-                            "Invalid number format in file: " + fromFileName + " -> \"" + line + "\"", e);
+                            "Invalid number format in file: "
+                                    + fromFileName + " -> \""
+                                    + line + "\"", e);
                 }
 
                 switch (operation) {
@@ -50,7 +54,9 @@ public class WorkWithFile {
                         break;
                     default:
                         throw new RuntimeException(
-                                "Unknown operation in file: " + fromFileName + " -> \"" + line + "\"");
+                                "Unknown operation in file: "
+                                        + fromFileName + " -> \""
+                                        + line + "\"");
                 }
             }
         } catch (IOException e) {
