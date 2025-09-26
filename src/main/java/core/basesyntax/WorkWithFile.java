@@ -9,6 +9,7 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
+    private static final String RESULT = "result";
     private static final String DELIMITER = ",";
     private static final String LINE_SEPARATOR = System.lineSeparator();
 
@@ -25,6 +26,10 @@ public class WorkWithFile {
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String line;
             while ((line = reader.readLine()) != null) {
+                if (line.trim().isEmpty()) {
+                    continue;
+                }
+
                 String[] parts = line.split(DELIMITER);
 
                 if (parts.length != 2) {
@@ -71,7 +76,7 @@ public class WorkWithFile {
         return new StringBuilder()
                 .append(SUPPLY).append(DELIMITER).append(supply).append(LINE_SEPARATOR)
                 .append(BUY).append(DELIMITER).append(buy).append(LINE_SEPARATOR)
-                .append("result").append(DELIMITER).append(result)
+                .append(RESULT).append(DELIMITER).append(result).append(LINE_SEPARATOR)
                 .toString();
     }
 
