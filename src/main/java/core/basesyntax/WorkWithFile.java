@@ -28,7 +28,10 @@ public class WorkWithFile {
                     try {
                         quantity = Integer.parseInt(parts[1]);
                     } catch (NumberFormatException e) {
-                        throw new RuntimeException("Can't parse amount in file " + fromFileName + ": " + line, e);
+                        throw new RuntimeException(
+                                "Can't parse amount in file " + fromFileName + ": " + line,
+                                e
+                        );
                     }
                     line = br.readLine();
                     switch (operation) {
@@ -39,7 +42,9 @@ public class WorkWithFile {
                             supply += quantity;
                             break;
                         default:
-                            throw new RuntimeException("Unknown operation in file " + fromFileName + ": " + line);
+                            throw new RuntimeException(
+                                    "Unknown operation in file " + fromFileName + ": " + line
+                            );
                     }
                 }
             }
