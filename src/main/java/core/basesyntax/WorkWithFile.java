@@ -21,9 +21,8 @@ public class WorkWithFile {
                     try {
                         currentValue = Integer.parseInt(itemDataSplit[Constants.ITEM_VALUE_INDEX]);
                     } catch (NumberFormatException e) {
-                        throw new RuntimeException
-                                (Constants.WRONG_DATA_FORMAT_FOR_INTEGER
-                                        + itemDataSplit[Constants.ITEM_VALUE_INDEX]);
+                        throw new RuntimeException(Constants.WRONG_DATA_FORMAT_FOR_INTEGER
+                                + itemDataSplit[Constants.ITEM_VALUE_INDEX]);
                     }
                 }
                 if (currentType.equals(Constants.ITEM_SUPPLY_NAME)) {
