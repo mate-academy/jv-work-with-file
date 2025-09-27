@@ -33,7 +33,6 @@ public class WorkWithFile {
                                 e
                         );
                     }
-                    line = br.readLine();
                     switch (operation) {
                         case "buy":
                             buy += quantity;
@@ -46,6 +45,7 @@ public class WorkWithFile {
                                     "Unknown operation in file " + fromFileName + ": " + line
                             );
                     }
+                    line = br.readLine();
                 }
             }
         } catch (IOException e) {
