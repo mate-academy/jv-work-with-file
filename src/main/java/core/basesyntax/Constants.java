@@ -3,8 +3,8 @@ package core.basesyntax;
 public class Constants {
     public static final String CANT_FIND_CSV_FILE = "Cant find that csv file: ";
     public static final String CANT_SAVE_CSV_FILE = "Cant save that csv file: ";
-    public static final String WRONG_DATA_FORMAT_FOR_INTEGER
-            = "wrong data format while parsing value, string provided:  ";
+    public static final String PARSE_INTEGER
+            = "Can't parse integer in file ";
     public static final String COMMA_SEPARATOR = ",";
     public static final String ITEM_SUPPLY_NAME = "supply";
     public static final String ITEM_BUY_NAME = "buy";

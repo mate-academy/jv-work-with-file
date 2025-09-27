@@ -8,28 +8,28 @@ import java.util.List;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
-        List<String> linesOfCsvFile = getDatafromCsvfile(fromFileName);
+        List<String> linesOfCsvFile = getDataFromCsvfile(fromFileName);
         int sumOfSupply = Constants.AMOUNT_STARTING_VALUE;
         int sumOfBuy = Constants.AMOUNT_STARTING_VALUE;
         if (!linesOfCsvFile.isEmpty()) {
             String currentType = "";
             int currentValue = 0;
-            for (String item : linesOfCsvFile) {
-                String[] itemDataSplit = item.split(Constants.COMMA_SEPARATOR);
+            for (int i = 0; i < linesOfCsvFile.toArray().length; i++) {
+                String[] itemDataSplit = linesOfCsvFile.get(i).split(Constants.COMMA_SEPARATOR);
                 if (itemDataSplit.length == 2) {
                     currentType = itemDataSplit[Constants.ITEM_TYPE_INDEX];
                     try {
                         currentValue = Integer.parseInt(itemDataSplit[Constants.ITEM_VALUE_INDEX]);
                     } catch (NumberFormatException e) {
-                        throw new RuntimeException(Constants.WRONG_DATA_FORMAT_FOR_INTEGER
-                                + itemDataSplit[Constants.ITEM_VALUE_INDEX]);
+                        throw new RuntimeException(Constants.PARSE_INTEGER
+                                + fromFileName + " for line: '" + i + "'", e);
                     }
-                }
-                if (currentType.equals(Constants.ITEM_SUPPLY_NAME)) {
-                    sumOfSupply += currentValue;
-                }
-                if (currentType.equals(Constants.ITEM_BUY_NAME)) {
-                    sumOfBuy += currentValue;
+                    if (currentType.equals(Constants.ITEM_SUPPLY_NAME)) {
+                        sumOfSupply += currentValue;
+                    }
+                    if (currentType.equals(Constants.ITEM_BUY_NAME)) {
+                        sumOfBuy += currentValue;
+                    }
                 }
             }
         }
@@ -38,7 +38,7 @@ public class WorkWithFile {
 
     }
 
-    private List<String> getDatafromCsvfile(String fromFileName) {
+    private List<String> getDataFromCsvfile(String fromFileName) {
         Path pathOfCsvFile = Path.of(fromFileName);
         List<String> linesOfCsvFile;
         try {
