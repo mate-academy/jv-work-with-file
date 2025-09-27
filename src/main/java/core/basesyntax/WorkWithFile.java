@@ -19,33 +19,36 @@ public class WorkWithFile {
         int buy = 0;
         int supply = 0;
         try (BufferedReader br = new BufferedReader(new FileReader(fromFileName))) {
-            String line = br.readLine();
-            while (line != null) {
+            String line;
+            while ((line = br.readLine()) != null) {
                 String[] parts = line.split(DELIMITER);
-                if (parts.length == PARTS) {
-                    String operation = parts[0];
-                    int quantity = 0;
-                    try {
-                        quantity = Integer.parseInt(parts[1]);
-                    } catch (NumberFormatException e) {
+                if (parts.length != PARTS) {
+                    throw new RuntimeException(
+                            "Can't parse line in file " + fromFileName + ": " + line
+                    );
+                }
+                String operation = parts[0];
+                int quantity = 0;
+                try {
+                    quantity = Integer.parseInt(parts[1]);
+                } catch (NumberFormatException e) {
+                    throw new RuntimeException(
+                            "Can't parse amount in file " + fromFileName + ": " + line,
+                            e
+                    );
+                }
+                line = br.readLine();
+                switch (operation) {
+                    case "buy":
+                        buy += quantity;
+                        break;
+                    case "supply":
+                        supply += quantity;
+                        break;
+                    default:
                         throw new RuntimeException(
-                                "Can't parse amount in file " + fromFileName + ": " + line,
-                                e
+                                "Unknown operation in file " + fromFileName + ": " + line
                         );
-                    }
-                    line = br.readLine();
-                    switch (operation) {
-                        case "buy":
-                            buy += quantity;
-                            break;
-                        case "supply":
-                            supply += quantity;
-                            break;
-                        default:
-                            throw new RuntimeException(
-                                    "Unknown operation in file " + fromFileName + ": " + line
-                            );
-                    }
                 }
             }
         } catch (IOException e) {
