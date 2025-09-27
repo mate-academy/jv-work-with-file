@@ -16,24 +16,15 @@ public class WorkWithFile {
     public String getStatistic(String fromFileName, String toFileName) {
         int[] statistics;
 
-        try {
-            statistics = parseInformationFromFile(fromFileName);
-        } catch (IOException e) {
-            throw new RuntimeException("Can't read data from file: " + fromFileName, e);
-        }
-
+        statistics = parseInformationFromFile(fromFileName);
         String report = buildReport(statistics);
 
-        try {
-            writeReport(toFileName, report);
-        } catch (IOException e) {
-            throw new RuntimeException("Can't write report to file: " + toFileName, e);
-        }
+        writeReport(toFileName, report);
 
         return report;
     }
 
-    private int[] parseInformationFromFile(String fromFileName) throws IOException {
+    private int[] parseInformationFromFile(String fromFileName) {
         int[] result = new int[LENGTH_OF_ARRAY];
 
         try (BufferedReader reader = Files.newBufferedReader(Path.of(fromFileName))) {
@@ -41,6 +32,8 @@ public class WorkWithFile {
             while ((line = reader.readLine()) != null) {
                 parseLine(line, result);
             }
+        } catch (IOException e) {
+            throw new RuntimeException("Can't read data from file: " + fromFileName, e);
         }
 
         return result;
@@ -74,7 +67,11 @@ public class WorkWithFile {
                 + "result," + result + System.lineSeparator();
     }
 
-    private void writeReport(String toFileName, String content) throws IOException {
-        Files.writeString(Path.of(toFileName), content);
+    private void writeReport(String toFileName, String content) {
+        try {
+            Files.writeString(Path.of(toFileName), content);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write report to file: " + toFileName, e);
+        }
     }
 }
