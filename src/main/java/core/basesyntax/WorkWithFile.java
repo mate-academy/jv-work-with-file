@@ -8,7 +8,7 @@ import java.util.List;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
-        List<String> linesOfCsvFile = getDataFromCSVFile(fromFileName);
+        List<String> linesOfCsvFile = getdatafromCsvfile(fromFileName);
         int sumOfSupply = Constants.AMOUNT_STARTING_VALUE;
         int sumOfBuy = Constants.AMOUNT_STARTING_VALUE;
         if (!linesOfCsvFile.isEmpty()) {
@@ -27,12 +27,11 @@ public class WorkWithFile {
             }
         }
         String report = generateReport(sumOfSupply, sumOfBuy);
-        saveToCSVFile(toFileName, report);
+        saveToCsvFile(toFileName, report);
 
     }
 
-
-    private List<String> getDataFromCSVFile(String fromFileName) {
+    private List<String> getdatafromCsvfile(String fromFileName) {
         Path pathOfCsvFile = Path.of(fromFileName);
         List<String> linesOfCsvFile;
         try {
@@ -43,11 +42,11 @@ public class WorkWithFile {
         return linesOfCsvFile;
     }
 
-    private void saveToCSVFile(String filename, String data) {
-        File newCSVFile = new File(filename);
+    private void saveToCsvFile(String filename, String data) {
+        File newCsvFile = new File(filename);
         try {
-            newCSVFile.createNewFile();
-            Files.write(newCSVFile.toPath(), data.getBytes());
+            newCsvFile.createNewFile();
+            Files.write(newCsvFile.toPath(), data.getBytes());
         } catch (IOException e) {
             throw new RuntimeException(Constants.CANT_SAVE_CSV_FILE, e);
         }
