@@ -3,8 +3,6 @@ package core.basesyntax;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.List;
 
 public class WorkWithFile {
@@ -52,12 +50,12 @@ public class WorkWithFile {
         }
             long totalResult = totalSupply - totalBuy;
             String finalReport = supplyKey + outputDelimiter + totalSupply + newline
-                    + buyKey + outputDelimiter + totalBuy + newline
-                    + "result" + outputDelimiter + totalResult;
+                + buyKey + outputDelimiter + totalBuy + newline
+                + "result" + outputDelimiter + totalResult;
             try {
                 Files.writeString(Path.of(toFileName), finalReport);
-            } catch (IOException e) {
-                throw new RuntimeException("Cannot write to file " + toFileName, e);
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot write to file " + toFileName, e);
         }
-    }
+            }
 }
