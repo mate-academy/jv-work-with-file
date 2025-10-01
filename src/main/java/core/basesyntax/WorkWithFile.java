@@ -6,7 +6,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
-
 public class WorkWithFile {
     private static final String comma = ",";
     private static final String supply = "supply";
@@ -29,7 +28,8 @@ public class WorkWithFile {
                 try {
                     amount = Integer.parseInt(amountStr);
                 } catch (NumberFormatException e) {
-                    throw new RuntimeException("Invalid number format in file " + fromFile + ": " + line, e);
+                    throw new RuntimeException("Invalid number format in file "
+                            + fromFile + ": " + line, e);
                 }
                 if (operation.equals("supply")) {
                     supplyTotal += amount;
@@ -41,13 +41,14 @@ public class WorkWithFile {
             throw new RuntimeException("Error reading file " + fromFile, e);
         }
         int resultTotal = supplyTotal - buyTotal;
-         StringBuilder reportBuilder = new StringBuilder();
-         reportBuilder.append(supply).append(comma).append(supplyTotal).append(System.lineSeparator());
-         reportBuilder.append(buy).append(comma).append(buyTotal).append(System.lineSeparator());
-         reportBuilder.append(result).append(comma).append(resultTotal);
-         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFile))) {
-              writer.write(reportBuilder.toString());
-         } catch (IOException e) {
+        StringBuilder reportBuilder = new StringBuilder();
+        reportBuilder.append(supply).append(comma).append
+                 (supplyTotal).append(System.lineSeparator());
+        reportBuilder.append(buy).append(comma).append(buyTotal).append(System.lineSeparator());
+        reportBuilder.append(result).append(comma).append(resultTotal);
+       try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFile))) {
+             writer.write(reportBuilder.toString());
+        } catch (IOException e) {
              throw new RuntimeException("Error write data to file " + toFile, e);
          }
     }
