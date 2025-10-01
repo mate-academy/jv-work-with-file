@@ -23,37 +23,45 @@ public class WorkWithFile {
     private int[] readAndAggregate(String fromFileName) {
         int supplySum = 0;
         int buySum = 0;
-
+        int[] result = new int[2];
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 if (line.isBlank()) {
                     continue;
                 }
-                String[] parts = line.split(",");
-                if (parts.length != 2) {
-                    throw new RuntimeException("Invalid line format in file");
-                }
-                String operation = parts[0].trim().toLowerCase();
-                int value;
-                try {
-                    value = Integer.parseInt(parts[1].trim());
-                } catch (NumberFormatException e) {
-                    throw new RuntimeException("Invalid number in file", e);
-                }
-
-                if (operation.equals(SUPPLY_WORD)) {
-                    supplySum += value;
-                } else if (operation.equals(BUY_WORD)) {
-                    buySum += value;
-                } else {
-                    throw new RuntimeException("Unknown operation");
-                }
+                String operation = parseLine(line)[0];
+                int value = Integer.parseInt(parseLine(line)[1]);
+                applyOperation(operation, value, result);
             }
         } catch (IOException e) {
             throw new RuntimeException("Can't read from file", e);
         }
-        return new int[]{supplySum, buySum};
+        return result;
+    }
+
+    private String[] parseLine(String line) {
+        String[] parts = line.split(DELIMITER);
+        if (parts.length != 2) {
+            throw new RuntimeException("Invalid line format in file");
+        }
+        parts[0] = parts[0].trim().toLowerCase();
+        try {
+            parts[1] = String.valueOf(Integer.parseInt(parts[1].trim()));
+        } catch (NumberFormatException e) {
+            throw new RuntimeException("Invalid number in file", e);
+        }
+        return parts;
+    }
+
+    private void applyOperation(String operation, int value, int[] result) {
+        if (operation.equals(SUPPLY_WORD)) {
+            result[0] += value;
+        } else if (operation.equals(BUY_WORD)) {
+            result[1] += value;
+        } else {
+            throw new RuntimeException("Unknown operation");
+        }
     }
 
     private String buildReportString(int supplySum, int buySum) {
