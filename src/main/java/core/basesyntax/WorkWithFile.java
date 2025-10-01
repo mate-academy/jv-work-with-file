@@ -1,61 +1,45 @@
 package core.basesyntax;
 
-import java.io.IOException;
+import java.io.*;
+import java.nio.Buffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
 public class WorkWithFile {
-    private static final String supplyKey = "supply";
-    private static final String buyKey = "buy";
-    private static final String inputDelimiter = ",";
-    private static final String outputDelimiter = ",";
-    private static final String newline = System.lineSeparator();
-
-    public void getStatistic(String fromFileName, String toFileName) {
-        List<String> lines;
-
-        try {
-            lines = Files.readAllLines(Path.of(fromFileName));
-        } catch (IOException e) {
-            throw new RuntimeException("Cannot read from file " + fromFileName);
-        }
-
-        long totalSupply = 0;
-        long totalBuy = 0;
-
-        for (String line : lines) {
-            String trimmedLine = line.toLowerCase().trim();
-            if (trimmedLine.isEmpty()) {
-                continue;
-            }
-            if (trimmedLine.contains(inputDelimiter)) {
-                String[] parts = trimmedLine.split(inputDelimiter);
-                if (parts.length != 2 || parts[1].trim().isEmpty()) {
+    public void getStatistic(String fromFile, String toFile) {
+        int supplyTotal = 0;
+        int buyTotal = 0;
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFile))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length != 2) {
                     continue;
                 }
-                String type = parts[0].trim();
-                String amountString = parts[1].trim();
-                try {
-                    int amount = Integer.parseInt(amountString);
-                    if (type.equals(supplyKey)) {
-                        totalSupply += amount;
-                    } else if (type.equals(buyKey)) {
-                        totalBuy += amount;
-                    }
-                } catch (NumberFormatException e) {
-                    continue;
+                String operation = parts[0].trim();
+                int amount = Integer.parseInt(parts[1].trim());
+
+                if (operation.equals("supply")) {
+                    supplyTotal += amount;
+                } else if (operation.equals("buy")) {
+                    buyTotal += amount;
                 }
             }
-        }
-            long totalResult = totalSupply - totalBuy;
-            String finalReport = supplyKey + outputDelimiter + totalSupply + newline
-                + buyKey + outputDelimiter + totalBuy + newline
-                + "result" + outputDelimiter + totalResult;
-            try {
-                Files.writeString(Path.of(toFileName), finalReport);
         } catch (IOException e) {
-            throw new RuntimeException("Cannot write to file " + toFileName, e);
+            System.out.println("Error reading file" + e.getMessage());
         }
-            }
+        int result = supplyTotal - buyTotal;
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFile))) {
+            writer.write("supply," + supplyTotal);
+            writer.newLine();
+            writer.write("buy," + buyTotal);
+            writer.newLine();
+            writer.write("result," + result);
+        } catch (IOException e) {
+            System.out.println("Error writing file" + e.getMessage());
+        }
+    }
+
 }
