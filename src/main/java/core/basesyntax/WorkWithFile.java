@@ -42,14 +42,14 @@ public class WorkWithFile {
         }
         int resultTotal = supplyTotal - buyTotal;
         StringBuilder reportBuilder = new StringBuilder();
-        reportBuilder.append(supply).append(comma).append
-                 (supplyTotal).append(System.lineSeparator());
+        reportBuilder.append(supply).append(comma).append(supplyTotal)
+                .append(System.lineSeparator());
         reportBuilder.append(buy).append(comma).append(buyTotal).append(System.lineSeparator());
         reportBuilder.append(result).append(comma).append(resultTotal);
-       try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFile))) {
-             writer.write(reportBuilder.toString());
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFile))) {
+            writer.write(reportBuilder.toString());
         } catch (IOException e) {
-             throw new RuntimeException("Error write data to file " + toFile, e);
-         }
+            throw new RuntimeException("Error write data to file " + toFile, e);
+        }
     }
 }
