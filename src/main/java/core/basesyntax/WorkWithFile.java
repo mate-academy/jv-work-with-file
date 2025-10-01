@@ -1,10 +1,10 @@
 package core.basesyntax;
 
-import java.io.*;
-import java.nio.Buffer;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.List;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class WorkWithFile {
     public void getStatistic(String fromFile, String toFile) {
