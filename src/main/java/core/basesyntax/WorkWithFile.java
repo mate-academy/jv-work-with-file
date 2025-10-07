@@ -28,14 +28,27 @@ public class WorkWithFile {
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(CSV_DELIMITER);
-                String operation = parts[0].trim();
-                int value = Integer.parseInt(parts[1].trim());
+                try {
+                    String[] parts = line.split(CSV_DELIMITER);
+                    if (parts.length != 2) {
+                        throw new RuntimeException(
+                                "Malformed line in file " + fromFileName + ": " + line);
+                    }
 
-                if (operation.equals(OPERATION_BUY)) {
-                    totalBuy += value;
-                } else if (operation.equals(OPERATION_SUPPLY)) {
-                    totalSupply += value;
+                    String operation = parts[0].trim();
+                    int value = Integer.parseInt(parts[1].trim());
+
+                    if (operation.equals(OPERATION_BUY)) {
+                        totalBuy += value;
+                    } else if (operation.equals(OPERATION_SUPPLY)) {
+                        totalSupply += value;
+                    }
+                } catch (NumberFormatException e) {
+                    throw new RuntimeException("Number format error in file " + fromFileName
+                            + ": " + line, e);
+                } catch (RuntimeException e) {
+                    throw new RuntimeException("Malformed line in file " + fromFileName
+                            + ": " + line, e);
                 }
             }
         } catch (IOException e) {
