@@ -7,37 +7,68 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String CSV_DELIMITER = ",";
+    private static final String OPERATION_SUPPLY = "supply";
+    private static final String OPERATION_BUY = "buy";
+    private static final String REPORT_SUPPLY = "supply,";
+    private static final String REPORT_BUY = "buy,";
+    private static final String REPORT_RESULT = "result,";
+    private static final String LINE_SEPARATOR = System.lineSeparator();
+
     public void getStatistic(String fromFileName, String toFileName) {
+        Totals totals = readAndAggregate(fromFileName);
+        String report = buildReport(totals.supply, totals.buy);
+        writeReport(toFileName, report);
+    }
+
+    private Totals readAndAggregate(String fromFileName) {
         int totalBuy = 0;
         int totalSupply = 0;
-        int result = 0;
-        int value = 0;
-        String line;
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
-            line = bufferedReader.readLine();
-            while (line != null) {
-                String[] parts = line.split(",");
-                value = Integer.parseInt(parts[1]);
 
-                if (parts[0].equals("buy")) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(CSV_DELIMITER);
+                String operation = parts[0].trim();
+                int value = Integer.parseInt(parts[1].trim());
+
+                if (operation.equals(OPERATION_BUY)) {
                     totalBuy += value;
-                } else if (parts[0].equals("supply")) {
+                } else if (operation.equals(OPERATION_SUPPLY)) {
                     totalSupply += value;
                 }
-                line = bufferedReader.readLine();
             }
-
         } catch (IOException e) {
-            throw new RuntimeException("Can`t read the file!");
+            throw new RuntimeException("Can't read data from file " + fromFileName, e);
         }
-        result = totalSupply - totalBuy;
 
+        return new Totals(totalSupply, totalBuy);
+    }
+
+    private String buildReport(int totalSupply, int totalBuy) {
+        int result = totalSupply - totalBuy;
+        StringBuilder reportBuilder = new StringBuilder();
+        reportBuilder.append(REPORT_SUPPLY).append(totalSupply).append(LINE_SEPARATOR)
+                .append(REPORT_BUY).append(totalBuy).append(LINE_SEPARATOR)
+                .append(REPORT_RESULT).append(result);
+        return reportBuilder.toString();
+    }
+
+    private void writeReport(String toFileName, String report) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            writer.write("supply," + totalSupply + System.lineSeparator());
-            writer.write("buy," + totalBuy + System.lineSeparator());
-            writer.write("result," + result);
+            writer.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Can`t write to the file!");
+            throw new RuntimeException("Can't write data to file " + toFileName, e);
+        }
+    }
+
+    private static class Totals {
+        private final int supply;
+        private final int buy;
+
+        public Totals(int supply, int buy) {
+            this.supply = supply;
+            this.buy = buy;
         }
     }
 }
