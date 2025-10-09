@@ -43,10 +43,15 @@ public class WorkWithFile {
 
         int resultTotal = supplyTotal - buyTotal;
 
-        return String.join(System.lineSeparator(),
-                SUPPLY + COMMA + supplyTotal,
-                BUY + COMMA + buyTotal,
-                RESULT + COMMA + resultTotal);
+        StringBuilder reportBuilder = new StringBuilder();
+        String lineSeparator = System.lineSeparator();
+
+        reportBuilder
+                .append(SUPPLY).append(COMMA).append(supplyTotal).append(lineSeparator)
+                .append(BUY).append(COMMA).append(buyTotal).append(lineSeparator)
+                .append(RESULT).append(COMMA).append(resultTotal);
+
+        return reportBuilder.toString();
     }
 
     private void writeToFile(String toFileName, String report) {
