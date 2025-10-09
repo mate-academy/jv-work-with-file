@@ -8,24 +8,34 @@ import java.io.IOException;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
+        int totalSupply = 0;
+        int totalBuy = 0;
+        int result = 0;
 
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String content = reader.readLine();
-            int totalSupply = 0;
-            int totalBuy = 0;
-            int result = 0;
             while (content != null) {
-                String[] parts = content.split(",",2);
-                String operation = parts[0].trim();
-
-                if (parts.length != 2) {
+                if (content.isBlank()) {
+                    content = reader.readLine();
                     continue;
                 }
 
-                int amount = Integer.parseInt(parts[1].trim());
-                content = reader.readLine();
+                String[] parts = content.split(",", 2);
+                if (parts.length != 2) {
+                    throw new IllegalArgumentException("Bad CSV row: " + content);
+                }
+                String operation = parts[0].trim();
+                String amountStr = parts[1].trim();
 
-                switch (operation) {
+                int amount;
+                try {
+                    amount = Integer.parseInt(amountStr);
+                } catch (NumberFormatException ex) {
+                    throw new RuntimeException("Bad amount '" + amountStr
+                            + "' in row: " + content, ex);
+                }
+
+                switch (operation.toLowerCase()) {
                     case "supply":
                         totalSupply += amount;
                         break;
@@ -33,19 +43,22 @@ public class WorkWithFile {
                         totalBuy += amount;
                         break;
                     default:
-                        throw new IllegalArgumentException("Invalid operation: " + operation);
+                        throw new RuntimeException("Invalid operation: " + operation);
                 }
+                content = reader.readLine();
             }
-            result = totalSupply - totalBuy;
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-                writer.write("supply," + totalSupply + System.lineSeparator());
-                writer.write("buy," + totalBuy + System.lineSeparator());
-                writer.write("result," + result + System.lineSeparator());
-            } catch (IOException e) {
-                throw new RuntimeException("Can't create file");
-            }
+
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file");
+            throw new RuntimeException("Can't read file" + fromFileName, e);
+        }
+        result = totalSupply - totalBuy;
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
+            writer.write("supply," + totalSupply + System.lineSeparator());
+            writer.write("buy," + totalBuy + System.lineSeparator());
+            writer.write("result," + result + System.lineSeparator());
+        } catch (IOException e) {
+            throw new RuntimeException("Can't create file" + toFileName, e);
         }
     }
 }
