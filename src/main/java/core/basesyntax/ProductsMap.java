@@ -10,7 +10,7 @@ public class ProductsMap {
     }
 
     public ProductsMap(ArrayList<Pair> pairs) {
-        this.pairs = pairs;
+        this.pairs = new ArrayList<>(pairs);
     }
 
     public void addProduct(String name, int value) {
@@ -34,16 +34,21 @@ public class ProductsMap {
         return null;
     }
 
+    public boolean isName(String name) {
+        for (Pair pair : pairs) {
+            if (pair.getName().equals(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public ArrayList<String> getProducts() {
         ArrayList<String> products = new ArrayList<>();
         for (Pair pair : pairs) {
             products.add(pair.getName());
         }
         return products;
-    }
-
-    public ArrayList<Pair> getPairs() {
-        return pairs;
     }
 
     public void clearProducts() {

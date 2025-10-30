@@ -1,6 +1,7 @@
 package core.basesyntax;
 
 public class Pair {
+    private static final char COMMA = ',';
     private String name;
     private int quantity;
 
@@ -31,7 +32,8 @@ public class Pair {
 
     @Override
     public String toString() {
-        return name + ','
+        return name
+                + COMMA
                 + quantity;
     }
 }
