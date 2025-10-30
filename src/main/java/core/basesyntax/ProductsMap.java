@@ -31,16 +31,7 @@ public class ProductsMap {
                 return pair.getQuantity();
             }
         }
-        return null;
-    }
-
-    public boolean isName(String name) {
-        for (Pair pair : pairs) {
-            if (pair.getName().equals(name)) {
-                return true;
-            }
-        }
-        return false;
+        return 0;
     }
 
     public ArrayList<String> getProducts() {

@@ -15,16 +15,17 @@ public class WorkWithFile {
     private static final int ONE = 1;
     private static final int TWO = 2;
     private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
     private static final String RESULT = "result";
-    private final List<String> stringList = new ArrayList<>();
-    private final ProductsMap productsMap = new ProductsMap();
 
     public void getStatistic(String fromFileName, String toFileName) {
-        parseLines(readFile(fromFileName));
-        writeFile(toFileName);
+        final List<String> stringList = new ArrayList<>();
+        final ProductsMap productsMap = new ProductsMap();
+        parseLines(readFile(fromFileName, stringList), productsMap);
+        writeFile(toFileName, productsMap);
     }
 
-    private List<String> readFile(String fromFileName) {
+    private List<String> readFile(String fromFileName, List<String> stringList) {
         File file = new File(fromFileName);
 
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
@@ -41,7 +42,7 @@ public class WorkWithFile {
         }
     }
 
-    private void parseLines(List<String> stringList) {
+    private void parseLines(List<String> stringList, ProductsMap productsMap) {
         String[][] stringArray = new String[stringList.size()][TWO];
 
         for (int i = 0; i < stringList.size(); i++) {
@@ -55,36 +56,31 @@ public class WorkWithFile {
         }
     }
 
-    private String writeString() {
-        int result = productsMap.isName(SUPPLY) ? productsMap.getQuantity(SUPPLY) : ZERO;
+    private String writeString(ProductsMap productsMap) {
+        int supplyQuantity = productsMap.getQuantity(SUPPLY);
+        int buyQuantity = productsMap.getQuantity(BUY);
+        int result = supplyQuantity - buyQuantity;
+
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(SUPPLY)
                 .append(COMMA)
-                .append(productsMap.getQuantity(SUPPLY))
-                .append(System.lineSeparator());
-
-        for (String product : productsMap.getProducts()) {
-            if (!product.equals(SUPPLY)) {
-                result -= productsMap.getQuantity(product);
-                stringBuilder.append(product)
-                        .append(COMMA)
-                        .append(productsMap.getQuantity(product))
-                        .append(System.lineSeparator());
-            }
-        }
-
-        stringBuilder.append(RESULT).append(COMMA).append(result);
-
+                .append(supplyQuantity)
+                .append(System.lineSeparator())
+                .append(BUY)
+                .append(COMMA)
+                .append(buyQuantity)
+                .append(System.lineSeparator())
+                .append(RESULT)
+                .append(COMMA)
+                .append(result);
         return stringBuilder.toString();
     }
 
-    private void writeFile(String toFileName) {
+    private void writeFile(String toFileName, ProductsMap productsMap) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write(writeString());
+            bufferedWriter.write(writeString(productsMap));
         } catch (IOException e) {
             throw new RuntimeException("Can`t write data to file.", e);
-        } finally {
-            productsMap.clearProducts();
         }
     }
 }
