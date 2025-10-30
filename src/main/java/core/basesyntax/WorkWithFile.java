@@ -10,23 +10,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WorkWithFile {
-    private static final char COMMA = ',';
-    private static final int ZERO = 0;
-    private static final int ONE = 1;
-    private static final int TWO = 2;
-    private static final String SUPPLY = "supply";
-    private static final String BUY = "buy";
-    private static final String RESULT = "result";
-
     public void getStatistic(String fromFileName, String toFileName) {
-        final List<String> stringList = new ArrayList<>();
-        final ProductsMap productsMap = new ProductsMap();
-        parseLines(readFile(fromFileName, stringList), productsMap);
+        List<String> lines = readFile(fromFileName);
+        ProductsMap productsMap = parseLines(lines);
         writeFile(toFileName, productsMap);
     }
 
-    private List<String> readFile(String fromFileName, List<String> stringList) {
+    private List<String> readFile(String fromFileName) {
         File file = new File(fromFileName);
+        List<String> stringList = new ArrayList<>();
 
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
             String value = bufferedReader.readLine();
@@ -42,38 +34,32 @@ public class WorkWithFile {
         }
     }
 
-    private void parseLines(List<String> stringList, ProductsMap productsMap) {
-        String[][] stringArray = new String[stringList.size()][TWO];
-
+    private ProductsMap parseLines(List<String> stringList) {
+        ProductsMap productsMap = new ProductsMap();
         for (int i = 0; i < stringList.size(); i++) {
-            stringArray[i] = stringList.get(i).split(String.valueOf(COMMA));
+            String name = stringList.get(i).split(Constants.DELIMITER)[0];
+            int quantity = Integer.parseInt(stringList.get(i).split(Constants.DELIMITER)[1]);
+            productsMap.addProduct(name, quantity);
         }
-
-        stringList.clear();
-
-        for (String[] strings : stringArray) {
-            productsMap.addProduct(strings[ZERO], Integer.parseInt(strings[ONE]));
-        }
+        return productsMap;
     }
 
     private String writeString(ProductsMap productsMap) {
-        int supplyQuantity = productsMap.getQuantity(SUPPLY);
-        int buyQuantity = productsMap.getQuantity(BUY);
+        int supplyQuantity = productsMap.getQuantity(Constants.SUPPLY);
+        int buyQuantity = productsMap.getQuantity(Constants.BUY);
         int result = supplyQuantity - buyQuantity;
 
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(SUPPLY)
-                .append(COMMA)
-                .append(supplyQuantity)
-                .append(System.lineSeparator())
-                .append(BUY)
-                .append(COMMA)
-                .append(buyQuantity)
-                .append(System.lineSeparator())
-                .append(RESULT)
-                .append(COMMA)
-                .append(result);
-        return stringBuilder.toString();
+        return Constants.SUPPLY
+                + Constants.DELIMITER
+                + supplyQuantity
+                + System.lineSeparator()
+                + Constants.BUY
+                + Constants.DELIMITER
+                + buyQuantity
+                + System.lineSeparator()
+                + Constants.RESULT
+                + Constants.DELIMITER
+                + result;
     }
 
     private void writeFile(String toFileName, ProductsMap productsMap) {

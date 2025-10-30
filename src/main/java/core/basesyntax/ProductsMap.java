@@ -3,51 +3,72 @@ package core.basesyntax;
 import java.util.ArrayList;
 
 public class ProductsMap {
-    private final ArrayList<Pair> pairs;
+    private final ArrayList<ProductQuantity> productQuantities;
 
     public ProductsMap() {
-        pairs = new ArrayList<>();
+        productQuantities = new ArrayList<>();
     }
 
-    public ProductsMap(ArrayList<Pair> pairs) {
-        this.pairs = new ArrayList<>(pairs);
-    }
-
-    public void addProduct(String name, int value) {
-        for (Pair pair : pairs) {
-            if (pair.getName().equals(name)) {
-                pair.increaseQuantity(value);
+    public void addProduct(String product, int quantity) {
+        for (ProductQuantity productQuantity : productQuantities) {
+            if (productQuantity.getProduct().equals(product)) {
+                productQuantity.increaseQuantity(quantity);
                 return;
             }
         }
 
-        Pair pair = new Pair(name, value);
-        pairs.add(pair);
+        ProductQuantity productQuantity = new ProductQuantity(product, quantity);
+        productQuantities.add(productQuantity);
     }
 
-    public Integer getQuantity(String name) {
-        for (Pair pair : pairs) {
-            if (pair.getName().equals(name)) {
-                return pair.getQuantity();
+    public int getQuantity(String product) {
+        for (ProductQuantity productQuantity : productQuantities) {
+            if (productQuantity.getProduct().equals(product)) {
+                return productQuantity.getQuantity();
             }
         }
         return 0;
     }
 
-    public ArrayList<String> getProducts() {
-        ArrayList<String> products = new ArrayList<>();
-        for (Pair pair : pairs) {
-            products.add(pair.getName());
-        }
-        return products;
-    }
-
-    public void clearProducts() {
-        pairs.clear();
-    }
-
     @Override
     public String toString() {
-        return pairs + "";
+        return productQuantities.toString();
+    }
+
+    private class ProductQuantity {
+        private String product;
+        private int quantity;
+
+        public ProductQuantity(String product, int quantity) {
+            this.product = product;
+            this.quantity = quantity;
+        }
+
+        public String getProduct() {
+            return product;
+        }
+
+        public void setProduct(String product) {
+            this.product = product;
+        }
+
+        public int getQuantity() {
+            return quantity;
+        }
+
+        public void setQuantity(int quantity) {
+            this.quantity = quantity;
+        }
+
+        public void increaseQuantity(int value) {
+            this.quantity += value;
+        }
+
+        @Override
+        public String toString() {
+            return product
+                    + Constants.DELIMITER
+                    + quantity;
+        }
     }
 }
