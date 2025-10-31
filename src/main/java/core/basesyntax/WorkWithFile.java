@@ -10,8 +10,6 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final String OPERATION_BUY = "buy";
     private static final String OPERATION_SUPPLY = "supply";
-    private int buy;
-    private int supply;
 
     public void getStatistic(String fromFileName, String toFileName) {
         int[] value = readAndOperation(fromFileName);
