@@ -25,7 +25,7 @@ public class WorkWithFile {
         try {
             lines = Files.readAllLines(fromFile.toPath());
         } catch (IOException e) {
-            throw new RuntimeException("Can`t read data from file " + fromFileName, e);
+            throw new RuntimeException("Can't read data from file " + fromFileName, e);
         }
         return lines;
     }
