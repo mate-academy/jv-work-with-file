@@ -18,21 +18,18 @@ public class WorkWithFile {
     }
 
     private String[] readFile(String fromFileName) {
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             return reader.lines().toArray(String[]::new);
 
         } catch (IOException e) {
-            throw new RuntimeException("Can`t read file");
+            throw new RuntimeException("Can`t read file", e);
         }
     }
 
     private String createReport(String[] lines) {
         int supplyAmount = 0;
         int buyAmount = 0;
-        int result;
         StringBuilder stringBuilder = new StringBuilder();
-
         for (String line : lines) {
             String[] parts = line.split(SEPARATOR);
             String operationType = parts[0];
@@ -43,18 +40,15 @@ public class WorkWithFile {
             } else if (operationType.equals(BUY)) {
                 buyAmount += operationAmount;
             }
-
         }
+        int result = supplyAmount - buyAmount;
 
-        result = supplyAmount - buyAmount;
-        String report = stringBuilder.append(SUPPLY).append(SEPARATOR)
+        return stringBuilder.append(SUPPLY).append(SEPARATOR)
                 .append(supplyAmount).append(System.lineSeparator())
                 .append(BUY).append(SEPARATOR).append(buyAmount)
                 .append(System.lineSeparator()).append(RESULT).append(SEPARATOR)
                 .append(result).append(System.lineSeparator())
                 .toString();
-
-        return report;
     }
 
     private void writeToFile(String toFileName, String data) {
