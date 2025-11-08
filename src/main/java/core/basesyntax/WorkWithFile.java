@@ -14,31 +14,24 @@ public class WorkWithFile {
     private static final String RESULT_OPERATION = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int supplyAll = 0;
-        int buyAll = 0;
-        File file = createTargetFile(toFileName);
 
+        int[] sums = {0,0};
+        File file = new File(toFileName);
+        getSum(fromFileName, sums);
+        writeToFiles(file, buildReport(sums[INDEX_DATA_0],sums[INDEX_DATA_1]));
+    }
+
+    private void getSum(String fromFileName, int[] sums){
         for (String valueFromFile : readLines(fromFileName)) {
             String[] value = valueFromFile.split(",");
             if (value[INDEX_DATA_0].equals(SUPPLY_OPERATION)) {
-                supplyAll += Integer.parseInt(value[INDEX_DATA_1]);
+                sums[INDEX_DATA_0] += Integer.parseInt(value[INDEX_DATA_1]);
             }
 
             if (value[INDEX_DATA_0].equals(BUY_OPERATION)) {
-                buyAll += Integer.parseInt(value[INDEX_DATA_1]);
+                sums[INDEX_DATA_1] += Integer.parseInt(value[INDEX_DATA_1]);
             }
         }
-        writToFiles(file, buildReport(supplyAll,buyAll));
-    }
-
-    private File createTargetFile(String toFileName) {
-        File file = new File(toFileName);
-        try {
-            file.createNewFile();
-        } catch (IOException e) {
-            throw new RuntimeException("Can't create a file",e);
-        }
-        return file;
     }
 
     private String[] readLines(String fromFileName) {
@@ -69,7 +62,7 @@ public class WorkWithFile {
         return builder.toString();
     }
 
-    private void writToFiles(File file, String report) {
+    private void writeToFiles(File file, String report) {
         try {
             Files.write(file.toPath(), report.getBytes());
         } catch (IOException e) {
