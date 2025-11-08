@@ -21,7 +21,7 @@ public class WorkWithFile {
         writeToFiles(file, buildReport(sums[INDEX_DATA_0],sums[INDEX_DATA_1]));
     }
 
-    private void getSum(String fromFileName, int[] sums){
+    private void getSum(String fromFileName, int[] sums) {
         for (String valueFromFile : readLines(fromFileName)) {
             String[] value = valueFromFile.split(",");
             if (value[INDEX_DATA_0].equals(SUPPLY_OPERATION)) {
