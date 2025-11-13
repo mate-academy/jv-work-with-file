@@ -1,7 +1,9 @@
 package core.basesyntax;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
@@ -18,16 +20,16 @@ public class WorkWithFile {
             return supply;
         }
 
-        public void setSupply(int supply) {
-            this.supply = supply;
+        public void setSupply(int amount) {
+            this.supply += amount;
         }
 
         public int getBuy() {
             return buy;
         }
 
-        public void setBuy(int buy) {
-            this.buy = buy;
+        public void setBuy(int amount) {
+            this.buy += amount;
         }
     }
 
@@ -58,16 +60,23 @@ public class WorkWithFile {
 
     private String createReport(ReportData data) {
         int result = data.getSupply() - data.getBuy();
-        return null;
+
+        return SUPPLY + SEPARATOR + data.getSupply() + System.lineSeparator()
+                + BUY + SEPARATOR + data.getBuy() + System.lineSeparator()
+                + RESULT + SEPARATOR + result;
     }
 
     private void writeToFile(String report, String toFileName) {
-
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(toFileName))) {
+            bw.write(report);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void getStatistic(String fromFileName, String toFileName) {
-
-        int totalSupply = 0;
-        int totalBuy = 0;
+        ReportData data = readAndCalculateData(fromFileName);
+        String report = createReport(data);
+        writeToFile(report, toFileName);
     }
 }
