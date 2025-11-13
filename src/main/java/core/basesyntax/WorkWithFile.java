@@ -20,7 +20,7 @@ public class WorkWithFile {
             return supply;
         }
 
-        public void setSupply(int amount) {
+        public void addSupply(int amount) {
             this.supply += amount;
         }
 
@@ -28,7 +28,7 @@ public class WorkWithFile {
             return buy;
         }
 
-        public void setBuy(int amount) {
+        public void addBuy(int amount) {
             this.buy += amount;
         }
     }
@@ -47,13 +47,13 @@ public class WorkWithFile {
                 amount = Integer.parseInt(lineArr[1]);
 
                 if (category.equals(SUPPLY)) {
-                    data.setSupply(amount);
+                    data.addSupply(amount);
                 } else if (category.equals(BUY)) {
-                    data.setBuy(amount);
+                    data.addBuy(amount);
                 }
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can't read data from the file " + fromFileName);
         }
         return data;
     }
@@ -70,7 +70,7 @@ public class WorkWithFile {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(toFileName))) {
             bw.write(report);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can't write data to the file " + toFileName);
         }
     }
 
