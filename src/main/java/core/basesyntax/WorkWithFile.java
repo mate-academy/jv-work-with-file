@@ -5,13 +5,25 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class WorkWithFile {
-    public void getStatistic(String fromFileName, String toFileName) {
-        int supplyTotal = 0;
-        int buyTotal = 0;
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
+    public void getStatistic(String fromFileName, String toFileName) {
+        Map<String, Integer> reportData = readData(fromFileName);
+        String report = calculateReport(reportData);
+        writeReport(toFileName, report);
+    }
+
+    private Map<String, Integer> readData(String fileName) {
+        Map<String, Integer> data = new HashMap<>();
+        data.put(SUPPLY, 0);
+        data.put(BUY, 0);
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
@@ -26,26 +38,37 @@ public class WorkWithFile {
                     continue;
                 }
 
-                if ("supply".equals(type)) {
-                    supplyTotal += amount;
-                } else if ("buy".equals(type)) {
-                    buyTotal += amount;
+                if (SUPPLY.equals(type)) {
+                    data.put(SUPPLY, data.get(SUPPLY) + amount);
+                } else if (BUY.equals(type)) {
+                    data.put(BUY, data.get(BUY) + amount);
                 }
             }
         } catch (IOException e) {
-            System.out.println(e.getMessage());
-            return;
+            throw new RuntimeException("Failed to read file: " + fileName, e);
         }
 
-        StringBuilder report = new StringBuilder();
-        report.append("supply,").append(supplyTotal).append("\n");
-        report.append("buy,").append(buyTotal).append("\n");
-        report.append("result,").append(supplyTotal - buyTotal).append("\n");
+        return data;
+    }
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            writer.write(report.toString());
+    private String calculateReport(Map<String, Integer> data) {
+        int supplyTotal = data.get(SUPPLY);
+        int buyTotal = data.get(BUY);
+        int result = supplyTotal - buyTotal;
+
+        StringBuilder report = new StringBuilder();
+        report.append(SUPPLY).append(",").append(supplyTotal).append("\n");
+        report.append(BUY).append(",").append(buyTotal).append("\n");
+        report.append("result").append(",").append(result).append("\n");
+
+        return report.toString();
+    }
+
+    private void writeReport(String fileName, String report) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+            writer.write(report);
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            throw new RuntimeException("Failed to write file: " + fileName, e);
         }
     }
 }
