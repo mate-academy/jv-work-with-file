@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap; // H перед M
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 
 public class WorkWithFile {
     private static final String OPERATION_SUPPLY = "supply";
