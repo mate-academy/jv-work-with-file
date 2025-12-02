@@ -4,80 +4,86 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 
 public class WorkWithFile {
     private static final String OPERATION_SUPPLY = "supply";
     private static final String OPERATION_BUY = "buy";
+    private static final String OPERATION_RESULT = "result"; // ВИПРАВЛЕНО
+    private static final String DELIMITER = ",";
     private static final int OPERATION_TYPE_INDEX = 0;
     private static final int AMOUNT_INDEX = 1;
-    private static final String DELIMITER = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        // Використовуємо Map для зберігання проміжних сум: [тип операції] -> [сума]
+
+        List<String> lines = readFromFile(fromFileName);
+        Map<String, Integer> operationSums = processData(lines);
+
+        String report = createReport(operationSums);
+
+        writeToFile(report, toFileName);
+    }
+
+    private List<String> readFromFile(String fileName) {
+        try {
+            Path fromFilePath = Paths.get(fileName);
+            return Files.readAllLines(fromFilePath);
+        } catch (IOException e) {
+            throw new RuntimeException("Error reading data from file: " + fileName, e);
+        }
+    }
+
+    private Map<String, Integer> processData(List<String> lines) {
         Map<String, Integer> operationSums = new HashMap<>();
         operationSums.put(OPERATION_SUPPLY, 0);
         operationSums.put(OPERATION_BUY, 0);
 
-        try {
-            // 1. Читання всіх рядків із вхідного файлу
-            Path fromFilePath = Paths.get(fromFileName);
-            List<String> lines = Files.readAllLines(fromFilePath);
-
-            // 2. Обробка та агрегація даних
-            for (String line : lines) {
-                if (line.trim().isEmpty()) {
-                    continue; // Пропускаємо порожні рядки
-                }
-
-                String[] parts = line.split(DELIMITER);
-
-                if (parts.length < 2) {
-                    // Якщо формат рядка невірний, можна пропустити або кинути виняток.
-                    // Для цієї задачі просто ігноруємо неповні рядки.
-                    continue;
-                }
-
-                String operationType = parts[OPERATION_TYPE_INDEX].trim();
-                int amount;
-
-                try {
-                    // Перетворення значення суми на число
-                    amount = Integer.parseInt(parts[AMOUNT_INDEX].trim());
-                } catch (NumberFormatException e) {
-                    // Обробка нечислових значень
-                    continue;
-                }
-
-                // Агрегація сум
-                if (operationType.equals(OPERATION_SUPPLY)) {
-                    int currentSupply = operationSums.get(OPERATION_SUPPLY);
-                    operationSums.put(OPERATION_SUPPLY, currentSupply + amount);
-                } else if (operationType.equals(OPERATION_BUY)) {
-                    int currentBuy = operationSums.get(OPERATION_BUY);
-                    operationSums.put(OPERATION_BUY, currentBuy + amount);
-                }
+        for (String line : lines) {
+            if (line.trim().isEmpty()) {
+                continue;
             }
 
-            // 3. Створення звіту
-            int totalSupply = operationSums.get(OPERATION_SUPPLY);
-            int totalBuy = operationSums.get(OPERATION_BUY);
-            int result = totalSupply - totalBuy;
+            String[] parts = line.split(DELIMITER);
 
-            String report = OPERATION_SUPPLY + DELIMITER + totalSupply + "\n"
-                    + OPERATION_BUY + DELIMITER + totalBuy + "\n"
-                    + "result" + DELIMITER + result + "\n";
+            if (parts.length < 2) {
+                continue;
+            }
 
-            // 4. Запис звіту у вихідний файл
-            Path toFilePath = Paths.get(toFileName);
-            Files.writeString(toFilePath, report);
+            String operationType = parts[OPERATION_TYPE_INDEX].trim();
+            int amount;
 
+            try {
+                amount = Integer.parseInt(parts[AMOUNT_INDEX].trim());
+            } catch (NumberFormatException e) {
+                continue;
+            }
+
+            if (operationType.equals(OPERATION_SUPPLY) || operationType.equals(OPERATION_BUY)) {
+                int currentSum = operationSums.get(operationType);
+                operationSums.put(operationType, currentSum + amount);
+            }
+        }
+        return operationSums;
+    }
+
+    private String createReport(Map<String, Integer> operationSums) {
+        int totalSupply = operationSums.getOrDefault(OPERATION_SUPPLY, 0);
+        int totalBuy = operationSums.getOrDefault(OPERATION_BUY, 0);
+        int result = totalSupply - totalBuy;
+
+        return OPERATION_SUPPLY + DELIMITER + totalSupply + "\n"
+                + OPERATION_BUY + DELIMITER + totalBuy + "\n"
+                + OPERATION_RESULT + DELIMITER + result + "\n";
+    }
+
+    private void writeToFile(String data, String fileName) {
+        try {
+            Path toFilePath = Paths.get(fileName);
+            Files.writeString(toFilePath, data);
         } catch (IOException e) {
-            // Обробка винятків, пов'язаних із доступом до файлів
-            // Наприклад, кинути RuntimeException, щоб сигналізувати про збій
-            throw new RuntimeException("Can't read or write file: " + e.getMessage(), e);
+            throw new RuntimeException("Error writing data to file: " + fileName, e);
         }
     }
 }
