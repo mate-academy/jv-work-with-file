@@ -1,6 +1,11 @@
 package core.basesyntax;
 
-import java.io.*;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class WorkWithFile {
     private static final int INDEX = 0;
@@ -10,34 +15,68 @@ public class WorkWithFile {
     private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
+        String[] list = getFile(fromFileName);
+        int[] totals = calculate(list);
+        String values = getStringResult(totals);
+        writeResult(values, toFileName);
+    }
+    private String[] getFile(String fromFileName) {
+        int count = 0;
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
+            String csv = bufferedReader.readLine();
+            while (csv != null) {
+                count++;
+                csv = bufferedReader.readLine();
+            }
+            } catch (IOException e) {
+            throw new RuntimeException("Can't process file", e);
+        }
+
+            try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
+            String[] products = new String[count];
+            int i = 0;
+            String csv1 = reader.readLine();
+            while (csv1 != null) {
+                    products[i] = csv1;
+                    i ++;
+                    csv1 = reader.readLine();
+                }
+            return products;
+
+            } catch (IOException e) {
+            throw new RuntimeException("Can't process file", e);
+        }
+    }
+
+    private int[] calculate(String[] products) {
         int supply = 0;
         int buy = 0;
         int result = 0;
-
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName));
-            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName));
-            String csv = bufferedReader.readLine();
-            while (csv != null) {
-                String[] split = csv.split(",");
-                if (split[INDEX].equals(SUPPLY)) {
-                    supply += Integer.parseInt(split[VALUE]);
-                } else {
-                    buy += Integer.parseInt(split[VALUE]);
-                }
-                result = supply - buy;
-                csv = bufferedReader.readLine();
+        for(String product : products) {
+            String[] sep = product.split(",");
+            if (sep[INDEX].equals(SUPPLY)) {
+                supply += Integer.parseInt(sep[VALUE]);
+            } else {
+                buy += Integer.parseInt(sep[VALUE]);
             }
-            bufferedWriter.write(SUPPLY + "," + supply);
-            bufferedWriter.newLine();
-            bufferedWriter.write(BUY + "," + buy);
-            bufferedWriter.newLine();
-            bufferedWriter.write(RESULT + "," + result);
-
-
-        } catch (
-                IOException e) {
-            throw new RuntimeException(e);
         }
+        result = supply - buy;
+        int[] totals = {supply, buy, result};
+        return totals;
+    }
+
+    private String getStringResult(int[] totals) {
+        String calculated = SUPPLY + "," + totals[0] + System.lineSeparator()
+                + BUY + "," + totals[1] + System.lineSeparator()
+                + RESULT + "," + totals[2] + System.lineSeparator();
+        return calculated;
+    }
+
+    private void writeResult(String calculated, String toFileName) {
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
+        writer.write(calculated);
+    } catch (IOException e) {
+        throw new RuntimeException(e);
+    }
     }
 }
