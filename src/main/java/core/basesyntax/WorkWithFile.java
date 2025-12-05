@@ -1,15 +1,18 @@
 package core.basesyntax;
 
-import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 
 public class WorkWithFile {
     private static final String LINE_SEPARATOR = System.lineSeparator();
     private static final int ACTION = 0;
     private static final int NUMBER = 1;
+    private static final String BUY = "buy";
+    private static final String SUPPLY = "supply";
+    private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
         StringBuilder text = new StringBuilder();
@@ -22,22 +25,28 @@ public class WorkWithFile {
             throw new RuntimeException("Can't read data from the file " + fromFileName, e);
         }
         String[] arr = text.toString().split(LINE_SEPARATOR);
+
         int buy = 0;
         int supply = 0;
         int res = 0;
         for (String s : arr) {
             String[] parts = s.split(",");
-            if (parts[ACTION].equals("buy")) {
+            if (parts[ACTION].equals(BUY)) {
                 buy += Integer.parseInt(parts[NUMBER]);
             } else {
                 supply += Integer.parseInt(parts[NUMBER]);
             }
-            res = supply - buy;
         }
+        res = supply - buy;
+        writeIntoFile(supply, buy, res, toFileName);
+    }
+
+    private void writeIntoFile(int supply, int buy, int res, String toFileName) {
         StringBuilder results = new StringBuilder();
-        results.append("supply,").append(supply)
-                .append(LINE_SEPARATOR).append("buy,").append(buy)
-                .append(LINE_SEPARATOR).append("result,").append(res);
+        results.append(SUPPLY).append(",").append(supply)
+                .append(LINE_SEPARATOR).append(BUY).append(",")
+                .append(buy).append(LINE_SEPARATOR).append(RESULT)
+                .append(",").append(res);
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(results.toString());
         } catch (IOException e) {
