@@ -15,6 +15,22 @@ public class WorkWithFile {
     private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
+        String[] arr = readFromFile(fromFileName).split(LINE_SEPARATOR);
+        int buy = 0;
+        int supply = 0;
+        for (String s : arr) {
+            String[] parts = s.split(",");
+            if (parts[ACTION].equals(BUY)) {
+                buy += Integer.parseInt(parts[NUMBER]);
+            } else {
+                supply += Integer.parseInt(parts[NUMBER]);
+            }
+        }
+        int res = supply - buy;
+        writeIntoFile(supply, buy, res, toFileName);
+    }
+
+    private String readFromFile(String fromFileName) {
         StringBuilder text = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
             String line;
@@ -24,21 +40,7 @@ public class WorkWithFile {
         } catch (Exception e) {
             throw new RuntimeException("Can't read data from the file " + fromFileName, e);
         }
-        String[] arr = text.toString().split(LINE_SEPARATOR);
-
-        int buy = 0;
-        int supply = 0;
-        int res = 0;
-        for (String s : arr) {
-            String[] parts = s.split(",");
-            if (parts[ACTION].equals(BUY)) {
-                buy += Integer.parseInt(parts[NUMBER]);
-            } else {
-                supply += Integer.parseInt(parts[NUMBER]);
-            }
-        }
-        res = supply - buy;
-        writeIntoFile(supply, buy, res, toFileName);
+        return text.toString();
     }
 
     private void writeIntoFile(int supply, int buy, int res, String toFileName) {
