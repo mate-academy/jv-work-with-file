@@ -2,7 +2,6 @@ package core.basesyntax;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -13,34 +12,16 @@ public class WorkWithFile {
     private static final String BUY_OPERATION = "buy";
     private static final String RESULT_OPERATION = "result";
 
-    private int bought;
-    private int supplied;
-    private int resultNumber;
-
     public void getStatistic(String fromFileName, String toFileName) {
-        createFile(toFileName);
-
-        readFile(fromFileName);
-
-        writeFile(toFileName);
+        writeFile(toFileName, readFile(fromFileName));
     }
 
-    public void createFile(String fileName) {
-        File toFile = new File(fileName);
-
-        try {
-            toFile.createNewFile();
-        } catch (IOException e) {
-            throw new RuntimeException("Can't create file", e);
-        }
-    }
-
-    public void readFile(String fileName) {
+    private int[] readFile(String fileName) {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
             String inputLine = bufferedReader.readLine();
 
-            bought = 0;
-            supplied = 0;
+            int bought = 0;
+            int supplied = 0;
 
             while (inputLine != null) {
                 String[] splitLine = inputLine.split(",");
@@ -54,7 +35,8 @@ public class WorkWithFile {
                 inputLine = bufferedReader.readLine();
             }
 
-            resultNumber = supplied - bought;
+            int resultNumber = supplied - bought;
+            return new int[]{supplied, bought, resultNumber};
         } catch (FileNotFoundException e) {
             throw new RuntimeException("Can't find file", e);
         } catch (IOException e) {
@@ -62,8 +44,12 @@ public class WorkWithFile {
         }
     }
 
-    public void writeFile(String fileName) {
+    private void writeFile(String fileName, int[] array) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
+            int supplied = array[0];
+            int bought = array[1];
+            int resultNumber = array[2];
+
             bufferedWriter.write(SUPPLY_OPERATION + "," + supplied);
             bufferedWriter.newLine();
 
