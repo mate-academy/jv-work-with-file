@@ -13,7 +13,9 @@ public class WorkWithFile {
     private static final String RESULT_OPERATION = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        writeFile(toFileName, readFile(fromFileName));
+        int[] data = readFile(fromFileName);
+        String report = createReport(data);
+        writeFile(toFileName, report);
     }
 
     private int[] readFile(String fileName) {
@@ -38,17 +40,19 @@ public class WorkWithFile {
             int resultNumber = supplied - bought;
             return new int[]{supplied, bought, resultNumber};
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("Can't find file", e);
+            throw new RuntimeException("Can't find file" + fileName, e);
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't read data from file " + fileName, e);
         }
     }
 
-    private void writeFile(String fileName, int[] array) {
+    private void writeFile(String fileName, String data) {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName))) {
-            int supplied = array[0];
-            int bought = array[1];
-            int resultNumber = array[2];
+            String[] array = data.split(" ");
+
+            int supplied = Integer.parseInt(array[0]);
+            int bought = Integer.parseInt(array[1]);
+            int resultNumber = Integer.parseInt(array[2]);
 
             bufferedWriter.write(SUPPLY_OPERATION + "," + supplied);
             bufferedWriter.newLine();
@@ -59,9 +63,14 @@ public class WorkWithFile {
             bufferedWriter.write(RESULT_OPERATION + "," + resultNumber);
             bufferedWriter.newLine();
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("Can't find file", e);
+            throw new RuntimeException("Can't find file" + fileName, e);
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't write to file " + fileName, e);
         }
+    }
+
+    private String createReport(int[] data) {
+        return String.valueOf(data[0]) + " " + String.valueOf(data[1]) + " "
+                + String.valueOf(data[2]);
     }
 }
