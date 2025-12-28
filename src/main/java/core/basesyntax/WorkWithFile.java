@@ -36,6 +36,7 @@ public class WorkWithFile {
             writer.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
+
         }
     }
 }
