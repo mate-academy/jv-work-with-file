@@ -9,6 +9,9 @@ import java.io.IOException;
 public class WorkWithFile {
     private static final int STRING_NAME = 0;
     private static final int NUMBERS = 1;
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String data = readFile(fromFileName);
@@ -48,9 +51,9 @@ public class WorkWithFile {
         }
 
         int result = supply - buy;
-        return "supply," + supply + System.lineSeparator()
-                + "buy," + buy + System.lineSeparator()
-                + "result," + result;
+        return SUPPLY + supply + System.lineSeparator()
+                + BUY + buy + System.lineSeparator()
+                + RESULT + result;
     }
 
     private void writeToFile(String fileName, String report) {
