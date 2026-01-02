@@ -1,6 +1,9 @@
 package core.basesyntax;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class WorkWithFile {
     private static final int STRING_NAME = 0;
@@ -31,7 +34,9 @@ public class WorkWithFile {
         String[] lines = data.split(System.lineSeparator());
 
         for (String line : lines) {
-            if (line.isEmpty()) continue;
+            if (line.isEmpty()) {
+                continue;
+            }
             String[] parts = line.split(",");
             int amount = Integer.parseInt(parts[NUMBERS]);
             if (parts[STRING_NAME].equals("supply")) {
@@ -42,9 +47,9 @@ public class WorkWithFile {
         }
 
         int result = supply - buy;
-        return "supply," + supply + System.lineSeparator() +
-                "buy," + buy + System.lineSeparator() +
-                "result," + result;
+        return "supply," + supply + System.lineSeparator()
+                + "buy," + buy + System.lineSeparator()
+                + "result," + result;
     }
 
     private void writeToFile(String fileName, String report) {
