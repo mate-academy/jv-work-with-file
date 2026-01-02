@@ -12,6 +12,7 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
+    private static final String COMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String data = readFile(fromFileName);
@@ -51,9 +52,9 @@ public class WorkWithFile {
         }
 
         int result = supply - buy;
-        return SUPPLY + supply + System.lineSeparator()
-                + BUY + buy + System.lineSeparator()
-                + RESULT + result;
+        return SUPPLY + COMA + supply + System.lineSeparator()
+                + BUY + COMA + buy + System.lineSeparator()
+                + RESULT + COMA + result;
     }
 
     private void writeToFile(String fileName, String report) {
