@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WorkWithFile {
+    private static final String supply = "supply";
+    private static final String buy = "buy";
+
     public void getStatistic(String fromFileName, String toFileName) {
         List<String> list = new ArrayList<>();
 
@@ -28,11 +31,11 @@ public class WorkWithFile {
 
         for (String value : list) {
             String[] tmp = value.split("\\W+");
-            if (tmp[0].equals("supply")) {
+            if (tmp[0].equals(supply)) {
                 if (tmp[1] != null && !tmp[1].isEmpty()) {
                     supplyAmount += Integer.parseInt(tmp[1]);
                 }
-            } else if (tmp[0].equals("buy")) {
+            } else if (tmp[0].equals(buy)) {
                 if (tmp[1] != null && !tmp[1].isEmpty()) {
                     buyAmount += Integer.parseInt(tmp[1]);
                 }
@@ -42,8 +45,8 @@ public class WorkWithFile {
         result = supplyAmount - buyAmount;
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            writer.write("supply," + supplyAmount + System.lineSeparator());
-            writer.write("buy," + buyAmount + System.lineSeparator());
+            writer.write(supply + "," + supplyAmount + System.lineSeparator());
+            writer.write(buy + "," + buyAmount + System.lineSeparator());
             writer.write("result," + result);
         } catch (IOException e) {
             throw new RuntimeException("Can't save to a file", e);
