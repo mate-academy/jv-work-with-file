@@ -11,6 +11,7 @@ import java.util.List;
 public class WorkWithFile {
     private static final String supply = "supply";
     private static final String buy = "buy";
+    private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
         List<String> list = new ArrayList<>();
@@ -47,7 +48,7 @@ public class WorkWithFile {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write(supply + "," + supplyAmount + System.lineSeparator());
             writer.write(buy + "," + buyAmount + System.lineSeparator());
-            writer.write("result," + result);
+            writer.write(RESULT + "," + result);
         } catch (IOException e) {
             throw new RuntimeException("Can't save to a file", e);
         }
