@@ -34,9 +34,9 @@ public class WorkWithFile {
             int result = totalSupply - totalBuy;
 
             StringBuilder builder = new StringBuilder();
-            builder.append("supply: ").append(totalSupply).append("\n");
-            builder.append("buy: ").append(totalBuy).append("\n");
-            builder.append("result: ").append(result).append("\n");
+            builder.append("supply,").append(totalSupply).append("\n");
+            builder.append("buy,").append(totalBuy).append("\n");
+            builder.append("result,").append(result).append("\n");
 
             Files.writeString(Path.of(toFileName), builder.toString());
 
