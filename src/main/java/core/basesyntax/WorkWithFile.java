@@ -1,10 +1,8 @@
 package core.basesyntax;
 
-import javax.imageio.IIOException;
-import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
+
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
