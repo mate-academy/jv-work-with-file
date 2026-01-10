@@ -3,7 +3,6 @@ package core.basesyntax;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         try {
