@@ -13,7 +13,7 @@ public class WorkWithFile {
             int totalSupply = 0;
             int totalBuy = 0;
 
-            for(int i = 0; i < itemsFromFile.length; i++){
+            for (int i = 0; i < itemsFromFile.length; i++) {
                 String items = itemsFromFile[i].trim();
 
                 if(items.isEmpty()){
@@ -25,9 +25,9 @@ public class WorkWithFile {
                 String priceStr = parts[1].trim();
                 int price =  Integer.parseInt(priceStr);
 
-                if(supplyOrBuy.equals("supply")){
+                if (supplyOrBuy.equals("supply")) {
                     totalSupply += price;
-                } else if(supplyOrBuy.equals("buy")){
+                } else if (supplyOrBuy.equals("buy")) {
                     totalBuy += price;
                 }
             }
