@@ -9,8 +9,5 @@ public class Main {
         workWithFile.getStatistic("orange.csv", "orange_report.csv");
 
         System.out.println("Wszytskie raporty gotowe");
-
-
-
     }
 }

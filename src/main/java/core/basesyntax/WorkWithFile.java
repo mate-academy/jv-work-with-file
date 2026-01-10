@@ -8,8 +8,6 @@ import java.nio.file.StandardOpenOption;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
-
-
         try {
             String readFromFile = Files.readString(Path.of(fromFileName));
             String [] itemsFromFile = readFromFile.split("\n");
@@ -23,6 +21,7 @@ public class WorkWithFile {
                 if(items.isEmpty()){
                     continue;
                 }
+
                 String[] parts = items.split(",");
                 String supplyOrBuy = parts[0].trim();
                 String priceStr = parts[1].trim();
@@ -34,6 +33,7 @@ public class WorkWithFile {
                     totalBuy += price;
                 }
             }
+
             int result = totalSupply -  totalBuy;
 
             StringBuilder builder = new StringBuilder();
