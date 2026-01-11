@@ -6,6 +6,7 @@ import java.nio.file.Path;
 public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
+
     public void getStatistic(String fromFileName, String toFileName) {
         try {
             String readFromFile = Files.readString(Path.of(fromFileName));
@@ -44,9 +45,6 @@ public class WorkWithFile {
 
         } catch (Exception e) {
             throw new RuntimeException("Can't work with file", e);
-            //e.printStackTrace();
         }
     }
-
 }
-
