@@ -4,6 +4,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class WorkWithFile {
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
     public void getStatistic(String fromFileName, String toFileName) {
         try {
             String readFromFile = Files.readString(Path.of(fromFileName));
@@ -24,9 +26,9 @@ public class WorkWithFile {
                 String priceStr = parts[1].trim();
                 int price = Integer.parseInt(priceStr);
 
-                if (supplyOrBuy.equals("supply")) {
+                if (SUPPLY.equals(supplyOrBuy)) {
                     totalSupply += price;
-                } else if (supplyOrBuy.equals("buy")) {
+                } else if (BUY.equals(supplyOrBuy)) {
                     totalBuy += price;
                 }
             }
@@ -41,8 +43,8 @@ public class WorkWithFile {
             Files.writeString(Path.of(toFileName), builder.toString());
 
         } catch (Exception e) {
-            System.out.println("Error reading file " + e);
-            e.printStackTrace();
+            throw new RuntimeException("Can't work with file", e);
+            //e.printStackTrace();
         }
     }
 
