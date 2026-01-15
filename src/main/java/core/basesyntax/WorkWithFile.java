@@ -7,10 +7,24 @@ import java.io.FileReader;
 import java.io.FileWriter;
 
 public class WorkWithFile {
+    private static final String DELIMITER = ",";
+
+    private static final String SUPPLY_OPERATION = "supply";
+
+    private static final String BUY_OPERATION = "buy";
+
+    private static final int AMOUNT_INDEX = 1;
+
+    private static final int WORD_INDEX = 0;
+
+    private static final String RESULT_OPERATION = "result";
+
+    private static final String LS = System.lineSeparator();
 
     public void getStatistic(String fromFileName, String toFileName) {
         String givenText = readTheFile(fromFileName);
-        String result = calculations(givenText);
+        int[] digits = calculations(givenText);
+        String result = buildReport(digits[0], digits[1]);
         writeIntoFile(result, toFileName);
     }
 
@@ -29,28 +43,32 @@ public class WorkWithFile {
         return stringBuilder.toString();
     }
 
-    private String calculations(String givenText) {
-        String ls = System.lineSeparator();
+    private int[] calculations(String givenText) {
         int supply = 0;
         int buy = 0;
-        StringBuilder stringBuilder = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
 
         String[] lines = givenText.split("\\R");
         for (String line : lines) {
-            String[] oneLine = line.split(",");
-            int number = Integer.parseInt(oneLine[1]);
-            if (oneLine[0].equals("supply")) {
+            String[] oneLine = line.split(DELIMITER);
+            int number = Integer.parseInt(oneLine[AMOUNT_INDEX]);
+            if (oneLine[WORD_INDEX].equals(SUPPLY_OPERATION)) {
                 supply += number;
-            } else if (oneLine[0].equals("buy")) {
+            } else if (oneLine[WORD_INDEX].equals(BUY_OPERATION)) {
                 buy += number;
             }
         }
 
+        return new int[]{supply, buy};
+    }
+
+    private String buildReport(int supply, int buy) {
+        StringBuilder stringBuilder = new StringBuilder();
         int result = supply - buy;
 
-        stringBuilder.append("supply,").append(supply).append(ls)
-                .append("buy,").append(buy).append(ls)
-                .append("result,").append(result);
+        stringBuilder.append(SUPPLY_OPERATION).append(DELIMITER).append(supply)
+                .append(LS).append(BUY_OPERATION).append(DELIMITER).append(buy)
+                .append(LS).append(RESULT_OPERATION).append(DELIMITER).append(result);
 
         return stringBuilder.toString();
     }
