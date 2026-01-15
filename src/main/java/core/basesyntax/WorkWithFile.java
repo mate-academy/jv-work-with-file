@@ -46,11 +46,17 @@ public class WorkWithFile {
     private int[] calculations(String givenText) {
         int supply = 0;
         int buy = 0;
-        StringBuilder sb = new StringBuilder();
 
         String[] lines = givenText.split("\\R");
         for (String line : lines) {
+            if (line == null || line.isBlank()) {
+                continue;
+            }
+
             String[] oneLine = line.split(DELIMITER);
+            if (oneLine.length < 2) {
+                continue;
+            }
             int number = Integer.parseInt(oneLine[AMOUNT_INDEX]);
             if (oneLine[WORD_INDEX].equals(SUPPLY_OPERATION)) {
                 supply += number;
