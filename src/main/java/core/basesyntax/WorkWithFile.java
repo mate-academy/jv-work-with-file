@@ -29,8 +29,8 @@ public class WorkWithFile {
             int result = supplySum - buySum;
 
             String output = "supply," + supplySum + System.lineSeparator()
-                + "buy," + buySum + System.lineSeparator()
-                + "result," + result;
+                    + "buy," + buySum + System.lineSeparator()
+                    + "result," + result;
 
             Files.write(Path.of(toFileName), output.getBytes());
 
