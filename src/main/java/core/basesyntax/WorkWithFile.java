@@ -1,6 +1,10 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,9 +26,9 @@ public class WorkWithFile {
 
         String lineSeparator = System.lineSeparator();
         String report = String.format(
-                "supply,%s%s" +
-                        "buy,%s%s" +
-                        "result,%s",
+                "supply,%s%s"
+                        + "buy,%s%s"
+                        + "result,%s",
                 supply, lineSeparator,
                 buy, lineSeparator,
                 supply - buy
