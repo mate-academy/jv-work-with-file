@@ -44,7 +44,8 @@ public class WorkWithFile {
                 lines.add(line);
             }
         } catch (IOException e) {
-            throw new RuntimeException("Could not read from the file", e);
+            throw new RuntimeException("Could not read from the file "
+                    + fileName, e);
         }
         return lines;
     }
@@ -53,7 +54,8 @@ public class WorkWithFile {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             writer.write(data);
         } catch (IOException e) {
-            throw new RuntimeException("Could not write to the file", e);
+            throw new RuntimeException("Could not write to the file "
+                    + fileName, e);
         }
     }
 }
