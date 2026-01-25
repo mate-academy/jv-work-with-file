@@ -9,30 +9,35 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WorkWithFile {
+
+    public static final String SUPPLY = "supply";
+    public static final String BUY = "buy";
+    public static final String RESULT = "result";
+
     public void getStatistic(String fromFileName, String toFileName) {
         List<String> lines = readLinesFromFile(fromFileName);
-        int buy = 0;
         int supply = 0;
+        int buy = 0;
 
         for (String l : lines) {
             String[] data = l.split(",");
-            if ("supply".equals(data[0])) {
+            if (data.length != 2) {
+                continue;
+            }
+            if (SUPPLY.equals(data[0])) {
                 supply += Integer.parseInt(data[1]);
             }
-            if ("buy".equals(data[0])) {
+            if (BUY.equals(data[0])) {
                 buy += Integer.parseInt(data[1]);
             }
         }
 
         String lineSeparator = System.lineSeparator();
         String report = String.format(
-                "supply,%s%s"
-                        + "buy,%s%s"
-                        + "result,%s",
-                supply, lineSeparator,
-                buy, lineSeparator,
-                supply - buy
-        );
+                SUPPLY + ",%s%s" + BUY
+                        + ",%s%s" + RESULT + ",%s",
+                supply, lineSeparator, buy, lineSeparator,
+                supply - buy);
         writeStringToFile(toFileName, report);
     }
 
