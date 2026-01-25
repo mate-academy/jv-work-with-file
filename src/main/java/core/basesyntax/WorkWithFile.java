@@ -29,21 +29,26 @@ public class WorkWithFile {
             if (data.length != 2) {
                 continue;
             }
-            if (SUPPLY.equals(data[0])) {
-                supply += Integer.parseInt(data[1]);
-            }
-            if (BUY.equals(data[0])) {
-                buy += Integer.parseInt(data[1]);
-            }
+            String op = data[0].trim().toLowerCase();
+            int amount = Integer.parseInt(data[1].trim());
 
+            switch (op) {
+                case SUPPLY:
+                    supply += amount;
+                    break;
+                case BUY:
+                    buy += amount;
+                    break;
+                default:
+                    throw new IllegalStateException("Unexpected value: " + op);
+            }
         }
 
-        String lineSeparator = System.lineSeparator();
-        return String.format(
-                SUPPLY + ",%s%s" + BUY
-                        + ",%s%s" + RESULT + ",%s",
-                supply, lineSeparator, buy, lineSeparator,
-                supply - buy);
+        String ls = System.lineSeparator();
+        StringBuilder sb = new StringBuilder(SUPPLY).append(",").append(supply).append(ls)
+                .append(BUY).append(",").append(buy).append(ls)
+                .append(RESULT).append(",").append(supply - buy).append(ls);
+        return sb.toString();
     }
 
     private List<String> readLinesFromFile(String fileName) {
