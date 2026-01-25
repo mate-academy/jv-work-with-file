@@ -16,6 +16,11 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         List<String> lines = readLinesFromFile(fromFileName);
+        String report = getString(lines);
+        writeStringToFile(toFileName, report);
+    }
+
+    private static String getString(List<String> lines) {
         int supply = 0;
         int buy = 0;
 
@@ -30,15 +35,15 @@ public class WorkWithFile {
             if (BUY.equals(data[0])) {
                 buy += Integer.parseInt(data[1]);
             }
+
         }
 
         String lineSeparator = System.lineSeparator();
-        String report = String.format(
+        return String.format(
                 SUPPLY + ",%s%s" + BUY
                         + ",%s%s" + RESULT + ",%s",
                 supply, lineSeparator, buy, lineSeparator,
                 supply - buy);
-        writeStringToFile(toFileName, report);
     }
 
     private List<String> readLinesFromFile(String fileName) {
