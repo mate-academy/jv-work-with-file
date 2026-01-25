@@ -67,7 +67,7 @@ public class WorkWithFile {
         return supplyBuy;
     }
 
-    private void writeStringToFile(String fileName, String data) {
+    private static void writeStringToFile(String fileName, String data) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             writer.write(data);
         } catch (IOException e) {
