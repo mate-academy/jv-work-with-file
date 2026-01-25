@@ -21,34 +21,44 @@ public class WorkWithFile {
     }
 
     private static String getString(List<String> lines) {
-        int supply = 0;
-        int buy = 0;
+        int[] supplyBuy = new int[]{0, 0};
 
         for (String l : lines) {
-            String[] data = l.split(",");
-            if (data.length != 2) {
-                continue;
-            }
-            String op = data[0].trim().toLowerCase();
-            int amount = Integer.parseInt(data[1].trim());
-
-            switch (op) {
-                case SUPPLY:
-                    supply += amount;
-                    break;
-                case BUY:
-                    buy += amount;
-                    break;
-                default:
-                    throw new IllegalStateException("Unexpected value: " + op);
-            }
+            supplyBuy(l, supplyBuy);
         }
 
         String ls = System.lineSeparator();
-        StringBuilder sb = new StringBuilder(SUPPLY).append(",").append(supply).append(ls)
-                .append(BUY).append(",").append(buy).append(ls)
-                .append(RESULT).append(",").append(supply - buy).append(ls);
+        StringBuilder sb = new StringBuilder(SUPPLY).append(",").append(supplyBuy[0]).append(ls)
+                .append(BUY).append(",").append(supplyBuy[1]).append(ls)
+                .append(RESULT).append(",").append(supplyBuy[0] - supplyBuy[1]).append(ls);
         return sb.toString();
+    }
+
+    private static void supplyBuy(String l, int[] supplyBuy) {
+        if (l == null || l.isBlank()) {
+            return;
+        }
+        String[] data = l.split(",");
+        if (data.length != 2) {
+            return;
+        }
+        String op = data[0].trim().toLowerCase();
+        int amount = 0;
+        try {
+            amount = Integer.parseInt(data[1].trim());
+        } catch (NumberFormatException e) {
+            throw new RuntimeException(data[1] + "is wrong number!");
+        }
+        switch (op) {
+            case SUPPLY:
+                supplyBuy[0] += amount;
+                break;
+            case BUY:
+                supplyBuy[1] += amount;
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + op);
+        }
     }
 
     private List<String> readLinesFromFile(String fileName) {
