@@ -1,13 +1,17 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         List<String> buf = new ArrayList<>();
-        try(BufferedReader br = new BufferedReader(new FileReader(fromFileName));) {
+        try (BufferedReader br = new BufferedReader(new FileReader(fromFileName))) {
             String line;
             int count = 0;
 
@@ -20,7 +24,7 @@ public class WorkWithFile {
         int buy = 0;
         int sell = 0;
         int sum = 0;
-        for(String s : buf) {
+        for (String s : buf) {
             if ( s != null && !s.equals("null")) {
                 String[] split = s.split(",");
                 if (split[0].equals("buy")) {
@@ -31,8 +35,8 @@ public class WorkWithFile {
             }
         }
         sum = sell - buy;
-        try(BufferedWriter bw = new BufferedWriter(new FileWriter(toFileName));) {
-            String[] result = new String[] {"supply,"+sell,"buy,"+buy, "result,"+sum};
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(toFileName));) {
+            String[] result = new String[] {"supply," + sell,"buy," + buy, "result," + sum};
             for (String s : result) {
                 bw.write(s);
                 bw.newLine();
