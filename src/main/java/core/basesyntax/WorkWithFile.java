@@ -10,33 +10,39 @@ import java.util.List;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
+        List<String> buf = readFile(fromFileName);
+        int buy = 0;
+        int supply = 0;
+        int sum;
+        for (String s : buf) {
+            if (s != null && !s.equals("null")) {
+                String[] split = s.split(",");
+                if (split[0].equals("buy")) {
+                    buy += Integer.parseInt(split[1]);
+                } else if (split[0].equals("supply")) {
+                    supply += Integer.parseInt(split[1]);
+                }
+            }
+        }
+        sum = supply - buy;
+        writeFile(toFileName, supply, buy, sum);
+    }
+    public List<String> readFile(String fromFileName) {
         List<String> buf = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(fromFileName))) {
             String line;
-            int count = 0;
-
             while ((line = br.readLine()) != null) {
                 buf.add(line);
             }
         } catch (IOException e) {
             throw new RuntimeException("cant read a file", e);
         }
-        int buy = 0;
-        int sell = 0;
-        int sum = 0;
-        for (String s : buf) {
-            if ( s != null && !s.equals("null")) {
-                String[] split = s.split(",");
-                if (split[0].equals("buy")) {
-                    buy += Integer.parseInt(split[1]);
-                } else {
-                    sell += Integer.parseInt(split[1]);
-                }
-            }
-        }
-        sum = sell - buy;
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(toFileName));) {
-            String[] result = new String[] {"supply," + sell,"buy," + buy, "result," + sum};
+
+        return buf;
+    }
+    public void writeFile(String toFileName, int supply, int buy, int sum) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(toFileName))) {
+            String[] result = new String[] {"supply," + supply,"buy," + buy, "result," + sum};
             for (String s : result) {
                 bw.write(s);
                 bw.newLine();
