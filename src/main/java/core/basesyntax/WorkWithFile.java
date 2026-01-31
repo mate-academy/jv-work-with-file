@@ -10,9 +10,11 @@ public class WorkWithFile {
         int supply = 0;
         int buy = 0;
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
-             FileWriter writer = new FileWriter(toFileName)) {
-
+        try (
+                BufferedReader reader =
+                        new BufferedReader(new FileReader(fromFileName));
+                FileWriter writer = new FileWriter(toFileName)
+        ) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
@@ -27,7 +29,6 @@ public class WorkWithFile {
             writer.write("supply," + supply + System.lineSeparator());
             writer.write("buy," + buy + System.lineSeparator());
             writer.write("result," + (supply - buy));
-
         } catch (IOException e) {
             throw new RuntimeException("Error while working with files", e);
         }
