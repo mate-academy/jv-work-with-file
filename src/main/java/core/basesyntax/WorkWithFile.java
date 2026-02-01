@@ -7,34 +7,47 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String BUY = "buy";
+    private static final String SUPPLY = "supply";
+
     public void getStatistic(String fromFileName, String toFileName) {
-        final int type = 0;
-        final int amount = 1;
+        int[] statistics = readStatistics(fromFileName);
+        writeStatistics(toFileName, statistics);
+    }
+
+    private int[] readStatistics(String fileName) {
         int supply = 0;
         int buy = 0;
         String line;
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
 
-                if (parts[type].equals("buy")) {
-                    buy += Integer.parseInt(parts[amount]);
-                } else if (parts[type].equals("supply")) {
-                    supply += Integer.parseInt(parts[amount]);
+                if (BUY.equals(parts[0])) {
+                    buy += Integer.parseInt(parts[1]);
+                } else if (SUPPLY.equals(parts[0])) {
+                    supply += Integer.parseInt(parts[1]);
                 }
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read this file");
+            throw new RuntimeException("Can't read this file", e);
         }
+
+        return new int[]{supply, buy};
+    }
+
+    private void writeStatistics(String fileName, int[] statistics) {
+        int supply = statistics[0];
+        int buy = statistics[1];
         int result = supply - buy;
 
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
-            bufferedWriter.write("supply," + supply + System.lineSeparator());
-            bufferedWriter.write("buy," + buy + System.lineSeparator());
-            bufferedWriter.write("result," + result + System.lineSeparator());
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+            writer.write(SUPPLY + "," + supply + System.lineSeparator());
+            writer.write(BUY + "," + buy + System.lineSeparator());
+            writer.write("result," + result + System.lineSeparator());
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data to file");
+            throw new RuntimeException("Can't write data to file", e);
         }
     }
 }
