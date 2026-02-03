@@ -46,6 +46,7 @@ public class WorkWithFile {
 
         return new int[]{supplySum, buySum};
     }
+
     private void writeReport(String fileName, int supplySum, int buySum) {
         String report = SUPPLY + "," + supplySum + "\n"
                 + BUY + "," + buySum + "\n"
