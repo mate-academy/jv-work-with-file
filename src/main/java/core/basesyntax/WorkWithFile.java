@@ -8,6 +8,7 @@ import java.util.List;
 public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
+
     public void getStatistic(String fromFileName, String toFileName) {
         List<String> lines = readLines(fromFileName);
         int[] sums = calculateSums(lines);
