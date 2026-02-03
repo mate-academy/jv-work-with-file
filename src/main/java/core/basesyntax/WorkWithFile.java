@@ -6,39 +6,55 @@ import java.nio.file.Files;
 import java.util.List;
 
 public class WorkWithFile {
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
     public void getStatistic(String fromFileName, String toFileName) {
-        File fileReader = new File(fromFileName);
-        File fileWriter = new File(toFileName);
+        List<String> lines = readLines(fromFileName);
+        int[] sums = calculateSums(lines);
+        writeReport(toFileName, sums[0], sums[1]);
+    }
+
+    private List<String> readLines(String fileName) {
+        File file = new File(fileName);
+        try {
+            return Files.readAllLines(file.toPath());
+        } catch (IOException e) {
+            throw new RuntimeException("Can't read file: " + fileName, e);
+        }
+    }
+
+    private int[] calculateSums(List<String> lines) {
         int supplySum = 0;
         int buySum = 0;
-        try {
-            List<String> lines = Files.readAllLines(fileReader.toPath());
-            for (String line : lines) {
-                String[] parts = line.split(",");
-                if (parts[0].equals("supply")) {
-                    supplySum = supplySum + Integer.parseInt(parts[1].trim());
-                } else if (parts[0].equals("buy")) {
-                    buySum = buySum + Integer.parseInt(parts[1].trim());
-                }
+
+        for (String line : lines) {
+            String[] parts = line.split(",");
+            if (parts.length != 2) {
+                continue; // на всякий случай, если строка криво форматирована
             }
-        } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+
+            String type = parts[0].trim();
+            int amount = Integer.parseInt(parts[1].trim());
+
+            if (SUPPLY.equals(type)) {
+                supplySum += amount;
+            } else if (BUY.equals(type)) {
+                buySum += amount;
+            }
         }
-        String report =
-                "supply,"
-                        + supplySum
-                        + "\n"
-                        +
-                        "buy,"
-                        + buySum
-                        + "\n"
-                        +
-                        "result,"
-                        + (supplySum - buySum);
+
+        return new int[]{supplySum, buySum};
+    }
+    private void writeReport(String fileName, int supplySum, int buySum) {
+        String report = SUPPLY + "," + supplySum + "\n"
+                + BUY + "," + buySum + "\n"
+                + "result," + (supplySum - buySum);
+
+        File file = new File(fileName);
         try {
-            Files.write(fileWriter.toPath(), report.getBytes());
+            Files.write(file.toPath(), report.getBytes());
         } catch (IOException e) {
-            throw new RuntimeException("Can't write file", e);
+            throw new RuntimeException("Can't write file: " + fileName, e);
         }
     }
 }
