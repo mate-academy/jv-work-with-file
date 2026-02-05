@@ -29,7 +29,7 @@ public class WorkWithFile {
     }
 
     private void writeReport(String report, String toFileName) {
-        try(BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(toFileName))) {
             bufferedWriter.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Cannot write file", e);
@@ -40,13 +40,12 @@ public class WorkWithFile {
         int totalSupply = 0;
         int totalBuy = 0;
         int amount;
-        for ( String line : lines) {
+        for (String line : lines) {
             String[] columns = line.split(DELIMITER);
             if (columns.length == 2) {
                 if (columns[OPERATION_INDEX].equals(SUPPLY_OPERATION)) {
                     totalSupply += Integer.parseInt(columns[AMOUNT_INDEX]);
-                }
-                else if (columns[OPERATION_INDEX].equals(BUY_OPERATION)) {
+                } else if (columns[OPERATION_INDEX].equals(BUY_OPERATION)) {
                     totalBuy += Integer.parseInt(columns[AMOUNT_INDEX]);
                 }
             }
@@ -56,8 +55,8 @@ public class WorkWithFile {
     }
 
     private String formatReport(int supply, int buy, int result) {
-        return SUPPLY_OPERATION + DELIMITER + supply + System.lineSeparator() +
-                BUY_OPERATION + DELIMITER + buy + System.lineSeparator() +
-                RESULT_OPERATION + DELIMITER + result;
+        return SUPPLY_OPERATION + DELIMITER + supply + System.lineSeparator()
+                + BUY_OPERATION + DELIMITER + buy + System.lineSeparator()
+                + RESULT_OPERATION + DELIMITER + result;
     }
 }
