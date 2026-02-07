@@ -9,6 +9,7 @@ import java.nio.file.Path;
 public class WorkWithFile {
     public static final int ACTION_COLUMN_INDEX = 0;
     public static final int COUNT_COLUMN_INDEX = 1;
+    public static final int COUNT_COLUMN = 1;
     public static final String NAME_COLUMN_BUY = "buy";
     public static final String NAME_COLUMN_SUPPLY = "supply";
     public static final String NAME_COLUMN_RESULT = "result";
@@ -19,7 +20,7 @@ public class WorkWithFile {
         writeProcessedData(processedData, toFileName);
     }
 
-    public String[] getLineArray(String fromFileName) {
+    private String[] getLineArray(String fromFileName) {
         StringBuilder stringBuilder = new StringBuilder();
 
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fromFileName))) {
@@ -29,44 +30,40 @@ public class WorkWithFile {
                 textLine = bufferedReader.readLine();
             }
         } catch (IOException e) {
-            throw new RuntimeException("file don`t exist or can`t be read", e);
+            throw new RuntimeException("Can't read data from the file " + fromFileName, e);
         }
 
         return stringBuilder.toString().split(System.lineSeparator());
     }
 
-    public String getProcessedData(String[] dataLineArray) {
-        StringBuilder stringBuilder = new StringBuilder();
+    private String getProcessedData(String[] dataLineArray) {
         int buySum = 0;
         int supplySum = 0;
-
         for (String dataLine : dataLineArray) {
             String[] infoArray = dataLine.split(",");
-            String actionName = infoArray[ACTION_COLUMN_INDEX];
-            int actionCount = Integer.parseInt(infoArray[COUNT_COLUMN_INDEX]);
-
-            if (actionName.equals(NAME_COLUMN_BUY)) {
-                buySum += actionCount;
+            if (infoArray.length < COUNT_COLUMN) {
+                continue;
             }
-
-            if (actionName.equals(NAME_COLUMN_SUPPLY)) {
-                supplySum += actionCount;
+            if (infoArray[ACTION_COLUMN_INDEX].equals(NAME_COLUMN_BUY)) {
+                buySum += Integer.parseInt(infoArray[COUNT_COLUMN_INDEX]);
+            } else if (infoArray[ACTION_COLUMN_INDEX].equals(NAME_COLUMN_SUPPLY)) {
+                supplySum += Integer.parseInt(infoArray[COUNT_COLUMN_INDEX]);
             }
         }
-
-        int resultSum = supplySum - buySum;
-
-        stringBuilder
-                .append(NAME_COLUMN_SUPPLY).append(",").append(supplySum)
-                .append(System.lineSeparator())
-                .append(NAME_COLUMN_BUY).append(",").append(buySum)
-                .append(System.lineSeparator())
-                .append(NAME_COLUMN_RESULT).append(",").append(resultSum);
-
-        return stringBuilder.toString();
+        return getProcessedString(buySum, supplySum);
     }
 
-    public void writeProcessedData(String processedData, String fileName) {
+    private String getProcessedString(int buySum, int supplySum) {
+        int resultSum = supplySum - buySum;
+
+        return NAME_COLUMN_SUPPLY + "," + supplySum
+                + System.lineSeparator()
+                + NAME_COLUMN_BUY + "," + buySum
+                + System.lineSeparator()
+                + NAME_COLUMN_RESULT + "," + resultSum;
+    }
+
+    private void writeProcessedData(String processedData, String fileName) {
         try {
             Files.write(Path.of(fileName), processedData.getBytes());
         } catch (Exception e) {
@@ -74,3 +71,4 @@ public class WorkWithFile {
         }
     }
 }
+
