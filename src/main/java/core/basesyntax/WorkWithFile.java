@@ -7,12 +7,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class WorkWithFile {
-    public static final int ACTION_COLUMN_INDEX = 0;
-    public static final int COUNT_COLUMN_INDEX = 1;
-    public static final int COUNT_COLUMN = 1;
-    public static final String NAME_COLUMN_BUY = "buy";
-    public static final String NAME_COLUMN_SUPPLY = "supply";
-    public static final String NAME_COLUMN_RESULT = "result";
+    private static final int ACTION_COLUMN_INDEX = 0;
+    private static final int COUNT_COLUMN_INDEX = 1;
+    private static final int COUNT_COLUMN = 2;
+    private static final String NAME_COLUMN_BUY = "buy";
+    private static final String NAME_COLUMN_SUPPLY = "supply";
+    private static final String NAME_COLUMN_RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] dataLineArray = getLineArray(fromFileName);
@@ -66,7 +66,7 @@ public class WorkWithFile {
     private void writeProcessedData(String processedData, String fileName) {
         try {
             Files.write(Path.of(fileName), processedData.getBytes());
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new RuntimeException("Can't write data to file " + fileName, e);
         }
     }
