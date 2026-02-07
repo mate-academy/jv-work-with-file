@@ -37,8 +37,8 @@ public class WorkWithFile {
     }
 
     private String getProcessedData(String[] dataLineArray) {
-        int buySum = 0;
         int supplySum = 0;
+        int buySum = 0;
         for (String dataLine : dataLineArray) {
             String[] infoArray = dataLine.split(",");
             if (infoArray.length < COUNT_COLUMN) {
