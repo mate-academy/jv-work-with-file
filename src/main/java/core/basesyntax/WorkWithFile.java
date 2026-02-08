@@ -14,7 +14,7 @@ public class WorkWithFile {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
-                if (line == null || line.trim().isEmpty()) {
+                if (line.trim().isEmpty()) {
                     continue;
                 }
                 if ("supply".equals(parts[0].trim())) {
@@ -25,7 +25,7 @@ public class WorkWithFile {
             }
 
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file", e);
+            throw new RuntimeException("Can't read file ", e);
         }
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
