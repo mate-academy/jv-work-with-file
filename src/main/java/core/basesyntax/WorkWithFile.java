@@ -8,20 +8,20 @@ import java.nio.file.Files;
 import java.util.List;
 
 public class WorkWithFile {
-    private int supplyAmount;
-    private int buyAmount;
-    private int result;
+    private static final int SUPPLY_INDEX = 0;
+    private static final int BUY_INDEX = 1;
+    private static final int RESULT_INDEX = 2;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        getDataFromFile(fromFileName);
-        writeDataToFile(toFileName);
+        int[] data = getDataFromFile(fromFileName);
+        writeDataToFile(toFileName, data);
     }
 
-    private void getDataFromFile(String fileName) {
+    private int[] getDataFromFile(String fileName) {
         File incomingFile = new File(fileName);
-        supplyAmount = 0;
-        buyAmount = 0;
-        result = 0;
+        int supplyAmount = 0;
+        int buyAmount = 0;
+        int result = 0;
 
         try {
             List<String> strings = Files.readAllLines(incomingFile.toPath());
@@ -38,31 +38,33 @@ public class WorkWithFile {
                 }
             }
             result = supplyAmount - buyAmount;
+
+            return new int[]{supplyAmount, buyAmount, result};
         } catch (IOException e) {
             throw new RuntimeException("Can't read file", e);
         }
     }
 
-    private void writeDataToFile(String fileName) {
+    private void writeDataToFile(String fileName, int[] data) {
         File outcomingFile = new File(fileName);
         try {
             FileWriter fileWriter = new FileWriter(outcomingFile);
 
             try (BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);) {
                 try {
-                    bufferedWriter.write("supply" + "," + supplyAmount);
+                    bufferedWriter.write("supply" + "," + data[SUPPLY_INDEX]);
                     bufferedWriter.newLine();
                 } catch (IOException e) {
                     throw new RuntimeException("Can't write data", e);
                 }
                 try {
-                    bufferedWriter.write("buy" + "," + buyAmount);
+                    bufferedWriter.write("buy" + "," + data[BUY_INDEX]);
                     bufferedWriter.newLine();
                 } catch (IOException e) {
                     throw new RuntimeException("Can't write data", e);
                 }
                 try {
-                    bufferedWriter.write("result" + "," + result);
+                    bufferedWriter.write("result" + "," + data[RESULT_INDEX]);
                 } catch (IOException e) {
                     throw new RuntimeException("Can't write data", e);
                 }
