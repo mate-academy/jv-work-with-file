@@ -8,16 +8,24 @@ import java.nio.file.Files;
 import java.util.List;
 
 public class WorkWithFile {
+    private int supplyAmount;
+    private int buyAmount;
+    private int result;
+
     public void getStatistic(String fromFileName, String toFileName) {
-        File incomingFile = new File(fromFileName);
+        getDataFromFile(fromFileName);
+        writeDataToFile(toFileName);
+    }
+
+    private void getDataFromFile(String fileName) {
+        File incomingFile = new File(fileName);
+        supplyAmount = 0;
+        buyAmount = 0;
+        result = 0;
 
         try {
             List<String> strings = Files.readAllLines(incomingFile.toPath());
             String[] array = strings.toArray(new String[0]);
-
-            int supplyAmount = 0;
-            int buyAmount = 0;
-            int result = 0;
 
             for (String data : array) {
                 String[] arrayData = data.split(",");
@@ -29,30 +37,41 @@ public class WorkWithFile {
                     buyAmount += Integer.parseInt(arrayData[1]);
                 }
             }
-
             result = supplyAmount - buyAmount;
-
-            File outcomingFile = new File(toFileName);
-            FileWriter fileWriter = new FileWriter(outcomingFile);
-            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-
-            try {
-                bufferedWriter.write("supply" + "," + supplyAmount);
-                bufferedWriter.newLine();
-                bufferedWriter.write("buy" + "," + buyAmount);
-                bufferedWriter.newLine();
-                bufferedWriter.write("result" + "," + result);
-            } catch (IOException e) {
-                throw new RuntimeException("Can't write data to file");
-            } finally {
-                try {
-                    bufferedWriter.close();
-                } catch (IOException e) {
-                    throw new RuntimeException("Can't close BufferedWriter");
-                }
-            }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read file");
+            throw new RuntimeException("Can't read file", e);
+        }
+    }
+
+    private void writeDataToFile(String fileName) {
+        File outcomingFile = new File(fileName);
+        try {
+            FileWriter fileWriter = new FileWriter(outcomingFile);
+
+            try (BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);) {
+                try {
+                    bufferedWriter.write("supply" + "," + supplyAmount);
+                    bufferedWriter.newLine();
+                } catch (IOException e) {
+                    throw new RuntimeException("Can't write data", e);
+                }
+                try {
+                    bufferedWriter.write("buy" + "," + buyAmount);
+                    bufferedWriter.newLine();
+                } catch (IOException e) {
+                    throw new RuntimeException("Can't write data", e);
+                }
+                try {
+                    bufferedWriter.write("result" + "," + result);
+                } catch (IOException e) {
+                    throw new RuntimeException("Can't write data", e);
+                }
+            } catch (IOException e) {
+                throw new RuntimeException("Can't create FileWriter", e);
+            }
+
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write data to file", e);
         }
     }
 }
