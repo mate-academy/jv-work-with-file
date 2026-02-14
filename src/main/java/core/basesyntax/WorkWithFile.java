@@ -1,40 +1,50 @@
 package core.basesyntax;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 
 public class WorkWithFile {
     private static final int TYPE = 0;
     private static final int AMOUNT = 1;
+    private static final String SUPPLY = "supply";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        Path fileInput = Path.of(fromFileName);
-        Path fileOutput = Path.of(toFileName);
+        List<String> stringsFromFile = readFile(fromFileName);
+        int supply = 0;
+        int buy = 0;
 
-        try (BufferedReader reader = Files.newBufferedReader(fileInput)) {
-            String input = reader.readLine();
-            int buy = 0;
-            int supply = 0;
-
-            while (input != null) {
-                String[] parsedValues = input.split(",");
-
-                if ("supply".equals(parsedValues[TYPE])) {
-                    supply += Integer.parseInt(parsedValues[AMOUNT]);
-                } else {
-                    buy += Integer.parseInt(parsedValues[AMOUNT]);
-                }
-                input = reader.readLine();
+        for (String line : stringsFromFile) {
+            String[] parsed = line.split(",");
+            if (SUPPLY.equals(parsed[TYPE])) {
+                supply += Integer.parseInt(parsed[AMOUNT]);
+            } else {
+                buy += Integer.parseInt(parsed[AMOUNT]);
             }
-            int result = supply - buy;
+        }
+        writeOutput(toFileName, supply, buy);
+    }
 
-            Files.writeString(fileOutput, "supply," + supply + System.lineSeparator()
-                             + "buy," + buy + System.lineSeparator()
-                             + "result," + result);
+    private static List<String> readFile(String fromFileName) {
+        Path fileInput = Path.of(fromFileName);
+        try {
+            return Files.readAllLines(fileInput);
         } catch (IOException e) {
-            throw new RuntimeException("cant open file.", e);
+            throw new RuntimeException("Cant read file.", e);
+        }
+    }
+
+    private static void writeOutput(String toFileName, int supply, int buy) {
+        Path outputFile = Path.of(toFileName);
+        int result = supply - buy;
+
+        try {
+            Files.writeString(outputFile, "supply," + supply + System.lineSeparator()
+                    + "buy," + buy + System.lineSeparator()
+                    + "result," + result);
+        } catch (IOException e) {
+            throw new RuntimeException("Cant write to the file.", e);
         }
     }
 }
