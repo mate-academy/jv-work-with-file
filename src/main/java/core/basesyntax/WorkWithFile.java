@@ -5,6 +5,9 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.List;
 public class WorkWithFile {
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
     public void getStatistic(String fromFileName, String toFileName) {
         List<String> lines = readLines(fromFileName);
         int[] result = getResult(lines);
@@ -26,9 +29,9 @@ public class WorkWithFile {
         int buy = 0;
         for (String el : lines) {
             String[] words = el.split(",");
-            if (words[0].equals("supply")) {
+            if (words[0].equals(SUPPLY)) {
                 supply += Integer.parseInt(words[1]);
-            } else if (words[0].equals("buy")) {
+            } else if (words[0].equals(BUY)) {
                 buy += Integer.parseInt(words[1]);
             }
         }
@@ -41,9 +44,9 @@ public class WorkWithFile {
         int buy = result[1];
         int total = supply - buy;
 
-        return "supply," + supply + System.lineSeparator()
-                + "buy," + buy + System.lineSeparator()
-                + "result," + total;
+        return SUPPLY + "," + supply + System.lineSeparator()
+                + BUY + "," + buy + System.lineSeparator()
+                + RESULT + "," + total;
     }
     private void writeReport(String toFileName, String report) {
         try {
