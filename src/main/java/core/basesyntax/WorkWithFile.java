@@ -12,29 +12,32 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         File file = new File(fromFileName);
+        List<String> strings;
         try {
-            List<String> strings = Files.readAllLines(file.toPath());
-
-            int buyAmount = 0;
-            int supplyAmount = 0;
-
-            for (String str : strings) {
-                String[] parts = str.split(",");
-                String operation = parts[DATA_OPERATION];
-                int amount = Integer.parseInt(parts[DATA_AMOUNT]);
-                if (operation.equals("buy")) {
-                    buyAmount += amount;
-                } else if (operation.equals("supply")) {
-                    supplyAmount += amount;
-                }
-            }
-            String result = "supply," + supplyAmount + System.lineSeparator()
-                    + "buy," + buyAmount + System.lineSeparator() + "result,"
-                    + (supplyAmount - buyAmount) + System.lineSeparator();
-
-            Files.writeString(Path.of(toFileName), result);
+            strings = Files.readAllLines(file.toPath());
         } catch (IOException e) {
             throw new RuntimeException("Cant read file", e);
+        }
+        int buyAmount = 0;
+        int supplyAmount = 0;
+
+        for (String str : strings) {
+            String[] parts = str.split(",");
+            String operation = parts[DATA_OPERATION];
+            int amount = Integer.parseInt(parts[DATA_AMOUNT]);
+            if (operation.equals("buy")) {
+                buyAmount += amount;
+            } else if (operation.equals("supply")) {
+                supplyAmount += amount;
+            }
+        }
+        String result = "supply," + supplyAmount + System.lineSeparator()
+                + "buy," + buyAmount + System.lineSeparator() + "result,"
+                + (supplyAmount - buyAmount) + System.lineSeparator();
+        try {
+            Files.writeString(Path.of(toFileName), result);
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot write file: ", e);
         }
     }
 }
