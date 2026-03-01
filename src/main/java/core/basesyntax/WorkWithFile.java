@@ -7,8 +7,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
-    public void getStatistic(String fromFileName, String toFileName) {
 
+    public void getStatistic(String fromFileName, String toFileName) {
+        int[] calc = calculateValue(fromFileName);
+        String report = getReport(calc);
+        writeToFile(report, toFileName);
+    }
+
+    public int[] calculateValue(String fromFileName) {
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             int supply = 0;
             int buy = 0;
@@ -22,12 +28,25 @@ public class WorkWithFile {
                 }
                 line = reader.readLine();
             }
+            return new int[]{supply, buy};
 
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-                writer.write("supply," + supply + System.lineSeparator()
-                        + "buy," + buy + System.lineSeparator()
-                        + "result," + (supply - buy) + System.lineSeparator());
-            }
+        } catch (IOException e) {
+            throw new RuntimeException("Can't read file", e);
+        }
+    }
+
+    public String getReport(int[] calculated) {
+        int supply = calculated[0];
+        int buy = calculated[1];
+        String report = "supply," + supply + System.lineSeparator()
+                + "buy," + buy + System.lineSeparator()
+                + "result," + (supply - buy) + System.lineSeparator();
+        return report;
+    }
+
+    public void writeToFile(String report, String toFileName) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
+            writer.write(report);
         } catch (IOException e) {
             throw new RuntimeException("Can't write file", e);
         }
