@@ -21,12 +21,7 @@ public class WorkWithFile {
 
 
 
-        StringBuilder report = new StringBuilder();
-        report.append(SUPPLY_OPERATION_NAME).append(",").append(supplyAmount)
-                .append(System.lineSeparator());
-        report.append(BUY_OPERATION_NAME).append(",").append(buyAmount)
-                .append(System.lineSeparator());
-        report.append(RESULT_LABEL_VALUE).append(",").append(supplyAmount - buyAmount);
+
 
         try {
             writeReportToFile(toFileName, report.toString());
@@ -59,6 +54,14 @@ public class WorkWithFile {
             }
         }
         return new int[] { supplyAmount, buyAmount, (supplyAmount - buyAmount) };
+    }
+
+    private String createReport(int supply, int buy, int result) {
+        return SUPPLY_OPERATION_NAME + "," + supply +
+                System.lineSeparator() +
+                BUY_OPERATION_NAME + "," + buy +
+                System.lineSeparator() +
+                RESULT_LABEL_VALUE + "," + (result);
     }
 
 }
