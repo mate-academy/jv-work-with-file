@@ -19,12 +19,15 @@ public class WorkWithFile {
             throw new RuntimeException(e);
         }
 
-
-
-
+        int[] calculatedStatistics = calculateStatistics(statistics);
+        String report = createReport(
+                calculatedStatistics[0],
+                calculatedStatistics[1],
+                calculatedStatistics[2]
+        );
 
         try {
-            writeReportToFile(toFileName, report.toString());
+            writeReportToFile(toFileName, report);
         } catch (IOException e) {
             throw new RuntimeException("Can't write report to file", e);
         }
@@ -53,15 +56,15 @@ public class WorkWithFile {
                 buyAmount += operationValue;
             }
         }
-        return new int[] { supplyAmount, buyAmount, (supplyAmount - buyAmount) };
+        return new int[]{supplyAmount, buyAmount, (supplyAmount - buyAmount)};
     }
 
     private String createReport(int supply, int buy, int result) {
-        return SUPPLY_OPERATION_NAME + "," + supply +
-                System.lineSeparator() +
-                BUY_OPERATION_NAME + "," + buy +
-                System.lineSeparator() +
-                RESULT_LABEL_VALUE + "," + (result);
+        return SUPPLY_OPERATION_NAME + "," + supply
+                + System.lineSeparator()
+                + BUY_OPERATION_NAME + "," + buy
+                + System.lineSeparator()
+                + RESULT_LABEL_VALUE + "," + result;
     }
 
 }
