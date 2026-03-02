@@ -19,19 +19,7 @@ public class WorkWithFile {
             throw new RuntimeException(e);
         }
 
-        int supplyAmount = 0;
-        int buyAmount = 0;
 
-        for (String operation : statistics) {
-            String operationType = operation.split(",")[OPERATION_TYPE_INDEX];
-            int operationValue = Integer.parseInt(operation.split(",")[OPERATION_VALUE_INDEX]);
-
-            if (operationType.equals(SUPPLY_OPERATION_NAME)) {
-                supplyAmount += operationValue;
-            } else if (operationType.equals(BUY_OPERATION_NAME)) {
-                buyAmount += operationValue;
-            }
-        }
 
         StringBuilder report = new StringBuilder();
         report.append(SUPPLY_OPERATION_NAME).append(",").append(supplyAmount)
@@ -54,6 +42,23 @@ public class WorkWithFile {
 
     private void writeReportToFile(String fileName, String report) throws IOException {
         Files.writeString(Path.of(fileName), report);
+    }
+
+    private int[] calculateStatistics(String[] statistics) {
+        int supplyAmount = 0;
+        int buyAmount = 0;
+
+        for (String operation : statistics) {
+            String operationType = operation.split(",")[OPERATION_TYPE_INDEX];
+            int operationValue = Integer.parseInt(operation.split(",")[OPERATION_VALUE_INDEX]);
+
+            if (operationType.equals(SUPPLY_OPERATION_NAME)) {
+                supplyAmount += operationValue;
+            } else if (operationType.equals(BUY_OPERATION_NAME)) {
+                buyAmount += operationValue;
+            }
+        }
+        return new int[] { supplyAmount, buyAmount, (supplyAmount - buyAmount) };
     }
 
 }
