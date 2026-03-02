@@ -43,16 +43,16 @@ public class WorkWithFile {
                     .append("result,")
                     .append(difference)
                     .append(ls);
-            } catch (Exception e) {
-                throw new NullPointerException("File is empty");
-            }
+        } catch (Exception e) {
+            throw new NullPointerException("File is empty");
+        }
 
         try (BufferedWriter writer = Files.newBufferedWriter(Path.of(toFileName))) {
             writer.write(result.toString());
         } catch (Exception e) {
             throw new NullPointerException();
         }
-    return new String[]{result.toString()};
+        return new String[]{result.toString()};
     }
 }
 
