@@ -1,7 +1,6 @@
 package core.basesyntax;
 
 import java.io.BufferedWriter;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -11,12 +10,10 @@ public class WorkWithFile {
             throw new NullPointerException("No file to read and/or no file to write");
         }
 
-        String[] lines = null;
         StringBuilder result = new StringBuilder();
 
         try {
-            lines = Files.readAllLines(Path.of(fromFileName)).toArray(new String[0]);
-            if (lines.length == 0) ;
+            String[] lines = Files.readAllLines(Path.of(fromFileName)).toArray(new String[0]);
 
             int buyAmount = 0;
             int supplyAmount = 0;
@@ -36,16 +33,16 @@ public class WorkWithFile {
                 }
             }
 
-                int difference = supplyAmount - buyAmount;
-                result.append("supply,")
-                        .append(supplyAmount)
-                        .append(ls)
-                        .append("buy,")
-                        .append(buyAmount)
-                        .append(ls)
-                        .append("result,")
-                        .append(difference)
-                        .append(ls);
+            int difference = supplyAmount - buyAmount;
+            result.append("supply,")
+                    .append(supplyAmount)
+                    .append(ls)
+                    .append("buy,")
+                    .append(buyAmount)
+                    .append(ls)
+                    .append("result,")
+                    .append(difference)
+                    .append(ls);
             } catch (Exception e) {
                 throw new NullPointerException("File is empty");
             }
