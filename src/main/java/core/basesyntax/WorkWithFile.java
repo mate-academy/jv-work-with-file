@@ -9,6 +9,7 @@ public class WorkWithFile {
     public static final int OPERATION_VALUE_INDEX = 1;
     public static final String SUPPLY_OPERATION_NAME = "supply";
     public static final String BUY_OPERATION_NAME = "buy";
+    public static final String RESULT_LABEL_VALUE = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String[] statistics;
@@ -37,7 +38,7 @@ public class WorkWithFile {
                 .append(System.lineSeparator());
         report.append(BUY_OPERATION_NAME).append(",").append(buyAmount)
                 .append(System.lineSeparator());
-        report.append("result,").append(supplyAmount - buyAmount);
+        report.append(RESULT_LABEL_VALUE).append(",").append(supplyAmount - buyAmount);
 
         try {
             writeReportToFile(toFileName, report.toString());
