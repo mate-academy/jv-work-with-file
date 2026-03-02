@@ -47,8 +47,9 @@ public class WorkWithFile {
         int buyAmount = 0;
 
         for (String operation : statistics) {
-            String operationType = operation.split(",")[OPERATION_TYPE_INDEX];
-            int operationValue = Integer.parseInt(operation.split(",")[OPERATION_VALUE_INDEX]);
+            String[] parts = operation.split(",");
+            String operationType = parts[OPERATION_TYPE_INDEX];
+            int operationValue = Integer.parseInt(parts[OPERATION_VALUE_INDEX]);
 
             if (operationType.equals(SUPPLY_OPERATION_NAME)) {
                 supplyAmount += operationValue;
