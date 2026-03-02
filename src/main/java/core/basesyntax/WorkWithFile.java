@@ -42,18 +42,19 @@ public class WorkWithFile {
         }
 
         absoluteDifference = Math.abs(buyAmount - supplyAmount);
-                result.append("buy,")
+        result.append("buy,")
                 .append(buyAmount)
                 .append(ls)
                 .append("supply,")
                 .append(supplyAmount)
                 .append(ls)
                 .append("result,")
-                .append(absoluteDifference);
+                .append(absoluteDifference)
+                .append(ls);
 
         try (BufferedWriter writer = Files.newBufferedWriter(Path.of(toFileName))) {
             writer.write(result.toString());
-        };
+        }
 
         return new String[]{result.toString()};
     }
