@@ -1,7 +1,61 @@
 package core.basesyntax;
 
-public class WorkWithFile {
-    public void getStatistic(String fromFileName, String toFileName) {
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
+public class WorkWithFile {
+    public String[] getStatistic(String fromFileName, String toFileName) throws IOException {
+        if (fromFileName == null || toFileName == null) {
+            throw new NullPointerException("No file to read and/or no file to write");
+        }
+
+        String[] lines = Files.readAllLines(Path.of(fromFileName)).toArray(new String[0]);
+
+        if (lines.length == 0) {
+            throw new IllegalArgumentException("File is empty");
+        }
+
+        String buy = "buy";
+        String supply = "supply";
+        String operationType;
+        String amountStr;
+        int buyAmount = 0;
+        int supplyAmount = 0;
+        StringBuilder result = new StringBuilder();
+        int absoluteDifference = 0;
+        final String ls = System.lineSeparator();
+
+        for (int i = 0; i < lines.length; i++) {
+            String toSplit = lines[i];
+            String[] splittedLine = toSplit.split(",");
+            operationType = splittedLine[0];
+            amountStr = splittedLine[1];
+            int amount = Integer.parseInt(amountStr);
+
+            if (operationType.equals(buy)) {
+                buyAmount += amount;
+            } else if (operationType.equals(supply)) {
+                supplyAmount += amount;
+            }
+        }
+
+        absoluteDifference = Math.abs(buyAmount - supplyAmount);
+                result.append("buy,")
+                .append(buyAmount)
+                .append(ls)
+                .append("supply,")
+                .append(supplyAmount)
+                .append(ls)
+                .append("result,")
+                .append(absoluteDifference);
+
+        try (BufferedWriter writer = Files.newBufferedWriter(Path.of(toFileName))) {
+            writer.write(result.toString());
+        };
+
+        return new String[]{result.toString()};
     }
 }
+
