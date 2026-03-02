@@ -16,7 +16,7 @@ public class WorkWithFile {
         try {
             statistics = readStatisticsFromFile(fromFileName);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can't read from file: " + fromFileName, e);
         }
 
         int[] calculatedStatistics = calculateStatistics(statistics);
@@ -29,7 +29,7 @@ public class WorkWithFile {
         try {
             writeReportToFile(toFileName, report);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write report to file", e);
+            throw new RuntimeException("Can't write report to file: " + toFileName, e);
         }
 
     }
