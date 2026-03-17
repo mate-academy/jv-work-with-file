@@ -18,7 +18,6 @@ public class WorkWithFile {
         try {
             BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
             String value = reader.readLine();
-            reader.close();
             while (value != null) {
                 String[] parts = value.split(",");
                 if (parts[0].equals("supply")) {
@@ -28,6 +27,7 @@ public class WorkWithFile {
                 }
                 value = reader.readLine();
             }
+            reader.close();
         } catch (IOException e) {
             throw new RuntimeException("Can`t read file", e);
         }
