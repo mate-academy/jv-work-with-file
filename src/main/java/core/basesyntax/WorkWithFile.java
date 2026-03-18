@@ -8,40 +8,50 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String SUPPLY_OPERATION = "supply";
+    private static final String BUY_OPERATION = "buy";
+    private static final String RESULT_OPERATION = "result";
+
     public void getStatistic(String fromFileName, String toFileName) {
-        int supply = 0;
-        int buy = 0;
-        int result = 0;
+        int supply = getFileData(fromFileName)[0];
+        int buy = getFileData(fromFileName)[1];
         File report = new File(toFileName);
-        StringBuilder stb = new StringBuilder();
 
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
-            String value = reader.readLine();
-            while (value != null) {
-                String[] parts = value.split(",");
-                if (parts[0].equals("supply")) {
-                    supply += Integer.parseInt(parts[1]);
-                } else {
-                    buy += Integer.parseInt(parts[1]);
-                }
-                value = reader.readLine();
-            }
-            reader.close();
-        } catch (IOException e) {
-            throw new RuntimeException("Can`t read file", e);
-        }
-
-        result = supply - buy;
-        stb.append("supply,").append(supply).append(System.lineSeparator())
-                .append("buy,").append(buy).append(System.lineSeparator())
-                .append("result,").append(result);
-
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(report, true));) {
-            writer.write(stb.toString());
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(report))) {
+            writer.write(getReportData(supply, buy));
             writer.close();
         } catch (IOException e) {
             throw new RuntimeException("Can`t write data to file", e);
         }
+    }
+
+    private int[] getFileData(String fromFileName) {
+        int[] info = new int[2];
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
+            String value = reader.readLine();
+            while (value != null) {
+                String[] parts = value.split(",");
+                if (parts[0].equals(SUPPLY_OPERATION)) {
+                    info[0] += Integer.parseInt(parts[1]);
+                } else {
+                    info[1] += Integer.parseInt(parts[1]);
+                }
+                value = reader.readLine();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Can`t read file", e);
+        }
+        return info;
+    }
+
+    private String getReportData(int supply, int buy) {
+        StringBuilder stb = new StringBuilder();
+        int result = supply - buy;
+        stb.append(SUPPLY_OPERATION).append(",").append(supply)
+                .append(System.lineSeparator()).append(BUY_OPERATION).append(",")
+                .append(buy).append(System.lineSeparator()).append(RESULT_OPERATION)
+                .append(",").append(result);
+        return stb.toString();
     }
 }
