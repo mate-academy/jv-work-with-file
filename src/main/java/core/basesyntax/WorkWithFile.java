@@ -13,13 +13,13 @@ public class WorkWithFile {
     private static final String RESULT_OPERATION = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int supply = getFileData(fromFileName)[0];
-        int buy = getFileData(fromFileName)[1];
+        int[] info = getFileData(fromFileName);
+        int supply = info[0];
+        int buy = info[1];
         File report = new File(toFileName);
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(report))) {
             writer.write(getReportData(supply, buy));
-            writer.close();
         } catch (IOException e) {
             throw new RuntimeException("Can`t write data to file", e);
         }
