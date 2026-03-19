@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.StandardOpenOption;
 
 public class WorkWithFile {
     private static final int ACTION = 0;
@@ -32,24 +31,22 @@ public class WorkWithFile {
             throw new RuntimeException("Can't read file " + fromFileName, e);
         }
 
-        File toFile = new File(toFileName);
+        String content = getContent(supply, buy);
+        writeContentToFile(content, toFileName);
+    }
+
+    private String getContent(int supply, int buy) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("supply,").append(supply).append(System.lineSeparator());
+        sb.append("buy,").append(buy).append(System.lineSeparator());
+        sb.append("result,").append(supply - buy);
+        return sb.toString();
+    }
+
+    private void writeContentToFile(String content, String fileName) {
+        File file = new File(fileName);
         try {
-            toFile.createNewFile();
-            Files.writeString(
-                    toFile.toPath(),
-                    "supply," + supply + System.lineSeparator(),
-                    StandardOpenOption.APPEND
-            );
-            Files.writeString(
-                    toFile.toPath(),
-                    "buy," + buy + System.lineSeparator(),
-                    StandardOpenOption.APPEND
-            );
-            Files.writeString(
-                    toFile.toPath(),
-                    "result," + (supply - buy),
-                    StandardOpenOption.APPEND
-            );
+            Files.writeString(file.toPath(), content);
         } catch (IOException e) {
             throw new RuntimeException("Failed to write to file", e);
         }
