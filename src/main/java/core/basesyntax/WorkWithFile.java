@@ -9,8 +9,16 @@ import java.nio.file.Files;
 public class WorkWithFile {
     private static final int ACTION = 0;
     private static final int AMOUNT = 1;
+    private static final int SUPPLY_INDEX = 0;
+    private static final int BUY_INDEX = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
+        int[] amounts = getAmounts(fromFileName);
+        String content = getContent(amounts[SUPPLY_INDEX], amounts[BUY_INDEX]);
+        writeContentToFile(content, toFileName);
+    }
+
+    private int[] getAmounts(String fromFileName) {
         int supply = 0;
         int buy = 0;
 
@@ -31,8 +39,7 @@ public class WorkWithFile {
             throw new RuntimeException("Can't read file " + fromFileName, e);
         }
 
-        String content = getContent(supply, buy);
-        writeContentToFile(content, toFileName);
+        return new int[] {supply, buy};
     }
 
     private String getContent(int supply, int buy) {
