@@ -13,18 +13,18 @@ public class WorkWithFile {
         int buy = 0;
 
         try (BufferedReader reader = Files.newBufferedReader(Path.of(fromFileName))) {
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    String[] parts = line.split(",");
-                    String operation = parts[0];
-                    int amount = Integer.parseInt(parts[1]);
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                String operation = parts[0];
+                int amount = Integer.parseInt(parts[1]);
 
-                    if (operation.equals("supply")) {
-                        supply += amount;
-                    } else if (operation.equals("buy")) {
-                        buy += amount;
-                    }
+                if (operation.equals("supply")) {
+                    supply += amount;
+                } else if (operation.equals("buy")) {
+                    buy += amount;
                 }
+            }
         } catch (IOException e) {
             throw new RuntimeException("Can't read fromFileName", e);
         }
