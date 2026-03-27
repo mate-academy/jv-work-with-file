@@ -24,11 +24,20 @@ public class WorkWithFile {
                     buyInt += secondInt;
                 }
             }
-            int resultInt = supplyInt - buyInt;
-            String supply = "supply," + supplyInt;
-            String buy = "buy," + buyInt;
-            String result = "result," + resultInt;
-            String[] list = { supply, buy, result };
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        calcStatistic(toFileName, supplyInt, buyInt);
+    }
+
+    private void calcStatistic(String toFileName, int supplyInt, int buyInt) {
+        int resultInt = supplyInt - buyInt;
+        String supply = "supply," + supplyInt;
+        String buy = "buy," + buyInt;
+        String result = "result," + resultInt;
+        String[] list = { supply, buy, result };
+        try {
             for (String sentence : list) {
                 Files.write(Paths.get(toFileName),
                         (sentence + "\n").getBytes(),
@@ -38,6 +47,6 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
     }
+
 }
