@@ -8,45 +8,60 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 
 public class WorkWithFile {
+
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
+
     public void getStatistic(String fromFileName, String toFileName) {
+        int[] sums = readData(fromFileName); 
+
+        String report = buildReport(sums[0], sums[1]);
+
+        writeReport(toFileName, report);
+    }
+
+    private int[] readData(String fromFileName) {
         int supplyInt = 0;
         int buyInt = 0;
 
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
-            String value = "";
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                String type = parts[0];
+                int amount = Integer.parseInt(parts[1]);
 
-            while ((value = reader.readLine()) != null) {
-                String firstString = value.split(",")[0];
-                int secondInt = Integer.parseInt(value.split(",")[1]);
-                if (firstString.equals("supply")) {
-                    supplyInt += secondInt;
-                } else {
-                    buyInt += secondInt;
+                if (SUPPLY.equals(type)) {
+                    supplyInt += amount;
+                } else if (BUY.equals(type)) {
+                    buyInt += amount;
                 }
             }
-
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        calcStatistic(toFileName, supplyInt, buyInt);
+
+        return new int[]{supplyInt, buyInt};
     }
 
-    private void calcStatistic(String toFileName, int supplyInt, int buyInt) {
+    private String buildReport(int supplyInt, int buyInt) {
         int resultInt = supplyInt - buyInt;
-        String supply = "supply," + supplyInt;
-        String buy = "buy," + buyInt;
-        String result = "result," + resultInt;
-        String[] list = { supply, buy, result };
+        StringBuilder report = new StringBuilder();
+        report.append(SUPPLY).append(",").append(supplyInt).append("\n");
+        report.append(BUY).append(",").append(buyInt).append("\n");
+        report.append(RESULT).append(",").append(resultInt).append("\n");
+        return report.toString();
+    }
+
+    private void writeReport(String toFileName, String report) {
         try {
-            for (String sentence : list) {
-                Files.write(Paths.get(toFileName),
-                        (sentence + "\n").getBytes(),
+            Files.write(Paths.get(toFileName),
+                        report.getBytes(),
                         StandardOpenOption.CREATE,
-                        StandardOpenOption.APPEND);
-            }
+                        StandardOpenOption.TRUNCATE_EXISTING);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
-
 }
