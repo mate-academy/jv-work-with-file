@@ -8,7 +8,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 
 public class WorkWithFile {
-    public void getStatistic(String fromFileName, String toFileName) throws IOException {
+    public void getStatistic(String fromFileName, String toFileName) {
         int supplyInt = 0;
         int buyInt = 0;
 
@@ -35,6 +35,8 @@ public class WorkWithFile {
                         StandardOpenOption.CREATE,
                         StandardOpenOption.APPEND);
             }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
 
     }
