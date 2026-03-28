@@ -14,7 +14,7 @@ public class WorkWithFile {
     private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
-        int[] sums = readData(fromFileName); 
+        int[] sums = readData(fromFileName);
 
         String report = buildReport(sums[0], sums[1]);
 
@@ -39,10 +39,11 @@ public class WorkWithFile {
                 }
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can't read data from file: "
+                    + fromFileName, e);
         }
 
-        return new int[]{supplyInt, buyInt};
+        return new int[] { supplyInt, buyInt };
     }
 
     private String buildReport(int supplyInt, int buyInt) {
@@ -57,11 +58,11 @@ public class WorkWithFile {
     private void writeReport(String toFileName, String report) {
         try {
             Files.write(Paths.get(toFileName),
-                        report.getBytes(),
-                        StandardOpenOption.CREATE,
-                        StandardOpenOption.TRUNCATE_EXISTING);
+                    report.getBytes(),
+                    StandardOpenOption.CREATE,
+                    StandardOpenOption.TRUNCATE_EXISTING);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Can't open file", e);
         }
     }
 }
