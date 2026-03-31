@@ -11,7 +11,6 @@ public class WorkWithFile {
     private static final String BUY = "buy";
     private static final String RESULT = "result";
 
-
     public void getStatistic(String fromFileName, String toFileName) {
         StringBuilder stringBuilder = new StringBuilder();
         String report;
@@ -53,6 +52,6 @@ public class WorkWithFile {
                 .append(System.lineSeparator())
                 .append(BUY).append(",").append(buy)
                 .append(System.lineSeparator()).append(RESULT).append(",").append(supply - buy);
-         return stringBuilder.toString();
+        return stringBuilder.toString();
     }
 }
