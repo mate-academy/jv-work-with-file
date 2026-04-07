@@ -11,9 +11,17 @@ public class WorkWithFile {
     private static final int NUMBER = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
-        File file = new File(toFileName);
-        String result;
+        String result = readFile(fromFileName);
 
+        File file = new File(toFileName);
+        try {
+            Files.write(file.toPath(), result.getBytes());
+        } catch (IOException e) {
+            throw new RuntimeException("Can't complete operation due to IO exception", e);
+        }
+    }
+
+    private String readFile(String fromFileName) {
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             String line;
             int supplyAmount = 0;
@@ -27,12 +35,11 @@ public class WorkWithFile {
                     buyAmount += Integer.parseInt(part[NUMBER]);
                 }
             }
-            result = "supply," + supplyAmount + System.lineSeparator()
+            return  "supply," + supplyAmount + System.lineSeparator()
                     + "buy," + buyAmount + System.lineSeparator()
                     + "result," + (supplyAmount - buyAmount);
-            Files.write(file.toPath(), result.getBytes());
         } catch (IOException y) {
-            throw new RuntimeException(y);
+            throw new RuntimeException("Can't complete operation due to IO exception", y);
         }
     }
 }
