@@ -34,6 +34,5 @@ public class WorkWithFile {
         } catch (IOException y) {
             throw new RuntimeException(y);
         }
-
     }
 }
