@@ -35,7 +35,7 @@ public class WorkWithFile {
                     buyAmount += Integer.parseInt(part[NUMBER]);
                 }
             }
-            return  "supply," + supplyAmount + System.lineSeparator()
+            return "supply," + supplyAmount + System.lineSeparator()
                     + "buy," + buyAmount + System.lineSeparator()
                     + "result," + (supplyAmount - buyAmount);
         } catch (IOException y) {
