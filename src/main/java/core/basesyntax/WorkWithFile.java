@@ -9,6 +9,7 @@ import java.util.List;
 public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
+    private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
         Path pathFrom = Paths.get(fromFileName);
@@ -50,7 +51,7 @@ public class WorkWithFile {
 
         return SUPPLY + "," + totalSupply + sep
                 + BUY + "," + totalBuy + sep
-                + "result," + (totalSupply - totalBuy) + sep;
+                + RESULT + "," + (totalSupply - totalBuy) + sep;
 
     }
 
