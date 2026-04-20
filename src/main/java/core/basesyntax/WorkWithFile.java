@@ -1,6 +1,10 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -42,10 +46,10 @@ public class WorkWithFile {
 
     private String prepareDataForWriting(String fromFileName) {
         Map<String, Integer> data = getResultData(readDataFromFile(fromFileName));
-        return SUPPLY_LABEL + "," + data.getOrDefault(SUPPLY_LABEL, 0) + "\n" +
-                BUY_LABEL + "," + data.getOrDefault(BUY_LABEL, 0) + "\n" +
-                RESULT_LABEL + "," +
-                (data.getOrDefault(SUPPLY_LABEL, 0) - data.getOrDefault(BUY_LABEL, 0));
+        return SUPPLY_LABEL + "," + data.getOrDefault(SUPPLY_LABEL, 0) + "\n"
+                + BUY_LABEL + "," + data.getOrDefault(BUY_LABEL, 0) + "\n"
+                + RESULT_LABEL + ","
+                + (data.getOrDefault(SUPPLY_LABEL, 0) - data.getOrDefault(BUY_LABEL, 0));
     }
 
     private void writeDataToFile(String toFileName, String data) {
