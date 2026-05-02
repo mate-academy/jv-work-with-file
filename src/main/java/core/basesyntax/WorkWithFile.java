@@ -24,9 +24,7 @@ public class WorkWithFile {
 
                     moneyBuy += Integer.parseInt(string.substring(4));
 
-                }
-
-                else if (string.startsWith("supply,")) {
+                } else if (string.startsWith("supply,")) {
 
                     moneySupply += Integer.parseInt(string.substring(7));
 
