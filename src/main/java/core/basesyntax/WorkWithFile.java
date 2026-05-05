@@ -12,6 +12,7 @@ public class WorkWithFile {
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String SEPARATOR = ",";
+    private static final String RESULT = "result";
 
     public void getStatistic(String fromFileName, String toFileName) {
         List<String> lines = readFile(fromFileName);
@@ -45,9 +46,11 @@ public class WorkWithFile {
             }
         }
         int result = supply - buy;
-        return SUPPLY + SEPARATOR + supply + "\n"
-                + BUY + SEPARATOR + buy + "\n"
-                + "result" + SEPARATOR + result;
+        return new StringBuilder()
+                .append(SUPPLY).append(SEPARATOR).append(supply).append(System.lineSeparator())
+                .append(BUY).append(SEPARATOR).append(buy).append(System.lineSeparator())
+                .append(RESULT).append(SEPARATOR).append(result)
+                .toString();
     }
 
     private void writeFile(String fileName, String report) {
