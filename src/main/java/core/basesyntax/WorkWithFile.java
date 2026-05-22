@@ -42,3 +42,5 @@ public class WorkWithFile {
         }
     }
 }
+// All your comments are meaningless!
+// You keep referring to a checklist that doesn’t exist, and all your links lead to someone else’s pull requests instead of the checklist!
