@@ -11,8 +11,7 @@ public class WorkWithFile {
         int totalSupply = 0;
         int totalBuy = 0;
 
-        try {
-            Scanner scanner = new Scanner(new File(fromFileName));
+        try (Scanner scanner = new Scanner(new File(fromFileName))) {
 
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
@@ -28,17 +27,13 @@ public class WorkWithFile {
                 }
             }
 
-            scanner.close();
-
             int result = totalSupply - totalBuy;
 
-            FileWriter writer = new FileWriter(toFileName);
-
-            writer.write("supply," + totalSupply + System.lineSeparator());
-            writer.write("buy," + totalBuy + System.lineSeparator());
-            writer.write("result," + result);
-
-            writer.close();
+            try (FileWriter writer = new FileWriter(toFileName)) {
+                writer.write("supply," + totalSupply + System.lineSeparator());
+                writer.write("buy," + totalBuy + System.lineSeparator());
+                writer.write("result," + result);
+            }
 
         } catch (FileNotFoundException e) {
             throw new RuntimeException("File not found", e);
