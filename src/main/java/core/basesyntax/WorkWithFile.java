@@ -1,7 +1,49 @@
 package core.basesyntax;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Scanner;
+
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
+        int totalSupply = 0;
+        int totalBuy = 0;
 
+        try {
+            Scanner scanner = new Scanner(new File(fromFileName));
+
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                String[] data = line.split(",");
+
+                String operation = data[0];
+                int amount = Integer.parseInt(data[1]);
+
+                if (operation.equals("supply")) {
+                    totalSupply += amount;
+                } else if (operation.equals("buy")) {
+                    totalBuy += amount;
+                }
+            }
+
+            scanner.close();
+
+            int result = totalSupply - totalBuy;
+
+            FileWriter writer = new FileWriter(toFileName);
+
+            writer.write("supply," + totalSupply + System.lineSeparator());
+            writer.write("buy," + totalBuy + System.lineSeparator());
+            writer.write("result," + result);
+
+            writer.close();
+
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException("File not found", e);
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write to file", e);
+        }
     }
 }
