@@ -48,12 +48,9 @@ public class WorkWithFile {
     }
 
     private String createReport(Map<String, Integer> statistics) {
-        StringBuilder reportBuilder = new StringBuilder();
-        reportBuilder.append("supply,").append(statistics.get("supply"))
-                .append(System.lineSeparator());
-        reportBuilder.append("buy,").append(statistics.get("buy")).append(System.lineSeparator());
-        reportBuilder.append("result,").append(statistics.get("result"));
-        return reportBuilder.toString();
+        return "supply," + statistics.get("supply") + System.lineSeparator() + "buy,"
+                + statistics.get("buy") + System.lineSeparator()
+                + "result," + statistics.get("result");
     }
 
     private void writeReport(String report, String toFileName) {
