@@ -1,44 +1,64 @@
 package core.basesyntax;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Scanner;
 
 public class WorkWithFile {
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
+    private static final int OPERATION_TYPE_INDEX = 0;
+    private static final int AMOUNT_INDEX = 1;
+
     public void getStatistic(String fromFileName, String toFileName) {
+        String data = readFromFile(fromFileName);
+        String report = createReport(data);
+        writeToFile(toFileName, report);
+    }
+
+    private String readFromFile(String fileName) {
+        StringBuilder data = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                data.append(line).append(System.lineSeparator());
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Can't read data from the file " + fileName, e);
+        }
+        return data.toString();
+    }
+
+    private String createReport(String data) {
         int totalSupply = 0;
         int totalBuy = 0;
-
-        try (Scanner scanner = new Scanner(new File(fromFileName))) {
-
-            while (scanner.hasNextLine()) {
-                String line = scanner.nextLine();
-                String[] data = line.split(",");
-
-                String operation = data[0];
-                int amount = Integer.parseInt(data[1]);
-
-                if (operation.equals("supply")) {
-                    totalSupply += amount;
-                } else if (operation.equals("buy")) {
-                    totalBuy += amount;
-                }
+        String[] lines = data.split(System.lineSeparator());
+        for (String line : lines) {
+            String[] parts = line.split(",");
+            String operationType = parts[OPERATION_TYPE_INDEX];
+            int amount = Integer.parseInt(parts[AMOUNT_INDEX]);
+            if (operationType.equals(SUPPLY)) {
+                totalSupply += amount;
+            } else if (operationType.equals(BUY)) {
+                totalBuy += amount;
             }
+        }
+        int result = totalSupply - totalBuy;
+        StringBuilder report = new StringBuilder();
+        report.append(SUPPLY).append(",").append(totalSupply).append(System.lineSeparator());
+        report.append(BUY).append(",").append(totalBuy).append(System.lineSeparator());
+        report.append(RESULT).append(",").append(result);
+        return report.toString();
+    }
 
-            int result = totalSupply - totalBuy;
-
-            try (FileWriter writer = new FileWriter(toFileName)) {
-                writer.write("supply," + totalSupply + System.lineSeparator());
-                writer.write("buy," + totalBuy + System.lineSeparator());
-                writer.write("result," + result);
-            }
-
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException("File not found", e);
+    private void writeToFile(String fileName, String data) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+            writer.write(data);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write to file", e);
+            throw new RuntimeException("Can't write data to the file " + fileName, e);
         }
     }
 }
