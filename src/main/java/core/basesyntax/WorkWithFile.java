@@ -49,7 +49,7 @@ public class WorkWithFile {
     }
 
     String getStatistic(String fromFileName, String toFileName) {
-        int[] countersSum = new int[2]; // [0] = supply, [1] = buy
+        int[] countersSum = new int[2]; // [0] = supply,[1] = buy
         List<String> allLines;
 
         try {
