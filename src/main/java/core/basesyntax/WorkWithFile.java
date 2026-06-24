@@ -8,15 +8,19 @@ import java.nio.file.Path;
 import java.util.List;
 
 public class WorkWithFile {
+    private static final String supplyString = "supply";
+    private static final String buyString = "buy";
+    private static final String commaString = ",";
+    private StringBuilder stringBuilder = new StringBuilder();
 
     void processLine(String line, int[] sums) {
-        String[] parts = line.split(",");
+        String[] parts = line.split(commaString);
         String type = parts[0];
         int amount = Integer.parseInt(parts[1]);
-        if (type.equals("supply")) {
+        if (type.equals(supplyString)) {
             sums[0] += amount;
         }
-        if (type.equals("buy")) {
+        if (type.equals(buyString)) {
             sums[1] += amount;
         }
 
@@ -27,23 +31,27 @@ public class WorkWithFile {
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
 
-            writer.write("supply," + supplySum);
+            writer.write(supplyString + commaString + supplySum);
+            stringBuilder.append(supplyString + commaString + supplySum);
             writer.newLine();
 
-            writer.write("buy," + buySum);
+            writer.write(buyString + commaString + buySum);
+            stringBuilder.append(buyString + commaString + buySum);
             writer.newLine();
 
             writer.write("result," + result);
+            stringBuilder.append("result," + result);
             writer.newLine();
 
         } catch (IOException e) {
-            System.out.println("Error while writing file: " + e.getMessage());
+            throw new RuntimeException("Error while writing file: " + e.getMessage());
         }
     }
 
-    public void getStatistic(String fromFileName, String toFileName) {
+    String getStatistic(String fromFileName, String toFileName) {
         int[] countersSum = new int[2]; // [0] = supply, [1] = buy
         List<String> allLines;
+
         try {
             allLines = Files.readAllLines(Path.of(fromFileName));
         } catch (IOException e) {
@@ -53,5 +61,6 @@ public class WorkWithFile {
             processLine(line, countersSum);
         }
         writeResult(toFileName, countersSum[0], countersSum[1]);
+        return stringBuilder.toString();
     }
 }
