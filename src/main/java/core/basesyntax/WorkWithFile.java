@@ -8,63 +8,59 @@ import java.nio.file.Path;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
-        Path filePath = Path.of(fromFileName);
+        Statistic statistic = readFile(fromFileName);
+        writeReport(statistic, toFileName);
+    }
 
-        if (Files.exists(filePath)) {
-            try (BufferedReader reader = Files.newBufferedReader(filePath)) {
-                String line;
-                String[] keys = new String[100];
-                int[] values = new int[100];
-                int size = 0;
+    private Statistic readFile(String fileName) {
+        Statistic statistic = new Statistic();
 
-                while ((line = reader.readLine()) != null) {
-                    String[] elements = line.split(",");
+        try (BufferedReader reader = Files.newBufferedReader(Path.of(fileName))) {
+            String line;
 
-                    String key = elements[0];
-                    int value = Integer.parseInt(elements[1]);
-
-                    boolean found = false;
-
-                    for (int i = 0; i < size; i++) {
-                        if (keys[i].equals(key)) {
-                            values[i] += value;
-                            found = true;
-                            break;
-                        }
-                    }
-
-                    if (!found) {
-                        keys[size] = key;
-                        values[size] = value;
-                        size++;
-                    }
-                }
-
-                int supply = 0;
-                int buy = 0;
-
-                for (int i = 0; i < size; i++) {
-                    if ("supply".equals(keys[i])) {
-                        supply = values[i];
-                    } else if ("buy".equals(keys[i])) {
-                        buy = values[i];
-                    }
-                }
-
-                try (BufferedWriter writer = Files.newBufferedWriter(Path.of(toFileName))) {
-                    writer.write("supply," + supply);
-                    writer.newLine();
-
-                    writer.write("buy," + buy);
-                    writer.newLine();
-
-                    writer.write("result," + (supply - buy));
-                }
-            } catch (IOException e) {
-                System.out.println("Cant read file");
+            while ((line = reader.readLine()) != null) {
+                calculateStatistics(line, statistic);
             }
-        } else {
-            System.out.println("File not exists");
+        } catch (IOException e) {
+            throw new RuntimeException("Can't read file: " + fileName, e);
         }
+
+        return statistic;
+    }
+
+    private void calculateStatistics(String line, Statistic statistic) {
+        String[] elements = line.split(",");
+        String operation = elements[0];
+        int amount = Integer.parseInt(elements[1]);
+
+        switch (operation) {
+            case "supply":
+                statistic.supply += amount;
+                break;
+            case "buy":
+                statistic.buy += amount;
+                break;
+            default:
+                throw new RuntimeException("Unknown operation: " + operation);
+        }
+    }
+
+    private void writeReport(Statistic statistic, String fileName) {
+        try (BufferedWriter writer = Files.newBufferedWriter(Path.of(fileName))) {
+            writer.write("supply," + statistic.supply);
+            writer.newLine();
+
+            writer.write("buy," + statistic.buy);
+            writer.newLine();
+
+            writer.write("result," + (statistic.supply - statistic.buy));
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write file: " + fileName, e);
+        }
+    }
+
+    private static class Statistic {
+        private int supply;
+        private int buy;
     }
 }
