@@ -1,6 +1,10 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class WorkWithFile {
     private static final String SUPPLY = "supply";
@@ -9,8 +13,7 @@ public class WorkWithFile {
 
     public void getStatistic(String fromFileName, String toFileName) {
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName));
-             BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName)))
-        {
+             BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             String line;
             int supplySummary = 0;
             int buySummary = 0;
@@ -28,9 +31,8 @@ public class WorkWithFile {
             writer.write(BUY + "," + buySummary);
             writer.newLine();
             writer.write(RESULT + "," + (supplySummary - buySummary));
-        }
-        catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException e) {
+            throw new RuntimeException("Can't read or write the File", e);
         }
     }
 }
