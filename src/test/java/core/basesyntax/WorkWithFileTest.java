@@ -79,8 +79,8 @@ public class WorkWithFileTest {
         String expectedResult = "supply,491" + System.lineSeparator()
             + "buy,293" + System.lineSeparator()
             + "result,198";
-        Assert.assertEquals("Calling the getStatistic() method repeatedly returned incorrect results.",
-            expectedResult, actualResult);
+        String message = "Calling the getStatistic() method repeatedly returned incorrect results.";
+        Assert.assertEquals(message, expectedResult, actualResult);
     }
 
     private String readFromFile(String fileName) {
