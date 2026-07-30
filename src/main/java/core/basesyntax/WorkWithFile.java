@@ -47,11 +47,19 @@ public class WorkWithFile {
     }
 
     private String createReport(int supplyAmount, int buyAmount) {
-        return SUPPLY_OPERATION + COMMA + supplyAmount +
-                System.lineSeparator() +
-                BUY_OPERATION + COMMA + buyAmount +
-                System.lineSeparator() +
-                RESULT_OPERATION + COMMA + (supplyAmount - buyAmount);
+        return new StringBuilder()
+                .append(SUPPLY_OPERATION)
+                .append(COMMA)
+                .append(supplyAmount)
+                .append(System.lineSeparator())
+                .append(BUY_OPERATION)
+                .append(COMMA)
+                .append(buyAmount)
+                .append(System.lineSeparator())
+                .append(RESULT_OPERATION)
+                .append(COMMA)
+                .append(supplyAmount - buyAmount)
+                .toString();
     }
 
     private void writeReport(String fileName, String report) {
