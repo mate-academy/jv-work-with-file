@@ -15,21 +15,23 @@ public class WorkWithFile {
                 String[] parts = line.split(",");
                 String operation = parts[0];
                 int amount = Integer.parseInt(parts[1]);
-
                 if (operation.equals("supply")) {
                     supply += amount;
                 } else {
                     buy += amount;
                 }
             }
-
-            String data = "supply," + supply + System.lineSeparator()
-                    + "buy," + buy + System.lineSeparator()
-                    + "result," + (supply - buy);
-
-            Files.writeString(Path.of(toFileName), data);
+            try {
+                String data = "supply," + supply + System.lineSeparator()
+                        + "buy," + buy + System.lineSeparator()
+                        + "result," + (supply - buy);
+                Files.writeString(Path.of(toFileName), data);
+            } catch (IOException e) {
+                throw new RuntimeException("Can't write to file!", e);
+            }
         } catch (IOException e) {
             throw new RuntimeException("Can`t read a file!", e);
         }
+
     }
 }
