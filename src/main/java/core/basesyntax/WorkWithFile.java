@@ -40,6 +40,5 @@ public class WorkWithFile {
             throw new RuntimeException(e);
         }
 
-
     }
 }
