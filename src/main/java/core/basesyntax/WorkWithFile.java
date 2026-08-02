@@ -8,11 +8,12 @@ import java.nio.file.Path;
 import java.util.List;
 
 public class WorkWithFile {
-
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
     private static final String COMMA = ",";
+    private static final int INDEX_SUPPLY = 0;
+    private static final int INDEX_BUY = 1;
 
     public void getStatistic(String fromFileName, String toFileName) {
         List<String> data = readFile(fromFileName);
@@ -29,6 +30,11 @@ public class WorkWithFile {
     }
 
     private String generateReport(List<String> data) {
+        int[] statistics = calculateStatistic(data);
+        return buildReportString(statistics[INDEX_SUPPLY], statistics[INDEX_BUY]);
+    }
+
+    private int[] calculateStatistic(List<String> data) {
         int supplyResult = 0;
         int buyResult = 0;
 
@@ -44,6 +50,10 @@ public class WorkWithFile {
             }
         }
 
+        return new int[]{supplyResult, buyResult};
+    }
+
+    private String buildReportString(int supplyResult, int buyResult) {
         int result = supplyResult - buyResult;
 
         return new StringBuilder()
