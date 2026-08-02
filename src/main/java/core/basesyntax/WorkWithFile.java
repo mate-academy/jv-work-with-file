@@ -4,43 +4,62 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.List;
 
 public class WorkWithFile {
 
-    private int result = 0;
-    private int supplyResult = 0;
-    private int buyResult = 0;
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+    private static final String RESULT = "result";
+    private static final String COMMA = ",";
 
     public void getStatistic(String fromFileName, String toFileName) {
+        List<String> data = readFile(fromFileName);
+        String report = generateReport(data);
+        writeToFile(toFileName, report);
+    }
+
+    private List<String> readFile(String fileName) {
         try {
-            List<String> lines = Files.readAllLines(Paths.get(fromFileName));
-            for (String line : lines) {
-                String[] parts = line.split(",");
-                String operation = parts[0];
-                String amountStr = parts[1];
-                int amount = Integer.parseInt(amountStr);
-                if (operation.equals("supply")) {
-                    supplyResult += amount;
-                } else if (operation.equals("buy")) {
-                    buyResult += amount;
-                }
-            }
+            return Files.readAllLines(Path.of(fileName));
         } catch (IOException e) {
-            throw new RuntimeException("Reading file error" + " "
-                    + fromFileName + " " + e);
+            throw new RuntimeException("Can't read file: " + fileName, e);
         }
-        result = supplyResult - buyResult;
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            writer.write("supply," + supplyResult);
-            writer.newLine();
-            writer.write("buy," + buyResult);
-            writer.newLine();
-            writer.write("result," + result);
+    }
+
+    private String generateReport(List<String> data) {
+        int supplyResult = 0;
+        int buyResult = 0;
+
+        for (String line : data) {
+            String[] parts = line.split(COMMA);
+            String operation = parts[0];
+            int amount = Integer.parseInt(parts[1]);
+
+            if (SUPPLY.equals(operation)) {
+                supplyResult += amount;
+            } else if (BUY.equals(operation)) {
+                buyResult += amount;
+            }
+        }
+
+        int result = supplyResult - buyResult;
+
+        return new StringBuilder()
+                .append(SUPPLY).append(COMMA).append(supplyResult)
+                .append(System.lineSeparator())
+                .append(BUY).append(COMMA).append(buyResult)
+                .append(System.lineSeparator())
+                .append(RESULT).append(COMMA).append(result)
+                .toString();
+    }
+
+    private void writeToFile(String fileName, String report) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+            writer.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Writing file error" + " "
-                    + toFileName + " " + e);
+            throw new RuntimeException("Can't write data to file: " + fileName, e);
         }
     }
 
