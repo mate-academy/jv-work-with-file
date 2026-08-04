@@ -8,6 +8,11 @@ import java.io.IOException;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
+        getStatic(fromFileName);
+        writer(getStatic(fromFileName)[0], getStatic(fromFileName)[1], toFileName);
+    }
+
+    private int[] getStatic(String fromFileName) {
         int supplyAll = 0;
         int buyAll = 0;
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
@@ -29,6 +34,10 @@ public class WorkWithFile {
         } catch (IOException e) {
             throw new RuntimeException("Can`t read file", e);
         }
+        return new int[] {supplyAll, buyAll};
+    }
+
+    private void writer(int supplyAll, int buyAll, String toFileName) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write("supply," + supplyAll + System.lineSeparator());
             writer.write("buy," + buyAll + System.lineSeparator());
