@@ -21,6 +21,8 @@ public class WorkWithFile {
                     case ("buy"):
                         buyAll += Integer.parseInt(line[1]);
                         break;
+                    default:
+                        break;
                 }
                 value = reader.readLine();
             }
