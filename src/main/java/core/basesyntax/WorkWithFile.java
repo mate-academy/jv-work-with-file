@@ -1,49 +1,67 @@
 package core.basesyntax;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileReader;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.util.List;
 
 public class WorkWithFile {
+    private static final String TEXT_SUPPLY = "supply";
+    private static final String TEXT_BUY = "buy";
+    private static final String TEXT_RESULT = "result";
+    private static final String SEPARATOR = ",";
+    private static final int INDEX_OPERATION = 0;
+    private static final int INDEX_SUM = 1;
+
     public void getStatistic(String fromFileName, String toFileName) {
-        getStatic(fromFileName);
-        writer(getStatic(fromFileName)[0], getStatic(fromFileName)[1], toFileName);
+        List<String> output = readFile(fromFileName);
+        String result = getResult(output);
+        writeToFile(result, toFileName);
     }
 
-    private int[] getStatic(String fromFileName) {
-        int supplyAll = 0;
-        int buyAll = 0;
-        try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
-            String value = reader.readLine();
-            while (value != null && !value.isEmpty()) {
-                String[] line = value.split(",");
-                switch (line[0]) {
-                    case ("supply"):
-                        supplyAll += Integer.parseInt(line[1]);
-                        break;
-                    case ("buy"):
-                        buyAll += Integer.parseInt(line[1]);
-                        break;
-                    default:
-                        break;
-                }
-                value = reader.readLine();
-            }
+    private List<String> readFile(String fromFileName) {
+
+        File file = new File(fromFileName);
+        List<String> output;
+        try {
+            output = Files.readAllLines(file.toPath());
         } catch (IOException e) {
             throw new RuntimeException("Can`t read file", e);
         }
-        return new int[] {supplyAll, buyAll};
+        return output;
     }
 
-    private void writer(int supplyAll, int buyAll, String toFileName) {
+    private String getResult(List<String> output) {
+        int supplyAll = 0;
+        int buyAll = 0;
+        for (String line : output) {
+            String[] linePars = line.split(SEPARATOR);
+            switch (linePars[INDEX_OPERATION]) {
+                case (TEXT_SUPPLY):
+                    supplyAll += Integer.parseInt(linePars[INDEX_SUM]);
+                    break;
+                case (TEXT_BUY):
+                    buyAll += Integer.parseInt(linePars[INDEX_SUM]);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(TEXT_SUPPLY).append(SEPARATOR).append(supplyAll).append(System.lineSeparator())
+                .append(TEXT_BUY).append(SEPARATOR).append(buyAll).append(System.lineSeparator())
+                .append(TEXT_RESULT).append(SEPARATOR).append(supplyAll - buyAll).append(System.lineSeparator());
+        return stringBuilder.toString();
+    }
+
+    private void writeToFile(String text, String toFileName) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            writer.write("supply," + supplyAll + System.lineSeparator());
-            writer.write("buy," + buyAll + System.lineSeparator());
-            writer.write("result," + (supplyAll - buyAll) + System.lineSeparator());
-        } catch (IOException e) {
-            throw new RuntimeException("Can`t write to file", e);
+            writer.write(text);
+        } catch (Exception e) {
+            throw new RuntimeException("Can`t write to file " + toFileName, e);
         }
     }
 }
