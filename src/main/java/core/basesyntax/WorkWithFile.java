@@ -51,9 +51,12 @@ public class WorkWithFile {
         }
 
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(TEXT_SUPPLY).append(SEPARATOR).append(supplyAll).append(System.lineSeparator())
-                .append(TEXT_BUY).append(SEPARATOR).append(buyAll).append(System.lineSeparator())
-                .append(TEXT_RESULT).append(SEPARATOR).append(supplyAll - buyAll).append(System.lineSeparator());
+        stringBuilder.append(TEXT_SUPPLY).append(SEPARATOR).append(supplyAll)
+                .append(System.lineSeparator())
+                .append(TEXT_BUY).append(SEPARATOR).append(buyAll)
+                .append(System.lineSeparator())
+                .append(TEXT_RESULT).append(SEPARATOR).append(supplyAll - buyAll)
+                .append(System.lineSeparator());
         return stringBuilder.toString();
     }
 
