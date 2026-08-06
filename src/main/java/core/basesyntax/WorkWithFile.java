@@ -48,9 +48,10 @@ public class WorkWithFile {
         }
 
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("supply").append(CSV_SEPARATOR).append(supplySum).append(System.lineSeparator())
-                .append("buy").append(CSV_SEPARATOR).append(buySum).append(System.lineSeparator())
-                .append("result").append(CSV_SEPARATOR).append(supplySum - buySum);
+        stringBuilder
+            .append("supply").append(CSV_SEPARATOR).append(supplySum).append(System.lineSeparator())
+            .append("buy").append(CSV_SEPARATOR).append(buySum).append(System.lineSeparator())
+            .append("result").append(CSV_SEPARATOR).append(supplySum - buySum);
 
         return stringBuilder.toString();
     }
