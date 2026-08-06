@@ -1,6 +1,11 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.FileWriter;
+import java.io.BufferedWriter;
 
 public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
@@ -40,9 +45,9 @@ public class WorkWithFile {
             }
         }
 
-        return "supply" + "," + supplySum + System.lineSeparator() +
-                "buy" + "," + buySum + System.lineSeparator() +
-                "result" + "," + (supplySum - buySum);
+        return "supply" + "," + supplySum + System.lineSeparator()
+                + "buy" + "," + buySum + System.lineSeparator()
+                + "result" + "," + (supplySum - buySum);
     }
 
     private void writeToFile(String statistics, String toFileName) {
