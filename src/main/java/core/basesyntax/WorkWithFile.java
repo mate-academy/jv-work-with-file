@@ -8,6 +8,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    public static final String CSV_SEPARATOR = ",";
+
     public void getStatistic(String fromFileName, String toFileName) {
         String statistics = readFile(fromFileName);
         String report = statisticCalculation(statistics);
@@ -31,13 +33,13 @@ public class WorkWithFile {
         return stringBuilder.toString();
     }
 
-    private String statisticCalculation(String statiscics) {
-        String[] separateStatisticsLines = statiscics.split(System.lineSeparator());
+    private String statisticCalculation(String statistics) {
+        String[] separateStatisticsLines = statistics.split(System.lineSeparator());
 
         int supplySum = 0;
         int buySum = 0;
         for (String separateStatisticsLine : separateStatisticsLines) {
-            String[] categoryAndValue = separateStatisticsLine.split(",");
+            String[] categoryAndValue = separateStatisticsLine.split(CSV_SEPARATOR);
             if (categoryAndValue[0].equals("supply")) {
                 supplySum += Integer.parseInt(categoryAndValue[1]);
             } else {
@@ -45,9 +47,12 @@ public class WorkWithFile {
             }
         }
 
-        return "supply" + "," + supplySum + System.lineSeparator()
-                + "buy" + "," + buySum + System.lineSeparator()
-                + "result" + "," + (supplySum - buySum);
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("supply").append(CSV_SEPARATOR).append(supplySum).append(System.lineSeparator())
+                .append("buy").append(CSV_SEPARATOR).append(buySum).append(System.lineSeparator())
+                .append("result").append(CSV_SEPARATOR).append(supplySum - buySum);
+
+        return stringBuilder.toString();
     }
 
     private void writeToFile(String statistics, String toFileName) {
