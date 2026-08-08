@@ -52,8 +52,10 @@ public class WorkWithFile {
 
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder
-            .append("WORD_SUPPLY").append(CSV_SEPARATOR).append(supplySum).append(System.lineSeparator())
-            .append("WORD_BUY").append(CSV_SEPARATOR).append(buySum).append(System.lineSeparator())
+            .append("WORD_SUPPLY").append(CSV_SEPARATOR).append(supplySum)
+            .append(System.lineSeparator())
+            .append("WORD_BUY").append(CSV_SEPARATOR).append(buySum)
+            .append(System.lineSeparator())
             .append("WORD_RESULT").append(CSV_SEPARATOR).append(supplySum - buySum);
 
         return stringBuilder.toString();
