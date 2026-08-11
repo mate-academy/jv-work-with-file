@@ -25,7 +25,7 @@ public class WorkWithFile {
                 value = br.read();
             }
         } catch (IOException e) {
-            throw new RuntimeException("Cound't read the file" + e);
+            throw new RuntimeException("Can't read data from the file " + fromFileName, e);
         }
 
         String[] operationsData = fileContents.toString().split("\\W+");
@@ -49,7 +49,7 @@ public class WorkWithFile {
             System.out.println("Successfully wrote to the file.");
 
         } catch (IOException e) {
-            throw new RuntimeException("Cound't write the file" + e);
+            throw new RuntimeException("Can't write data to the file " + toFileName, e);
         }
     }
 }
