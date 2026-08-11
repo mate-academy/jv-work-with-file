@@ -12,33 +12,30 @@ public class WorkWithFile {
     public void getStatistic(String fromFileName, String toFileName) {
         File fromFile = new File(fromFileName);
         File toFile = new File(toFileName);
-        StringBuilder sb1 = new StringBuilder();
+        StringBuilder fileContents = new StringBuilder();
         final StringBuilder resultIntoFile = new StringBuilder();
         int sumOfSuppliers = 0;
         int sumOfBuy = 0;
         int result;
 
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(fromFile));
+        try (BufferedReader br = new BufferedReader(new FileReader(fromFile))) {
             int value = br.read();
             while (value != -1) {
-                sb1.append((char) value);
+                fileContents.append((char) value);
                 value = br.read();
             }
         } catch (IOException e) {
             throw new RuntimeException("Cound't read the file" + e);
         }
 
-        String[] dates1 = sb1.toString().split("\\W+");
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < dates1.length; j++) {
-                if ((dates1[i].contains("supply")) && dates1[i].equals(dates1[j])) {
-                    sumOfSuppliers = sumOfSuppliers + Integer.parseInt((dates1[j + 1]));
-                } else if ((dates1[i].contains("buy")) && dates1[i].equals(dates1[j])) {
-                    sumOfBuy = sumOfBuy + Integer.parseInt((dates1[j + 1]));
-                }
-            }
+        String[] operationsData = fileContents.toString().split("\\W+");
 
+        for (int i = 0; i < operationsData.length; i = i + 2) {
+            if (operationsData[i].equals("supply")) {
+                sumOfSuppliers = sumOfSuppliers + Integer.parseInt((operationsData[i + 1]));
+            } else {
+                sumOfBuy = sumOfBuy + Integer.parseInt((operationsData[i + 1]));
+            }
         }
         result = sumOfSuppliers - sumOfBuy;
         resultIntoFile.append(result);
