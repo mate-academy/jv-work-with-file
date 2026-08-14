@@ -29,13 +29,7 @@ public class WorkWithFile {
     private String calculateStat(List<String> lines) {
         int supply = 0;
         int buy = 0;
-        int resultOfBuy = 0;
-        StringBuilder stringBuilder = new StringBuilder();
         for (String line : lines) {
-            stringBuilder.append(line).append(" ");
-        }
-        String[] result = stringBuilder.toString().split("\\s+");
-        for (String line : result) {
             if (line.contains(SUPPLY)) {
                 supply += Integer.parseInt(line.split(",")[1]);
             }
@@ -43,7 +37,7 @@ public class WorkWithFile {
                 buy += Integer.parseInt(line.split(",")[1]);
             }
         }
-        resultOfBuy = supply - buy;
+        int resultOfBuy = supply - buy;
         return SUPPLIES_RESULT + supply + "\n" + BUY_RESULT + buy + "\n" + RESULT + resultOfBuy;
     }
 
