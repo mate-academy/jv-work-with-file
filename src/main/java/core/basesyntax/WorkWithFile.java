@@ -23,7 +23,7 @@ public class WorkWithFile {
             throw new RuntimeException(ex);
         }
         String result = calculateStat(lines);
-        writeToFile(result ,toFileName);
+        writeToFile(result, toFileName);
     }
 
     private String calculateStat(List<String> lines) {
