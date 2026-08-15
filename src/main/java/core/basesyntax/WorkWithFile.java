@@ -14,6 +14,9 @@ import java.util.List;
 import java.util.Map;
 
 public class WorkWithFile {
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+
     public void getStatistic(String fromFileName, String toFileName) {
         List<String> content = read(fromFileName);
         String res = calculateResult(content);
@@ -53,17 +56,17 @@ public class WorkWithFile {
             String[] valueAndKey = line.split(",");
             String key = valueAndKey[0];
             int value = Integer.parseInt(valueAndKey[1]);
-            if (key.equals("supply") || key.equals("buy")) {
+            if (key.equals(SUPPLY) || key.equals(BUY)) {
                 data.compute(key, (k, oldValue) -> (oldValue == null)
                         ? value : oldValue + value);
             } else {
                 data.put(key, value);
             }
         }
-        int difference = data.getOrDefault("supply", 0) - data.getOrDefault("buy", 0);
+        int difference = data.getOrDefault(SUPPLY, 0) - data.getOrDefault(BUY, 0);
         StringBuilder report = new StringBuilder();
-        report.append("supply,").append(data.get("supply")).append(System.lineSeparator());
-        report.append("buy,").append(data.get("buy")).append(System.lineSeparator());
+        report.append(SUPPLY).append(",").append(data.get(SUPPLY)).append(System.lineSeparator());
+        report.append(BUY).append(",").append(data.get(BUY)).append(System.lineSeparator());
         report.append("result,").append(difference);
         return report.toString();
     }
