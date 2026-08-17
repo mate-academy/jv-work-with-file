@@ -21,9 +21,7 @@ public class WorkWithFile {
         int supplyCount = 0;
         int buyCount = 0;
         
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(inputFile));
-                BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(outputFile));
-        ) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(inputFile))) {
             String fileLine = bufferedReader.readLine();
             
             while (fileLine != null) {
@@ -36,9 +34,13 @@ public class WorkWithFile {
                 }
                 fileLine = bufferedReader.readLine();
             }
-            
-            bufferedWriter.write(OPERATION_SUPPLY + CSV_SEPARATOR
-                    + supplyCount + System.lineSeparator()
+        } catch (IOException e) {
+            throw new RuntimeException("File wasn't found or couldn't be opened", e);
+        }
+        
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(outputFile));) {
+            bufferedWriter.write(OPERATION_SUPPLY + CSV_SEPARATOR + supplyCount
+                    + System.lineSeparator()
                     + OPERATION_BUY + CSV_SEPARATOR + buyCount + System.lineSeparator()
                     + RESULT + CSV_SEPARATOR + (supplyCount - buyCount)
             );
@@ -54,7 +56,7 @@ public class WorkWithFile {
                 : OPERATION_SUPPLY;
     }
     
-    public int getOperationCount(String line) {
+    private int getOperationCount(String line) {
         String[] operationAndCount = line.split(CSV_SEPARATOR);
         
         return Integer.parseInt(operationAndCount[COUNT_POSITION]);
