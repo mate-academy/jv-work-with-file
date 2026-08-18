@@ -16,37 +16,68 @@ public class WorkWithFile {
     private static final int COUNT_POSITION = 1;
     
     public void getStatistic(String fromFileName, String toFileName) {
-        File inputFile = new File(fromFileName);
-        File outputFile = new File(toFileName);
         int supplyCount = 0;
         int buyCount = 0;
+        String [] fileContent = readFromFile(fromFileName).split(System.lineSeparator());
+        
+        for (String row : fileContent) {
+            int operationCount = getOperationCount(row);
+            
+            if (getOperation(row).equals(OPERATION_BUY)) {
+                buyCount += operationCount;
+            } else {
+                supplyCount += operationCount;
+            }
+        }
+        
+        writeIntoFile(toFileName, supplyCount, buyCount);
+    }
+    
+    private static String readFromFile(String inputFileName) {
+        File inputFile = new File(inputFileName);
+        StringBuilder stringBuilder = new StringBuilder();
         
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(inputFile))) {
             String fileLine = bufferedReader.readLine();
             
             while (fileLine != null) {
-                int operationCount = getOperationCount(fileLine);
-                
-                if (getOperation(fileLine).equals(OPERATION_BUY)) {
-                    buyCount += operationCount;
-                } else {
-                    supplyCount += operationCount;
-                }
+                stringBuilder.append(fileLine).append(System.lineSeparator());
                 fileLine = bufferedReader.readLine();
             }
         } catch (IOException e) {
             throw new RuntimeException("File wasn't found or couldn't be opened", e);
         }
         
+        return stringBuilder.toString();
+    }
+    
+    private void writeIntoFile(String outputFileName, int supplyCount, int buyCount) {
+        File outputFile = new File(outputFileName);
+        
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(outputFile));) {
-            bufferedWriter.write(OPERATION_SUPPLY + CSV_SEPARATOR + supplyCount
-                    + System.lineSeparator()
-                    + OPERATION_BUY + CSV_SEPARATOR + buyCount + System.lineSeparator()
-                    + RESULT + CSV_SEPARATOR + (supplyCount - buyCount)
-            );
+            String report = createReport(supplyCount, buyCount);
+            
+            bufferedWriter.write(report);
         } catch (IOException e) {
             throw new RuntimeException("File wasn't found or couldn't be opened", e);
         }
+    }
+    
+    private String createReport(int supplyCount, int buyCount) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(OPERATION_SUPPLY)
+                .append(CSV_SEPARATOR)
+                .append(supplyCount)
+                .append(System.lineSeparator())
+                .append(OPERATION_BUY)
+                .append(CSV_SEPARATOR)
+                .append(buyCount)
+                .append(System.lineSeparator())
+                .append(RESULT)
+                .append(CSV_SEPARATOR)
+                .append(supplyCount - buyCount);
+        
+        return stringBuilder.toString();
     }
     
     private String getOperation(String line) {
