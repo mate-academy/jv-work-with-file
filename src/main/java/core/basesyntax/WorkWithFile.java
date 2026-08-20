@@ -53,8 +53,10 @@ public class WorkWithFile {
         int resultSum = supplySum - buySum;
 
         StringBuilder builder = new StringBuilder();
-        builder.append(OPERATION_SUPPLY).append(",").append(supplySum).append(System.lineSeparator())
-                .append(OPERATION_BUY).append(",").append(buySum).append(System.lineSeparator())
+        builder.append(OPERATION_SUPPLY).append(",")
+                .append(supplySum).append(System.lineSeparator())
+                .append(OPERATION_BUY).append(",")
+                .append(buySum).append(System.lineSeparator())
                 .append("result,").append(resultSum);
 
         return builder.toString();
