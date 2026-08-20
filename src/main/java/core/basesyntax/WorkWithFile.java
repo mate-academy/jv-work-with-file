@@ -1,9 +1,20 @@
 package core.basesyntax;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class WorkWithFile {
+
     public void getStatistic(String fromFileName, String toFileName) {
+        String data = readData(fromFileName);
+        String report = createReport(data);
+        writeData(toFileName, report);
+    }
+
+    private String readData(String fromFileName) {
         int supplySum = 0;
         int buySum = 0;
 
@@ -21,22 +32,37 @@ public class WorkWithFile {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Can't read data from file " + fromFileName, e);
         }
 
-        String supplyLine = "supply," + supplySum;
-        String buyLine = "buy," + buySum;
-        int resultSum = supplySum - buySum;
-        String resultLine = "result," + resultSum;
+        return supplySum + "," + buySum;
+    }
 
+    private String createReport(String data) {
+        if (data == null || data.isEmpty()) {
+            return "supply,0" + System.lineSeparator()
+                    + "buy,0" + System.lineSeparator()
+                    + "result,0";
+        }
+
+        String[] parts = data.split(",");
+        int supplySum = Integer.parseInt(parts[0]);
+        int buySum = Integer.parseInt(parts[1]);
+        int resultSum = supplySum - buySum;
+
+        StringBuilder builder = new StringBuilder();
+        builder.append("supply,").append(supplySum).append(System.lineSeparator())
+                .append("buy,").append(buySum).append(System.lineSeparator())
+                .append("result,").append(resultSum);
+
+        return builder.toString();
+    }
+
+    private void writeData(String toFileName, String report) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
-            writer.write(supplyLine);
-            writer.newLine();
-            writer.write(buyLine);
-            writer.newLine();
-            writer.write(resultLine);
+            writer.write(report);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Can't write data to file " + toFileName, e);
         }
     }
 }
