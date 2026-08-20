@@ -7,6 +7,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class WorkWithFile {
+    private static final String OPERATION_SUPPLY = "supply";
+    private static final String OPERATION_BUY = "buy";
 
     public void getStatistic(String fromFileName, String toFileName) {
         String data = readData(fromFileName);
@@ -25,14 +27,14 @@ public class WorkWithFile {
                 String operationType = cells[0];
                 int amount = Integer.parseInt(cells[1]);
 
-                if (operationType.equals("supply")) {
+                if (operationType.equals(OPERATION_SUPPLY)) {
                     supplySum += amount;
-                } else if (operationType.equals("buy")) {
+                } else if (operationType.equals(OPERATION_BUY)) {
                     buySum += amount;
                 }
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read data from file " + fromFileName, e);
+            throw new RuntimeException("Can't read data from the file " + fromFileName, e);
         }
 
         return supplySum + "," + buySum;
@@ -40,8 +42,8 @@ public class WorkWithFile {
 
     private String createReport(String data) {
         if (data == null || data.isEmpty()) {
-            return "supply,0" + System.lineSeparator()
-                    + "buy,0" + System.lineSeparator()
+            return OPERATION_SUPPLY + ",0" + System.lineSeparator()
+                    + OPERATION_BUY + ",0" + System.lineSeparator()
                     + "result,0";
         }
 
@@ -51,8 +53,8 @@ public class WorkWithFile {
         int resultSum = supplySum - buySum;
 
         StringBuilder builder = new StringBuilder();
-        builder.append("supply,").append(supplySum).append(System.lineSeparator())
-                .append("buy,").append(buySum).append(System.lineSeparator())
+        builder.append(OPERATION_SUPPLY).append(",").append(supplySum).append(System.lineSeparator())
+                .append(OPERATION_BUY).append(",").append(buySum).append(System.lineSeparator())
                 .append("result,").append(resultSum);
 
         return builder.toString();
@@ -62,7 +64,7 @@ public class WorkWithFile {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(toFileName))) {
             writer.write(report);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data to file " + toFileName, e);
+            throw new RuntimeException("Can't write data to the file " + toFileName, e);
         }
     }
 }
