@@ -43,6 +43,10 @@ public class WorkWithFile {
             return new Summary(supplySum, buySum);
         } catch (IOException e) {
             throw new RuntimeException("Can't read the file: " + fromFileName, e);
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException("Invalid data in file: " + fromFileName, e);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            throw new RuntimeException("Invalid CSV format in file: " + fromFileName, e);
         }
     }
 }
