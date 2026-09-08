@@ -43,10 +43,11 @@ public class WorkWithFile {
     }
 
     private String createReport(int amountSupply, int amountBuy, int result) {
-          return SUPPLY_REPORT + amountSupply + "\n"
+        return SUPPLY_REPORT + amountSupply + "\n"
                 + BUY_REPORT + amountBuy + "\n"
                 + RESULT_REPORT + result;
     }
+
     private void writeReport(String toFileName, String report) {
         try (FileWriter writer = new FileWriter(toFileName)) {
             writer.write(report);
