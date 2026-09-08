@@ -24,8 +24,6 @@ public class WorkWithFile {
         int result;
 
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
-            reader.readLine();
-
             String value;
             while ((value = reader.readLine()) != null) {
                 String[] parts = value.split(",");
