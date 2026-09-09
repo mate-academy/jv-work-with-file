@@ -6,40 +6,48 @@ import java.nio.file.Path;
 import java.util.List;
 
 public class WorkWithFile {
+    private static final String SUPPLY = "supply";
+    private static final String BUY = "buy";
+
     public void getStatistic(String fromFileName, String toFileName) {
+        List<String> lines = readFromFile(fromFileName);
+        String report = createReport(lines);
+        writeToFile(toFileName, report);
+    }
 
-        StringBuilder sb = new StringBuilder();
-        int supplyTotal = 0;
-        int buyTotal = 0;
-
+    private List<String> readFromFile(String fileName) {
         try {
-            List<String> lines = Files.readAllLines(Path.of(fromFileName));
-            for (String line: lines) {
-                String[] split = line.split(",");
-                if (split[0].equals("supply")) {
-                    supplyTotal += Integer.parseInt(split[1]);
-                } else {
-                    buyTotal += Integer.parseInt(split[1]);
-                }
-            }
-
-            sb.append("supply,")
-                    .append(supplyTotal)
-                    .append(System.lineSeparator())
-                    .append("buy,")
-                    .append(buyTotal)
-                    .append(System.lineSeparator())
-                    .append("result,")
-                    .append(supplyTotal - buyTotal);
-
+            return Files.readAllLines(Path.of(fileName));
         } catch (IOException e) {
             throw new RuntimeException("Can't read from file!", e);
         }
+    }
 
+    private String createReport(List<String> lines) {
+        int supplyTotal = 0;
+        int buyTotal = 0;
+
+        for (String line : lines) {
+            String[] split = line.split(",");
+            if (split[0].equals(SUPPLY)) {
+                supplyTotal += Integer.parseInt(split[1]);
+            } else if (split[0].equals(BUY)) {
+                buyTotal += Integer.parseInt(split[1]);
+            }
+        }
+
+        return SUPPLY + "," + supplyTotal
+                + System.lineSeparator()
+                + BUY + "," + buyTotal
+                + System.lineSeparator()
+                + "result," + (supplyTotal - buyTotal);
+    }
+
+    private void writeToFile(String fileName, String report) {
         try {
-            Files.writeString(Path.of(toFileName), sb.toString());
+            Files.writeString(Path.of(fileName), report);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write in file!", e);
+            throw new RuntimeException("Can't write to file!", e);
         }
     }
 }
