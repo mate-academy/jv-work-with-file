@@ -36,7 +36,7 @@ public class WorkWithFile {
                 }
             }
         } catch (IOException e) {
-            throw new RuntimeException("Can't read data from the file ", e);
+            throw new RuntimeException("Can't read data from the file " + fromFileName, e);
         }
 
         return new int[]{supplySum, buySum};
@@ -63,7 +63,7 @@ public class WorkWithFile {
         try {
             Files.writeString(Path.of(toFileName), data);
         } catch (IOException e) {
-            throw new RuntimeException("Can't write data to file ", e);
+            throw new RuntimeException("Can't write data to file " + toFileName, e);
         }
 
     }
