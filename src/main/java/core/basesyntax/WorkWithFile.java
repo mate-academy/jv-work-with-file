@@ -8,10 +8,10 @@ import java.io.IOException;
 
 public class WorkWithFile {
     private String line;
-    private int buy = 0;
-    private int supply = 0;
 
     public void getStatistic(String fromFileName, String toFileName) {
+        int buy = 0;
+        int supply = 0;
         try (BufferedReader reader = new BufferedReader(new FileReader(fromFileName))) {
             while ((line = reader.readLine()) != null) {
                 String[] waw = line.split(",");
@@ -33,7 +33,7 @@ public class WorkWithFile {
             writer.newLine();
             writer.write("result," + (supply - buy));
         } catch (IOException e) {
-            throw new RuntimeException("Can't write file: " + fromFileName, e);
+            throw new RuntimeException("Can't write file: " + toFileName, e);
         }
     }
 }
