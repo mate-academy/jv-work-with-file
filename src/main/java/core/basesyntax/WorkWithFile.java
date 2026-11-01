@@ -28,11 +28,7 @@ public class WorkWithFile {
         String[] names = returnDataSplitted[TYPE].split(EMPTY_SPACE);
         String[] valuesString = returnDataSplitted[VALUE].split(EMPTY_SPACE);
 
-        int[] values = new int[valuesString.length];
-
-        for (int i = 0; i < values.length; i++) {
-            values[i] = Integer.parseInt(valuesString[i]);
-        }
+        int[] values = parseValues(valuesString);
 
         int[] numbers = calculateStatistic(names, values);
 
@@ -41,6 +37,17 @@ public class WorkWithFile {
                 + RESULT + COMMA + numbers[RESULT_VALUE];
 
         writeReportToFile(toFileName, message);
+    }
+
+    private int[] parseValues(String[] valuesString) {
+
+        int[] values = new int[valuesString.length];
+
+        for (int i = 0; i < values.length; i++) {
+            values[i] = Integer.parseInt(valuesString[i]);
+        }
+
+        return values;
     }
 
     private String readDataFromFile(String nameFile) {
