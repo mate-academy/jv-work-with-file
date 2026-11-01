@@ -11,23 +11,45 @@ public class WorkWithFile {
 
     private static final int TYPE = 0;
     private static final int VALUE = 1;
+    private static final int RESULT_VALUE = 2;
     private static final String EMPTY_SPACE = " ";
     private static final String SUPPLY = "supply";
     private static final String BUY = "buy";
     private static final String RESULT = "result";
     private static final String NEW_LINE = System.lineSeparator();
     private static final String COMMA = ",";
+    private static final String SPECIAL_SIGN = "@";
 
     public void getStatistic(String fromFileName, String toFileName) {
 
-        File from = new File(fromFileName);
-        File to = new File(toFileName);
+        String readData = readDataFromFile(fromFileName);
+        String[] returnDataSplitted = readData.split(SPECIAL_SIGN);
 
-        String namesBeforeSplit = "";
-        String valueBeforeSplit = "";
+        String[] names = returnDataSplitted[TYPE].split(EMPTY_SPACE);
+        String[] valuesString = returnDataSplitted[VALUE].split(EMPTY_SPACE);
+
+        int[] values = new int[valuesString.length];
+
+        for (int i = 0; i < values.length; i++) {
+            values[i] = Integer.parseInt(valuesString[i]);
+        }
+
+        int[] numbers = calculateStatistic(names, values);
+
+        String message = SUPPLY + COMMA + numbers[TYPE] + NEW_LINE
+                + BUY + COMMA + numbers[VALUE] + NEW_LINE
+                + RESULT + COMMA + numbers[RESULT_VALUE];
+
+        writeReportToFile(toFileName, message);
+    }
+
+    private String readDataFromFile(String nameFile) {
+        File from = new File(nameFile);
+
+        StringBuilder namesBeforeSplit = new StringBuilder();
+        StringBuilder valueBeforeSplit = new StringBuilder();
 
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(from))) {
-
             String line;
 
             while ((line = bufferedReader.readLine()) != null) {
@@ -37,10 +59,9 @@ public class WorkWithFile {
                     throw new RuntimeException("Input file is incorrect");
                 }
 
-                namesBeforeSplit += splittedLine[TYPE] + EMPTY_SPACE;
-                valueBeforeSplit += splittedLine[VALUE] + EMPTY_SPACE;
+                namesBeforeSplit.append(splittedLine[TYPE]).append(EMPTY_SPACE);
+                valueBeforeSplit.append(splittedLine[VALUE]).append(EMPTY_SPACE);
             }
-
             if (namesBeforeSplit.isEmpty() && valueBeforeSplit.isEmpty()) {
                 throw new RuntimeException("Input file is empty");
             }
@@ -49,17 +70,25 @@ public class WorkWithFile {
             throw new RuntimeException("Can't read from file", e);
         }
 
-        String[] names = namesBeforeSplit.split(EMPTY_SPACE);
-        String[] valuesString = valueBeforeSplit.split(EMPTY_SPACE);
+        String result = namesBeforeSplit + SPECIAL_SIGN + valueBeforeSplit;
+        return result;
+    }
 
-        int[] values = new int[valuesString.length];
+    private void writeReportToFile(String file, String message) {
+
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
+
+            bufferedWriter.write(message);
+
+        } catch (IOException e) {
+            throw new RuntimeException("Can't write to file", e);
+        }
+    }
+
+    private int[] calculateStatistic(String[] names, int[] values) {
 
         int supplyValue = 0;
         int buyValue = 0;
-
-        for (int i = 0; i < values.length; i++) {
-            values[i] = Integer.parseInt(valuesString[i]);
-        }
 
         for (int i = 0; i < names.length; i++) {
             if (names[i].equals(SUPPLY)) {
@@ -72,14 +101,8 @@ public class WorkWithFile {
 
         int resultValue = supplyValue - buyValue;
 
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(to))) {
+        int[] numbers = new int[] {supplyValue, buyValue, resultValue};
 
-            bufferedWriter.write(SUPPLY + COMMA + supplyValue + NEW_LINE
-                                + BUY + COMMA + buyValue + NEW_LINE
-                                + RESULT + COMMA + resultValue);
-
-        } catch (IOException e) {
-            throw new RuntimeException("Can't write to file", e);
-        }
+        return numbers;
     }
 }
